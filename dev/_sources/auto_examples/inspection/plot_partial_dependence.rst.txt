@@ -137,7 +137,7 @@ single-variable partial dependence plots.
  .. code-block:: none
 
     Training MLPRegressor...
-    done in 3.488s
+    done in 2.919s
     Test R2 score: 0.82
 
 
@@ -165,29 +165,23 @@ a poor model.
 We will plot the partial dependence, both individual (ICE) and averaged one
 (PDP). We limit to only 50 ICE curves to not overcrowd the plot.
 
-.. GENERATED FROM PYTHON SOURCE LINES 113-140
+.. GENERATED FROM PYTHON SOURCE LINES 113-134
 
 .. code-block:: default
 
 
-    import matplotlib.pyplot as plt
-    from sklearn.inspection import partial_dependence
     from sklearn.inspection import PartialDependenceDisplay
+
+    common_params = {"subsample": 50, "n_jobs": 2, "grid_resolution": 20, "random_state": 0}
 
     print("Computing partial dependence plots...")
     tic = time()
-    features = ["MedInc", "AveOccup", "HouseAge", "AveRooms"]
     display = PartialDependenceDisplay.from_estimator(
         est,
         X_train,
-        features,
+        features=["MedInc", "AveOccup", "HouseAge", "AveRooms"],
         kind="both",
-        subsample=50,
-        n_jobs=3,
-        grid_resolution=20,
-        random_state=0,
-        ice_lines_kw={"color": "tab:blue", "alpha": 0.2, "linewidth": 0.5},
-        pd_line_kw={"color": "tab:orange", "linestyle": "--"},
+        **common_params,
     )
     print(f"done in {time() - tic:.3f}s")
     display.figure_.suptitle(
@@ -212,12 +206,12 @@ We will plot the partial dependence, both individual (ICE) and averaged one
  .. code-block:: none
 
     Computing partial dependence plots...
-    done in 2.119s
+    done in 1.414s
 
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 141-146
+.. GENERATED FROM PYTHON SOURCE LINES 135-140
 
 Gradient boosting
 .................
@@ -225,7 +219,7 @@ Gradient boosting
 Let's now fit a :class:`~sklearn.ensemble.HistGradientBoostingRegressor` and
 compute the partial dependence on the same features.
 
-.. GENERATED FROM PYTHON SOURCE LINES 146-156
+.. GENERATED FROM PYTHON SOURCE LINES 140-150
 
 .. code-block:: default
 
@@ -250,13 +244,13 @@ compute the partial dependence on the same features.
  .. code-block:: none
 
     Training HistGradientBoostingRegressor...
-    done in 0.462s
+    done in 0.494s
     Test R2 score: 0.85
 
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 157-168
+.. GENERATED FROM PYTHON SOURCE LINES 151-162
 
 Here, we used the default hyperparameters for the gradient boosting model
 without any preprocessing as tree-based models are naturally robust to
@@ -270,7 +264,7 @@ to work well while this is not often the case for neural networks).
 We will plot the partial dependence, both individual (ICE) and averaged one
 (PDP). We limit to only 50 ICE curves to not overcrowd the plot.
 
-.. GENERATED FROM PYTHON SOURCE LINES 168-190
+.. GENERATED FROM PYTHON SOURCE LINES 162-179
 
 .. code-block:: default
 
@@ -280,14 +274,9 @@ We will plot the partial dependence, both individual (ICE) and averaged one
     display = PartialDependenceDisplay.from_estimator(
         est,
         X_train,
-        features,
+        features=["MedInc", "AveOccup", "HouseAge", "AveRooms"],
         kind="both",
-        subsample=50,
-        n_jobs=3,
-        grid_resolution=20,
-        random_state=0,
-        ice_lines_kw={"color": "tab:blue", "alpha": 0.2, "linewidth": 0.5},
-        pd_line_kw={"color": "tab:orange", "linestyle": "--"},
+        **common_params,
     )
     print(f"done in {time() - tic:.3f}s")
     display.figure_.suptitle(
@@ -312,12 +301,12 @@ We will plot the partial dependence, both individual (ICE) and averaged one
  .. code-block:: none
 
     Computing partial dependence plots...
-    done in 8.511s
+    done in 6.371s
 
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 191-219
+.. GENERATED FROM PYTHON SOURCE LINES 180-208
 
 Analysis of the plots
 .....................
@@ -348,7 +337,7 @@ smoother predictions than
 However, it is worth noting that we are creating potential meaningless
 synthetic samples if features are correlated.
 
-.. GENERATED FROM PYTHON SOURCE LINES 221-229
+.. GENERATED FROM PYTHON SOURCE LINES 210-218
 
 2D interaction plots
 --------------------
@@ -359,24 +348,27 @@ Another consideration is linked to the performance to compute the PDPs. With
 the tree-based algorithm, when only PDPs are requested, they can be computed
 on an efficient way using the `'recursion'` method.
 
-.. GENERATED FROM PYTHON SOURCE LINES 229-250
+.. GENERATED FROM PYTHON SOURCE LINES 218-242
 
 .. code-block:: default
 
+    import matplotlib.pyplot as plt
 
-    features = ["AveOccup", "HouseAge", ("AveOccup", "HouseAge")]
     print("Computing partial dependence plots...")
     tic = time()
     _, ax = plt.subplots(ncols=3, figsize=(9, 4))
+
+    # Note that we could have called the method `from_estimator` three times and
+    # provide one feature, one kind of plot, and one axis for each call.
     display = PartialDependenceDisplay.from_estimator(
         est,
         X_train,
-        features,
-        kind="average",
-        n_jobs=2,
-        grid_resolution=10,
+        features=["AveOccup", "HouseAge", ("AveOccup", "HouseAge")],
+        kind=["both", "both", "average"],
         ax=ax,
+        **common_params,
     )
+
     print(f"done in {time() - tic:.3f}s")
     display.figure_.suptitle(
         "Partial dependence of house value on non-location features\n"
@@ -400,12 +392,12 @@ on an efficient way using the `'recursion'` method.
  .. code-block:: none
 
     Computing partial dependence plots...
-    done in 0.392s
+    done in 3.442s
 
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 251-263
+.. GENERATED FROM PYTHON SOURCE LINES 243-255
 
 The two-way partial dependence plot shows the dependence of median house
 price on joint values of house age and average occupants per household. We
@@ -420,13 +412,13 @@ age.
 Let's make the same partial dependence plot for the 2 features interaction,
 this time in 3 dimensions.
 
-.. GENERATED FROM PYTHON SOURCE LINES 263-291
+.. GENERATED FROM PYTHON SOURCE LINES 255-283
 
 .. code-block:: default
 
-
     import numpy as np
     from mpl_toolkits.mplot3d import Axes3D
+    from sklearn.inspection import partial_dependence
 
     fig = plt.figure()
 
@@ -467,7 +459,7 @@ this time in 3 dimensions.
 
  .. code-block:: none
 
-    /home/circleci/project/examples/inspection/plot_partial_dependence.py:275: MatplotlibDeprecationWarning: Axes3D(fig) adding itself to the figure is deprecated since 3.4. Pass the keyword argument auto_add_to_figure=False and use fig.add_axes(ax) to suppress this warning. The default value of auto_add_to_figure will change to False in mpl3.5 and True values will no longer work in 3.6.  This is consistent with other Axes classes.
+    /home/circleci/project/examples/inspection/plot_partial_dependence.py:267: MatplotlibDeprecationWarning: Axes3D(fig) adding itself to the figure is deprecated since 3.4. Pass the keyword argument auto_add_to_figure=False and use fig.add_axes(ax) to suppress this warning. The default value of auto_add_to_figure will change to False in mpl3.5 and True values will no longer work in 3.6.  This is consistent with other Axes classes.
       ax = Axes3D(fig)
 
 
@@ -476,7 +468,7 @@ this time in 3 dimensions.
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** ( 0 minutes  15.763 seconds)
+   **Total running time of the script:** ( 0 minutes  15.568 seconds)
 
 
 .. _sphx_glr_download_auto_examples_inspection_plot_partial_dependence.py:
