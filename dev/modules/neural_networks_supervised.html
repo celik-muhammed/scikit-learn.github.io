@@ -415,15 +415,16 @@ belong to each class. The output is the class with the highest probability.</p>
 <p>In regression, the output remains as <span class="math notranslate nohighlight">\(f(x)\)</span>; therefore, output activation
 function is just the identity function.</p>
 <p>MLP uses different loss functions depending on the problem type. The loss
-function for classification is Cross-Entropy, which in binary case is given as,</p>
+function for classification is Average Cross-Entropy, which in binary case is
+given as,</p>
 <div class="math notranslate nohighlight">
-\[Loss(\hat{y},y,W) = -y \ln {\hat{y}} - (1-y) \ln{(1-\hat{y})} + \alpha ||W||_2^2\]</div>
+\[Loss(\hat{y},y,W) = -\dfrac{1}{n}\sum_{i=0}^n(y_i \ln {\hat{y_i}} + (1-y_i) \ln{(1-\hat{y_i})}) + \dfrac{\alpha}{2n} ||W||_2^2\]</div>
 <p>where <span class="math notranslate nohighlight">\(\alpha ||W||_2^2\)</span> is an L2-regularization term (aka penalty)
 that penalizes complex models; and <span class="math notranslate nohighlight">\(\alpha &gt; 0\)</span> is a non-negative
 hyperparameter that controls the magnitude of the penalty.</p>
-<p>For regression, MLP uses the Square Error loss function; written as,</p>
+<p>For regression, MLP uses the Mean Square Error loss function; written as,</p>
 <div class="math notranslate nohighlight">
-\[Loss(\hat{y},y,W) = \frac{1}{2}||\hat{y} - y ||_2^2 + \frac{\alpha}{2} ||W||_2^2\]</div>
+\[Loss(\hat{y},y,W) = \frac{1}{2n}\sum_{i=0}^n||\hat{y}_i - y_i ||_2^2 + \frac{\alpha}{2n} ||W||_2^2\]</div>
 <p>Starting from initial random weights, multi-layer perceptron (MLP) minimizes
 the loss function by repeatedly updating these weights. After computing the
 loss, a backward pass propagates it from the output layer to the previous
