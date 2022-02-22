@@ -191,7 +191,7 @@
 <h1><a class="reference internal" href="../classes.html#module-sklearn.ensemble" title="sklearn.ensemble"><code class="xref py py-mod docutils literal notranslate"><span class="pre">sklearn.ensemble</span></code></a>.StackingRegressor<a class="headerlink" href="#sklearn-ensemble-stackingregressor" title="Permalink to this headline">¶</a></h1>
 <dl class="py class">
 <dt class="sig sig-object py" id="sklearn.ensemble.StackingRegressor">
-<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">sklearn.ensemble.</span></span><span class="sig-name descname"><span class="pre">StackingRegressor</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">estimators</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">final_estimator</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cv</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_jobs</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">passthrough</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/scikit-learn/scikit-learn/blob/5ad3421a5/sklearn/ensemble/_stacking.py#L579"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#sklearn.ensemble.StackingRegressor" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">sklearn.ensemble.</span></span><span class="sig-name descname"><span class="pre">StackingRegressor</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">estimators</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">final_estimator</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cv</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_jobs</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">passthrough</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/scikit-learn/scikit-learn/blob/691972a7c/sklearn/ensemble/_stacking.py#L606"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#sklearn.ensemble.StackingRegressor" title="Permalink to this definition">¶</a></dt>
 <dd><p>Stack of estimators with a final regressor.</p>
 <p>Stacked generalization consists in stacking the output of individual
 estimator and use a regressor to compute the final prediction. Stacking
@@ -214,7 +214,7 @@ instance. An estimator can be set to ‘drop’ using <code class="docutils lite
 <dt><strong>final_estimator</strong><span class="classifier">estimator, default=None</span></dt><dd><p>A regressor which will be used to combine the base estimators.
 The default regressor is a <a class="reference internal" href="sklearn.linear_model.RidgeCV.html#sklearn.linear_model.RidgeCV" title="sklearn.linear_model.RidgeCV"><code class="xref py py-class docutils literal notranslate"><span class="pre">RidgeCV</span></code></a>.</p>
 </dd>
-<dt><strong>cv</strong><span class="classifier">int, cross-validation generator or an iterable, default=None</span></dt><dd><p>Determines the cross-validation splitting strategy used in
+<dt><strong>cv</strong><span class="classifier">int, cross-validation generator, iterable, or “prefit”, default=None</span></dt><dd><p>Determines the cross-validation splitting strategy used in
 <code class="docutils literal notranslate"><span class="pre">cross_val_predict</span></code> to train <code class="docutils literal notranslate"><span class="pre">final_estimator</span></code>. Possible inputs for
 cv are:</p>
 <ul class="simple">
@@ -222,6 +222,7 @@ cv are:</p>
 <li><p>integer, to specify the number of folds in a (Stratified) KFold,</p></li>
 <li><p>An object to be used as a cross-validation generator,</p></li>
 <li><p>An iterable yielding train, test splits.</p></li>
+<li><p>“prefit” to assume the <code class="docutils literal notranslate"><span class="pre">estimators</span></code> are prefit, and skip cross validation</p></li>
 </ul>
 <p>For integer/None inputs, if the estimator is a classifier and y is
 either binary or multiclass,
@@ -231,6 +232,14 @@ These splitters are instantiated with <code class="docutils literal notranslate"
 will be the same across calls.</p>
 <p>Refer <a class="reference internal" href="../cross_validation.html#cross-validation"><span class="std std-ref">User Guide</span></a> for the various
 cross-validation strategies that can be used here.</p>
+<p>If “prefit” is passed, it is assumed that all <code class="docutils literal notranslate"><span class="pre">estimators</span></code> have
+been fitted already. The <code class="docutils literal notranslate"><span class="pre">final_estimator_</span></code> is trained on the <code class="docutils literal notranslate"><span class="pre">estimators</span></code>
+predictions on the full training set and are <strong>not</strong> cross validated
+predictions. Please note that if the models have been trained on the same
+data to train the stacking model, there is a very high risk of overfitting.</p>
+<div class="versionadded">
+<p><span class="versionmodified added">New in version 1.1: </span>The ‘prefit’ option was added in 1.1</p>
+</div>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
 <p>A larger number of split will provide no benefits if the number
@@ -254,9 +263,10 @@ original training data.</p>
 </dd>
 <dt class="field-even">Attributes</dt>
 <dd class="field-even"><dl>
-<dt><strong>estimators_</strong><span class="classifier">list of estimator</span></dt><dd><p>The elements of the estimators parameter, having been fitted on the
+<dt><strong>estimators_</strong><span class="classifier">list of estimator</span></dt><dd><p>The elements of the <code class="docutils literal notranslate"><span class="pre">estimators</span></code> parameter, having been fitted on the
 training data. If an estimator has been set to <code class="docutils literal notranslate"><span class="pre">'drop'</span></code>, it
-will not appear in <code class="docutils literal notranslate"><span class="pre">estimators_</span></code>.</p>
+will not appear in <code class="docutils literal notranslate"><span class="pre">estimators_</span></code>. When <code class="docutils literal notranslate"><span class="pre">cv=&quot;prefit&quot;</span></code>, <code class="docutils literal notranslate"><span class="pre">estimators_</span></code>
+is set to <code class="docutils literal notranslate"><span class="pre">estimators</span></code> and is not fitted again.</p>
 </dd>
 <dt><strong>named_estimators_</strong><span class="classifier"><a class="reference internal" href="sklearn.utils.Bunch.html#sklearn.utils.Bunch" title="sklearn.utils.Bunch"><code class="xref py py-class docutils literal notranslate"><span class="pre">Bunch</span></code></a></span></dt><dd><p>Attribute to access any fitted sub-estimators by name.</p>
 </dd>
@@ -343,7 +353,7 @@ underlying estimators expose such an attribute when fit.
 </table>
 <dl class="py method">
 <dt class="sig sig-object py" id="sklearn.ensemble.StackingRegressor.fit">
-<span class="sig-name descname"><span class="pre">fit</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sample_weight</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/scikit-learn/scikit-learn/blob/5ad3421a5/sklearn/ensemble/_stacking.py#L736"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#sklearn.ensemble.StackingRegressor.fit" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">fit</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sample_weight</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/scikit-learn/scikit-learn/blob/691972a7c/sklearn/ensemble/_stacking.py#L774"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#sklearn.ensemble.StackingRegressor.fit" title="Permalink to this definition">¶</a></dt>
 <dd><p>Fit the estimators.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -370,7 +380,7 @@ support sample weights.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="sklearn.ensemble.StackingRegressor.fit_transform">
-<span class="sig-name descname"><span class="pre">fit_transform</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">fit_params</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/scikit-learn/scikit-learn/blob/5ad3421a5/sklearn/base.py#L839"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#sklearn.ensemble.StackingRegressor.fit_transform" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">fit_transform</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">fit_params</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/scikit-learn/scikit-learn/blob/691972a7c/sklearn/base.py#L839"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#sklearn.ensemble.StackingRegressor.fit_transform" title="Permalink to this definition">¶</a></dt>
 <dd><p>Fit to data, then transform it.</p>
 <p>Fits transformer to <code class="docutils literal notranslate"><span class="pre">X</span></code> and <code class="docutils literal notranslate"><span class="pre">y</span></code> with optional parameters <code class="docutils literal notranslate"><span class="pre">fit_params</span></code>
 and returns a transformed version of <code class="docutils literal notranslate"><span class="pre">X</span></code>.</p>
@@ -396,7 +406,7 @@ and returns a transformed version of <code class="docutils literal notranslate">
 
 <dl class="py method">
 <dt class="sig sig-object py" id="sklearn.ensemble.StackingRegressor.get_params">
-<span class="sig-name descname"><span class="pre">get_params</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">deep</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/scikit-learn/scikit-learn/blob/5ad3421a5/sklearn/ensemble/_base.py#L295"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#sklearn.ensemble.StackingRegressor.get_params" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">get_params</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">deep</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/scikit-learn/scikit-learn/blob/691972a7c/sklearn/ensemble/_base.py#L295"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#sklearn.ensemble.StackingRegressor.get_params" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get the parameters of an estimator from the ensemble.</p>
 <p>Returns the parameters given in the constructor as well as the
 estimators contained within the <code class="docutils literal notranslate"><span class="pre">estimators</span></code> parameter.</p>
@@ -439,7 +449,7 @@ names mapped to their values.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="sklearn.ensemble.StackingRegressor.predict">
-<span class="sig-name descname"><span class="pre">predict</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">predict_params</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/scikit-learn/scikit-learn/blob/5ad3421a5/sklearn/ensemble/_stacking.py#L244"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#sklearn.ensemble.StackingRegressor.predict" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">predict</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">predict_params</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/scikit-learn/scikit-learn/blob/691972a7c/sklearn/ensemble/_stacking.py#L259"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#sklearn.ensemble.StackingRegressor.predict" title="Permalink to this definition">¶</a></dt>
 <dd><p>Predict target for X.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -465,7 +475,7 @@ accounts for uncertainty in the final estimator.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="sklearn.ensemble.StackingRegressor.score">
-<span class="sig-name descname"><span class="pre">score</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sample_weight</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/scikit-learn/scikit-learn/blob/5ad3421a5/sklearn/base.py#L677"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#sklearn.ensemble.StackingRegressor.score" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">score</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sample_weight</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/scikit-learn/scikit-learn/blob/691972a7c/sklearn/base.py#L677"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#sklearn.ensemble.StackingRegressor.score" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return the coefficient of determination of the prediction.</p>
 <p>The coefficient of determination <span class="math notranslate nohighlight">\(R^2\)</span> is defined as
 <span class="math notranslate nohighlight">\((1 - \frac{u}{v})\)</span>, where <span class="math notranslate nohighlight">\(u\)</span> is the residual
@@ -507,7 +517,7 @@ regressors (except for
 
 <dl class="py method">
 <dt class="sig sig-object py" id="sklearn.ensemble.StackingRegressor.set_params">
-<span class="sig-name descname"><span class="pre">set_params</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">params</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/scikit-learn/scikit-learn/blob/5ad3421a5/sklearn/ensemble/_base.py#L270"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#sklearn.ensemble.StackingRegressor.set_params" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">set_params</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">params</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/scikit-learn/scikit-learn/blob/691972a7c/sklearn/ensemble/_base.py#L270"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#sklearn.ensemble.StackingRegressor.set_params" title="Permalink to this definition">¶</a></dt>
 <dd><p>Set the parameters of an estimator from the ensemble.</p>
 <p>Valid parameter keys can be listed with <code class="docutils literal notranslate"><span class="pre">get_params()</span></code>. Note that you
 can directly set the parameters of the estimators contained in
@@ -534,7 +544,7 @@ estimators can also be set, or can be removed by setting them to
 
 <dl class="py method">
 <dt class="sig sig-object py" id="sklearn.ensemble.StackingRegressor.transform">
-<span class="sig-name descname"><span class="pre">transform</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/scikit-learn/scikit-learn/blob/5ad3421a5/sklearn/ensemble/_stacking.py#L761"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#sklearn.ensemble.StackingRegressor.transform" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">transform</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/scikit-learn/scikit-learn/blob/691972a7c/sklearn/ensemble/_stacking.py#L799"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#sklearn.ensemble.StackingRegressor.transform" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return the predictions for X for each estimator.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
