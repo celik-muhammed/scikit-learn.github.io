@@ -48,23 +48,8 @@ comes in to choose a direction that is not flat.
          :class: sphx-glr-multi-img
 
 
-.. rst-class:: sphx-glr-script-out
-
- Out:
-
- .. code-block:: none
-
-    /home/circleci/project/examples/decomposition/plot_pca_3d.py:60: MatplotlibDeprecationWarning: Axes3D(fig) adding itself to the figure is deprecated since 3.4. Pass the keyword argument auto_add_to_figure=False and use fig.add_axes(ax) to suppress this warning. The default value of auto_add_to_figure will change to False in mpl3.5 and True values will no longer work in 3.6.  This is consistent with other Axes classes.
-      ax = Axes3D(fig, rect=[0, 0, 0.95, 1], elev=elev, azim=azim)
-    /home/circleci/project/examples/decomposition/plot_pca_3d.py:60: MatplotlibDeprecationWarning: Axes3D(fig) adding itself to the figure is deprecated since 3.4. Pass the keyword argument auto_add_to_figure=False and use fig.add_axes(ax) to suppress this warning. The default value of auto_add_to_figure will change to False in mpl3.5 and True values will no longer work in 3.6.  This is consistent with other Axes classes.
-      ax = Axes3D(fig, rect=[0, 0, 0.95, 1], elev=elev, azim=azim)
 
 
-
-
-
-
-|
 
 .. code-block:: default
 
@@ -76,7 +61,6 @@ comes in to choose a direction that is not flat.
 
     from sklearn.decomposition import PCA
 
-    from mpl_toolkits.mplot3d import Axes3D
     import numpy as np
     import matplotlib.pyplot as plt
     from scipy import stats
@@ -116,7 +100,8 @@ comes in to choose a direction that is not flat.
     def plot_figs(fig_num, elev, azim):
         fig = plt.figure(fig_num, figsize=(4, 3))
         plt.clf()
-        ax = Axes3D(fig, rect=[0, 0, 0.95, 1], elev=elev, azim=azim)
+        ax = fig.add_subplot(111, projection="3d", elev=elev, azim=azim)
+        ax.set_position([0, 0, 0.95, 1])
 
         ax.scatter(a[::10], b[::10], c[::10], c=density[::10], marker="+", alpha=0.4)
         Y = np.c_[a, b, c]
@@ -154,7 +139,7 @@ comes in to choose a direction that is not flat.
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** ( 0 minutes  0.154 seconds)
+   **Total running time of the script:** ( 0 minutes  0.167 seconds)
 
 
 .. _sphx_glr_download_auto_examples_decomposition_plot_pca_3d.py:
