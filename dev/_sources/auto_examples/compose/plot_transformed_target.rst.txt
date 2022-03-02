@@ -28,7 +28,7 @@ to illustrate the benefit of transforming the targets before learning a linear
 regression model. The first example uses synthetic data while the second
 example is based on the Ames housing data set.
 
-.. GENERATED FROM PYTHON SOURCE LINES 14-29
+.. GENERATED FROM PYTHON SOURCE LINES 14-27
 
 .. code-block:: default
 
@@ -37,7 +37,6 @@ example is based on the Ames housing data set.
     # License: BSD 3 clause
 
     import numpy as np
-    import matplotlib
     import matplotlib.pyplot as plt
 
     from sklearn.datasets import make_regression
@@ -45,7 +44,6 @@ example is based on the Ames housing data set.
     from sklearn.linear_model import RidgeCV
     from sklearn.compose import TransformedTargetRegressor
     from sklearn.metrics import median_absolute_error, r2_score
-    from sklearn.utils.fixes import parse_version
 
 
 
@@ -54,30 +52,12 @@ example is based on the Ames housing data set.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 30-32
+.. GENERATED FROM PYTHON SOURCE LINES 28-30
 
 Synthetic example
 #############################################################################
 
-.. GENERATED FROM PYTHON SOURCE LINES 32-39
-
-.. code-block:: default
-
-
-    # `normed` is being deprecated in favor of `density` in histograms
-    if parse_version(matplotlib.__version__) >= parse_version("2.1"):
-        density_param = {"density": True}
-    else:
-        density_param = {"normed": True}
-
-
-
-
-
-
-
-
-.. GENERATED FROM PYTHON SOURCE LINES 40-51
+.. GENERATED FROM PYTHON SOURCE LINES 32-43
 
 A synthetic random regression dataset is generated. The targets ``y`` are
 modified by:
@@ -91,7 +71,7 @@ Therefore, a logarithmic (`np.log1p`) and an exponential function
 (`np.expm1`) will be used to transform the targets before training a linear
 regression model and using it for prediction.
 
-.. GENERATED FROM PYTHON SOURCE LINES 51-56
+.. GENERATED FROM PYTHON SOURCE LINES 43-48
 
 .. code-block:: default
 
@@ -107,25 +87,25 @@ regression model and using it for prediction.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 57-59
+.. GENERATED FROM PYTHON SOURCE LINES 49-51
 
 Below we plot the probability density functions of the target
 before and after applying the logarithmic functions.
 
-.. GENERATED FROM PYTHON SOURCE LINES 59-78
+.. GENERATED FROM PYTHON SOURCE LINES 51-70
 
 .. code-block:: default
 
 
     f, (ax0, ax1) = plt.subplots(1, 2)
 
-    ax0.hist(y, bins=100, **density_param)
+    ax0.hist(y, bins=100, density=True)
     ax0.set_xlim([0, 2000])
     ax0.set_ylabel("Probability")
     ax0.set_xlabel("Target")
     ax0.set_title("Target distribution")
 
-    ax1.hist(y_trans, bins=100, **density_param)
+    ax1.hist(y_trans, bins=100, density=True)
     ax1.set_ylabel("Probability")
     ax1.set_xlabel("Target")
     ax1.set_title("Transformed target distribution")
@@ -147,7 +127,7 @@ before and after applying the logarithmic functions.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 79-84
+.. GENERATED FROM PYTHON SOURCE LINES 71-76
 
 At first, a linear model will be applied on the original targets. Due to the
 non-linearity, the model trained will not be precise during
@@ -155,7 +135,7 @@ prediction. Subsequently, a logarithmic function is used to linearize the
 targets, allowing better prediction even with a similar linear model as
 reported by the median absolute error (MAE).
 
-.. GENERATED FROM PYTHON SOURCE LINES 84-128
+.. GENERATED FROM PYTHON SOURCE LINES 76-120
 
 .. code-block:: default
 
@@ -215,7 +195,7 @@ reported by the median absolute error (MAE).
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 129-135
+.. GENERATED FROM PYTHON SOURCE LINES 121-127
 
 Real-world data set
 ##############################################################################
@@ -224,7 +204,7 @@ Real-world data set
  of transforming the targets before learning a model. In this example, the
  target to be predicted is the selling price of each house.
 
-.. GENERATED FROM PYTHON SOURCE LINES 135-148
+.. GENERATED FROM PYTHON SOURCE LINES 127-140
 
 .. code-block:: default
 
@@ -248,26 +228,26 @@ Real-world data set
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 149-152
+.. GENERATED FROM PYTHON SOURCE LINES 141-144
 
 A :class:`~sklearn.preprocessing.QuantileTransformer` is used to normalize
 the target distribution before applying a
 :class:`~sklearn.linear_model.RidgeCV` model.
 
-.. GENERATED FROM PYTHON SOURCE LINES 152-171
+.. GENERATED FROM PYTHON SOURCE LINES 144-163
 
 .. code-block:: default
 
 
     f, (ax0, ax1) = plt.subplots(1, 2)
 
-    ax0.hist(y, bins=100, **density_param)
+    ax0.hist(y, bins=100, density=True)
     ax0.set_ylabel("Probability")
     ax0.set_xlabel("Target")
     ax0.text(s="Target distribution", x=1.2e5, y=9.8e-6, fontsize=12)
     ax0.ticklabel_format(axis="both", style="sci", scilimits=(0, 0))
 
-    ax1.hist(y_trans, bins=100, **density_param)
+    ax1.hist(y_trans, bins=100, density=True)
     ax1.set_ylabel("Probability")
     ax1.set_xlabel("Target")
     ax1.text(s="Transformed target distribution", x=-6.8, y=0.479, fontsize=12)
@@ -289,7 +269,7 @@ the target distribution before applying a
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 172-179
+.. GENERATED FROM PYTHON SOURCE LINES 164-171
 
 The effect of the transformer is weaker than on the synthetic data. However,
 the transformation results in an increase in :math:`R^2` and large decrease
@@ -299,7 +279,7 @@ shape due to residual values that vary depending on the value of predicted
 target. With target transformation, the shape is more linear indicating
 better model fit.
 
-.. GENERATED FROM PYTHON SOURCE LINES 179-248
+.. GENERATED FROM PYTHON SOURCE LINES 171-240
 
 .. code-block:: default
 
@@ -387,7 +367,7 @@ better model fit.
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** ( 0 minutes  1.526 seconds)
+   **Total running time of the script:** ( 0 minutes  1.153 seconds)
 
 
 .. _sphx_glr_download_auto_examples_compose_plot_transformed_target.py:

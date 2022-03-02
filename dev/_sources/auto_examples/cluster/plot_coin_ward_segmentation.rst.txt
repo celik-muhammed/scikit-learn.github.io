@@ -26,7 +26,7 @@ Compute the segmentation of a 2D image with Ward hierarchical
 clustering. The clustering is spatially constrained in order
 for each segmented region to be in one piece.
 
-.. GENERATED FROM PYTHON SOURCE LINES 11-81
+.. GENERATED FROM PYTHON SOURCE LINES 11-76
 
 
 
@@ -44,10 +44,10 @@ for each segmented region to be in one piece.
 
     /home/circleci/project/examples/cluster/plot_coin_ward_segmentation.py:19: DeprecationWarning: Please use `gaussian_filter` from the `scipy.ndimage` namespace, the `scipy.ndimage.filters` namespace is deprecated.
       from scipy.ndimage.filters import gaussian_filter
-    /home/circleci/project/examples/cluster/plot_coin_ward_segmentation.py:45: FutureWarning: `multichannel` is a deprecated argument name for `rescale`. It will be removed in version 1.0. Please use `channel_axis` instead.
-      rescaled_coins = rescale(smoothened_coins, 0.2, mode="reflect", **rescale_params)
+    /home/circleci/project/examples/cluster/plot_coin_ward_segmentation.py:38: FutureWarning: `multichannel` is a deprecated argument name for `rescale`. It will be removed in version 1.0. Please use `channel_axis` instead.
+      rescaled_coins = rescale(
     Compute structured hierarchical clustering...
-    Elapsed time:  0.1656050682067871
+    Elapsed time:  0.16317391395568848
     Number of pixels:  4697
     Number of clusters:  27
 
@@ -72,19 +72,12 @@ for each segmented region to be in one piece.
 
     import matplotlib.pyplot as plt
 
-    import skimage
     from skimage.data import coins
     from skimage.transform import rescale
 
     from sklearn.feature_extraction.image import grid_to_graph
     from sklearn.cluster import AgglomerativeClustering
-    from sklearn.utils.fixes import parse_version
 
-    # these were introduced in skimage-0.14
-    if parse_version(skimage.__version__) >= parse_version("0.14"):
-        rescale_params = {"anti_aliasing": False, "multichannel": False}
-    else:
-        rescale_params = {}
 
     # #############################################################################
     # Generate data
@@ -94,7 +87,9 @@ for each segmented region to be in one piece.
     # Applying a Gaussian filter for smoothing prior to down-scaling
     # reduces aliasing artifacts.
     smoothened_coins = gaussian_filter(orig_coins, sigma=2)
-    rescaled_coins = rescale(smoothened_coins, 0.2, mode="reflect", **rescale_params)
+    rescaled_coins = rescale(
+        smoothened_coins, 0.2, mode="reflect", anti_aliasing=False, multichannel=False
+    )
 
     X = np.reshape(rescaled_coins, (-1, 1))
 
@@ -134,7 +129,7 @@ for each segmented region to be in one piece.
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** ( 0 minutes  0.483 seconds)
+   **Total running time of the script:** ( 0 minutes  0.484 seconds)
 
 
 .. _sphx_glr_download_auto_examples_cluster_plot_coin_ward_segmentation.py:

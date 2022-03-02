@@ -159,8 +159,8 @@
           </a>
         </div>
         <div class="btn-group w-100 mb-2" role="group" aria-label="rellinks">
-            <a href="plot_anomaly_comparison.html" role="button" class="btn sk-btn-rellink py-1" sk-rellink-tooltip="Comparing anomaly detection algorithms for outlier detection on toy datasets">Prev</a><a href="../index.html" role="button" class="btn sk-btn-rellink py-1" sk-rellink-tooltip="Examples">Up</a>
-            <a href="plot_kernel_ridge_regression.html" role="button" class="btn sk-btn-rellink py-1" sk-rellink-tooltip="Comparison of kernel ridge regression and SVR">Next</a>
+            <a href="plot_pipeline_display.html" role="button" class="btn sk-btn-rellink py-1" sk-rellink-tooltip="Displaying Pipelines">Prev</a><a href="../index.html" role="button" class="btn sk-btn-rellink py-1" sk-rellink-tooltip="Examples">Up</a>
+            <a href="plot_anomaly_comparison.html" role="button" class="btn sk-btn-rellink py-1" sk-rellink-tooltip="Comparing anomaly detection algorithms for outlier detection on toy datasets">Next</a>
         </div>
         <div class="alert alert-danger p-1 mb-2" role="alert">
           <p class="text-center mb-0">
@@ -202,20 +202,12 @@ space while controlling the distortion in the pairwise distances.</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">sys</span>
 <span class="kn">from</span> <span class="nn">time</span> <span class="kn">import</span> <a href="https://docs.python.org/3/library/time.html#time.time" title="time.time" class="sphx-glr-backref-module-time sphx-glr-backref-type-py-function"><span class="n">time</span></a>
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
-<span class="kn">import</span> <span class="nn">matplotlib</span>
 <span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
 <span class="kn">from</span> <span class="nn">sklearn.random_projection</span> <span class="kn">import</span> <a href="../../modules/generated/sklearn.random_projection.johnson_lindenstrauss_min_dim.html#sklearn.random_projection.johnson_lindenstrauss_min_dim" title="sklearn.random_projection.johnson_lindenstrauss_min_dim" class="sphx-glr-backref-module-sklearn-random_projection sphx-glr-backref-type-py-function"><span class="n">johnson_lindenstrauss_min_dim</span></a>
 <span class="kn">from</span> <span class="nn">sklearn.random_projection</span> <span class="kn">import</span> <a href="../../modules/generated/sklearn.random_projection.SparseRandomProjection.html#sklearn.random_projection.SparseRandomProjection" title="sklearn.random_projection.SparseRandomProjection" class="sphx-glr-backref-module-sklearn-random_projection sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">SparseRandomProjection</span></a>
 <span class="kn">from</span> <span class="nn">sklearn.datasets</span> <span class="kn">import</span> <a href="../../modules/generated/sklearn.datasets.fetch_20newsgroups_vectorized.html#sklearn.datasets.fetch_20newsgroups_vectorized" title="sklearn.datasets.fetch_20newsgroups_vectorized" class="sphx-glr-backref-module-sklearn-datasets sphx-glr-backref-type-py-function"><span class="n">fetch_20newsgroups_vectorized</span></a>
 <span class="kn">from</span> <span class="nn">sklearn.datasets</span> <span class="kn">import</span> <a href="../../modules/generated/sklearn.datasets.load_digits.html#sklearn.datasets.load_digits" title="sklearn.datasets.load_digits" class="sphx-glr-backref-module-sklearn-datasets sphx-glr-backref-type-py-function"><span class="n">load_digits</span></a>
 <span class="kn">from</span> <span class="nn">sklearn.metrics.pairwise</span> <span class="kn">import</span> <span class="n">euclidean_distances</span>
-<span class="kn">from</span> <span class="nn">sklearn.utils.fixes</span> <span class="kn">import</span> <span class="n">parse_version</span>
-
-<span class="c1"># `normed` is being deprecated in favor of `density` in histograms</span>
-<span class="k">if</span> <span class="n">parse_version</span><span class="p">(</span><span class="n">matplotlib</span><span class="o">.</span><span class="n">__version__</span><span class="p">)</span> <span class="o">&gt;=</span> <span class="n">parse_version</span><span class="p">(</span><span class="s2">&quot;2.1&quot;</span><span class="p">):</span>
-    <span class="n">density_param</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;density&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">}</span>
-<span class="k">else</span><span class="p">:</span>
-    <span class="n">density_param</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;normed&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">}</span>
 </pre></div>
 </div>
 <section id="theoretical-bounds">
@@ -353,7 +345,7 @@ and projected spaces as x and y axis respectively.</p></li>
     <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Mean distances rate: </span><span class="si">%0.2f</span><span class="s2"> (</span><span class="si">%0.2f</span><span class="s2">)&quot;</span> <span class="o">%</span> <span class="p">(</span><a href="https://numpy.org/doc/stable/reference/generated/numpy.mean.html#numpy.mean" title="numpy.mean" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-function"><span class="n">np</span><span class="o">.</span><span class="n">mean</span></a><span class="p">(</span><span class="n">rates</span><span class="p">),</span> <a href="https://numpy.org/doc/stable/reference/generated/numpy.std.html#numpy.std" title="numpy.std" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-function"><span class="n">np</span><span class="o">.</span><span class="n">std</span></a><span class="p">(</span><span class="n">rates</span><span class="p">)))</span>
 
     <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">()</span>
-    <span class="n">plt</span><span class="o">.</span><span class="n">hist</span><span class="p">(</span><span class="n">rates</span><span class="p">,</span> <span class="n">bins</span><span class="o">=</span><span class="mi">50</span><span class="p">,</span> <span class="nb">range</span><span class="o">=</span><span class="p">(</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">2.0</span><span class="p">),</span> <span class="n">edgecolor</span><span class="o">=</span><span class="s2">&quot;k&quot;</span><span class="p">,</span> <span class="o">**</span><span class="n">density_param</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">hist</span><span class="p">(</span><span class="n">rates</span><span class="p">,</span> <span class="n">bins</span><span class="o">=</span><span class="mi">50</span><span class="p">,</span> <span class="nb">range</span><span class="o">=</span><span class="p">(</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">2.0</span><span class="p">),</span> <span class="n">edgecolor</span><span class="o">=</span><span class="s2">&quot;k&quot;</span><span class="p">,</span> <span class="n">density</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
     <span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s2">&quot;Squared distances rate: projected / original&quot;</span><span class="p">)</span>
     <span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s2">&quot;Distribution of samples pairs&quot;</span><span class="p">)</span>
     <span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s2">&quot;Histogram of pairwise distance rates for n_components=</span><span class="si">%d</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="n">n_components</span><span class="p">)</span>
@@ -374,14 +366,14 @@ and projected spaces as x and y axis respectively.</p></li>
 </ul>
 <p class="sphx-glr-script-out">Out:</p>
 <div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>Embedding 500 samples with dim 130107 using various random projections
-Projected 500 samples from 130107 to 300 in 0.330s
-Random matrix with size: 1.300MB
-Mean distances rate: 1.01 (0.19)
-Projected 500 samples from 130107 to 1000 in 0.972s
-Random matrix with size: 4.332MB
-Mean distances rate: 1.07 (0.12)
-Projected 500 samples from 130107 to 10000 in 9.719s
-Random matrix with size: 43.258MB
+Projected 500 samples from 130107 to 300 in 0.231s
+Random matrix with size: 1.301MB
+Mean distances rate: 0.97 (0.18)
+Projected 500 samples from 130107 to 1000 in 0.763s
+Random matrix with size: 4.333MB
+Mean distances rate: 1.01 (0.09)
+Projected 500 samples from 130107 to 10000 in 7.712s
+Random matrix with size: 43.268MB
 Mean distances rate: 1.01 (0.03)
 </pre></div>
 </div>
@@ -402,7 +394,7 @@ for dimensionality reduction in this case.</p>
 <p>On the twenty newsgroups on the other hand the dimensionality can be
 decreased from 56436 down to 10000 while reasonably preserving
 pairwise distances.</p>
-<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> ( 0 minutes  14.446 seconds)</p>
+<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> ( 0 minutes  11.403 seconds)</p>
 <div class="sphx-glr-footer class sphx-glr-footer-example docutils container" id="sphx-glr-download-auto-examples-miscellaneous-plot-johnson-lindenstrauss-bound-py">
 <div class="binder-badge docutils container">
 <a class="reference external image-reference" href="https://mybinder.org/v2/gh/scikit-learn/scikit-learn/main?urlpath=lab/tree/notebooks/auto_examples/miscellaneous/plot_johnson_lindenstrauss_bound.ipynb"><img alt="Launch binder" src="../../_images/binder_badge_logo19.svg" width="150px" /></a>
