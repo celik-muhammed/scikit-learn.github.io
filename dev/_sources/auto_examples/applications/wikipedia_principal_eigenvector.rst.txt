@@ -47,7 +47,7 @@ algorithm implemented in scikit-learn.
 The graph data is fetched from the DBpedia dumps. DBpedia is an extraction
 of the latent structured data of the Wikipedia content.
 
-.. GENERATED FROM PYTHON SOURCE LINES 32-226
+.. GENERATED FROM PYTHON SOURCE LINES 32-50
 
 .. code-block:: default
 
@@ -69,8 +69,16 @@ of the latent structured data of the Wikipedia content.
     from urllib.request import urlopen
 
 
-    # #############################################################################
-    # Where to download the data, if not already on disk
+
+.. GENERATED FROM PYTHON SOURCE LINES 51-53
+
+Download data, if not already on disk
+-------------------------------------
+
+.. GENERATED FROM PYTHON SOURCE LINES 53-72
+
+.. code-block:: default
+
     redirects_url = "http://downloads.dbpedia.org/3.5.1/en/redirects_en.nt.bz2"
     redirects_filename = redirects_url.rsplit("/", 1)[1]
 
@@ -90,9 +98,15 @@ of the latent structured data of the Wikipedia content.
             print()
 
 
-    # #############################################################################
-    # Loading the redirect files
 
+.. GENERATED FROM PYTHON SOURCE LINES 73-75
+
+Loading the redirect files
+--------------------------
+
+.. GENERATED FROM PYTHON SOURCE LINES 75-122
+
+.. code-block:: default
 
     def index(redirects, index_map, k):
         """Find the index of an article name after redirect resolution"""
@@ -141,6 +155,16 @@ of the latent structured data of the Wikipedia content.
         return redirects
 
 
+
+.. GENERATED FROM PYTHON SOURCE LINES 123-125
+
+Computing the Adjacency matrix
+------------------------------
+
+.. GENERATED FROM PYTHON SOURCE LINES 125-173
+
+.. code-block:: default
+
     def get_adjacency_matrix(redirects_filename, page_links_filename, limit=None):
         """Extract the adjacency graph as a scipy sparse matrix
 
@@ -188,6 +212,17 @@ of the latent structured data of the Wikipedia content.
     )
     names = {i: name for name, i in index_map.items()}
 
+
+
+.. GENERATED FROM PYTHON SOURCE LINES 174-176
+
+Computing Principal Singular Vector using Randomized SVD
+--------------------------------------------------------
+
+.. GENERATED FROM PYTHON SOURCE LINES 176-188
+
+.. code-block:: default
+
     print("Computing the principal singular vectors using randomized_svd")
     t0 = time()
     U, s, V = randomized_svd(X, 5, n_iter=3)
@@ -199,6 +234,16 @@ of the latent structured data of the Wikipedia content.
     pprint([names[i] for i in np.abs(U.T[0]).argsort()[-10:]])
     pprint([names[i] for i in np.abs(V[0]).argsort()[-10:]])
 
+
+
+.. GENERATED FROM PYTHON SOURCE LINES 189-191
+
+Computing Centrality scores
+---------------------------
+
+.. GENERATED FROM PYTHON SOURCE LINES 191-236
+
+.. code-block:: default
 
     def centrality_scores(X, alpha=0.85, max_iter=100, tol=1e-10):
         """Power iteration computation of the principal eigenvector
