@@ -37,119 +37,351 @@ the distances in the original high-dimensional space, unlike other
 manifold-learning algorithms, it does not seeks an isotropic
 representation of the data in the low-dimensional space.
 
-.. GENERATED FROM PYTHON SOURCE LINES 22-92
-
-
-
-.. image-sg:: /auto_examples/manifold/images/sphx_glr_plot_compare_methods_001.png
-   :alt: Manifold Learning with 1000 points, 10 neighbors, LLE (0.077 sec), LTSA (0.13 sec), Hessian LLE (0.21 sec), Modified LLE (0.16 sec), Isomap (0.41 sec), MDS (0.71 sec), SE (0.061 sec), t-SNE (1.6 sec)
-   :srcset: /auto_examples/manifold/images/sphx_glr_plot_compare_methods_001.png
-   :class: sphx-glr-single-img
-
-
-.. rst-class:: sphx-glr-script-out
-
- Out:
-
- .. code-block:: none
-
-    LLE: 0.077 sec
-    LTSA: 0.13 sec
-    Hessian LLE: 0.21 sec
-    Modified LLE: 0.16 sec
-    Isomap: 0.41 sec
-    MDS: 0.71 sec
-    SE: 0.061 sec
-    /home/circleci/project/sklearn/manifold/_t_sne.py:793: FutureWarning: The default learning rate in TSNE will change from 200.0 to 'auto' in 1.2.
-      warnings.warn(
-    /home/circleci/project/sklearn/manifold/_t_sne.py:979: FutureWarning: The PCA initialization in TSNE will change to have the standard deviation of PC1 equal to 1e-4 in 1.2. This will ensure better convergence.
-      warnings.warn(
-    t-SNE: 1.6 sec
-
-
-
-
-
-
-|
+.. GENERATED FROM PYTHON SOURCE LINES 22-25
 
 .. code-block:: default
 
 
     # Author: Jake Vanderplas -- <vanderplas@astro.washington.edu>
 
-    from collections import OrderedDict
-    from functools import partial
-    from time import time
 
+
+
+
+
+
+
+.. GENERATED FROM PYTHON SOURCE LINES 26-30
+
+Dataset preparation
+-------------------
+
+We start by generating the S-curve dataset.
+
+.. GENERATED FROM PYTHON SOURCE LINES 30-42
+
+.. code-block:: default
+
+
+    from numpy.random import RandomState
     import matplotlib.pyplot as plt
-    from mpl_toolkits.mplot3d import Axes3D
-    from matplotlib.ticker import NullFormatter
+    from matplotlib import ticker
 
     from sklearn import manifold, datasets
 
-    # Next line to silence pyflakes. This import is needed.
-    Axes3D
+    rng = RandomState(0)
 
-    n_points = 1000
-    X, color = datasets.make_s_curve(n_points, random_state=0)
-    n_neighbors = 10
-    n_components = 2
+    n_samples = 1500
+    S_points, S_color = datasets.make_s_curve(n_samples, random_state=rng)
 
-    # Create figure
-    fig = plt.figure(figsize=(15, 8))
-    fig.suptitle(
-        "Manifold Learning with %i points, %i neighbors" % (n_points, n_neighbors),
-        fontsize=14,
+
+
+
+
+
+
+
+.. GENERATED FROM PYTHON SOURCE LINES 43-45
+
+Let's look at the original data. Also define some helping
+functions, which we will use further on.
+
+.. GENERATED FROM PYTHON SOURCE LINES 45-84
+
+.. code-block:: default
+
+
+
+    def plot_3d(points, points_color, title):
+        x, y, z = points.T
+
+        fig, ax = plt.subplots(
+            figsize=(6, 6),
+            facecolor="white",
+            tight_layout=True,
+            subplot_kw={"projection": "3d"},
+        )
+        fig.suptitle(title, size=16)
+        col = ax.scatter(x, y, z, c=points_color, s=50, alpha=0.8)
+        ax.view_init(azim=-60, elev=9)
+        ax.xaxis.set_major_locator(ticker.MultipleLocator(1))
+        ax.yaxis.set_major_locator(ticker.MultipleLocator(1))
+        ax.zaxis.set_major_locator(ticker.MultipleLocator(1))
+
+        fig.colorbar(col, ax=ax, orientation="horizontal", shrink=0.6, aspect=60, pad=0.01)
+        plt.show()
+
+
+    def plot_2d(points, points_color, title):
+        fig, ax = plt.subplots(figsize=(3, 3), facecolor="white", constrained_layout=True)
+        fig.suptitle(title, size=16)
+        add_2d_scatter(ax, points, points_color)
+        plt.show()
+
+
+    def add_2d_scatter(ax, points, points_color, title=None):
+        x, y = points.T
+        ax.scatter(x, y, c=points_color, s=50, alpha=0.8)
+        ax.set_title(title)
+        ax.xaxis.set_major_formatter(ticker.NullFormatter())
+        ax.yaxis.set_major_formatter(ticker.NullFormatter())
+
+
+    plot_3d(S_points, S_color, "Original S-curve samples")
+
+
+
+
+.. image-sg:: /auto_examples/manifold/images/sphx_glr_plot_compare_methods_001.png
+   :alt: Original S-curve samples
+   :srcset: /auto_examples/manifold/images/sphx_glr_plot_compare_methods_001.png
+   :class: sphx-glr-single-img
+
+
+
+
+
+.. GENERATED FROM PYTHON SOURCE LINES 85-93
+
+Define algorithms for the manifold learning
+-------------------------------------------
+
+Manifold learning is an approach to non-linear dimensionality reduction.
+Algorithms for this task are based on the idea that the dimensionality of
+many data sets is only artificially high.
+
+Read more in the :ref:`User Guide <manifold>`.
+
+.. GENERATED FROM PYTHON SOURCE LINES 93-97
+
+.. code-block:: default
+
+
+    n_neighbors = 12  # neighborhood which is used to recover the locally linear structure
+    n_components = 2  # number of coordinates for the manifold
+
+
+
+
+
+
+
+
+.. GENERATED FROM PYTHON SOURCE LINES 98-105
+
+Locally Linear Embeddings
+^^^^^^^^^^^^^^^^^^^^^^^^^
+
+Locally linear embedding (LLE) can be thought of as a series of local
+Principal Component Analyses which are globally compared to find the
+best non-linear embedding.
+Read more in the :ref:`User Guide <locally_linear_embedding>`.
+
+.. GENERATED FROM PYTHON SOURCE LINES 105-125
+
+.. code-block:: default
+
+
+    params = {
+        "n_neighbors": n_neighbors,
+        "n_components": n_components,
+        "eigen_solver": "auto",
+        "random_state": rng,
+    }
+
+    lle_standart = manifold.LocallyLinearEmbedding(method="standard", **params)
+    S_standart = lle_standart.fit_transform(S_points)
+
+    lle_ltsa = manifold.LocallyLinearEmbedding(method="ltsa", **params)
+    S_ltsa = lle_ltsa.fit_transform(S_points)
+
+    lle_hessian = manifold.LocallyLinearEmbedding(method="hessian", **params)
+    S_hessian = lle_hessian.fit_transform(S_points)
+
+    lle_mod = manifold.LocallyLinearEmbedding(method="modified", modified_tol=0.8, **params)
+    S_mod = lle_mod.fit_transform(S_points)
+
+
+
+
+
+
+
+
+.. GENERATED FROM PYTHON SOURCE LINES 126-143
+
+.. code-block:: default
+
+    fig, axs = plt.subplots(
+        nrows=2, ncols=2, figsize=(7, 7), facecolor="white", constrained_layout=True
     )
+    fig.suptitle("Locally Linear Embeddings", size=16)
 
-    # Add 3d scatter plot
-    ax = fig.add_subplot(251, projection="3d")
-    ax.scatter(X[:, 0], X[:, 1], X[:, 2], c=color, cmap=plt.cm.Spectral)
-    ax.view_init(4, -72)
-
-    # Set-up manifold methods
-    LLE = partial(
-        manifold.LocallyLinearEmbedding,
-        n_neighbors=n_neighbors,
-        n_components=n_components,
-        eigen_solver="auto",
-        random_state=0,
-    )
-
-    methods = OrderedDict()
-    methods["LLE"] = LLE(method="standard")
-    methods["LTSA"] = LLE(method="ltsa")
-    methods["Hessian LLE"] = LLE(method="hessian")
-    methods["Modified LLE"] = LLE(method="modified")
-    methods["Isomap"] = manifold.Isomap(n_neighbors=n_neighbors, n_components=n_components)
-    methods["MDS"] = manifold.MDS(n_components, max_iter=50, n_init=1, random_state=0)
-    methods["SE"] = manifold.SpectralEmbedding(
-        n_components=n_components, n_neighbors=n_neighbors, random_state=0
-    )
-    methods["t-SNE"] = manifold.TSNE(
-        n_components=n_components, perplexity=30, n_iter=250, init="pca", random_state=0
-    )
-
-    # Plot results
-    for i, (label, method) in enumerate(methods.items()):
-        t0 = time()
-        Y = method.fit_transform(X)
-        t1 = time()
-        print("%s: %.2g sec" % (label, t1 - t0))
-        ax = fig.add_subplot(2, 5, 2 + i + (i > 3))
-        ax.scatter(Y[:, 0], Y[:, 1], c=color, cmap=plt.cm.Spectral)
-        ax.set_title("%s (%.2g sec)" % (label, t1 - t0))
-        ax.xaxis.set_major_formatter(NullFormatter())
-        ax.yaxis.set_major_formatter(NullFormatter())
-        ax.axis("tight")
+    lle_methods = [
+        ("Standart locally linear embedding", S_standart),
+        ("Local tangent space alignment", S_ltsa),
+        ("Hessian eigenmap", S_hessian),
+        ("Modified locally linear embedding", S_mod),
+    ]
+    for ax, method in zip(axs.flat, lle_methods):
+        name, points = method
+        add_2d_scatter(ax, points, S_color, name)
 
     plt.show()
 
 
+
+
+.. image-sg:: /auto_examples/manifold/images/sphx_glr_plot_compare_methods_002.png
+   :alt: Locally Linear Embeddings, Standart locally linear embedding, Local tangent space alignment, Hessian eigenmap, Modified locally linear embedding
+   :srcset: /auto_examples/manifold/images/sphx_glr_plot_compare_methods_002.png
+   :class: sphx-glr-single-img
+
+
+
+
+
+.. GENERATED FROM PYTHON SOURCE LINES 144-150
+
+Isomap Embedding
+^^^^^^^^^^^^^^^^
+
+Non-linear dimensionality reduction through Isometric Mapping.
+Isomap seeks a lower-dimensional embedding which maintains geodesic
+distances between all points. Read more in the :ref:`User Guide <isomap>`.
+
+.. GENERATED FROM PYTHON SOURCE LINES 150-156
+
+.. code-block:: default
+
+
+    isomap = manifold.Isomap(n_neighbors=n_neighbors, n_components=n_components, p=1)
+    S_isomap = isomap.fit_transform(S_points)
+
+    plot_2d(S_isomap, S_color, "Isomap Embedding")
+
+
+
+
+.. image-sg:: /auto_examples/manifold/images/sphx_glr_plot_compare_methods_003.png
+   :alt: Isomap Embedding
+   :srcset: /auto_examples/manifold/images/sphx_glr_plot_compare_methods_003.png
+   :class: sphx-glr-single-img
+
+
+
+
+
+.. GENERATED FROM PYTHON SOURCE LINES 157-164
+
+Multidimensional scaling
+^^^^^^^^^^^^^^^^^^^^^^^^
+
+Multidimensional scaling (MDS) seeks a low-dimensional representation
+of the data in which the distances respect well the distances in the
+original high-dimensional space.
+Read more in the :ref:`User Guide <multidimensional_scaling>`.
+
+.. GENERATED FROM PYTHON SOURCE LINES 164-172
+
+.. code-block:: default
+
+
+    md_scaling = manifold.MDS(
+        n_components=n_components, max_iter=50, n_init=4, random_state=rng
+    )
+    S_scaling = md_scaling.fit_transform(S_points)
+
+    plot_2d(S_scaling, S_color, "Multidimensional scaling")
+
+
+
+
+.. image-sg:: /auto_examples/manifold/images/sphx_glr_plot_compare_methods_004.png
+   :alt: Multidimensional scaling
+   :srcset: /auto_examples/manifold/images/sphx_glr_plot_compare_methods_004.png
+   :class: sphx-glr-single-img
+
+
+
+
+
+.. GENERATED FROM PYTHON SOURCE LINES 173-179
+
+Spectral embedding for non-linear dimensionality reduction
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+This implementation uses Laplacian Eigenmaps, which finds a low dimensional
+representation of the data using a spectral decomposition of the graph Laplacian.
+Read more in the :ref:`User Guide <spectral_embedding>`.
+
+.. GENERATED FROM PYTHON SOURCE LINES 179-187
+
+.. code-block:: default
+
+
+    spectral = manifold.SpectralEmbedding(
+        n_components=n_components, n_neighbors=n_neighbors
+    )
+    S_spectral = spectral.fit_transform(S_points)
+
+    plot_2d(S_spectral, S_color, "Spectral Embedding")
+
+
+
+
+.. image-sg:: /auto_examples/manifold/images/sphx_glr_plot_compare_methods_005.png
+   :alt: Spectral Embedding
+   :srcset: /auto_examples/manifold/images/sphx_glr_plot_compare_methods_005.png
+   :class: sphx-glr-single-img
+
+
+
+
+
+.. GENERATED FROM PYTHON SOURCE LINES 188-196
+
+T-distributed Stochastic Neighbor Embedding
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+It converts similarities between data points to joint probabilities and
+tries to minimize the Kullback-Leibler divergence between the joint probabilities
+of the low-dimensional embedding and the high-dimensional data. t-SNE has a cost
+function that is not convex, i.e. with different initializations we can get
+different results. Read more in the :ref:`User Guide <t_sne>`.
+
+.. GENERATED FROM PYTHON SOURCE LINES 196-208
+
+.. code-block:: default
+
+
+    t_sne = manifold.TSNE(
+        n_components=n_components,
+        learning_rate="auto",
+        perplexity=30,
+        n_iter=250,
+        init="random",
+        random_state=rng,
+    )
+    S_t_sne = t_sne.fit_transform(S_points)
+
+    plot_2d(S_t_sne, S_color, "T-distributed Stochastic  \n Neighbor Embedding")
+
+
+
+.. image-sg:: /auto_examples/manifold/images/sphx_glr_plot_compare_methods_006.png
+   :alt: T-distributed Stochastic    Neighbor Embedding
+   :srcset: /auto_examples/manifold/images/sphx_glr_plot_compare_methods_006.png
+   :class: sphx-glr-single-img
+
+
+
+
+
+
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** ( 0 minutes  3.882 seconds)
+   **Total running time of the script:** ( 0 minutes  12.212 seconds)
 
 
 .. _sphx_glr_download_auto_examples_manifold_plot_compare_methods.py:
