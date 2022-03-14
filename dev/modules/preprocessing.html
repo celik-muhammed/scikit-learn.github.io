@@ -192,7 +192,10 @@
 </ul>
 </li>
 <li><a class="reference internal" href="#normalization">6.3.3. Normalization</a></li>
-<li><a class="reference internal" href="#encoding-categorical-features">6.3.4. Encoding categorical features</a></li>
+<li><a class="reference internal" href="#encoding-categorical-features">6.3.4. Encoding categorical features</a><ul>
+<li><a class="reference internal" href="#infrequent-categories">6.3.4.1. Infrequent categories</a></li>
+</ul>
+</li>
 <li><a class="reference internal" href="#discretization">6.3.5. Discretization</a><ul>
 <li><a class="reference internal" href="#k-bins-discretization">6.3.5.1. K-bins discretization</a></li>
 <li><a class="reference internal" href="#feature-binarization">6.3.5.2. Feature binarization</a></li>
@@ -730,16 +733,18 @@ dataset:</p>
 </pre></div>
 </div>
 <p>If there is a possibility that the training data might have missing categorical
-features, it can often be better to specify <code class="docutils literal notranslate"><span class="pre">handle_unknown='ignore'</span></code> instead
-of setting the <code class="docutils literal notranslate"><span class="pre">categories</span></code> manually as above. When
-<code class="docutils literal notranslate"><span class="pre">handle_unknown='ignore'</span></code> is specified and unknown categories are encountered
-during transform, no error will be raised but the resulting one-hot encoded
-columns for this feature will be all zeros
-(<code class="docutils literal notranslate"><span class="pre">handle_unknown='ignore'</span></code> is only supported for one-hot encoding):</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">enc</span> <span class="o">=</span> <span class="n">preprocessing</span><span class="o">.</span><span class="n">OneHotEncoder</span><span class="p">(</span><span class="n">handle_unknown</span><span class="o">=</span><span class="s1">&#39;ignore&#39;</span><span class="p">)</span>
+features, it can often be better to specify
+<code class="docutils literal notranslate"><span class="pre">handle_unknown='infrequent_if_exist'</span></code> instead of setting the <code class="docutils literal notranslate"><span class="pre">categories</span></code>
+manually as above. When <code class="docutils literal notranslate"><span class="pre">handle_unknown='infrequent_if_exist'</span></code> is specified
+and unknown categories are encountered during transform, no error will be
+raised but the resulting one-hot encoded columns for this feature will be all
+zeros or considered as an infrequent category if enabled.
+(<code class="docutils literal notranslate"><span class="pre">handle_unknown='infrequent_if_exist'</span></code> is only supported for one-hot
+encoding):</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">enc</span> <span class="o">=</span> <span class="n">preprocessing</span><span class="o">.</span><span class="n">OneHotEncoder</span><span class="p">(</span><span class="n">handle_unknown</span><span class="o">=</span><span class="s1">&#39;infrequent_if_exist&#39;</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">X</span> <span class="o">=</span> <span class="p">[[</span><span class="s1">&#39;male&#39;</span><span class="p">,</span> <span class="s1">&#39;from US&#39;</span><span class="p">,</span> <span class="s1">&#39;uses Safari&#39;</span><span class="p">],</span> <span class="p">[</span><span class="s1">&#39;female&#39;</span><span class="p">,</span> <span class="s1">&#39;from Europe&#39;</span><span class="p">,</span> <span class="s1">&#39;uses Firefox&#39;</span><span class="p">]]</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">enc</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X</span><span class="p">)</span>
-<span class="go">OneHotEncoder(handle_unknown=&#39;ignore&#39;)</span>
+<span class="go">OneHotEncoder(handle_unknown=&#39;infrequent_if_exist&#39;)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">enc</span><span class="o">.</span><span class="n">transform</span><span class="p">([[</span><span class="s1">&#39;female&#39;</span><span class="p">,</span> <span class="s1">&#39;from Asia&#39;</span><span class="p">,</span> <span class="s1">&#39;uses Chrome&#39;</span><span class="p">]])</span><span class="o">.</span><span class="n">toarray</span><span class="p">()</span>
 <span class="go">array([[1., 0., 0., 0., 0., 0.]])</span>
 </pre></div>
@@ -755,7 +760,8 @@ since co-linearity would cause the covariance matrix to be non-invertible:</p>
 <span class="gp">... </span>     <span class="p">[</span><span class="s1">&#39;female&#39;</span><span class="p">,</span> <span class="s1">&#39;from Europe&#39;</span><span class="p">,</span> <span class="s1">&#39;uses Firefox&#39;</span><span class="p">]]</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">drop_enc</span> <span class="o">=</span> <span class="n">preprocessing</span><span class="o">.</span><span class="n">OneHotEncoder</span><span class="p">(</span><span class="n">drop</span><span class="o">=</span><span class="s1">&#39;first&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">drop_enc</span><span class="o">.</span><span class="n">categories_</span>
-<span class="go">[array([&#39;female&#39;, &#39;male&#39;], dtype=object), array([&#39;from Europe&#39;, &#39;from US&#39;], dtype=object), array([&#39;uses Firefox&#39;, &#39;uses Safari&#39;], dtype=object)]</span>
+<span class="go">[array([&#39;female&#39;, &#39;male&#39;], dtype=object), array([&#39;from Europe&#39;, &#39;from US&#39;], dtype=object),</span>
+<span class="go"> array([&#39;uses Firefox&#39;, &#39;uses Safari&#39;], dtype=object)]</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">drop_enc</span><span class="o">.</span><span class="n">transform</span><span class="p">(</span><span class="n">X</span><span class="p">)</span><span class="o">.</span><span class="n">toarray</span><span class="p">()</span>
 <span class="go">array([[1., 1., 1.],</span>
 <span class="go">       [0., 0., 0.]])</span>
@@ -768,7 +774,8 @@ categories. In this case, you can set the parameter <code class="docutils litera
 <span class="gp">... </span>     <span class="p">[</span><span class="s1">&#39;female&#39;</span><span class="p">,</span> <span class="s1">&#39;Asia&#39;</span><span class="p">,</span> <span class="s1">&#39;Chrome&#39;</span><span class="p">]]</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">drop_enc</span> <span class="o">=</span> <span class="n">preprocessing</span><span class="o">.</span><span class="n">OneHotEncoder</span><span class="p">(</span><span class="n">drop</span><span class="o">=</span><span class="s1">&#39;if_binary&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">drop_enc</span><span class="o">.</span><span class="n">categories_</span>
-<span class="go">[array([&#39;female&#39;, &#39;male&#39;], dtype=object), array([&#39;Asia&#39;, &#39;Europe&#39;, &#39;US&#39;], dtype=object), array([&#39;Chrome&#39;, &#39;Firefox&#39;, &#39;Safari&#39;], dtype=object)]</span>
+<span class="go">[array([&#39;female&#39;, &#39;male&#39;], dtype=object), array([&#39;Asia&#39;, &#39;Europe&#39;, &#39;US&#39;], dtype=object),</span>
+<span class="go"> array([&#39;Chrome&#39;, &#39;Firefox&#39;, &#39;Safari&#39;], dtype=object)]</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">drop_enc</span><span class="o">.</span><span class="n">transform</span><span class="p">(</span><span class="n">X</span><span class="p">)</span><span class="o">.</span><span class="n">toarray</span><span class="p">()</span>
 <span class="go">array([[1., 0., 0., 1., 0., 0., 1.],</span>
 <span class="go">       [0., 0., 1., 0., 0., 1., 0.],</span>
@@ -832,6 +839,103 @@ separate categories:</p>
 </div>
 <p>See <a class="reference internal" href="feature_extraction.html#dict-feature-extraction"><span class="std std-ref">Loading features from dicts</span></a> for categorical features that are
 represented as a dict, not as scalars.</p>
+<section id="infrequent-categories">
+<span id="one-hot-encoder-infrequent-categories"></span><h3><span class="section-number">6.3.4.1. </span>Infrequent categories<a class="headerlink" href="#infrequent-categories" title="Permalink to this headline">¶</a></h3>
+<p><a class="reference internal" href="generated/sklearn.preprocessing.OneHotEncoder.html#sklearn.preprocessing.OneHotEncoder" title="sklearn.preprocessing.OneHotEncoder"><code class="xref py py-class docutils literal notranslate"><span class="pre">OneHotEncoder</span></code></a> supports aggregating infrequent categories into a single
+output for each feature. The parameters to enable the gathering of infrequent
+categories are <code class="docutils literal notranslate"><span class="pre">min_frequency</span></code> and <code class="docutils literal notranslate"><span class="pre">max_categories</span></code>.</p>
+<ol class="arabic simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">min_frequency</span></code> is either an  integer greater or equal to 1, or a float in
+the interval <code class="docutils literal notranslate"><span class="pre">(0.0,</span> <span class="pre">1.0)</span></code>. If <code class="docutils literal notranslate"><span class="pre">min_frequency</span></code> is an integer, categories with
+a cardinality smaller than <code class="docutils literal notranslate"><span class="pre">min_frequency</span></code>  will be considered infrequent.
+If <code class="docutils literal notranslate"><span class="pre">min_frequency</span></code> is a float, categories with a cardinality smaller than
+this fraction of the total number of samples will be considered infrequent.
+The default value is 1, which means every category is encoded separately.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">max_categories</span></code> is either <code class="docutils literal notranslate"><span class="pre">None</span></code> or any integer greater than 1. This
+parameter sets an upper limit to the number of output features for each
+input feature. <code class="docutils literal notranslate"><span class="pre">max_categories</span></code> includes the feature that combines
+infrequent categories.</p></li>
+</ol>
+<p>In the following example, the categories, <code class="docutils literal notranslate"><span class="pre">'dog',</span> <span class="pre">'snake'</span></code> are considered
+infrequent:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">X</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([[</span><span class="s1">&#39;dog&#39;</span><span class="p">]</span> <span class="o">*</span> <span class="mi">5</span> <span class="o">+</span> <span class="p">[</span><span class="s1">&#39;cat&#39;</span><span class="p">]</span> <span class="o">*</span> <span class="mi">20</span> <span class="o">+</span> <span class="p">[</span><span class="s1">&#39;rabbit&#39;</span><span class="p">]</span> <span class="o">*</span> <span class="mi">10</span> <span class="o">+</span>
+<span class="gp">... </span>              <span class="p">[</span><span class="s1">&#39;snake&#39;</span><span class="p">]</span> <span class="o">*</span> <span class="mi">3</span><span class="p">],</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">object</span><span class="p">)</span><span class="o">.</span><span class="n">T</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">enc</span> <span class="o">=</span> <span class="n">preprocessing</span><span class="o">.</span><span class="n">OneHotEncoder</span><span class="p">(</span><span class="n">min_frequency</span><span class="o">=</span><span class="mi">6</span><span class="p">,</span> <span class="n">sparse</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">enc</span><span class="o">.</span><span class="n">infrequent_categories_</span>
+<span class="go">[array([&#39;dog&#39;, &#39;snake&#39;], dtype=object)]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">enc</span><span class="o">.</span><span class="n">transform</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([[</span><span class="s1">&#39;dog&#39;</span><span class="p">],</span> <span class="p">[</span><span class="s1">&#39;cat&#39;</span><span class="p">],</span> <span class="p">[</span><span class="s1">&#39;rabbit&#39;</span><span class="p">],</span> <span class="p">[</span><span class="s1">&#39;snake&#39;</span><span class="p">]]))</span>
+<span class="go">array([[0., 0., 1.],</span>
+<span class="go">       [1., 0., 0.],</span>
+<span class="go">       [0., 1., 0.],</span>
+<span class="go">       [0., 0., 1.]])</span>
+</pre></div>
+</div>
+<p>By setting handle_unknown to <code class="docutils literal notranslate"><span class="pre">'infrequent_if_exist'</span></code>, unknown categories will
+be considered infrequent:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">enc</span> <span class="o">=</span> <span class="n">preprocessing</span><span class="o">.</span><span class="n">OneHotEncoder</span><span class="p">(</span>
+<span class="gp">... </span>   <span class="n">handle_unknown</span><span class="o">=</span><span class="s1">&#39;infrequent_if_exist&#39;</span><span class="p">,</span> <span class="n">sparse</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">min_frequency</span><span class="o">=</span><span class="mi">6</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">enc</span> <span class="o">=</span> <span class="n">enc</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">enc</span><span class="o">.</span><span class="n">transform</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([[</span><span class="s1">&#39;dragon&#39;</span><span class="p">]]))</span>
+<span class="go">array([[0., 0., 1.]])</span>
+</pre></div>
+</div>
+<p><a class="reference internal" href="generated/sklearn.preprocessing.OneHotEncoder.html#sklearn.preprocessing.OneHotEncoder.get_feature_names_out" title="sklearn.preprocessing.OneHotEncoder.get_feature_names_out"><code class="xref py py-meth docutils literal notranslate"><span class="pre">OneHotEncoder.get_feature_names_out</span></code></a> uses ‘infrequent’ as the infrequent
+feature name:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">enc</span><span class="o">.</span><span class="n">get_feature_names_out</span><span class="p">()</span>
+<span class="go">array([&#39;x0_cat&#39;, &#39;x0_rabbit&#39;, &#39;x0_infrequent_sklearn&#39;], dtype=object)</span>
+</pre></div>
+</div>
+<p>When <code class="docutils literal notranslate"><span class="pre">'handle_unknown'</span></code> is set to <code class="docutils literal notranslate"><span class="pre">'infrequent_if_exist'</span></code> and an unknown
+category is encountered in transform:</p>
+<ol class="arabic simple">
+<li><p>If infrequent category support was not configured or there was no
+infrequent category during training, the resulting one-hot encoded columns
+for this feature will be all zeros. In the inverse transform, an unknown
+category will be denoted as <code class="docutils literal notranslate"><span class="pre">None</span></code>.</p></li>
+<li><p>If there is an infrequent category during training, the unknown category
+will be considered infrequent. In the inverse transform, ‘infrequent_sklearn’
+will be used to represent the infrequent category.</p></li>
+</ol>
+<p>Infrequent categories can also be configured using <code class="docutils literal notranslate"><span class="pre">max_categories</span></code>. In the
+following example, we set <code class="docutils literal notranslate"><span class="pre">max_categories=2</span></code> to limit the number of features in
+the output. This will result in all but the <code class="docutils literal notranslate"><span class="pre">'cat'</span></code> category to be considered
+infrequent, leading to two features, one for <code class="docutils literal notranslate"><span class="pre">'cat'</span></code> and one for infrequent
+categories - which are all the others:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">enc</span> <span class="o">=</span> <span class="n">preprocessing</span><span class="o">.</span><span class="n">OneHotEncoder</span><span class="p">(</span><span class="n">max_categories</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">sparse</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">enc</span> <span class="o">=</span> <span class="n">enc</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">enc</span><span class="o">.</span><span class="n">transform</span><span class="p">([[</span><span class="s1">&#39;dog&#39;</span><span class="p">],</span> <span class="p">[</span><span class="s1">&#39;cat&#39;</span><span class="p">],</span> <span class="p">[</span><span class="s1">&#39;rabbit&#39;</span><span class="p">],</span> <span class="p">[</span><span class="s1">&#39;snake&#39;</span><span class="p">]])</span>
+<span class="go">array([[0., 1.],</span>
+<span class="go">       [1., 0.],</span>
+<span class="go">       [0., 1.],</span>
+<span class="go">       [0., 1.]])</span>
+</pre></div>
+</div>
+<p>If both <code class="docutils literal notranslate"><span class="pre">max_categories</span></code> and <code class="docutils literal notranslate"><span class="pre">min_frequency</span></code> are non-default values, then
+categories are selected based on <code class="docutils literal notranslate"><span class="pre">min_frequency</span></code> first and <code class="docutils literal notranslate"><span class="pre">max_categories</span></code>
+categories are kept. In the following example, <code class="docutils literal notranslate"><span class="pre">min_frequency=4</span></code> considers
+only <code class="docutils literal notranslate"><span class="pre">snake</span></code> to be infrequent, but <code class="docutils literal notranslate"><span class="pre">max_categories=3</span></code>, forces <code class="docutils literal notranslate"><span class="pre">dog</span></code> to also be
+infrequent:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">enc</span> <span class="o">=</span> <span class="n">preprocessing</span><span class="o">.</span><span class="n">OneHotEncoder</span><span class="p">(</span><span class="n">min_frequency</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span> <span class="n">max_categories</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">sparse</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">enc</span> <span class="o">=</span> <span class="n">enc</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">enc</span><span class="o">.</span><span class="n">transform</span><span class="p">([[</span><span class="s1">&#39;dog&#39;</span><span class="p">],</span> <span class="p">[</span><span class="s1">&#39;cat&#39;</span><span class="p">],</span> <span class="p">[</span><span class="s1">&#39;rabbit&#39;</span><span class="p">],</span> <span class="p">[</span><span class="s1">&#39;snake&#39;</span><span class="p">]])</span>
+<span class="go">array([[0., 0., 1.],</span>
+<span class="go">       [1., 0., 0.],</span>
+<span class="go">       [0., 1., 0.],</span>
+<span class="go">       [0., 0., 1.]])</span>
+</pre></div>
+</div>
+<p>If there are infrequent categories with the same cardinality at the cutoff of
+<code class="docutils literal notranslate"><span class="pre">max_categories</span></code>, then then the first <code class="docutils literal notranslate"><span class="pre">max_categories</span></code> are taken based on lexicon
+ordering. In the following example, “b”, “c”, and “d”, have the same cardinality
+and with <code class="docutils literal notranslate"><span class="pre">max_categories=2</span></code>, “b” and “c” are infrequent because they have a higher
+lexicon order.</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">X</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">([[</span><span class="s2">&quot;a&quot;</span><span class="p">]</span> <span class="o">*</span> <span class="mi">20</span> <span class="o">+</span> <span class="p">[</span><span class="s2">&quot;b&quot;</span><span class="p">]</span> <span class="o">*</span> <span class="mi">10</span> <span class="o">+</span> <span class="p">[</span><span class="s2">&quot;c&quot;</span><span class="p">]</span> <span class="o">*</span> <span class="mi">10</span> <span class="o">+</span> <span class="p">[</span><span class="s2">&quot;d&quot;</span><span class="p">]</span> <span class="o">*</span> <span class="mi">10</span><span class="p">],</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">object</span><span class="p">)</span><span class="o">.</span><span class="n">T</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">enc</span> <span class="o">=</span> <span class="n">preprocessing</span><span class="o">.</span><span class="n">OneHotEncoder</span><span class="p">(</span><span class="n">max_categories</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">enc</span><span class="o">.</span><span class="n">infrequent_categories_</span>
+<span class="go">[array([&#39;b&#39;, &#39;c&#39;], dtype=object)]</span>
+</pre></div>
+</div>
+</section>
 </section>
 <section id="discretization">
 <span id="preprocessing-discretization"></span><h2><span class="section-number">6.3.5. </span>Discretization<a class="headerlink" href="#discretization" title="Permalink to this headline">¶</a></h2>
