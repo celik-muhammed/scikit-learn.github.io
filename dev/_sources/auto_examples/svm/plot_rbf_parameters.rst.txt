@@ -92,59 +92,18 @@ expense of compute time. Increasing the value number of ``C_range`` and
 ``gamma_range`` steps will increase the resolution of the hyper-parameter heat
 map.
 
-.. GENERATED FROM PYTHON SOURCE LINES 77-211
+.. GENERATED FROM PYTHON SOURCE LINES 79-81
 
+Utility class to move the midpoint of a colormap to be around
+the values of interest.
 
-
-.. rst-class:: sphx-glr-horizontal
-
-
-    *
-
-      .. image-sg:: /auto_examples/svm/images/sphx_glr_plot_rbf_parameters_001.png
-         :alt: gamma=10^-1, C=10^-2, gamma=10^0, C=10^-2, gamma=10^1, C=10^-2, gamma=10^-1, C=10^0, gamma=10^0, C=10^0, gamma=10^1, C=10^0, gamma=10^-1, C=10^2, gamma=10^0, C=10^2, gamma=10^1, C=10^2
-         :srcset: /auto_examples/svm/images/sphx_glr_plot_rbf_parameters_001.png
-         :class: sphx-glr-multi-img
-
-    *
-
-      .. image-sg:: /auto_examples/svm/images/sphx_glr_plot_rbf_parameters_002.png
-         :alt: Validation accuracy
-         :srcset: /auto_examples/svm/images/sphx_glr_plot_rbf_parameters_002.png
-         :class: sphx-glr-multi-img
-
-
-.. rst-class:: sphx-glr-script-out
-
- Out:
-
- .. code-block:: none
-
-    The best parameters are {'C': 1.0, 'gamma': 0.1} with a score of 0.97
-
-
-
-
-
-
-|
+.. GENERATED FROM PYTHON SOURCE LINES 81-96
 
 .. code-block:: default
 
 
     import numpy as np
-    import matplotlib.pyplot as plt
     from matplotlib.colors import Normalize
-
-    from sklearn.svm import SVC
-    from sklearn.preprocessing import StandardScaler
-    from sklearn.datasets import load_iris
-    from sklearn.model_selection import StratifiedShuffleSplit
-    from sklearn.model_selection import GridSearchCV
-
-
-    # Utility function to move the midpoint of a colormap to be around
-    # the values of interest.
 
 
     class MidpointNormalize(Normalize):
@@ -157,40 +116,103 @@ map.
             return np.ma.masked_array(np.interp(value, x, y))
 
 
-    # #############################################################################
-    # Load and prepare data set
-    #
-    # dataset for grid search
 
+
+
+
+
+
+
+.. GENERATED FROM PYTHON SOURCE LINES 97-101
+
+Load and prepare data set
+-------------------------
+
+dataset for grid search
+
+.. GENERATED FROM PYTHON SOURCE LINES 101-108
+
+.. code-block:: default
+
+
+    from sklearn.datasets import load_iris
 
     iris = load_iris()
     X = iris.data
     y = iris.target
 
-    # Dataset for decision function visualization: we only keep the first two
-    # features in X and sub-sample the dataset to keep only 2 classes and
-    # make it a binary classification problem.
+
+
+
+
+
+
+
+.. GENERATED FROM PYTHON SOURCE LINES 109-112
+
+Dataset for decision function visualization: we only keep the first two
+features in X and sub-sample the dataset to keep only 2 classes and
+make it a binary classification problem.
+
+.. GENERATED FROM PYTHON SOURCE LINES 112-118
+
+.. code-block:: default
+
 
     X_2d = X[:, :2]
     X_2d = X_2d[y > 0]
     y_2d = y[y > 0]
     y_2d -= 1
 
-    # It is usually a good idea to scale the data for SVM training.
-    # We are cheating a bit in this example in scaling all of the data,
-    # instead of fitting the transformation on the training set and
-    # just applying it on the test set.
+
+
+
+
+
+
+
+.. GENERATED FROM PYTHON SOURCE LINES 119-123
+
+It is usually a good idea to scale the data for SVM training.
+We are cheating a bit in this example in scaling all of the data,
+instead of fitting the transformation on the training set and
+just applying it on the test set.
+
+.. GENERATED FROM PYTHON SOURCE LINES 123-130
+
+.. code-block:: default
+
+
+    from sklearn.preprocessing import StandardScaler
 
     scaler = StandardScaler()
     X = scaler.fit_transform(X)
     X_2d = scaler.fit_transform(X_2d)
 
-    # #############################################################################
-    # Train classifiers
-    #
-    # For an initial search, a logarithmic grid with basis
-    # 10 is often helpful. Using a basis of 2, a finer
-    # tuning can be achieved but at a much higher cost.
+
+
+
+
+
+
+
+.. GENERATED FROM PYTHON SOURCE LINES 131-137
+
+Train classifiers
+-----------------
+
+For an initial search, a logarithmic grid with basis
+10 is often helpful. Using a basis of 2, a finer
+tuning can be achieved but at a much higher cost.
+
+.. GENERATED FROM PYTHON SOURCE LINES 137-154
+
+.. code-block:: default
+
+
+    from sklearn.svm import SVC
+    from sklearn.model_selection import StratifiedShuffleSplit
+    from sklearn.model_selection import GridSearchCV
 
     C_range = np.logspace(-2, 10, 13)
     gamma_range = np.logspace(-9, 3, 13)
@@ -204,8 +226,30 @@ map.
         % (grid.best_params_, grid.best_score_)
     )
 
-    # Now we need to fit a classifier for all parameters in the 2d version
-    # (we use a smaller set of parameters here because it takes a while to train)
+
+
+
+
+.. rst-class:: sphx-glr-script-out
+
+ Out:
+
+ .. code-block:: none
+
+    The best parameters are {'C': 1.0, 'gamma': 0.1} with a score of 0.97
+
+
+
+
+.. GENERATED FROM PYTHON SOURCE LINES 155-157
+
+Now we need to fit a classifier for all parameters in the 2d version
+(we use a smaller set of parameters here because it takes a while to train)
+
+.. GENERATED FROM PYTHON SOURCE LINES 157-167
+
+.. code-block:: default
+
 
     C_2d_range = [1e-2, 1, 1e2]
     gamma_2d_range = [1e-1, 1, 1e1]
@@ -216,10 +260,26 @@ map.
             clf.fit(X_2d, y_2d)
             classifiers.append((C, gamma, clf))
 
-    # #############################################################################
-    # Visualization
-    #
-    # draw visualization of parameter effects
+
+
+
+
+
+
+
+.. GENERATED FROM PYTHON SOURCE LINES 168-172
+
+Visualization
+-------------
+
+draw visualization of parameter effects
+
+.. GENERATED FROM PYTHON SOURCE LINES 172-195
+
+.. code-block:: default
+
+
+    import matplotlib.pyplot as plt
 
     plt.figure(figsize=(8, 6))
     xx, yy = np.meshgrid(np.linspace(-3, 3, 200), np.linspace(-3, 3, 200))
@@ -241,14 +301,33 @@ map.
 
     scores = grid.cv_results_["mean_test_score"].reshape(len(C_range), len(gamma_range))
 
-    # Draw heatmap of the validation accuracy as a function of gamma and C
-    #
-    # The score are encoded as colors with the hot colormap which varies from dark
-    # red to bright yellow. As the most interesting scores are all located in the
-    # 0.92 to 0.97 range we use a custom normalizer to set the mid-point to 0.92 so
-    # as to make it easier to visualize the small variations of score values in the
-    # interesting range while not brutally collapsing all the low score values to
-    # the same color.
+
+
+
+.. image-sg:: /auto_examples/svm/images/sphx_glr_plot_rbf_parameters_001.png
+   :alt: gamma=10^-1, C=10^-2, gamma=10^0, C=10^-2, gamma=10^1, C=10^-2, gamma=10^-1, C=10^0, gamma=10^0, C=10^0, gamma=10^1, C=10^0, gamma=10^-1, C=10^2, gamma=10^0, C=10^2, gamma=10^1, C=10^2
+   :srcset: /auto_examples/svm/images/sphx_glr_plot_rbf_parameters_001.png
+   :class: sphx-glr-single-img
+
+
+
+
+
+.. GENERATED FROM PYTHON SOURCE LINES 196-204
+
+Draw heatmap of the validation accuracy as a function of gamma and C
+
+The score are encoded as colors with the hot colormap which varies from dark
+red to bright yellow. As the most interesting scores are all located in the
+0.92 to 0.97 range we use a custom normalizer to set the mid-point to 0.92 so
+as to make it easier to visualize the small variations of score values in the
+interesting range while not brutally collapsing all the low score values to
+the same color.
+
+.. GENERATED FROM PYTHON SOURCE LINES 204-220
+
+.. code-block:: default
+
 
     plt.figure(figsize=(8, 6))
     plt.subplots_adjust(left=0.2, right=0.95, bottom=0.15, top=0.95)
@@ -267,9 +346,20 @@ map.
     plt.show()
 
 
+
+.. image-sg:: /auto_examples/svm/images/sphx_glr_plot_rbf_parameters_002.png
+   :alt: Validation accuracy
+   :srcset: /auto_examples/svm/images/sphx_glr_plot_rbf_parameters_002.png
+   :class: sphx-glr-single-img
+
+
+
+
+
+
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** ( 0 minutes  4.975 seconds)
+   **Total running time of the script:** ( 0 minutes  4.359 seconds)
 
 
 .. _sphx_glr_download_auto_examples_svm_plot_rbf_parameters.py:
