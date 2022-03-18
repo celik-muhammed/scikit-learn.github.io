@@ -67,43 +67,7 @@ set by internal cross-validation in the GraphicalLassoCV. As can be
 seen on figure 2, the grid to compute the cross-validation score is
 iteratively refined in the neighborhood of the maximum.
 
-.. GENERATED FROM PYTHON SOURCE LINES 52-152
-
-
-
-.. rst-class:: sphx-glr-horizontal
-
-
-    *
-
-      .. image-sg:: /auto_examples/covariance/images/sphx_glr_plot_sparse_cov_001.png
-         :alt: Empirical covariance, Ledoit-Wolf covariance, GraphicalLassoCV covariance, True covariance, Empirical precision, Ledoit-Wolf precision, GraphicalLasso precision, True precision
-         :srcset: /auto_examples/covariance/images/sphx_glr_plot_sparse_cov_001.png
-         :class: sphx-glr-multi-img
-
-    *
-
-      .. image-sg:: /auto_examples/covariance/images/sphx_glr_plot_sparse_cov_002.png
-         :alt: Model selection
-         :srcset: /auto_examples/covariance/images/sphx_glr_plot_sparse_cov_002.png
-         :class: sphx-glr-multi-img
-
-
-.. rst-class:: sphx-glr-script-out
-
- Out:
-
- .. code-block:: none
-
-    /home/circleci/project/sklearn/covariance/_graph_lasso.py:86: FutureWarning: Key: 'mean_score', is deprecated in 1.0 and will be removed in 1.2. Use 'mean_test_score' instead
-      warnings.warn(
-
-
-
-
-
-
-|
+.. GENERATED FROM PYTHON SOURCE LINES 52-57
 
 .. code-block:: default
 
@@ -112,14 +76,26 @@ iteratively refined in the neighborhood of the maximum.
     # License: BSD 3 clause
     # Copyright: INRIA
 
+
+
+
+
+
+
+
+.. GENERATED FROM PYTHON SOURCE LINES 58-60
+
+Generate the data
+-----------------
+
+.. GENERATED FROM PYTHON SOURCE LINES 60-81
+
+.. code-block:: default
+
     import numpy as np
     from scipy import linalg
     from sklearn.datasets import make_sparse_spd_matrix
-    from sklearn.covariance import GraphicalLassoCV, ledoit_wolf
-    import matplotlib.pyplot as plt
 
-    # #############################################################################
-    # Generate the data
     n_samples = 60
     n_features = 20
 
@@ -137,8 +113,24 @@ iteratively refined in the neighborhood of the maximum.
     X -= X.mean(axis=0)
     X /= X.std(axis=0)
 
-    # #############################################################################
-    # Estimate the covariance
+
+
+
+
+
+
+
+.. GENERATED FROM PYTHON SOURCE LINES 82-84
+
+Estimate the covariance
+-----------------------
+
+.. GENERATED FROM PYTHON SOURCE LINES 84-96
+
+.. code-block:: default
+
+    from sklearn.covariance import GraphicalLassoCV, ledoit_wolf
+
     emp_cov = np.dot(X.T, X) / n_samples
 
     model = GraphicalLassoCV()
@@ -149,8 +141,24 @@ iteratively refined in the neighborhood of the maximum.
     lw_cov_, _ = ledoit_wolf(X)
     lw_prec_ = linalg.inv(lw_cov_)
 
-    # #############################################################################
-    # Plot the results
+
+
+
+
+
+
+
+.. GENERATED FROM PYTHON SOURCE LINES 97-99
+
+Plot the results
+----------------
+
+.. GENERATED FROM PYTHON SOURCE LINES 99-147
+
+.. code-block:: default
+
+    import matplotlib.pyplot as plt
+
     plt.figure(figsize=(10, 6))
     plt.subplots_adjust(left=0.02, right=0.98)
 
@@ -197,10 +205,27 @@ iteratively refined in the neighborhood of the maximum.
         else:
             ax.set_axis_bgcolor(".7")
 
+
+
+
+.. image-sg:: /auto_examples/covariance/images/sphx_glr_plot_sparse_cov_001.png
+   :alt: Empirical covariance, Ledoit-Wolf covariance, GraphicalLassoCV covariance, True covariance, Empirical precision, Ledoit-Wolf precision, GraphicalLasso precision, True precision
+   :srcset: /auto_examples/covariance/images/sphx_glr_plot_sparse_cov_001.png
+   :class: sphx-glr-single-img
+
+
+
+
+
+.. GENERATED FROM PYTHON SOURCE LINES 148-159
+
+.. code-block:: default
+
+
     # plot the model selection metric
     plt.figure(figsize=(4, 3))
     plt.axes([0.2, 0.15, 0.75, 0.7])
-    plt.plot(model.cv_results_["alphas"], model.cv_results_["mean_score"], "o-")
+    plt.plot(model.cv_results_["alphas"], model.cv_results_["mean_test_score"], "o-")
     plt.axvline(model.alpha_, color=".5")
     plt.title("Model selection")
     plt.ylabel("Cross-validation score")
@@ -209,9 +234,20 @@ iteratively refined in the neighborhood of the maximum.
     plt.show()
 
 
+
+.. image-sg:: /auto_examples/covariance/images/sphx_glr_plot_sparse_cov_002.png
+   :alt: Model selection
+   :srcset: /auto_examples/covariance/images/sphx_glr_plot_sparse_cov_002.png
+   :class: sphx-glr-single-img
+
+
+
+
+
+
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** ( 0 minutes  0.503 seconds)
+   **Total running time of the script:** ( 0 minutes  0.681 seconds)
 
 
 .. _sphx_glr_download_auto_examples_covariance_plot_sparse_cov.py:
