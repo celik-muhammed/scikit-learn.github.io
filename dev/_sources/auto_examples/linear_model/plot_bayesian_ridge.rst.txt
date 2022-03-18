@@ -41,56 +41,18 @@ Note the uncertainty starts going up on the right side of the plot.
 This is because these test samples are outside of the range of the training
 samples.
 
-.. GENERATED FROM PYTHON SOURCE LINES 26-122
+.. GENERATED FROM PYTHON SOURCE LINES 28-30
 
+Generate simulated data with Gaussian weights
+---------------------------------------------
 
-
-.. rst-class:: sphx-glr-horizontal
-
-
-    *
-
-      .. image-sg:: /auto_examples/linear_model/images/sphx_glr_plot_bayesian_ridge_001.png
-         :alt: Weights of the model
-         :srcset: /auto_examples/linear_model/images/sphx_glr_plot_bayesian_ridge_001.png
-         :class: sphx-glr-multi-img
-
-    *
-
-      .. image-sg:: /auto_examples/linear_model/images/sphx_glr_plot_bayesian_ridge_002.png
-         :alt: Histogram of the weights
-         :srcset: /auto_examples/linear_model/images/sphx_glr_plot_bayesian_ridge_002.png
-         :class: sphx-glr-multi-img
-
-    *
-
-      .. image-sg:: /auto_examples/linear_model/images/sphx_glr_plot_bayesian_ridge_003.png
-         :alt: Marginal log-likelihood
-         :srcset: /auto_examples/linear_model/images/sphx_glr_plot_bayesian_ridge_003.png
-         :class: sphx-glr-multi-img
-
-    *
-
-      .. image-sg:: /auto_examples/linear_model/images/sphx_glr_plot_bayesian_ridge_004.png
-         :alt: plot bayesian ridge
-         :srcset: /auto_examples/linear_model/images/sphx_glr_plot_bayesian_ridge_004.png
-         :class: sphx-glr-multi-img
-
-
-
-
+.. GENERATED FROM PYTHON SOURCE LINES 30-50
 
 .. code-block:: default
 
-
     import numpy as np
-    import matplotlib.pyplot as plt
     from scipy import stats
 
-    from sklearn.linear_model import BayesianRidge, LinearRegression
-
-    # #############################################################################
-    # Generating simulated data with Gaussian weights
     np.random.seed(0)
     n_samples, n_features = 100, 100
     X = np.random.randn(n_samples, n_features)  # Create Gaussian data
@@ -99,6 +61,7 @@ samples.
     w = np.zeros(n_features)
     # Only keep 10 weights of interest
     relevant_features = np.random.randint(0, n_features, 10)
+
     for i in relevant_features:
         w[i] = stats.norm.rvs(loc=0, scale=1.0 / np.sqrt(lambda_))
     # Create noise with a precision alpha of 50.
@@ -107,17 +70,54 @@ samples.
     # Create the target
     y = np.dot(X, w) + noise
 
-    # #############################################################################
-    # Fit the Bayesian Ridge Regression and an OLS for comparison
+
+
+
+
+
+
+
+.. GENERATED FROM PYTHON SOURCE LINES 51-53
+
+Fit the Bayesian Ridge Regression and an OLS for comparison
+-----------------------------------------------------------
+
+.. GENERATED FROM PYTHON SOURCE LINES 53-61
+
+.. code-block:: default
+
+    from sklearn.linear_model import BayesianRidge, LinearRegression
+
     clf = BayesianRidge(compute_score=True)
     clf.fit(X, y)
 
     ols = LinearRegression()
     ols.fit(X, y)
 
-    # #############################################################################
-    # Plot true weights, estimated weights, histogram of the weights, and
-    # predictions with standard deviations
+
+
+
+
+
+.. raw:: html
+
+    <div class="output_subarea output_html rendered_html output_result">
+    <style>#sk-bef4bd71-29d9-4040-92fa-685710977ca3 {color: black;background-color: white;}#sk-bef4bd71-29d9-4040-92fa-685710977ca3 pre{padding: 0;}#sk-bef4bd71-29d9-4040-92fa-685710977ca3 div.sk-toggleable {background-color: white;}#sk-bef4bd71-29d9-4040-92fa-685710977ca3 label.sk-toggleable__label {cursor: pointer;display: block;width: 100%;margin-bottom: 0;padding: 0.3em;box-sizing: border-box;text-align: center;}#sk-bef4bd71-29d9-4040-92fa-685710977ca3 label.sk-toggleable__label-arrow:before {content: "▸";float: left;margin-right: 0.25em;color: #696969;}#sk-bef4bd71-29d9-4040-92fa-685710977ca3 label.sk-toggleable__label-arrow:hover:before {color: black;}#sk-bef4bd71-29d9-4040-92fa-685710977ca3 div.sk-estimator:hover label.sk-toggleable__label-arrow:before {color: black;}#sk-bef4bd71-29d9-4040-92fa-685710977ca3 div.sk-toggleable__content {max-height: 0;max-width: 0;overflow: hidden;text-align: left;background-color: #f0f8ff;}#sk-bef4bd71-29d9-4040-92fa-685710977ca3 div.sk-toggleable__content pre {margin: 0.2em;color: black;border-radius: 0.25em;background-color: #f0f8ff;}#sk-bef4bd71-29d9-4040-92fa-685710977ca3 input.sk-toggleable__control:checked~div.sk-toggleable__content {max-height: 200px;max-width: 100%;overflow: auto;}#sk-bef4bd71-29d9-4040-92fa-685710977ca3 input.sk-toggleable__control:checked~label.sk-toggleable__label-arrow:before {content: "▾";}#sk-bef4bd71-29d9-4040-92fa-685710977ca3 div.sk-estimator input.sk-toggleable__control:checked~label.sk-toggleable__label {background-color: #d4ebff;}#sk-bef4bd71-29d9-4040-92fa-685710977ca3 div.sk-label input.sk-toggleable__control:checked~label.sk-toggleable__label {background-color: #d4ebff;}#sk-bef4bd71-29d9-4040-92fa-685710977ca3 input.sk-hidden--visually {border: 0;clip: rect(1px 1px 1px 1px);clip: rect(1px, 1px, 1px, 1px);height: 1px;margin: -1px;overflow: hidden;padding: 0;position: absolute;width: 1px;}#sk-bef4bd71-29d9-4040-92fa-685710977ca3 div.sk-estimator {font-family: monospace;background-color: #f0f8ff;border: 1px dotted black;border-radius: 0.25em;box-sizing: border-box;margin-bottom: 0.5em;}#sk-bef4bd71-29d9-4040-92fa-685710977ca3 div.sk-estimator:hover {background-color: #d4ebff;}#sk-bef4bd71-29d9-4040-92fa-685710977ca3 div.sk-parallel-item::after {content: "";width: 100%;border-bottom: 1px solid gray;flex-grow: 1;}#sk-bef4bd71-29d9-4040-92fa-685710977ca3 div.sk-label:hover label.sk-toggleable__label {background-color: #d4ebff;}#sk-bef4bd71-29d9-4040-92fa-685710977ca3 div.sk-serial::before {content: "";position: absolute;border-left: 1px solid gray;box-sizing: border-box;top: 2em;bottom: 0;left: 50%;}#sk-bef4bd71-29d9-4040-92fa-685710977ca3 div.sk-serial {display: flex;flex-direction: column;align-items: center;background-color: white;padding-right: 0.2em;padding-left: 0.2em;}#sk-bef4bd71-29d9-4040-92fa-685710977ca3 div.sk-item {z-index: 1;}#sk-bef4bd71-29d9-4040-92fa-685710977ca3 div.sk-parallel {display: flex;align-items: stretch;justify-content: center;background-color: white;}#sk-bef4bd71-29d9-4040-92fa-685710977ca3 div.sk-parallel::before {content: "";position: absolute;border-left: 1px solid gray;box-sizing: border-box;top: 2em;bottom: 0;left: 50%;}#sk-bef4bd71-29d9-4040-92fa-685710977ca3 div.sk-parallel-item {display: flex;flex-direction: column;position: relative;background-color: white;}#sk-bef4bd71-29d9-4040-92fa-685710977ca3 div.sk-parallel-item:first-child::after {align-self: flex-end;width: 50%;}#sk-bef4bd71-29d9-4040-92fa-685710977ca3 div.sk-parallel-item:last-child::after {align-self: flex-start;width: 50%;}#sk-bef4bd71-29d9-4040-92fa-685710977ca3 div.sk-parallel-item:only-child::after {width: 0;}#sk-bef4bd71-29d9-4040-92fa-685710977ca3 div.sk-dashed-wrapped {border: 1px dashed gray;margin: 0 0.4em 0.5em 0.4em;box-sizing: border-box;padding-bottom: 0.4em;background-color: white;position: relative;}#sk-bef4bd71-29d9-4040-92fa-685710977ca3 div.sk-label label {font-family: monospace;font-weight: bold;background-color: white;display: inline-block;line-height: 1.2em;}#sk-bef4bd71-29d9-4040-92fa-685710977ca3 div.sk-label-container {position: relative;z-index: 2;text-align: center;}#sk-bef4bd71-29d9-4040-92fa-685710977ca3 div.sk-container {/* jupyter's `normalize.less` sets `[hidden] { display: none; }` but bootstrap.min.css set `[hidden] { display: none !important; }` so we also need the `!important` here to be able to override the default hidden behavior on the sphinx rendered scikit-learn.org. See: https://github.com/scikit-learn/scikit-learn/issues/21755 */display: inline-block !important;position: relative;}#sk-bef4bd71-29d9-4040-92fa-685710977ca3 div.sk-text-repr-fallback {display: none;}</style><div id="sk-bef4bd71-29d9-4040-92fa-685710977ca3" class="sk-top-container"><div class="sk-text-repr-fallback"><pre>LinearRegression()</pre><b>Please rerun this cell to show the HTML repr or trust the notebook.</b></div><div class="sk-container" hidden><div class="sk-item"><div class="sk-estimator sk-toggleable"><input class="sk-toggleable__control sk-hidden--visually" id="db232df7-b354-4b9f-b7c5-565ca650111c" type="checkbox" checked><label for="db232df7-b354-4b9f-b7c5-565ca650111c" class="sk-toggleable__label sk-toggleable__label-arrow">LinearRegression</label><div class="sk-toggleable__content"><pre>LinearRegression()</pre></div></div></div></div></div>
+    </div>
+    <br />
+    <br />
+
+.. GENERATED FROM PYTHON SOURCE LINES 62-64
+
+Plot true weights and estimated weights
+---------------------------------------
+
+.. GENERATED FROM PYTHON SOURCE LINES 64-76
+
+.. code-block:: default
+
+    import matplotlib.pyplot as plt
+
     lw = 2
     plt.figure(figsize=(6, 5))
     plt.title("Weights of the model")
@@ -126,7 +126,29 @@ samples.
     plt.plot(ols.coef_, color="navy", linestyle="--", label="OLS estimate")
     plt.xlabel("Features")
     plt.ylabel("Values of the weights")
-    plt.legend(loc="best", prop=dict(size=12))
+    _ = plt.legend(loc="best", prop=dict(size=12))
+
+
+
+
+.. image-sg:: /auto_examples/linear_model/images/sphx_glr_plot_bayesian_ridge_001.png
+   :alt: Weights of the model
+   :srcset: /auto_examples/linear_model/images/sphx_glr_plot_bayesian_ridge_001.png
+   :class: sphx-glr-single-img
+
+
+
+
+
+.. GENERATED FROM PYTHON SOURCE LINES 77-79
+
+Plot histogram of the weights
+-----------------------------
+
+.. GENERATED FROM PYTHON SOURCE LINES 79-93
+
+.. code-block:: default
+
 
     plt.figure(figsize=(6, 5))
     plt.title("Histogram of the weights")
@@ -139,16 +161,59 @@ samples.
     )
     plt.ylabel("Features")
     plt.xlabel("Values of the weights")
-    plt.legend(loc="upper left")
+    _ = plt.legend(loc="upper left")
+
+
+
+
+.. image-sg:: /auto_examples/linear_model/images/sphx_glr_plot_bayesian_ridge_002.png
+   :alt: Histogram of the weights
+   :srcset: /auto_examples/linear_model/images/sphx_glr_plot_bayesian_ridge_002.png
+   :class: sphx-glr-single-img
+
+
+
+
+
+.. GENERATED FROM PYTHON SOURCE LINES 94-96
+
+Plot marginal log-likelihood
+----------------------------
+
+.. GENERATED FROM PYTHON SOURCE LINES 96-103
+
+.. code-block:: default
+
 
     plt.figure(figsize=(6, 5))
     plt.title("Marginal log-likelihood")
     plt.plot(clf.scores_, color="navy", linewidth=lw)
     plt.ylabel("Score")
-    plt.xlabel("Iterations")
+    _ = plt.xlabel("Iterations")
 
 
-    # Plotting some predictions for polynomial regression
+
+
+.. image-sg:: /auto_examples/linear_model/images/sphx_glr_plot_bayesian_ridge_003.png
+   :alt: Marginal log-likelihood
+   :srcset: /auto_examples/linear_model/images/sphx_glr_plot_bayesian_ridge_003.png
+   :class: sphx-glr-single-img
+
+
+
+
+
+.. GENERATED FROM PYTHON SOURCE LINES 104-106
+
+Plot some predictions for polynomial regression with standard deviations
+------------------------------------------------------------------------
+
+.. GENERATED FROM PYTHON SOURCE LINES 106-136
+
+.. code-block:: default
+
+
+
     def f(x, noise_amount):
         y = np.sqrt(x) * np.sin(x)
         noise = np.random.normal(0, 1, len(x))
@@ -176,13 +241,23 @@ samples.
     plt.plot(X_plot, y_plot, color="gold", linewidth=lw, label="Ground Truth")
     plt.ylabel("Output y")
     plt.xlabel("Feature X")
-    plt.legend(loc="lower left")
-    plt.show()
+    _ = plt.legend(loc="lower left")
+
+
+
+.. image-sg:: /auto_examples/linear_model/images/sphx_glr_plot_bayesian_ridge_004.png
+   :alt: plot bayesian ridge
+   :srcset: /auto_examples/linear_model/images/sphx_glr_plot_bayesian_ridge_004.png
+   :class: sphx-glr-single-img
+
+
+
+
 
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** ( 0 minutes  0.379 seconds)
+   **Total running time of the script:** ( 0 minutes  0.363 seconds)
 
 
 .. _sphx_glr_download_auto_examples_linear_model_plot_bayesian_ridge.py:
