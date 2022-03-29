@@ -251,7 +251,7 @@ original Tensor Sketch paper [1].</p>
 </div>
 <p>As a baseline, train a linear SVM on the original features and print the
 accuracy. We also measure and store accuracies and training times to
-plot them latter.</p>
+plot them later.</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">results</span> <span class="o">=</span> <span class="p">{}</span>
 
 <span class="n">lsvm</span> <span class="o">=</span> <a href="../../modules/generated/sklearn.svm.LinearSVC.html#sklearn.svm.LinearSVC" title="sklearn.svm.LinearSVC" class="sphx-glr-backref-module-sklearn-svm sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">LinearSVC</span></a><span class="p">()</span>
@@ -281,10 +281,13 @@ original samples have 54 features, the explicit feature map of the
 polynomial kernel of degree four would have approximately 8.5 million
 features (precisely, 54^4). Thanks to <a class="reference internal" href="../../modules/generated/sklearn.kernel_approximation.PolynomialCountSketch.html#sklearn.kernel_approximation.PolynomialCountSketch" title="sklearn.kernel_approximation.PolynomialCountSketch"><code class="xref py py-class docutils literal notranslate"><span class="pre">PolynomialCountSketch</span></code></a>, we can
 condense most of the discriminative information of that feature space into a
-much more compact representation. We repeat the experiment 5 times to
-compensate for the stochastic nature of <a class="reference internal" href="../../modules/generated/sklearn.kernel_approximation.PolynomialCountSketch.html#sklearn.kernel_approximation.PolynomialCountSketch" title="sklearn.kernel_approximation.PolynomialCountSketch"><code class="xref py py-class docutils literal notranslate"><span class="pre">PolynomialCountSketch</span></code></a>.</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">n_runs</span> <span class="o">=</span> <span class="mi">3</span>
-<span class="k">for</span> <span class="n">n_components</span> <span class="ow">in</span> <span class="p">[</span><span class="mi">250</span><span class="p">,</span> <span class="mi">500</span><span class="p">,</span> <span class="mi">1000</span><span class="p">,</span> <span class="mi">2000</span><span class="p">]:</span>
+much more compact representation. While we run the experiment only a single time
+(<code class="docutils literal notranslate"><span class="pre">n_runs</span></code> = 1) in this example, in practice one should repeat the experiment several
+times to compensate for the stochastic nature of <a class="reference internal" href="../../modules/generated/sklearn.kernel_approximation.PolynomialCountSketch.html#sklearn.kernel_approximation.PolynomialCountSketch" title="sklearn.kernel_approximation.PolynomialCountSketch"><code class="xref py py-class docutils literal notranslate"><span class="pre">PolynomialCountSketch</span></code></a>.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">n_runs</span> <span class="o">=</span> <span class="mi">1</span>
+<span class="n">N_COMPONENTS</span> <span class="o">=</span> <span class="p">[</span><span class="mi">250</span><span class="p">,</span> <span class="mi">500</span><span class="p">,</span> <span class="mi">1000</span><span class="p">,</span> <span class="mi">2000</span><span class="p">]</span>
+
+<span class="k">for</span> <span class="n">n_components</span> <span class="ow">in</span> <span class="n">N_COMPONENTS</span><span class="p">:</span>
 
     <span class="n">ps_lsvm_time</span> <span class="o">=</span> <span class="mi">0</span>
     <span class="n">ps_lsvm_score</span> <span class="o">=</span> <span class="mi">0</span>
@@ -320,9 +323,9 @@ compensate for the stochastic nature of <a class="reference internal" href="../.
 </div>
 <p class="sphx-glr-script-out">Out:</p>
 <div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>Linear SVM score on 250 PolynomialCountSketch features: 76.50%
-Linear SVM score on 500 PolynomialCountSketch features: 77.36%
-Linear SVM score on 1000 PolynomialCountSketch features: 77.87%
-Linear SVM score on 2000 PolynomialCountSketch features: 78.30%
+Linear SVM score on 500 PolynomialCountSketch features: 77.54%
+Linear SVM score on 1000 PolynomialCountSketch features: 77.58%
+Linear SVM score on 2000 PolynomialCountSketch features: 78.12%
 </pre></div>
 </div>
 <p>Train a kernelized SVM to see how well <a class="reference internal" href="../../modules/generated/sklearn.kernel_approximation.PolynomialCountSketch.html#sklearn.kernel_approximation.PolynomialCountSketch" title="sklearn.kernel_approximation.PolynomialCountSketch"><code class="xref py py-class docutils literal notranslate"><span class="pre">PolynomialCountSketch</span></code></a>
@@ -339,20 +342,18 @@ reason why kernel approximators are so useful:</p>
 <span class="n">ksvm_score</span> <span class="o">=</span> <span class="mi">100</span> <span class="o">*</span> <span class="n">ksvm</span><span class="o">.</span><span class="n">score</span><span class="p">(</span><span class="n">X_test</span><span class="p">,</span> <span class="n">y_test</span><span class="p">)</span>
 
 <span class="n">results</span><span class="p">[</span><span class="s2">&quot;KSVM&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;time&quot;</span><span class="p">:</span> <span class="n">ksvm_time</span><span class="p">,</span> <span class="s2">&quot;score&quot;</span><span class="p">:</span> <span class="n">ksvm_score</span><span class="p">}</span>
-<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Kernel-SVM score on raw featrues: </span><span class="si">{</span><span class="n">ksvm_score</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2">%&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Kernel-SVM score on raw features: </span><span class="si">{</span><span class="n">ksvm_score</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2">%&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
 <p class="sphx-glr-script-out">Out:</p>
-<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>Kernel-SVM score on raw featrues: 79.78%
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>Kernel-SVM score on raw features: 79.78%
 </pre></div>
 </div>
 <p>Finally, plot the results of the different methods against their training
 times. As we can see, the kernelized SVM achieves a higher accuracy,
 but its training time is much larger and, most importantly, will grow
 much faster if the number of training samples increases.</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">N_COMPONENTS</span> <span class="o">=</span> <span class="p">[</span><span class="mi">250</span><span class="p">,</span> <span class="mi">500</span><span class="p">,</span> <span class="mi">1000</span><span class="p">,</span> <span class="mi">2000</span><span class="p">]</span>
-
-<span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <a href="https://matplotlib.org/stable/api/_as_gen/matplotlib.pyplot.subplots.html#matplotlib.pyplot.subplots" title="matplotlib.pyplot.subplots" class="sphx-glr-backref-module-matplotlib-pyplot sphx-glr-backref-type-py-function"><span class="n">plt</span><span class="o">.</span><span class="n">subplots</span></a><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">7</span><span class="p">,</span> <span class="mi">7</span><span class="p">))</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <a href="https://matplotlib.org/stable/api/_as_gen/matplotlib.pyplot.subplots.html#matplotlib.pyplot.subplots" title="matplotlib.pyplot.subplots" class="sphx-glr-backref-module-matplotlib-pyplot sphx-glr-backref-type-py-function"><span class="n">plt</span><span class="o">.</span><span class="n">subplots</span></a><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">7</span><span class="p">,</span> <span class="mi">7</span><span class="p">))</span>
 <span class="n">ax</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span>
     <span class="p">[</span>
         <span class="n">results</span><span class="p">[</span><span class="s2">&quot;LSVM&quot;</span><span class="p">][</span><span class="s2">&quot;time&quot;</span><span class="p">],</span>
@@ -375,6 +376,7 @@ much faster if the number of training samples increases.</p>
     <span class="n">label</span><span class="o">=</span><span class="s2">&quot;Linear SVM + PolynomialCountSketch&quot;</span><span class="p">,</span>
     <span class="n">c</span><span class="o">=</span><span class="s2">&quot;blue&quot;</span><span class="p">,</span>
 <span class="p">)</span>
+
 <span class="k">for</span> <span class="n">n_components</span> <span class="ow">in</span> <span class="n">N_COMPONENTS</span><span class="p">:</span>
     <span class="n">ax</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span>
         <span class="p">[</span>
@@ -420,7 +422,7 @@ explicit feature maps.” KDD ‘13 (2013).
 <a class="reference external" href="https://doi.org/10.1145/2487575.2487591">https://doi.org/10.1145/2487575.2487591</a></p>
 <p>[2] LIBSVM binary datasets repository
 <a class="reference external" href="https://www.csie.ntu.edu.tw/~cjlin/libsvmtools/datasets/binary.html">https://www.csie.ntu.edu.tw/~cjlin/libsvmtools/datasets/binary.html</a></p>
-<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> ( 0 minutes  35.376 seconds)</p>
+<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> ( 0 minutes  13.290 seconds)</p>
 <div class="sphx-glr-footer class sphx-glr-footer-example docutils container" id="sphx-glr-download-auto-examples-kernel-approximation-plot-scalable-poly-kernels-py">
 <div class="binder-badge docutils container">
 <a class="reference external image-reference" href="https://mybinder.org/v2/gh/scikit-learn/scikit-learn/main?urlpath=lab/tree/notebooks/auto_examples/kernel_approximation/plot_scalable_poly_kernels.ipynb"><img alt="Launch binder" src="../../_images/binder_badge_logo16.svg" width="150px" /></a>
