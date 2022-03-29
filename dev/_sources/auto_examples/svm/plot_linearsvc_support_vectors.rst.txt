@@ -26,7 +26,7 @@ Unlike SVC (based on LIBSVM), LinearSVC (based on LIBLINEAR) does not provide
 the support vectors. This example demonstrates how to obtain the support
 vectors in LinearSVC.
 
-.. GENERATED FROM PYTHON SOURCE LINES 11-62
+.. GENERATED FROM PYTHON SOURCE LINES 11-58
 
 
 
@@ -46,6 +46,7 @@ vectors in LinearSVC.
     import matplotlib.pyplot as plt
     from sklearn.datasets import make_blobs
     from sklearn.svm import LinearSVC
+    from sklearn.inspection import DecisionBoundaryDisplay
 
     X, y = make_blobs(n_samples=40, centers=2, random_state=0)
 
@@ -65,17 +66,12 @@ vectors in LinearSVC.
         plt.subplot(1, 2, i + 1)
         plt.scatter(X[:, 0], X[:, 1], c=y, s=30, cmap=plt.cm.Paired)
         ax = plt.gca()
-        xlim = ax.get_xlim()
-        ylim = ax.get_ylim()
-        xx, yy = np.meshgrid(
-            np.linspace(xlim[0], xlim[1], 50), np.linspace(ylim[0], ylim[1], 50)
-        )
-        Z = clf.decision_function(np.c_[xx.ravel(), yy.ravel()])
-        Z = Z.reshape(xx.shape)
-        plt.contour(
-            xx,
-            yy,
-            Z,
+        DecisionBoundaryDisplay.from_estimator(
+            clf,
+            X,
+            ax=ax,
+            grid_resolution=50,
+            plot_method="contour",
             colors="k",
             levels=[-1, 0, 1],
             alpha=0.5,
@@ -96,7 +92,7 @@ vectors in LinearSVC.
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** ( 0 minutes  0.117 seconds)
+   **Total running time of the script:** ( 0 minutes  0.118 seconds)
 
 
 .. _sphx_glr_download_auto_examples_svm_plot_linearsvc_support_vectors.py:

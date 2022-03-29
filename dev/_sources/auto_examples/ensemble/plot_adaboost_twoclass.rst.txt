@@ -34,7 +34,7 @@ the predicted class label. Additionally, a new dataset could be constructed
 containing a desired purity of class B, for example, by only selecting samples
 with a decision score above some value.
 
-.. GENERATED FROM PYTHON SOURCE LINES 19-111
+.. GENERATED FROM PYTHON SOURCE LINES 19-113
 
 
 
@@ -60,6 +60,7 @@ with a decision score above some value.
     from sklearn.ensemble import AdaBoostClassifier
     from sklearn.tree import DecisionTreeClassifier
     from sklearn.datasets import make_gaussian_quantiles
+    from sklearn.inspection import DecisionBoundaryDisplay
 
 
     # Construct dataset
@@ -86,16 +87,18 @@ with a decision score above some value.
     plt.figure(figsize=(10, 5))
 
     # Plot the decision boundaries
-    plt.subplot(121)
-    x_min, x_max = X[:, 0].min() - 1, X[:, 0].max() + 1
-    y_min, y_max = X[:, 1].min() - 1, X[:, 1].max() + 1
-    xx, yy = np.meshgrid(
-        np.arange(x_min, x_max, plot_step), np.arange(y_min, y_max, plot_step)
+    ax = plt.subplot(121)
+    disp = DecisionBoundaryDisplay.from_estimator(
+        bdt,
+        X,
+        cmap=plt.cm.Paired,
+        response_method="predict",
+        ax=ax,
+        xlabel="x",
+        ylabel="y",
     )
-
-    Z = bdt.predict(np.c_[xx.ravel(), yy.ravel()])
-    Z = Z.reshape(xx.shape)
-    cs = plt.contourf(xx, yy, Z, cmap=plt.cm.Paired)
+    x_min, x_max = disp.xx0.min(), disp.xx0.max()
+    y_min, y_max = disp.xx1.min(), disp.xx1.max()
     plt.axis("tight")
 
     # Plot the training points
@@ -113,8 +116,7 @@ with a decision score above some value.
     plt.xlim(x_min, x_max)
     plt.ylim(y_min, y_max)
     plt.legend(loc="upper right")
-    plt.xlabel("x")
-    plt.ylabel("y")
+
     plt.title("Decision Boundary")
 
     # Plot the two-class decision scores
@@ -145,7 +147,7 @@ with a decision score above some value.
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** ( 0 minutes  1.631 seconds)
+   **Total running time of the script:** ( 0 minutes  0.434 seconds)
 
 
 .. _sphx_glr_download_auto_examples_ensemble_plot_adaboost_twoclass.py:
