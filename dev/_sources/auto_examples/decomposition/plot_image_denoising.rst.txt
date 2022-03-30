@@ -168,7 +168,7 @@ Extract reference patches
     data = data.reshape(data.shape[0], -1)
     data -= np.mean(data, axis=0)
     data /= np.std(data, axis=0)
-    print("done in %.2fs." % (time() - t0))
+    print(f"{data.shape[0]} patches extracted in %.2fs." % (time() - t0))
 
 
 
@@ -182,7 +182,7 @@ Extract reference patches
  .. code-block:: none
 
     Extracting reference patches...
-    done in 0.01s.
+    22692 patches extracted in 0.01s.
 
 
 
@@ -192,7 +192,7 @@ Extract reference patches
 Learn the dictionary from reference patches
 -------------------------------------------
 
-.. GENERATED FROM PYTHON SOURCE LINES 115-138
+.. GENERATED FROM PYTHON SOURCE LINES 115-145
 
 .. code-block:: default
 
@@ -200,10 +200,17 @@ Learn the dictionary from reference patches
 
     print("Learning the dictionary...")
     t0 = time()
-    dico = MiniBatchDictionaryLearning(n_components=50, alpha=1, n_iter=250)
+    dico = MiniBatchDictionaryLearning(
+        # increase to 300 for higher quality results at the cost of slower
+        # training times.
+        n_components=50,
+        batch_size=200,
+        alpha=1.0,
+        max_iter=10,
+    )
     V = dico.fit(data).components_
     dt = time() - t0
-    print("done in %.2fs." % dt)
+    print(f"{dico.n_iter_} iterations / {dico.n_steps_} steps in {dt:.2f}.")
 
     plt.figure(figsize=(4.2, 4))
     for i, comp in enumerate(V[:100]):
@@ -223,7 +230,7 @@ Learn the dictionary from reference patches
 
 
 .. image-sg:: /auto_examples/decomposition/images/sphx_glr_plot_image_denoising_002.png
-   :alt: Dictionary learned from face patches Train time 0.9s on 22692 patches
+   :alt: Dictionary learned from face patches Train time 16.8s on 22692 patches
    :srcset: /auto_examples/decomposition/images/sphx_glr_plot_image_denoising_002.png
    :class: sphx-glr-single-img
 
@@ -235,17 +242,17 @@ Learn the dictionary from reference patches
  .. code-block:: none
 
     Learning the dictionary...
-    done in 0.95s.
+    1.0 iterations / 114 steps in 16.84.
 
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 139-141
+.. GENERATED FROM PYTHON SOURCE LINES 146-148
 
 Extract noisy patches and reconstruct them using the dictionary
 ---------------------------------------------------------------
 
-.. GENERATED FROM PYTHON SOURCE LINES 141-180
+.. GENERATED FROM PYTHON SOURCE LINES 148-187
 
 .. code-block:: default
 
@@ -297,28 +304,28 @@ Extract noisy patches and reconstruct them using the dictionary
     *
 
       .. image-sg:: /auto_examples/decomposition/images/sphx_glr_plot_image_denoising_003.png
-         :alt: Orthogonal Matching Pursuit 1 atom (time: 0.6s), Image, Difference (norm: 11.23)
+         :alt: Orthogonal Matching Pursuit 1 atom (time: 0.6s), Image, Difference (norm: 10.69)
          :srcset: /auto_examples/decomposition/images/sphx_glr_plot_image_denoising_003.png
          :class: sphx-glr-multi-img
 
     *
 
       .. image-sg:: /auto_examples/decomposition/images/sphx_glr_plot_image_denoising_004.png
-         :alt: Orthogonal Matching Pursuit 2 atoms (time: 1.2s), Image, Difference (norm: 9.65)
+         :alt: Orthogonal Matching Pursuit 2 atoms (time: 1.2s), Image, Difference (norm: 9.32)
          :srcset: /auto_examples/decomposition/images/sphx_glr_plot_image_denoising_004.png
          :class: sphx-glr-multi-img
 
     *
 
       .. image-sg:: /auto_examples/decomposition/images/sphx_glr_plot_image_denoising_005.png
-         :alt: Least-angle regression 4 atoms (time: 9.5s), Image, Difference (norm: 13.52)
+         :alt: Least-angle regression 4 atoms (time: 10.1s), Image, Difference (norm: 13.45)
          :srcset: /auto_examples/decomposition/images/sphx_glr_plot_image_denoising_005.png
          :class: sphx-glr-multi-img
 
     *
 
       .. image-sg:: /auto_examples/decomposition/images/sphx_glr_plot_image_denoising_006.png
-         :alt: Thresholding  alpha=0.1 (time: 0.1s), Image, Difference (norm: 15.41)
+         :alt: Thresholding  alpha=0.1 (time: 0.1s), Image, Difference (norm: 14.40)
          :srcset: /auto_examples/decomposition/images/sphx_glr_plot_image_denoising_006.png
          :class: sphx-glr-multi-img
 
@@ -333,13 +340,13 @@ Extract noisy patches and reconstruct them using the dictionary
     done in 0.00s.
     Orthogonal Matching Pursuit
     1 atom...
-    done in 0.59s.
+    done in 0.60s.
     Orthogonal Matching Pursuit
     2 atoms...
-    done in 1.18s.
+    done in 1.20s.
     Least-angle regression
     4 atoms...
-    done in 9.50s.
+    done in 10.06s.
     Thresholding
      alpha=0.1...
     done in 0.09s.
@@ -350,7 +357,7 @@ Extract noisy patches and reconstruct them using the dictionary
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** ( 0 minutes  13.566 seconds)
+   **Total running time of the script:** ( 0 minutes  30.048 seconds)
 
 
 .. _sphx_glr_download_auto_examples_decomposition_plot_image_denoising.py:
