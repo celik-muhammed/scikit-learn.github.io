@@ -212,8 +212,8 @@
 <li><a class="reference internal" href="#sklearn-linear-model"><code class="xref py py-mod docutils literal notranslate"><span class="pre">sklearn.linear_model</span></code></a></li>
 <li><a class="reference internal" href="#sklearn-manifold"><code class="xref py py-mod docutils literal notranslate"><span class="pre">sklearn.manifold</span></code></a></li>
 <li><a class="reference internal" href="#sklearn-metrics"><code class="xref py py-mod docutils literal notranslate"><span class="pre">sklearn.metrics</span></code></a></li>
-<li><a class="reference internal" href="#sklearn-model-selection"><code class="xref py py-mod docutils literal notranslate"><span class="pre">sklearn.model_selection</span></code></a></li>
 <li><a class="reference internal" href="#sklearn-mixture"><code class="xref py py-mod docutils literal notranslate"><span class="pre">sklearn.mixture</span></code></a></li>
+<li><a class="reference internal" href="#sklearn-model-selection"><code class="xref py py-mod docutils literal notranslate"><span class="pre">sklearn.model_selection</span></code></a></li>
 <li><a class="reference internal" href="#sklearn-multiclass"><code class="xref py py-mod docutils literal notranslate"><span class="pre">sklearn.multiclass</span></code></a></li>
 <li><a class="reference internal" href="#sklearn-neighbors"><code class="xref py py-mod docutils literal notranslate"><span class="pre">sklearn.neighbors</span></code></a></li>
 <li><a class="reference internal" href="#sklearn-neural-network"><code class="xref py py-mod docutils literal notranslate"><span class="pre">sklearn.neural_network</span></code></a></li>
@@ -308,6 +308,18 @@ behavior.</p></li>
 <section id="changelog">
 <h2>Changelog<a class="headerlink" href="#changelog" title="Permalink to this headline">¶</a></h2>
 <ul>
+<li><p><span class="raw-html"><span class="badge badge-warning">API Change</span></span>  The option for using the log loss, aka binomial or multinomial deviance, via
+the <code class="docutils literal notranslate"><span class="pre">loss</span></code> parameters was made more consistent. The preferred way is by
+setting the value to <code class="docutils literal notranslate"><span class="pre">&quot;log_loss&quot;</span></code>. Old option names are still valid and
+produce the same models, but are deprecated and will be removed in version
+1.3.</p>
+<ul class="simple">
+<li><p>For <a class="reference internal" href="../modules/generated/sklearn.ensemble.GradientBoostingClassifier.html#sklearn.ensemble.GradientBoostingClassifier" title="sklearn.ensemble.GradientBoostingClassifier"><code class="xref py py-class docutils literal notranslate"><span class="pre">ensemble.GradientBoostingClassifier</span></code></a>, The <code class="docutils literal notranslate"><span class="pre">loss</span></code> parameter name
+“deviance” is deprecated in favor of the new name “log_loss”, which is now the
+default.
+<a class="reference external" href="https://github.com/scikit-learn/scikit-learn/pull/23036">#23036</a> by <a class="reference external" href="https://github.com/lorentzenchr">Christian Lorentzen</a>.</p></li>
+</ul>
+</li>
 <li><p><span class="raw-html"><span class="badge badge-info">Efficiency</span></span>  Low-level routines for reductions on pairwise distances
 for dense float64 datasets have been refactored. The following functions
 and estimators now benefit from improved performances in terms of hardware
@@ -931,6 +943,20 @@ unbounded values. <a class="reference external" href="https://github.com/scikit-
 are all negative. <a class="reference external" href="https://github.com/scikit-learn/scikit-learn/pull/19085">#19085</a> by <a class="reference external" href="https://github.com/varunagrawal">Varun Agrawal</a>.</p></li>
 </ul>
 </section>
+<section id="sklearn-mixture">
+<h3><a class="reference internal" href="../modules/classes.html#module-sklearn.mixture" title="sklearn.mixture"><code class="xref py py-mod docutils literal notranslate"><span class="pre">sklearn.mixture</span></code></a><a class="headerlink" href="#sklearn-mixture" title="Permalink to this headline">¶</a></h3>
+<ul class="simple">
+<li><p><span class="raw-html"><span class="badge badge-info">Enhancement</span></span>  <a class="reference internal" href="../modules/generated/sklearn.mixture.GaussianMixture.html#sklearn.mixture.GaussianMixture" title="sklearn.mixture.GaussianMixture"><code class="xref py py-class docutils literal notranslate"><span class="pre">mixture.GaussianMixture</span></code></a> and
+<a class="reference internal" href="../modules/generated/sklearn.mixture.BayesianGaussianMixture.html#sklearn.mixture.BayesianGaussianMixture" title="sklearn.mixture.BayesianGaussianMixture"><code class="xref py py-class docutils literal notranslate"><span class="pre">mixture.BayesianGaussianMixture</span></code></a> can now be initialized using
+k-means++ and random data points. <a class="reference external" href="https://github.com/scikit-learn/scikit-learn/pull/20408">#20408</a> by
+<a class="reference external" href="https://github.com/g-walsh">Gordon Walsh</a>, <a class="reference external" href="https://github.com/alceballosa">Alberto Ceballos</a>
+and <a class="reference external" href="https://github.com/ariosramirez">Andres Rios</a>.</p></li>
+<li><p><span class="raw-html"><span class="badge badge-danger">Fix</span></span>  Fix a bug that correctly initialize <code class="docutils literal notranslate"><span class="pre">precisions_cholesky_</span></code> in
+<a class="reference internal" href="../modules/generated/sklearn.mixture.GaussianMixture.html#sklearn.mixture.GaussianMixture" title="sklearn.mixture.GaussianMixture"><code class="xref py py-class docutils literal notranslate"><span class="pre">mixture.GaussianMixture</span></code></a> when providing <code class="docutils literal notranslate"><span class="pre">precisions_init</span></code> by taking
+its square root.
+<a class="reference external" href="https://github.com/scikit-learn/scikit-learn/pull/22058">#22058</a> by <a class="reference external" href="https://github.com/glemaitre">Guillaume Lemaitre</a>.</p></li>
+</ul>
+</section>
 <section id="sklearn-model-selection">
 <h3><a class="reference internal" href="../modules/classes.html#module-sklearn.model_selection" title="sklearn.model_selection"><code class="xref py py-mod docutils literal notranslate"><span class="pre">sklearn.model_selection</span></code></a><a class="headerlink" href="#sklearn-model-selection" title="Permalink to this headline">¶</a></h3>
 <ul class="simple">
@@ -945,15 +971,8 @@ correlation coefficient (MCC).
 <a class="reference internal" href="../modules/generated/sklearn.model_selection.HalvingGridSearchCV.html#sklearn.model_selection.HalvingGridSearchCV" title="sklearn.model_selection.HalvingGridSearchCV"><code class="xref py py-class docutils literal notranslate"><span class="pre">model_selection.HalvingGridSearchCV</span></code></a>
 now validate input parameters in <code class="docutils literal notranslate"><span class="pre">fit</span></code> instead of <code class="docutils literal notranslate"><span class="pre">__init__</span></code>.
 <a class="reference external" href="https://github.com/scikit-learn/scikit-learn/pull/21880">#21880</a> by <a class="reference external" href="https://github.com/MrinalTyagi">Mrinal Tyagi</a>.</p></li>
-</ul>
-</section>
-<section id="sklearn-mixture">
-<h3><a class="reference internal" href="../modules/classes.html#module-sklearn.mixture" title="sklearn.mixture"><code class="xref py py-mod docutils literal notranslate"><span class="pre">sklearn.mixture</span></code></a><a class="headerlink" href="#sklearn-mixture" title="Permalink to this headline">¶</a></h3>
-<ul class="simple">
-<li><p><span class="raw-html"><span class="badge badge-danger">Fix</span></span>  Fix a bug that correctly initialize <code class="docutils literal notranslate"><span class="pre">precisions_cholesky_</span></code> in
-<a class="reference internal" href="../modules/generated/sklearn.mixture.GaussianMixture.html#sklearn.mixture.GaussianMixture" title="sklearn.mixture.GaussianMixture"><code class="xref py py-class docutils literal notranslate"><span class="pre">mixture.GaussianMixture</span></code></a> when providing <code class="docutils literal notranslate"><span class="pre">precisions_init</span></code> by taking
-its square root.
-<a class="reference external" href="https://github.com/scikit-learn/scikit-learn/pull/22058">#22058</a> by <a class="reference external" href="https://github.com/glemaitre">Guillaume Lemaitre</a>.</p></li>
+<li><p><span class="raw-html"><span class="badge badge-danger">Fix</span></span>  <a class="reference internal" href="../modules/generated/sklearn.model_selection.learning_curve.html#sklearn.model_selection.learning_curve" title="sklearn.model_selection.learning_curve"><code class="xref py py-func docutils literal notranslate"><span class="pre">model_selection.learning_curve</span></code></a> now supports <code class="docutils literal notranslate"><span class="pre">partial_fit</span></code>
+with regressors. <a class="reference external" href="https://github.com/scikit-learn/scikit-learn/pull/22982">#22982</a> by <a class="reference external" href="https://github.com/thomasjpfan">Thomas Fan</a>.</p></li>
 </ul>
 </section>
 <section id="sklearn-multiclass">
