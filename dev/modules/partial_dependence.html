@@ -201,11 +201,11 @@
 <span id="partial-dependence"></span><h1><span class="section-number">4.1. </span>Partial Dependence and Individual Conditional Expectation plots<a class="headerlink" href="#partial-dependence-and-individual-conditional-expectation-plots" title="Permalink to this headline">¶</a></h1>
 <p>Partial dependence plots (PDP) and individual conditional expectation (ICE)
 plots can be used to visualize and analyze interaction between the target
-response <a class="footnote-reference brackets" href="#id2" id="id1">1</a> and a set of input features of interest.</p>
-<p>Both PDPs and ICEs assume that the input features of interest are independent
-from the complement features, and this assumption is often violated in practice.
-Thus, in the case of correlated features, we will create absurd data points to
-compute the PDP/ICE.</p>
+response <a class="footnote-reference brackets" href="#id6" id="id1">1</a> and a set of input features of interest.</p>
+<p>Both PDPs <a class="reference internal" href="#h2009" id="id2"><span>[H2009]</span></a> and ICEs <a class="reference internal" href="#g2015" id="id3"><span>[G2015]</span></a> assume that the input features of interest
+are independent from the complement features, and this assumption is often
+violated in practice. Thus, in the case of correlated features, we will
+create absurd data points to compute the PDP/ICE <a class="reference internal" href="#m2019" id="id4"><span>[M2019]</span></a>.</p>
 <section id="partial-dependence-plots">
 <h2><span class="section-number">4.1.1. </span>Partial dependence plots<a class="headerlink" href="#partial-dependence-plots" title="Permalink to this headline">¶</a></h2>
 <p>Partial dependence plots (PDP) show the dependence between the target response
@@ -335,6 +335,18 @@ PDPs. They can be plotted together with
 <span class="go">&lt;...&gt;</span>
 </pre></div>
 </div>
+<p>If there are too many lines in an ICE plot, it can be difficult to see
+differences between individual samples and interpret the model. Centering the
+ICE at the first value on the x-axis, produces centered Individual Conditional
+Expectation (cICE) plots <a class="reference internal" href="#g2015" id="id5"><span>[G2015]</span></a>. This puts emphasis on the divergence of
+individual conditional expectations from the mean line, thus making it easier
+to explore heterogeneous relationships. cICE plots can be plotted by setting
+<code class="docutils literal notranslate"><span class="pre">centered=True</span></code>:</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">PartialDependenceDisplay</span><span class="o">.</span><span class="n">from_estimator</span><span class="p">(</span><span class="n">clf</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">features</span><span class="p">,</span>
+<span class="gp">... </span>    <span class="n">kind</span><span class="o">=</span><span class="s1">&#39;both&#39;</span><span class="p">,</span> <span class="n">centered</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="go">&lt;...&gt;</span>
+</pre></div>
+</div>
 </section>
 <section id="mathematical-definition">
 <h2><span class="section-number">4.1.3. </span>Mathematical Definition<a class="headerlink" href="#mathematical-definition" title="Permalink to this headline">¶</a></h2>
@@ -404,7 +416,7 @@ interpreting PDPs is that the features should be independent.</p>
 </div>
 <p class="rubric">Footnotes</p>
 <dl class="footnote brackets">
-<dt class="label" id="id2"><span class="brackets"><a class="fn-backref" href="#id1">1</a></span></dt>
+<dt class="label" id="id6"><span class="brackets"><a class="fn-backref" href="#id1">1</a></span></dt>
 <dd><p>For classification, the target response may be the probability of a
 class (the positive class for binary classification), or the decision
 function.</p>
@@ -412,15 +424,25 @@ function.</p>
 </dl>
 <div class="topic">
 <p class="topic-title">References</p>
-<p>T. Hastie, R. Tibshirani and J. Friedman, <a class="reference external" href="https://web.stanford.edu/~hastie/ElemStatLearn//">The Elements of
-Statistical Learning</a>,
+<dl class="citation">
+<dt class="label" id="h2009"><span class="brackets"><a class="fn-backref" href="#id2">H2009</a></span></dt>
+<dd><p>T. Hastie, R. Tibshirani and J. Friedman,
+<a class="reference external" href="https://web.stanford.edu/~hastie/ElemStatLearn//">The Elements of Statistical Learning</a>,
 Second Edition, Section 10.13.2, Springer, 2009.</p>
-<p>C. Molnar, <a class="reference external" href="https://christophm.github.io/interpretable-ml-book/">Interpretable Machine Learning</a>, Section 5.1, 2019.</p>
-<p>A. Goldstein, A. Kapelner, J. Bleich, and E. Pitkin, <a class="reference external" href="https://arxiv.org/abs/1309.6392">Peeking Inside the
-Black Box: Visualizing Statistical Learning With Plots of Individual
-Conditional Expectation</a>,
-Journal of Computational and Graphical Statistics, 24(1): 44-65, Springer,
-2015.</p>
+</dd>
+<dt class="label" id="m2019"><span class="brackets"><a class="fn-backref" href="#id4">M2019</a></span></dt>
+<dd><p>C. Molnar,
+<a class="reference external" href="https://christophm.github.io/interpretable-ml-book/">Interpretable Machine Learning</a>,
+Section 5.1, 2019.</p>
+</dd>
+<dt class="label" id="g2015"><span class="brackets">G2015</span><span class="fn-backref">(<a href="#id3">1</a>,<a href="#id5">2</a>)</span></dt>
+<dd><p><a class="reference external" href="https://arxiv.org/abs/1309.6392">A. Goldstein, A. Kapelner, J. Bleich, and E. Pitkin,
+“Peeking Inside the Black Box: Visualizing Statistical
+Learning With Plots of Individual Conditional Expectation”
+Journal of Computational and Graphical Statistics,
+24(1): 44-65, Springer, 2015.</a></p>
+</dd>
+</dl>
 </div>
 </section>
 </section>
