@@ -137,7 +137,7 @@ single-variable partial dependence plots.
  .. code-block:: none
 
     Training MLPRegressor...
-    done in 3.044s
+    done in 2.154s
     Test R2 score: 0.82
 
 
@@ -212,7 +212,7 @@ We will plot the partial dependence, both individual (ICE) and averaged one
  .. code-block:: none
 
     Computing partial dependence plots...
-    done in 1.668s
+    done in 1.247s
 
 
 
@@ -250,7 +250,7 @@ compute the partial dependence on the same features.
  .. code-block:: none
 
     Training HistGradientBoostingRegressor...
-    done in 0.598s
+    done in 0.383s
     Test R2 score: 0.85
 
 
@@ -307,7 +307,7 @@ We will plot the partial dependence, both individual (ICE) and averaged one
  .. code-block:: none
 
     Computing partial dependence plots...
-    done in 7.318s
+    done in 6.162s
 
 
 
@@ -400,7 +400,7 @@ on an efficient way using the `'recursion'` method.
  .. code-block:: none
 
     Computing partial dependence plots...
-    done in 3.398s
+    done in 3.092s
 
 
 
@@ -420,12 +420,15 @@ age.
 Let's make the same partial dependence plot for the 2 features interaction,
 this time in 3 dimensions.
 
-.. GENERATED FROM PYTHON SOURCE LINES 263-291
+.. GENERATED FROM PYTHON SOURCE LINES 263-294
 
 .. code-block:: default
 
     import numpy as np
-    from mpl_toolkits.mplot3d import Axes3D
+
+    # unused but required import for doing 3d projections with matplotlib < 3.2
+    import mpl_toolkits.mplot3d  # noqa: F401
+
     from sklearn.inspection import partial_dependence
 
     fig = plt.figure()
@@ -436,7 +439,7 @@ this time in 3 dimensions.
     )
     XX, YY = np.meshgrid(pdp["values"][0], pdp["values"][1])
     Z = pdp.average[0].T
-    ax = Axes3D(fig)
+    ax = fig.add_subplot(projection="3d")
     fig.add_axes(ax)
 
     surf = ax.plot_surface(XX, YY, Z, rstride=1, cstride=1, cmap=plt.cm.BuPu, edgecolor="k")
@@ -461,22 +464,13 @@ this time in 3 dimensions.
    :class: sphx-glr-single-img
 
 
-.. rst-class:: sphx-glr-script-out
-
- Out:
-
- .. code-block:: none
-
-    /home/circleci/project/examples/inspection/plot_partial_dependence.py:275: MatplotlibDeprecationWarning: Axes3D(fig) adding itself to the figure is deprecated since 3.4. Pass the keyword argument auto_add_to_figure=False and use fig.add_axes(ax) to suppress this warning. The default value of auto_add_to_figure will change to False in mpl3.5 and True values will no longer work in 3.6.  This is consistent with other Axes classes.
-      ax = Axes3D(fig)
-
 
 
 
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** ( 0 minutes  16.694 seconds)
+   **Total running time of the script:** ( 0 minutes  13.559 seconds)
 
 
 .. _sphx_glr_download_auto_examples_inspection_plot_partial_dependence.py:
