@@ -183,7 +183,16 @@
             <div class="sk-sidebar-toc">
               <ul>
 <li><a class="reference internal" href="#">Scalable learning with polynomial kernel approximation</a><ul>
+<li><a class="reference internal" href="#preparing-the-data">Preparing the data</a></li>
+<li><a class="reference internal" href="#partitioning-the-data">Partitioning the data</a></li>
+<li><a class="reference internal" href="#feature-normalization">Feature normalization</a></li>
+<li><a class="reference internal" href="#establishing-a-baseline-model">Establishing a baseline model</a></li>
+<li><a class="reference internal" href="#establishing-the-kernel-approximation-model">Establishing the kernel approximation model</a></li>
+<li><a class="reference internal" href="#establishing-the-kernelized-svm-model">Establishing the kernelized SVM model</a></li>
+<li><a class="reference internal" href="#comparing-the-results">Comparing the results</a><ul>
 <li><a class="reference internal" href="#references">References</a></li>
+</ul>
+</li>
 </ul>
 </li>
 </ul>
@@ -214,49 +223,61 @@ features (<code class="docutils literal notranslate"><span class="pre">n_compone
 approximating the accuracy of a kernelized classifier in a scalable manner.</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># Author: Daniel Lopez-Sanchez &lt;lope@usal.es&gt;</span>
 <span class="c1"># License: BSD 3 clause</span>
-
-<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
-<span class="kn">from</span> <span class="nn">sklearn.datasets</span> <span class="kn">import</span> <a href="../../modules/generated/sklearn.datasets.fetch_covtype.html#sklearn.datasets.fetch_covtype" title="sklearn.datasets.fetch_covtype" class="sphx-glr-backref-module-sklearn-datasets sphx-glr-backref-type-py-function"><span class="n">fetch_covtype</span></a>
-<span class="kn">from</span> <span class="nn">sklearn.model_selection</span> <span class="kn">import</span> <a href="../../modules/generated/sklearn.model_selection.train_test_split.html#sklearn.model_selection.train_test_split" title="sklearn.model_selection.train_test_split" class="sphx-glr-backref-module-sklearn-model_selection sphx-glr-backref-type-py-function"><span class="n">train_test_split</span></a>
-<span class="kn">from</span> <span class="nn">sklearn.preprocessing</span> <span class="kn">import</span> <a href="../../modules/generated/sklearn.preprocessing.MinMaxScaler.html#sklearn.preprocessing.MinMaxScaler" title="sklearn.preprocessing.MinMaxScaler" class="sphx-glr-backref-module-sklearn-preprocessing sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">MinMaxScaler</span></a><span class="p">,</span> <a href="../../modules/generated/sklearn.preprocessing.Normalizer.html#sklearn.preprocessing.Normalizer" title="sklearn.preprocessing.Normalizer" class="sphx-glr-backref-module-sklearn-preprocessing sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">Normalizer</span></a>
-<span class="kn">from</span> <span class="nn">sklearn.svm</span> <span class="kn">import</span> <a href="../../modules/generated/sklearn.svm.LinearSVC.html#sklearn.svm.LinearSVC" title="sklearn.svm.LinearSVC" class="sphx-glr-backref-module-sklearn-svm sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">LinearSVC</span></a>
-<span class="kn">from</span> <span class="nn">sklearn.kernel_approximation</span> <span class="kn">import</span> <a href="../../modules/generated/sklearn.kernel_approximation.PolynomialCountSketch.html#sklearn.kernel_approximation.PolynomialCountSketch" title="sklearn.kernel_approximation.PolynomialCountSketch" class="sphx-glr-backref-module-sklearn-kernel_approximation sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">PolynomialCountSketch</span></a>
-<span class="kn">from</span> <span class="nn">sklearn.pipeline</span> <span class="kn">import</span> <a href="../../modules/generated/sklearn.pipeline.Pipeline.html#sklearn.pipeline.Pipeline" title="sklearn.pipeline.Pipeline" class="sphx-glr-backref-module-sklearn-pipeline sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">Pipeline</span></a><span class="p">,</span> <a href="../../modules/generated/sklearn.pipeline.make_pipeline.html#sklearn.pipeline.make_pipeline" title="sklearn.pipeline.make_pipeline" class="sphx-glr-backref-module-sklearn-pipeline sphx-glr-backref-type-py-function"><span class="n">make_pipeline</span></a>
-<span class="kn">import</span> <span class="nn">time</span>
 </pre></div>
 </div>
+<section id="preparing-the-data">
+<h2>Preparing the data<a class="headerlink" href="#preparing-the-data" title="Permalink to this headline">¶</a></h2>
 <p>Load the Covtype dataset, which contains 581,012 samples
 with 54 features each, distributed among 6 classes. The goal of this dataset
 is to predict forest cover type from cartographic variables only
 (no remotely sensed data). After loading, we transform it into a binary
 classification problem to match the version of the dataset in the
 LIBSVM webpage [2], which was the one used in [1].</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">X</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <a href="../../modules/generated/sklearn.datasets.fetch_covtype.html#sklearn.datasets.fetch_covtype" title="sklearn.datasets.fetch_covtype" class="sphx-glr-backref-module-sklearn-datasets sphx-glr-backref-type-py-function"><span class="n">fetch_covtype</span></a><span class="p">(</span><span class="n">return_X_y</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">sklearn.datasets</span> <span class="kn">import</span> <a href="../../modules/generated/sklearn.datasets.fetch_covtype.html#sklearn.datasets.fetch_covtype" title="sklearn.datasets.fetch_covtype" class="sphx-glr-backref-module-sklearn-datasets sphx-glr-backref-type-py-function"><span class="n">fetch_covtype</span></a>
+
+<span class="n">X</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <a href="../../modules/generated/sklearn.datasets.fetch_covtype.html#sklearn.datasets.fetch_covtype" title="sklearn.datasets.fetch_covtype" class="sphx-glr-backref-module-sklearn-datasets sphx-glr-backref-type-py-function"><span class="n">fetch_covtype</span></a><span class="p">(</span><span class="n">return_X_y</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 
 <span class="n">y</span><span class="p">[</span><span class="n">y</span> <span class="o">!=</span> <span class="mi">2</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span>
 <span class="n">y</span><span class="p">[</span><span class="n">y</span> <span class="o">==</span> <span class="mi">2</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span>  <span class="c1"># We will try to separate class 2 from the other 6 classes.</span>
 </pre></div>
 </div>
+</section>
+<section id="partitioning-the-data">
+<h2>Partitioning the data<a class="headerlink" href="#partitioning-the-data" title="Permalink to this headline">¶</a></h2>
 <p>Here we select 5,000 samples for training and 10,000 for testing.
 To actually reproduce the results in the original Tensor Sketch paper,
 select 100,000 for training.</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">X_train</span><span class="p">,</span> <span class="n">X_test</span><span class="p">,</span> <span class="n">y_train</span><span class="p">,</span> <span class="n">y_test</span> <span class="o">=</span> <a href="../../modules/generated/sklearn.model_selection.train_test_split.html#sklearn.model_selection.train_test_split" title="sklearn.model_selection.train_test_split" class="sphx-glr-backref-module-sklearn-model_selection sphx-glr-backref-type-py-function"><span class="n">train_test_split</span></a><span class="p">(</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">sklearn.model_selection</span> <span class="kn">import</span> <a href="../../modules/generated/sklearn.model_selection.train_test_split.html#sklearn.model_selection.train_test_split" title="sklearn.model_selection.train_test_split" class="sphx-glr-backref-module-sklearn-model_selection sphx-glr-backref-type-py-function"><span class="n">train_test_split</span></a>
+
+<span class="n">X_train</span><span class="p">,</span> <span class="n">X_test</span><span class="p">,</span> <span class="n">y_train</span><span class="p">,</span> <span class="n">y_test</span> <span class="o">=</span> <a href="../../modules/generated/sklearn.model_selection.train_test_split.html#sklearn.model_selection.train_test_split" title="sklearn.model_selection.train_test_split" class="sphx-glr-backref-module-sklearn-model_selection sphx-glr-backref-type-py-function"><span class="n">train_test_split</span></a><span class="p">(</span>
     <span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">train_size</span><span class="o">=</span><span class="mi">5_000</span><span class="p">,</span> <span class="n">test_size</span><span class="o">=</span><span class="mi">10_000</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="mi">42</span>
 <span class="p">)</span>
 </pre></div>
 </div>
+</section>
+<section id="feature-normalization">
+<h2>Feature normalization<a class="headerlink" href="#feature-normalization" title="Permalink to this headline">¶</a></h2>
 <p>Now scale features to the range [0, 1] to match the format of the dataset in
 the LIBSVM webpage, and then normalize to unit length as done in the
 original Tensor Sketch paper [1].</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">mm</span> <span class="o">=</span> <a href="../../modules/generated/sklearn.pipeline.make_pipeline.html#sklearn.pipeline.make_pipeline" title="sklearn.pipeline.make_pipeline" class="sphx-glr-backref-module-sklearn-pipeline sphx-glr-backref-type-py-function"><span class="n">make_pipeline</span></a><span class="p">(</span><a href="../../modules/generated/sklearn.preprocessing.MinMaxScaler.html#sklearn.preprocessing.MinMaxScaler" title="sklearn.preprocessing.MinMaxScaler" class="sphx-glr-backref-module-sklearn-preprocessing sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">MinMaxScaler</span></a><span class="p">(),</span> <a href="../../modules/generated/sklearn.preprocessing.Normalizer.html#sklearn.preprocessing.Normalizer" title="sklearn.preprocessing.Normalizer" class="sphx-glr-backref-module-sklearn-preprocessing sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">Normalizer</span></a><span class="p">())</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">sklearn.preprocessing</span> <span class="kn">import</span> <a href="../../modules/generated/sklearn.preprocessing.MinMaxScaler.html#sklearn.preprocessing.MinMaxScaler" title="sklearn.preprocessing.MinMaxScaler" class="sphx-glr-backref-module-sklearn-preprocessing sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">MinMaxScaler</span></a><span class="p">,</span> <a href="../../modules/generated/sklearn.preprocessing.Normalizer.html#sklearn.preprocessing.Normalizer" title="sklearn.preprocessing.Normalizer" class="sphx-glr-backref-module-sklearn-preprocessing sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">Normalizer</span></a>
+<span class="kn">from</span> <span class="nn">sklearn.pipeline</span> <span class="kn">import</span> <a href="../../modules/generated/sklearn.pipeline.make_pipeline.html#sklearn.pipeline.make_pipeline" title="sklearn.pipeline.make_pipeline" class="sphx-glr-backref-module-sklearn-pipeline sphx-glr-backref-type-py-function"><span class="n">make_pipeline</span></a>
+
+<span class="n">mm</span> <span class="o">=</span> <a href="../../modules/generated/sklearn.pipeline.make_pipeline.html#sklearn.pipeline.make_pipeline" title="sklearn.pipeline.make_pipeline" class="sphx-glr-backref-module-sklearn-pipeline sphx-glr-backref-type-py-function"><span class="n">make_pipeline</span></a><span class="p">(</span><a href="../../modules/generated/sklearn.preprocessing.MinMaxScaler.html#sklearn.preprocessing.MinMaxScaler" title="sklearn.preprocessing.MinMaxScaler" class="sphx-glr-backref-module-sklearn-preprocessing sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">MinMaxScaler</span></a><span class="p">(),</span> <a href="../../modules/generated/sklearn.preprocessing.Normalizer.html#sklearn.preprocessing.Normalizer" title="sklearn.preprocessing.Normalizer" class="sphx-glr-backref-module-sklearn-preprocessing sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">Normalizer</span></a><span class="p">())</span>
 <span class="n">X_train</span> <span class="o">=</span> <span class="n">mm</span><span class="o">.</span><span class="n">fit_transform</span><span class="p">(</span><span class="n">X_train</span><span class="p">)</span>
 <span class="n">X_test</span> <span class="o">=</span> <span class="n">mm</span><span class="o">.</span><span class="n">transform</span><span class="p">(</span><span class="n">X_test</span><span class="p">)</span>
 </pre></div>
 </div>
+</section>
+<section id="establishing-a-baseline-model">
+<h2>Establishing a baseline model<a class="headerlink" href="#establishing-a-baseline-model" title="Permalink to this headline">¶</a></h2>
 <p>As a baseline, train a linear SVM on the original features and print the
 accuracy. We also measure and store accuracies and training times to
 plot them later.</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">results</span> <span class="o">=</span> <span class="p">{}</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">time</span>
+<span class="kn">from</span> <span class="nn">sklearn.svm</span> <span class="kn">import</span> <a href="../../modules/generated/sklearn.svm.LinearSVC.html#sklearn.svm.LinearSVC" title="sklearn.svm.LinearSVC" class="sphx-glr-backref-module-sklearn-svm sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">LinearSVC</span></a>
+
+<span class="n">results</span> <span class="o">=</span> <span class="p">{}</span>
 
 <span class="n">lsvm</span> <span class="o">=</span> <a href="../../modules/generated/sklearn.svm.LinearSVC.html#sklearn.svm.LinearSVC" title="sklearn.svm.LinearSVC" class="sphx-glr-backref-module-sklearn-svm sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">LinearSVC</span></a><span class="p">()</span>
 <span class="n">start</span> <span class="o">=</span> <a href="https://docs.python.org/3/library/time.html#time.time" title="time.time" class="sphx-glr-backref-module-time sphx-glr-backref-type-py-function"><span class="n">time</span><span class="o">.</span><span class="n">time</span></a><span class="p">()</span>
@@ -272,6 +293,9 @@ plot them later.</p>
 <div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>Linear SVM score on raw features: 75.62%
 </pre></div>
 </div>
+</section>
+<section id="establishing-the-kernel-approximation-model">
+<h2>Establishing the kernel approximation model<a class="headerlink" href="#establishing-the-kernel-approximation-model" title="Permalink to this headline">¶</a></h2>
 <p>Then we train linear SVMs on the features generated by
 <a class="reference internal" href="../../modules/generated/sklearn.kernel_approximation.PolynomialCountSketch.html#sklearn.kernel_approximation.PolynomialCountSketch" title="sklearn.kernel_approximation.PolynomialCountSketch"><code class="xref py py-class docutils literal notranslate"><span class="pre">PolynomialCountSketch</span></code></a> with different values for <code class="docutils literal notranslate"><span class="pre">n_components</span></code>,
 showing that these kernel feature approximations improve the accuracy
@@ -288,7 +312,9 @@ condense most of the discriminative information of that feature space into a
 much more compact representation. While we run the experiment only a single time
 (<code class="docutils literal notranslate"><span class="pre">n_runs</span></code> = 1) in this example, in practice one should repeat the experiment several
 times to compensate for the stochastic nature of <a class="reference internal" href="../../modules/generated/sklearn.kernel_approximation.PolynomialCountSketch.html#sklearn.kernel_approximation.PolynomialCountSketch" title="sklearn.kernel_approximation.PolynomialCountSketch"><code class="xref py py-class docutils literal notranslate"><span class="pre">PolynomialCountSketch</span></code></a>.</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">n_runs</span> <span class="o">=</span> <span class="mi">1</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">sklearn.kernel_approximation</span> <span class="kn">import</span> <a href="../../modules/generated/sklearn.kernel_approximation.PolynomialCountSketch.html#sklearn.kernel_approximation.PolynomialCountSketch" title="sklearn.kernel_approximation.PolynomialCountSketch" class="sphx-glr-backref-module-sklearn-kernel_approximation sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">PolynomialCountSketch</span></a>
+
+<span class="n">n_runs</span> <span class="o">=</span> <span class="mi">1</span>
 <span class="n">N_COMPONENTS</span> <span class="o">=</span> <span class="p">[</span><span class="mi">250</span><span class="p">,</span> <span class="mi">500</span><span class="p">,</span> <span class="mi">1000</span><span class="p">,</span> <span class="mi">2000</span><span class="p">]</span>
 
 <span class="k">for</span> <span class="n">n_components</span> <span class="ow">in</span> <span class="n">N_COMPONENTS</span><span class="p">:</span>
@@ -297,14 +323,9 @@ times to compensate for the stochastic nature of <a class="reference internal" h
     <span class="n">ps_lsvm_score</span> <span class="o">=</span> <span class="mi">0</span>
     <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n_runs</span><span class="p">):</span>
 
-        <span class="n">pipeline</span> <span class="o">=</span> <a href="../../modules/generated/sklearn.pipeline.Pipeline.html#sklearn.pipeline.Pipeline" title="sklearn.pipeline.Pipeline" class="sphx-glr-backref-module-sklearn-pipeline sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">Pipeline</span></a><span class="p">(</span>
-            <span class="n">steps</span><span class="o">=</span><span class="p">[</span>
-                <span class="p">(</span>
-                    <span class="s2">&quot;kernel_approximator&quot;</span><span class="p">,</span>
-                    <a href="../../modules/generated/sklearn.kernel_approximation.PolynomialCountSketch.html#sklearn.kernel_approximation.PolynomialCountSketch" title="sklearn.kernel_approximation.PolynomialCountSketch" class="sphx-glr-backref-module-sklearn-kernel_approximation sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">PolynomialCountSketch</span></a><span class="p">(</span><span class="n">n_components</span><span class="o">=</span><span class="n">n_components</span><span class="p">,</span> <span class="n">degree</span><span class="o">=</span><span class="mi">4</span><span class="p">),</span>
-                <span class="p">),</span>
-                <span class="p">(</span><span class="s2">&quot;linear_classifier&quot;</span><span class="p">,</span> <a href="../../modules/generated/sklearn.svm.LinearSVC.html#sklearn.svm.LinearSVC" title="sklearn.svm.LinearSVC" class="sphx-glr-backref-module-sklearn-svm sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">LinearSVC</span></a><span class="p">()),</span>
-            <span class="p">]</span>
+        <span class="n">pipeline</span> <span class="o">=</span> <a href="../../modules/generated/sklearn.pipeline.make_pipeline.html#sklearn.pipeline.make_pipeline" title="sklearn.pipeline.make_pipeline" class="sphx-glr-backref-module-sklearn-pipeline sphx-glr-backref-type-py-function"><span class="n">make_pipeline</span></a><span class="p">(</span>
+            <a href="../../modules/generated/sklearn.kernel_approximation.PolynomialCountSketch.html#sklearn.kernel_approximation.PolynomialCountSketch" title="sklearn.kernel_approximation.PolynomialCountSketch" class="sphx-glr-backref-module-sklearn-kernel_approximation sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">PolynomialCountSketch</span></a><span class="p">(</span><span class="n">n_components</span><span class="o">=</span><span class="n">n_components</span><span class="p">,</span> <span class="n">degree</span><span class="o">=</span><span class="mi">4</span><span class="p">),</span>
+            <a href="../../modules/generated/sklearn.svm.LinearSVC.html#sklearn.svm.LinearSVC" title="sklearn.svm.LinearSVC" class="sphx-glr-backref-module-sklearn-svm sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">LinearSVC</span></a><span class="p">(),</span>
         <span class="p">)</span>
 
         <span class="n">start</span> <span class="o">=</span> <a href="https://docs.python.org/3/library/time.html#time.time" title="time.time" class="sphx-glr-backref-module-time sphx-glr-backref-type-py-function"><span class="n">time</span><span class="o">.</span><span class="n">time</span></a><span class="p">()</span>
@@ -332,6 +353,9 @@ Linear SVM score on 1000 PolynomialCountSketch features: 77.58%
 Linear SVM score on 2000 PolynomialCountSketch features: 78.12%
 </pre></div>
 </div>
+</section>
+<section id="establishing-the-kernelized-svm-model">
+<h2>Establishing the kernelized SVM model<a class="headerlink" href="#establishing-the-kernelized-svm-model" title="Permalink to this headline">¶</a></h2>
 <p>Train a kernelized SVM to see how well <a class="reference internal" href="../../modules/generated/sklearn.kernel_approximation.PolynomialCountSketch.html#sklearn.kernel_approximation.PolynomialCountSketch" title="sklearn.kernel_approximation.PolynomialCountSketch"><code class="xref py py-class docutils literal notranslate"><span class="pre">PolynomialCountSketch</span></code></a>
 is approximating the performance of the kernel. This, of course, may take
 some time, as the SVC class has a relatively poor scalability. This is the
@@ -353,11 +377,16 @@ reason why kernel approximators are so useful:</p>
 <div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>Kernel-SVM score on raw features: 79.78%
 </pre></div>
 </div>
+</section>
+<section id="comparing-the-results">
+<h2>Comparing the results<a class="headerlink" href="#comparing-the-results" title="Permalink to this headline">¶</a></h2>
 <p>Finally, plot the results of the different methods against their training
 times. As we can see, the kernelized SVM achieves a higher accuracy,
 but its training time is much larger and, most importantly, will grow
 much faster if the number of training samples increases.</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <a href="https://matplotlib.org/stable/api/_as_gen/matplotlib.pyplot.subplots.html#matplotlib.pyplot.subplots" title="matplotlib.pyplot.subplots" class="sphx-glr-backref-module-matplotlib-pyplot sphx-glr-backref-type-py-function"><span class="n">plt</span><span class="o">.</span><span class="n">subplots</span></a><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">7</span><span class="p">,</span> <span class="mi">7</span><span class="p">))</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+
+<span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <a href="https://matplotlib.org/stable/api/_as_gen/matplotlib.pyplot.subplots.html#matplotlib.pyplot.subplots" title="matplotlib.pyplot.subplots" class="sphx-glr-backref-module-matplotlib-pyplot sphx-glr-backref-type-py-function"><span class="n">plt</span><span class="o">.</span><span class="n">subplots</span></a><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">7</span><span class="p">,</span> <span class="mi">7</span><span class="p">))</span>
 <span class="n">ax</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span>
     <span class="p">[</span>
         <span class="n">results</span><span class="p">[</span><span class="s2">&quot;LSVM&quot;</span><span class="p">][</span><span class="s2">&quot;time&quot;</span><span class="p">],</span>
@@ -420,13 +449,13 @@ much faster if the number of training samples increases.</p>
 </pre></div>
 </div>
 <img src="../../_images/sphx_glr_plot_scalable_poly_kernels_001.png" srcset="../../_images/sphx_glr_plot_scalable_poly_kernels_001.png" alt="plot scalable poly kernels" class = "sphx-glr-single-img"/><section id="references">
-<h2>References<a class="headerlink" href="#references" title="Permalink to this headline">¶</a></h2>
+<h3>References<a class="headerlink" href="#references" title="Permalink to this headline">¶</a></h3>
 <p>[1] Pham, Ninh and Rasmus Pagh. “Fast and scalable polynomial kernels via
 explicit feature maps.” KDD ‘13 (2013).
 <a class="reference external" href="https://doi.org/10.1145/2487575.2487591">https://doi.org/10.1145/2487575.2487591</a></p>
 <p>[2] LIBSVM binary datasets repository
 <a class="reference external" href="https://www.csie.ntu.edu.tw/~cjlin/libsvmtools/datasets/binary.html">https://www.csie.ntu.edu.tw/~cjlin/libsvmtools/datasets/binary.html</a></p>
-<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> ( 0 minutes  17.701 seconds)</p>
+<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> ( 0 minutes  15.619 seconds)</p>
 <div class="sphx-glr-footer class sphx-glr-footer-example docutils container" id="sphx-glr-download-auto-examples-kernel-approximation-plot-scalable-poly-kernels-py">
 <div class="binder-badge docutils container">
 <a class="reference external image-reference" href="https://mybinder.org/v2/gh/scikit-learn/scikit-learn/main?urlpath=lab/tree/notebooks/auto_examples/kernel_approximation/plot_scalable_poly_kernels.ipynb"><img alt="Launch binder" src="../../_images/binder_badge_logo16.svg" width="150px" /></a>
@@ -439,6 +468,7 @@ explicit feature maps.” KDD ‘13 (2013).
 </div>
 </div>
 <p class="sphx-glr-signature"><a class="reference external" href="https://sphinx-gallery.github.io">Gallery generated by Sphinx-Gallery</a></p>
+</section>
 </section>
 </section>
 
