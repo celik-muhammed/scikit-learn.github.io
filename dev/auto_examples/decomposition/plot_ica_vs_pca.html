@@ -182,7 +182,11 @@
         </div>
             <div class="sk-sidebar-toc">
               <ul>
-<li><a class="reference internal" href="#">FastICA on 2D point clouds</a></li>
+<li><a class="reference internal" href="#">FastICA on 2D point clouds</a><ul>
+<li><a class="reference internal" href="#generate-sample-data">Generate sample data</a></li>
+<li><a class="reference internal" href="#plot-results">Plot results</a></li>
+</ul>
+</li>
 </ul>
 
             </div>
@@ -217,24 +221,16 @@ represented by orange vectors. We represent the signal in the PCA space,
 after whitening by the variance corresponding to the PCA vectors (lower
 left). Running ICA corresponds to finding a rotation in this space to
 identify the directions of largest non-Gaussianity (lower right).</p>
-<img src="../../_images/sphx_glr_plot_ica_vs_pca_001.png" srcset="../../_images/sphx_glr_plot_ica_vs_pca_001.png" alt="True Independent Sources, Observations, PCA recovered signals, ICA recovered signals" class = "sphx-glr-single-img"/><p class="sphx-glr-script-out">Out:</p>
-<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>/home/circleci/project/sklearn/decomposition/_fastica.py:488: FutureWarning: From version 1.3 whiten=&#39;unit-variance&#39; will be used by default.
-  warnings.warn(
-</pre></div>
-</div>
-<div class="line-block">
-<div class="line"><br /></div>
-</div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># Authors: Alexandre Gramfort, Gael Varoquaux</span>
 <span class="c1"># License: BSD 3 clause</span>
-
-<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
-<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+</pre></div>
+</div>
+<section id="generate-sample-data">
+<h2>Generate sample data<a class="headerlink" href="#generate-sample-data" title="Permalink to this headline">¶</a></h2>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 
 <span class="kn">from</span> <span class="nn">sklearn.decomposition</span> <span class="kn">import</span> <a href="../../modules/generated/sklearn.decomposition.PCA.html#sklearn.decomposition.PCA" title="sklearn.decomposition.PCA" class="sphx-glr-backref-module-sklearn-decomposition sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">PCA</span></a><span class="p">,</span> <a href="../../modules/generated/sklearn.decomposition.FastICA.html#sklearn.decomposition.FastICA" title="sklearn.decomposition.FastICA" class="sphx-glr-backref-module-sklearn-decomposition sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">FastICA</span></a>
 
-<span class="c1"># #############################################################################</span>
-<span class="c1"># Generate sample data</span>
 <span class="n">rng</span> <span class="o">=</span> <a href="https://numpy.org/doc/stable/reference/random/legacy.html#numpy.random.RandomState" title="numpy.random.RandomState" class="sphx-glr-backref-module-numpy-random sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">RandomState</span></a><span class="p">(</span><span class="mi">42</span><span class="p">)</span>
 <span class="n">S</span> <span class="o">=</span> <span class="n">rng</span><span class="o">.</span><span class="n">standard_t</span><span class="p">(</span><span class="mf">1.5</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="p">(</span><span class="mi">20000</span><span class="p">,</span> <span class="mi">2</span><span class="p">))</span>
 <span class="n">S</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">]</span> <span class="o">*=</span> <span class="mf">2.0</span>
@@ -247,14 +243,16 @@ identify the directions of largest non-Gaussianity (lower right).</p>
 <span class="n">pca</span> <span class="o">=</span> <a href="../../modules/generated/sklearn.decomposition.PCA.html#sklearn.decomposition.PCA" title="sklearn.decomposition.PCA" class="sphx-glr-backref-module-sklearn-decomposition sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">PCA</span></a><span class="p">()</span>
 <span class="n">S_pca_</span> <span class="o">=</span> <span class="n">pca</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X</span><span class="p">)</span><span class="o">.</span><span class="n">transform</span><span class="p">(</span><span class="n">X</span><span class="p">)</span>
 
-<span class="n">ica</span> <span class="o">=</span> <a href="../../modules/generated/sklearn.decomposition.FastICA.html#sklearn.decomposition.FastICA" title="sklearn.decomposition.FastICA" class="sphx-glr-backref-module-sklearn-decomposition sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">FastICA</span></a><span class="p">(</span><span class="n">random_state</span><span class="o">=</span><span class="n">rng</span><span class="p">)</span>
+<span class="n">ica</span> <span class="o">=</span> <a href="../../modules/generated/sklearn.decomposition.FastICA.html#sklearn.decomposition.FastICA" title="sklearn.decomposition.FastICA" class="sphx-glr-backref-module-sklearn-decomposition sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">FastICA</span></a><span class="p">(</span><span class="n">random_state</span><span class="o">=</span><span class="n">rng</span><span class="p">,</span> <span class="n">whiten</span><span class="o">=</span><span class="s2">&quot;arbitrary-variance&quot;</span><span class="p">)</span>
 <span class="n">S_ica_</span> <span class="o">=</span> <span class="n">ica</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X</span><span class="p">)</span><span class="o">.</span><span class="n">transform</span><span class="p">(</span><span class="n">X</span><span class="p">)</span>  <span class="c1"># Estimate the sources</span>
 
 <span class="n">S_ica_</span> <span class="o">/=</span> <span class="n">S_ica_</span><span class="o">.</span><span class="n">std</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
-
-
-<span class="c1"># #############################################################################</span>
-<span class="c1"># Plot results</span>
+</pre></div>
+</div>
+</section>
+<section id="plot-results">
+<h2>Plot results<a class="headerlink" href="#plot-results" title="Permalink to this headline">¶</a></h2>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
 
 
 <span class="k">def</span> <span class="nf">plot_samples</span><span class="p">(</span><span class="n">S</span><span class="p">,</span> <span class="n">axis_list</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
@@ -312,7 +310,7 @@ identify the directions of largest non-Gaussianity (lower right).</p>
 <a href="https://matplotlib.org/stable/api/_as_gen/matplotlib.pyplot.show.html#matplotlib.pyplot.show" title="matplotlib.pyplot.show" class="sphx-glr-backref-module-matplotlib-pyplot sphx-glr-backref-type-py-function"><span class="n">plt</span><span class="o">.</span><span class="n">show</span></a><span class="p">()</span>
 </pre></div>
 </div>
-<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> ( 0 minutes  0.251 seconds)</p>
+<img src="../../_images/sphx_glr_plot_ica_vs_pca_001.png" srcset="../../_images/sphx_glr_plot_ica_vs_pca_001.png" alt="True Independent Sources, Observations, PCA recovered signals, ICA recovered signals" class = "sphx-glr-single-img"/><p class="sphx-glr-timing"><strong>Total running time of the script:</strong> ( 0 minutes  0.263 seconds)</p>
 <div class="sphx-glr-footer class sphx-glr-footer-example docutils container" id="sphx-glr-download-auto-examples-decomposition-plot-ica-vs-pca-py">
 <div class="binder-badge docutils container">
 <a class="reference external image-reference" href="https://mybinder.org/v2/gh/scikit-learn/scikit-learn/main?urlpath=lab/tree/notebooks/auto_examples/decomposition/plot_ica_vs_pca.ipynb"><img alt="Launch binder" src="../../_images/binder_badge_logo9.svg" width="150px" /></a>
@@ -325,6 +323,7 @@ identify the directions of largest non-Gaussianity (lower right).</p>
 </div>
 </div>
 <p class="sphx-glr-signature"><a class="reference external" href="https://sphinx-gallery.github.io">Gallery generated by Sphinx-Gallery</a></p>
+</section>
 </section>
 
 

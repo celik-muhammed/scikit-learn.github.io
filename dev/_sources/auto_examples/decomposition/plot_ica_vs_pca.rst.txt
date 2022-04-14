@@ -46,31 +46,7 @@ after whitening by the variance corresponding to the PCA vectors (lower
 left). Running ICA corresponds to finding a rotation in this space to
 identify the directions of largest non-Gaussianity (lower right).
 
-.. GENERATED FROM PYTHON SOURCE LINES 31-117
-
-
-
-.. image-sg:: /auto_examples/decomposition/images/sphx_glr_plot_ica_vs_pca_001.png
-   :alt: True Independent Sources, Observations, PCA recovered signals, ICA recovered signals
-   :srcset: /auto_examples/decomposition/images/sphx_glr_plot_ica_vs_pca_001.png
-   :class: sphx-glr-single-img
-
-
-.. rst-class:: sphx-glr-script-out
-
- Out:
-
- .. code-block:: none
-
-    /home/circleci/project/sklearn/decomposition/_fastica.py:488: FutureWarning: From version 1.3 whiten='unit-variance' will be used by default.
-      warnings.warn(
-
-
-
-
-
-
-|
+.. GENERATED FROM PYTHON SOURCE LINES 31-35
 
 .. code-block:: default
 
@@ -78,13 +54,26 @@ identify the directions of largest non-Gaussianity (lower right).
     # Authors: Alexandre Gramfort, Gael Varoquaux
     # License: BSD 3 clause
 
+
+
+
+
+
+
+
+.. GENERATED FROM PYTHON SOURCE LINES 36-38
+
+Generate sample data
+--------------------
+
+.. GENERATED FROM PYTHON SOURCE LINES 38-60
+
+.. code-block:: default
+
     import numpy as np
-    import matplotlib.pyplot as plt
 
     from sklearn.decomposition import PCA, FastICA
 
-    # #############################################################################
-    # Generate sample data
     rng = np.random.RandomState(42)
     S = rng.standard_t(1.5, size=(20000, 2))
     S[:, 0] *= 2.0
@@ -97,14 +86,29 @@ identify the directions of largest non-Gaussianity (lower right).
     pca = PCA()
     S_pca_ = pca.fit(X).transform(X)
 
-    ica = FastICA(random_state=rng)
+    ica = FastICA(random_state=rng, whiten="arbitrary-variance")
     S_ica_ = ica.fit(X).transform(X)  # Estimate the sources
 
     S_ica_ /= S_ica_.std(axis=0)
 
 
-    # #############################################################################
-    # Plot results
+
+
+
+
+
+
+
+.. GENERATED FROM PYTHON SOURCE LINES 61-63
+
+Plot results
+------------
+
+.. GENERATED FROM PYTHON SOURCE LINES 63-119
+
+.. code-block:: default
+
+    import matplotlib.pyplot as plt
 
 
     def plot_samples(S, axis_list=None):
@@ -162,9 +166,20 @@ identify the directions of largest non-Gaussianity (lower right).
     plt.show()
 
 
+
+.. image-sg:: /auto_examples/decomposition/images/sphx_glr_plot_ica_vs_pca_001.png
+   :alt: True Independent Sources, Observations, PCA recovered signals, ICA recovered signals
+   :srcset: /auto_examples/decomposition/images/sphx_glr_plot_ica_vs_pca_001.png
+   :class: sphx-glr-single-img
+
+
+
+
+
+
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** ( 0 minutes  0.251 seconds)
+   **Total running time of the script:** ( 0 minutes  0.263 seconds)
 
 
 .. _sphx_glr_download_auto_examples_decomposition_plot_ica_vs_pca.py:
