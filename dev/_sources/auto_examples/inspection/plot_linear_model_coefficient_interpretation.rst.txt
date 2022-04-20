@@ -46,10 +46,9 @@ wage as a function of various features such as experience, age, or education.
    :local:
    :depth: 1
 
-.. GENERATED FROM PYTHON SOURCE LINES 31-38
+.. GENERATED FROM PYTHON SOURCE LINES 33-39
 
 .. code-block:: default
-
 
     import numpy as np
     import scipy as sp
@@ -64,7 +63,7 @@ wage as a function of various features such as experience, age, or education.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 39-45
+.. GENERATED FROM PYTHON SOURCE LINES 40-46
 
 The dataset: wages
 ------------------
@@ -73,7 +72,7 @@ We fetch the data from `OpenML <http://openml.org/>`_.
 Note that setting the parameter `as_frame` to True will retrieve the data
 as a pandas dataframe.
 
-.. GENERATED FROM PYTHON SOURCE LINES 45-50
+.. GENERATED FROM PYTHON SOURCE LINES 46-51
 
 .. code-block:: default
 
@@ -89,15 +88,15 @@ as a pandas dataframe.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 51-54
+.. GENERATED FROM PYTHON SOURCE LINES 52-54
 
 Then, we identify features `X` and targets `y`: the column WAGE is our
 target variable (i.e., the variable which we want to predict).
 
-
-.. GENERATED FROM PYTHON SOURCE LINES 54-57
+.. GENERATED FROM PYTHON SOURCE LINES 54-58
 
 .. code-block:: default
+
 
     X = survey.data[survey.feature_names]
     X.describe(include="all")
@@ -291,13 +290,13 @@ target variable (i.e., the variable which we want to predict).
     <br />
     <br />
 
-.. GENERATED FROM PYTHON SOURCE LINES 58-61
+.. GENERATED FROM PYTHON SOURCE LINES 59-62
 
 Note that the dataset contains categorical and numerical variables.
 We will need to take this into account when preprocessing the dataset
 thereafter.
 
-.. GENERATED FROM PYTHON SOURCE LINES 61-64
+.. GENERATED FROM PYTHON SOURCE LINES 62-65
 
 .. code-block:: default
 
@@ -415,14 +414,15 @@ thereafter.
     <br />
     <br />
 
-.. GENERATED FROM PYTHON SOURCE LINES 65-67
+.. GENERATED FROM PYTHON SOURCE LINES 66-68
 
 Our target for prediction: the wage.
 Wages are described as floating-point number in dollars per hour.
 
-.. GENERATED FROM PYTHON SOURCE LINES 67-70
+.. GENERATED FROM PYTHON SOURCE LINES 68-72
 
 .. code-block:: default
+
 
     y = survey.target.values.ravel()
     survey.target.head()
@@ -447,7 +447,7 @@ Wages are described as floating-point number in dollars per hour.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 71-76
+.. GENERATED FROM PYTHON SOURCE LINES 73-78
 
 We split the sample into a train and a test dataset.
 Only the train dataset will be used in the following exploratory analysis.
@@ -455,7 +455,7 @@ This is a way to emulate a real situation where predictions are performed on
 an unknown target, and we don't want our analysis and decisions to be biased
 by our knowledge of the test data.
 
-.. GENERATED FROM PYTHON SOURCE LINES 76-81
+.. GENERATED FROM PYTHON SOURCE LINES 78-83
 
 .. code-block:: default
 
@@ -471,7 +471,7 @@ by our knowledge of the test data.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 82-87
+.. GENERATED FROM PYTHON SOURCE LINES 84-89
 
 First, let's get some insights by looking at the variable distributions and
 at the pairwise relationships between them. Only numerical
@@ -479,7 +479,7 @@ variables will be used. In the following plot, each dot represents a sample.
 
   .. _marginal_dependencies:
 
-.. GENERATED FROM PYTHON SOURCE LINES 87-92
+.. GENERATED FROM PYTHON SOURCE LINES 89-94
 
 .. code-block:: default
 
@@ -500,7 +500,7 @@ variables will be used. In the following plot, each dot represents a sample.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 93-112
+.. GENERATED FROM PYTHON SOURCE LINES 95-114
 
 Looking closely at the WAGE distribution reveals that it has a
 long tail. For this reason, we should take its logarithm
@@ -522,7 +522,7 @@ The machine-learning pipeline
 To design our machine-learning pipeline, we first manually
 check the type of data that we are dealing with:
 
-.. GENERATED FROM PYTHON SOURCE LINES 112-115
+.. GENERATED FROM PYTHON SOURCE LINES 114-117
 
 .. code-block:: default
 
@@ -560,7 +560,7 @@ check the type of data that we are dealing with:
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 116-127
+.. GENERATED FROM PYTHON SOURCE LINES 118-129
 
 As seen previously, the dataset contains columns with different data types
 and we need to apply a specific preprocessing for each data types.
@@ -570,11 +570,11 @@ treated as ordered values, we need to one-hot-encode them.
 Our pre-processor will
 
 - one-hot encode (i.e., generate a column by category) the categorical
-  columns;
+  columns, only for non-binary categorical variables;
 - as a first approach (we will see after how the normalisation of numerical
   values will affect our discussion), keep numerical values as they are.
 
-.. GENERATED FROM PYTHON SOURCE LINES 127-140
+.. GENERATED FROM PYTHON SOURCE LINES 129-142
 
 .. code-block:: default
 
@@ -588,7 +588,7 @@ Our pre-processor will
     preprocessor = make_column_transformer(
         (OneHotEncoder(drop="if_binary"), categorical_columns),
         remainder="passthrough",
-        verbose_feature_names_out=False,
+        verbose_feature_names_out=False,  # avoid to prepend the preprocessor names
     )
 
 
@@ -598,15 +598,14 @@ Our pre-processor will
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 141-143
+.. GENERATED FROM PYTHON SOURCE LINES 143-145
 
 To describe the dataset as a linear model we use a ridge regressor
 with a very small regularization and to model the logarithm of the WAGE.
 
-.. GENERATED FROM PYTHON SOURCE LINES 143-156
+.. GENERATED FROM PYTHON SOURCE LINES 145-157
 
 .. code-block:: default
-
 
 
     from sklearn.pipeline import make_pipeline
@@ -627,34 +626,68 @@ with a very small regularization and to model the logarithm of the WAGE.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 157-161
+.. GENERATED FROM PYTHON SOURCE LINES 158-162
 
 Processing the dataset
 ----------------------
 
 First, we fit the model.
 
-.. GENERATED FROM PYTHON SOURCE LINES 161-164
+.. GENERATED FROM PYTHON SOURCE LINES 162-165
 
 .. code-block:: default
 
 
-    _ = model.fit(X_train, y_train)
+    model.fit(X_train, y_train)
 
 
 
 
 
 
+.. raw:: html
 
+    <div class="output_subarea output_html rendered_html output_result">
+    <style>#sk-container-id-25 {color: black;background-color: white;}#sk-container-id-25 pre{padding: 0;}#sk-container-id-25 div.sk-toggleable {background-color: white;}#sk-container-id-25 label.sk-toggleable__label {cursor: pointer;display: block;width: 100%;margin-bottom: 0;padding: 0.3em;box-sizing: border-box;text-align: center;}#sk-container-id-25 label.sk-toggleable__label-arrow:before {content: "▸";float: left;margin-right: 0.25em;color: #696969;}#sk-container-id-25 label.sk-toggleable__label-arrow:hover:before {color: black;}#sk-container-id-25 div.sk-estimator:hover label.sk-toggleable__label-arrow:before {color: black;}#sk-container-id-25 div.sk-toggleable__content {max-height: 0;max-width: 0;overflow: hidden;text-align: left;background-color: #f0f8ff;}#sk-container-id-25 div.sk-toggleable__content pre {margin: 0.2em;color: black;border-radius: 0.25em;background-color: #f0f8ff;}#sk-container-id-25 input.sk-toggleable__control:checked~div.sk-toggleable__content {max-height: 200px;max-width: 100%;overflow: auto;}#sk-container-id-25 input.sk-toggleable__control:checked~label.sk-toggleable__label-arrow:before {content: "▾";}#sk-container-id-25 div.sk-estimator input.sk-toggleable__control:checked~label.sk-toggleable__label {background-color: #d4ebff;}#sk-container-id-25 div.sk-label input.sk-toggleable__control:checked~label.sk-toggleable__label {background-color: #d4ebff;}#sk-container-id-25 input.sk-hidden--visually {border: 0;clip: rect(1px 1px 1px 1px);clip: rect(1px, 1px, 1px, 1px);height: 1px;margin: -1px;overflow: hidden;padding: 0;position: absolute;width: 1px;}#sk-container-id-25 div.sk-estimator {font-family: monospace;background-color: #f0f8ff;border: 1px dotted black;border-radius: 0.25em;box-sizing: border-box;margin-bottom: 0.5em;}#sk-container-id-25 div.sk-estimator:hover {background-color: #d4ebff;}#sk-container-id-25 div.sk-parallel-item::after {content: "";width: 100%;border-bottom: 1px solid gray;flex-grow: 1;}#sk-container-id-25 div.sk-label:hover label.sk-toggleable__label {background-color: #d4ebff;}#sk-container-id-25 div.sk-serial::before {content: "";position: absolute;border-left: 1px solid gray;box-sizing: border-box;top: 0;bottom: 0;left: 50%;z-index: 0;}#sk-container-id-25 div.sk-serial {display: flex;flex-direction: column;align-items: center;background-color: white;padding-right: 0.2em;padding-left: 0.2em;position: relative;}#sk-container-id-25 div.sk-item {position: relative;z-index: 1;}#sk-container-id-25 div.sk-parallel {display: flex;align-items: stretch;justify-content: center;background-color: white;position: relative;}#sk-container-id-25 div.sk-item::before, #sk-container-id-25 div.sk-parallel-item::before {content: "";position: absolute;border-left: 1px solid gray;box-sizing: border-box;top: 0;bottom: 0;left: 50%;z-index: -1;}#sk-container-id-25 div.sk-parallel-item {display: flex;flex-direction: column;z-index: 1;position: relative;background-color: white;}#sk-container-id-25 div.sk-parallel-item:first-child::after {align-self: flex-end;width: 50%;}#sk-container-id-25 div.sk-parallel-item:last-child::after {align-self: flex-start;width: 50%;}#sk-container-id-25 div.sk-parallel-item:only-child::after {width: 0;}#sk-container-id-25 div.sk-dashed-wrapped {border: 1px dashed gray;margin: 0 0.4em 0.5em 0.4em;box-sizing: border-box;padding-bottom: 0.4em;background-color: white;}#sk-container-id-25 div.sk-label label {font-family: monospace;font-weight: bold;display: inline-block;line-height: 1.2em;}#sk-container-id-25 div.sk-label-container {text-align: center;}#sk-container-id-25 div.sk-container {/* jupyter's `normalize.less` sets `[hidden] { display: none; }` but bootstrap.min.css set `[hidden] { display: none !important; }` so we also need the `!important` here to be able to override the default hidden behavior on the sphinx rendered scikit-learn.org. See: https://github.com/scikit-learn/scikit-learn/issues/21755 */display: inline-block !important;position: relative;}#sk-container-id-25 div.sk-text-repr-fallback {display: none;}</style><div id="sk-container-id-25" class="sk-top-container"><div class="sk-text-repr-fallback"><pre>Pipeline(steps=[(&#x27;columntransformer&#x27;,
+                     ColumnTransformer(remainder=&#x27;passthrough&#x27;,
+                                       transformers=[(&#x27;onehotencoder&#x27;,
+                                                      OneHotEncoder(drop=&#x27;if_binary&#x27;),
+                                                      [&#x27;RACE&#x27;, &#x27;OCCUPATION&#x27;,
+                                                       &#x27;SECTOR&#x27;, &#x27;MARR&#x27;, &#x27;UNION&#x27;,
+                                                       &#x27;SEX&#x27;, &#x27;SOUTH&#x27;])],
+                                       verbose_feature_names_out=False)),
+                    (&#x27;transformedtargetregressor&#x27;,
+                     TransformedTargetRegressor(func=&lt;ufunc &#x27;log10&#x27;&gt;,
+                                                inverse_func=&lt;ufunc &#x27;exp10&#x27;&gt;,
+                                                regressor=Ridge(alpha=1e-10)))])</pre><b>In a Jupyter environment, please rerun this cell to show the HTML representation or trust the notebook. <br />On GitHub, the HTML representation is unable to render, please try loading this page with nbviewer.org.</b></div><div class="sk-container" hidden><div class="sk-item sk-dashed-wrapped"><div class="sk-label-container"><div class="sk-label sk-toggleable"><input class="sk-toggleable__control sk-hidden--visually" id="sk-estimator-id-98" type="checkbox" ><label for="sk-estimator-id-98" class="sk-toggleable__label sk-toggleable__label-arrow">Pipeline</label><div class="sk-toggleable__content"><pre>Pipeline(steps=[(&#x27;columntransformer&#x27;,
+                     ColumnTransformer(remainder=&#x27;passthrough&#x27;,
+                                       transformers=[(&#x27;onehotencoder&#x27;,
+                                                      OneHotEncoder(drop=&#x27;if_binary&#x27;),
+                                                      [&#x27;RACE&#x27;, &#x27;OCCUPATION&#x27;,
+                                                       &#x27;SECTOR&#x27;, &#x27;MARR&#x27;, &#x27;UNION&#x27;,
+                                                       &#x27;SEX&#x27;, &#x27;SOUTH&#x27;])],
+                                       verbose_feature_names_out=False)),
+                    (&#x27;transformedtargetregressor&#x27;,
+                     TransformedTargetRegressor(func=&lt;ufunc &#x27;log10&#x27;&gt;,
+                                                inverse_func=&lt;ufunc &#x27;exp10&#x27;&gt;,
+                                                regressor=Ridge(alpha=1e-10)))])</pre></div></div></div><div class="sk-serial"><div class="sk-item sk-dashed-wrapped"><div class="sk-label-container"><div class="sk-label sk-toggleable"><input class="sk-toggleable__control sk-hidden--visually" id="sk-estimator-id-99" type="checkbox" ><label for="sk-estimator-id-99" class="sk-toggleable__label sk-toggleable__label-arrow">columntransformer: ColumnTransformer</label><div class="sk-toggleable__content"><pre>ColumnTransformer(remainder=&#x27;passthrough&#x27;,
+                      transformers=[(&#x27;onehotencoder&#x27;,
+                                     OneHotEncoder(drop=&#x27;if_binary&#x27;),
+                                     [&#x27;RACE&#x27;, &#x27;OCCUPATION&#x27;, &#x27;SECTOR&#x27;, &#x27;MARR&#x27;,
+                                      &#x27;UNION&#x27;, &#x27;SEX&#x27;, &#x27;SOUTH&#x27;])],
+                      verbose_feature_names_out=False)</pre></div></div></div><div class="sk-parallel"><div class="sk-parallel-item"><div class="sk-item"><div class="sk-label-container"><div class="sk-label sk-toggleable"><input class="sk-toggleable__control sk-hidden--visually" id="sk-estimator-id-100" type="checkbox" ><label for="sk-estimator-id-100" class="sk-toggleable__label sk-toggleable__label-arrow">onehotencoder</label><div class="sk-toggleable__content"><pre>[&#x27;RACE&#x27;, &#x27;OCCUPATION&#x27;, &#x27;SECTOR&#x27;, &#x27;MARR&#x27;, &#x27;UNION&#x27;, &#x27;SEX&#x27;, &#x27;SOUTH&#x27;]</pre></div></div></div><div class="sk-serial"><div class="sk-item"><div class="sk-estimator sk-toggleable"><input class="sk-toggleable__control sk-hidden--visually" id="sk-estimator-id-101" type="checkbox" ><label for="sk-estimator-id-101" class="sk-toggleable__label sk-toggleable__label-arrow">OneHotEncoder</label><div class="sk-toggleable__content"><pre>OneHotEncoder(drop=&#x27;if_binary&#x27;)</pre></div></div></div></div></div></div><div class="sk-parallel-item"><div class="sk-item"><div class="sk-label-container"><div class="sk-label sk-toggleable"><input class="sk-toggleable__control sk-hidden--visually" id="sk-estimator-id-102" type="checkbox" ><label for="sk-estimator-id-102" class="sk-toggleable__label sk-toggleable__label-arrow">remainder</label><div class="sk-toggleable__content"><pre>[&#x27;EDUCATION&#x27;, &#x27;EXPERIENCE&#x27;, &#x27;AGE&#x27;]</pre></div></div></div><div class="sk-serial"><div class="sk-item"><div class="sk-estimator sk-toggleable"><input class="sk-toggleable__control sk-hidden--visually" id="sk-estimator-id-103" type="checkbox" ><label for="sk-estimator-id-103" class="sk-toggleable__label sk-toggleable__label-arrow">passthrough</label><div class="sk-toggleable__content"><pre>passthrough</pre></div></div></div></div></div></div></div></div><div class="sk-item sk-dashed-wrapped"><div class="sk-label-container"><div class="sk-label sk-toggleable"><input class="sk-toggleable__control sk-hidden--visually" id="sk-estimator-id-104" type="checkbox" ><label for="sk-estimator-id-104" class="sk-toggleable__label sk-toggleable__label-arrow">transformedtargetregressor: TransformedTargetRegressor</label><div class="sk-toggleable__content"><pre>TransformedTargetRegressor(func=&lt;ufunc &#x27;log10&#x27;&gt;, inverse_func=&lt;ufunc &#x27;exp10&#x27;&gt;,
+                               regressor=Ridge(alpha=1e-10))</pre></div></div></div><div class="sk-parallel"><div class="sk-parallel-item"><div class="sk-item"><div class="sk-label-container"><div class="sk-label sk-toggleable"><input class="sk-toggleable__control sk-hidden--visually" id="sk-estimator-id-105" type="checkbox" ><label for="sk-estimator-id-105" class="sk-toggleable__label sk-toggleable__label-arrow">regressor: Ridge</label><div class="sk-toggleable__content"><pre>Ridge(alpha=1e-10)</pre></div></div></div><div class="sk-serial"><div class="sk-item"><div class="sk-estimator sk-toggleable"><input class="sk-toggleable__control sk-hidden--visually" id="sk-estimator-id-106" type="checkbox" ><label for="sk-estimator-id-106" class="sk-toggleable__label sk-toggleable__label-arrow">Ridge</label><div class="sk-toggleable__content"><pre>Ridge(alpha=1e-10)</pre></div></div></div></div></div></div></div></div></div></div></div></div>
+    </div>
+    <br />
+    <br />
 
-.. GENERATED FROM PYTHON SOURCE LINES 165-168
+.. GENERATED FROM PYTHON SOURCE LINES 166-169
 
 Then we check the performance of the computed model plotting its predictions
 on the test set and computing,
 for example, the median absolute error of the model.
 
-.. GENERATED FROM PYTHON SOURCE LINES 168-188
+.. GENERATED FROM PYTHON SOURCE LINES 169-180
 
 .. code-block:: default
 
@@ -668,6 +701,18 @@ for example, the median absolute error of the model.
     y_pred = model.predict(X_test)
     mae = median_absolute_error(y_test, y_pred)
     string_score += f"\nMAE on testing set: {mae:.2f} $/hour"
+
+
+
+
+
+
+
+
+.. GENERATED FROM PYTHON SOURCE LINES 181-191
+
+.. code-block:: default
+
     fig, ax = plt.subplots(figsize=(5, 5))
     plt.scatter(y_test, y_pred)
     ax.plot([0, 1], [0, 1], transform=ax.transAxes, ls="--", c="red")
@@ -690,7 +735,7 @@ for example, the median absolute error of the model.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 189-203
+.. GENERATED FROM PYTHON SOURCE LINES 192-206
 
 The model learnt is far from being a good model making accurate predictions:
 this is obvious when looking at the plot above, where good predictions
@@ -702,19 +747,19 @@ about the model that we build, rather than about the true (real-world)
 generative process of the data.
 
 Interpreting coefficients: scale matters
----------------------------------------------
+----------------------------------------
 
 First of all, we can take a look to the values of the coefficients of the
 regressor we have fitted.
 
-.. GENERATED FROM PYTHON SOURCE LINES 203-213
+.. GENERATED FROM PYTHON SOURCE LINES 206-216
 
 .. code-block:: default
 
     feature_names = model[:-1].get_feature_names_out()
 
     coefs = pd.DataFrame(
-        model.named_steps["transformedtargetregressor"].regressor_.coef_,
+        model[-1].regressor_.coef_,
         columns=["Coefficients"],
         index=feature_names,
     )
@@ -834,7 +879,7 @@ regressor we have fitted.
     <br />
     <br />
 
-.. GENERATED FROM PYTHON SOURCE LINES 214-226
+.. GENERATED FROM PYTHON SOURCE LINES 217-229
 
 The AGE coefficient is expressed in "dollars/hour per living years" while the
 EDUCATION one is expressed in "dollars/hour per years of education". This
@@ -849,14 +894,15 @@ different coefficients since the features have different natural scales, and
 hence value ranges, because of their different unit of measure. This is more
 visible if we plot the coefficients.
 
-.. GENERATED FROM PYTHON SOURCE LINES 226-232
+.. GENERATED FROM PYTHON SOURCE LINES 229-236
 
 .. code-block:: default
 
 
-    coefs.plot(kind="barh", figsize=(9, 7))
+    coefs.plot.barh(figsize=(9, 7))
     plt.title("Ridge model, small regularization")
     plt.axvline(x=0, color=".5")
+    plt.xlabel("Raw coefficient values")
     plt.subplots_adjust(left=0.3)
 
 
@@ -871,7 +917,7 @@ visible if we plot the coefficients.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 233-244
+.. GENERATED FROM PYTHON SOURCE LINES 237-248
 
 Indeed, from the plot above the most important factor in determining WAGE
 appears to be the
@@ -885,24 +931,25 @@ varies a lot more, several decades.
 This is visible if we compare the standard deviations of different
 features.
 
-.. GENERATED FROM PYTHON SOURCE LINES 244-253
+.. GENERATED FROM PYTHON SOURCE LINES 248-258
 
 .. code-block:: default
 
 
     X_train_preprocessed = pd.DataFrame(
-        model.named_steps["columntransformer"].transform(X_train), columns=feature_names
+        model[:-1].transform(X_train), columns=feature_names
     )
 
-    X_train_preprocessed.std(axis=0).plot(kind="barh", figsize=(9, 7))
-    plt.title("Features std. dev.")
+    X_train_preprocessed.std(axis=0).plot.barh(figsize=(9, 7))
+    plt.title("Feature ranges")
+    plt.xlabel("Std. dev. of feature values")
     plt.subplots_adjust(left=0.3)
 
 
 
 
 .. image-sg:: /auto_examples/inspection/images/sphx_glr_plot_linear_model_coefficient_interpretation_004.png
-   :alt: Features std. dev.
+   :alt: Feature ranges
    :srcset: /auto_examples/inspection/images/sphx_glr_plot_linear_model_coefficient_interpretation_004.png
    :class: sphx-glr-single-img
 
@@ -910,7 +957,7 @@ features.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 254-264
+.. GENERATED FROM PYTHON SOURCE LINES 259-269
 
 Multiplying the coefficients by the standard deviation of the related
 feature would reduce all the coefficients to the same unit of measure.
@@ -923,18 +970,18 @@ In that way, we emphasize that the
 greater the variance of a feature, the larger the weight of the corresponding
 coefficient on the output, all else being equal.
 
-.. GENERATED FROM PYTHON SOURCE LINES 264-276
+.. GENERATED FROM PYTHON SOURCE LINES 269-281
 
 .. code-block:: default
 
 
     coefs = pd.DataFrame(
-        model.named_steps["transformedtargetregressor"].regressor_.coef_
-        * X_train_preprocessed.std(axis=0),
+        model[-1].regressor_.coef_ * X_train_preprocessed.std(axis=0),
         columns=["Coefficient importance"],
         index=feature_names,
     )
     coefs.plot(kind="barh", figsize=(9, 7))
+    plt.xlabel("Coefficient values corrected by the feature's std. dev.")
     plt.title("Ridge model, small regularization")
     plt.axvline(x=0, color=".5")
     plt.subplots_adjust(left=0.3)
@@ -951,7 +998,7 @@ coefficient on the output, all else being equal.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 277-304
+.. GENERATED FROM PYTHON SOURCE LINES 282-309
 
 Now that the coefficients have been scaled, we can safely compare them.
 
@@ -981,7 +1028,7 @@ If coefficients vary significantly when changing the input dataset
 their robustness is not guaranteed, and they should probably be interpreted
 with caution.
 
-.. GENERATED FROM PYTHON SOURCE LINES 304-332
+.. GENERATED FROM PYTHON SOURCE LINES 309-331
 
 .. code-block:: default
 
@@ -989,35 +1036,49 @@ with caution.
     from sklearn.model_selection import cross_validate
     from sklearn.model_selection import RepeatedKFold
 
+    cv = RepeatedKFold(n_splits=5, n_repeats=5, random_state=0)
     cv_model = cross_validate(
         model,
         X,
         y,
-        cv=RepeatedKFold(n_splits=5, n_repeats=5),
+        cv=cv,
         return_estimator=True,
         n_jobs=2,
     )
+
     coefs = pd.DataFrame(
         [
-            est.named_steps["transformedtargetregressor"].regressor_.coef_
-            * X_train_preprocessed.std(axis=0)
-            for est in cv_model["estimator"]
+            est[-1].regressor_.coef_ * est[:-1].transform(X.iloc[train_idx]).std(axis=0)
+            for est, (train_idx, _) in zip(cv_model["estimator"], cv.split(X, y))
         ],
         columns=feature_names,
     )
+
+
+
+
+
+
+
+
+.. GENERATED FROM PYTHON SOURCE LINES 332-341
+
+.. code-block:: default
+
     plt.figure(figsize=(9, 7))
     sns.stripplot(data=coefs, orient="h", color="k", alpha=0.5)
-    sns.boxplot(data=coefs, orient="h", color="cyan", saturation=0.5)
+    sns.boxplot(data=coefs, orient="h", color="cyan", saturation=0.5, whis=10)
     plt.axvline(x=0, color=".5")
     plt.xlabel("Coefficient importance")
     plt.title("Coefficient importance and its variability")
+    plt.suptitle("Ridge model, small regularization")
     plt.subplots_adjust(left=0.3)
 
 
 
 
 .. image-sg:: /auto_examples/inspection/images/sphx_glr_plot_linear_model_coefficient_interpretation_006.png
-   :alt: Coefficient importance and its variability
+   :alt: Ridge model, small regularization, Coefficient importance and its variability
    :srcset: /auto_examples/inspection/images/sphx_glr_plot_linear_model_coefficient_interpretation_006.png
    :class: sphx-glr-single-img
 
@@ -1025,7 +1086,7 @@ with caution.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 333-345
+.. GENERATED FROM PYTHON SOURCE LINES 342-354
 
 The problem of correlated variables
 -----------------------------------
@@ -1040,7 +1101,7 @@ EXPERIENCE coefficient.
 
 .. _covariation:
 
-.. GENERATED FROM PYTHON SOURCE LINES 345-354
+.. GENERATED FROM PYTHON SOURCE LINES 354-363
 
 .. code-block:: default
 
@@ -1065,7 +1126,7 @@ EXPERIENCE coefficient.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 355-360
+.. GENERATED FROM PYTHON SOURCE LINES 364-369
 
 Two regions are populated: when the EXPERIENCE coefficient is
 positive the AGE one is negative and vice-versa.
@@ -1073,7 +1134,7 @@ positive the AGE one is negative and vice-versa.
 To go further we remove one of the 2 features and check what is the impact
 on the model stability.
 
-.. GENERATED FROM PYTHON SOURCE LINES 360-387
+.. GENERATED FROM PYTHON SOURCE LINES 369-390
 
 .. code-block:: default
 
@@ -1084,31 +1145,45 @@ on the model stability.
         model,
         X.drop(columns=column_to_drop),
         y,
-        cv=RepeatedKFold(n_splits=5, n_repeats=5),
+        cv=cv,
         return_estimator=True,
         n_jobs=2,
     )
+
     coefs = pd.DataFrame(
         [
-            est.named_steps["transformedtargetregressor"].regressor_.coef_
-            * X_train_preprocessed.drop(columns=column_to_drop).std(axis=0)
-            for est in cv_model["estimator"]
+            est[-1].regressor_.coef_
+            * est[:-1].transform(X.drop(columns=column_to_drop).iloc[train_idx]).std(axis=0)
+            for est, (train_idx, _) in zip(cv_model["estimator"], cv.split(X, y))
         ],
         columns=feature_names[:-1],
     )
+
+
+
+
+
+
+
+
+.. GENERATED FROM PYTHON SOURCE LINES 391-400
+
+.. code-block:: default
+
     plt.figure(figsize=(9, 7))
     sns.stripplot(data=coefs, orient="h", color="k", alpha=0.5)
     sns.boxplot(data=coefs, orient="h", color="cyan", saturation=0.5)
     plt.axvline(x=0, color=".5")
     plt.title("Coefficient importance and its variability")
     plt.xlabel("Coefficient importance")
+    plt.suptitle("Ridge model, small regularization, AGE dropped")
     plt.subplots_adjust(left=0.3)
 
 
 
 
 .. image-sg:: /auto_examples/inspection/images/sphx_glr_plot_linear_model_coefficient_interpretation_008.png
-   :alt: Coefficient importance and its variability
+   :alt: Ridge model, small regularization, AGE dropped, Coefficient importance and its variability
    :srcset: /auto_examples/inspection/images/sphx_glr_plot_linear_model_coefficient_interpretation_008.png
    :class: sphx-glr-single-img
 
@@ -1116,10 +1191,11 @@ on the model stability.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 388-402
+.. GENERATED FROM PYTHON SOURCE LINES 401-416
 
-The estimation of the EXPERIENCE coefficient is now less variable and
-remain important for all models trained during cross-validation.
+The estimation of the EXPERIENCE coefficient now shows a much reduced
+variability. EXPERIENCE remains important for all models trained during
+cross-validation.
 
 .. _scaling_num:
 
@@ -1128,12 +1204,12 @@ Preprocessing numerical variables
 
 As said above (see ":ref:`the-pipeline`"), we could also choose to scale
 numerical values before training the model.
-This can be useful to apply a similar amount regularization to all of them
-in the Ridge.
+This can be useful when we apply a similar amount of regularization to all of them
+in the ridge.
 The preprocessor is redefined in order to subtract the mean and scale
 variables to unit variance.
 
-.. GENERATED FROM PYTHON SOURCE LINES 402-411
+.. GENERATED FROM PYTHON SOURCE LINES 416-424
 
 .. code-block:: default
 
@@ -1143,7 +1219,6 @@ variables to unit variance.
     preprocessor = make_column_transformer(
         (OneHotEncoder(drop="if_binary"), categorical_columns),
         (StandardScaler(), numerical_columns),
-        remainder="passthrough",
     )
 
 
@@ -1153,11 +1228,11 @@ variables to unit variance.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 412-413
+.. GENERATED FROM PYTHON SOURCE LINES 425-426
 
 The model will stay unchanged.
 
-.. GENERATED FROM PYTHON SOURCE LINES 413-423
+.. GENERATED FROM PYTHON SOURCE LINES 426-435
 
 .. code-block:: default
 
@@ -1168,23 +1243,60 @@ The model will stay unchanged.
             regressor=Ridge(alpha=1e-10), func=np.log10, inverse_func=sp.special.exp10
         ),
     )
-
-    _ = model.fit(X_train, y_train)
-
+    model.fit(X_train, y_train)
 
 
 
 
 
 
+.. raw:: html
 
-.. GENERATED FROM PYTHON SOURCE LINES 424-427
+    <div class="output_subarea output_html rendered_html output_result">
+    <style>#sk-container-id-26 {color: black;background-color: white;}#sk-container-id-26 pre{padding: 0;}#sk-container-id-26 div.sk-toggleable {background-color: white;}#sk-container-id-26 label.sk-toggleable__label {cursor: pointer;display: block;width: 100%;margin-bottom: 0;padding: 0.3em;box-sizing: border-box;text-align: center;}#sk-container-id-26 label.sk-toggleable__label-arrow:before {content: "▸";float: left;margin-right: 0.25em;color: #696969;}#sk-container-id-26 label.sk-toggleable__label-arrow:hover:before {color: black;}#sk-container-id-26 div.sk-estimator:hover label.sk-toggleable__label-arrow:before {color: black;}#sk-container-id-26 div.sk-toggleable__content {max-height: 0;max-width: 0;overflow: hidden;text-align: left;background-color: #f0f8ff;}#sk-container-id-26 div.sk-toggleable__content pre {margin: 0.2em;color: black;border-radius: 0.25em;background-color: #f0f8ff;}#sk-container-id-26 input.sk-toggleable__control:checked~div.sk-toggleable__content {max-height: 200px;max-width: 100%;overflow: auto;}#sk-container-id-26 input.sk-toggleable__control:checked~label.sk-toggleable__label-arrow:before {content: "▾";}#sk-container-id-26 div.sk-estimator input.sk-toggleable__control:checked~label.sk-toggleable__label {background-color: #d4ebff;}#sk-container-id-26 div.sk-label input.sk-toggleable__control:checked~label.sk-toggleable__label {background-color: #d4ebff;}#sk-container-id-26 input.sk-hidden--visually {border: 0;clip: rect(1px 1px 1px 1px);clip: rect(1px, 1px, 1px, 1px);height: 1px;margin: -1px;overflow: hidden;padding: 0;position: absolute;width: 1px;}#sk-container-id-26 div.sk-estimator {font-family: monospace;background-color: #f0f8ff;border: 1px dotted black;border-radius: 0.25em;box-sizing: border-box;margin-bottom: 0.5em;}#sk-container-id-26 div.sk-estimator:hover {background-color: #d4ebff;}#sk-container-id-26 div.sk-parallel-item::after {content: "";width: 100%;border-bottom: 1px solid gray;flex-grow: 1;}#sk-container-id-26 div.sk-label:hover label.sk-toggleable__label {background-color: #d4ebff;}#sk-container-id-26 div.sk-serial::before {content: "";position: absolute;border-left: 1px solid gray;box-sizing: border-box;top: 0;bottom: 0;left: 50%;z-index: 0;}#sk-container-id-26 div.sk-serial {display: flex;flex-direction: column;align-items: center;background-color: white;padding-right: 0.2em;padding-left: 0.2em;position: relative;}#sk-container-id-26 div.sk-item {position: relative;z-index: 1;}#sk-container-id-26 div.sk-parallel {display: flex;align-items: stretch;justify-content: center;background-color: white;position: relative;}#sk-container-id-26 div.sk-item::before, #sk-container-id-26 div.sk-parallel-item::before {content: "";position: absolute;border-left: 1px solid gray;box-sizing: border-box;top: 0;bottom: 0;left: 50%;z-index: -1;}#sk-container-id-26 div.sk-parallel-item {display: flex;flex-direction: column;z-index: 1;position: relative;background-color: white;}#sk-container-id-26 div.sk-parallel-item:first-child::after {align-self: flex-end;width: 50%;}#sk-container-id-26 div.sk-parallel-item:last-child::after {align-self: flex-start;width: 50%;}#sk-container-id-26 div.sk-parallel-item:only-child::after {width: 0;}#sk-container-id-26 div.sk-dashed-wrapped {border: 1px dashed gray;margin: 0 0.4em 0.5em 0.4em;box-sizing: border-box;padding-bottom: 0.4em;background-color: white;}#sk-container-id-26 div.sk-label label {font-family: monospace;font-weight: bold;display: inline-block;line-height: 1.2em;}#sk-container-id-26 div.sk-label-container {text-align: center;}#sk-container-id-26 div.sk-container {/* jupyter's `normalize.less` sets `[hidden] { display: none; }` but bootstrap.min.css set `[hidden] { display: none !important; }` so we also need the `!important` here to be able to override the default hidden behavior on the sphinx rendered scikit-learn.org. See: https://github.com/scikit-learn/scikit-learn/issues/21755 */display: inline-block !important;position: relative;}#sk-container-id-26 div.sk-text-repr-fallback {display: none;}</style><div id="sk-container-id-26" class="sk-top-container"><div class="sk-text-repr-fallback"><pre>Pipeline(steps=[(&#x27;columntransformer&#x27;,
+                     ColumnTransformer(transformers=[(&#x27;onehotencoder&#x27;,
+                                                      OneHotEncoder(drop=&#x27;if_binary&#x27;),
+                                                      [&#x27;RACE&#x27;, &#x27;OCCUPATION&#x27;,
+                                                       &#x27;SECTOR&#x27;, &#x27;MARR&#x27;, &#x27;UNION&#x27;,
+                                                       &#x27;SEX&#x27;, &#x27;SOUTH&#x27;]),
+                                                     (&#x27;standardscaler&#x27;,
+                                                      StandardScaler(),
+                                                      [&#x27;EDUCATION&#x27;, &#x27;EXPERIENCE&#x27;,
+                                                       &#x27;AGE&#x27;])])),
+                    (&#x27;transformedtargetregressor&#x27;,
+                     TransformedTargetRegressor(func=&lt;ufunc &#x27;log10&#x27;&gt;,
+                                                inverse_func=&lt;ufunc &#x27;exp10&#x27;&gt;,
+                                                regressor=Ridge(alpha=1e-10)))])</pre><b>In a Jupyter environment, please rerun this cell to show the HTML representation or trust the notebook. <br />On GitHub, the HTML representation is unable to render, please try loading this page with nbviewer.org.</b></div><div class="sk-container" hidden><div class="sk-item sk-dashed-wrapped"><div class="sk-label-container"><div class="sk-label sk-toggleable"><input class="sk-toggleable__control sk-hidden--visually" id="sk-estimator-id-107" type="checkbox" ><label for="sk-estimator-id-107" class="sk-toggleable__label sk-toggleable__label-arrow">Pipeline</label><div class="sk-toggleable__content"><pre>Pipeline(steps=[(&#x27;columntransformer&#x27;,
+                     ColumnTransformer(transformers=[(&#x27;onehotencoder&#x27;,
+                                                      OneHotEncoder(drop=&#x27;if_binary&#x27;),
+                                                      [&#x27;RACE&#x27;, &#x27;OCCUPATION&#x27;,
+                                                       &#x27;SECTOR&#x27;, &#x27;MARR&#x27;, &#x27;UNION&#x27;,
+                                                       &#x27;SEX&#x27;, &#x27;SOUTH&#x27;]),
+                                                     (&#x27;standardscaler&#x27;,
+                                                      StandardScaler(),
+                                                      [&#x27;EDUCATION&#x27;, &#x27;EXPERIENCE&#x27;,
+                                                       &#x27;AGE&#x27;])])),
+                    (&#x27;transformedtargetregressor&#x27;,
+                     TransformedTargetRegressor(func=&lt;ufunc &#x27;log10&#x27;&gt;,
+                                                inverse_func=&lt;ufunc &#x27;exp10&#x27;&gt;,
+                                                regressor=Ridge(alpha=1e-10)))])</pre></div></div></div><div class="sk-serial"><div class="sk-item sk-dashed-wrapped"><div class="sk-label-container"><div class="sk-label sk-toggleable"><input class="sk-toggleable__control sk-hidden--visually" id="sk-estimator-id-108" type="checkbox" ><label for="sk-estimator-id-108" class="sk-toggleable__label sk-toggleable__label-arrow">columntransformer: ColumnTransformer</label><div class="sk-toggleable__content"><pre>ColumnTransformer(transformers=[(&#x27;onehotencoder&#x27;,
+                                     OneHotEncoder(drop=&#x27;if_binary&#x27;),
+                                     [&#x27;RACE&#x27;, &#x27;OCCUPATION&#x27;, &#x27;SECTOR&#x27;, &#x27;MARR&#x27;,
+                                      &#x27;UNION&#x27;, &#x27;SEX&#x27;, &#x27;SOUTH&#x27;]),
+                                    (&#x27;standardscaler&#x27;, StandardScaler(),
+                                     [&#x27;EDUCATION&#x27;, &#x27;EXPERIENCE&#x27;, &#x27;AGE&#x27;])])</pre></div></div></div><div class="sk-parallel"><div class="sk-parallel-item"><div class="sk-item"><div class="sk-label-container"><div class="sk-label sk-toggleable"><input class="sk-toggleable__control sk-hidden--visually" id="sk-estimator-id-109" type="checkbox" ><label for="sk-estimator-id-109" class="sk-toggleable__label sk-toggleable__label-arrow">onehotencoder</label><div class="sk-toggleable__content"><pre>[&#x27;RACE&#x27;, &#x27;OCCUPATION&#x27;, &#x27;SECTOR&#x27;, &#x27;MARR&#x27;, &#x27;UNION&#x27;, &#x27;SEX&#x27;, &#x27;SOUTH&#x27;]</pre></div></div></div><div class="sk-serial"><div class="sk-item"><div class="sk-estimator sk-toggleable"><input class="sk-toggleable__control sk-hidden--visually" id="sk-estimator-id-110" type="checkbox" ><label for="sk-estimator-id-110" class="sk-toggleable__label sk-toggleable__label-arrow">OneHotEncoder</label><div class="sk-toggleable__content"><pre>OneHotEncoder(drop=&#x27;if_binary&#x27;)</pre></div></div></div></div></div></div><div class="sk-parallel-item"><div class="sk-item"><div class="sk-label-container"><div class="sk-label sk-toggleable"><input class="sk-toggleable__control sk-hidden--visually" id="sk-estimator-id-111" type="checkbox" ><label for="sk-estimator-id-111" class="sk-toggleable__label sk-toggleable__label-arrow">standardscaler</label><div class="sk-toggleable__content"><pre>[&#x27;EDUCATION&#x27;, &#x27;EXPERIENCE&#x27;, &#x27;AGE&#x27;]</pre></div></div></div><div class="sk-serial"><div class="sk-item"><div class="sk-estimator sk-toggleable"><input class="sk-toggleable__control sk-hidden--visually" id="sk-estimator-id-112" type="checkbox" ><label for="sk-estimator-id-112" class="sk-toggleable__label sk-toggleable__label-arrow">StandardScaler</label><div class="sk-toggleable__content"><pre>StandardScaler()</pre></div></div></div></div></div></div></div></div><div class="sk-item sk-dashed-wrapped"><div class="sk-label-container"><div class="sk-label sk-toggleable"><input class="sk-toggleable__control sk-hidden--visually" id="sk-estimator-id-113" type="checkbox" ><label for="sk-estimator-id-113" class="sk-toggleable__label sk-toggleable__label-arrow">transformedtargetregressor: TransformedTargetRegressor</label><div class="sk-toggleable__content"><pre>TransformedTargetRegressor(func=&lt;ufunc &#x27;log10&#x27;&gt;, inverse_func=&lt;ufunc &#x27;exp10&#x27;&gt;,
+                               regressor=Ridge(alpha=1e-10))</pre></div></div></div><div class="sk-parallel"><div class="sk-parallel-item"><div class="sk-item"><div class="sk-label-container"><div class="sk-label sk-toggleable"><input class="sk-toggleable__control sk-hidden--visually" id="sk-estimator-id-114" type="checkbox" ><label for="sk-estimator-id-114" class="sk-toggleable__label sk-toggleable__label-arrow">regressor: Ridge</label><div class="sk-toggleable__content"><pre>Ridge(alpha=1e-10)</pre></div></div></div><div class="sk-serial"><div class="sk-item"><div class="sk-estimator sk-toggleable"><input class="sk-toggleable__control sk-hidden--visually" id="sk-estimator-id-115" type="checkbox" ><label for="sk-estimator-id-115" class="sk-toggleable__label sk-toggleable__label-arrow">Ridge</label><div class="sk-toggleable__content"><pre>Ridge(alpha=1e-10)</pre></div></div></div></div></div></div></div></div></div></div></div></div>
+    </div>
+    <br />
+    <br />
+
+.. GENERATED FROM PYTHON SOURCE LINES 436-439
 
 Again, we check the performance of the computed
 model using, for example, the median absolute error of the model and the R
 squared coefficient.
 
-.. GENERATED FROM PYTHON SOURCE LINES 427-446
+.. GENERATED FROM PYTHON SOURCE LINES 439-447
 
 .. code-block:: default
 
@@ -1195,6 +1307,18 @@ squared coefficient.
     y_pred = model.predict(X_test)
     mae = median_absolute_error(y_test, y_pred)
     string_score += f"\nMAE on testing set: {mae:.2f} $/hour"
+
+
+
+
+
+
+
+
+.. GENERATED FROM PYTHON SOURCE LINES 448-460
+
+.. code-block:: default
+
     fig, ax = plt.subplots(figsize=(6, 6))
     plt.scatter(y_test, y_pred)
     ax.plot([0, 1], [0, 1], transform=ax.transAxes, ls="--", c="red")
@@ -1219,22 +1343,24 @@ squared coefficient.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 447-448
+.. GENERATED FROM PYTHON SOURCE LINES 461-463
 
-For the coefficient analysis, scaling is not needed this time.
+For the coefficient analysis, scaling is not needed this time because it
+was performed during the preprocessing step.
 
-.. GENERATED FROM PYTHON SOURCE LINES 448-459
+.. GENERATED FROM PYTHON SOURCE LINES 463-475
 
 .. code-block:: default
 
 
     coefs = pd.DataFrame(
-        model.named_steps["transformedtargetregressor"].regressor_.coef_,
-        columns=["Coefficients"],
+        model[-1].regressor_.coef_,
+        columns=["Coefficients importance"],
         index=feature_names,
     )
-    coefs.plot(kind="barh", figsize=(9, 7))
+    coefs.plot.barh(figsize=(9, 7))
     plt.title("Ridge model, small regularization, normalized variables")
+    plt.xlabel("Raw coefficient values")
     plt.axvline(x=0, color=".5")
     plt.subplots_adjust(left=0.3)
 
@@ -1250,11 +1376,14 @@ For the coefficient analysis, scaling is not needed this time.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 460-461
+.. GENERATED FROM PYTHON SOURCE LINES 476-480
 
-We now inspect the coefficients across several cross-validation folds.
+We now inspect the coefficients across several cross-validation folds. As in
+the above example, we do not need to scale the coefficients by the std. dev.
+of the feature values since this scaling was already
+done in the preprocessing step of the pipeline.
 
-.. GENERATED FROM PYTHON SOURCE LINES 461-484
+.. GENERATED FROM PYTHON SOURCE LINES 480-493
 
 .. code-block:: default
 
@@ -1263,20 +1392,28 @@ We now inspect the coefficients across several cross-validation folds.
         model,
         X,
         y,
-        cv=RepeatedKFold(n_splits=5, n_repeats=5),
+        cv=cv,
         return_estimator=True,
         n_jobs=2,
     )
     coefs = pd.DataFrame(
-        [
-            est.named_steps["transformedtargetregressor"].regressor_.coef_
-            for est in cv_model["estimator"]
-        ],
-        columns=feature_names,
+        [est[-1].regressor_.coef_ for est in cv_model["estimator"]], columns=feature_names
     )
+
+
+
+
+
+
+
+
+.. GENERATED FROM PYTHON SOURCE LINES 494-501
+
+.. code-block:: default
+
     plt.figure(figsize=(9, 7))
     sns.stripplot(data=coefs, orient="h", color="k", alpha=0.5)
-    sns.boxplot(data=coefs, orient="h", color="cyan", saturation=0.5)
+    sns.boxplot(data=coefs, orient="h", color="cyan", saturation=0.5, whis=10)
     plt.axvline(x=0, color=".5")
     plt.title("Coefficient variability")
     plt.subplots_adjust(left=0.3)
@@ -1293,52 +1430,100 @@ We now inspect the coefficients across several cross-validation folds.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 485-498
+.. GENERATED FROM PYTHON SOURCE LINES 502-515
 
 The result is quite similar to the non-normalized case.
 
 Linear models with regularization
 ---------------------------------
 
-In machine-learning practice, Ridge Regression is more often used with
+In machine-learning practice, ridge regression is more often used with
 non-negligible regularization.
 
-Above, we limited this regularization to a very little amount.
-Regularization improves the conditioning of the problem and reduces the
-variance of the estimates. RidgeCV applies cross validation in order to
-determine which value of the regularization parameter (`alpha`) is best
-suited for prediction.
+Above, we limited this regularization to a very little amount. Regularization
+improves the conditioning of the problem and reduces the variance of the
+estimates. :class:`~sklearn.linear_model.RidgeCV` applies cross validation
+in order to determine which value of the regularization parameter (`alpha`)
+is best suited for prediction.
 
-.. GENERATED FROM PYTHON SOURCE LINES 498-512
+.. GENERATED FROM PYTHON SOURCE LINES 515-529
 
 .. code-block:: default
 
 
     from sklearn.linear_model import RidgeCV
 
+    alphas = np.logspace(-10, 10, 21)  # alpha values to be chosen from by cross-validation
     model = make_pipeline(
         preprocessor,
         TransformedTargetRegressor(
-            regressor=RidgeCV(alphas=np.logspace(-10, 10, 21)),
+            regressor=RidgeCV(alphas=alphas),
             func=np.log10,
             inverse_func=sp.special.exp10,
         ),
     )
-
-    _ = model.fit(X_train, y_train)
-
+    model.fit(X_train, y_train)
 
 
 
 
 
 
+.. raw:: html
 
-.. GENERATED FROM PYTHON SOURCE LINES 513-514
+    <div class="output_subarea output_html rendered_html output_result">
+    <style>#sk-container-id-27 {color: black;background-color: white;}#sk-container-id-27 pre{padding: 0;}#sk-container-id-27 div.sk-toggleable {background-color: white;}#sk-container-id-27 label.sk-toggleable__label {cursor: pointer;display: block;width: 100%;margin-bottom: 0;padding: 0.3em;box-sizing: border-box;text-align: center;}#sk-container-id-27 label.sk-toggleable__label-arrow:before {content: "▸";float: left;margin-right: 0.25em;color: #696969;}#sk-container-id-27 label.sk-toggleable__label-arrow:hover:before {color: black;}#sk-container-id-27 div.sk-estimator:hover label.sk-toggleable__label-arrow:before {color: black;}#sk-container-id-27 div.sk-toggleable__content {max-height: 0;max-width: 0;overflow: hidden;text-align: left;background-color: #f0f8ff;}#sk-container-id-27 div.sk-toggleable__content pre {margin: 0.2em;color: black;border-radius: 0.25em;background-color: #f0f8ff;}#sk-container-id-27 input.sk-toggleable__control:checked~div.sk-toggleable__content {max-height: 200px;max-width: 100%;overflow: auto;}#sk-container-id-27 input.sk-toggleable__control:checked~label.sk-toggleable__label-arrow:before {content: "▾";}#sk-container-id-27 div.sk-estimator input.sk-toggleable__control:checked~label.sk-toggleable__label {background-color: #d4ebff;}#sk-container-id-27 div.sk-label input.sk-toggleable__control:checked~label.sk-toggleable__label {background-color: #d4ebff;}#sk-container-id-27 input.sk-hidden--visually {border: 0;clip: rect(1px 1px 1px 1px);clip: rect(1px, 1px, 1px, 1px);height: 1px;margin: -1px;overflow: hidden;padding: 0;position: absolute;width: 1px;}#sk-container-id-27 div.sk-estimator {font-family: monospace;background-color: #f0f8ff;border: 1px dotted black;border-radius: 0.25em;box-sizing: border-box;margin-bottom: 0.5em;}#sk-container-id-27 div.sk-estimator:hover {background-color: #d4ebff;}#sk-container-id-27 div.sk-parallel-item::after {content: "";width: 100%;border-bottom: 1px solid gray;flex-grow: 1;}#sk-container-id-27 div.sk-label:hover label.sk-toggleable__label {background-color: #d4ebff;}#sk-container-id-27 div.sk-serial::before {content: "";position: absolute;border-left: 1px solid gray;box-sizing: border-box;top: 0;bottom: 0;left: 50%;z-index: 0;}#sk-container-id-27 div.sk-serial {display: flex;flex-direction: column;align-items: center;background-color: white;padding-right: 0.2em;padding-left: 0.2em;position: relative;}#sk-container-id-27 div.sk-item {position: relative;z-index: 1;}#sk-container-id-27 div.sk-parallel {display: flex;align-items: stretch;justify-content: center;background-color: white;position: relative;}#sk-container-id-27 div.sk-item::before, #sk-container-id-27 div.sk-parallel-item::before {content: "";position: absolute;border-left: 1px solid gray;box-sizing: border-box;top: 0;bottom: 0;left: 50%;z-index: -1;}#sk-container-id-27 div.sk-parallel-item {display: flex;flex-direction: column;z-index: 1;position: relative;background-color: white;}#sk-container-id-27 div.sk-parallel-item:first-child::after {align-self: flex-end;width: 50%;}#sk-container-id-27 div.sk-parallel-item:last-child::after {align-self: flex-start;width: 50%;}#sk-container-id-27 div.sk-parallel-item:only-child::after {width: 0;}#sk-container-id-27 div.sk-dashed-wrapped {border: 1px dashed gray;margin: 0 0.4em 0.5em 0.4em;box-sizing: border-box;padding-bottom: 0.4em;background-color: white;}#sk-container-id-27 div.sk-label label {font-family: monospace;font-weight: bold;display: inline-block;line-height: 1.2em;}#sk-container-id-27 div.sk-label-container {text-align: center;}#sk-container-id-27 div.sk-container {/* jupyter's `normalize.less` sets `[hidden] { display: none; }` but bootstrap.min.css set `[hidden] { display: none !important; }` so we also need the `!important` here to be able to override the default hidden behavior on the sphinx rendered scikit-learn.org. See: https://github.com/scikit-learn/scikit-learn/issues/21755 */display: inline-block !important;position: relative;}#sk-container-id-27 div.sk-text-repr-fallback {display: none;}</style><div id="sk-container-id-27" class="sk-top-container"><div class="sk-text-repr-fallback"><pre>Pipeline(steps=[(&#x27;columntransformer&#x27;,
+                     ColumnTransformer(transformers=[(&#x27;onehotencoder&#x27;,
+                                                      OneHotEncoder(drop=&#x27;if_binary&#x27;),
+                                                      [&#x27;RACE&#x27;, &#x27;OCCUPATION&#x27;,
+                                                       &#x27;SECTOR&#x27;, &#x27;MARR&#x27;, &#x27;UNION&#x27;,
+                                                       &#x27;SEX&#x27;, &#x27;SOUTH&#x27;]),
+                                                     (&#x27;standardscaler&#x27;,
+                                                      StandardScaler(),
+                                                      [&#x27;EDUCATION&#x27;, &#x27;EXPERIENCE&#x27;,
+                                                       &#x27;AGE&#x27;])])),
+                    (&#x27;transformedtargetregressor&#x27;,
+                     TransformedTargetRegressor(func=&lt;ufunc &#x27;log10&#x27;&gt;,
+                                                inverse_func=&lt;ufunc &#x27;exp10&#x27;&gt;,
+                                                regressor=RidgeCV(alphas=array([1.e-10, 1.e-09, 1.e-08, 1.e-07, 1.e-06, 1.e-05, 1.e-04, 1.e-03,
+           1.e-02, 1.e-01, 1.e+00, 1.e+01, 1.e+02, 1.e+03, 1.e+04, 1.e+05,
+           1.e+06, 1.e+07, 1.e+08, 1.e+09, 1.e+10]))))])</pre><b>In a Jupyter environment, please rerun this cell to show the HTML representation or trust the notebook. <br />On GitHub, the HTML representation is unable to render, please try loading this page with nbviewer.org.</b></div><div class="sk-container" hidden><div class="sk-item sk-dashed-wrapped"><div class="sk-label-container"><div class="sk-label sk-toggleable"><input class="sk-toggleable__control sk-hidden--visually" id="sk-estimator-id-116" type="checkbox" ><label for="sk-estimator-id-116" class="sk-toggleable__label sk-toggleable__label-arrow">Pipeline</label><div class="sk-toggleable__content"><pre>Pipeline(steps=[(&#x27;columntransformer&#x27;,
+                     ColumnTransformer(transformers=[(&#x27;onehotencoder&#x27;,
+                                                      OneHotEncoder(drop=&#x27;if_binary&#x27;),
+                                                      [&#x27;RACE&#x27;, &#x27;OCCUPATION&#x27;,
+                                                       &#x27;SECTOR&#x27;, &#x27;MARR&#x27;, &#x27;UNION&#x27;,
+                                                       &#x27;SEX&#x27;, &#x27;SOUTH&#x27;]),
+                                                     (&#x27;standardscaler&#x27;,
+                                                      StandardScaler(),
+                                                      [&#x27;EDUCATION&#x27;, &#x27;EXPERIENCE&#x27;,
+                                                       &#x27;AGE&#x27;])])),
+                    (&#x27;transformedtargetregressor&#x27;,
+                     TransformedTargetRegressor(func=&lt;ufunc &#x27;log10&#x27;&gt;,
+                                                inverse_func=&lt;ufunc &#x27;exp10&#x27;&gt;,
+                                                regressor=RidgeCV(alphas=array([1.e-10, 1.e-09, 1.e-08, 1.e-07, 1.e-06, 1.e-05, 1.e-04, 1.e-03,
+           1.e-02, 1.e-01, 1.e+00, 1.e+01, 1.e+02, 1.e+03, 1.e+04, 1.e+05,
+           1.e+06, 1.e+07, 1.e+08, 1.e+09, 1.e+10]))))])</pre></div></div></div><div class="sk-serial"><div class="sk-item sk-dashed-wrapped"><div class="sk-label-container"><div class="sk-label sk-toggleable"><input class="sk-toggleable__control sk-hidden--visually" id="sk-estimator-id-117" type="checkbox" ><label for="sk-estimator-id-117" class="sk-toggleable__label sk-toggleable__label-arrow">columntransformer: ColumnTransformer</label><div class="sk-toggleable__content"><pre>ColumnTransformer(transformers=[(&#x27;onehotencoder&#x27;,
+                                     OneHotEncoder(drop=&#x27;if_binary&#x27;),
+                                     [&#x27;RACE&#x27;, &#x27;OCCUPATION&#x27;, &#x27;SECTOR&#x27;, &#x27;MARR&#x27;,
+                                      &#x27;UNION&#x27;, &#x27;SEX&#x27;, &#x27;SOUTH&#x27;]),
+                                    (&#x27;standardscaler&#x27;, StandardScaler(),
+                                     [&#x27;EDUCATION&#x27;, &#x27;EXPERIENCE&#x27;, &#x27;AGE&#x27;])])</pre></div></div></div><div class="sk-parallel"><div class="sk-parallel-item"><div class="sk-item"><div class="sk-label-container"><div class="sk-label sk-toggleable"><input class="sk-toggleable__control sk-hidden--visually" id="sk-estimator-id-118" type="checkbox" ><label for="sk-estimator-id-118" class="sk-toggleable__label sk-toggleable__label-arrow">onehotencoder</label><div class="sk-toggleable__content"><pre>[&#x27;RACE&#x27;, &#x27;OCCUPATION&#x27;, &#x27;SECTOR&#x27;, &#x27;MARR&#x27;, &#x27;UNION&#x27;, &#x27;SEX&#x27;, &#x27;SOUTH&#x27;]</pre></div></div></div><div class="sk-serial"><div class="sk-item"><div class="sk-estimator sk-toggleable"><input class="sk-toggleable__control sk-hidden--visually" id="sk-estimator-id-119" type="checkbox" ><label for="sk-estimator-id-119" class="sk-toggleable__label sk-toggleable__label-arrow">OneHotEncoder</label><div class="sk-toggleable__content"><pre>OneHotEncoder(drop=&#x27;if_binary&#x27;)</pre></div></div></div></div></div></div><div class="sk-parallel-item"><div class="sk-item"><div class="sk-label-container"><div class="sk-label sk-toggleable"><input class="sk-toggleable__control sk-hidden--visually" id="sk-estimator-id-120" type="checkbox" ><label for="sk-estimator-id-120" class="sk-toggleable__label sk-toggleable__label-arrow">standardscaler</label><div class="sk-toggleable__content"><pre>[&#x27;EDUCATION&#x27;, &#x27;EXPERIENCE&#x27;, &#x27;AGE&#x27;]</pre></div></div></div><div class="sk-serial"><div class="sk-item"><div class="sk-estimator sk-toggleable"><input class="sk-toggleable__control sk-hidden--visually" id="sk-estimator-id-121" type="checkbox" ><label for="sk-estimator-id-121" class="sk-toggleable__label sk-toggleable__label-arrow">StandardScaler</label><div class="sk-toggleable__content"><pre>StandardScaler()</pre></div></div></div></div></div></div></div></div><div class="sk-item sk-dashed-wrapped"><div class="sk-label-container"><div class="sk-label sk-toggleable"><input class="sk-toggleable__control sk-hidden--visually" id="sk-estimator-id-122" type="checkbox" ><label for="sk-estimator-id-122" class="sk-toggleable__label sk-toggleable__label-arrow">transformedtargetregressor: TransformedTargetRegressor</label><div class="sk-toggleable__content"><pre>TransformedTargetRegressor(func=&lt;ufunc &#x27;log10&#x27;&gt;, inverse_func=&lt;ufunc &#x27;exp10&#x27;&gt;,
+                               regressor=RidgeCV(alphas=array([1.e-10, 1.e-09, 1.e-08, 1.e-07, 1.e-06, 1.e-05, 1.e-04, 1.e-03,
+           1.e-02, 1.e-01, 1.e+00, 1.e+01, 1.e+02, 1.e+03, 1.e+04, 1.e+05,
+           1.e+06, 1.e+07, 1.e+08, 1.e+09, 1.e+10])))</pre></div></div></div><div class="sk-parallel"><div class="sk-parallel-item"><div class="sk-item"><div class="sk-label-container"><div class="sk-label sk-toggleable"><input class="sk-toggleable__control sk-hidden--visually" id="sk-estimator-id-123" type="checkbox" ><label for="sk-estimator-id-123" class="sk-toggleable__label sk-toggleable__label-arrow">regressor: RidgeCV</label><div class="sk-toggleable__content"><pre>RidgeCV(alphas=array([1.e-10, 1.e-09, 1.e-08, 1.e-07, 1.e-06, 1.e-05, 1.e-04, 1.e-03,
+           1.e-02, 1.e-01, 1.e+00, 1.e+01, 1.e+02, 1.e+03, 1.e+04, 1.e+05,
+           1.e+06, 1.e+07, 1.e+08, 1.e+09, 1.e+10]))</pre></div></div></div><div class="sk-serial"><div class="sk-item"><div class="sk-estimator sk-toggleable"><input class="sk-toggleable__control sk-hidden--visually" id="sk-estimator-id-124" type="checkbox" ><label for="sk-estimator-id-124" class="sk-toggleable__label sk-toggleable__label-arrow">RidgeCV</label><div class="sk-toggleable__content"><pre>RidgeCV(alphas=array([1.e-10, 1.e-09, 1.e-08, 1.e-07, 1.e-06, 1.e-05, 1.e-04, 1.e-03,
+           1.e-02, 1.e-01, 1.e+00, 1.e+01, 1.e+02, 1.e+03, 1.e+04, 1.e+05,
+           1.e+06, 1.e+07, 1.e+08, 1.e+09, 1.e+10]))</pre></div></div></div></div></div></div></div></div></div></div></div></div>
+    </div>
+    <br />
+    <br />
+
+.. GENERATED FROM PYTHON SOURCE LINES 530-531
 
 First we check which value of :math:`\alpha` has been selected.
 
-.. GENERATED FROM PYTHON SOURCE LINES 514-517
+.. GENERATED FROM PYTHON SOURCE LINES 531-534
 
 .. code-block:: default
 
@@ -1360,11 +1545,11 @@ First we check which value of :math:`\alpha` has been selected.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 518-519
+.. GENERATED FROM PYTHON SOURCE LINES 535-536
 
 Then we check the quality of the predictions.
 
-.. GENERATED FROM PYTHON SOURCE LINES 519-539
+.. GENERATED FROM PYTHON SOURCE LINES 536-544
 
 .. code-block:: default
 
@@ -1376,13 +1561,24 @@ Then we check the quality of the predictions.
     mae = median_absolute_error(y_test, y_pred)
     string_score += f"\nMAE on testing set: {mae:.2f} $/hour"
 
+
+
+
+
+
+
+
+.. GENERATED FROM PYTHON SOURCE LINES 545-557
+
+.. code-block:: default
+
     fig, ax = plt.subplots(figsize=(6, 6))
     plt.scatter(y_test, y_pred)
     ax.plot([0, 1], [0, 1], transform=ax.transAxes, ls="--", c="red")
 
     plt.text(3, 20, string_score)
 
-    plt.title("Ridge model, regularization, normalized variables")
+    plt.title("Ridge model, optimum regularization, normalized variables")
     plt.ylabel("Model predictions")
     plt.xlabel("Truths")
     plt.xlim([0, 27])
@@ -1392,7 +1588,7 @@ Then we check the quality of the predictions.
 
 
 .. image-sg:: /auto_examples/inspection/images/sphx_glr_plot_linear_model_coefficient_interpretation_012.png
-   :alt: Ridge model, regularization, normalized variables
+   :alt: Ridge model, optimum regularization, normalized variables
    :srcset: /auto_examples/inspection/images/sphx_glr_plot_linear_model_coefficient_interpretation_012.png
    :class: sphx-glr-single-img
 
@@ -1400,23 +1596,24 @@ Then we check the quality of the predictions.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 540-542
+.. GENERATED FROM PYTHON SOURCE LINES 558-560
 
 The ability to reproduce the data of the regularized model is similar to
 the one of the non-regularized model.
 
-.. GENERATED FROM PYTHON SOURCE LINES 542-553
+.. GENERATED FROM PYTHON SOURCE LINES 560-572
 
 .. code-block:: default
 
 
     coefs = pd.DataFrame(
-        model.named_steps["transformedtargetregressor"].regressor_.coef_,
-        columns=["Coefficients"],
+        model[-1].regressor_.coef_,
+        columns=["Coefficients importance"],
         index=feature_names,
     )
-    coefs.plot(kind="barh", figsize=(9, 7))
-    plt.title("Ridge model, regularization, normalized variables")
+    coefs.plot.barh(figsize=(9, 7))
+    plt.title("Ridge model, with regularization, normalized variables")
+    plt.xlabel("Raw coefficient values")
     plt.axvline(x=0, color=".5")
     plt.subplots_adjust(left=0.3)
 
@@ -1424,7 +1621,7 @@ the one of the non-regularized model.
 
 
 .. image-sg:: /auto_examples/inspection/images/sphx_glr_plot_linear_model_coefficient_interpretation_013.png
-   :alt: Ridge model, regularization, normalized variables
+   :alt: Ridge model, with regularization, normalized variables
    :srcset: /auto_examples/inspection/images/sphx_glr_plot_linear_model_coefficient_interpretation_013.png
    :class: sphx-glr-single-img
 
@@ -1432,7 +1629,7 @@ the one of the non-regularized model.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 554-567
+.. GENERATED FROM PYTHON SOURCE LINES 573-586
 
 The coefficients are significantly different.
 AGE and EXPERIENCE coefficients are both positive but they now have less
@@ -1443,12 +1640,12 @@ variables on the model because the weight is shared between the two
 predictive variables, so neither alone would have strong weights.
 
 On the other hand, the weights obtained with regularization are more
-stable  (see the :ref:`ridge_regression` User Guide section). This
+stable (see the :ref:`ridge_regression` User Guide section). This
 increased stability is visible from the plot, obtained from data
-perturbations, in a cross validation. This plot can  be compared with
+perturbations, in a cross-validation. This plot can be compared with
 the :ref:`previous one<covariation>`.
 
-.. GENERATED FROM PYTHON SOURCE LINES 567-593
+.. GENERATED FROM PYTHON SOURCE LINES 586-599
 
 .. code-block:: default
 
@@ -1457,18 +1654,24 @@ the :ref:`previous one<covariation>`.
         model,
         X,
         y,
-        cv=RepeatedKFold(n_splits=5, n_repeats=5),
+        cv=cv,
         return_estimator=True,
         n_jobs=2,
     )
     coefs = pd.DataFrame(
-        [
-            est.named_steps["transformedtargetregressor"].regressor_.coef_
-            * X_train_preprocessed.std(axis=0)
-            for est in cv_model["estimator"]
-        ],
-        columns=feature_names,
+        [est[-1].regressor_.coef_ for est in cv_model["estimator"]], columns=feature_names
     )
+
+
+
+
+
+
+
+
+.. GENERATED FROM PYTHON SOURCE LINES 600-608
+
+.. code-block:: default
 
     plt.ylabel("Age coefficient")
     plt.xlabel("Experience coefficient")
@@ -1490,31 +1693,32 @@ the :ref:`previous one<covariation>`.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 594-605
+.. GENERATED FROM PYTHON SOURCE LINES 609-620
 
 Linear models with sparse coefficients
 --------------------------------------
 
 Another possibility to take into account correlated variables in the dataset,
 is to estimate sparse coefficients. In some way we already did it manually
-when we dropped the AGE column in a previous Ridge estimation.
+when we dropped the AGE column in a previous ridge estimation.
 
 Lasso models (see the :ref:`lasso` User Guide section) estimates sparse
-coefficients. LassoCV applies cross validation in order to
-determine which value of the regularization parameter (`alpha`) is best
-suited for the model estimation.
+coefficients. :class:`~sklearn.linear_model.LassoCV` applies cross
+validation in order to determine which value of the regularization parameter
+(`alpha`) is best suited for the model estimation.
 
-.. GENERATED FROM PYTHON SOURCE LINES 605-619
+.. GENERATED FROM PYTHON SOURCE LINES 620-635
 
 .. code-block:: default
 
 
     from sklearn.linear_model import LassoCV
 
+    alphas = np.logspace(-10, 10, 21)  # alpha values to be chosen from by cross-validation
     model = make_pipeline(
         preprocessor,
         TransformedTargetRegressor(
-            regressor=LassoCV(alphas=np.logspace(-10, 10, 21), max_iter=100000),
+            regressor=LassoCV(alphas=alphas, max_iter=100_000),
             func=np.log10,
             inverse_func=sp.special.exp10,
         ),
@@ -1529,11 +1733,11 @@ suited for the model estimation.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 620-621
+.. GENERATED FROM PYTHON SOURCE LINES 636-637
 
 First we verify which value of :math:`\alpha` has been selected.
 
-.. GENERATED FROM PYTHON SOURCE LINES 621-624
+.. GENERATED FROM PYTHON SOURCE LINES 637-640
 
 .. code-block:: default
 
@@ -1555,11 +1759,11 @@ First we verify which value of :math:`\alpha` has been selected.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 625-626
+.. GENERATED FROM PYTHON SOURCE LINES 641-642
 
 Then we check the quality of the predictions.
 
-.. GENERATED FROM PYTHON SOURCE LINES 626-646
+.. GENERATED FROM PYTHON SOURCE LINES 642-650
 
 .. code-block:: default
 
@@ -1570,6 +1774,17 @@ Then we check the quality of the predictions.
     y_pred = model.predict(X_test)
     mae = median_absolute_error(y_test, y_pred)
     string_score += f"\nMAE on testing set: {mae:.2f} $/hour"
+
+
+
+
+
+
+
+
+.. GENERATED FROM PYTHON SOURCE LINES 651-663
+
+.. code-block:: default
 
     fig, ax = plt.subplots(figsize=(6, 6))
     plt.scatter(y_test, y_pred)
@@ -1595,22 +1810,22 @@ Then we check the quality of the predictions.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 647-648
+.. GENERATED FROM PYTHON SOURCE LINES 664-665
 
 For our dataset, again the model is not very predictive.
 
-.. GENERATED FROM PYTHON SOURCE LINES 648-659
+.. GENERATED FROM PYTHON SOURCE LINES 665-676
 
 .. code-block:: default
 
 
     coefs = pd.DataFrame(
-        model.named_steps["transformedtargetregressor"].regressor_.coef_,
-        columns=["Coefficients"],
+        model[-1].regressor_.coef_,
+        columns=["Coefficients importance"],
         index=feature_names,
     )
     coefs.plot(kind="barh", figsize=(9, 7))
-    plt.title("Lasso model, regularization, normalized variables")
+    plt.title("Lasso model, optimum regularization, normalized variables")
     plt.axvline(x=0, color=".5")
     plt.subplots_adjust(left=0.3)
 
@@ -1618,7 +1833,7 @@ For our dataset, again the model is not very predictive.
 
 
 .. image-sg:: /auto_examples/inspection/images/sphx_glr_plot_linear_model_coefficient_interpretation_016.png
-   :alt: Lasso model, regularization, normalized variables
+   :alt: Lasso model, optimum regularization, normalized variables
    :srcset: /auto_examples/inspection/images/sphx_glr_plot_linear_model_coefficient_interpretation_016.png
    :class: sphx-glr-single-img
 
@@ -1626,7 +1841,7 @@ For our dataset, again the model is not very predictive.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 660-685
+.. GENERATED FROM PYTHON SOURCE LINES 677-688
 
 A Lasso model identifies the correlation between
 AGE and EXPERIENCE and suppresses one of them for the sake of the prediction.
@@ -1637,6 +1852,59 @@ chose to suppress them because they bring little or no additional
 information on top of the other features. Additionally, this selection
 is unstable for correlated features, and should be interpreted with
 caution.
+
+Indeed, we can check the variability of the coefficients across folds.
+
+.. GENERATED FROM PYTHON SOURCE LINES 688-700
+
+.. code-block:: default
+
+    cv_model = cross_validate(
+        model,
+        X,
+        y,
+        cv=cv,
+        return_estimator=True,
+        n_jobs=2,
+    )
+    coefs = pd.DataFrame(
+        [est[-1].regressor_.coef_ for est in cv_model["estimator"]], columns=feature_names
+    )
+
+
+
+
+
+
+
+
+.. GENERATED FROM PYTHON SOURCE LINES 701-708
+
+.. code-block:: default
+
+    plt.figure(figsize=(9, 7))
+    sns.stripplot(data=coefs, orient="h", color="k", alpha=0.5)
+    sns.boxplot(data=coefs, orient="h", color="cyan", saturation=0.5, whis=100)
+    plt.axvline(x=0, color=".5")
+    plt.title("Coefficient variability")
+    plt.subplots_adjust(left=0.3)
+
+
+
+
+.. image-sg:: /auto_examples/inspection/images/sphx_glr_plot_linear_model_coefficient_interpretation_017.png
+   :alt: Coefficient variability
+   :srcset: /auto_examples/inspection/images/sphx_glr_plot_linear_model_coefficient_interpretation_017.png
+   :class: sphx-glr-single-img
+
+
+
+
+
+.. GENERATED FROM PYTHON SOURCE LINES 709-727
+
+We observe that the AGE and EXPERIENCE coefficients are varying a lot
+depending of the fold.
 
 Lessons learned
 ---------------
@@ -1657,7 +1925,7 @@ Lessons learned
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** ( 0 minutes  5.188 seconds)
+   **Total running time of the script:** ( 0 minutes  10.848 seconds)
 
 
 .. _sphx_glr_download_auto_examples_inspection_plot_linear_model_coefficient_interpretation.py:
