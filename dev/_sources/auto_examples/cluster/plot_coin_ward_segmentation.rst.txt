@@ -26,35 +26,7 @@ Compute the segmentation of a 2D image with Ward hierarchical
 clustering. The clustering is spatially constrained in order
 for each segmented region to be in one piece.
 
-.. GENERATED FROM PYTHON SOURCE LINES 11-76
-
-
-
-.. image-sg:: /auto_examples/cluster/images/sphx_glr_plot_coin_ward_segmentation_001.png
-   :alt: plot coin ward segmentation
-   :srcset: /auto_examples/cluster/images/sphx_glr_plot_coin_ward_segmentation_001.png
-   :class: sphx-glr-single-img
-
-
-.. rst-class:: sphx-glr-script-out
-
- Out:
-
- .. code-block:: none
-
-    /home/circleci/project/examples/cluster/plot_coin_ward_segmentation.py:38: FutureWarning: `multichannel` is a deprecated argument name for `rescale`. It will be removed in version 1.0. Please use `channel_axis` instead.
-      rescaled_coins = rescale(
-    Compute structured hierarchical clustering...
-    Elapsed time:  0.15285348892211914
-    Number of pixels:  4697
-    Number of clusters:  27
-
-
-
-
-
-
-|
+.. GENERATED FROM PYTHON SOURCE LINES 11-16
 
 .. code-block:: default
 
@@ -63,40 +35,103 @@ for each segmented region to be in one piece.
     #          Alexandre Gramfort, 2011
     # License: BSD 3 clause
 
-    import time as time
+
+
+
+
+
+
+
+.. GENERATED FROM PYTHON SOURCE LINES 17-19
+
+Generate data
+-------------
+
+.. GENERATED FROM PYTHON SOURCE LINES 19-24
+
+.. code-block:: default
+
+
+    from skimage.data import coins
+
+    orig_coins = coins()
+
+
+
+
+
+
+
+
+.. GENERATED FROM PYTHON SOURCE LINES 25-28
+
+Resize it to 20% of the original size to speed up the processing
+Applying a Gaussian filter for smoothing prior to down-scaling
+reduces aliasing artifacts.
+
+.. GENERATED FROM PYTHON SOURCE LINES 28-43
+
+.. code-block:: default
+
 
     import numpy as np
     from scipy.ndimage import gaussian_filter
-
-    import matplotlib.pyplot as plt
-
-    from skimage.data import coins
     from skimage.transform import rescale
 
-    from sklearn.feature_extraction.image import grid_to_graph
-    from sklearn.cluster import AgglomerativeClustering
-
-
-    # #############################################################################
-    # Generate data
-    orig_coins = coins()
-
-    # Resize it to 20% of the original size to speed up the processing
-    # Applying a Gaussian filter for smoothing prior to down-scaling
-    # reduces aliasing artifacts.
     smoothened_coins = gaussian_filter(orig_coins, sigma=2)
     rescaled_coins = rescale(
-        smoothened_coins, 0.2, mode="reflect", anti_aliasing=False, multichannel=False
+        smoothened_coins,
+        0.2,
+        mode="reflect",
+        anti_aliasing=False,
     )
 
     X = np.reshape(rescaled_coins, (-1, 1))
 
-    # #############################################################################
-    # Define the structure A of the data. Pixels connected to their neighbors.
+
+
+
+
+
+
+
+.. GENERATED FROM PYTHON SOURCE LINES 44-48
+
+Define structure of the data
+----------------------------
+
+Pixels are connected to their neighbors.
+
+.. GENERATED FROM PYTHON SOURCE LINES 48-53
+
+.. code-block:: default
+
+
+    from sklearn.feature_extraction.image import grid_to_graph
+
     connectivity = grid_to_graph(*rescaled_coins.shape)
 
-    # #############################################################################
-    # Compute clustering
+
+
+
+
+
+
+
+.. GENERATED FROM PYTHON SOURCE LINES 54-56
+
+Compute clustering
+------------------
+
+.. GENERATED FROM PYTHON SOURCE LINES 56-73
+
+.. code-block:: default
+
+
+    import time as time
+
+    from sklearn.cluster import AgglomerativeClustering
+
     print("Compute structured hierarchical clustering...")
     st = time.time()
     n_clusters = 27  # number of regions
@@ -105,12 +140,44 @@ for each segmented region to be in one piece.
     )
     ward.fit(X)
     label = np.reshape(ward.labels_, rescaled_coins.shape)
-    print("Elapsed time: ", time.time() - st)
-    print("Number of pixels: ", label.size)
-    print("Number of clusters: ", np.unique(label).size)
+    print(f"Elapsed time: {time.time() - st:.3f}s")
+    print(f"Number of pixels: {label.size}")
+    print(f"Number of clusters: {np.unique(label).size}")
 
-    # #############################################################################
-    # Plot the results on an image
+
+
+
+
+.. rst-class:: sphx-glr-script-out
+
+ Out:
+
+ .. code-block:: none
+
+    Compute structured hierarchical clustering...
+    Elapsed time: 0.152s
+    Number of pixels: 4697
+    Number of clusters: 27
+
+
+
+
+.. GENERATED FROM PYTHON SOURCE LINES 74-80
+
+Plot the results on an image
+----------------------------
+
+Agglomerative clustering is able to segment each coin however, we have had to
+use a ``n_cluster`` larger than the number of coins because the segmentation
+is finding a large in the background.
+
+.. GENERATED FROM PYTHON SOURCE LINES 80-94
+
+.. code-block:: default
+
+
+    import matplotlib.pyplot as plt
+
     plt.figure(figsize=(5, 5))
     plt.imshow(rescaled_coins, cmap=plt.cm.gray)
     for l in range(n_clusters):
@@ -120,14 +187,24 @@ for each segmented region to be in one piece.
                 plt.cm.nipy_spectral(l / float(n_clusters)),
             ],
         )
-    plt.xticks(())
-    plt.yticks(())
+    plt.axis("off")
     plt.show()
+
+
+
+.. image-sg:: /auto_examples/cluster/images/sphx_glr_plot_coin_ward_segmentation_001.png
+   :alt: plot coin ward segmentation
+   :srcset: /auto_examples/cluster/images/sphx_glr_plot_coin_ward_segmentation_001.png
+   :class: sphx-glr-single-img
+
+
+
+
 
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** ( 0 minutes  0.460 seconds)
+   **Total running time of the script:** ( 0 minutes  0.459 seconds)
 
 
 .. _sphx_glr_download_auto_examples_cluster_plot_coin_ward_segmentation.py:
