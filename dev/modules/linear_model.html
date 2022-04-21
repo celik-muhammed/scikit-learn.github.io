@@ -861,9 +861,6 @@ can be set with the hyperparameters <code class="docutils literal notranslate"><
 <span class="math notranslate nohighlight">\(\lambda_1\)</span> and <span class="math notranslate nohighlight">\(\lambda_2\)</span> of the gamma prior distributions over
 <span class="math notranslate nohighlight">\(\alpha\)</span> and <span class="math notranslate nohighlight">\(\lambda\)</span>. These are usually chosen to be
 <em>non-informative</em>. By default <span class="math notranslate nohighlight">\(\alpha_1 = \alpha_2 =  \lambda_1 = \lambda_2 = 10^{-6}\)</span>.</p>
-<figure class="align-center">
-<a class="reference external image-reference" href="../auto_examples/linear_model/plot_bayesian_ridge.html"><img alt="../_images/sphx_glr_plot_bayesian_ridge_001.png" src="../_images/sphx_glr_plot_bayesian_ridge_001.png" style="width: 300.0px; height: 250.0px;" /></a>
-</figure>
 <p>Bayesian Ridge Regression is used for regression:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">sklearn</span> <span class="kn">import</span> <span class="n">linear_model</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">X</span> <span class="o">=</span> <span class="p">[[</span><span class="mf">0.</span><span class="p">,</span> <span class="mf">0.</span><span class="p">],</span> <span class="p">[</span><span class="mf">1.</span><span class="p">,</span> <span class="mf">1.</span><span class="p">],</span> <span class="p">[</span><span class="mf">2.</span><span class="p">,</span> <span class="mf">2.</span><span class="p">],</span> <span class="p">[</span><span class="mf">3.</span><span class="p">,</span> <span class="mf">3.</span><span class="p">]]</span>
@@ -889,7 +886,6 @@ is more robust to ill-posed problems.</p>
 <div class="topic">
 <p class="topic-title">Examples:</p>
 <ul class="simple">
-<li><p><a class="reference internal" href="../auto_examples/linear_model/plot_bayesian_ridge.html#sphx-glr-auto-examples-linear-model-plot-bayesian-ridge-py"><span class="std std-ref">Bayesian Ridge Regression</span></a></p></li>
 <li><p><a class="reference internal" href="../auto_examples/linear_model/plot_bayesian_ridge_curvefit.html#sphx-glr-auto-examples-linear-model-plot-bayesian-ridge-curvefit-py"><span class="std std-ref">Curve Fitting with Bayesian Ridge Regression</span></a></p></li>
 </ul>
 </div>
@@ -903,31 +899,31 @@ is more robust to ill-posed problems.</p>
 </div>
 </section>
 <section id="automatic-relevance-determination-ard">
-<h3><span class="section-number">1.1.10.2. </span>Automatic Relevance Determination - ARD<a class="headerlink" href="#automatic-relevance-determination-ard" title="Permalink to this headline">¶</a></h3>
-<p><a class="reference internal" href="generated/sklearn.linear_model.ARDRegression.html#sklearn.linear_model.ARDRegression" title="sklearn.linear_model.ARDRegression"><code class="xref py py-class docutils literal notranslate"><span class="pre">ARDRegression</span></code></a> is very similar to <a class="reference internal" href="#id14">Bayesian Ridge Regression</a>,
-but can lead to sparser coefficients <span class="math notranslate nohighlight">\(w\)</span> <a class="footnote-reference brackets" href="#id19" id="id15">1</a> <a class="footnote-reference brackets" href="#id20" id="id16">2</a>.
-<a class="reference internal" href="generated/sklearn.linear_model.ARDRegression.html#sklearn.linear_model.ARDRegression" title="sklearn.linear_model.ARDRegression"><code class="xref py py-class docutils literal notranslate"><span class="pre">ARDRegression</span></code></a> poses a different prior over <span class="math notranslate nohighlight">\(w\)</span>, by dropping the
-assumption of the Gaussian being spherical.</p>
-<p>Instead, the distribution over <span class="math notranslate nohighlight">\(w\)</span> is assumed to be an axis-parallel,
-elliptical Gaussian distribution.</p>
-<p>This means each coefficient <span class="math notranslate nohighlight">\(w_{i}\)</span> is drawn from a Gaussian distribution,
-centered on zero and with a precision <span class="math notranslate nohighlight">\(\lambda_{i}\)</span>:</p>
+<span id="automatic-relevance-determination"></span><h3><span class="section-number">1.1.10.2. </span>Automatic Relevance Determination - ARD<a class="headerlink" href="#automatic-relevance-determination-ard" title="Permalink to this headline">¶</a></h3>
+<p>The Automatic Relevance Determination (as being implemented in
+<a class="reference internal" href="generated/sklearn.linear_model.ARDRegression.html#sklearn.linear_model.ARDRegression" title="sklearn.linear_model.ARDRegression"><code class="xref py py-class docutils literal notranslate"><span class="pre">ARDRegression</span></code></a>) is a kind of linear model which is very similar to the
+<a class="reference internal" href="#id14">Bayesian Ridge Regression</a>, but that leads to sparser coefficients <span class="math notranslate nohighlight">\(w\)</span>
+<a class="footnote-reference brackets" href="#id19" id="id15">1</a> <a class="footnote-reference brackets" href="#id20" id="id16">2</a>.</p>
+<p><a class="reference internal" href="generated/sklearn.linear_model.ARDRegression.html#sklearn.linear_model.ARDRegression" title="sklearn.linear_model.ARDRegression"><code class="xref py py-class docutils literal notranslate"><span class="pre">ARDRegression</span></code></a> poses a different prior over <span class="math notranslate nohighlight">\(w\)</span>: it drops
+the spherical Gaussian distribution for a centered elliptic Gaussian
+distribution. This means each coefficient <span class="math notranslate nohighlight">\(w_{i}\)</span> can itself be drawn from
+a Gaussian distribution, centered on zero and with a precision
+<span class="math notranslate nohighlight">\(\lambda_{i}\)</span>:</p>
 <div class="math notranslate nohighlight">
 \[p(w|\lambda) = \mathcal{N}(w|0,A^{-1})\]</div>
-<p>with <span class="math notranslate nohighlight">\(\text{diag}(A) = \lambda = \{\lambda_{1},...,\lambda_{p}\}\)</span>.</p>
-<p>In contrast to <a class="reference internal" href="#id14">Bayesian Ridge Regression</a>, each coordinate of <span class="math notranslate nohighlight">\(w_{i}\)</span>
-has its own standard deviation <span class="math notranslate nohighlight">\(\lambda_i\)</span>. The prior over all
-<span class="math notranslate nohighlight">\(\lambda_i\)</span> is chosen to be the same gamma distribution given by
-hyperparameters <span class="math notranslate nohighlight">\(\lambda_1\)</span> and <span class="math notranslate nohighlight">\(\lambda_2\)</span>.</p>
-<figure class="align-center">
-<a class="reference external image-reference" href="../auto_examples/linear_model/plot_ard.html"><img alt="../_images/sphx_glr_plot_ard_001.png" src="../_images/sphx_glr_plot_ard_001.png" style="width: 300.0px; height: 250.0px;" /></a>
-</figure>
-<p>ARD is also known in the literature as <em>Sparse Bayesian Learning</em> and
-<em>Relevance Vector Machine</em> <a class="footnote-reference brackets" href="#id21" id="id17">3</a> <a class="footnote-reference brackets" href="#id23" id="id18">4</a>.</p>
+<p>with <span class="math notranslate nohighlight">\(A\)</span> being a positive definite diagonal matrix and
+<span class="math notranslate nohighlight">\(\text{diag}(A) = \lambda = \{\lambda_{1},...,\lambda_{p}\}\)</span>.</p>
+<p>In contrast to the <a class="reference internal" href="#id14">Bayesian Ridge Regression</a>, each coordinate of
+<span class="math notranslate nohighlight">\(w_{i}\)</span> has its own standard deviation <span class="math notranslate nohighlight">\(\frac{1}{\lambda_i}\)</span>. The
+prior over all <span class="math notranslate nohighlight">\(\lambda_i\)</span> is chosen to be the same gamma distribution
+given by the hyperparameters <span class="math notranslate nohighlight">\(\lambda_1\)</span> and <span class="math notranslate nohighlight">\(\lambda_2\)</span>.</p>
+<p>ARD is also known in the literature as <em>Sparse Bayesian Learning</em> and <em>Relevance
+Vector Machine</em> <a class="footnote-reference brackets" href="#id21" id="id17">3</a> <a class="footnote-reference brackets" href="#id23" id="id18">4</a>. For a worked-out comparison between ARD and <a class="reference internal" href="#id14">Bayesian
+Ridge Regression</a>, see the example below.</p>
 <div class="topic">
 <p class="topic-title">Examples:</p>
 <ul class="simple">
-<li><p><a class="reference internal" href="../auto_examples/linear_model/plot_ard.html#sphx-glr-auto-examples-linear-model-plot-ard-py"><span class="std std-ref">Automatic Relevance Determination Regression (ARD)</span></a></p></li>
+<li><p><a class="reference internal" href="../auto_examples/linear_model/plot_ard.html#sphx-glr-auto-examples-linear-model-plot-ard-py"><span class="std std-ref">Comparing Linear Bayesian Regressors</span></a></p></li>
 </ul>
 </div>
 <div class="topic">
