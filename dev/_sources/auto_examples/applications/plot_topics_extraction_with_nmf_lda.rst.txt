@@ -38,7 +38,7 @@ increase the dimensions of the problem, but be aware that the time
 complexity is polynomial in NMF. In LDA, the time complexity is
 proportional to (n_samples * iterations).
 
-.. GENERATED FROM PYTHON SOURCE LINES 23-158
+.. GENERATED FROM PYTHON SOURCE LINES 23-227
 
 
 
@@ -62,8 +62,22 @@ proportional to (n_samples * iterations).
     *
 
       .. image-sg:: /auto_examples/applications/images/sphx_glr_plot_topics_extraction_with_nmf_lda_003.png
-         :alt: Topics in LDA model, Topic 1, Topic 2, Topic 3, Topic 4, Topic 5, Topic 6, Topic 7, Topic 8, Topic 9, Topic 10
+         :alt: Topics in MiniBatchNMF model (Frobenius norm), Topic 1, Topic 2, Topic 3, Topic 4, Topic 5, Topic 6, Topic 7, Topic 8, Topic 9, Topic 10
          :srcset: /auto_examples/applications/images/sphx_glr_plot_topics_extraction_with_nmf_lda_003.png
+         :class: sphx-glr-multi-img
+
+    *
+
+      .. image-sg:: /auto_examples/applications/images/sphx_glr_plot_topics_extraction_with_nmf_lda_004.png
+         :alt: Topics in MiniBatchNMF model (generalized Kullback-Leibler divergence), Topic 1, Topic 2, Topic 3, Topic 4, Topic 5, Topic 6, Topic 7, Topic 8, Topic 9, Topic 10
+         :srcset: /auto_examples/applications/images/sphx_glr_plot_topics_extraction_with_nmf_lda_004.png
+         :class: sphx-glr-multi-img
+
+    *
+
+      .. image-sg:: /auto_examples/applications/images/sphx_glr_plot_topics_extraction_with_nmf_lda_005.png
+         :alt: Topics in LDA model, Topic 1, Topic 2, Topic 3, Topic 4, Topic 5, Topic 6, Topic 7, Topic 8, Topic 9, Topic 10
+         :srcset: /auto_examples/applications/images/sphx_glr_plot_topics_extraction_with_nmf_lda_005.png
          :class: sphx-glr-multi-img
 
 
@@ -74,26 +88,30 @@ proportional to (n_samples * iterations).
  .. code-block:: none
 
     Loading dataset...
-    done in 1.123s.
+    done in 1.023s.
     Extracting tf-idf features for NMF...
-    done in 0.282s.
+    done in 0.245s.
     Extracting tf features for LDA...
-    done in 0.364s.
+    done in 0.247s.
 
     Fitting the NMF model (Frobenius norm) with tf-idf features, n_samples=2000 and n_features=1000...
-    /home/circleci/project/sklearn/decomposition/_nmf.py:1438: FutureWarning: `alpha` was deprecated in version 1.0 and will be removed in 1.2. Use `alpha_W` and `alpha_H` instead
-      warnings.warn(
-    done in 0.206s.
+    done in 0.077s.
 
 
      Fitting the NMF model (generalized Kullback-Leibler divergence) with tf-idf features, n_samples=2000 and n_features=1000...
-    /home/circleci/project/sklearn/decomposition/_nmf.py:1438: FutureWarning: `alpha` was deprecated in version 1.0 and will be removed in 1.2. Use `alpha_W` and `alpha_H` instead
-      warnings.warn(
-    done in 1.370s.
+    done in 1.140s.
+
+
+     Fitting the MiniBatchNMF model (Frobenius norm) with tf-idf features, n_samples=2000 and n_features=1000, batch_size=128...
+    done in 0.085s.
+
+
+     Fitting the MiniBatchNMF model (generalized Kullback-Leibler divergence) with tf-idf features, n_samples=2000 and n_features=1000, batch_size=128...
+    done in 0.230s.
 
 
      Fitting LDA models with tf features, n_samples=2000 and n_features=1000...
-    done in 3.045s.
+    done in 2.694s.
 
 
 
@@ -114,13 +132,15 @@ proportional to (n_samples * iterations).
     import matplotlib.pyplot as plt
 
     from sklearn.feature_extraction.text import TfidfVectorizer, CountVectorizer
-    from sklearn.decomposition import NMF, LatentDirichletAllocation
+    from sklearn.decomposition import NMF, MiniBatchNMF, LatentDirichletAllocation
     from sklearn.datasets import fetch_20newsgroups
 
     n_samples = 2000
     n_features = 1000
     n_components = 10
     n_top_words = 20
+    batch_size = 128
+    init = "nndsvda"
 
 
     def plot_top_words(model, feature_names, n_top_words, title):
@@ -185,7 +205,15 @@ proportional to (n_samples * iterations).
         "n_samples=%d and n_features=%d..." % (n_samples, n_features)
     )
     t0 = time()
-    nmf = NMF(n_components=n_components, random_state=1, alpha=0.1, l1_ratio=0.5).fit(tfidf)
+    nmf = NMF(
+        n_components=n_components,
+        random_state=1,
+        init=init,
+        beta_loss="frobenius",
+        alpha_W=0.00005,
+        alpha_H=0.00005,
+        l1_ratio=1,
+    ).fit(tfidf)
     print("done in %0.3fs." % (time() - t0))
 
 
@@ -205,10 +233,12 @@ proportional to (n_samples * iterations).
     nmf = NMF(
         n_components=n_components,
         random_state=1,
+        init=init,
         beta_loss="kullback-leibler",
         solver="mu",
         max_iter=1000,
-        alpha=0.1,
+        alpha_W=0.00005,
+        alpha_H=0.00005,
         l1_ratio=0.5,
     ).fit(tfidf)
     print("done in %0.3fs." % (time() - t0))
@@ -219,6 +249,63 @@ proportional to (n_samples * iterations).
         tfidf_feature_names,
         n_top_words,
         "Topics in NMF model (generalized Kullback-Leibler divergence)",
+    )
+
+    # Fit the MiniBatchNMF model
+    print(
+        "\n" * 2,
+        "Fitting the MiniBatchNMF model (Frobenius norm) with tf-idf "
+        "features, n_samples=%d and n_features=%d, batch_size=%d..."
+        % (n_samples, n_features, batch_size),
+    )
+    t0 = time()
+    mbnmf = MiniBatchNMF(
+        n_components=n_components,
+        random_state=1,
+        batch_size=batch_size,
+        init=init,
+        beta_loss="frobenius",
+        alpha_W=0.00005,
+        alpha_H=0.00005,
+        l1_ratio=0.5,
+    ).fit(tfidf)
+    print("done in %0.3fs." % (time() - t0))
+
+
+    tfidf_feature_names = tfidf_vectorizer.get_feature_names_out()
+    plot_top_words(
+        mbnmf,
+        tfidf_feature_names,
+        n_top_words,
+        "Topics in MiniBatchNMF model (Frobenius norm)",
+    )
+
+    # Fit the MiniBatchNMF model
+    print(
+        "\n" * 2,
+        "Fitting the MiniBatchNMF model (generalized Kullback-Leibler "
+        "divergence) with tf-idf features, n_samples=%d and n_features=%d, "
+        "batch_size=%d..." % (n_samples, n_features, batch_size),
+    )
+    t0 = time()
+    mbnmf = MiniBatchNMF(
+        n_components=n_components,
+        random_state=1,
+        batch_size=batch_size,
+        init=init,
+        beta_loss="kullback-leibler",
+        alpha_W=0.00005,
+        alpha_H=0.00005,
+        l1_ratio=0.5,
+    ).fit(tfidf)
+    print("done in %0.3fs." % (time() - t0))
+
+    tfidf_feature_names = tfidf_vectorizer.get_feature_names_out()
+    plot_top_words(
+        mbnmf,
+        tfidf_feature_names,
+        n_top_words,
+        "Topics in MiniBatchNMF model (generalized Kullback-Leibler divergence)",
     )
 
     print(
@@ -243,7 +330,7 @@ proportional to (n_samples * iterations).
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** ( 0 minutes  9.372 seconds)
+   **Total running time of the script:** ( 0 minutes  10.070 seconds)
 
 
 .. _sphx_glr_download_auto_examples_applications_plot_topics_extraction_with_nmf_lda.py:
