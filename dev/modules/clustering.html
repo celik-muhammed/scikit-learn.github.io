@@ -201,6 +201,7 @@
 <li><a class="reference internal" href="#visualization-of-cluster-hierarchy">2.3.6.2. Visualization of cluster hierarchy</a></li>
 <li><a class="reference internal" href="#adding-connectivity-constraints">2.3.6.3. Adding connectivity constraints</a></li>
 <li><a class="reference internal" href="#varying-the-metric">2.3.6.4. Varying the metric</a></li>
+<li><a class="reference internal" href="#bisecting-k-means">2.3.6.5. Bisecting K-Means</a></li>
 </ul>
 </li>
 <li><a class="reference internal" href="#dbscan">2.3.7. DBSCAN</a></li>
@@ -374,6 +375,13 @@ outlier removal, transductive</p></td>
 <td><p>Large <code class="docutils literal notranslate"><span class="pre">n_clusters</span></code> and <code class="docutils literal notranslate"><span class="pre">n_samples</span></code></p></td>
 <td><p>Large dataset, outlier removal, data reduction, inductive</p></td>
 <td><p>Euclidean distance between points</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#bisect-k-means"><span class="std std-ref">Bisecting K-Means</span></a></p></td>
+<td><p>number of clusters</p></td>
+<td><p>Very large <code class="docutils literal notranslate"><span class="pre">n_samples</span></code>, medium <code class="docutils literal notranslate"><span class="pre">n_clusters</span></code></p></td>
+<td><p>General-purpose, even cluster size, flat geometry,
+no empty clusters, inductive, hierarchical</p></td>
+<td><p>Distances between points</p></td>
 </tr>
 </tbody>
 </table>
@@ -893,6 +901,58 @@ each class.</p>
 <p class="topic-title">Examples:</p>
 <ul class="simple">
 <li><p><a class="reference internal" href="../auto_examples/cluster/plot_agglomerative_clustering_metrics.html#sphx-glr-auto-examples-cluster-plot-agglomerative-clustering-metrics-py"><span class="std std-ref">Agglomerative clustering with different metrics</span></a></p></li>
+</ul>
+</div>
+</section>
+<section id="bisecting-k-means">
+<h3><span class="section-number">2.3.6.5. </span>Bisecting K-Means<a class="headerlink" href="#bisecting-k-means" title="Permalink to this headline">¶</a></h3>
+<p id="bisect-k-means">The <a class="reference internal" href="generated/sklearn.cluster.BisectingKMeans.html#sklearn.cluster.BisectingKMeans" title="sklearn.cluster.BisectingKMeans"><code class="xref py py-class docutils literal notranslate"><span class="pre">BisectingKMeans</span></code></a> is an iterative variant of <a class="reference internal" href="generated/sklearn.cluster.KMeans.html#sklearn.cluster.KMeans" title="sklearn.cluster.KMeans"><code class="xref py py-class docutils literal notranslate"><span class="pre">KMeans</span></code></a>, using
+divisive hierarchical clustering. Instead of creating all centroids at once, centroids
+are picked progressively based on a previous clustering: a cluster is split into two
+new clusters repeatedly until the target number of clusters is reached.</p>
+<p><a class="reference internal" href="generated/sklearn.cluster.BisectingKMeans.html#sklearn.cluster.BisectingKMeans" title="sklearn.cluster.BisectingKMeans"><code class="xref py py-class docutils literal notranslate"><span class="pre">BisectingKMeans</span></code></a> is more efficient than <a class="reference internal" href="generated/sklearn.cluster.KMeans.html#sklearn.cluster.KMeans" title="sklearn.cluster.KMeans"><code class="xref py py-class docutils literal notranslate"><span class="pre">KMeans</span></code></a> when the number the
+number of clusters is large since it only works on a subset of the data at each
+bisection while <a class="reference internal" href="generated/sklearn.cluster.KMeans.html#sklearn.cluster.KMeans" title="sklearn.cluster.KMeans"><code class="xref py py-class docutils literal notranslate"><span class="pre">KMeans</span></code></a> always works on the entire dataset.</p>
+<p>Although <a class="reference internal" href="generated/sklearn.cluster.BisectingKMeans.html#sklearn.cluster.BisectingKMeans" title="sklearn.cluster.BisectingKMeans"><code class="xref py py-class docutils literal notranslate"><span class="pre">BisectingKMeans</span></code></a> can’t benefit from the advantages of the <code class="docutils literal notranslate"><span class="pre">&quot;k-means++&quot;</span></code>
+initialization by design, it will still produce comparable results than
+<code class="docutils literal notranslate"><span class="pre">KMeans(init=&quot;k-means++&quot;)</span></code> in terms of inertia at cheaper computational costs, and will
+likely produce better results than <code class="docutils literal notranslate"><span class="pre">KMeans</span></code> with a random initialization.</p>
+<p>This variant is more efficient to agglomerative clustering if the number of clusters is
+small compared to the number of data points.</p>
+<p>This variant also does not produce empty clusters.</p>
+<dl class="simple">
+<dt>There exist two strategies for selecting the cluster to split:</dt><dd><ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">bisecting_strategy=&quot;largest_cluster&quot;</span></code> selects the cluster having the most points</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">bisecting_strategy=&quot;biggest_inertia&quot;</span></code> selects the cluster with biggest inertia
+(cluster with biggest Sum of Squared Errors within)</p></li>
+</ul>
+</dd>
+</dl>
+<p>Picking by largest amount of data points in most cases produces result as
+accurate as picking by inertia and is faster (especially for larger amount of data
+points, where calculating error may be costly).</p>
+<p>Picking by largest amount of data points will also likely produce clusters of similar
+sizes while <code class="docutils literal notranslate"><span class="pre">KMeans</span></code> is known to produce clusters of different sizes.</p>
+<p>Difference between Bisecting K-Means and regular K-Means can be seen on example
+<a class="reference internal" href="../auto_examples/cluster/plot_bisect_kmeans.html#sphx-glr-auto-examples-cluster-plot-bisect-kmeans-py"><span class="std std-ref">Bisecting K-Means and Regular K-Means Performance Comparison</span></a>.
+While the regular K-Means algorithm tends to create non-related clusters,
+clusters from Bisecting K-Means are well ordered and create quite a visible hierarchy.</p>
+<div class="topic">
+<p class="topic-title">References:</p>
+<ul class="simple">
+<li><p><a class="reference external" href="http://www.philippe-fournier-viger.com/spmf/bisectingkmeans.pdf">“A Comparison of Document Clustering Techniques”</a>
+Michael Steinbach, George Karypis and Vipin Kumar,
+Department of Computer Science and Egineering, University of Minnesota
+(June 2000)</p></li>
+<li><p><a class="reference external" href="https://ijeter.everscience.org/Manuscripts/Volume-4/Issue-8/Vol-4-issue-8-M-23.pdf">“Performance Analysis of K-Means and Bisecting K-Means Algorithms in Weblog Data”</a>
+K.Abirami and Dr.P.Mayilvahanan,
+International Journal of Emerging Technologies in Engineering Research (IJETER)
+Volume 4, Issue 8, (August 2016)</p></li>
+<li><p><a class="reference external" href="http://www.jcomputers.us/vol13/jcp1306-01.pdf">“Bisecting K-means Algorithm Based on K-valued Self-determining
+and Clustering Center Optimization”</a>
+Jian Di, Xinyue Gou
+School of Control and Computer Engineering,North China Electric Power University,
+Baoding, Hebei, China (August 2017)</p></li>
 </ul>
 </div>
 </section>
