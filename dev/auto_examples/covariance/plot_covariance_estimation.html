@@ -182,7 +182,13 @@
         </div>
             <div class="sk-sidebar-toc">
               <ul>
-<li><a class="reference internal" href="#">Shrinkage covariance estimation: LedoitWolf vs OAS and max-likelihood</a></li>
+<li><a class="reference internal" href="#">Shrinkage covariance estimation: LedoitWolf vs OAS and max-likelihood</a><ul>
+<li><a class="reference internal" href="#generate-sample-data">Generate sample data</a></li>
+<li><a class="reference internal" href="#compute-the-likelihood-on-test-data">Compute the likelihood on test data</a></li>
+<li><a class="reference internal" href="#compare-different-approaches-to-setting-the-regularization-parameter">Compare different approaches to setting the regularization parameter</a></li>
+<li><a class="reference internal" href="#plot-results">Plot results</a></li>
+</ul>
+</li>
 </ul>
 
             </div>
@@ -208,6 +214,43 @@ example illustrates the simple regularization used in
 <a class="reference internal" href="../../modules/covariance.html#shrunk-covariance"><span class="std std-ref">Shrunk Covariance</span></a> estimators. In particular, it focuses on how to
 set the amount of regularization, i.e. how to choose the bias-variance
 trade-off.</p>
+<section id="generate-sample-data">
+<h2>Generate sample data<a class="headerlink" href="#generate-sample-data" title="Permalink to this headline">¶</a></h2>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+
+<span class="n">n_features</span><span class="p">,</span> <span class="n">n_samples</span> <span class="o">=</span> <span class="mi">40</span><span class="p">,</span> <span class="mi">20</span>
+<a href="https://numpy.org/doc/stable/reference/random/generated/numpy.random.seed.html#numpy.random.seed" title="numpy.random.seed" class="sphx-glr-backref-module-numpy-random sphx-glr-backref-type-py-function"><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">seed</span></a><span class="p">(</span><span class="mi">42</span><span class="p">)</span>
+<span class="n">base_X_train</span> <span class="o">=</span> <a href="https://numpy.org/doc/stable/reference/random/generated/numpy.random.normal.html#numpy.random.normal" title="numpy.random.normal" class="sphx-glr-backref-module-numpy-random sphx-glr-backref-type-py-function"><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">normal</span></a><span class="p">(</span><span class="n">size</span><span class="o">=</span><span class="p">(</span><span class="n">n_samples</span><span class="p">,</span> <span class="n">n_features</span><span class="p">))</span>
+<span class="n">base_X_test</span> <span class="o">=</span> <a href="https://numpy.org/doc/stable/reference/random/generated/numpy.random.normal.html#numpy.random.normal" title="numpy.random.normal" class="sphx-glr-backref-module-numpy-random sphx-glr-backref-type-py-function"><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">normal</span></a><span class="p">(</span><span class="n">size</span><span class="o">=</span><span class="p">(</span><span class="n">n_samples</span><span class="p">,</span> <span class="n">n_features</span><span class="p">))</span>
+
+<span class="c1"># Color samples</span>
+<span class="n">coloring_matrix</span> <span class="o">=</span> <a href="https://numpy.org/doc/stable/reference/random/generated/numpy.random.normal.html#numpy.random.normal" title="numpy.random.normal" class="sphx-glr-backref-module-numpy-random sphx-glr-backref-type-py-function"><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">normal</span></a><span class="p">(</span><span class="n">size</span><span class="o">=</span><span class="p">(</span><span class="n">n_features</span><span class="p">,</span> <span class="n">n_features</span><span class="p">))</span>
+<span class="n">X_train</span> <span class="o">=</span> <a href="https://numpy.org/doc/stable/reference/generated/numpy.dot.html#numpy.dot" title="numpy.dot" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-function"><span class="n">np</span><span class="o">.</span><span class="n">dot</span></a><span class="p">(</span><span class="n">base_X_train</span><span class="p">,</span> <span class="n">coloring_matrix</span><span class="p">)</span>
+<span class="n">X_test</span> <span class="o">=</span> <a href="https://numpy.org/doc/stable/reference/generated/numpy.dot.html#numpy.dot" title="numpy.dot" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-function"><span class="n">np</span><span class="o">.</span><span class="n">dot</span></a><span class="p">(</span><span class="n">base_X_test</span><span class="p">,</span> <span class="n">coloring_matrix</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="compute-the-likelihood-on-test-data">
+<h2>Compute the likelihood on test data<a class="headerlink" href="#compute-the-likelihood-on-test-data" title="Permalink to this headline">¶</a></h2>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">sklearn.covariance</span> <span class="kn">import</span> <a href="../../modules/generated/sklearn.covariance.ShrunkCovariance.html#sklearn.covariance.ShrunkCovariance" title="sklearn.covariance.ShrunkCovariance" class="sphx-glr-backref-module-sklearn-covariance sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">ShrunkCovariance</span></a><span class="p">,</span> <a href="../../modules/generated/sklearn.covariance.empirical_covariance.html#sklearn.covariance.empirical_covariance" title="sklearn.covariance.empirical_covariance" class="sphx-glr-backref-module-sklearn-covariance sphx-glr-backref-type-py-function"><span class="n">empirical_covariance</span></a><span class="p">,</span> <span class="n">log_likelihood</span>
+<span class="kn">from</span> <span class="nn">scipy</span> <span class="kn">import</span> <span class="n">linalg</span>
+
+<span class="c1"># spanning a range of possible shrinkage coefficient values</span>
+<span class="n">shrinkages</span> <span class="o">=</span> <a href="https://numpy.org/doc/stable/reference/generated/numpy.logspace.html#numpy.logspace" title="numpy.logspace" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-function"><span class="n">np</span><span class="o">.</span><span class="n">logspace</span></a><span class="p">(</span><span class="o">-</span><span class="mi">2</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">30</span><span class="p">)</span>
+<span class="n">negative_logliks</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="o">-</span><a href="../../modules/generated/sklearn.covariance.ShrunkCovariance.html#sklearn.covariance.ShrunkCovariance" title="sklearn.covariance.ShrunkCovariance" class="sphx-glr-backref-module-sklearn-covariance sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">ShrunkCovariance</span></a><span class="p">(</span><span class="n">shrinkage</span><span class="o">=</span><span class="n">s</span><span class="p">)</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X_train</span><span class="p">)</span><span class="o">.</span><span class="n">score</span><span class="p">(</span><span class="n">X_test</span><span class="p">)</span> <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="n">shrinkages</span>
+<span class="p">]</span>
+
+<span class="c1"># under the ground-truth model, which we would not have access to in real</span>
+<span class="c1"># settings</span>
+<span class="n">real_cov</span> <span class="o">=</span> <a href="https://numpy.org/doc/stable/reference/generated/numpy.dot.html#numpy.dot" title="numpy.dot" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-function"><span class="n">np</span><span class="o">.</span><span class="n">dot</span></a><span class="p">(</span><span class="n">coloring_matrix</span><span class="o">.</span><span class="n">T</span><span class="p">,</span> <span class="n">coloring_matrix</span><span class="p">)</span>
+<span class="n">emp_cov</span> <span class="o">=</span> <a href="../../modules/generated/sklearn.covariance.empirical_covariance.html#sklearn.covariance.empirical_covariance" title="sklearn.covariance.empirical_covariance" class="sphx-glr-backref-module-sklearn-covariance sphx-glr-backref-type-py-function"><span class="n">empirical_covariance</span></a><span class="p">(</span><span class="n">X_train</span><span class="p">)</span>
+<span class="n">loglik_real</span> <span class="o">=</span> <span class="o">-</span><span class="n">log_likelihood</span><span class="p">(</span><span class="n">emp_cov</span><span class="p">,</span> <a href="https://docs.scipy.org/doc/scipy/reference/generated/scipy.linalg.inv.html#scipy.linalg.inv" title="scipy.linalg.inv" class="sphx-glr-backref-module-scipy-linalg sphx-glr-backref-type-py-function"><span class="n">linalg</span><span class="o">.</span><span class="n">inv</span></a><span class="p">(</span><span class="n">real_cov</span><span class="p">))</span>
+</pre></div>
+</div>
+</section>
+<section id="compare-different-approaches-to-setting-the-regularization-parameter">
+<h2>Compare different approaches to setting the regularization parameter<a class="headerlink" href="#compare-different-approaches-to-setting-the-regularization-parameter" title="Permalink to this headline">¶</a></h2>
 <p>Here we compare 3 approaches:</p>
 <ul class="simple">
 <li><p>Setting the parameter by cross-validating the likelihood on three folds
@@ -221,58 +264,8 @@ covariance estimate.</p></li>
 convergence is significantly better under the assumption that the data
 are Gaussian, in particular for small samples.</p></li>
 </ul>
-<p>To quantify estimation error, we plot the likelihood of unseen data for
-different values of the shrinkage parameter. We also show the choices by
-cross-validation, or with the LedoitWolf and OAS estimates.</p>
-<p>Note that the maximum likelihood estimate corresponds to no shrinkage,
-and thus performs poorly. The Ledoit-Wolf estimate performs really well,
-as it is close to the optimal and is computational not costly. In this
-example, the OAS estimate is a bit further away. Interestingly, both
-approaches outperform cross-validation, which is significantly most
-computationally costly.</p>
-<img src="../../_images/sphx_glr_plot_covariance_estimation_001.png" srcset="../../_images/sphx_glr_plot_covariance_estimation_001.png" alt="Regularized covariance: likelihood and shrinkage coefficient" class = "sphx-glr-single-img"/><div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
-<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
-<span class="kn">from</span> <span class="nn">scipy</span> <span class="kn">import</span> <span class="n">linalg</span>
-
-<span class="kn">from</span> <span class="nn">sklearn.covariance</span> <span class="kn">import</span> <span class="p">(</span>
-    <a href="../../modules/generated/sklearn.covariance.LedoitWolf.html#sklearn.covariance.LedoitWolf" title="sklearn.covariance.LedoitWolf" class="sphx-glr-backref-module-sklearn-covariance sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">LedoitWolf</span></a><span class="p">,</span>
-    <a href="../../modules/generated/sklearn.covariance.OAS.html#sklearn.covariance.OAS" title="sklearn.covariance.OAS" class="sphx-glr-backref-module-sklearn-covariance sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">OAS</span></a><span class="p">,</span>
-    <a href="../../modules/generated/sklearn.covariance.ShrunkCovariance.html#sklearn.covariance.ShrunkCovariance" title="sklearn.covariance.ShrunkCovariance" class="sphx-glr-backref-module-sklearn-covariance sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">ShrunkCovariance</span></a><span class="p">,</span>
-    <span class="n">log_likelihood</span><span class="p">,</span>
-    <a href="../../modules/generated/sklearn.covariance.empirical_covariance.html#sklearn.covariance.empirical_covariance" title="sklearn.covariance.empirical_covariance" class="sphx-glr-backref-module-sklearn-covariance sphx-glr-backref-type-py-function"><span class="n">empirical_covariance</span></a><span class="p">,</span>
-<span class="p">)</span>
-<span class="kn">from</span> <span class="nn">sklearn.model_selection</span> <span class="kn">import</span> <a href="../../modules/generated/sklearn.model_selection.GridSearchCV.html#sklearn.model_selection.GridSearchCV" title="sklearn.model_selection.GridSearchCV" class="sphx-glr-backref-module-sklearn-model_selection sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">GridSearchCV</span></a>
-
-
-<span class="c1"># #############################################################################</span>
-<span class="c1"># Generate sample data</span>
-<span class="n">n_features</span><span class="p">,</span> <span class="n">n_samples</span> <span class="o">=</span> <span class="mi">40</span><span class="p">,</span> <span class="mi">20</span>
-<a href="https://numpy.org/doc/stable/reference/random/generated/numpy.random.seed.html#numpy.random.seed" title="numpy.random.seed" class="sphx-glr-backref-module-numpy-random sphx-glr-backref-type-py-function"><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">seed</span></a><span class="p">(</span><span class="mi">42</span><span class="p">)</span>
-<span class="n">base_X_train</span> <span class="o">=</span> <a href="https://numpy.org/doc/stable/reference/random/generated/numpy.random.normal.html#numpy.random.normal" title="numpy.random.normal" class="sphx-glr-backref-module-numpy-random sphx-glr-backref-type-py-function"><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">normal</span></a><span class="p">(</span><span class="n">size</span><span class="o">=</span><span class="p">(</span><span class="n">n_samples</span><span class="p">,</span> <span class="n">n_features</span><span class="p">))</span>
-<span class="n">base_X_test</span> <span class="o">=</span> <a href="https://numpy.org/doc/stable/reference/random/generated/numpy.random.normal.html#numpy.random.normal" title="numpy.random.normal" class="sphx-glr-backref-module-numpy-random sphx-glr-backref-type-py-function"><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">normal</span></a><span class="p">(</span><span class="n">size</span><span class="o">=</span><span class="p">(</span><span class="n">n_samples</span><span class="p">,</span> <span class="n">n_features</span><span class="p">))</span>
-
-<span class="c1"># Color samples</span>
-<span class="n">coloring_matrix</span> <span class="o">=</span> <a href="https://numpy.org/doc/stable/reference/random/generated/numpy.random.normal.html#numpy.random.normal" title="numpy.random.normal" class="sphx-glr-backref-module-numpy-random sphx-glr-backref-type-py-function"><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">normal</span></a><span class="p">(</span><span class="n">size</span><span class="o">=</span><span class="p">(</span><span class="n">n_features</span><span class="p">,</span> <span class="n">n_features</span><span class="p">))</span>
-<span class="n">X_train</span> <span class="o">=</span> <a href="https://numpy.org/doc/stable/reference/generated/numpy.dot.html#numpy.dot" title="numpy.dot" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-function"><span class="n">np</span><span class="o">.</span><span class="n">dot</span></a><span class="p">(</span><span class="n">base_X_train</span><span class="p">,</span> <span class="n">coloring_matrix</span><span class="p">)</span>
-<span class="n">X_test</span> <span class="o">=</span> <a href="https://numpy.org/doc/stable/reference/generated/numpy.dot.html#numpy.dot" title="numpy.dot" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-function"><span class="n">np</span><span class="o">.</span><span class="n">dot</span></a><span class="p">(</span><span class="n">base_X_test</span><span class="p">,</span> <span class="n">coloring_matrix</span><span class="p">)</span>
-
-<span class="c1"># #############################################################################</span>
-<span class="c1"># Compute the likelihood on test data</span>
-
-<span class="c1"># spanning a range of possible shrinkage coefficient values</span>
-<span class="n">shrinkages</span> <span class="o">=</span> <a href="https://numpy.org/doc/stable/reference/generated/numpy.logspace.html#numpy.logspace" title="numpy.logspace" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-function"><span class="n">np</span><span class="o">.</span><span class="n">logspace</span></a><span class="p">(</span><span class="o">-</span><span class="mi">2</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">30</span><span class="p">)</span>
-<span class="n">negative_logliks</span> <span class="o">=</span> <span class="p">[</span>
-    <span class="o">-</span><a href="../../modules/generated/sklearn.covariance.ShrunkCovariance.html#sklearn.covariance.ShrunkCovariance" title="sklearn.covariance.ShrunkCovariance" class="sphx-glr-backref-module-sklearn-covariance sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">ShrunkCovariance</span></a><span class="p">(</span><span class="n">shrinkage</span><span class="o">=</span><span class="n">s</span><span class="p">)</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X_train</span><span class="p">)</span><span class="o">.</span><span class="n">score</span><span class="p">(</span><span class="n">X_test</span><span class="p">)</span> <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="n">shrinkages</span>
-<span class="p">]</span>
-
-<span class="c1"># under the ground-truth model, which we would not have access to in real</span>
-<span class="c1"># settings</span>
-<span class="n">real_cov</span> <span class="o">=</span> <a href="https://numpy.org/doc/stable/reference/generated/numpy.dot.html#numpy.dot" title="numpy.dot" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-function"><span class="n">np</span><span class="o">.</span><span class="n">dot</span></a><span class="p">(</span><span class="n">coloring_matrix</span><span class="o">.</span><span class="n">T</span><span class="p">,</span> <span class="n">coloring_matrix</span><span class="p">)</span>
-<span class="n">emp_cov</span> <span class="o">=</span> <a href="../../modules/generated/sklearn.covariance.empirical_covariance.html#sklearn.covariance.empirical_covariance" title="sklearn.covariance.empirical_covariance" class="sphx-glr-backref-module-sklearn-covariance sphx-glr-backref-type-py-function"><span class="n">empirical_covariance</span></a><span class="p">(</span><span class="n">X_train</span><span class="p">)</span>
-<span class="n">loglik_real</span> <span class="o">=</span> <span class="o">-</span><span class="n">log_likelihood</span><span class="p">(</span><span class="n">emp_cov</span><span class="p">,</span> <a href="https://docs.scipy.org/doc/scipy/reference/generated/scipy.linalg.inv.html#scipy.linalg.inv" title="scipy.linalg.inv" class="sphx-glr-backref-module-scipy-linalg sphx-glr-backref-type-py-function"><span class="n">linalg</span><span class="o">.</span><span class="n">inv</span></a><span class="p">(</span><span class="n">real_cov</span><span class="p">))</span>
-
-<span class="c1"># #############################################################################</span>
-<span class="c1"># Compare different approaches to setting the parameter</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">sklearn.model_selection</span> <span class="kn">import</span> <a href="../../modules/generated/sklearn.model_selection.GridSearchCV.html#sklearn.model_selection.GridSearchCV" title="sklearn.model_selection.GridSearchCV" class="sphx-glr-backref-module-sklearn-model_selection sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">GridSearchCV</span></a>
+<span class="kn">from</span> <span class="nn">sklearn.covariance</span> <span class="kn">import</span> <a href="../../modules/generated/sklearn.covariance.LedoitWolf.html#sklearn.covariance.LedoitWolf" title="sklearn.covariance.LedoitWolf" class="sphx-glr-backref-module-sklearn-covariance sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">LedoitWolf</span></a><span class="p">,</span> <a href="../../modules/generated/sklearn.covariance.OAS.html#sklearn.covariance.OAS" title="sklearn.covariance.OAS" class="sphx-glr-backref-module-sklearn-covariance sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">OAS</span></a>
 
 <span class="c1"># GridSearch for an optimal shrinkage coefficient</span>
 <span class="n">tuned_parameters</span> <span class="o">=</span> <span class="p">[{</span><span class="s2">&quot;shrinkage&quot;</span><span class="p">:</span> <span class="n">shrinkages</span><span class="p">}]</span>
@@ -286,9 +279,16 @@ computationally costly.</p>
 <span class="c1"># OAS coefficient estimate</span>
 <span class="n">oa</span> <span class="o">=</span> <a href="../../modules/generated/sklearn.covariance.OAS.html#sklearn.covariance.OAS" title="sklearn.covariance.OAS" class="sphx-glr-backref-module-sklearn-covariance sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">OAS</span></a><span class="p">()</span>
 <span class="n">loglik_oa</span> <span class="o">=</span> <span class="n">oa</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X_train</span><span class="p">)</span><span class="o">.</span><span class="n">score</span><span class="p">(</span><span class="n">X_test</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="plot-results">
+<h2>Plot results<a class="headerlink" href="#plot-results" title="Permalink to this headline">¶</a></h2>
+<p>To quantify estimation error, we plot the likelihood of unseen data for
+different values of the shrinkage parameter. We also show the choices by
+cross-validation, or with the LedoitWolf and OAS estimates.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
 
-<span class="c1"># #############################################################################</span>
-<span class="c1"># Plot results</span>
 <span class="n">fig</span> <span class="o">=</span> <a href="https://matplotlib.org/stable/api/_as_gen/matplotlib.pyplot.figure.html#matplotlib.pyplot.figure" title="matplotlib.pyplot.figure" class="sphx-glr-backref-module-matplotlib-pyplot sphx-glr-backref-type-py-function"><span class="n">plt</span><span class="o">.</span><span class="n">figure</span></a><span class="p">()</span>
 <a href="https://matplotlib.org/stable/api/_as_gen/matplotlib.pyplot.title.html#matplotlib.pyplot.title" title="matplotlib.pyplot.title" class="sphx-glr-backref-module-matplotlib-pyplot sphx-glr-backref-type-py-function"><span class="n">plt</span><span class="o">.</span><span class="n">title</span></a><span class="p">(</span><span class="s2">&quot;Regularized covariance: likelihood and shrinkage coefficient&quot;</span><span class="p">)</span>
 <a href="https://matplotlib.org/stable/api/_as_gen/matplotlib.pyplot.xlabel.html#matplotlib.pyplot.xlabel" title="matplotlib.pyplot.xlabel" class="sphx-glr-backref-module-matplotlib-pyplot sphx-glr-backref-type-py-function"><span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span></a><span class="p">(</span><span class="s2">&quot;Regularization parameter: shrinkage coefficient&quot;</span><span class="p">)</span>
@@ -335,7 +335,16 @@ computationally costly.</p>
 <a href="https://matplotlib.org/stable/api/_as_gen/matplotlib.pyplot.show.html#matplotlib.pyplot.show" title="matplotlib.pyplot.show" class="sphx-glr-backref-module-matplotlib-pyplot sphx-glr-backref-type-py-function"><span class="n">plt</span><span class="o">.</span><span class="n">show</span></a><span class="p">()</span>
 </pre></div>
 </div>
-<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> ( 0 minutes  0.340 seconds)</p>
+<img src="../../_images/sphx_glr_plot_covariance_estimation_001.png" srcset="../../_images/sphx_glr_plot_covariance_estimation_001.png" alt="Regularized covariance: likelihood and shrinkage coefficient" class = "sphx-glr-single-img"/><div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>The maximum likelihood estimate corresponds to no shrinkage,
+and thus performs poorly. The Ledoit-Wolf estimate performs really well,
+as it is close to the optimal and is not computationally costly. In this
+example, the OAS estimate is a bit further away. Interestingly, both
+approaches outperform cross-validation, which is significantly most
+computationally costly.</p>
+</div>
+<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> ( 0 minutes  0.341 seconds)</p>
 <div class="sphx-glr-footer class sphx-glr-footer-example docutils container" id="sphx-glr-download-auto-examples-covariance-plot-covariance-estimation-py">
 <div class="binder-badge docutils container">
 <a class="reference external image-reference" href="https://mybinder.org/v2/gh/scikit-learn/scikit-learn/main?urlpath=lab/tree/notebooks/auto_examples/covariance/plot_covariance_estimation.ipynb"><img alt="Launch binder" src="../../_images/binder_badge_logo6.svg" width="150px" /></a>
@@ -348,6 +357,7 @@ computationally costly.</p>
 </div>
 </div>
 <p class="sphx-glr-signature"><a class="reference external" href="https://sphinx-gallery.github.io">Gallery generated by Sphinx-Gallery</a></p>
+</section>
 </section>
 
 

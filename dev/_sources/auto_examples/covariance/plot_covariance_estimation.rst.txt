@@ -33,6 +33,74 @@ example illustrates the simple regularization used in
 set the amount of regularization, i.e. how to choose the bias-variance
 trade-off.
 
+.. GENERATED FROM PYTHON SOURCE LINES 20-22
+
+Generate sample data
+--------------------
+
+.. GENERATED FROM PYTHON SOURCE LINES 22-36
+
+.. code-block:: default
+
+
+    import numpy as np
+
+    n_features, n_samples = 40, 20
+    np.random.seed(42)
+    base_X_train = np.random.normal(size=(n_samples, n_features))
+    base_X_test = np.random.normal(size=(n_samples, n_features))
+
+    # Color samples
+    coloring_matrix = np.random.normal(size=(n_features, n_features))
+    X_train = np.dot(base_X_train, coloring_matrix)
+    X_test = np.dot(base_X_test, coloring_matrix)
+
+
+
+
+
+
+
+
+
+.. GENERATED FROM PYTHON SOURCE LINES 37-39
+
+Compute the likelihood on test data
+-----------------------------------
+
+.. GENERATED FROM PYTHON SOURCE LINES 39-56
+
+.. code-block:: default
+
+
+    from sklearn.covariance import ShrunkCovariance, empirical_covariance, log_likelihood
+    from scipy import linalg
+
+    # spanning a range of possible shrinkage coefficient values
+    shrinkages = np.logspace(-2, 0, 30)
+    negative_logliks = [
+        -ShrunkCovariance(shrinkage=s).fit(X_train).score(X_test) for s in shrinkages
+    ]
+
+    # under the ground-truth model, which we would not have access to in real
+    # settings
+    real_cov = np.dot(coloring_matrix.T, coloring_matrix)
+    emp_cov = empirical_covariance(X_train)
+    loglik_real = -log_likelihood(emp_cov, linalg.inv(real_cov))
+
+
+
+
+
+
+
+
+
+.. GENERATED FROM PYTHON SOURCE LINES 57-74
+
+Compare different approaches to setting the regularization parameter
+--------------------------------------------------------------------
+
 Here we compare 3 approaches:
 
 * Setting the parameter by cross-validating the likelihood on three folds
@@ -48,76 +116,14 @@ Here we compare 3 approaches:
   convergence is significantly better under the assumption that the data
   are Gaussian, in particular for small samples.
 
-To quantify estimation error, we plot the likelihood of unseen data for
-different values of the shrinkage parameter. We also show the choices by
-cross-validation, or with the LedoitWolf and OAS estimates.
-
-Note that the maximum likelihood estimate corresponds to no shrinkage,
-and thus performs poorly. The Ledoit-Wolf estimate performs really well,
-as it is close to the optimal and is computational not costly. In this
-example, the OAS estimate is a bit further away. Interestingly, both
-approaches outperform cross-validation, which is significantly most
-computationally costly.
-
-.. GENERATED FROM PYTHON SOURCE LINES 44-148
-
-
-
-.. image-sg:: /auto_examples/covariance/images/sphx_glr_plot_covariance_estimation_001.png
-   :alt: Regularized covariance: likelihood and shrinkage coefficient
-   :srcset: /auto_examples/covariance/images/sphx_glr_plot_covariance_estimation_001.png
-   :class: sphx-glr-single-img
-
-
-
-
+.. GENERATED FROM PYTHON SOURCE LINES 74-92
 
 .. code-block:: default
 
 
-    import numpy as np
-    import matplotlib.pyplot as plt
-    from scipy import linalg
 
-    from sklearn.covariance import (
-        LedoitWolf,
-        OAS,
-        ShrunkCovariance,
-        log_likelihood,
-        empirical_covariance,
-    )
     from sklearn.model_selection import GridSearchCV
-
-
-    # #############################################################################
-    # Generate sample data
-    n_features, n_samples = 40, 20
-    np.random.seed(42)
-    base_X_train = np.random.normal(size=(n_samples, n_features))
-    base_X_test = np.random.normal(size=(n_samples, n_features))
-
-    # Color samples
-    coloring_matrix = np.random.normal(size=(n_features, n_features))
-    X_train = np.dot(base_X_train, coloring_matrix)
-    X_test = np.dot(base_X_test, coloring_matrix)
-
-    # #############################################################################
-    # Compute the likelihood on test data
-
-    # spanning a range of possible shrinkage coefficient values
-    shrinkages = np.logspace(-2, 0, 30)
-    negative_logliks = [
-        -ShrunkCovariance(shrinkage=s).fit(X_train).score(X_test) for s in shrinkages
-    ]
-
-    # under the ground-truth model, which we would not have access to in real
-    # settings
-    real_cov = np.dot(coloring_matrix.T, coloring_matrix)
-    emp_cov = empirical_covariance(X_train)
-    loglik_real = -log_likelihood(emp_cov, linalg.inv(real_cov))
-
-    # #############################################################################
-    # Compare different approaches to setting the parameter
+    from sklearn.covariance import LedoitWolf, OAS
 
     # GridSearch for an optimal shrinkage coefficient
     tuned_parameters = [{"shrinkage": shrinkages}]
@@ -132,8 +138,30 @@ computationally costly.
     oa = OAS()
     loglik_oa = oa.fit(X_train).score(X_test)
 
-    # #############################################################################
-    # Plot results
+
+
+
+
+
+
+
+.. GENERATED FROM PYTHON SOURCE LINES 93-100
+
+Plot results
+------------
+
+
+To quantify estimation error, we plot the likelihood of unseen data for
+different values of the shrinkage parameter. We also show the choices by
+cross-validation, or with the LedoitWolf and OAS estimates.
+
+.. GENERATED FROM PYTHON SOURCE LINES 100-148
+
+.. code-block:: default
+
+
+    import matplotlib.pyplot as plt
+
     fig = plt.figure()
     plt.title("Regularized covariance: likelihood and shrinkage coefficient")
     plt.xlabel("Regularization parameter: shrinkage coefficient")
@@ -180,9 +208,32 @@ computationally costly.
     plt.show()
 
 
+
+
+.. image-sg:: /auto_examples/covariance/images/sphx_glr_plot_covariance_estimation_001.png
+   :alt: Regularized covariance: likelihood and shrinkage coefficient
+   :srcset: /auto_examples/covariance/images/sphx_glr_plot_covariance_estimation_001.png
+   :class: sphx-glr-single-img
+
+
+
+
+
+.. GENERATED FROM PYTHON SOURCE LINES 149-157
+
+.. note::
+
+   The maximum likelihood estimate corresponds to no shrinkage,
+   and thus performs poorly. The Ledoit-Wolf estimate performs really well,
+   as it is close to the optimal and is not computationally costly. In this
+   example, the OAS estimate is a bit further away. Interestingly, both
+   approaches outperform cross-validation, which is significantly most
+   computationally costly.
+
+
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** ( 0 minutes  0.340 seconds)
+   **Total running time of the script:** ( 0 minutes  0.341 seconds)
 
 
 .. _sphx_glr_download_auto_examples_covariance_plot_covariance_estimation.py:
