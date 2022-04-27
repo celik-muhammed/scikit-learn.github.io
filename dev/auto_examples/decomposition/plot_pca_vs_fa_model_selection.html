@@ -182,7 +182,11 @@
         </div>
             <div class="sk-sidebar-toc">
               <ul>
-<li><a class="reference internal" href="#">Model selection with Probabilistic PCA and Factor Analysis (FA)</a></li>
+<li><a class="reference internal" href="#">Model selection with Probabilistic PCA and Factor Analysis (FA)</a><ul>
+<li><a class="reference internal" href="#create-the-data">Create the data</a></li>
+<li><a class="reference internal" href="#fit-the-models">Fit the models</a></li>
+</ul>
+</li>
 </ul>
 
             </div>
@@ -215,37 +219,16 @@ data is more likely for low rank models than for shrinkage models.</p>
 <p>The automatic estimation from
 Automatic Choice of Dimensionality for PCA. NIPS 2000: 598-604
 by Thomas P. Minka is also compared.</p>
-<ul class="sphx-glr-horizontal">
-<li><img src="../../_images/sphx_glr_plot_pca_vs_fa_model_selection_001.png" srcset="../../_images/sphx_glr_plot_pca_vs_fa_model_selection_001.png" alt="Homoscedastic Noise" class = "sphx-glr-multi-img"/></li>
-<li><img src="../../_images/sphx_glr_plot_pca_vs_fa_model_selection_002.png" srcset="../../_images/sphx_glr_plot_pca_vs_fa_model_selection_002.png" alt="Heteroscedastic Noise" class = "sphx-glr-multi-img"/></li>
-</ul>
-<p class="sphx-glr-script-out">Out:</p>
-<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>best n_components by PCA CV = 5
-best n_components by FactorAnalysis CV = 5
-best n_components by PCA MLE = 5
-best n_components by PCA CV = 20
-best n_components by FactorAnalysis CV = 5
-best n_components by PCA MLE = 18
-</pre></div>
-</div>
-<div class="line-block">
-<div class="line"><br /></div>
-</div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># Authors: Alexandre Gramfort</span>
 <span class="c1">#          Denis A. Engemann</span>
 <span class="c1"># License: BSD 3 clause</span>
+</pre></div>
+</div>
+<section id="create-the-data">
+<h2>Create the data<a class="headerlink" href="#create-the-data" title="Permalink to this headline">¶</a></h2>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 
-<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
-<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
 <span class="kn">from</span> <span class="nn">scipy</span> <span class="kn">import</span> <span class="n">linalg</span>
-
-<span class="kn">from</span> <span class="nn">sklearn.decomposition</span> <span class="kn">import</span> <a href="../../modules/generated/sklearn.decomposition.PCA.html#sklearn.decomposition.PCA" title="sklearn.decomposition.PCA" class="sphx-glr-backref-module-sklearn-decomposition sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">PCA</span></a><span class="p">,</span> <a href="../../modules/generated/sklearn.decomposition.FactorAnalysis.html#sklearn.decomposition.FactorAnalysis" title="sklearn.decomposition.FactorAnalysis" class="sphx-glr-backref-module-sklearn-decomposition sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">FactorAnalysis</span></a>
-<span class="kn">from</span> <span class="nn">sklearn.covariance</span> <span class="kn">import</span> <a href="../../modules/generated/sklearn.covariance.ShrunkCovariance.html#sklearn.covariance.ShrunkCovariance" title="sklearn.covariance.ShrunkCovariance" class="sphx-glr-backref-module-sklearn-covariance sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">ShrunkCovariance</span></a><span class="p">,</span> <a href="../../modules/generated/sklearn.covariance.LedoitWolf.html#sklearn.covariance.LedoitWolf" title="sklearn.covariance.LedoitWolf" class="sphx-glr-backref-module-sklearn-covariance sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">LedoitWolf</span></a>
-<span class="kn">from</span> <span class="nn">sklearn.model_selection</span> <span class="kn">import</span> <a href="../../modules/generated/sklearn.model_selection.cross_val_score.html#sklearn.model_selection.cross_val_score" title="sklearn.model_selection.cross_val_score" class="sphx-glr-backref-module-sklearn-model_selection sphx-glr-backref-type-py-function"><span class="n">cross_val_score</span></a>
-<span class="kn">from</span> <span class="nn">sklearn.model_selection</span> <span class="kn">import</span> <a href="../../modules/generated/sklearn.model_selection.GridSearchCV.html#sklearn.model_selection.GridSearchCV" title="sklearn.model_selection.GridSearchCV" class="sphx-glr-backref-module-sklearn-model_selection sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">GridSearchCV</span></a>
-
-<span class="c1"># #############################################################################</span>
-<span class="c1"># Create the data</span>
 
 <span class="n">n_samples</span><span class="p">,</span> <span class="n">n_features</span><span class="p">,</span> <span class="n">rank</span> <span class="o">=</span> <span class="mi">500</span><span class="p">,</span> <span class="mi">25</span><span class="p">,</span> <span class="mi">5</span>
 <span class="n">sigma</span> <span class="o">=</span> <span class="mf">1.0</span>
@@ -259,9 +242,17 @@ best n_components by PCA MLE = 18
 <span class="c1"># Adding heteroscedastic noise</span>
 <span class="n">sigmas</span> <span class="o">=</span> <span class="n">sigma</span> <span class="o">*</span> <span class="n">rng</span><span class="o">.</span><span class="n">rand</span><span class="p">(</span><span class="n">n_features</span><span class="p">)</span> <span class="o">+</span> <span class="n">sigma</span> <span class="o">/</span> <span class="mf">2.0</span>
 <span class="n">X_hetero</span> <span class="o">=</span> <span class="n">X</span> <span class="o">+</span> <span class="n">rng</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="n">n_samples</span><span class="p">,</span> <span class="n">n_features</span><span class="p">)</span> <span class="o">*</span> <span class="n">sigmas</span>
+</pre></div>
+</div>
+</section>
+<section id="fit-the-models">
+<h2>Fit the models<a class="headerlink" href="#fit-the-models" title="Permalink to this headline">¶</a></h2>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
 
-<span class="c1"># #############################################################################</span>
-<span class="c1"># Fit the models</span>
+<span class="kn">from</span> <span class="nn">sklearn.decomposition</span> <span class="kn">import</span> <a href="../../modules/generated/sklearn.decomposition.PCA.html#sklearn.decomposition.PCA" title="sklearn.decomposition.PCA" class="sphx-glr-backref-module-sklearn-decomposition sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">PCA</span></a><span class="p">,</span> <a href="../../modules/generated/sklearn.decomposition.FactorAnalysis.html#sklearn.decomposition.FactorAnalysis" title="sklearn.decomposition.FactorAnalysis" class="sphx-glr-backref-module-sklearn-decomposition sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">FactorAnalysis</span></a>
+<span class="kn">from</span> <span class="nn">sklearn.covariance</span> <span class="kn">import</span> <a href="../../modules/generated/sklearn.covariance.ShrunkCovariance.html#sklearn.covariance.ShrunkCovariance" title="sklearn.covariance.ShrunkCovariance" class="sphx-glr-backref-module-sklearn-covariance sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">ShrunkCovariance</span></a><span class="p">,</span> <a href="../../modules/generated/sklearn.covariance.LedoitWolf.html#sklearn.covariance.LedoitWolf" title="sklearn.covariance.LedoitWolf" class="sphx-glr-backref-module-sklearn-covariance sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">LedoitWolf</span></a>
+<span class="kn">from</span> <span class="nn">sklearn.model_selection</span> <span class="kn">import</span> <a href="../../modules/generated/sklearn.model_selection.cross_val_score.html#sklearn.model_selection.cross_val_score" title="sklearn.model_selection.cross_val_score" class="sphx-glr-backref-module-sklearn-model_selection sphx-glr-backref-type-py-function"><span class="n">cross_val_score</span></a>
+<span class="kn">from</span> <span class="nn">sklearn.model_selection</span> <span class="kn">import</span> <a href="../../modules/generated/sklearn.model_selection.GridSearchCV.html#sklearn.model_selection.GridSearchCV" title="sklearn.model_selection.GridSearchCV" class="sphx-glr-backref-module-sklearn-model_selection sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">GridSearchCV</span></a>
 
 <span class="n">n_components</span> <span class="o">=</span> <a href="https://numpy.org/doc/stable/reference/generated/numpy.arange.html#numpy.arange" title="numpy.arange" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-function"><span class="n">np</span><span class="o">.</span><span class="n">arange</span></a><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">n_features</span><span class="p">,</span> <span class="mi">5</span><span class="p">)</span>  <span class="c1"># options for n_components</span>
 
@@ -348,7 +339,20 @@ best n_components by PCA MLE = 18
 <a href="https://matplotlib.org/stable/api/_as_gen/matplotlib.pyplot.show.html#matplotlib.pyplot.show" title="matplotlib.pyplot.show" class="sphx-glr-backref-module-matplotlib-pyplot sphx-glr-backref-type-py-function"><span class="n">plt</span><span class="o">.</span><span class="n">show</span></a><span class="p">()</span>
 </pre></div>
 </div>
-<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> ( 0 minutes  2.669 seconds)</p>
+<ul class="sphx-glr-horizontal">
+<li><img src="../../_images/sphx_glr_plot_pca_vs_fa_model_selection_001.png" srcset="../../_images/sphx_glr_plot_pca_vs_fa_model_selection_001.png" alt="Homoscedastic Noise" class = "sphx-glr-multi-img"/></li>
+<li><img src="../../_images/sphx_glr_plot_pca_vs_fa_model_selection_002.png" srcset="../../_images/sphx_glr_plot_pca_vs_fa_model_selection_002.png" alt="Heteroscedastic Noise" class = "sphx-glr-multi-img"/></li>
+</ul>
+<p class="sphx-glr-script-out">Out:</p>
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>best n_components by PCA CV = 5
+best n_components by FactorAnalysis CV = 5
+best n_components by PCA MLE = 5
+best n_components by PCA CV = 20
+best n_components by FactorAnalysis CV = 5
+best n_components by PCA MLE = 18
+</pre></div>
+</div>
+<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> ( 0 minutes  2.400 seconds)</p>
 <div class="sphx-glr-footer class sphx-glr-footer-example docutils container" id="sphx-glr-download-auto-examples-decomposition-plot-pca-vs-fa-model-selection-py">
 <div class="binder-badge docutils container">
 <a class="reference external image-reference" href="https://mybinder.org/v2/gh/scikit-learn/scikit-learn/main?urlpath=lab/tree/notebooks/auto_examples/decomposition/plot_pca_vs_fa_model_selection.ipynb"><img alt="Launch binder" src="../../_images/binder_badge_logo9.svg" width="150px" /></a>
@@ -361,6 +365,7 @@ best n_components by PCA MLE = 18
 </div>
 </div>
 <p class="sphx-glr-signature"><a class="reference external" href="https://sphinx-gallery.github.io">Gallery generated by Sphinx-Gallery</a></p>
+</section>
 </section>
 
 
