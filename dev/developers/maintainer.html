@@ -381,15 +381,6 @@ files) to <a class="reference external" href="https://test.pypi.org">https://tes
 following GitHub Actions workflow:</p>
 <p><a class="reference external" href="https://github.com/scikit-learn/scikit-learn/actions?query=workflow%3A%22Publish+to+Pypi%22">https://github.com/scikit-learn/scikit-learn/actions?query=workflow%3A%22Publish+to+Pypi%22</a></p>
 </li>
-</ol>
-<dl class="simple">
-<dt>4.1 You can test the conda-forge builds by submitting a PR to the feedstock</dt><dd><p>repo: <a class="reference external" href="https://github.com/conda-forge/scikit-learn-feedstock">https://github.com/conda-forge/scikit-learn-feedstock</a>. If you want to
-publish an RC release on conda-forge, the PR should target the <code class="docutils literal notranslate"><span class="pre">rc</span></code> branch
-as opposed to the <code class="docutils literal notranslate"><span class="pre">master</span></code> branch. The two branches need to be kept sync
-together otherwise.</p>
-</dd>
-</dl>
-<ol class="arabic" start="5">
 <li><p>If this went fine, you can proceed with tagging. Proceed with caution.
 Ideally, tags should be created when you’re almost certain that the release
 is ready, since adding a tag to the main repo can trigger certain automated
@@ -399,11 +390,16 @@ instance):</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span class="prompt1">git tag -a <span class="m">0</span>.99.0  <span class="c1"># in the 0.99.X branch</span></span>
 <span class="prompt1">git push git@github.com:scikit-learn/scikit-learn.git <span class="m">0</span>.99.0</span>
 </pre></div></div></li>
+<li><p>Confirm that the bot has detected the tag on the conda-forge feedstock repo:
+<a class="reference external" href="https://github.com/conda-forge/scikit-learn-feedstock">https://github.com/conda-forge/scikit-learn-feedstock</a>. If not, submit a PR for the
+release. If you want to publish an RC release on conda-forge, the PR should target
+the <code class="docutils literal notranslate"><span class="pre">rc</span></code> branch as opposed to the <code class="docutils literal notranslate"><span class="pre">main</span></code> branch. The two branches need to be kept
+sync together otherwise.</p></li>
 <li><p>Trigger the GitHub Actions workflow again but this time to upload the artifacts
 to the real <a class="reference external" href="https://pypi.org">https://pypi.org</a> (replace “testpypi” by “pypi” in the “Run
 workflow” form).</p></li>
-<li><p>Alternatively, it’s possible to collect locally the generated binary wheel
-packages and source tarball and upload them all to PyPI by running the
+<li><p><strong>Alternative to step 7</strong>: it’s possible to collect locally the generated binary
+wheel packages and source tarball and upload them all to PyPI by running the
 following commands in the scikit-learn source folder (checked out at the
 release tag):</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span class="prompt1">rm -r dist</span>
@@ -425,8 +421,8 @@ the scikit-learn package in that folder.</p>
 </pre></div></div><p>Upload everything at once to <a class="reference external" href="https://pypi.org">https://pypi.org</a>:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span class="prompt1">twine upload dist/*</span>
 </pre></div></div></li>
-<li><p>For major/minor (not bug-fix release), update the symlink for <code class="docutils literal notranslate"><span class="pre">stable</span></code>
-and the <code class="docutils literal notranslate"><span class="pre">latestStable</span></code> variable in
+<li><p>For major/minor (not bug-fix release or release candidates), update the symlink for
+<code class="docutils literal notranslate"><span class="pre">stable</span></code> and the <code class="docutils literal notranslate"><span class="pre">latestStable</span></code> variable in
 <a class="reference external" href="https://github.com/scikit-learn/scikit-learn.github.io">https://github.com/scikit-learn/scikit-learn.github.io</a>:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span class="prompt1"><span class="nb">cd</span> /tmp</span>
 <span class="prompt1">git clone --depth <span class="m">1</span> --no-checkout git@github.com:scikit-learn/scikit-learn.github.io.git</span>
@@ -454,7 +450,7 @@ and the <code class="docutils literal notranslate"><span class="pre">latestStabl
 * [ ] confirm bot detected at
   https://github.com/conda-forge/scikit-learn-feedstock and wait for merge
 * [ ] upload the wheels and source tarball to PyPI
-* [ ] https://github.com/scikit-learn/scikit-learn/releases publish
+* [ ] https://github.com/scikit-learn/scikit-learn/releases publish (except for RC)
 * [ ] announce on mailing list and on Twitter, and LinkedIn
 </pre></div>
 </div>
