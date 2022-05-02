@@ -15,7 +15,7 @@
   
 <meta property="og:site_name" content="scikit-learn" />
   
-<meta property="og:description" content="In Development Changelog: Version 1.1.0: May 2022 For a short description of the main highlights of the release, please refer to Release Highlights for scikit-learn 1.1. Legend for changelogs:: som..." />
+<meta property="og:description" content="In Development Changelog: sklearn.metrics: Fixes metrics.precision_recall_curve to compute precision-recall at 100% recall. The Precision-Recall curve now displays the last point corresponding to a..." />
   
 <meta property="og:image" content="https://scikit-learn.org/stable/_static/scikit-learn-logo-small.png" />
   
@@ -183,7 +183,10 @@
             <div class="sk-sidebar-toc">
               <ul>
 <li><a class="reference internal" href="#">Version 1.1.1</a><ul>
-<li><a class="reference internal" href="#changelog">Changelog</a></li>
+<li><a class="reference internal" href="#changelog">Changelog</a><ul>
+<li><a class="reference internal" href="#sklearn-metrics"><code class="xref py py-mod docutils literal notranslate"><span class="pre">sklearn.metrics</span></code></a></li>
+</ul>
+</li>
 </ul>
 </li>
 <li><a class="reference internal" href="#version-1-1-0">Version 1.1.0</a><ul>
@@ -210,7 +213,7 @@
 <li><a class="reference internal" href="#sklearn-kernel-approximation"><code class="xref py py-mod docutils literal notranslate"><span class="pre">sklearn.kernel_approximation</span></code></a></li>
 <li><a class="reference internal" href="#sklearn-linear-model"><code class="xref py py-mod docutils literal notranslate"><span class="pre">sklearn.linear_model</span></code></a></li>
 <li><a class="reference internal" href="#sklearn-manifold"><code class="xref py py-mod docutils literal notranslate"><span class="pre">sklearn.manifold</span></code></a></li>
-<li><a class="reference internal" href="#sklearn-metrics"><code class="xref py py-mod docutils literal notranslate"><span class="pre">sklearn.metrics</span></code></a></li>
+<li><a class="reference internal" href="#id2"><code class="xref py py-mod docutils literal notranslate"><span class="pre">sklearn.metrics</span></code></a></li>
 <li><a class="reference internal" href="#sklearn-mixture"><code class="xref py py-mod docutils literal notranslate"><span class="pre">sklearn.mixture</span></code></a></li>
 <li><a class="reference internal" href="#sklearn-model-selection"><code class="xref py py-mod docutils literal notranslate"><span class="pre">sklearn.model_selection</span></code></a></li>
 <li><a class="reference internal" href="#sklearn-multiclass"><code class="xref py py-mod docutils literal notranslate"><span class="pre">sklearn.multiclass</span></code></a></li>
@@ -240,6 +243,16 @@
 <p><strong>In Development</strong></p>
 <section id="changelog">
 <h2>Changelog<a class="headerlink" href="#changelog" title="Permalink to this headline">¶</a></h2>
+<section id="sklearn-metrics">
+<h3><a class="reference internal" href="../modules/classes.html#module-sklearn.metrics" title="sklearn.metrics"><code class="xref py py-mod docutils literal notranslate"><span class="pre">sklearn.metrics</span></code></a><a class="headerlink" href="#sklearn-metrics" title="Permalink to this headline">¶</a></h3>
+<ul class="simple">
+<li><p><span class="raw-html"><span class="badge badge-danger">Fix</span></span>  Fixes <code class="docutils literal notranslate"><span class="pre">metrics.precision_recall_curve</span></code> to compute precision-recall at 100%
+recall. The Precision-Recall curve now displays the last point corresponding to a
+classifier that always predicts the positive class: recall=100% and
+precision=class balance.
+<a class="reference external" href="https://github.com/scikit-learn/scikit-learn/pull/23214">#23214</a> by <a class="reference external" href="https://github.com/stephanecollot">Stéphane Collot</a> and <a class="reference external" href="https://github.com/mbaak">Max Baak</a>.</p></li>
+</ul>
+</section>
 </section>
 </section>
 <section id="version-1-1-0">
@@ -490,6 +503,12 @@ and <a class="reference internal" href="../modules/generated/sklearn.cross_decom
 with other linear models and to make it work with interface expecting a
 specific shape for <code class="docutils literal notranslate"><span class="pre">coef_</span></code> (e.g. <a class="reference internal" href="../modules/generated/sklearn.feature_selection.RFE.html#sklearn.feature_selection.RFE" title="sklearn.feature_selection.RFE"><code class="xref py py-class docutils literal notranslate"><span class="pre">feature_selection.RFE</span></code></a>).
 <a class="reference external" href="https://github.com/scikit-learn/scikit-learn/pull/22016">#22016</a> by <a class="reference external" href="https://github.com/glemaitre">Guillaume Lemaitre</a>.</p></li>
+<li><p><span class="raw-html"><span class="badge badge-warning">API Change</span></span>  add the fitted attribute <code class="docutils literal notranslate"><span class="pre">intercept_</span></code> to
+<a class="reference internal" href="../modules/generated/sklearn.cross_decomposition.PLSCanonical.html#sklearn.cross_decomposition.PLSCanonical" title="sklearn.cross_decomposition.PLSCanonical"><code class="xref py py-class docutils literal notranslate"><span class="pre">cross_decomposition.PLSCanonical</span></code></a>,
+<a class="reference internal" href="../modules/generated/sklearn.cross_decomposition.PLSRegression.html#sklearn.cross_decomposition.PLSRegression" title="sklearn.cross_decomposition.PLSRegression"><code class="xref py py-class docutils literal notranslate"><span class="pre">cross_decomposition.PLSRegression</span></code></a>, and
+<a class="reference internal" href="../modules/generated/sklearn.cross_decomposition.CCA.html#sklearn.cross_decomposition.CCA" title="sklearn.cross_decomposition.CCA"><code class="xref py py-class docutils literal notranslate"><span class="pre">cross_decomposition.CCA</span></code></a>. The method <code class="docutils literal notranslate"><span class="pre">predict</span></code> is indeed equivalent to
+<code class="docutils literal notranslate"><span class="pre">Y</span> <span class="pre">=</span> <span class="pre">X</span> <span class="pre">&#64;</span> <span class="pre">coef_</span> <span class="pre">+</span> <span class="pre">intercept_</span></code>.
+<a class="reference external" href="https://github.com/scikit-learn/scikit-learn/pull/22015">#22015</a> by <a class="reference external" href="https://github.com/glemaitre">Guillaume Lemaitre</a>.</p></li>
 </ul>
 </section>
 <section id="sklearn-datasets">
@@ -954,8 +973,8 @@ in eigen_solvers <code class="docutils literal notranslate"><span class="pre">lo
 <a class="reference external" href="https://github.com/scikit-learn/scikit-learn/pull/21565">#21565</a> by <a class="reference external" href="https://github.com/lobpcg">Andrew Knyazev</a>.</p></li>
 </ul>
 </section>
-<section id="sklearn-metrics">
-<h3><a class="reference internal" href="../modules/classes.html#module-sklearn.metrics" title="sklearn.metrics"><code class="xref py py-mod docutils literal notranslate"><span class="pre">sklearn.metrics</span></code></a><a class="headerlink" href="#sklearn-metrics" title="Permalink to this headline">¶</a></h3>
+<section id="id2">
+<h3><a class="reference internal" href="../modules/classes.html#module-sklearn.metrics" title="sklearn.metrics"><code class="xref py py-mod docutils literal notranslate"><span class="pre">sklearn.metrics</span></code></a><a class="headerlink" href="#id2" title="Permalink to this headline">¶</a></h3>
 <ul class="simple">
 <li><p><span class="raw-html"><span class="badge badge-success">Feature</span></span>  <a class="reference internal" href="../modules/generated/sklearn.metrics.r2_score.html#sklearn.metrics.r2_score" title="sklearn.metrics.r2_score"><code class="xref py py-func docutils literal notranslate"><span class="pre">metrics.r2_score</span></code></a> and <a class="reference internal" href="../modules/generated/sklearn.metrics.explained_variance_score.html#sklearn.metrics.explained_variance_score" title="sklearn.metrics.explained_variance_score"><code class="xref py py-func docutils literal notranslate"><span class="pre">metrics.explained_variance_score</span></code></a> have a
 new <code class="docutils literal notranslate"><span class="pre">force_finite</span></code> parameter. Setting this parameter to <code class="docutils literal notranslate"><span class="pre">False</span></code> will return the
