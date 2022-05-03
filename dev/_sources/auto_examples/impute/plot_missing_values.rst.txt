@@ -72,7 +72,7 @@ Download the data and make missing values sets
  up the calculations but feel free to use the whole dataset.
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 44-83
+.. GENERATED FROM PYTHON SOURCE LINES 44-85
 
 .. code-block:: default
 
@@ -87,8 +87,10 @@ Download the data and make missing values sets
 
     X_diabetes, y_diabetes = load_diabetes(return_X_y=True)
     X_california, y_california = fetch_california_housing(return_X_y=True)
-    X_california = X_california[:400]
-    y_california = y_california[:400]
+    X_california = X_california[:300]
+    y_california = y_california[:300]
+    X_diabetes = X_diabetes[:300]
+    y_diabetes = y_diabetes[:300]
 
 
     def add_missing_values(X_full, y_full):
@@ -122,7 +124,7 @@ Download the data and make missing values sets
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 84-89
+.. GENERATED FROM PYTHON SOURCE LINES 86-91
 
 Impute the missing data and score
 #################################
@@ -130,7 +132,7 @@ Now we will write a function which will score the results on the differently
 imputed data. Let's look at each imputer separately:
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 89-104
+.. GENERATED FROM PYTHON SOURCE LINES 91-106
 
 .. code-block:: default
 
@@ -146,7 +148,7 @@ imputed data. Let's look at each imputer separately:
     from sklearn.pipeline import make_pipeline
 
 
-    N_SPLITS = 5
+    N_SPLITS = 4
     regressor = RandomForestRegressor(random_state=0)
 
 
@@ -156,7 +158,7 @@ imputed data. Let's look at each imputer separately:
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 105-111
+.. GENERATED FROM PYTHON SOURCE LINES 107-113
 
 Missing information
 -------------------
@@ -165,7 +167,7 @@ In addition to imputing the missing values, the imputers have an
 might carry some information.
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 111-128
+.. GENERATED FROM PYTHON SOURCE LINES 113-130
 
 .. code-block:: default
 
@@ -193,14 +195,14 @@ might carry some information.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 129-133
+.. GENERATED FROM PYTHON SOURCE LINES 131-135
 
 Estimate the score
 ------------------
 First, we want to estimate the score on the original data:
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 133-147
+.. GENERATED FROM PYTHON SOURCE LINES 135-149
 
 .. code-block:: default
 
@@ -225,7 +227,7 @@ First, we want to estimate the score on the original data:
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 148-154
+.. GENERATED FROM PYTHON SOURCE LINES 150-156
 
 Replace missing values by 0
 ---------------------------
@@ -234,7 +236,7 @@ Now we will estimate the score on the data where the missing values are
 replaced by 0:
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 154-174
+.. GENERATED FROM PYTHON SOURCE LINES 156-176
 
 .. code-block:: default
 
@@ -265,7 +267,7 @@ replaced by 0:
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 175-180
+.. GENERATED FROM PYTHON SOURCE LINES 177-182
 
 kNN-imputation of the missing values
 ------------------------------------
@@ -273,7 +275,7 @@ kNN-imputation of the missing values
 :class:`~sklearn.impute.KNNImputer` imputes missing values using the weighted
 or unweighted mean of the desired number of nearest neighbors.
 
-.. GENERATED FROM PYTHON SOURCE LINES 180-197
+.. GENERATED FROM PYTHON SOURCE LINES 182-199
 
 .. code-block:: default
 
@@ -301,13 +303,13 @@ or unweighted mean of the desired number of nearest neighbors.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 198-201
+.. GENERATED FROM PYTHON SOURCE LINES 200-203
 
 Impute missing values with mean
 -------------------------------
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 201-216
+.. GENERATED FROM PYTHON SOURCE LINES 203-218
 
 .. code-block:: default
 
@@ -333,7 +335,7 @@ Impute missing values with mean
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 217-227
+.. GENERATED FROM PYTHON SOURCE LINES 219-229
 
 Iterative imputation of the missing values
 ------------------------------------------
@@ -346,7 +348,7 @@ are obviously non-normal, consider transforming them to look more normal
 to potentially improve performance.
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 227-252
+.. GENERATED FROM PYTHON SOURCE LINES 229-255
 
 .. code-block:: default
 
@@ -357,7 +359,8 @@ to potentially improve performance.
             missing_values=np.nan,
             add_indicator=True,
             random_state=0,
-            n_nearest_features=5,
+            n_nearest_features=3,
+            max_iter=1,
             sample_posterior=True,
         )
         iterative_impute_scores = get_scores_for_imputer(imputer, X_missing, y_missing)
@@ -382,7 +385,7 @@ to potentially improve performance.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 253-258
+.. GENERATED FROM PYTHON SOURCE LINES 256-261
 
 Plot the results
 ################
@@ -390,7 +393,7 @@ Plot the results
 Finally we are going to visualize the score:
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 258-307
+.. GENERATED FROM PYTHON SOURCE LINES 261-310
 
 .. code-block:: default
 
@@ -455,7 +458,7 @@ Finally we are going to visualize the score:
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 308-311
+.. GENERATED FROM PYTHON SOURCE LINES 311-314
 
 You can also try different techniques. For instance, the median is a more
 robust estimator for data with high magnitude variables which could dominate
@@ -464,7 +467,7 @@ results (otherwise known as a 'long tail').
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** ( 0 minutes  18.573 seconds)
+   **Total running time of the script:** ( 0 minutes  7.277 seconds)
 
 
 .. _sphx_glr_download_auto_examples_impute_plot_missing_values.py:
