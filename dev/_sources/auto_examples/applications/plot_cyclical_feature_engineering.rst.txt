@@ -37,13 +37,15 @@ Data exploration on the Bike Sharing Demand dataset
 
 We start by loading the data from the OpenML repository.
 
-.. GENERATED FROM PYTHON SOURCE LINES 21-26
+.. GENERATED FROM PYTHON SOURCE LINES 21-28
 
 .. code-block:: default
 
     from sklearn.datasets import fetch_openml
 
-    bike_sharing = fetch_openml("Bike_Sharing_Demand", version=2, as_frame=True)
+    bike_sharing = fetch_openml(
+        "Bike_Sharing_Demand", version=2, as_frame=True, parser="pandas"
+    )
     df = bike_sharing.frame
 
 
@@ -53,7 +55,7 @@ We start by loading the data from the OpenML repository.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 27-34
+.. GENERATED FROM PYTHON SOURCE LINES 29-36
 
 To get a quick understanding of the periodic patterns of the data, let us
 have a look at the average demand per hour during a week.
@@ -63,7 +65,7 @@ distinguish the commute patterns in the morning and evenings of the work days
 and the leisure use of the bikes on the weekends with a more spread peak
 demand around the middle of the days:
 
-.. GENERATED FROM PYTHON SOURCE LINES 34-48
+.. GENERATED FROM PYTHON SOURCE LINES 36-50
 
 .. code-block:: default
 
@@ -93,12 +95,12 @@ demand around the middle of the days:
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 49-51
+.. GENERATED FROM PYTHON SOURCE LINES 51-53
 
 The target of the prediction problem is the absolute count of bike rentals on
 a hourly basis:
 
-.. GENERATED FROM PYTHON SOURCE LINES 52-54
+.. GENERATED FROM PYTHON SOURCE LINES 54-56
 
 .. code-block:: default
 
@@ -115,11 +117,11 @@ a hourly basis:
  .. code-block:: none
 
 
-    977.0
+    977
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 55-70
+.. GENERATED FROM PYTHON SOURCE LINES 57-72
 
 Let us rescale the target variable (number of hourly bike rentals) to predict
 a relative demand so that the mean absolute error is more easily interpreted
@@ -137,7 +139,7 @@ as a fraction of the maximum demand.
     best models for one metric are also the best for the other in this
     study.
 
-.. GENERATED FROM PYTHON SOURCE LINES 71-73
+.. GENERATED FROM PYTHON SOURCE LINES 73-75
 
 .. code-block:: default
 
@@ -150,7 +152,7 @@ as a fraction of the maximum demand.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 74-81
+.. GENERATED FROM PYTHON SOURCE LINES 76-83
 
 .. code-block:: default
 
@@ -173,7 +175,7 @@ as a fraction of the maximum demand.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 82-87
+.. GENERATED FROM PYTHON SOURCE LINES 84-89
 
 The input feature data frame is a time annotated hourly log of variables
 describing the weather conditions. It includes both numerical and categorical
@@ -181,7 +183,7 @@ variables. Note that the time information has already been expanded into
 several complementary columns.
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 87-90
+.. GENERATED FROM PYTHON SOURCE LINES 89-92
 
 .. code-block:: default
 
@@ -232,11 +234,11 @@ several complementary columns.
         <tr>
           <th>0</th>
           <td>spring</td>
-          <td>0.0</td>
-          <td>1.0</td>
-          <td>0.0</td>
+          <td>0</td>
+          <td>1</td>
+          <td>0</td>
           <td>False</td>
-          <td>6.0</td>
+          <td>6</td>
           <td>False</td>
           <td>clear</td>
           <td>9.84</td>
@@ -247,11 +249,11 @@ several complementary columns.
         <tr>
           <th>1</th>
           <td>spring</td>
-          <td>0.0</td>
-          <td>1.0</td>
-          <td>1.0</td>
+          <td>0</td>
+          <td>1</td>
+          <td>1</td>
           <td>False</td>
-          <td>6.0</td>
+          <td>6</td>
           <td>False</td>
           <td>clear</td>
           <td>9.02</td>
@@ -262,11 +264,11 @@ several complementary columns.
         <tr>
           <th>2</th>
           <td>spring</td>
-          <td>0.0</td>
-          <td>1.0</td>
-          <td>2.0</td>
+          <td>0</td>
+          <td>1</td>
+          <td>2</td>
           <td>False</td>
-          <td>6.0</td>
+          <td>6</td>
           <td>False</td>
           <td>clear</td>
           <td>9.02</td>
@@ -277,11 +279,11 @@ several complementary columns.
         <tr>
           <th>3</th>
           <td>spring</td>
-          <td>0.0</td>
-          <td>1.0</td>
-          <td>3.0</td>
+          <td>0</td>
+          <td>1</td>
+          <td>3</td>
           <td>False</td>
-          <td>6.0</td>
+          <td>6</td>
           <td>False</td>
           <td>clear</td>
           <td>9.84</td>
@@ -292,11 +294,11 @@ several complementary columns.
         <tr>
           <th>4</th>
           <td>spring</td>
-          <td>0.0</td>
-          <td>1.0</td>
-          <td>4.0</td>
+          <td>0</td>
+          <td>1</td>
+          <td>4</td>
           <td>False</td>
-          <td>6.0</td>
+          <td>6</td>
           <td>False</td>
           <td>clear</td>
           <td>9.84</td>
@@ -322,11 +324,11 @@ several complementary columns.
         <tr>
           <th>17374</th>
           <td>spring</td>
-          <td>1.0</td>
-          <td>12.0</td>
-          <td>19.0</td>
+          <td>1</td>
+          <td>12</td>
+          <td>19</td>
           <td>False</td>
-          <td>1.0</td>
+          <td>1</td>
           <td>True</td>
           <td>misty</td>
           <td>10.66</td>
@@ -337,11 +339,11 @@ several complementary columns.
         <tr>
           <th>17375</th>
           <td>spring</td>
-          <td>1.0</td>
-          <td>12.0</td>
-          <td>20.0</td>
+          <td>1</td>
+          <td>12</td>
+          <td>20</td>
           <td>False</td>
-          <td>1.0</td>
+          <td>1</td>
           <td>True</td>
           <td>misty</td>
           <td>10.66</td>
@@ -352,11 +354,11 @@ several complementary columns.
         <tr>
           <th>17376</th>
           <td>spring</td>
-          <td>1.0</td>
-          <td>12.0</td>
-          <td>21.0</td>
+          <td>1</td>
+          <td>12</td>
+          <td>21</td>
           <td>False</td>
-          <td>1.0</td>
+          <td>1</td>
           <td>True</td>
           <td>clear</td>
           <td>10.66</td>
@@ -367,11 +369,11 @@ several complementary columns.
         <tr>
           <th>17377</th>
           <td>spring</td>
-          <td>1.0</td>
-          <td>12.0</td>
-          <td>22.0</td>
+          <td>1</td>
+          <td>12</td>
+          <td>22</td>
           <td>False</td>
-          <td>1.0</td>
+          <td>1</td>
           <td>True</td>
           <td>clear</td>
           <td>10.66</td>
@@ -382,11 +384,11 @@ several complementary columns.
         <tr>
           <th>17378</th>
           <td>spring</td>
-          <td>1.0</td>
-          <td>12.0</td>
-          <td>23.0</td>
+          <td>1</td>
+          <td>12</td>
+          <td>23</td>
           <td>False</td>
-          <td>1.0</td>
+          <td>1</td>
           <td>True</td>
           <td>clear</td>
           <td>10.66</td>
@@ -402,7 +404,7 @@ several complementary columns.
     <br />
     <br />
 
-.. GENERATED FROM PYTHON SOURCE LINES 91-101
+.. GENERATED FROM PYTHON SOURCE LINES 93-103
 
 .. note::
 
@@ -415,7 +417,7 @@ We now introspect the distribution of the categorical variables, starting
 with `"weather"`:
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 101-103
+.. GENERATED FROM PYTHON SOURCE LINES 103-105
 
 .. code-block:: default
 
@@ -440,14 +442,14 @@ with `"weather"`:
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 104-108
+.. GENERATED FROM PYTHON SOURCE LINES 106-110
 
 Since there are only 3 `"heavy_rain"` events, we cannot use this category to
 train machine learning models with cross validation. Instead, we simplify the
 representation by collapsing those into the `"rain"` category.
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 108-109
+.. GENERATED FROM PYTHON SOURCE LINES 110-111
 
 .. code-block:: default
 
@@ -459,7 +461,7 @@ representation by collapsing those into the `"rain"` category.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 110-112
+.. GENERATED FROM PYTHON SOURCE LINES 112-114
 
 .. code-block:: default
 
@@ -483,12 +485,12 @@ representation by collapsing those into the `"rain"` category.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 113-115
+.. GENERATED FROM PYTHON SOURCE LINES 115-117
 
 As expected, the `"season"` variable is well balanced:
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 115-117
+.. GENERATED FROM PYTHON SOURCE LINES 117-119
 
 .. code-block:: default
 
@@ -513,7 +515,7 @@ As expected, the `"season"` variable is well balanced:
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 118-130
+.. GENERATED FROM PYTHON SOURCE LINES 120-132
 
 Time-based cross-validation
 ---------------------------
@@ -528,7 +530,7 @@ performance of the CV folds more stable.
 model. This represents a bit less than a month and a half of contiguous test
 data:
 
-.. GENERATED FROM PYTHON SOURCE LINES 130-140
+.. GENERATED FROM PYTHON SOURCE LINES 132-142
 
 .. code-block:: default
 
@@ -549,12 +551,12 @@ data:
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 141-143
+.. GENERATED FROM PYTHON SOURCE LINES 143-145
 
 Let us manually inspect the various splits to check that the
 `TimeSeriesSplit` works as we expect, starting with the first split:
 
-.. GENERATED FROM PYTHON SOURCE LINES 143-146
+.. GENERATED FROM PYTHON SOURCE LINES 145-148
 
 .. code-block:: default
 
@@ -568,7 +570,7 @@ Let us manually inspect the various splits to check that the
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 147-149
+.. GENERATED FROM PYTHON SOURCE LINES 149-151
 
 .. code-block:: default
 
@@ -618,11 +620,11 @@ Let us manually inspect the various splits to check that the
         <tr>
           <th>12379</th>
           <td>summer</td>
-          <td>1.0</td>
-          <td>6.0</td>
-          <td>0.0</td>
+          <td>1</td>
+          <td>6</td>
+          <td>0</td>
           <td>False</td>
-          <td>2.0</td>
+          <td>2</td>
           <td>True</td>
           <td>clear</td>
           <td>22.14</td>
@@ -633,11 +635,11 @@ Let us manually inspect the various splits to check that the
         <tr>
           <th>12380</th>
           <td>summer</td>
-          <td>1.0</td>
-          <td>6.0</td>
-          <td>1.0</td>
+          <td>1</td>
+          <td>6</td>
+          <td>1</td>
           <td>False</td>
-          <td>2.0</td>
+          <td>2</td>
           <td>True</td>
           <td>misty</td>
           <td>21.32</td>
@@ -648,11 +650,11 @@ Let us manually inspect the various splits to check that the
         <tr>
           <th>12381</th>
           <td>summer</td>
-          <td>1.0</td>
-          <td>6.0</td>
-          <td>2.0</td>
+          <td>1</td>
+          <td>6</td>
+          <td>2</td>
           <td>False</td>
-          <td>2.0</td>
+          <td>2</td>
           <td>True</td>
           <td>rain</td>
           <td>21.32</td>
@@ -663,11 +665,11 @@ Let us manually inspect the various splits to check that the
         <tr>
           <th>12382</th>
           <td>summer</td>
-          <td>1.0</td>
-          <td>6.0</td>
-          <td>3.0</td>
+          <td>1</td>
+          <td>6</td>
+          <td>3</td>
           <td>False</td>
-          <td>2.0</td>
+          <td>2</td>
           <td>True</td>
           <td>rain</td>
           <td>20.50</td>
@@ -678,11 +680,11 @@ Let us manually inspect the various splits to check that the
         <tr>
           <th>12383</th>
           <td>summer</td>
-          <td>1.0</td>
-          <td>6.0</td>
-          <td>4.0</td>
+          <td>1</td>
+          <td>6</td>
+          <td>4</td>
           <td>False</td>
-          <td>2.0</td>
+          <td>2</td>
           <td>True</td>
           <td>rain</td>
           <td>20.50</td>
@@ -708,11 +710,11 @@ Let us manually inspect the various splits to check that the
         <tr>
           <th>13374</th>
           <td>fall</td>
-          <td>1.0</td>
-          <td>7.0</td>
-          <td>11.0</td>
+          <td>1</td>
+          <td>7</td>
+          <td>11</td>
           <td>False</td>
-          <td>1.0</td>
+          <td>1</td>
           <td>True</td>
           <td>clear</td>
           <td>34.44</td>
@@ -723,11 +725,11 @@ Let us manually inspect the various splits to check that the
         <tr>
           <th>13375</th>
           <td>fall</td>
-          <td>1.0</td>
-          <td>7.0</td>
-          <td>12.0</td>
+          <td>1</td>
+          <td>7</td>
+          <td>12</td>
           <td>False</td>
-          <td>1.0</td>
+          <td>1</td>
           <td>True</td>
           <td>clear</td>
           <td>34.44</td>
@@ -738,11 +740,11 @@ Let us manually inspect the various splits to check that the
         <tr>
           <th>13376</th>
           <td>fall</td>
-          <td>1.0</td>
-          <td>7.0</td>
-          <td>13.0</td>
+          <td>1</td>
+          <td>7</td>
+          <td>13</td>
           <td>False</td>
-          <td>1.0</td>
+          <td>1</td>
           <td>True</td>
           <td>clear</td>
           <td>34.44</td>
@@ -753,11 +755,11 @@ Let us manually inspect the various splits to check that the
         <tr>
           <th>13377</th>
           <td>fall</td>
-          <td>1.0</td>
-          <td>7.0</td>
-          <td>14.0</td>
+          <td>1</td>
+          <td>7</td>
+          <td>14</td>
           <td>False</td>
-          <td>1.0</td>
+          <td>1</td>
           <td>True</td>
           <td>clear</td>
           <td>36.08</td>
@@ -768,11 +770,11 @@ Let us manually inspect the various splits to check that the
         <tr>
           <th>13378</th>
           <td>fall</td>
-          <td>1.0</td>
-          <td>7.0</td>
-          <td>15.0</td>
+          <td>1</td>
+          <td>7</td>
+          <td>15</td>
           <td>False</td>
-          <td>1.0</td>
+          <td>1</td>
           <td>True</td>
           <td>clear</td>
           <td>35.26</td>
@@ -788,7 +790,7 @@ Let us manually inspect the various splits to check that the
     <br />
     <br />
 
-.. GENERATED FROM PYTHON SOURCE LINES 150-152
+.. GENERATED FROM PYTHON SOURCE LINES 152-154
 
 .. code-block:: default
 
@@ -838,11 +840,11 @@ Let us manually inspect the various splits to check that the
         <tr>
           <th>2331</th>
           <td>summer</td>
-          <td>0.0</td>
-          <td>4.0</td>
-          <td>1.0</td>
+          <td>0</td>
+          <td>4</td>
+          <td>1</td>
           <td>False</td>
-          <td>2.0</td>
+          <td>2</td>
           <td>True</td>
           <td>misty</td>
           <td>25.42</td>
@@ -853,11 +855,11 @@ Let us manually inspect the various splits to check that the
         <tr>
           <th>2332</th>
           <td>summer</td>
-          <td>0.0</td>
-          <td>4.0</td>
-          <td>2.0</td>
+          <td>0</td>
+          <td>4</td>
+          <td>2</td>
           <td>False</td>
-          <td>2.0</td>
+          <td>2</td>
           <td>True</td>
           <td>misty</td>
           <td>24.60</td>
@@ -868,11 +870,11 @@ Let us manually inspect the various splits to check that the
         <tr>
           <th>2333</th>
           <td>summer</td>
-          <td>0.0</td>
-          <td>4.0</td>
-          <td>3.0</td>
+          <td>0</td>
+          <td>4</td>
+          <td>3</td>
           <td>False</td>
-          <td>2.0</td>
+          <td>2</td>
           <td>True</td>
           <td>misty</td>
           <td>23.78</td>
@@ -883,11 +885,11 @@ Let us manually inspect the various splits to check that the
         <tr>
           <th>2334</th>
           <td>summer</td>
-          <td>0.0</td>
-          <td>4.0</td>
-          <td>4.0</td>
+          <td>0</td>
+          <td>4</td>
+          <td>4</td>
           <td>False</td>
-          <td>2.0</td>
+          <td>2</td>
           <td>True</td>
           <td>misty</td>
           <td>22.96</td>
@@ -898,11 +900,11 @@ Let us manually inspect the various splits to check that the
         <tr>
           <th>2335</th>
           <td>summer</td>
-          <td>0.0</td>
-          <td>4.0</td>
-          <td>5.0</td>
+          <td>0</td>
+          <td>4</td>
+          <td>5</td>
           <td>False</td>
-          <td>2.0</td>
+          <td>2</td>
           <td>True</td>
           <td>misty</td>
           <td>22.14</td>
@@ -928,11 +930,11 @@ Let us manually inspect the various splits to check that the
         <tr>
           <th>12326</th>
           <td>summer</td>
-          <td>1.0</td>
-          <td>6.0</td>
-          <td>19.0</td>
+          <td>1</td>
+          <td>6</td>
+          <td>19</td>
           <td>False</td>
-          <td>6.0</td>
+          <td>6</td>
           <td>False</td>
           <td>clear</td>
           <td>26.24</td>
@@ -943,11 +945,11 @@ Let us manually inspect the various splits to check that the
         <tr>
           <th>12327</th>
           <td>summer</td>
-          <td>1.0</td>
-          <td>6.0</td>
-          <td>20.0</td>
+          <td>1</td>
+          <td>6</td>
+          <td>20</td>
           <td>False</td>
-          <td>6.0</td>
+          <td>6</td>
           <td>False</td>
           <td>clear</td>
           <td>25.42</td>
@@ -958,11 +960,11 @@ Let us manually inspect the various splits to check that the
         <tr>
           <th>12328</th>
           <td>summer</td>
-          <td>1.0</td>
-          <td>6.0</td>
-          <td>21.0</td>
+          <td>1</td>
+          <td>6</td>
+          <td>21</td>
           <td>False</td>
-          <td>6.0</td>
+          <td>6</td>
           <td>False</td>
           <td>clear</td>
           <td>24.60</td>
@@ -973,11 +975,11 @@ Let us manually inspect the various splits to check that the
         <tr>
           <th>12329</th>
           <td>summer</td>
-          <td>1.0</td>
-          <td>6.0</td>
-          <td>22.0</td>
+          <td>1</td>
+          <td>6</td>
+          <td>22</td>
           <td>False</td>
-          <td>6.0</td>
+          <td>6</td>
           <td>False</td>
           <td>clear</td>
           <td>23.78</td>
@@ -988,11 +990,11 @@ Let us manually inspect the various splits to check that the
         <tr>
           <th>12330</th>
           <td>summer</td>
-          <td>1.0</td>
-          <td>6.0</td>
-          <td>23.0</td>
+          <td>1</td>
+          <td>6</td>
+          <td>23</td>
           <td>False</td>
-          <td>6.0</td>
+          <td>6</td>
           <td>False</td>
           <td>clear</td>
           <td>22.96</td>
@@ -1008,11 +1010,11 @@ Let us manually inspect the various splits to check that the
     <br />
     <br />
 
-.. GENERATED FROM PYTHON SOURCE LINES 153-154
+.. GENERATED FROM PYTHON SOURCE LINES 155-156
 
 We now inspect the last split:
 
-.. GENERATED FROM PYTHON SOURCE LINES 154-156
+.. GENERATED FROM PYTHON SOURCE LINES 156-158
 
 .. code-block:: default
 
@@ -1025,7 +1027,7 @@ We now inspect the last split:
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 157-159
+.. GENERATED FROM PYTHON SOURCE LINES 159-161
 
 .. code-block:: default
 
@@ -1075,11 +1077,11 @@ We now inspect the last split:
         <tr>
           <th>16379</th>
           <td>winter</td>
-          <td>1.0</td>
-          <td>11.0</td>
-          <td>5.0</td>
+          <td>1</td>
+          <td>11</td>
+          <td>5</td>
           <td>False</td>
-          <td>2.0</td>
+          <td>2</td>
           <td>True</td>
           <td>misty</td>
           <td>13.94</td>
@@ -1090,11 +1092,11 @@ We now inspect the last split:
         <tr>
           <th>16380</th>
           <td>winter</td>
-          <td>1.0</td>
-          <td>11.0</td>
-          <td>6.0</td>
+          <td>1</td>
+          <td>11</td>
+          <td>6</td>
           <td>False</td>
-          <td>2.0</td>
+          <td>2</td>
           <td>True</td>
           <td>misty</td>
           <td>13.94</td>
@@ -1105,11 +1107,11 @@ We now inspect the last split:
         <tr>
           <th>16381</th>
           <td>winter</td>
-          <td>1.0</td>
-          <td>11.0</td>
-          <td>7.0</td>
+          <td>1</td>
+          <td>11</td>
+          <td>7</td>
           <td>False</td>
-          <td>2.0</td>
+          <td>2</td>
           <td>True</td>
           <td>clear</td>
           <td>13.12</td>
@@ -1120,11 +1122,11 @@ We now inspect the last split:
         <tr>
           <th>16382</th>
           <td>winter</td>
-          <td>1.0</td>
-          <td>11.0</td>
-          <td>8.0</td>
+          <td>1</td>
+          <td>11</td>
+          <td>8</td>
           <td>False</td>
-          <td>2.0</td>
+          <td>2</td>
           <td>True</td>
           <td>clear</td>
           <td>13.94</td>
@@ -1135,11 +1137,11 @@ We now inspect the last split:
         <tr>
           <th>16383</th>
           <td>winter</td>
-          <td>1.0</td>
-          <td>11.0</td>
-          <td>9.0</td>
+          <td>1</td>
+          <td>11</td>
+          <td>9</td>
           <td>False</td>
-          <td>2.0</td>
+          <td>2</td>
           <td>True</td>
           <td>misty</td>
           <td>14.76</td>
@@ -1165,11 +1167,11 @@ We now inspect the last split:
         <tr>
           <th>17374</th>
           <td>spring</td>
-          <td>1.0</td>
-          <td>12.0</td>
-          <td>19.0</td>
+          <td>1</td>
+          <td>12</td>
+          <td>19</td>
           <td>False</td>
-          <td>1.0</td>
+          <td>1</td>
           <td>True</td>
           <td>misty</td>
           <td>10.66</td>
@@ -1180,11 +1182,11 @@ We now inspect the last split:
         <tr>
           <th>17375</th>
           <td>spring</td>
-          <td>1.0</td>
-          <td>12.0</td>
-          <td>20.0</td>
+          <td>1</td>
+          <td>12</td>
+          <td>20</td>
           <td>False</td>
-          <td>1.0</td>
+          <td>1</td>
           <td>True</td>
           <td>misty</td>
           <td>10.66</td>
@@ -1195,11 +1197,11 @@ We now inspect the last split:
         <tr>
           <th>17376</th>
           <td>spring</td>
-          <td>1.0</td>
-          <td>12.0</td>
-          <td>21.0</td>
+          <td>1</td>
+          <td>12</td>
+          <td>21</td>
           <td>False</td>
-          <td>1.0</td>
+          <td>1</td>
           <td>True</td>
           <td>clear</td>
           <td>10.66</td>
@@ -1210,11 +1212,11 @@ We now inspect the last split:
         <tr>
           <th>17377</th>
           <td>spring</td>
-          <td>1.0</td>
-          <td>12.0</td>
-          <td>22.0</td>
+          <td>1</td>
+          <td>12</td>
+          <td>22</td>
           <td>False</td>
-          <td>1.0</td>
+          <td>1</td>
           <td>True</td>
           <td>clear</td>
           <td>10.66</td>
@@ -1225,11 +1227,11 @@ We now inspect the last split:
         <tr>
           <th>17378</th>
           <td>spring</td>
-          <td>1.0</td>
-          <td>12.0</td>
-          <td>23.0</td>
+          <td>1</td>
+          <td>12</td>
+          <td>23</td>
           <td>False</td>
-          <td>1.0</td>
+          <td>1</td>
           <td>True</td>
           <td>clear</td>
           <td>10.66</td>
@@ -1245,7 +1247,7 @@ We now inspect the last split:
     <br />
     <br />
 
-.. GENERATED FROM PYTHON SOURCE LINES 160-162
+.. GENERATED FROM PYTHON SOURCE LINES 162-164
 
 .. code-block:: default
 
@@ -1295,11 +1297,11 @@ We now inspect the last split:
         <tr>
           <th>6331</th>
           <td>winter</td>
-          <td>0.0</td>
-          <td>9.0</td>
-          <td>9.0</td>
+          <td>0</td>
+          <td>9</td>
+          <td>9</td>
           <td>False</td>
-          <td>1.0</td>
+          <td>1</td>
           <td>True</td>
           <td>misty</td>
           <td>26.24</td>
@@ -1310,11 +1312,11 @@ We now inspect the last split:
         <tr>
           <th>6332</th>
           <td>winter</td>
-          <td>0.0</td>
-          <td>9.0</td>
-          <td>10.0</td>
+          <td>0</td>
+          <td>9</td>
+          <td>10</td>
           <td>False</td>
-          <td>1.0</td>
+          <td>1</td>
           <td>True</td>
           <td>misty</td>
           <td>26.24</td>
@@ -1325,11 +1327,11 @@ We now inspect the last split:
         <tr>
           <th>6333</th>
           <td>winter</td>
-          <td>0.0</td>
-          <td>9.0</td>
-          <td>11.0</td>
+          <td>0</td>
+          <td>9</td>
+          <td>11</td>
           <td>False</td>
-          <td>1.0</td>
+          <td>1</td>
           <td>True</td>
           <td>clear</td>
           <td>27.88</td>
@@ -1340,11 +1342,11 @@ We now inspect the last split:
         <tr>
           <th>6334</th>
           <td>winter</td>
-          <td>0.0</td>
-          <td>9.0</td>
-          <td>12.0</td>
+          <td>0</td>
+          <td>9</td>
+          <td>12</td>
           <td>False</td>
-          <td>1.0</td>
+          <td>1</td>
           <td>True</td>
           <td>misty</td>
           <td>27.88</td>
@@ -1355,11 +1357,11 @@ We now inspect the last split:
         <tr>
           <th>6335</th>
           <td>winter</td>
-          <td>0.0</td>
-          <td>9.0</td>
-          <td>13.0</td>
+          <td>0</td>
+          <td>9</td>
+          <td>13</td>
           <td>False</td>
-          <td>1.0</td>
+          <td>1</td>
           <td>True</td>
           <td>misty</td>
           <td>28.70</td>
@@ -1385,11 +1387,11 @@ We now inspect the last split:
         <tr>
           <th>16326</th>
           <td>winter</td>
-          <td>1.0</td>
-          <td>11.0</td>
-          <td>0.0</td>
+          <td>1</td>
+          <td>11</td>
+          <td>0</td>
           <td>False</td>
-          <td>0.0</td>
+          <td>0</td>
           <td>False</td>
           <td>misty</td>
           <td>12.30</td>
@@ -1400,11 +1402,11 @@ We now inspect the last split:
         <tr>
           <th>16327</th>
           <td>winter</td>
-          <td>1.0</td>
-          <td>11.0</td>
-          <td>1.0</td>
+          <td>1</td>
+          <td>11</td>
+          <td>1</td>
           <td>False</td>
-          <td>0.0</td>
+          <td>0</td>
           <td>False</td>
           <td>clear</td>
           <td>12.30</td>
@@ -1415,11 +1417,11 @@ We now inspect the last split:
         <tr>
           <th>16328</th>
           <td>winter</td>
-          <td>1.0</td>
-          <td>11.0</td>
-          <td>2.0</td>
+          <td>1</td>
+          <td>11</td>
+          <td>2</td>
           <td>False</td>
-          <td>0.0</td>
+          <td>0</td>
           <td>False</td>
           <td>clear</td>
           <td>11.48</td>
@@ -1430,11 +1432,11 @@ We now inspect the last split:
         <tr>
           <th>16329</th>
           <td>winter</td>
-          <td>1.0</td>
-          <td>11.0</td>
-          <td>3.0</td>
+          <td>1</td>
+          <td>11</td>
+          <td>3</td>
           <td>False</td>
-          <td>0.0</td>
+          <td>0</td>
           <td>False</td>
           <td>misty</td>
           <td>12.30</td>
@@ -1445,11 +1447,11 @@ We now inspect the last split:
         <tr>
           <th>16330</th>
           <td>winter</td>
-          <td>1.0</td>
-          <td>11.0</td>
-          <td>4.0</td>
+          <td>1</td>
+          <td>11</td>
+          <td>4</td>
           <td>False</td>
-          <td>0.0</td>
+          <td>0</td>
           <td>False</td>
           <td>misty</td>
           <td>12.30</td>
@@ -1465,7 +1467,7 @@ We now inspect the last split:
     <br />
     <br />
 
-.. GENERATED FROM PYTHON SOURCE LINES 163-182
+.. GENERATED FROM PYTHON SOURCE LINES 165-184
 
 All is well. We are now ready to do some predictive modeling!
 
@@ -1487,7 +1489,7 @@ categories when using cross-validation.
 The numerical variables need no preprocessing and, for the sake of simplicity,
 we only try the default hyper-parameters for this model:
 
-.. GENERATED FROM PYTHON SOURCE LINES 182-216
+.. GENERATED FROM PYTHON SOURCE LINES 184-218
 
 .. code-block:: default
 
@@ -1532,12 +1534,12 @@ we only try the default hyper-parameters for this model:
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 217-219
+.. GENERATED FROM PYTHON SOURCE LINES 219-221
 
 Lets evaluate our gradient boosting model with the mean absolute error of the
 relative demand averaged across our 5 time-based cross-validation splits:
 
-.. GENERATED FROM PYTHON SOURCE LINES 220-240
+.. GENERATED FROM PYTHON SOURCE LINES 222-242
 
 .. code-block:: default
 
@@ -1577,7 +1579,7 @@ relative demand averaged across our 5 time-based cross-validation splits:
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 241-258
+.. GENERATED FROM PYTHON SOURCE LINES 243-260
 
 This model has an average error around 4 to 5% of the maximum demand. This is
 quite good for a first trial without any hyper-parameter tuning! We just had
@@ -1597,7 +1599,7 @@ For consistency, we scale the numerical features to the same 0-1 range using
 class:`sklearn.preprocessing.MinMaxScaler`, although in this case it does not
 impact the results much because they are already on comparable scales:
 
-.. GENERATED FROM PYTHON SOURCE LINES 258-280
+.. GENERATED FROM PYTHON SOURCE LINES 260-282
 
 .. code-block:: default
 
@@ -1639,7 +1641,7 @@ impact the results much because they are already on comparable scales:
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 281-307
+.. GENERATED FROM PYTHON SOURCE LINES 283-309
 
 The performance is not good: the average error is around 14% of the maximum
 demand. This is more than three times higher than the average error of the
@@ -1668,7 +1670,7 @@ Using one-hot encoding for the time features gives the linear model a lot
 more flexibility as we introduce one additional feature per discrete time
 level.
 
-.. GENERATED FROM PYTHON SOURCE LINES 308-321
+.. GENERATED FROM PYTHON SOURCE LINES 310-323
 
 .. code-block:: default
 
@@ -1701,7 +1703,7 @@ level.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 322-351
+.. GENERATED FROM PYTHON SOURCE LINES 324-353
 
 The average error rate of this model is 10% which is much better than using
 the original (ordinal) encoding of the time feature, confirming our intuition
@@ -1733,7 +1735,7 @@ Each ordinal time feature is transformed into 2 features that together encode
 equivalent information in a non-monotonic way, and more importantly without
 any jump between the first and the last value of the periodic range.
 
-.. GENERATED FROM PYTHON SOURCE LINES 351-362
+.. GENERATED FROM PYTHON SOURCE LINES 353-364
 
 .. code-block:: default
 
@@ -1755,12 +1757,12 @@ any jump between the first and the last value of the periodic range.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 363-365
+.. GENERATED FROM PYTHON SOURCE LINES 365-367
 
 Let us visualize the effect of this feature expansion on some synthetic hour
 data with a bit of extrapolation beyond hour=23:
 
-.. GENERATED FROM PYTHON SOURCE LINES 366-377
+.. GENERATED FROM PYTHON SOURCE LINES 368-379
 
 .. code-block:: default
 
@@ -1787,7 +1789,7 @@ data with a bit of extrapolation beyond hour=23:
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 378-383
+.. GENERATED FROM PYTHON SOURCE LINES 380-385
 
 Let's use a 2D scatter plot with the hours encoded as colors to better see
 how this representation maps the 24 hours of the day to a 2D space, akin to
@@ -1795,7 +1797,7 @@ some sort of a 24 hour version of an analog clock. Note that the "25th" hour
 is mapped back to the 1st hour because of the periodic nature of the
 sine/cosine representation.
 
-.. GENERATED FROM PYTHON SOURCE LINES 384-392
+.. GENERATED FROM PYTHON SOURCE LINES 386-394
 
 .. code-block:: default
 
@@ -1819,11 +1821,11 @@ sine/cosine representation.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 393-394
+.. GENERATED FROM PYTHON SOURCE LINES 395-396
 
 We can now build a feature extraction pipeline using this strategy:
 
-.. GENERATED FROM PYTHON SOURCE LINES 395-414
+.. GENERATED FROM PYTHON SOURCE LINES 397-416
 
 .. code-block:: default
 
@@ -1862,7 +1864,7 @@ We can now build a feature extraction pipeline using this strategy:
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 415-427
+.. GENERATED FROM PYTHON SOURCE LINES 417-429
 
 The performance of our linear regression model with this simple feature
 engineering is a bit better than using the original ordinal time features but
@@ -1877,7 +1879,7 @@ using spline transformations with a large enough number of splines, and as a
 result a larger number of expanded features compared to the sine/cosine
 transformation:
 
-.. GENERATED FROM PYTHON SOURCE LINES 428-444
+.. GENERATED FROM PYTHON SOURCE LINES 430-446
 
 .. code-block:: default
 
@@ -1904,12 +1906,12 @@ transformation:
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 445-447
+.. GENERATED FROM PYTHON SOURCE LINES 447-449
 
 Again, let us visualize the effect of this feature expansion on some
 synthetic hour data with a bit of extrapolation beyond hour=23:
 
-.. GENERATED FROM PYTHON SOURCE LINES 448-461
+.. GENERATED FROM PYTHON SOURCE LINES 450-463
 
 .. code-block:: default
 
@@ -1938,7 +1940,7 @@ synthetic hour data with a bit of extrapolation beyond hour=23:
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 462-471
+.. GENERATED FROM PYTHON SOURCE LINES 464-473
 
 Thanks to the use of the `extrapolation="periodic"` parameter, we observe
 that the feature encoding stays smooth when extrapolating beyond midnight.
@@ -1950,7 +1952,7 @@ It is possible to use fewer splines than discrete levels for those ordinal
 values. This makes spline-based encoding more efficient than one-hot encoding
 while preserving most of the expressivity:
 
-.. GENERATED FROM PYTHON SOURCE LINES 471-486
+.. GENERATED FROM PYTHON SOURCE LINES 473-488
 
 .. code-block:: default
 
@@ -1985,7 +1987,7 @@ while preserving most of the expressivity:
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 487-500
+.. GENERATED FROM PYTHON SOURCE LINES 489-502
 
 Spline features make it possible for the linear model to successfully
 leverage the periodic time-related features and reduce the error from ~14% to
@@ -2001,7 +2003,7 @@ the time related shape of the predictions.
 To do so we consider an arbitrary time-based split to compare the predictions
 on a range of held out data points.
 
-.. GENERATED FROM PYTHON SOURCE LINES 500-512
+.. GENERATED FROM PYTHON SOURCE LINES 502-514
 
 .. code-block:: default
 
@@ -2024,12 +2026,12 @@ on a range of held out data points.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 513-515
+.. GENERATED FROM PYTHON SOURCE LINES 515-517
 
 We visualize those predictions by zooming on the last 96 hours (4 days) of
 the test set to get some qualitative insights:
 
-.. GENERATED FROM PYTHON SOURCE LINES 515-543
+.. GENERATED FROM PYTHON SOURCE LINES 517-545
 
 .. code-block:: default
 
@@ -2073,7 +2075,7 @@ the test set to get some qualitative insights:
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 544-570
+.. GENERATED FROM PYTHON SOURCE LINES 546-572
 
 We can draw the following conclusions from the above plot:
 
@@ -2102,12 +2104,12 @@ We can draw the following conclusions from the above plot:
   advantage for linear models is not necessarily one for more expressive
   models.
 
-.. GENERATED FROM PYTHON SOURCE LINES 572-574
+.. GENERATED FROM PYTHON SOURCE LINES 574-576
 
 We can also compare the number of features extracted by each feature
 engineering pipeline:
 
-.. GENERATED FROM PYTHON SOURCE LINES 574-576
+.. GENERATED FROM PYTHON SOURCE LINES 576-578
 
 .. code-block:: default
 
@@ -2128,7 +2130,7 @@ engineering pipeline:
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 577-579
+.. GENERATED FROM PYTHON SOURCE LINES 579-581
 
 .. code-block:: default
 
@@ -2149,7 +2151,7 @@ engineering pipeline:
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 580-582
+.. GENERATED FROM PYTHON SOURCE LINES 582-584
 
 .. code-block:: default
 
@@ -2170,7 +2172,7 @@ engineering pipeline:
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 583-585
+.. GENERATED FROM PYTHON SOURCE LINES 585-587
 
 .. code-block:: default
 
@@ -2191,7 +2193,7 @@ engineering pipeline:
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 586-602
+.. GENERATED FROM PYTHON SOURCE LINES 588-604
 
 This confirms that the one-hot encoding and the spline encoding strategies
 create a lot more features for the time representation than the alternatives,
@@ -2210,7 +2212,7 @@ explained by the lack of interactions terms between features, e.g.
 "workingday" and features derived from "hours". This issue will be addressed
 in the following section.
 
-.. GENERATED FROM PYTHON SOURCE LINES 604-615
+.. GENERATED FROM PYTHON SOURCE LINES 606-617
 
 Modeling pairwise interactions with splines and polynomial features
 -------------------------------------------------------------------
@@ -2224,7 +2226,7 @@ However, it is possible to use the `PolynomialFeatures` class on coarse
 grained spline encoded hours to model the "workingday"/"hours" interaction
 explicitly without introducing too many new variables:
 
-.. GENERATED FROM PYTHON SOURCE LINES 615-629
+.. GENERATED FROM PYTHON SOURCE LINES 617-631
 
 .. code-block:: default
 
@@ -2249,13 +2251,13 @@ explicitly without introducing too many new variables:
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 630-633
+.. GENERATED FROM PYTHON SOURCE LINES 632-635
 
 Those features are then combined with the ones already computed in the
 previous spline-base pipeline. We can observe a nice performance improvemnt
 by modeling this pairwise interaction explicitly:
 
-.. GENERATED FROM PYTHON SOURCE LINES 633-645
+.. GENERATED FROM PYTHON SOURCE LINES 635-647
 
 .. code-block:: default
 
@@ -2287,7 +2289,7 @@ by modeling this pairwise interaction explicitly:
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 646-662
+.. GENERATED FROM PYTHON SOURCE LINES 648-664
 
 Modeling non-linear feature interactions with kernels
 -----------------------------------------------------
@@ -2306,7 +2308,7 @@ and computational tractability issues.
 Alternatively, we can use the Nyström method to compute an approximate
 polynomial kernel expansion. Let us try the latter:
 
-.. GENERATED FROM PYTHON SOURCE LINES 662-672
+.. GENERATED FROM PYTHON SOURCE LINES 664-674
 
 .. code-block:: default
 
@@ -2336,7 +2338,7 @@ polynomial kernel expansion. Let us try the latter:
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 673-683
+.. GENERATED FROM PYTHON SOURCE LINES 675-685
 
 We observe that this model can almost rival the performance of the gradient
 boosted trees with an average error around 5% of the maximum demand.
@@ -2349,7 +2351,7 @@ is much more expressive than a simple linear regression model with raw features.
 For the sake of completeness, we also evaluate the combination of one-hot
 encoding and kernel approximation:
 
-.. GENERATED FROM PYTHON SOURCE LINES 684-699
+.. GENERATED FROM PYTHON SOURCE LINES 686-701
 
 .. code-block:: default
 
@@ -2384,7 +2386,7 @@ encoding and kernel approximation:
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 700-709
+.. GENERATED FROM PYTHON SOURCE LINES 702-711
 
 While one-hot encoded features were competitive with spline-based features
 when using linear models, this is no longer the case when using a low-rank
@@ -2396,7 +2398,7 @@ Let us now have a qualitative look at the predictions of the kernel models
 and of the gradient boosted trees that should be able to better model
 non-linear interactions between features:
 
-.. GENERATED FROM PYTHON SOURCE LINES 709-718
+.. GENERATED FROM PYTHON SOURCE LINES 711-720
 
 .. code-block:: default
 
@@ -2416,11 +2418,11 @@ non-linear interactions between features:
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 719-720
+.. GENERATED FROM PYTHON SOURCE LINES 721-722
 
 Again we zoom on the last 4 days of the test set:
 
-.. GENERATED FROM PYTHON SOURCE LINES 720-749
+.. GENERATED FROM PYTHON SOURCE LINES 722-751
 
 .. code-block:: default
 
@@ -2465,7 +2467,7 @@ Again we zoom on the last 4 days of the test set:
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 750-771
+.. GENERATED FROM PYTHON SOURCE LINES 752-773
 
 First, note that trees can naturally model non-linear feature interactions
 since, by default, decision trees are allowed to grow beyond a depth of 2
@@ -2489,7 +2491,7 @@ fraction of bikes that are immobilized because they need servicing.
 Let us finally get a more quantative look at the prediction errors of those
 three models using the true vs predicted demand scatter plots:
 
-.. GENERATED FROM PYTHON SOURCE LINES 771-795
+.. GENERATED FROM PYTHON SOURCE LINES 773-797
 
 .. code-block:: default
 
@@ -2529,7 +2531,7 @@ three models using the true vs predicted demand scatter plots:
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 796-832
+.. GENERATED FROM PYTHON SOURCE LINES 798-834
 
 This visualization confirms the conclusions we draw on the previous plot.
 
@@ -2571,7 +2573,7 @@ instead of `RidgeCV`.
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** ( 0 minutes  14.625 seconds)
+   **Total running time of the script:** ( 0 minutes  16.410 seconds)
 
 
 .. _sphx_glr_download_auto_examples_applications_plot_cyclical_feature_engineering.py:

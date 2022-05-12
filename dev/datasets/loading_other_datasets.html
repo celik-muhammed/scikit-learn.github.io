@@ -363,7 +363,7 @@ from the repository using the function
 <a class="reference internal" href="../modules/generated/sklearn.datasets.fetch_openml.html#sklearn.datasets.fetch_openml" title="sklearn.datasets.fetch_openml"><code class="xref py py-func docutils literal notranslate"><span class="pre">sklearn.datasets.fetch_openml</span></code></a>.</p>
 <p>For example, to download a dataset of gene expressions in mice brains:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">sklearn.datasets</span> <span class="kn">import</span> <span class="n">fetch_openml</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">mice</span> <span class="o">=</span> <span class="n">fetch_openml</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;miceprotein&#39;</span><span class="p">,</span> <span class="n">version</span><span class="o">=</span><span class="mi">4</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">mice</span> <span class="o">=</span> <span class="n">fetch_openml</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;miceprotein&#39;</span><span class="p">,</span> <span class="n">version</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span> <span class="n">parser</span><span class="o">=</span><span class="s2">&quot;auto&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
 <p>To fully specify a dataset, you need to provide a name and a version, though
@@ -409,7 +409,7 @@ dataset on the openml website:</p>
 </pre></div>
 </div>
 <p>The <code class="docutils literal notranslate"><span class="pre">data_id</span></code> also uniquely identifies a dataset from OpenML:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">mice</span> <span class="o">=</span> <span class="n">fetch_openml</span><span class="p">(</span><span class="n">data_id</span><span class="o">=</span><span class="mi">40966</span><span class="p">)</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">mice</span> <span class="o">=</span> <span class="n">fetch_openml</span><span class="p">(</span><span class="n">data_id</span><span class="o">=</span><span class="mi">40966</span><span class="p">,</span> <span class="n">parser</span><span class="o">=</span><span class="s2">&quot;auto&quot;</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">mice</span><span class="o">.</span><span class="n">details</span> 
 <span class="go">{&#39;id&#39;: &#39;4550&#39;, &#39;name&#39;: &#39;MiceProtein&#39;, &#39;version&#39;: &#39;1&#39;, &#39;format&#39;: &#39;ARFF&#39;,</span>
 <span class="go">&#39;creator&#39;: ...,</span>
@@ -431,8 +431,8 @@ which can contain entirely different datasets.
 If a particular version of a dataset has been found to contain significant
 issues, it might be deactivated. Using a name to specify a dataset will yield
 the earliest version of a dataset that is still active. That means that
-<code class="docutils literal notranslate"><span class="pre">fetch_openml(name=&quot;miceprotein&quot;)</span></code> can yield different results at different
-times if earlier versions become inactive.
+<code class="docutils literal notranslate"><span class="pre">fetch_openml(name=&quot;miceprotein&quot;,</span> <span class="pre">parser=&quot;auto&quot;)</span></code> can yield different results
+at different times if earlier versions become inactive.
 You can see that the dataset with <code class="docutils literal notranslate"><span class="pre">data_id</span></code> 40966 that we fetched above is
 the first version of the “miceprotein” dataset:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">mice</span><span class="o">.</span><span class="n">details</span><span class="p">[</span><span class="s1">&#39;version&#39;</span><span class="p">]</span>  
@@ -441,19 +441,19 @@ the first version of the “miceprotein” dataset:</p>
 </div>
 <p>In fact, this dataset only has one version. The iris dataset on the other hand
 has multiple versions:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">iris</span> <span class="o">=</span> <span class="n">fetch_openml</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">&quot;iris&quot;</span><span class="p">)</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">iris</span> <span class="o">=</span> <span class="n">fetch_openml</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">&quot;iris&quot;</span><span class="p">,</span> <span class="n">parser</span><span class="o">=</span><span class="s2">&quot;auto&quot;</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">iris</span><span class="o">.</span><span class="n">details</span><span class="p">[</span><span class="s1">&#39;version&#39;</span><span class="p">]</span>  
 <span class="go">&#39;1&#39;</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">iris</span><span class="o">.</span><span class="n">details</span><span class="p">[</span><span class="s1">&#39;id&#39;</span><span class="p">]</span>  
 <span class="go">&#39;61&#39;</span>
 
-<span class="gp">&gt;&gt;&gt; </span><span class="n">iris_61</span> <span class="o">=</span> <span class="n">fetch_openml</span><span class="p">(</span><span class="n">data_id</span><span class="o">=</span><span class="mi">61</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">iris_61</span> <span class="o">=</span> <span class="n">fetch_openml</span><span class="p">(</span><span class="n">data_id</span><span class="o">=</span><span class="mi">61</span><span class="p">,</span> <span class="n">parser</span><span class="o">=</span><span class="s2">&quot;auto&quot;</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">iris_61</span><span class="o">.</span><span class="n">details</span><span class="p">[</span><span class="s1">&#39;version&#39;</span><span class="p">]</span>
 <span class="go">&#39;1&#39;</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">iris_61</span><span class="o">.</span><span class="n">details</span><span class="p">[</span><span class="s1">&#39;id&#39;</span><span class="p">]</span>
 <span class="go">&#39;61&#39;</span>
 
-<span class="gp">&gt;&gt;&gt; </span><span class="n">iris_969</span> <span class="o">=</span> <span class="n">fetch_openml</span><span class="p">(</span><span class="n">data_id</span><span class="o">=</span><span class="mi">969</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">iris_969</span> <span class="o">=</span> <span class="n">fetch_openml</span><span class="p">(</span><span class="n">data_id</span><span class="o">=</span><span class="mi">969</span><span class="p">,</span> <span class="n">parser</span><span class="o">=</span><span class="s2">&quot;auto&quot;</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">iris_969</span><span class="o">.</span><span class="n">details</span><span class="p">[</span><span class="s1">&#39;version&#39;</span><span class="p">]</span>
 <span class="go">&#39;3&#39;</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">iris_969</span><span class="o">.</span><span class="n">details</span><span class="p">[</span><span class="s1">&#39;id&#39;</span><span class="p">]</span>
@@ -471,7 +471,7 @@ binarized version of the data:</p>
 </div>
 <p>You can also specify both the name and the version, which also uniquely
 identifies the dataset:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">iris_version_3</span> <span class="o">=</span> <span class="n">fetch_openml</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">&quot;iris&quot;</span><span class="p">,</span> <span class="n">version</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">iris_version_3</span> <span class="o">=</span> <span class="n">fetch_openml</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">&quot;iris&quot;</span><span class="p">,</span> <span class="n">version</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">parser</span><span class="o">=</span><span class="s2">&quot;auto&quot;</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">iris_version_3</span><span class="o">.</span><span class="n">details</span><span class="p">[</span><span class="s1">&#39;version&#39;</span><span class="p">]</span>
 <span class="go">&#39;3&#39;</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">iris_version_3</span><span class="o">.</span><span class="n">details</span><span class="p">[</span><span class="s1">&#39;id&#39;</span><span class="p">]</span>
@@ -485,6 +485,41 @@ identifies the dataset:</p>
 machine learning” ACM SIGKDD Explorations Newsletter, 15(2), 49-60, 2014.</a></p></li>
 </ul>
 </div>
+</section>
+<section id="arff-parser">
+<span id="openml-parser"></span><h3><span class="section-number">7.4.3.2. </span>ARFF parser<a class="headerlink" href="#arff-parser" title="Permalink to this headline">¶</a></h3>
+<p>From version 1.2, scikit-learn provides a new keyword argument <code class="docutils literal notranslate"><span class="pre">parser</span></code> that
+provides several options to parse the ARFF files provided by OpenML. The legacy
+parser (i.e. <code class="docutils literal notranslate"><span class="pre">parser=&quot;liac-arff&quot;</span></code>) is based on the project
+<a class="reference external" href="https://github.com/renatopp/liac-arff">LIAC-ARFF</a>. This parser is however
+slow and consume more memory than required. A new parser based on pandas
+(i.e. <code class="docutils literal notranslate"><span class="pre">parser=&quot;pandas&quot;</span></code>) is both faster and more memory efficient.
+However, this parser does not support sparse data.
+Therefore, we recommend using <code class="docutils literal notranslate"><span class="pre">parser=&quot;auto&quot;</span></code> which will use the best parser
+available for the requested dataset.</p>
+<p>The <code class="docutils literal notranslate"><span class="pre">&quot;pandas&quot;</span></code> and <code class="docutils literal notranslate"><span class="pre">&quot;liac-arff&quot;</span></code> parsers can lead to different data types in
+the output. The notable differences are the following:</p>
+<ul class="simple">
+<li><p>The <code class="docutils literal notranslate"><span class="pre">&quot;liac-arff&quot;</span></code> parser always encodes categorical features as <code class="docutils literal notranslate"><span class="pre">str</span></code>
+objects. To the contrary, the <code class="docutils literal notranslate"><span class="pre">&quot;pandas&quot;</span></code> parser instead infers the type while
+reading and numerical categories will be casted into integers whenever
+possible.</p></li>
+<li><p>The <code class="docutils literal notranslate"><span class="pre">&quot;liac-arff&quot;</span></code> parser uses float64 to encode numerical features tagged as
+‘REAL’ and ‘NUMERICAL’ in the metadata. The <code class="docutils literal notranslate"><span class="pre">&quot;pandas&quot;</span></code> parser instead infers
+if these numerical features corresponds to integers and uses panda’s Integer
+extension dtype.</p></li>
+<li><p>In particular, classification datasets with integer categories are typically
+loaded as such <code class="docutils literal notranslate"><span class="pre">(0,</span> <span class="pre">1,</span> <span class="pre">...)</span></code> with the <code class="docutils literal notranslate"><span class="pre">&quot;pandas&quot;</span></code> parser while <code class="docutils literal notranslate"><span class="pre">&quot;liac-arff&quot;</span></code>
+will force the use of string encoded class labels such as <code class="docutils literal notranslate"><span class="pre">&quot;0&quot;</span></code>, <code class="docutils literal notranslate"><span class="pre">&quot;1&quot;</span></code> and so
+on.</p></li>
+</ul>
+<p>In addition, when <code class="docutils literal notranslate"><span class="pre">as_frame=False</span></code> is used, the <code class="docutils literal notranslate"><span class="pre">&quot;liac-arff&quot;</span></code> parser returns
+ordinally encoded data where the categories are provided in the attribute
+<code class="docutils literal notranslate"><span class="pre">categories</span></code> of the <code class="docutils literal notranslate"><span class="pre">Bunch</span></code> instance. Instead, <code class="docutils literal notranslate"><span class="pre">&quot;pandas&quot;</span></code> returns a NumPy array
+were the categories. Then it’s up to the user to design a feature
+engineering pipeline with an instance of  <code class="docutils literal notranslate"><span class="pre">OneHotEncoder</span></code> or
+<code class="docutils literal notranslate"><span class="pre">OrdinalEncoder</span></code> typically wrapped in a <code class="docutils literal notranslate"><span class="pre">ColumnTransformer</span></code> to
+preprocess the categorical columns explicitly. See for instance: <a class="reference internal" href="../auto_examples/compose/plot_column_transformer_mixed_types.html#sphx-glr-auto-examples-compose-plot-column-transformer-mixed-types-py"><span class="std std-ref">Column Transformer with Mixed Types</span></a>.</p>
 </section>
 </section>
 <section id="loading-from-external-datasets">

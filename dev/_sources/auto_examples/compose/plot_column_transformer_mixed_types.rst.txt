@@ -84,11 +84,13 @@ model.
 
 Load data from https://www.openml.org/d/40945
 
-.. GENERATED FROM PYTHON SOURCE LINES 46-52
+.. GENERATED FROM PYTHON SOURCE LINES 46-54
 
 .. code-block:: default
 
-    X, y = fetch_openml("titanic", version=1, as_frame=True, return_X_y=True)
+    X, y = fetch_openml(
+        "titanic", version=1, as_frame=True, return_X_y=True, parser="pandas"
+    )
 
     # Alternatively X and y can be obtained directly from the frame attribute:
     # X = titanic.frame.drop('survived', axis=1)
@@ -101,7 +103,7 @@ Load data from https://www.openml.org/d/40945
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 53-71
+.. GENERATED FROM PYTHON SOURCE LINES 55-73
 
 Use ``ColumnTransformer`` by selecting column by names
 
@@ -122,7 +124,7 @@ We create the preprocessing pipelines for both numeric and categorical data.
 Note that ``pclass`` could either be treated as a categorical or numeric
 feature.
 
-.. GENERATED FROM PYTHON SOURCE LINES 71-87
+.. GENERATED FROM PYTHON SOURCE LINES 73-89
 
 .. code-block:: default
 
@@ -149,12 +151,12 @@ feature.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 88-90
+.. GENERATED FROM PYTHON SOURCE LINES 90-92
 
 Append classifier to preprocessing pipeline.
 Now we have a full prediction pipeline.
 
-.. GENERATED FROM PYTHON SOURCE LINES 90-99
+.. GENERATED FROM PYTHON SOURCE LINES 92-101
 
 .. code-block:: default
 
@@ -182,14 +184,14 @@ Now we have a full prediction pipeline.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 100-104
+.. GENERATED FROM PYTHON SOURCE LINES 102-106
 
 HTML representation of ``Pipeline`` (display diagram)
 
 When the ``Pipeline`` is printed out in a jupyter notebook an HTML
 representation of the estimator is displayed:
 
-.. GENERATED FROM PYTHON SOURCE LINES 104-106
+.. GENERATED FROM PYTHON SOURCE LINES 106-108
 
 .. code-block:: default
 
@@ -236,7 +238,7 @@ representation of the estimator is displayed:
     <br />
     <br />
 
-.. GENERATED FROM PYTHON SOURCE LINES 107-115
+.. GENERATED FROM PYTHON SOURCE LINES 109-117
 
 Use ``ColumnTransformer`` by selecting column by data types
 
@@ -247,7 +249,7 @@ numerical or categorical feature.
 First, let's only select a subset of columns to simplify our
 example.
 
-.. GENERATED FROM PYTHON SOURCE LINES 115-119
+.. GENERATED FROM PYTHON SOURCE LINES 117-121
 
 .. code-block:: default
 
@@ -262,11 +264,11 @@ example.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 120-121
+.. GENERATED FROM PYTHON SOURCE LINES 122-123
 
 Then, we introspect the information regarding each column data type.
 
-.. GENERATED FROM PYTHON SOURCE LINES 121-124
+.. GENERATED FROM PYTHON SOURCE LINES 123-126
 
 .. code-block:: default
 
@@ -290,16 +292,16 @@ Then, we introspect the information regarding each column data type.
     ---  ------    --------------  -----   
      0   embarked  1045 non-null   category
      1   sex       1047 non-null   category
-     2   pclass    1047 non-null   float64 
+     2   pclass    1047 non-null   int64   
      3   age       841 non-null    float64 
      4   fare      1046 non-null   float64 
-    dtypes: category(2), float64(3)
-    memory usage: 35.0 KB
+    dtypes: category(2), float64(2), int64(1)
+    memory usage: 34.9 KB
 
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 125-130
+.. GENERATED FROM PYTHON SOURCE LINES 127-132
 
 We can observe that the `embarked` and `sex` columns were tagged as
 `category` columns when loading the data with ``fetch_openml``. Therefore, we
@@ -307,7 +309,7 @@ can use this information to dispatch the categorical columns to the
 ``categorical_transformer`` and the remaining columns to the
 ``numerical_transformer``.
 
-.. GENERATED FROM PYTHON SOURCE LINES 132-137
+.. GENERATED FROM PYTHON SOURCE LINES 134-139
 
 .. note:: In practice, you will have to handle yourself the column data type.
    If you want some columns to be considered as `category`, you will have to
@@ -315,7 +317,7 @@ can use this information to dispatch the categorical columns to the
    refer to their documentation regarding `Categorical data
    <https://pandas.pydata.org/pandas-docs/stable/user_guide/categorical.html>`_.
 
-.. GENERATED FROM PYTHON SOURCE LINES 137-155
+.. GENERATED FROM PYTHON SOURCE LINES 139-157
 
 .. code-block:: default
 
@@ -359,38 +361,38 @@ can use this information to dispatch the categorical columns to the
                                                                        SimpleImputer(strategy=&#x27;median&#x27;)),
                                                                       (&#x27;scaler&#x27;,
                                                                        StandardScaler())]),
-                                                      &lt;sklearn.compose._column_transformer.make_column_selector object at 0x7f9082410c40&gt;),
+                                                      &lt;sklearn.compose._column_transformer.make_column_selector object at 0x7f416453bd90&gt;),
                                                      (&#x27;cat&#x27;,
                                                       OneHotEncoder(handle_unknown=&#x27;ignore&#x27;),
-                                                      &lt;sklearn.compose._column_transformer.make_column_selector object at 0x7f9082410820&gt;)])),
+                                                      &lt;sklearn.compose._column_transformer.make_column_selector object at 0x7f416453bdf0&gt;)])),
                     (&#x27;classifier&#x27;, LogisticRegression())])</pre><b>In a Jupyter environment, please rerun this cell to show the HTML representation or trust the notebook. <br />On GitHub, the HTML representation is unable to render, please try loading this page with nbviewer.org.</b></div><div class="sk-container" hidden><div class="sk-item sk-dashed-wrapped"><div class="sk-label-container"><div class="sk-label sk-toggleable"><input class="sk-toggleable__control sk-hidden--visually" id="sk-estimator-id-207" type="checkbox" ><label for="sk-estimator-id-207" class="sk-toggleable__label sk-toggleable__label-arrow">Pipeline</label><div class="sk-toggleable__content"><pre>Pipeline(steps=[(&#x27;preprocessor&#x27;,
                      ColumnTransformer(transformers=[(&#x27;num&#x27;,
                                                       Pipeline(steps=[(&#x27;imputer&#x27;,
                                                                        SimpleImputer(strategy=&#x27;median&#x27;)),
                                                                       (&#x27;scaler&#x27;,
                                                                        StandardScaler())]),
-                                                      &lt;sklearn.compose._column_transformer.make_column_selector object at 0x7f9082410c40&gt;),
+                                                      &lt;sklearn.compose._column_transformer.make_column_selector object at 0x7f416453bd90&gt;),
                                                      (&#x27;cat&#x27;,
                                                       OneHotEncoder(handle_unknown=&#x27;ignore&#x27;),
-                                                      &lt;sklearn.compose._column_transformer.make_column_selector object at 0x7f9082410820&gt;)])),
+                                                      &lt;sklearn.compose._column_transformer.make_column_selector object at 0x7f416453bdf0&gt;)])),
                     (&#x27;classifier&#x27;, LogisticRegression())])</pre></div></div></div><div class="sk-serial"><div class="sk-item sk-dashed-wrapped"><div class="sk-label-container"><div class="sk-label sk-toggleable"><input class="sk-toggleable__control sk-hidden--visually" id="sk-estimator-id-208" type="checkbox" ><label for="sk-estimator-id-208" class="sk-toggleable__label sk-toggleable__label-arrow">preprocessor: ColumnTransformer</label><div class="sk-toggleable__content"><pre>ColumnTransformer(transformers=[(&#x27;num&#x27;,
                                      Pipeline(steps=[(&#x27;imputer&#x27;,
                                                       SimpleImputer(strategy=&#x27;median&#x27;)),
                                                      (&#x27;scaler&#x27;, StandardScaler())]),
-                                     &lt;sklearn.compose._column_transformer.make_column_selector object at 0x7f9082410c40&gt;),
+                                     &lt;sklearn.compose._column_transformer.make_column_selector object at 0x7f416453bd90&gt;),
                                     (&#x27;cat&#x27;, OneHotEncoder(handle_unknown=&#x27;ignore&#x27;),
-                                     &lt;sklearn.compose._column_transformer.make_column_selector object at 0x7f9082410820&gt;)])</pre></div></div></div><div class="sk-parallel"><div class="sk-parallel-item"><div class="sk-item"><div class="sk-label-container"><div class="sk-label sk-toggleable"><input class="sk-toggleable__control sk-hidden--visually" id="sk-estimator-id-209" type="checkbox" ><label for="sk-estimator-id-209" class="sk-toggleable__label sk-toggleable__label-arrow">num</label><div class="sk-toggleable__content"><pre>&lt;sklearn.compose._column_transformer.make_column_selector object at 0x7f9082410c40&gt;</pre></div></div></div><div class="sk-serial"><div class="sk-item"><div class="sk-serial"><div class="sk-item"><div class="sk-estimator sk-toggleable"><input class="sk-toggleable__control sk-hidden--visually" id="sk-estimator-id-210" type="checkbox" ><label for="sk-estimator-id-210" class="sk-toggleable__label sk-toggleable__label-arrow">SimpleImputer</label><div class="sk-toggleable__content"><pre>SimpleImputer(strategy=&#x27;median&#x27;)</pre></div></div></div><div class="sk-item"><div class="sk-estimator sk-toggleable"><input class="sk-toggleable__control sk-hidden--visually" id="sk-estimator-id-211" type="checkbox" ><label for="sk-estimator-id-211" class="sk-toggleable__label sk-toggleable__label-arrow">StandardScaler</label><div class="sk-toggleable__content"><pre>StandardScaler()</pre></div></div></div></div></div></div></div></div><div class="sk-parallel-item"><div class="sk-item"><div class="sk-label-container"><div class="sk-label sk-toggleable"><input class="sk-toggleable__control sk-hidden--visually" id="sk-estimator-id-212" type="checkbox" ><label for="sk-estimator-id-212" class="sk-toggleable__label sk-toggleable__label-arrow">cat</label><div class="sk-toggleable__content"><pre>&lt;sklearn.compose._column_transformer.make_column_selector object at 0x7f9082410820&gt;</pre></div></div></div><div class="sk-serial"><div class="sk-item"><div class="sk-estimator sk-toggleable"><input class="sk-toggleable__control sk-hidden--visually" id="sk-estimator-id-213" type="checkbox" ><label for="sk-estimator-id-213" class="sk-toggleable__label sk-toggleable__label-arrow">OneHotEncoder</label><div class="sk-toggleable__content"><pre>OneHotEncoder(handle_unknown=&#x27;ignore&#x27;)</pre></div></div></div></div></div></div></div></div><div class="sk-item"><div class="sk-estimator sk-toggleable"><input class="sk-toggleable__control sk-hidden--visually" id="sk-estimator-id-214" type="checkbox" ><label for="sk-estimator-id-214" class="sk-toggleable__label sk-toggleable__label-arrow">LogisticRegression</label><div class="sk-toggleable__content"><pre>LogisticRegression()</pre></div></div></div></div></div></div></div>
+                                     &lt;sklearn.compose._column_transformer.make_column_selector object at 0x7f416453bdf0&gt;)])</pre></div></div></div><div class="sk-parallel"><div class="sk-parallel-item"><div class="sk-item"><div class="sk-label-container"><div class="sk-label sk-toggleable"><input class="sk-toggleable__control sk-hidden--visually" id="sk-estimator-id-209" type="checkbox" ><label for="sk-estimator-id-209" class="sk-toggleable__label sk-toggleable__label-arrow">num</label><div class="sk-toggleable__content"><pre>&lt;sklearn.compose._column_transformer.make_column_selector object at 0x7f416453bd90&gt;</pre></div></div></div><div class="sk-serial"><div class="sk-item"><div class="sk-serial"><div class="sk-item"><div class="sk-estimator sk-toggleable"><input class="sk-toggleable__control sk-hidden--visually" id="sk-estimator-id-210" type="checkbox" ><label for="sk-estimator-id-210" class="sk-toggleable__label sk-toggleable__label-arrow">SimpleImputer</label><div class="sk-toggleable__content"><pre>SimpleImputer(strategy=&#x27;median&#x27;)</pre></div></div></div><div class="sk-item"><div class="sk-estimator sk-toggleable"><input class="sk-toggleable__control sk-hidden--visually" id="sk-estimator-id-211" type="checkbox" ><label for="sk-estimator-id-211" class="sk-toggleable__label sk-toggleable__label-arrow">StandardScaler</label><div class="sk-toggleable__content"><pre>StandardScaler()</pre></div></div></div></div></div></div></div></div><div class="sk-parallel-item"><div class="sk-item"><div class="sk-label-container"><div class="sk-label sk-toggleable"><input class="sk-toggleable__control sk-hidden--visually" id="sk-estimator-id-212" type="checkbox" ><label for="sk-estimator-id-212" class="sk-toggleable__label sk-toggleable__label-arrow">cat</label><div class="sk-toggleable__content"><pre>&lt;sklearn.compose._column_transformer.make_column_selector object at 0x7f416453bdf0&gt;</pre></div></div></div><div class="sk-serial"><div class="sk-item"><div class="sk-estimator sk-toggleable"><input class="sk-toggleable__control sk-hidden--visually" id="sk-estimator-id-213" type="checkbox" ><label for="sk-estimator-id-213" class="sk-toggleable__label sk-toggleable__label-arrow">OneHotEncoder</label><div class="sk-toggleable__content"><pre>OneHotEncoder(handle_unknown=&#x27;ignore&#x27;)</pre></div></div></div></div></div></div></div></div><div class="sk-item"><div class="sk-estimator sk-toggleable"><input class="sk-toggleable__control sk-hidden--visually" id="sk-estimator-id-214" type="checkbox" ><label for="sk-estimator-id-214" class="sk-toggleable__label sk-toggleable__label-arrow">LogisticRegression</label><div class="sk-toggleable__content"><pre>LogisticRegression()</pre></div></div></div></div></div></div></div>
     </div>
     <br />
     <br />
 
-.. GENERATED FROM PYTHON SOURCE LINES 156-159
+.. GENERATED FROM PYTHON SOURCE LINES 158-161
 
 The resulting score is not exactly the same as the one from the previous
 pipeline because the dtype-based selector treats the ``pclass`` column as
 a numeric feature instead of a categorical feature as previously:
 
-.. GENERATED FROM PYTHON SOURCE LINES 159-162
+.. GENERATED FROM PYTHON SOURCE LINES 161-164
 
 .. code-block:: default
 
@@ -412,7 +414,7 @@ a numeric feature instead of a categorical feature as previously:
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 163-166
+.. GENERATED FROM PYTHON SOURCE LINES 165-168
 
 .. code-block:: default
 
@@ -434,7 +436,7 @@ a numeric feature instead of a categorical feature as previously:
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 167-175
+.. GENERATED FROM PYTHON SOURCE LINES 169-177
 
 Using the prediction pipeline in a grid search
 
@@ -445,7 +447,7 @@ We will search for both the imputer strategy of the numeric preprocessing
 and the regularization parameter of the logistic regression using
 :class:`~sklearn.model_selection.GridSearchCV`.
 
-.. GENERATED FROM PYTHON SOURCE LINES 175-184
+.. GENERATED FROM PYTHON SOURCE LINES 177-186
 
 .. code-block:: default
 
@@ -473,10 +475,10 @@ and the regularization parameter of the logistic regression using
                                                                                               SimpleImputer(strategy=&#x27;median&#x27;)),
                                                                                              (&#x27;scaler&#x27;,
                                                                                               StandardScaler())]),
-                                                                             &lt;sklearn.compose._column_transformer.make_column_selector object at 0x7f9082410c40&gt;),
+                                                                             &lt;sklearn.compose._column_transformer.make_column_selector object at 0x7f416453bd90&gt;),
                                                                             (&#x27;cat&#x27;,
                                                                              OneHotEncoder(handle_unknown=&#x27;ignore&#x27;),
-                                                                             &lt;sklearn.compose._column_transformer.make_column_selector object at 0x7f9082410820&gt;)])),
+                                                                             &lt;sklearn.compose._column_transformer.make_column_selector object at 0x7f416453bdf0&gt;)])),
                                            (&#x27;classifier&#x27;, LogisticRegression())]),
                  param_grid={&#x27;classifier__C&#x27;: [0.1, 1.0, 10, 100],
                              &#x27;preprocessor__num__imputer__strategy&#x27;: [&#x27;mean&#x27;,
@@ -487,10 +489,10 @@ and the regularization parameter of the logistic regression using
                                                                                               SimpleImputer(strategy=&#x27;median&#x27;)),
                                                                                              (&#x27;scaler&#x27;,
                                                                                               StandardScaler())]),
-                                                                             &lt;sklearn.compose._column_transformer.make_column_selector object at 0x7f9082410c40&gt;),
+                                                                             &lt;sklearn.compose._column_transformer.make_column_selector object at 0x7f416453bd90&gt;),
                                                                             (&#x27;cat&#x27;,
                                                                              OneHotEncoder(handle_unknown=&#x27;ignore&#x27;),
-                                                                             &lt;sklearn.compose._column_transformer.make_column_selector object at 0x7f9082410820&gt;)])),
+                                                                             &lt;sklearn.compose._column_transformer.make_column_selector object at 0x7f416453bdf0&gt;)])),
                                            (&#x27;classifier&#x27;, LogisticRegression())]),
                  param_grid={&#x27;classifier__C&#x27;: [0.1, 1.0, 10, 100],
                              &#x27;preprocessor__num__imputer__strategy&#x27;: [&#x27;mean&#x27;,
@@ -500,28 +502,28 @@ and the regularization parameter of the logistic regression using
                                                                        SimpleImputer(strategy=&#x27;median&#x27;)),
                                                                       (&#x27;scaler&#x27;,
                                                                        StandardScaler())]),
-                                                      &lt;sklearn.compose._column_transformer.make_column_selector object at 0x7f9082410c40&gt;),
+                                                      &lt;sklearn.compose._column_transformer.make_column_selector object at 0x7f416453bd90&gt;),
                                                      (&#x27;cat&#x27;,
                                                       OneHotEncoder(handle_unknown=&#x27;ignore&#x27;),
-                                                      &lt;sklearn.compose._column_transformer.make_column_selector object at 0x7f9082410820&gt;)])),
+                                                      &lt;sklearn.compose._column_transformer.make_column_selector object at 0x7f416453bdf0&gt;)])),
                     (&#x27;classifier&#x27;, LogisticRegression())])</pre></div></div></div><div class="sk-serial"><div class="sk-item"><div class="sk-serial"><div class="sk-item sk-dashed-wrapped"><div class="sk-label-container"><div class="sk-label sk-toggleable"><input class="sk-toggleable__control sk-hidden--visually" id="sk-estimator-id-217" type="checkbox" ><label for="sk-estimator-id-217" class="sk-toggleable__label sk-toggleable__label-arrow">preprocessor: ColumnTransformer</label><div class="sk-toggleable__content"><pre>ColumnTransformer(transformers=[(&#x27;num&#x27;,
                                      Pipeline(steps=[(&#x27;imputer&#x27;,
                                                       SimpleImputer(strategy=&#x27;median&#x27;)),
                                                      (&#x27;scaler&#x27;, StandardScaler())]),
-                                     &lt;sklearn.compose._column_transformer.make_column_selector object at 0x7f9082410c40&gt;),
+                                     &lt;sklearn.compose._column_transformer.make_column_selector object at 0x7f416453bd90&gt;),
                                     (&#x27;cat&#x27;, OneHotEncoder(handle_unknown=&#x27;ignore&#x27;),
-                                     &lt;sklearn.compose._column_transformer.make_column_selector object at 0x7f9082410820&gt;)])</pre></div></div></div><div class="sk-parallel"><div class="sk-parallel-item"><div class="sk-item"><div class="sk-label-container"><div class="sk-label sk-toggleable"><input class="sk-toggleable__control sk-hidden--visually" id="sk-estimator-id-218" type="checkbox" ><label for="sk-estimator-id-218" class="sk-toggleable__label sk-toggleable__label-arrow">num</label><div class="sk-toggleable__content"><pre>&lt;sklearn.compose._column_transformer.make_column_selector object at 0x7f9082410c40&gt;</pre></div></div></div><div class="sk-serial"><div class="sk-item"><div class="sk-serial"><div class="sk-item"><div class="sk-estimator sk-toggleable"><input class="sk-toggleable__control sk-hidden--visually" id="sk-estimator-id-219" type="checkbox" ><label for="sk-estimator-id-219" class="sk-toggleable__label sk-toggleable__label-arrow">SimpleImputer</label><div class="sk-toggleable__content"><pre>SimpleImputer(strategy=&#x27;median&#x27;)</pre></div></div></div><div class="sk-item"><div class="sk-estimator sk-toggleable"><input class="sk-toggleable__control sk-hidden--visually" id="sk-estimator-id-220" type="checkbox" ><label for="sk-estimator-id-220" class="sk-toggleable__label sk-toggleable__label-arrow">StandardScaler</label><div class="sk-toggleable__content"><pre>StandardScaler()</pre></div></div></div></div></div></div></div></div><div class="sk-parallel-item"><div class="sk-item"><div class="sk-label-container"><div class="sk-label sk-toggleable"><input class="sk-toggleable__control sk-hidden--visually" id="sk-estimator-id-221" type="checkbox" ><label for="sk-estimator-id-221" class="sk-toggleable__label sk-toggleable__label-arrow">cat</label><div class="sk-toggleable__content"><pre>&lt;sklearn.compose._column_transformer.make_column_selector object at 0x7f9082410820&gt;</pre></div></div></div><div class="sk-serial"><div class="sk-item"><div class="sk-estimator sk-toggleable"><input class="sk-toggleable__control sk-hidden--visually" id="sk-estimator-id-222" type="checkbox" ><label for="sk-estimator-id-222" class="sk-toggleable__label sk-toggleable__label-arrow">OneHotEncoder</label><div class="sk-toggleable__content"><pre>OneHotEncoder(handle_unknown=&#x27;ignore&#x27;)</pre></div></div></div></div></div></div></div></div><div class="sk-item"><div class="sk-estimator sk-toggleable"><input class="sk-toggleable__control sk-hidden--visually" id="sk-estimator-id-223" type="checkbox" ><label for="sk-estimator-id-223" class="sk-toggleable__label sk-toggleable__label-arrow">LogisticRegression</label><div class="sk-toggleable__content"><pre>LogisticRegression()</pre></div></div></div></div></div></div></div></div></div></div></div></div>
+                                     &lt;sklearn.compose._column_transformer.make_column_selector object at 0x7f416453bdf0&gt;)])</pre></div></div></div><div class="sk-parallel"><div class="sk-parallel-item"><div class="sk-item"><div class="sk-label-container"><div class="sk-label sk-toggleable"><input class="sk-toggleable__control sk-hidden--visually" id="sk-estimator-id-218" type="checkbox" ><label for="sk-estimator-id-218" class="sk-toggleable__label sk-toggleable__label-arrow">num</label><div class="sk-toggleable__content"><pre>&lt;sklearn.compose._column_transformer.make_column_selector object at 0x7f416453bd90&gt;</pre></div></div></div><div class="sk-serial"><div class="sk-item"><div class="sk-serial"><div class="sk-item"><div class="sk-estimator sk-toggleable"><input class="sk-toggleable__control sk-hidden--visually" id="sk-estimator-id-219" type="checkbox" ><label for="sk-estimator-id-219" class="sk-toggleable__label sk-toggleable__label-arrow">SimpleImputer</label><div class="sk-toggleable__content"><pre>SimpleImputer(strategy=&#x27;median&#x27;)</pre></div></div></div><div class="sk-item"><div class="sk-estimator sk-toggleable"><input class="sk-toggleable__control sk-hidden--visually" id="sk-estimator-id-220" type="checkbox" ><label for="sk-estimator-id-220" class="sk-toggleable__label sk-toggleable__label-arrow">StandardScaler</label><div class="sk-toggleable__content"><pre>StandardScaler()</pre></div></div></div></div></div></div></div></div><div class="sk-parallel-item"><div class="sk-item"><div class="sk-label-container"><div class="sk-label sk-toggleable"><input class="sk-toggleable__control sk-hidden--visually" id="sk-estimator-id-221" type="checkbox" ><label for="sk-estimator-id-221" class="sk-toggleable__label sk-toggleable__label-arrow">cat</label><div class="sk-toggleable__content"><pre>&lt;sklearn.compose._column_transformer.make_column_selector object at 0x7f416453bdf0&gt;</pre></div></div></div><div class="sk-serial"><div class="sk-item"><div class="sk-estimator sk-toggleable"><input class="sk-toggleable__control sk-hidden--visually" id="sk-estimator-id-222" type="checkbox" ><label for="sk-estimator-id-222" class="sk-toggleable__label sk-toggleable__label-arrow">OneHotEncoder</label><div class="sk-toggleable__content"><pre>OneHotEncoder(handle_unknown=&#x27;ignore&#x27;)</pre></div></div></div></div></div></div></div></div><div class="sk-item"><div class="sk-estimator sk-toggleable"><input class="sk-toggleable__control sk-hidden--visually" id="sk-estimator-id-223" type="checkbox" ><label for="sk-estimator-id-223" class="sk-toggleable__label sk-toggleable__label-arrow">LogisticRegression</label><div class="sk-toggleable__content"><pre>LogisticRegression()</pre></div></div></div></div></div></div></div></div></div></div></div></div>
     </div>
     <br />
     <br />
 
-.. GENERATED FROM PYTHON SOURCE LINES 185-188
+.. GENERATED FROM PYTHON SOURCE LINES 187-190
 
 Calling 'fit' triggers the cross-validated search for the best
 hyper-parameters combination:
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 188-193
+.. GENERATED FROM PYTHON SOURCE LINES 190-195
 
 .. code-block:: default
 
@@ -546,11 +548,11 @@ hyper-parameters combination:
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 194-195
+.. GENERATED FROM PYTHON SOURCE LINES 196-197
 
 The internal cross-validation scores obtained by those parameters is:
 
-.. GENERATED FROM PYTHON SOURCE LINES 195-197
+.. GENERATED FROM PYTHON SOURCE LINES 197-199
 
 .. code-block:: default
 
@@ -571,11 +573,11 @@ The internal cross-validation scores obtained by those parameters is:
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 198-199
+.. GENERATED FROM PYTHON SOURCE LINES 200-201
 
 We can also introspect the top grid search results as a pandas dataframe:
 
-.. GENERATED FROM PYTHON SOURCE LINES 199-212
+.. GENERATED FROM PYTHON SOURCE LINES 201-214
 
 .. code-block:: default
 
@@ -667,14 +669,14 @@ We can also introspect the top grid search results as a pandas dataframe:
     <br />
     <br />
 
-.. GENERATED FROM PYTHON SOURCE LINES 213-217
+.. GENERATED FROM PYTHON SOURCE LINES 215-219
 
 The best hyper-parameters have be used to re-fit a final model on the full
 training set. We can evaluate that final model on held out test data that was
 not used for hyperparameter tuning.
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 217-223
+.. GENERATED FROM PYTHON SOURCE LINES 219-225
 
 .. code-block:: default
 
@@ -702,7 +704,7 @@ not used for hyperparameter tuning.
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** ( 0 minutes  1.251 seconds)
+   **Total running time of the script:** ( 0 minutes  1.363 seconds)
 
 
 .. _sphx_glr_download_auto_examples_compose_plot_column_transformer_mixed_types.py:
