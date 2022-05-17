@@ -218,6 +218,7 @@
 <li><a class="reference internal" href="#detection-error-tradeoff-det">3.3.2.16. Detection error tradeoff (DET)</a></li>
 <li><a class="reference internal" href="#zero-one-loss">3.3.2.17. Zero one loss</a></li>
 <li><a class="reference internal" href="#brier-score-loss">3.3.2.18. Brier score loss</a></li>
+<li><a class="reference internal" href="#class-likelihood-ratios">3.3.2.19. Class likelihood ratios</a></li>
 </ul>
 </li>
 <li><a class="reference internal" href="#multilabel-ranking-metrics">3.3.3. Multilabel ranking metrics</a><ul>
@@ -695,7 +696,10 @@ to the overall score, through the <code class="docutils literal notranslate"><sp
 <tr class="row-even"><td><p><a class="reference internal" href="generated/sklearn.metrics.roc_curve.html#sklearn.metrics.roc_curve" title="sklearn.metrics.roc_curve"><code class="xref py py-obj docutils literal notranslate"><span class="pre">roc_curve</span></code></a>(y_true, y_score, *[, pos_label, ...])</p></td>
 <td><p>Compute Receiver operating characteristic (ROC).</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="generated/sklearn.metrics.det_curve.html#sklearn.metrics.det_curve" title="sklearn.metrics.det_curve"><code class="xref py py-obj docutils literal notranslate"><span class="pre">det_curve</span></code></a>(y_true, y_score[, pos_label, ...])</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/sklearn.metrics.class_likelihood_ratios.html#sklearn.metrics.class_likelihood_ratios" title="sklearn.metrics.class_likelihood_ratios"><code class="xref py py-obj docutils literal notranslate"><span class="pre">class_likelihood_ratios</span></code></a>(y_true, y_pred, *[, ...])</p></td>
+<td><p>Compute binary classification positive and negative likelihood ratios.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/sklearn.metrics.det_curve.html#sklearn.metrics.det_curve" title="sklearn.metrics.det_curve"><code class="xref py py-obj docutils literal notranslate"><span class="pre">det_curve</span></code></a>(y_true, y_score[, pos_label, ...])</p></td>
 <td><p>Compute error rates for different probability thresholds.</p></td>
 </tr>
 </tbody>
@@ -1273,6 +1277,7 @@ Correct absence of result</p></td>
 \[\text{recall} = \frac{tp}{tp + fn},\]</div>
 <div class="math notranslate nohighlight">
 \[F_\beta = (1 + \beta^2) \frac{\text{precision} \times \text{recall}}{\beta^2 \text{precision} + \text{recall}}.\]</div>
+<p>Sometimes recall is also called ‘’sensitivity’’.</p>
 <p>Here are some small examples in binary classification:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">sklearn</span> <span class="kn">import</span> <span class="n">metrics</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">y_pred</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span>
@@ -2094,14 +2099,106 @@ Dagstuhl Seminar Proceedings. Schloss Dagstuhl-Leibniz-Zentrum fr Informatik (20
 </dl>
 </div>
 </section>
+<section id="class-likelihood-ratios">
+<span id="id42"></span><h3><span class="section-number">3.3.2.19. </span>Class likelihood ratios<a class="headerlink" href="#class-likelihood-ratios" title="Permalink to this headline">¶</a></h3>
+<p>The <a class="reference internal" href="generated/sklearn.metrics.class_likelihood_ratios.html#sklearn.metrics.class_likelihood_ratios" title="sklearn.metrics.class_likelihood_ratios"><code class="xref py py-func docutils literal notranslate"><span class="pre">class_likelihood_ratios</span></code></a> function computes the <a class="reference external" href="https://en.wikipedia.org/wiki/Likelihood_ratios_in_diagnostic_testing">positive and negative
+likelihood ratios</a>
+<span class="math notranslate nohighlight">\(LR_\pm\)</span> for binary classes, which can be interpreted as the ratio of
+post-test to pre-test odds as explained below. As a consequence, this metric is
+invariant w.r.t. the class prevalence (the number of samples in the positive
+class divided by the total number of samples) and <strong>can be extrapolated between
+populations regardless of any possible class imbalance.</strong></p>
+<p>The <span class="math notranslate nohighlight">\(LR_\pm\)</span> metrics are therefore very useful in settings where the data
+available to learn and evaluate a classifier is a study population with nearly
+balanced classes, such as a case-control study, while the target application,
+i.e. the general population, has very low prevalence.</p>
+<p>The positive likelihood ratio <span class="math notranslate nohighlight">\(LR_+\)</span> is the probability of a classifier to
+correctly predict that a sample belongs to the positive class divided by the
+probability of predicting the positive class for a sample belonging to the
+negative class:</p>
+<div class="math notranslate nohighlight">
+\[LR_+ = \frac{\text{PR}(P+|T+)}{\text{PR}(P+|T-)}.\]</div>
+<p>The notation here refers to predicted (<span class="math notranslate nohighlight">\(P\)</span>) or true (<span class="math notranslate nohighlight">\(T\)</span>) label and
+the sign <span class="math notranslate nohighlight">\(+\)</span> and <span class="math notranslate nohighlight">\(-\)</span> refer to the positive and negative class,
+respectively, e.g. <span class="math notranslate nohighlight">\(P+\)</span> stands for “predicted positive”.</p>
+<p>Analogously, the negative likelihood ratio <span class="math notranslate nohighlight">\(LR_-\)</span> is the probability of a
+sample of the positive class being classified as belonging to the negative class
+divided by the probability of a sample of the negative class being correctly
+classified:</p>
+<div class="math notranslate nohighlight">
+\[LR_- = \frac{\text{PR}(P-|T+)}{\text{PR}(P-|T-)}.\]</div>
+<p>For classifiers above chance <span class="math notranslate nohighlight">\(LR_+\)</span> above 1 <strong>higher is better</strong>, while
+<span class="math notranslate nohighlight">\(LR_-\)</span> ranges from 0 to 1 and <strong>lower is better</strong>.
+Values of <span class="math notranslate nohighlight">\(LR_\pm\approx 1\)</span> correspond to chance level.</p>
+<p>Notice that probabilities differ from counts, for instance
+<span class="math notranslate nohighlight">\(\operatorname{PR}(P+|T+)\)</span> is not equal to the number of true positive
+counts <code class="docutils literal notranslate"><span class="pre">tp</span></code> (see <a class="reference external" href="https://en.wikipedia.org/wiki/Likelihood_ratios_in_diagnostic_testing">the wikipedia page</a> for
+the actual formulas).</p>
+<p><strong>Interpretation across varying prevalence:</strong></p>
+<p>Both class likelihood ratios are interpretable in terms of an odds ratio
+(pre-test and post-tests):</p>
+<div class="math notranslate nohighlight">
+\[\text{post-test odds} = \text{Likelihood ratio} \times \text{pre-test odds}.\]</div>
+<p>Odds are in general related to probabilities via</p>
+<div class="math notranslate nohighlight">
+\[\text{odds} = \frac{\text{probability}}{1 - \text{probability}},\]</div>
+<p>or equivalently</p>
+<div class="math notranslate nohighlight">
+\[\text{probability} = \frac{\text{odds}}{1 + \text{odds}}.\]</div>
+<p>On a given population, the pre-test probability is given by the prevalence. By
+converting odds to probabilities, the likelihood ratios can be translated into a
+probability of truly belonging to either class before and after a classifier
+prediction:</p>
+<div class="math notranslate nohighlight">
+\[\text{post-test odds} = \text{Likelihood ratio} \times
+\frac{\text{pre-test probability}}{1 - \text{pre-test probability}},\]</div>
+<div class="math notranslate nohighlight">
+\[\text{post-test probability} = \frac{\text{post-test odds}}{1 + \text{post-test odds}}.\]</div>
+<p><strong>Mathematical divergences:</strong></p>
+<p>The positive likelihood ratio is undefined when <span class="math notranslate nohighlight">\(fp = 0\)</span>, which can be
+interpreted as the classifier perfectly identifying positive cases. If <span class="math notranslate nohighlight">\(fp
+= 0\)</span> and additionally <span class="math notranslate nohighlight">\(tp = 0\)</span>, this leads to a zero/zero division. This
+happens, for instance, when using a <code class="docutils literal notranslate"><span class="pre">DummyClassifier</span></code> that always predicts the
+negative class and therefore the interpretation as a perfect classifier is lost.</p>
+<p>The negative likelihood ratio is undefined when <span class="math notranslate nohighlight">\(tn = 0\)</span>. Such divergence
+is invalid, as <span class="math notranslate nohighlight">\(LR_- &gt; 1\)</span> would indicate an increase in the odds of a
+sample belonging to the positive class after being classified as negative, as if
+the act of classifying caused the positive condition. This includes the case of
+a <code class="docutils literal notranslate"><span class="pre">DummyClassifier</span></code> that always predicts the positive class (i.e. when
+<span class="math notranslate nohighlight">\(tn=fn=0\)</span>).</p>
+<p>Both class likelihood ratios are undefined when <span class="math notranslate nohighlight">\(tp=fn=0\)</span>, which means
+that no samples of the positive class were present in the testing set. This can
+also happen when cross-validating highly imbalanced data.</p>
+<p>In all the previous cases the <a class="reference internal" href="generated/sklearn.metrics.class_likelihood_ratios.html#sklearn.metrics.class_likelihood_ratios" title="sklearn.metrics.class_likelihood_ratios"><code class="xref py py-func docutils literal notranslate"><span class="pre">class_likelihood_ratios</span></code></a> function raises by
+default an appropriate warning message and returns <code class="docutils literal notranslate"><span class="pre">nan</span></code> to avoid pollution when
+averaging over cross-validation folds.</p>
+<p>For a worked-out demonstration of the <a class="reference internal" href="generated/sklearn.metrics.class_likelihood_ratios.html#sklearn.metrics.class_likelihood_ratios" title="sklearn.metrics.class_likelihood_ratios"><code class="xref py py-func docutils literal notranslate"><span class="pre">class_likelihood_ratios</span></code></a> function,
+see the example below.</p>
+<div class="topic">
+<p class="topic-title">Examples:</p>
+<ul class="simple">
+<li><p><a class="reference internal" href="../auto_examples/model_selection/plot_likelihood_ratios.html#sphx-glr-auto-examples-model-selection-plot-likelihood-ratios-py"><span class="std std-ref">Class Likelihood Ratios to measure classification performance</span></a></p></li>
+</ul>
+</div>
+<div class="topic">
+<p class="topic-title">References:</p>
+<ul class="simple">
+<li><p><a class="reference external" href="https://en.wikipedia.org/wiki/Likelihood_ratios_in_diagnostic_testing">Wikipedia entry for Likelihood ratios in diagnostic testing</a></p></li>
+<li><p>Brenner, H., &amp; Gefeller, O. (1997).
+Variation of sensitivity, specificity, likelihood ratios and predictive
+values with disease prevalence.
+Statistics in medicine, 16(9), 981-991.</p></li>
+</ul>
+</div>
+</section>
 </section>
 <section id="multilabel-ranking-metrics">
-<span id="id42"></span><h2><span class="section-number">3.3.3. </span>Multilabel ranking metrics<a class="headerlink" href="#multilabel-ranking-metrics" title="Permalink to this headline">¶</a></h2>
+<span id="id43"></span><h2><span class="section-number">3.3.3. </span>Multilabel ranking metrics<a class="headerlink" href="#multilabel-ranking-metrics" title="Permalink to this headline">¶</a></h2>
 <p>In multilabel learning, each sample can have any number of ground truth labels
 associated with it. The goal is to give high scores and better rank to
 the ground truth labels.</p>
 <section id="coverage-error">
-<span id="id43"></span><h3><span class="section-number">3.3.3.1. </span>Coverage error<a class="headerlink" href="#coverage-error" title="Permalink to this headline">¶</a></h3>
+<span id="id44"></span><h3><span class="section-number">3.3.3.1. </span>Coverage error<a class="headerlink" href="#coverage-error" title="Permalink to this headline">¶</a></h3>
 <p>The <a class="reference internal" href="generated/sklearn.metrics.coverage_error.html#sklearn.metrics.coverage_error" title="sklearn.metrics.coverage_error"><code class="xref py py-func docutils literal notranslate"><span class="pre">coverage_error</span></code></a> function computes the average number of labels that
 have to be included in the final prediction such that all true labels
 are predicted. This is useful if you want to know how many top-scored-labels
@@ -2135,7 +2232,7 @@ maximal rank that would have been assigned to all tied values.</p>
 </div>
 </section>
 <section id="label-ranking-average-precision">
-<span id="id44"></span><h3><span class="section-number">3.3.3.2. </span>Label ranking average precision<a class="headerlink" href="#label-ranking-average-precision" title="Permalink to this headline">¶</a></h3>
+<span id="id45"></span><h3><span class="section-number">3.3.3.2. </span>Label ranking average precision<a class="headerlink" href="#label-ranking-average-precision" title="Permalink to this headline">¶</a></h3>
 <p>The <a class="reference internal" href="generated/sklearn.metrics.label_ranking_average_precision_score.html#sklearn.metrics.label_ranking_average_precision_score" title="sklearn.metrics.label_ranking_average_precision_score"><code class="xref py py-func docutils literal notranslate"><span class="pre">label_ranking_average_precision_score</span></code></a> function
 implements label ranking average precision (LRAP). This metric is linked to
 the <a class="reference internal" href="generated/sklearn.metrics.average_precision_score.html#sklearn.metrics.average_precision_score" title="sklearn.metrics.average_precision_score"><code class="xref py py-func docutils literal notranslate"><span class="pre">average_precision_score</span></code></a> function, but is based on the notion of
@@ -2265,7 +2362,7 @@ Berlin, Heidelberg.</p></li>
 </section>
 </section>
 <section id="regression-metrics">
-<span id="id45"></span><h2><span class="section-number">3.3.4. </span>Regression metrics<a class="headerlink" href="#regression-metrics" title="Permalink to this headline">¶</a></h2>
+<span id="id46"></span><h2><span class="section-number">3.3.4. </span>Regression metrics<a class="headerlink" href="#regression-metrics" title="Permalink to this headline">¶</a></h2>
 <p>The <a class="reference internal" href="classes.html#module-sklearn.metrics" title="sklearn.metrics"><code class="xref py py-mod docutils literal notranslate"><span class="pre">sklearn.metrics</span></code></a> module implements several loss, score, and utility
 functions to measure regression performance. Some of those have been enhanced
 to handle the multioutput case: <a class="reference internal" href="generated/sklearn.metrics.mean_squared_error.html#sklearn.metrics.mean_squared_error" title="sklearn.metrics.mean_squared_error"><code class="xref py py-func docutils literal notranslate"><span class="pre">mean_squared_error</span></code></a>,
@@ -2362,7 +2459,7 @@ evaluate Lasso and Elastic Net on sparse signals.</p></li>
 </div>
 </section>
 <section id="mean-absolute-error">
-<span id="id46"></span><h3><span class="section-number">3.3.4.2. </span>Mean absolute error<a class="headerlink" href="#mean-absolute-error" title="Permalink to this headline">¶</a></h3>
+<span id="id47"></span><h3><span class="section-number">3.3.4.2. </span>Mean absolute error<a class="headerlink" href="#mean-absolute-error" title="Permalink to this headline">¶</a></h3>
 <p>The <a class="reference internal" href="generated/sklearn.metrics.mean_absolute_error.html#sklearn.metrics.mean_absolute_error" title="sklearn.metrics.mean_absolute_error"><code class="xref py py-func docutils literal notranslate"><span class="pre">mean_absolute_error</span></code></a> function computes <a class="reference external" href="https://en.wikipedia.org/wiki/Mean_absolute_error">mean absolute
 error</a>, a risk
 metric corresponding to the expected value of the absolute error loss or
@@ -2390,7 +2487,7 @@ and <span class="math notranslate nohighlight">\(y_i\)</span> is the correspondi
 </div>
 </section>
 <section id="mean-squared-error">
-<span id="id48"></span><h3><span class="section-number">3.3.4.3. </span>Mean squared error<a class="headerlink" href="#mean-squared-error" title="Permalink to this headline">¶</a></h3>
+<span id="id49"></span><h3><span class="section-number">3.3.4.3. </span>Mean squared error<a class="headerlink" href="#mean-squared-error" title="Permalink to this headline">¶</a></h3>
 <p>The <a class="reference internal" href="generated/sklearn.metrics.mean_squared_error.html#sklearn.metrics.mean_squared_error" title="sklearn.metrics.mean_squared_error"><code class="xref py py-func docutils literal notranslate"><span class="pre">mean_squared_error</span></code></a> function computes <a class="reference external" href="https://en.wikipedia.org/wiki/Mean_squared_error">mean square
 error</a>, a risk
 metric corresponding to the expected value of the squared (quadratic) error or
@@ -2453,7 +2550,7 @@ function:</p>
 </div>
 </section>
 <section id="mean-absolute-percentage-error">
-<span id="id49"></span><h3><span class="section-number">3.3.4.5. </span>Mean absolute percentage error<a class="headerlink" href="#mean-absolute-percentage-error" title="Permalink to this headline">¶</a></h3>
+<span id="id50"></span><h3><span class="section-number">3.3.4.5. </span>Mean absolute percentage error<a class="headerlink" href="#mean-absolute-percentage-error" title="Permalink to this headline">¶</a></h3>
 <p>The <a class="reference internal" href="generated/sklearn.metrics.mean_absolute_percentage_error.html#sklearn.metrics.mean_absolute_percentage_error" title="sklearn.metrics.mean_absolute_percentage_error"><code class="xref py py-func docutils literal notranslate"><span class="pre">mean_absolute_percentage_error</span></code></a> (MAPE), also known as mean absolute
 percentage deviation (MAPD), is an evaluation metric for regression problems.
 The idea of this metric is to be sensitive to relative errors. It is for example
@@ -2481,7 +2578,7 @@ magnitude value. But that problem is resolved in case of MAPE because it calcula
 relative percentage error with respect to actual output.</p>
 </section>
 <section id="median-absolute-error">
-<span id="id50"></span><h3><span class="section-number">3.3.4.6. </span>Median absolute error<a class="headerlink" href="#median-absolute-error" title="Permalink to this headline">¶</a></h3>
+<span id="id51"></span><h3><span class="section-number">3.3.4.6. </span>Median absolute error<a class="headerlink" href="#median-absolute-error" title="Permalink to this headline">¶</a></h3>
 <p>The <a class="reference internal" href="generated/sklearn.metrics.median_absolute_error.html#sklearn.metrics.median_absolute_error" title="sklearn.metrics.median_absolute_error"><code class="xref py py-func docutils literal notranslate"><span class="pre">median_absolute_error</span></code></a> is particularly interesting because it is
 robust to outliers. The loss is calculated by taking the median of all absolute
 differences between the target and the prediction.</p>
@@ -2502,7 +2599,7 @@ function:</p>
 </div>
 </section>
 <section id="max-error">
-<span id="id51"></span><h3><span class="section-number">3.3.4.7. </span>Max error<a class="headerlink" href="#max-error" title="Permalink to this headline">¶</a></h3>
+<span id="id52"></span><h3><span class="section-number">3.3.4.7. </span>Max error<a class="headerlink" href="#max-error" title="Permalink to this headline">¶</a></h3>
 <p>The <a class="reference internal" href="generated/sklearn.metrics.max_error.html#sklearn.metrics.max_error" title="sklearn.metrics.max_error"><code class="xref py py-func docutils literal notranslate"><span class="pre">max_error</span></code></a> function computes the maximum <a class="reference external" href="https://en.wikipedia.org/wiki/Errors_and_residuals">residual error</a> , a metric
 that captures the worst case error between the predicted value and
 the true value. In a perfectly fitted single output regression
@@ -2525,7 +2622,7 @@ defined as</p>
 <p>The <a class="reference internal" href="generated/sklearn.metrics.max_error.html#sklearn.metrics.max_error" title="sklearn.metrics.max_error"><code class="xref py py-func docutils literal notranslate"><span class="pre">max_error</span></code></a> does not support multioutput.</p>
 </section>
 <section id="explained-variance-score">
-<span id="id52"></span><h3><span class="section-number">3.3.4.8. </span>Explained variance score<a class="headerlink" href="#explained-variance-score" title="Permalink to this headline">¶</a></h3>
+<span id="id53"></span><h3><span class="section-number">3.3.4.8. </span>Explained variance score<a class="headerlink" href="#explained-variance-score" title="Permalink to this headline">¶</a></h3>
 <p>The <a class="reference internal" href="generated/sklearn.metrics.explained_variance_score.html#sklearn.metrics.explained_variance_score" title="sklearn.metrics.explained_variance_score"><code class="xref py py-func docutils literal notranslate"><span class="pre">explained_variance_score</span></code></a> computes the <a class="reference external" href="https://en.wikipedia.org/wiki/Explained_variation">explained variance
 regression score</a>.</p>
 <p>If <span class="math notranslate nohighlight">\(\hat{y}\)</span> is the estimated target output, <span class="math notranslate nohighlight">\(y\)</span> the corresponding
@@ -2641,7 +2738,7 @@ prediction difference of the second point,:</p>
 sensitive to relative errors.</p>
 </section>
 <section id="pinball-loss">
-<span id="id53"></span><h3><span class="section-number">3.3.4.10. </span>Pinball loss<a class="headerlink" href="#pinball-loss" title="Permalink to this headline">¶</a></h3>
+<span id="id54"></span><h3><span class="section-number">3.3.4.10. </span>Pinball loss<a class="headerlink" href="#pinball-loss" title="Permalink to this headline">¶</a></h3>
 <p>The <a class="reference internal" href="generated/sklearn.metrics.mean_pinball_loss.html#sklearn.metrics.mean_pinball_loss" title="sklearn.metrics.mean_pinball_loss"><code class="xref py py-func docutils literal notranslate"><span class="pre">mean_pinball_loss</span></code></a> function is used to evaluate the predictive
 performance of quantile regression models. The <a class="reference external" href="https://en.wikipedia.org/wiki/Quantile_regression#Computation">pinball loss</a> is equivalent
 to <a class="reference internal" href="generated/sklearn.metrics.mean_absolute_error.html#sklearn.metrics.mean_absolute_error" title="sklearn.metrics.mean_absolute_error"><code class="xref py py-func docutils literal notranslate"><span class="pre">mean_absolute_error</span></code></a> when the quantile parameter <code class="docutils literal notranslate"><span class="pre">alpha</span></code> is set to
@@ -2700,7 +2797,7 @@ noise and outliers.</p></li>
 </div>
 </section>
 <section id="d2-score">
-<span id="id55"></span><h3><span class="section-number">3.3.4.11. </span>D² score<a class="headerlink" href="#d2-score" title="Permalink to this headline">¶</a></h3>
+<span id="id56"></span><h3><span class="section-number">3.3.4.11. </span>D² score<a class="headerlink" href="#d2-score" title="Permalink to this headline">¶</a></h3>
 <p>The D² score computes the fraction of deviance explained.
 It is a generalization of R², where the squared error is generalized and replaced
 by a deviance of choice <span class="math notranslate nohighlight">\(\text{dev}(y, \hat{y})\)</span>
@@ -2772,14 +2869,14 @@ the <a class="reference internal" href="#mean-absolute-error"><span class="std s
 </section>
 </section>
 <section id="clustering-metrics">
-<span id="id56"></span><h2><span class="section-number">3.3.5. </span>Clustering metrics<a class="headerlink" href="#clustering-metrics" title="Permalink to this headline">¶</a></h2>
+<span id="id57"></span><h2><span class="section-number">3.3.5. </span>Clustering metrics<a class="headerlink" href="#clustering-metrics" title="Permalink to this headline">¶</a></h2>
 <p>The <a class="reference internal" href="classes.html#module-sklearn.metrics" title="sklearn.metrics"><code class="xref py py-mod docutils literal notranslate"><span class="pre">sklearn.metrics</span></code></a> module implements several loss, score, and utility
 functions. For more information see the <a class="reference internal" href="clustering.html#clustering-evaluation"><span class="std std-ref">Clustering performance evaluation</span></a>
 section for instance clustering, and <a class="reference internal" href="biclustering.html#biclustering-evaluation"><span class="std std-ref">Biclustering evaluation</span></a> for
 biclustering.</p>
 </section>
 <section id="dummy-estimators">
-<span id="id57"></span><h2><span class="section-number">3.3.6. </span>Dummy estimators<a class="headerlink" href="#dummy-estimators" title="Permalink to this headline">¶</a></h2>
+<span id="id58"></span><h2><span class="section-number">3.3.6. </span>Dummy estimators<a class="headerlink" href="#dummy-estimators" title="Permalink to this headline">¶</a></h2>
 <p>When doing supervised learning, a simple sanity check consists of comparing
 one’s estimator against simple rules of thumb. <a class="reference internal" href="generated/sklearn.dummy.DummyClassifier.html#sklearn.dummy.DummyClassifier" title="sklearn.dummy.DummyClassifier"><code class="xref py py-class docutils literal notranslate"><span class="pre">DummyClassifier</span></code></a>
 implements several such simple strategies for classification:</p>
