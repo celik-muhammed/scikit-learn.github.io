@@ -15,7 +15,7 @@
   
 <meta property="og:site_name" content="scikit-learn" />
   
-<meta property="og:description" content="May 2022 Changelog: sklearn.datasets: Avoid timeouts in datasets.fetch_openml by not passing a timeout argument,#23358 by Loïc Estève.. sklearn.decomposition: Avoid spurious warning in decompositio..." />
+<meta property="og:description" content="May 2022 Changelog: The error message is improved when importing model_selection.HalvingGridSearchCV, model_selection.HalvingRandomSearchCV, or impute.IterativeImputer without importing the experim..." />
   
 <meta property="og:image" content="https://scikit-learn.org/stable/_static/scikit-learn-logo-small.png" />
   
@@ -249,6 +249,17 @@
 <p><strong>May 2022</strong></p>
 <section id="changelog">
 <h2>Changelog<a class="headerlink" href="#changelog" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li><p><span class="raw-html"><span class="badge badge-info">Enhancement</span></span>  The error message is improved when importing
+<a class="reference internal" href="../modules/generated/sklearn.model_selection.HalvingGridSearchCV.html#sklearn.model_selection.HalvingGridSearchCV" title="sklearn.model_selection.HalvingGridSearchCV"><code class="xref py py-class docutils literal notranslate"><span class="pre">model_selection.HalvingGridSearchCV</span></code></a>,
+<a class="reference internal" href="../modules/generated/sklearn.model_selection.HalvingRandomSearchCV.html#sklearn.model_selection.HalvingRandomSearchCV" title="sklearn.model_selection.HalvingRandomSearchCV"><code class="xref py py-class docutils literal notranslate"><span class="pre">model_selection.HalvingRandomSearchCV</span></code></a>, or
+<a class="reference internal" href="../modules/generated/sklearn.impute.IterativeImputer.html#sklearn.impute.IterativeImputer" title="sklearn.impute.IterativeImputer"><code class="xref py py-class docutils literal notranslate"><span class="pre">impute.IterativeImputer</span></code></a> without importing the experimental flag.
+<a class="reference external" href="https://github.com/scikit-learn/scikit-learn/pull/23194">#23194</a> by <a class="reference external" href="https://github.com/thomasjpfan">Thomas Fan</a>.</p></li>
+<li><p><span class="raw-html"><span class="badge badge-info">Enhancement</span></span>  Added an extension in doc/conf.py to automatically generate
+the list of estimators that handle NaN values.
+<a class="reference external" href="https://github.com/scikit-learn/scikit-learn/pull/23198">#23198</a> by <a class="reference external" href="https://github.com/lisekleiber">Lise Kleiber</a>, <a class="reference external" href="https://github.com/MaxwellLZH">Zhehao Liu</a>
+and <a class="reference external" href="https://github.com/cmarmo">Chiara Marmo</a>.</p></li>
+</ul>
 <section id="sklearn-datasets">
 <h3><a class="reference internal" href="../modules/classes.html#module-sklearn.datasets" title="sklearn.datasets"><code class="xref py py-mod docutils literal notranslate"><span class="pre">sklearn.datasets</span></code></a><a class="headerlink" href="#sklearn-datasets" title="Permalink to this headline">¶</a></h3>
 <ul class="simple">
@@ -459,15 +470,6 @@ favor of the new name “log_loss”, which is now the default.
 notebooks. It can be deactivated by setting <code class="docutils literal notranslate"><span class="pre">display='text'</span></code> in
 <a class="reference internal" href="../modules/generated/sklearn.set_config.html#sklearn.set_config" title="sklearn.set_config"><code class="xref py py-func docutils literal notranslate"><span class="pre">sklearn.set_config</span></code></a>.
 <a class="reference external" href="https://github.com/scikit-learn/scikit-learn/pull/22856">#22856</a> by <a class="reference external" href="https://github.com/jeremiedbb">Jérémie du Boisberranger</a>.</p></li>
-<li><p><span class="raw-html"><span class="badge badge-info">Enhancement</span></span>  The error message is improved when importing
-<a class="reference internal" href="../modules/generated/sklearn.model_selection.HalvingGridSearchCV.html#sklearn.model_selection.HalvingGridSearchCV" title="sklearn.model_selection.HalvingGridSearchCV"><code class="xref py py-class docutils literal notranslate"><span class="pre">model_selection.HalvingGridSearchCV</span></code></a>,
-<a class="reference internal" href="../modules/generated/sklearn.model_selection.HalvingRandomSearchCV.html#sklearn.model_selection.HalvingRandomSearchCV" title="sklearn.model_selection.HalvingRandomSearchCV"><code class="xref py py-class docutils literal notranslate"><span class="pre">model_selection.HalvingRandomSearchCV</span></code></a>, or
-<a class="reference internal" href="../modules/generated/sklearn.impute.IterativeImputer.html#sklearn.impute.IterativeImputer" title="sklearn.impute.IterativeImputer"><code class="xref py py-class docutils literal notranslate"><span class="pre">impute.IterativeImputer</span></code></a> without importing the experimental flag.
-<a class="reference external" href="https://github.com/scikit-learn/scikit-learn/pull/23194">#23194</a> by <a class="reference external" href="https://github.com/thomasjpfan">Thomas Fan</a>.</p></li>
-<li><p><span class="raw-html"><span class="badge badge-info">Enhancement</span></span>  Added an extension in doc/conf.py to automatically generate
-the list of estimators that handle NaN values.
-<a class="reference external" href="https://github.com/scikit-learn/scikit-learn/pull/23198">#23198</a> by <a class="reference external" href="lisekleiber">Lise Kleiber</a>, <a class="reference external" href="https://github.com/MaxwellLZH">Zhehao Liu</a>
-and <a class="reference external" href="https://github.com/cmarmo">Chiara Marmo</a>.</p></li>
 </ul>
 <section id="sklearn-calibration">
 <h3><a class="reference internal" href="../modules/classes.html#module-sklearn.calibration" title="sklearn.calibration"><code class="xref py py-mod docutils literal notranslate"><span class="pre">sklearn.calibration</span></code></a><a class="headerlink" href="#sklearn-calibration" title="Permalink to this headline">¶</a></h3>
@@ -1332,55 +1334,59 @@ the project since version 1.0, including:</p>
 <p>2357juan, Abhishek Gupta, adamgonzo, Adam Li, adijohar, Aditya Kumawat, Aditya
 Raghuwanshi, Aditya Singh, Adrian Trujillo Duron, Adrin Jalali, ahmadjubair33,
 AJ Druck, aj-white, Alan Peixinho, Alberto Mario Ceballos-Arroyo, Alek
-Lefebvre, Alex, Alexandre Gramfort, alexanmv, almeidayoel, Amanda Dsouza, Aman
-Sharma, Amar pratap singh, Amit, amrcode, András Simon, Andreas Mueller, Andrew
-Knyazev, Andriy, Angus L’Herrou, Ankit Sharma, Anne Ducout, Arisa, Arth,
-arthurmello, Arturo Amor, ArturoAmor, Atharva Patil, aufarkari, Aurélien Geron,
-avm19, Ayan Bag, baam, Behrouz B, Ben3940, Benjamin Bossan, Bharat Raghunathan,
-Bijil Subhash, bmreiniger, Brandon Truth, Brenden Kadota, Brian Sun, cdrig,
-Chalmer Lowe, Chiara Marmo, Chitteti Srinath Reddy, Chloe-Agathe Azencott,
-Christian Lorentzen, Christian Ritter, christopherlim98, Christoph T.
-Weidemann, Christos Aridas, Claudio Salvatore Arcidiacono, combscCode, Daniela
-Fernandes, Dave Eargle, David Poznik, Dea María Léon, Dennis Osei, DessyVV,
-Dev514, Dimitri Papadopoulos Orfanos, Diwakar Gupta, Dr. Felix M. Riese, drskd,
-Emiko Sano, Emmanouil Gionanidis, EricEllwanger, Erich Schubert, Eric Larson,
-Eric Ndirangu, Estefania Barreto-Ojeda, eyast, Fatima GASMI, Federico Luna,
-Felix Glushchenkov, fkaren27, Fortune Uwha, FPGAwesome, francoisgoupil, Frans
-Larsson, Gabor Berei, Gabor Kertesz, Gabriel Stefanini Vicente, Gabriel S
-Vicente, Gael Varoquaux, GAURAV CHOUDHARY, Gauthier I, genvalen,
-Geoffrey-Paris, Giancarlo Pablo, glennfrutiz, gpapadok, Guillaume Lemaitre,
-Guillermo Tomás Fernández Martín, Gustavo Oliveira, Haidar Almubarak, Hannah
-Bohle, Haoyin Xu, Haya, Helder Geovane Gomes de Lima, henrymooresc, Hideaki
-Imamura, Himanshu Kumar, Hind-M, hmasdev, hvassard, i-aki-y, iasoon, Inclusive
-Coding Bot, Ingela, iofall, Ishan Kumar, Jack Liu, Jake Cowton, jalexand3r, J
-Alexander, Jauhar, Jaya Surya Kommireddy, Jay Stanley, Jeff Hale, je-kr,
-JElfner, Jenny Vo, Jérémie du Boisberranger, Jihane, Jirka Borovec, Joel
-Nothman, Jon Haitz Legarreta Gorroño, Jordan Silke, Jorge Ciprián, Jorge
-Loayza, Joseph Chazalon, Joseph Schwartz-Messing, JSchuerz, Juan Carlos Alfaro
-Jiménez, Juan Martin Loyola, Julien Jerphanion, katotten, Kaushik Roy
-Chowdhury, Ken4git, kernc, Kevin Doucet, KimAYoung, Koushik Joshi, Kranthi
-Sedamaki, krumetoft, lesnee, Long Bao, Logan Thomas, Loic Esteve, Louis Wagner,
+Lefebvre, Alex, Alexandr, Alexandre Gramfort, alexanmv, almeidayoel, Amanda
+Dsouza, Aman Sharma, Amar pratap singh, Amit, amrcode, András Simon, Andreas
+Grivas, Andreas Mueller, Andrew Knyazev, Andriy, Angus L’Herrou, Ankit Sharma,
+Anne Ducout, Arisa, Arth, arthurmello, Arturo Amor, ArturoAmor, Atharva Patil,
+aufarkari, Aurélien Geron, avm19, Ayan Bag, baam, Bardiya Ak, Behrouz B,
+Ben3940, Benjamin Bossan, Bharat Raghunathan, Bijil Subhash, bmreiniger,
+Brandon Truth, Brenden Kadota, Brian Sun, cdrig, Chalmer Lowe, Chiara Marmo,
+Chitteti Srinath Reddy, Chloe-Agathe Azencott, Christian Lorentzen, Christian
+Ritter, christopherlim98, Christoph T. Weidemann, Christos Aridas, Claudio
+Salvatore Arcidiacono, combscCode, Daniela Fernandes, darioka, Darren Nguyen,
+Dave Eargle, David Gilbertson, David Poznik, Dea María Léon, Dennis Osei,
+DessyVV, Dev514, Dimitri Papadopoulos Orfanos, Diwakar Gupta, Dr. Felix M.
+Riese, drskd, Emiko Sano, Emmanouil Gionanidis, EricEllwanger, Erich Schubert,
+Eric Larson, Eric Ndirangu, ErmolaevPA, Estefania Barreto-Ojeda, eyast, Fatima
+GASMI, Federico Luna, Felix Glushchenkov, fkaren27, Fortune Uwha, FPGAwesome,
+francoisgoupil, Frans Larsson, ftorres16, Gabor Berei, Gabor Kertesz, Gabriel
+Stefanini Vicente, Gabriel S Vicente, Gael Varoquaux, GAURAV CHOUDHARY,
+Gauthier I, genvalen, Geoffrey-Paris, Giancarlo Pablo, glennfrutiz, gpapadok,
+Guillaume Lemaitre, Guillermo Tomás Fernández Martín, Gustavo Oliveira, Haidar
+Almubarak, Hannah Bohle, Hansin Ahuja, Haoyin Xu, Haya, Helder Geovane Gomes de
+Lima, henrymooresc, Hideaki Imamura, Himanshu Kumar, Hind-M, hmasdev, hvassard,
+i-aki-y, iasoon, Inclusive Coding Bot, Ingela, iofall, Ishan Kumar, Jack Liu,
+Jake Cowton, jalexand3r, J Alexander, Jauhar, Jaya Surya Kommireddy, Jay
+Stanley, Jeff Hale, je-kr, JElfner, Jenny Vo, Jérémie du Boisberranger, Jihane,
+Jirka Borovec, Joel Nothman, Jon Haitz Legarreta Gorroño, Jordan Silke, Jorge
+Ciprián, Jorge Loayza, Joseph Chazalon, Joseph Schwartz-Messing, Jovan
+Stojanovic, JSchuerz, Juan Carlos Alfaro Jiménez, Juan Martin Loyola, Julien
+Jerphanion, katotten, Kaushik Roy Chowdhury, Ken4git, Kenneth Prabakaran,
+kernc, Kevin Doucet, KimAYoung, Koushik Joshi, Kranthi Sedamaki, krishna kumar,
+krumetoft, lesnee, Lisa Casino, Logan Thomas, Loic Esteve, Louis Wagner,
 LucieClair, Lucy Liu, Luiz Eduardo Amaral, Magali, MaggieChege, Mai,
-mandjevant, Mandy Gu, Manimaran, MarcoM, Maren Westermann, Maria Boerner,
-MarieS-WiMLDS, Martel Corentin, mathurinm, Matías, matjansen, Matteo Francia,
-Maxwell, Max Baak, Meekail Zain, Megabyte, Mehrdad Moradizadeh, melemo2,
-Michael I Chen, michalkrawczyk, Micky774, milana2, millawell, Ming-Yang Ho,
-Mitzi, miwojc, Mizuki, mlant, Mohamed Haseeb, Mohit Sharma, Moonkyung94,
-mpoemsl, MrinalTyagi, Mr. Leu, msabatier, murata-yu, N, Nadirhan Şahin,
-NartayXD, nastegiano, nathansquan, nat-salt, Nicki Skafte Detlefsen, Nicolas
-Hug, Niket Jain, Nikhil Suresh, Nikita Titov, Nikolay Kondratyev, Ohad Michel,
-Oleksandr Husak, Olivier Grisel, partev, Patrick Ferreira, Paul, pelennor,
-PierreAttard, Pieter Gijsbers, Pinky, poloso, Pramod Anantharam, puhuk, Purna
-Chandra Mansingh, QuadV, Rahil Parikh, Randall Boyes, randomgeek78, Raz Hoshia,
-Reshama Shaikh, Ricardo Ferreira, Richard Taylor, Rileran, Rishabh, Robin
-Thibaut, Roman Feldbauer, Roman Yurchak, Ross Barnowski, rsnegrin, Sachin
-Yadav, sakinaOuisrani, Sam Adam Day, Sanjay Marreddi, Sebastian Pujalte, SEELE,
+mandjevant, Mandy Gu, Manimaran, MarcoM, Marco Wurps, Maren Westermann, Maria
+Boerner, MarieS-WiMLDS, Martel Corentin, martin-kokos, mathurinm, Matías,
+matjansen, Matteo Francia, Maxwell, Meekail Zain, Megabyte, Mehrdad
+Moradizadeh, melemo2, Michael I Chen, michalkrawczyk, Micky774, milana2,
+millawell, Ming-Yang Ho, Mitzi, miwojc, Mizuki, mlant, Mohamed Haseeb, Mohit
+Sharma, Moonkyung94, mpoemsl, MrinalTyagi, Mr. Leu, msabatier, murata-yu, N,
+Nadirhan Şahin, Naipawat Poolsawat, NartayXD, nastegiano, nathansquan,
+nat-salt, Nicki Skafte Detlefsen, Nicolas Hug, Niket Jain, Nikhil Suresh,
+Nikita Titov, Nikolay Kondratyev, Ohad Michel, Oleksandr Husak, Olivier Grisel,
+partev, Patrick Ferreira, Paul, pelennor, PierreAttard, Piet Brömmel, Pieter
+Gijsbers, Pinky, poloso, Pramod Anantharam, puhuk, Purna Chandra Mansingh,
+QuadV, Rahil Parikh, Randall Boyes, randomgeek78, Raz Hoshia, Reshama Shaikh,
+Ricardo Ferreira, Richard Taylor, Rileran, Rishabh, Robin Thibaut, Rocco Meli,
+Roman Feldbauer, Roman Yurchak, Ross Barnowski, rsnegrin, Sachin Yadav,
+sakinaOuisrani, Sam Adam Day, Sanjay Marreddi, Sebastian Pujalte, SEELE, SELEE,
 Seyedsaman (Sam) Emami, ShanDeng123, Shao Yang Hong, sharmadharmpal,
-shaymerNaturalint, Shubhraneel Pal, siavrez, slishak, Smile, spikebh, sply88,
-Stéphane Collot, Sultan Orazbayev, Sumit Saha, Sven Eschlbeck, Swapnil Jha,
-Sylvain Marié, Takeshi Oura, Tamires Santana, Tenavi, teunpe, Theis Ferré
-Hjortkjær, Thiruvenkadam, Thomas J. Fan, t-jakubek, Tom Dupré la Tour, TONY
-GEORGE, Tyler Martin, Tyler Reddy, Udit Gupta, Ugo Marchand, Varun Agrawal,
+shaymerNaturalint, Shuangchi He, Shubhraneel Pal, siavrez, slishak, Smile,
+spikebh, sply88, Srinath Kailasa, Stéphane Collot, Sultan Orazbayev, Sumit
+Saha, Sven Eschlbeck, Sven Stehle, Swapnil Jha, Sylvain Marié, Takeshi Oura,
+Tamires Santana, Tenavi, teunpe, Theis Ferré Hjortkjær, Thiruvenkadam, Thomas
+J. Fan, t-jakubek, toastedyeast, Tom Dupré la Tour, Tom McTiernan, TONY GEORGE,
+Tyler Martin, Tyler Reddy, Udit Gupta, Ugo Marchand, Varun Agrawal,
 Venkatachalam N, Vera Komeyer, victoirelouis, Vikas Vishwakarma, Vikrant
 khedkar, Vladimir Chernyy, Vladimir Kim, WeijiaDu, Xiao Yuan, Yar Khine Phyo,
 Ying Xiong, yiyangq, Yosshi999, Yuki Koyama, Zach Deane-Mayer, Zeel B Patel,
