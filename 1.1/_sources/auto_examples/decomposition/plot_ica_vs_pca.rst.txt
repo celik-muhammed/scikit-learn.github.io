@@ -104,7 +104,7 @@ Generate sample data
 Plot results
 ------------
 
-.. GENERATED FROM PYTHON SOURCE LINES 63-119
+.. GENERATED FROM PYTHON SOURCE LINES 63-117
 
 .. code-block:: default
 
@@ -116,12 +116,9 @@ Plot results
             S[:, 0], S[:, 1], s=2, marker="o", zorder=10, color="steelblue", alpha=0.5
         )
         if axis_list is not None:
-            colors = ["orange", "red"]
-            for color, axis in zip(colors, axis_list):
+            for axis, color, label in axis_list:
                 axis /= axis.std()
                 x_axis, y_axis = axis
-                # Trick to get legend to work
-                plt.plot(0.1 * x_axis, 0.1 * y_axis, linewidth=2, color=color)
                 plt.quiver(
                     (0, 0),
                     (0, 0),
@@ -131,6 +128,7 @@ Plot results
                     width=0.01,
                     scale=6,
                     color=color,
+                    label=label,
                 )
 
         plt.hlines(0, -3, 3)
@@ -146,10 +144,10 @@ Plot results
     plot_samples(S / S.std())
     plt.title("True Independent Sources")
 
-    axis_list = [pca.components_.T, ica.mixing_]
+    axis_list = [(pca.components_.T, "orange", "PCA"), (ica.mixing_, "red", "ICA")]
     plt.subplot(2, 2, 2)
     plot_samples(X / np.std(X), axis_list=axis_list)
-    legend = plt.legend(["PCA", "ICA"], loc="upper right")
+    legend = plt.legend(loc="lower right")
     legend.set_zorder(100)
 
     plt.title("Observations")
@@ -179,7 +177,7 @@ Plot results
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** ( 0 minutes  0.255 seconds)
+   **Total running time of the script:** ( 0 minutes  0.234 seconds)
 
 
 .. _sphx_glr_download_auto_examples_decomposition_plot_ica_vs_pca.py:

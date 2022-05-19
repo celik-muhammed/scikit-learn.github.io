@@ -24,7 +24,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
   
-  <title>Approximate nearest neighbors in TSNE &mdash; scikit-learn 1.1.0 documentation</title>
+  <title>Approximate nearest neighbors in TSNE &mdash; scikit-learn 1.1.1 documentation</title>
   
   <link rel="canonical" href="http://scikit-learn.org/stable/auto_examples/neighbors/approximate_nearest_neighbors.html" />
 
@@ -173,7 +173,7 @@
         </div>
         <div class="alert alert-danger p-1 mb-2" role="alert">
           <p class="text-center mb-0">
-          <strong>scikit-learn 1.1.0</strong><br/>
+          <strong>scikit-learn 1.1.1</strong><br/>
           <a href="http://scikit-learn.org/dev/versions.html">Other versions</a>
           </p>
         </div>
@@ -200,36 +200,40 @@ to download the full example code or to run this example in your browser via Bin
 </div>
 <section class="sphx-glr-example-title" id="approximate-nearest-neighbors-in-tsne">
 <span id="sphx-glr-auto-examples-neighbors-approximate-nearest-neighbors-py"></span><h1>Approximate nearest neighbors in TSNE<a class="headerlink" href="#approximate-nearest-neighbors-in-tsne" title="Permalink to this headline">¶</a></h1>
-<p>This example presents how to chain KNeighborsTransformer and TSNE in a
-pipeline. It also shows how to wrap the packages <code class="docutils literal notranslate"><span class="pre">annoy</span></code> and <code class="docutils literal notranslate"><span class="pre">nmslib</span></code> to
-replace KNeighborsTransformer and perform approximate nearest neighbors.
-These packages can be installed with <code class="docutils literal notranslate"><span class="pre">pip</span> <span class="pre">install</span> <span class="pre">annoy</span> <span class="pre">nmslib</span></code>.</p>
+<p>This example presents how to chain KNeighborsTransformer and TSNE in a pipeline.
+It also shows how to wrap the packages <code class="docutils literal notranslate"><span class="pre">annoy</span></code> and <code class="docutils literal notranslate"><span class="pre">nmslib</span></code> to replace
+KNeighborsTransformer and perform approximate nearest neighbors. These packages
+can be installed with <code class="docutils literal notranslate"><span class="pre">pip</span> <span class="pre">install</span> <span class="pre">annoy</span> <span class="pre">nmslib</span></code>.</p>
 <p>Note: In KNeighborsTransformer we use the definition which includes each
 training point as its own neighbor in the count of <code class="docutils literal notranslate"><span class="pre">n_neighbors</span></code>, and for
-compatibility reasons, one extra neighbor is computed when
-<code class="docutils literal notranslate"><span class="pre">mode</span> <span class="pre">==</span> <span class="pre">'distance'</span></code>. Please note that we do the same in the proposed wrappers.</p>
+compatibility reasons, one extra neighbor is computed when <code class="docutils literal notranslate"><span class="pre">mode</span> <span class="pre">==</span> <span class="pre">'distance'</span></code>.
+Please note that we do the same in the proposed wrappers.</p>
 <p>Sample output:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">Benchmarking</span> <span class="n">on</span> <span class="n">MNIST_2000</span><span class="p">:</span>
 <span class="o">---------------------------</span>
-<span class="n">AnnoyTransformer</span><span class="p">:</span>                    <span class="mf">0.583</span> <span class="n">sec</span>
-<span class="n">NMSlibTransformer</span><span class="p">:</span>                   <span class="mf">0.321</span> <span class="n">sec</span>
-<a href="../../modules/generated/sklearn.neighbors.KNeighborsTransformer.html#sklearn.neighbors.KNeighborsTransformer" title="sklearn.neighbors.KNeighborsTransformer" class="sphx-glr-backref-module-sklearn-neighbors sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">KNeighborsTransformer</span></a><span class="p">:</span>               <span class="mf">1.225</span> <span class="n">sec</span>
-<a href="../../modules/generated/sklearn.manifold.TSNE.html#sklearn.manifold.TSNE" title="sklearn.manifold.TSNE" class="sphx-glr-backref-module-sklearn-manifold sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">TSNE</span></a> <span class="k">with</span> <span class="n">AnnoyTransformer</span><span class="p">:</span>          <span class="mf">4.903</span> <span class="n">sec</span>
-<a href="../../modules/generated/sklearn.manifold.TSNE.html#sklearn.manifold.TSNE" title="sklearn.manifold.TSNE" class="sphx-glr-backref-module-sklearn-manifold sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">TSNE</span></a> <span class="k">with</span> <span class="n">NMSlibTransformer</span><span class="p">:</span>         <span class="mf">5.009</span> <span class="n">sec</span>
-<a href="../../modules/generated/sklearn.manifold.TSNE.html#sklearn.manifold.TSNE" title="sklearn.manifold.TSNE" class="sphx-glr-backref-module-sklearn-manifold sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">TSNE</span></a> <span class="k">with</span> <a href="../../modules/generated/sklearn.neighbors.KNeighborsTransformer.html#sklearn.neighbors.KNeighborsTransformer" title="sklearn.neighbors.KNeighborsTransformer" class="sphx-glr-backref-module-sklearn-neighbors sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">KNeighborsTransformer</span></a><span class="p">:</span>     <span class="mf">6.210</span> <span class="n">sec</span>
-<a href="../../modules/generated/sklearn.manifold.TSNE.html#sklearn.manifold.TSNE" title="sklearn.manifold.TSNE" class="sphx-glr-backref-module-sklearn-manifold sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">TSNE</span></a> <span class="k">with</span> <span class="n">internal</span> <span class="n">NearestNeighbors</span><span class="p">:</span> <span class="mf">6.365</span> <span class="n">sec</span>
+<span class="n">AnnoyTransformer</span><span class="p">:</span>                    <span class="mf">0.305</span> <span class="n">sec</span>
+<span class="n">NMSlibTransformer</span><span class="p">:</span>                   <span class="mf">0.144</span> <span class="n">sec</span>
+<a href="../../modules/generated/sklearn.neighbors.KNeighborsTransformer.html#sklearn.neighbors.KNeighborsTransformer" title="sklearn.neighbors.KNeighborsTransformer" class="sphx-glr-backref-module-sklearn-neighbors sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">KNeighborsTransformer</span></a><span class="p">:</span>               <span class="mf">0.090</span> <span class="n">sec</span>
+<a href="../../modules/generated/sklearn.manifold.TSNE.html#sklearn.manifold.TSNE" title="sklearn.manifold.TSNE" class="sphx-glr-backref-module-sklearn-manifold sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">TSNE</span></a> <span class="k">with</span> <span class="n">AnnoyTransformer</span><span class="p">:</span>          <span class="mf">2.818</span> <span class="n">sec</span>
+<a href="../../modules/generated/sklearn.manifold.TSNE.html#sklearn.manifold.TSNE" title="sklearn.manifold.TSNE" class="sphx-glr-backref-module-sklearn-manifold sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">TSNE</span></a> <span class="k">with</span> <span class="n">NMSlibTransformer</span><span class="p">:</span>         <span class="mf">2.592</span> <span class="n">sec</span>
+<a href="../../modules/generated/sklearn.manifold.TSNE.html#sklearn.manifold.TSNE" title="sklearn.manifold.TSNE" class="sphx-glr-backref-module-sklearn-manifold sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">TSNE</span></a> <span class="k">with</span> <a href="../../modules/generated/sklearn.neighbors.KNeighborsTransformer.html#sklearn.neighbors.KNeighborsTransformer" title="sklearn.neighbors.KNeighborsTransformer" class="sphx-glr-backref-module-sklearn-neighbors sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">KNeighborsTransformer</span></a><span class="p">:</span>     <span class="mf">2.338</span> <span class="n">sec</span>
+<a href="../../modules/generated/sklearn.manifold.TSNE.html#sklearn.manifold.TSNE" title="sklearn.manifold.TSNE" class="sphx-glr-backref-module-sklearn-manifold sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">TSNE</span></a> <span class="k">with</span> <span class="n">internal</span> <span class="n">NearestNeighbors</span><span class="p">:</span> <span class="mf">2.364</span> <span class="n">sec</span>
 
 <span class="n">Benchmarking</span> <span class="n">on</span> <span class="n">MNIST_10000</span><span class="p">:</span>
 <span class="o">----------------------------</span>
-<span class="n">AnnoyTransformer</span><span class="p">:</span>                    <span class="mf">4.457</span> <span class="n">sec</span>
-<span class="n">NMSlibTransformer</span><span class="p">:</span>                   <span class="mf">2.080</span> <span class="n">sec</span>
-<a href="../../modules/generated/sklearn.neighbors.KNeighborsTransformer.html#sklearn.neighbors.KNeighborsTransformer" title="sklearn.neighbors.KNeighborsTransformer" class="sphx-glr-backref-module-sklearn-neighbors sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">KNeighborsTransformer</span></a><span class="p">:</span>               <span class="mf">30.680</span> <span class="n">sec</span>
-<a href="../../modules/generated/sklearn.manifold.TSNE.html#sklearn.manifold.TSNE" title="sklearn.manifold.TSNE" class="sphx-glr-backref-module-sklearn-manifold sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">TSNE</span></a> <span class="k">with</span> <span class="n">AnnoyTransformer</span><span class="p">:</span>          <span class="mf">30.225</span> <span class="n">sec</span>
-<a href="../../modules/generated/sklearn.manifold.TSNE.html#sklearn.manifold.TSNE" title="sklearn.manifold.TSNE" class="sphx-glr-backref-module-sklearn-manifold sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">TSNE</span></a> <span class="k">with</span> <span class="n">NMSlibTransformer</span><span class="p">:</span>         <span class="mf">43.295</span> <span class="n">sec</span>
-<a href="../../modules/generated/sklearn.manifold.TSNE.html#sklearn.manifold.TSNE" title="sklearn.manifold.TSNE" class="sphx-glr-backref-module-sklearn-manifold sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">TSNE</span></a> <span class="k">with</span> <a href="../../modules/generated/sklearn.neighbors.KNeighborsTransformer.html#sklearn.neighbors.KNeighborsTransformer" title="sklearn.neighbors.KNeighborsTransformer" class="sphx-glr-backref-module-sklearn-neighbors sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">KNeighborsTransformer</span></a><span class="p">:</span>     <span class="mf">64.845</span> <span class="n">sec</span>
-<a href="../../modules/generated/sklearn.manifold.TSNE.html#sklearn.manifold.TSNE" title="sklearn.manifold.TSNE" class="sphx-glr-backref-module-sklearn-manifold sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">TSNE</span></a> <span class="k">with</span> <span class="n">internal</span> <span class="n">NearestNeighbors</span><span class="p">:</span> <span class="mf">64.984</span> <span class="n">sec</span>
+<span class="n">AnnoyTransformer</span><span class="p">:</span>                    <span class="mf">2.874</span> <span class="n">sec</span>
+<span class="n">NMSlibTransformer</span><span class="p">:</span>                   <span class="mf">1.098</span> <span class="n">sec</span>
+<a href="../../modules/generated/sklearn.neighbors.KNeighborsTransformer.html#sklearn.neighbors.KNeighborsTransformer" title="sklearn.neighbors.KNeighborsTransformer" class="sphx-glr-backref-module-sklearn-neighbors sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">KNeighborsTransformer</span></a><span class="p">:</span>               <span class="mf">1.264</span> <span class="n">sec</span>
+<a href="../../modules/generated/sklearn.manifold.TSNE.html#sklearn.manifold.TSNE" title="sklearn.manifold.TSNE" class="sphx-glr-backref-module-sklearn-manifold sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">TSNE</span></a> <span class="k">with</span> <span class="n">AnnoyTransformer</span><span class="p">:</span>          <span class="mf">16.118</span> <span class="n">sec</span>
+<a href="../../modules/generated/sklearn.manifold.TSNE.html#sklearn.manifold.TSNE" title="sklearn.manifold.TSNE" class="sphx-glr-backref-module-sklearn-manifold sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">TSNE</span></a> <span class="k">with</span> <span class="n">NMSlibTransformer</span><span class="p">:</span>         <span class="mf">15.281</span> <span class="n">sec</span>
+<a href="../../modules/generated/sklearn.manifold.TSNE.html#sklearn.manifold.TSNE" title="sklearn.manifold.TSNE" class="sphx-glr-backref-module-sklearn-manifold sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">TSNE</span></a> <span class="k">with</span> <a href="../../modules/generated/sklearn.neighbors.KNeighborsTransformer.html#sklearn.neighbors.KNeighborsTransformer" title="sklearn.neighbors.KNeighborsTransformer" class="sphx-glr-backref-module-sklearn-neighbors sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">KNeighborsTransformer</span></a><span class="p">:</span>     <span class="mf">15.400</span> <span class="n">sec</span>
+<a href="../../modules/generated/sklearn.manifold.TSNE.html#sklearn.manifold.TSNE" title="sklearn.manifold.TSNE" class="sphx-glr-backref-module-sklearn-manifold sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">TSNE</span></a> <span class="k">with</span> <span class="n">internal</span> <span class="n">NearestNeighbors</span><span class="p">:</span> <span class="mf">15.573</span> <span class="n">sec</span>
 </pre></div>
 </div>
+<p>Note that the prediction speed KNeighborsTransformer was optimized in
+scikit-learn 1.1 and therefore approximate methods are not necessarily faster
+because computing the index takes time and can nullify the gains obtained at
+prediction time.</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># Author: Tom Dupre la Tour</span>
 <span class="c1">#</span>
 <span class="c1"># License: BSD 3 clause</span>
@@ -404,11 +408,12 @@ compatibility reasons, one extra neighbor is computed when
     <span class="n">n_neighbors</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="mf">3.0</span> <span class="o">*</span> <span class="n">perplexity</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span>
 
     <span class="n">tsne_params</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span>
+        <span class="n">init</span><span class="o">=</span><span class="s2">&quot;random&quot;</span><span class="p">,</span>  <span class="c1"># pca not supported for sparse matrices</span>
         <span class="n">perplexity</span><span class="o">=</span><span class="n">perplexity</span><span class="p">,</span>
         <span class="n">method</span><span class="o">=</span><span class="s2">&quot;barnes_hut&quot;</span><span class="p">,</span>
         <span class="n">random_state</span><span class="o">=</span><span class="mi">42</span><span class="p">,</span>
         <span class="n">n_iter</span><span class="o">=</span><span class="n">n_iter</span><span class="p">,</span>
-        <span class="n">square_distances</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+        <span class="n">learning_rate</span><span class="o">=</span><span class="s2">&quot;auto&quot;</span><span class="p">,</span>
     <span class="p">)</span>
 
     <span class="n">transformers</span> <span class="o">=</span> <span class="p">[</span>
