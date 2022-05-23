@@ -22,15 +22,12 @@
 Classification of text documents using sparse features
 ======================================================
 
-This is an example showing how scikit-learn can be used to classify documents
-by topics using a bag-of-words approach. This example uses a scipy.sparse
-matrix to store the features and demonstrates various classifiers that can
-efficiently handle sparse matrices.
+This is an example showing how scikit-learn can be used to classify documents by
+topics using a bag-of-words approach. This example uses a Tf-idf-weighted
+document-term sparse matrix to encode the features and demonstrates various
+classifiers that can efficiently handle sparse matrices.
 
-The dataset used in this example is the 20 newsgroups dataset. It will be
-automatically downloaded, then cached.
-
-.. GENERATED FROM PYTHON SOURCE LINES 15-23
+.. GENERATED FROM PYTHON SOURCE LINES 12-21
 
 .. code-block:: default
 
@@ -38,6 +35,7 @@ automatically downloaded, then cached.
     # Author: Peter Prettenhofer <peter.prettenhofer@gmail.com>
     #         Olivier Grisel <olivier.grisel@ensta.org>
     #         Mathieu Blondel <mathieu@mblondel.org>
+    #         Arturo Amor <david-arturo.amor-quiroz@inria.fr>
     #         Lars Buitinck
     # License: BSD 3 clause
 
@@ -49,47 +47,28 @@ automatically downloaded, then cached.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 24-26
+.. GENERATED FROM PYTHON SOURCE LINES 22-33
 
-Configuration options for the analysis
---------------------------------------
+Load data
+---------
+We define a function to load data from :ref:`20newsgroups_dataset`, which
+comprises around 18000 newsgroups posts on 20 topics split in two subsets: one
+for training (or development) and the other one for testing (or for
+performance evaluation). Note that, by default, the text samples contain some
+message metadata such as `'headers'`, `'footers'` (signatures) and `'quotes'`
+to other posts. The `fetch_20newsgroups` function therefore accepts a
+parameter named `remove` to attempt stripping such information that can make
+the classification problem "too easy". This is achieved using simple
+heuristics that are neither perfect nor standard, hence disabled by default.
 
-.. GENERATED FROM PYTHON SOURCE LINES 26-38
-
-.. code-block:: default
-
-
-    # If True, we use `HashingVectorizer`, otherwise we use a `TfidfVectorizer`
-    USE_HASHING = False
-
-    # Number of features used by `HashingVectorizer`
-    N_FEATURES = 2**16
-
-    # Optional feature selection: either False, or an integer: the number of
-    # features to select
-    SELECT_CHI2 = False
-
-
-
-
-
-
-
-
-
-.. GENERATED FROM PYTHON SOURCE LINES 39-44
-
-Load data from the training set
-------------------------------------
-Let's load data from the newsgroups dataset which comprises around 18000
-newsgroups posts on 20 topics split in two subsets: one for training (or
-development) and the other one for testing (or for performance evaluation).
-
-.. GENERATED FROM PYTHON SOURCE LINES 44-79
+.. GENERATED FROM PYTHON SOURCE LINES 33-116
 
 .. code-block:: default
+
 
     from sklearn.datasets import fetch_20newsgroups
+    from sklearn.feature_extraction.text import TfidfVectorizer
+    from time import time
 
     categories = [
         "alt.atheism",
@@ -98,156 +77,75 @@ development) and the other one for testing (or for performance evaluation).
         "sci.space",
     ]
 
-    data_train = fetch_20newsgroups(
-        subset="train", categories=categories, shuffle=True, random_state=42
-    )
-
-    data_test = fetch_20newsgroups(
-        subset="test", categories=categories, shuffle=True, random_state=42
-    )
-    print("data loaded")
-
-    # order of labels in `target_names` can be different from `categories`
-    target_names = data_train.target_names
-
 
     def size_mb(docs):
         return sum(len(s.encode("utf-8")) for s in docs) / 1e6
 
 
-    data_train_size_mb = size_mb(data_train.data)
-    data_test_size_mb = size_mb(data_test.data)
+    def load_dataset(verbose=False, remove=()):
+        """Load and vectorize the 20 newsgroups dataset."""
 
-    print(
-        "%d documents - %0.3fMB (training set)" % (len(data_train.data), data_train_size_mb)
-    )
-    print("%d documents - %0.3fMB (test set)" % (len(data_test.data), data_test_size_mb))
-    print("%d categories" % len(target_names))
-
-
-
-
-
-.. rst-class:: sphx-glr-script-out
-
- Out:
-
- .. code-block:: none
-
-    data loaded
-    2034 documents - 3.980MB (training set)
-    1353 documents - 2.867MB (test set)
-    4 categories
-
-
-
-
-.. GENERATED FROM PYTHON SOURCE LINES 80-84
-
-Vectorize the training and test data
--------------------------------------
-
-split a training set and a test set
-
-.. GENERATED FROM PYTHON SOURCE LINES 84-86
-
-.. code-block:: default
-
-    y_train, y_test = data_train.target, data_test.target
-
-
-
-
-
-
-
-
-.. GENERATED FROM PYTHON SOURCE LINES 87-88
-
-Extracting features from the training data using a sparse vectorizer
-
-.. GENERATED FROM PYTHON SOURCE LINES 88-107
-
-.. code-block:: default
-
-    from time import time
-
-    from sklearn.feature_extraction.text import TfidfVectorizer
-    from sklearn.feature_extraction.text import HashingVectorizer
-
-    t0 = time()
-
-    if USE_HASHING:
-        vectorizer = HashingVectorizer(
-            stop_words="english", alternate_sign=False, n_features=N_FEATURES
+        data_train = fetch_20newsgroups(
+            subset="train",
+            categories=categories,
+            shuffle=True,
+            random_state=42,
+            remove=remove,
         )
-        X_train = vectorizer.transform(data_train.data)
-    else:
-        vectorizer = TfidfVectorizer(sublinear_tf=True, max_df=0.5, stop_words="english")
+
+        data_test = fetch_20newsgroups(
+            subset="test",
+            categories=categories,
+            shuffle=True,
+            random_state=42,
+            remove=remove,
+        )
+
+        # order of labels in `target_names` can be different from `categories`
+        target_names = data_train.target_names
+
+        # split target in a training set and a test set
+        y_train, y_test = data_train.target, data_test.target
+
+        # Extracting features from the training data using a sparse vectorizer
+        t0 = time()
+        vectorizer = TfidfVectorizer(
+            sublinear_tf=True, max_df=0.5, min_df=5, stop_words="english"
+        )
         X_train = vectorizer.fit_transform(data_train.data)
-    duration = time() - t0
-    print("done in %fs at %0.3fMB/s" % (duration, data_train_size_mb / duration))
-    print("n_samples: %d, n_features: %d" % X_train.shape)
+        duration_train = time() - t0
 
+        # Extracting features from the test data using the same vectorizer
+        t0 = time()
+        X_test = vectorizer.transform(data_test.data)
+        duration_test = time() - t0
 
-
-
-
-.. rst-class:: sphx-glr-script-out
-
- Out:
-
- .. code-block:: none
-
-    done in 0.382987s at 10.391MB/s
-    n_samples: 2034, n_features: 33809
-
-
-
-
-.. GENERATED FROM PYTHON SOURCE LINES 108-109
-
-Extracting features from the test data using the same vectorizer
-
-.. GENERATED FROM PYTHON SOURCE LINES 109-115
-
-.. code-block:: default
-
-    t0 = time()
-    X_test = vectorizer.transform(data_test.data)
-    duration = time() - t0
-    print("done in %fs at %0.3fMB/s" % (duration, data_test_size_mb / duration))
-    print("n_samples: %d, n_features: %d" % X_test.shape)
-
-
-
-
-
-.. rst-class:: sphx-glr-script-out
-
- Out:
-
- .. code-block:: none
-
-    done in 0.242585s at 11.821MB/s
-    n_samples: 1353, n_features: 33809
-
-
-
-
-.. GENERATED FROM PYTHON SOURCE LINES 116-117
-
-mapping from integer feature name to original token string
-
-.. GENERATED FROM PYTHON SOURCE LINES 117-122
-
-.. code-block:: default
-
-    if USE_HASHING:
-        feature_names = None
-    else:
         feature_names = vectorizer.get_feature_names_out()
 
+        if verbose:
+
+            # compute size of loaded data
+            data_train_size_mb = size_mb(data_train.data)
+            data_test_size_mb = size_mb(data_test.data)
+
+            print(
+                f"{len(data_train.data)} documents - "
+                f"{data_train_size_mb:.2f}MB (training set)"
+            )
+            print(f"{len(data_test.data)} documents - {data_test_size_mb:.2f}MB (test set)")
+            print(f"{len(target_names)} categories")
+            print(
+                f"vectorize training done in {duration_train:.3f}s "
+                f"at {data_train_size_mb / duration_train:.3f}MB/s"
+            )
+            print(f"n_samples: {X_train.shape[0]}, n_features: {X_train.shape[1]}")
+            print(
+                f"vectorize testing done in {duration_test:.3f}s "
+                f"at {data_test_size_mb / duration_test:.3f}MB/s"
+            )
+            print(f"n_samples: {X_test.shape[0]}, n_features: {X_test.shape[1]}")
+
+        return X_train, X_test, y_train, y_test, feature_names, target_names
 
 
 
@@ -255,93 +153,487 @@ mapping from integer feature name to original token string
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 123-124
 
-Keeping only the best features
 
-.. GENERATED FROM PYTHON SOURCE LINES 124-139
+.. GENERATED FROM PYTHON SOURCE LINES 117-121
+
+Compare feature effects
+-----------------------
+We train a first classification model without attempting to strip the metadata
+of the dataset.
+
+.. GENERATED FROM PYTHON SOURCE LINES 121-126
 
 .. code-block:: default
 
-    from sklearn.feature_selection import SelectKBest, chi2
 
-    if SELECT_CHI2:
-        print("Extracting %d best features by a chi-squared test" % SELECT_CHI2)
-        t0 = time()
-        ch2 = SelectKBest(chi2, k=SELECT_CHI2)
-        X_train = ch2.fit_transform(X_train, y_train)
-        X_test = ch2.transform(X_test)
-        if feature_names is not None:
-            # keep selected feature names
-            feature_names = feature_names[ch2.get_support()]
-        print("done in %fs" % (time() - t0))
-        print()
+    X_train, X_test, y_train, y_test, feature_names, target_names = load_dataset(
+        verbose=True
+    )
 
 
 
 
 
+.. rst-class:: sphx-glr-script-out
+
+ Out:
+
+ .. code-block:: none
+
+    2034 documents - 3.98MB (training set)
+    1353 documents - 2.87MB (test set)
+    4 categories
+    vectorize training done in 0.363s at 10.961MB/s
+    n_samples: 2034, n_features: 7831
+    vectorize testing done in 0.231s at 12.389MB/s
+    n_samples: 1353, n_features: 7831
 
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 140-144
+.. GENERATED FROM PYTHON SOURCE LINES 127-135
 
-Benchmark classifiers
-------------------------------------
+Our first model is an instance of the
+:class:`~sklearn.linear_model.RidgeClassifier` class. This is a linear
+classification model that uses the mean squared error on {-1, 1} encoded
+targets, one for each possible class. Contrary to
+:class:`~sklearn.linear_model.LogisticRegression`,
+:class:`~sklearn.linear_model.RidgeClassifier` does not
+provide probabilistic predictions (no `predict_proba` method),
+but it is often faster to train.
+
+.. GENERATED FROM PYTHON SOURCE LINES 135-142
+
+.. code-block:: default
+
+
+    from sklearn.linear_model import RidgeClassifier
+
+    clf = RidgeClassifier(tol=1e-2, solver="sparse_cg")
+    clf.fit(X_train, y_train)
+    pred = clf.predict(X_test)
+
+
+
+
+
+
+
+
+.. GENERATED FROM PYTHON SOURCE LINES 143-145
+
+We plot the confusion matrix of this classifier to find if there is a pattern
+in the classification errors.
+
+.. GENERATED FROM PYTHON SOURCE LINES 145-157
+
+.. code-block:: default
+
+
+    import matplotlib.pyplot as plt
+    from sklearn.metrics import ConfusionMatrixDisplay
+
+    fig, ax = plt.subplots(figsize=(10, 5))
+    ConfusionMatrixDisplay.from_predictions(y_test, pred, ax=ax)
+    ax.xaxis.set_ticklabels(target_names)
+    ax.yaxis.set_ticklabels(target_names)
+    _ = ax.set_title(
+        f"Confusion Matrix for {clf.__class__.__name__}\non the original documents"
+    )
+
+
+
+
+.. image-sg:: /auto_examples/text/images/sphx_glr_plot_document_classification_20newsgroups_001.png
+   :alt: Confusion Matrix for RidgeClassifier on the original documents
+   :srcset: /auto_examples/text/images/sphx_glr_plot_document_classification_20newsgroups_001.png
+   :class: sphx-glr-single-img
+
+
+
+
+
+.. GENERATED FROM PYTHON SOURCE LINES 158-170
+
+The confusion matrix highlights that documents of the `alt.atheism` class are
+often confused with documents with the class `talk.religion.misc` class and
+vice-versa which is expected since the topics are semantically related.
+
+We also observe that some documents of the `sci.space` class can be misclassified as
+`comp.graphics` while the converse is much rarer. A manual inspection of those
+badly classified documents would be required to get some insights on this
+asymmetry. It could be the case that the vocabulary of the space topic could
+be more specific than the vocabulary for computer graphics.
+
+We can gain a deeper understanding of how this classifier makes its decisions
+by looking at the words with the highest average feature effects:
+
+.. GENERATED FROM PYTHON SOURCE LINES 170-221
+
+.. code-block:: default
+
+
+    import pandas as pd
+    import numpy as np
+
+
+    def plot_feature_effects():
+        # learned coefficients weighted by frequency of appearance
+        average_feature_effects = clf.coef_ * np.asarray(X_train.mean(axis=0)).ravel()
+
+        for i, label in enumerate(target_names):
+            top5 = np.argsort(average_feature_effects[i])[-5:][::-1]
+            if i == 0:
+                top = pd.DataFrame(feature_names[top5], columns=[label])
+                top_indices = top5
+            else:
+                top[label] = feature_names[top5]
+                top_indices = np.concatenate((top_indices, top5), axis=None)
+        top_indices = np.unique(top_indices)
+        predictive_words = feature_names[top_indices]
+
+        # plot feature effects
+        bar_size = 0.25
+        padding = 0.75
+        y_locs = np.arange(len(top_indices)) * (4 * bar_size + padding)
+
+        fig, ax = plt.subplots(figsize=(10, 8))
+        for i, label in enumerate(target_names):
+            ax.barh(
+                y_locs + (i - 2) * bar_size,
+                average_feature_effects[i, top_indices],
+                height=bar_size,
+                label=label,
+            )
+        ax.set(
+            yticks=y_locs,
+            yticklabels=predictive_words,
+            ylim=[
+                0 - 4 * bar_size,
+                len(top_indices) * (4 * bar_size + padding) - 4 * bar_size,
+            ],
+        )
+        ax.legend(loc="lower right")
+
+        print("top 5 keywords per class:")
+        print(top)
+
+        return ax
+
+
+    _ = plot_feature_effects().set_title("Average feature effect on the original data")
+
+
+
+
+.. image-sg:: /auto_examples/text/images/sphx_glr_plot_document_classification_20newsgroups_002.png
+   :alt: Average feature effect on the original data
+   :srcset: /auto_examples/text/images/sphx_glr_plot_document_classification_20newsgroups_002.png
+   :class: sphx-glr-single-img
+
+
+.. rst-class:: sphx-glr-script-out
+
+ Out:
+
+ .. code-block:: none
+
+    top 5 keywords per class:
+      alt.atheism comp.graphics sci.space talk.religion.misc
+    0       keith      graphics     space          christian
+    1         god    university      nasa                com
+    2    atheists        thanks     orbit                god
+    3      people          does      moon           morality
+    4     caltech         image    access             people
+
+
+
+
+.. GENERATED FROM PYTHON SOURCE LINES 222-233
+
+We can observe that the most predictive words are often strongly positively
+associated with a single class and negatively associated with all the other
+classes. Most of those positive associations are quite easy to interpret.
+However, some words such as `"god"` and `"people"` are positively associated to
+both `"talk.misc.religion"` and `"alt.atheism"` as those two classes expectedly
+share some common vocabulary. Notice however that there are also words such as
+`"christian"` and `"morality"` that are only positively associated with
+`"talk.misc.religion"`. Furthermore, in this version of the dataset, the word
+`"caltech"` is one of the top predictive features for atheism due to pollution
+in the dataset coming from some sort of metadata such as the email addresses
+of the sender of previous emails in the discussion as can be seen below:
+
+.. GENERATED FROM PYTHON SOURCE LINES 233-243
+
+.. code-block:: default
+
+
+    data_train = fetch_20newsgroups(
+        subset="train", categories=categories, shuffle=True, random_state=42
+    )
+
+    for doc in data_train.data:
+        if "caltech" in doc:
+            print(doc)
+            break
+
+
+
+
+
+.. rst-class:: sphx-glr-script-out
+
+ Out:
+
+ .. code-block:: none
+
+    From: livesey@solntze.wpd.sgi.com (Jon Livesey)
+    Subject: Re: Morality? (was Re: <Political Atheists?)
+    Organization: sgi
+    Lines: 93
+    Distribution: world
+    NNTP-Posting-Host: solntze.wpd.sgi.com
+
+    In article <1qlettINN8oi@gap.caltech.edu>, keith@cco.caltech.edu (Keith Allan Schneider) writes:
+    |> livesey@solntze.wpd.sgi.com (Jon Livesey) writes:
+    |> 
+    |> >>>Explain to me
+    |> >>>how instinctive acts can be moral acts, and I am happy to listen.
+    |> >>For example, if it were instinctive not to murder...
+    |> >
+    |> >Then not murdering would have no moral significance, since there
+    |> >would be nothing voluntary about it.
+    |> 
+    |> See, there you go again, saying that a moral act is only significant
+    |> if it is "voluntary."  Why do you think this?
+
+    If you force me to do something, am I morally responsible for it?
+
+    |> 
+    |> And anyway, humans have the ability to disregard some of their instincts.
+
+    Well, make up your mind.    Is it to be "instinctive not to murder"
+    or not?
+
+    |> 
+    |> >>So, only intelligent beings can be moral, even if the bahavior of other
+    |> >>beings mimics theirs?
+    |> >
+    |> >You are starting to get the point.  Mimicry is not necessarily the 
+    |> >same as the action being imitated.  A Parrot saying "Pretty Polly" 
+    |> >isn't necessarily commenting on the pulchritude of Polly.
+    |> 
+    |> You are attaching too many things to the term "moral," I think.
+    |> Let's try this:  is it "good" that animals of the same species
+    |> don't kill each other.  Or, do you think this is right? 
+
+    It's not even correct.    Animals of the same species do kill
+    one another.
+
+    |> 
+    |> Or do you think that animals are machines, and that nothing they do
+    |> is either right nor wrong?
+
+    Sigh.   I wonder how many times we have been round this loop.
+
+    I think that instinctive bahaviour has no moral significance.
+    I am quite prepared to believe that higher animals, such as
+    primates, have the beginnings of a moral sense, since they seem
+    to exhibit self-awareness.
+
+    |> 
+    |> 
+    |> >>Animals of the same species could kill each other arbitarily, but 
+    |> >>they don't.
+    |> >
+    |> >They do.  I and other posters have given you many examples of exactly
+    |> >this, but you seem to have a very short memory.
+    |> 
+    |> Those weren't arbitrary killings.  They were slayings related to some 
+    |> sort of mating ritual or whatnot.
+
+    So what?     Are you trying to say that some killing in animals
+    has a moral significance and some does not?   Is this your
+    natural morality>
+
+
+    |> 
+    |> >>Are you trying to say that this isn't an act of morality because
+    |> >>most animals aren't intelligent enough to think like we do?
+    |> >
+    |> >I'm saying:
+    |> >    "There must be the possibility that the organism - it's not 
+    |> >    just people we are talking about - can consider alternatives."
+    |> >
+    |> >It's right there in the posting you are replying to.
+    |> 
+    |> Yes it was, but I still don't understand your distinctions.  What
+    |> do you mean by "consider?"  Can a small child be moral?  How about
+    |> a gorilla?  A dolphin?  A platypus?  Where is the line drawn?  Does
+    |> the being need to be self aware?
+
+    Are you blind?   What do you think that this sentence means?
+
+            "There must be the possibility that the organism - it's not 
+            just people we are talking about - can consider alternatives."
+
+    What would that imply?
+
+    |> 
+    |> What *do* you call the mechanism which seems to prevent animals of
+    |> the same species from (arbitrarily) killing each other?  Don't
+    |> you find the fact that they don't at all significant?
+
+    I find the fact that they do to be significant. 
+
+    jon.
+
+
+
+
+
+.. GENERATED FROM PYTHON SOURCE LINES 244-257
+
+Such headers, signature footers (and quoted metadata from previous messages)
+can be considered side information that artificially reveals the newsgroup by
+identifying the registered members and one would rather want our text
+classifier to only learn from the "main content" of each text document instead
+of relying on the leaked identity of the writers.
+
+The `remove` option of the 20 newsgroups dataset loader in scikit-learn allows
+to heuristically attempt to filter out some of this unwanted metadata that
+makes the classification problem artificially easier. Be aware that such
+filtering of the text contents is far from perfect.
+
+Let us try to leverage this option to train a text classifier that does not
+rely too much on this kind of metadata to make its decisions:
+
+.. GENERATED FROM PYTHON SOURCE LINES 257-278
+
+.. code-block:: default
+
+    (
+        X_train,
+        X_test,
+        y_train,
+        y_test,
+        feature_names,
+        target_names,
+    ) = load_dataset(remove=("headers", "footers", "quotes"))
+
+    clf = RidgeClassifier(tol=1e-2, solver="sparse_cg")
+    clf.fit(X_train, y_train)
+    pred = clf.predict(X_test)
+
+    fig, ax = plt.subplots(figsize=(10, 5))
+    ConfusionMatrixDisplay.from_predictions(y_test, pred, ax=ax)
+    ax.xaxis.set_ticklabels(target_names)
+    ax.yaxis.set_ticklabels(target_names)
+    _ = ax.set_title(
+        f"Confusion Matrix for {clf.__class__.__name__}\non filtered documents"
+    )
+
+
+
+
+.. image-sg:: /auto_examples/text/images/sphx_glr_plot_document_classification_20newsgroups_003.png
+   :alt: Confusion Matrix for RidgeClassifier on filtered documents
+   :srcset: /auto_examples/text/images/sphx_glr_plot_document_classification_20newsgroups_003.png
+   :class: sphx-glr-single-img
+
+
+
+
+
+.. GENERATED FROM PYTHON SOURCE LINES 279-283
+
+By looking at the confusion matrix, it is more evident that the scores of the
+model trained with metadata were over-optimistic. The classification problem
+without access to the metadata is less accurate but more representative of the
+intended text classification problem.
+
+.. GENERATED FROM PYTHON SOURCE LINES 283-286
+
+.. code-block:: default
+
+
+    _ = plot_feature_effects().set_title("Average feature effects on filtered documents")
+
+
+
+
+.. image-sg:: /auto_examples/text/images/sphx_glr_plot_document_classification_20newsgroups_004.png
+   :alt: Average feature effects on filtered documents
+   :srcset: /auto_examples/text/images/sphx_glr_plot_document_classification_20newsgroups_004.png
+   :class: sphx-glr-single-img
+
+
+.. rst-class:: sphx-glr-script-out
+
+ Out:
+
+ .. code-block:: none
+
+    top 5 keywords per class:
+      alt.atheism comp.graphics sci.space talk.religion.misc
+    0         don      graphics     space                god
+    1      people          file      like          christian
+    2         say        thanks      nasa              jesus
+    3    religion         image     orbit         christians
+    4        post          does    launch              wrong
+
+
+
+
+.. GENERATED FROM PYTHON SOURCE LINES 287-289
+
+In the next section we keep the dataset without metadata to compare several
+classifiers.
+
+.. GENERATED FROM PYTHON SOURCE LINES 291-295
+
+Benchmarking classifiers
+------------------------
 
 First we define small benchmarking utilities
 
-.. GENERATED FROM PYTHON SOURCE LINES 144-193
+.. GENERATED FROM PYTHON SOURCE LINES 295-330
 
 .. code-block:: default
 
-    import numpy as np
-    from sklearn import metrics
+
     from sklearn.utils.extmath import density
+    from sklearn import metrics
 
 
-    def trim(s):
-        """Trim string to fit on terminal (assuming 80-column display)"""
-        return s if len(s) <= 80 else s[:77] + "..."
-
-
-    def benchmark(clf):
+    def benchmark(clf, custom_name=False):
         print("_" * 80)
         print("Training: ")
         print(clf)
         t0 = time()
         clf.fit(X_train, y_train)
         train_time = time() - t0
-        print("train time: %0.3fs" % train_time)
+        print(f"train time: {train_time:.3}s")
 
         t0 = time()
         pred = clf.predict(X_test)
         test_time = time() - t0
-        print("test time:  %0.3fs" % test_time)
+        print(f"test time:  {test_time:.3}s")
 
         score = metrics.accuracy_score(y_test, pred)
-        print("accuracy:   %0.3f" % score)
+        print(f"accuracy:   {score:.3}")
 
         if hasattr(clf, "coef_"):
-            print("dimensionality: %d" % clf.coef_.shape[1])
-            print("density: %f" % density(clf.coef_))
-
-            if feature_names is not None:
-                print("top 10 keywords per class:")
-                for i, label in enumerate(target_names):
-                    top10 = np.argsort(clf.coef_[i])[-10:]
-                    print(trim("%s: %s" % (label, " ".join(feature_names[top10]))))
+            print(f"dimensionality: {clf.coef_.shape[1]}")
+            print(f"density: {density(clf.coef_)}")
             print()
 
-        print("classification report:")
-        print(metrics.classification_report(y_test, pred, target_names=target_names))
-
-        print("confusion matrix:")
-        print(metrics.confusion_matrix(y_test, pred))
-
         print()
-        clf_descr = str(clf).split("(")[0]
+        if custom_name:
+            clf_descr = str(custom_name)
+        else:
+            clf_descr = clf.__class__.__name__
         return clf_descr, score, train_time, test_time
 
 
@@ -352,23 +644,25 @@ First we define small benchmarking utilities
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 194-196
+.. GENERATED FROM PYTHON SOURCE LINES 331-338
 
-We now train and test the datasets with 15 different classification
-models and get performance results for each model.
+We now train and test the datasets with 8 different classification models and
+get performance results for each model. The goal of this study is to highlight
+the computation/accuracy tradeoffs of different types of classifiers for
+such a multi-class text classification problem.
 
-.. GENERATED FROM PYTHON SOURCE LINES 196-268
+Notice that the most important hyperparameters values were tuned using a grid
+search procedure not shown in this notebook for the sake of simplicity.
+
+.. GENERATED FROM PYTHON SOURCE LINES 338-372
 
 .. code-block:: default
 
-    from sklearn.feature_selection import SelectFromModel
-    from sklearn.linear_model import RidgeClassifier
-    from sklearn.pipeline import Pipeline
+
+    from sklearn.linear_model import LogisticRegression
     from sklearn.svm import LinearSVC
     from sklearn.linear_model import SGDClassifier
-    from sklearn.linear_model import Perceptron
-    from sklearn.linear_model import PassiveAggressiveClassifier
-    from sklearn.naive_bayes import BernoulliNB, ComplementNB, MultinomialNB
+    from sklearn.naive_bayes import ComplementNB
     from sklearn.neighbors import KNeighborsClassifier
     from sklearn.neighbors import NearestCentroid
     from sklearn.ensemble import RandomForestClassifier
@@ -376,62 +670,27 @@ models and get performance results for each model.
 
     results = []
     for clf, name in (
-        (RidgeClassifier(tol=1e-2, solver="sag"), "Ridge Classifier"),
-        (Perceptron(max_iter=50), "Perceptron"),
-        (PassiveAggressiveClassifier(max_iter=50), "Passive-Aggressive"),
-        (KNeighborsClassifier(n_neighbors=10), "kNN"),
-        (RandomForestClassifier(), "Random forest"),
+        (LogisticRegression(C=5, max_iter=1000), "Logistic Regression"),
+        (RidgeClassifier(alpha=1.0, solver="sparse_cg"), "Ridge Classifier"),
+        (KNeighborsClassifier(n_neighbors=100), "kNN"),
+        (RandomForestClassifier(), "Random Forest"),
+        # L2 penalty Linear SVC
+        (LinearSVC(C=0.1, dual=False, max_iter=1000), "Linear SVC"),
+        # L2 penalty Linear SGD
+        (
+            SGDClassifier(
+                loss="log_loss", alpha=1e-4, n_iter_no_change=3, early_stopping=True
+            ),
+            "log-loss SGD",
+        ),
+        # NearestCentroid (aka Rocchio classifier)
+        (NearestCentroid(), "NearestCentroid"),
+        # Sparse naive Bayes classifier
+        (ComplementNB(alpha=0.1), "Complement naive Bayes"),
     ):
         print("=" * 80)
         print(name)
-        results.append(benchmark(clf))
-
-    for penalty in ["l2", "l1"]:
-        print("=" * 80)
-        print("%s penalty" % penalty.upper())
-        # Train Liblinear model
-        results.append(benchmark(LinearSVC(penalty=penalty, dual=False, tol=1e-3)))
-
-        # Train SGD model
-        results.append(benchmark(SGDClassifier(alpha=0.0001, max_iter=50, penalty=penalty)))
-
-    # Train SGD with Elastic Net penalty
-    print("=" * 80)
-    print("Elastic-Net penalty")
-    results.append(
-        benchmark(SGDClassifier(alpha=0.0001, max_iter=50, penalty="elasticnet"))
-    )
-
-    # Train NearestCentroid without threshold
-    print("=" * 80)
-    print("NearestCentroid (aka Rocchio classifier)")
-    results.append(benchmark(NearestCentroid()))
-
-    # Train sparse Naive Bayes classifiers
-    print("=" * 80)
-    print("Naive Bayes")
-    results.append(benchmark(MultinomialNB(alpha=0.01)))
-    results.append(benchmark(BernoulliNB(alpha=0.01)))
-    results.append(benchmark(ComplementNB(alpha=0.1)))
-
-    print("=" * 80)
-    print("LinearSVC with L1-based feature selection")
-    # The smaller C, the stronger the regularization.
-    # The more regularization, the more sparsity.
-    results.append(
-        benchmark(
-            Pipeline(
-                [
-                    (
-                        "feature_selection",
-                        SelectFromModel(LinearSVC(penalty="l1", dual=False, tol=1e-3)),
-                    ),
-                    ("classification", LinearSVC(penalty="l2")),
-                ]
-            )
-        )
-    )
-
+        results.append(benchmark(clf, name))
 
 
 
@@ -444,512 +703,187 @@ models and get performance results for each model.
  .. code-block:: none
 
     ================================================================================
+    Logistic Regression
+    ________________________________________________________________________________
+    Training: 
+    LogisticRegression(C=5, max_iter=1000)
+    train time: 0.316s
+    test time:  0.000546s
+    accuracy:   0.773
+    dimensionality: 5316
+    density: 1.0
+
+
+    ================================================================================
     Ridge Classifier
     ________________________________________________________________________________
     Training: 
-    RidgeClassifier(solver='sag', tol=0.01)
-    /home/circleci/project/sklearn/linear_model/_ridge.py:830: UserWarning: "sag" solver requires many iterations to fit an intercept with sparse inputs. Either set the solver to "auto" or "sparse_cg", or set a low "tol" and a high "max_iter" (especially if inputs are not standardized).
-      warnings.warn(
-    train time: 0.172s
-    test time:  0.001s
-    accuracy:   0.897
-    dimensionality: 33809
-    density: 1.000000
-    top 10 keywords per class:
-    alt.atheism: atheist osrhe wingate god okcforum caltech islamic atheism keith...
-    comp.graphics: animation video looking card hi 3d thanks file image graphics
-    sci.space: dc flight shuttle launch pat moon sci orbit nasa space
-    talk.religion.misc: jesus mitre hudson morality biblical 2000 beast mr fbi ch...
+    RidgeClassifier(solver='sparse_cg')
+    train time: 0.0301s
+    test time:  0.000633s
+    accuracy:   0.76
+    dimensionality: 5316
+    density: 1.0
 
-    classification report:
-                        precision    recall  f1-score   support
-
-           alt.atheism       0.87      0.83      0.85       319
-         comp.graphics       0.90      0.98      0.94       389
-             sci.space       0.96      0.94      0.95       394
-    talk.religion.misc       0.83      0.78      0.80       251
-
-              accuracy                           0.90      1353
-             macro avg       0.89      0.88      0.89      1353
-          weighted avg       0.90      0.90      0.90      1353
-
-    confusion matrix:
-    [[266   9   7  37]
-     [  1 381   4   3]
-     [  0  22 372   0]
-     [ 40  10   6 195]]
-
-    ================================================================================
-    Perceptron
-    ________________________________________________________________________________
-    Training: 
-    Perceptron(max_iter=50)
-    train time: 0.015s
-    test time:  0.001s
-    accuracy:   0.888
-    dimensionality: 33809
-    density: 0.255302
-    top 10 keywords per class:
-    alt.atheism: wingate osrhe freedom lippard alt thing cobb atheists atheism keith
-    comp.graphics: siggraph code fractal comp mpeg library pc animation sphere gr...
-    sci.space: bruce wpi solar sci funding moon orbit planets dc space
-    talk.religion.misc: god morality hudson beast sword fbi 2000 order mr christian
-
-    classification report:
-                        precision    recall  f1-score   support
-
-           alt.atheism       0.86      0.80      0.83       319
-         comp.graphics       0.90      0.97      0.94       389
-             sci.space       0.95      0.93      0.94       394
-    talk.religion.misc       0.79      0.80      0.79       251
-
-              accuracy                           0.89      1353
-             macro avg       0.88      0.88      0.88      1353
-          weighted avg       0.89      0.89      0.89      1353
-
-    confusion matrix:
-    [[256   7   8  48]
-     [  0 379   4   6]
-     [  7  21 366   0]
-     [ 33  12   6 200]]
-
-    ================================================================================
-    Passive-Aggressive
-    ________________________________________________________________________________
-    Training: 
-    PassiveAggressiveClassifier(max_iter=50)
-    train time: 0.028s
-    test time:  0.002s
-    accuracy:   0.903
-    dimensionality: 33809
-    density: 0.708428
-    top 10 keywords per class:
-    alt.atheism: charley cobb osrhe okcforum caltech atheist islamic keith atheis...
-    comp.graphics: 3d 42 computer code animation windows tiff file image graphics
-    sci.space: pat alaska shuttle launch sci dc nasa moon orbit space
-    talk.religion.misc: abortion 666 hudson christians fbi mr morality beast 2000...
-
-    classification report:
-                        precision    recall  f1-score   support
-
-           alt.atheism       0.86      0.84      0.85       319
-         comp.graphics       0.93      0.98      0.95       389
-             sci.space       0.95      0.95      0.95       394
-    talk.religion.misc       0.83      0.80      0.81       251
-
-              accuracy                           0.90      1353
-             macro avg       0.89      0.89      0.89      1353
-          weighted avg       0.90      0.90      0.90      1353
-
-    confusion matrix:
-    [[269   5   9  36]
-     [  0 380   4   5]
-     [  3  17 373   1]
-     [ 39   7   5 200]]
 
     ================================================================================
     kNN
     ________________________________________________________________________________
     Training: 
-    KNeighborsClassifier(n_neighbors=10)
-    train time: 0.001s
-    test time:  0.164s
-    accuracy:   0.858
-    classification report:
-                        precision    recall  f1-score   support
-
-           alt.atheism       0.78      0.90      0.84       319
-         comp.graphics       0.89      0.89      0.89       389
-             sci.space       0.90      0.91      0.90       394
-    talk.religion.misc       0.86      0.67      0.75       251
-
-              accuracy                           0.86      1353
-             macro avg       0.86      0.84      0.85      1353
-          weighted avg       0.86      0.86      0.86      1353
-
-    confusion matrix:
-    [[287   3  11  18]
-     [ 14 348  19   8]
-     [  7  26 359   2]
-     [ 59  13  12 167]]
+    KNeighborsClassifier(n_neighbors=100)
+    train time: 0.000776s
+    test time:  0.104s
+    accuracy:   0.752
 
     ================================================================================
-    Random forest
+    Random Forest
     ________________________________________________________________________________
     Training: 
     RandomForestClassifier()
-    train time: 1.530s
-    test time:  0.079s
-    accuracy:   0.838
-    classification report:
-                        precision    recall  f1-score   support
-
-           alt.atheism       0.83      0.73      0.78       319
-         comp.graphics       0.80      0.97      0.88       389
-             sci.space       0.93      0.89      0.91       394
-    talk.religion.misc       0.78      0.69      0.73       251
-
-              accuracy                           0.84      1353
-             macro avg       0.83      0.82      0.82      1353
-          weighted avg       0.84      0.84      0.84      1353
-
-    confusion matrix:
-    [[234  29   9  47]
-     [  1 377  10   1]
-     [  3  41 349   1]
-     [ 43  25   9 174]]
+    train time: 1.16s
+    test time:  0.0651s
+    accuracy:   0.704
 
     ================================================================================
-    L2 penalty
+    Linear SVC
     ________________________________________________________________________________
     Training: 
-    LinearSVC(dual=False, tol=0.001)
-    train time: 0.077s
-    test time:  0.001s
-    accuracy:   0.900
-    dimensionality: 33809
-    density: 1.000000
-    top 10 keywords per class:
-    alt.atheism: rushdie osrhe atheist wingate okcforum caltech islamic atheism k...
-    comp.graphics: code 42 video hi animation thanks 3d file image graphics
-    sci.space: planets dc pat shuttle launch sci moon nasa orbit space
-    talk.religion.misc: abortion hudson 666 biblical 2000 morality mr beast fbi c...
+    LinearSVC(C=0.1, dual=False)
+    train time: 0.0301s
+    test time:  0.000527s
+    accuracy:   0.752
+    dimensionality: 5316
+    density: 1.0
 
-    classification report:
-                        precision    recall  f1-score   support
-
-           alt.atheism       0.87      0.83      0.85       319
-         comp.graphics       0.91      0.98      0.95       389
-             sci.space       0.96      0.95      0.95       394
-    talk.religion.misc       0.83      0.79      0.81       251
-
-              accuracy                           0.90      1353
-             macro avg       0.89      0.89      0.89      1353
-          weighted avg       0.90      0.90      0.90      1353
-
-    confusion matrix:
-    [[266   7   8  38]
-     [  2 381   3   3]
-     [  1  20 373   0]
-     [ 38   9   6 198]]
-
-    ________________________________________________________________________________
-    Training: 
-    SGDClassifier(max_iter=50)
-    train time: 0.022s
-    test time:  0.001s
-    accuracy:   0.899
-    dimensionality: 33809
-    density: 0.570514
-    top 10 keywords per class:
-    alt.atheism: charley rushdie cobb caltech okcforum wingate islamic keith athe...
-    comp.graphics: tiff video hi 42 code 3d animation file image graphics
-    sci.space: shuttle pat planets launch sci dc moon nasa orbit space
-    talk.religion.misc: hudson abortion 666 biblical beast mr morality fbi 2000 c...
-
-    classification report:
-                        precision    recall  f1-score   support
-
-           alt.atheism       0.87      0.83      0.85       319
-         comp.graphics       0.92      0.97      0.94       389
-             sci.space       0.95      0.94      0.95       394
-    talk.religion.misc       0.81      0.81      0.81       251
-
-              accuracy                           0.90      1353
-             macro avg       0.89      0.89      0.89      1353
-          weighted avg       0.90      0.90      0.90      1353
-
-    confusion matrix:
-    [[264   5   9  41]
-     [  2 377   5   5]
-     [  2  20 371   1]
-     [ 34   8   5 204]]
 
     ================================================================================
-    L1 penalty
+    log-loss SGD
     ________________________________________________________________________________
     Training: 
-    LinearSVC(dual=False, penalty='l1', tol=0.001)
-    train time: 0.193s
-    test time:  0.001s
-    accuracy:   0.873
-    dimensionality: 33809
-    density: 0.005561
-    top 10 keywords per class:
-    alt.atheism: benedikt rice rushdie wingate islamic bmd atheism wwc keith athe...
-    comp.graphics: sphere virtual 42 files windows hi image 3d 3do graphics
-    sci.space: pat henry sunrise rockets dc launch flight moon orbit space
-    talk.religion.misc: hudson thyagi biblical 2000 abortion kendig hare mitre ch...
+    SGDClassifier(early_stopping=True, loss='log_loss', n_iter_no_change=3)
+    train time: 0.0222s
+    test time:  0.00049s
+    accuracy:   0.762
+    dimensionality: 5316
+    density: 1.0
 
-    classification report:
-                        precision    recall  f1-score   support
-
-           alt.atheism       0.85      0.75      0.80       319
-         comp.graphics       0.89      0.97      0.93       389
-             sci.space       0.94      0.94      0.94       394
-    talk.religion.misc       0.76      0.78      0.77       251
-
-              accuracy                           0.87      1353
-             macro avg       0.86      0.86      0.86      1353
-          weighted avg       0.87      0.87      0.87      1353
-
-    confusion matrix:
-    [[238  14  11  56]
-     [  0 378   7   4]
-     [  2  22 369   1]
-     [ 39  12   4 196]]
-
-    ________________________________________________________________________________
-    Training: 
-    SGDClassifier(max_iter=50, penalty='l1')
-    train time: 0.083s
-    test time:  0.002s
-    accuracy:   0.885
-    dimensionality: 33809
-    density: 0.023019
-    top 10 keywords per class:
-    alt.atheism: charley atheist rice psilink wingate rushdie keith islamic athei...
-    comp.graphics: windows 3d video animation files hi pov 3do image graphics
-    sci.space: sunrise sci nasa flight launch dc pat moon orbit space
-    talk.religion.misc: 2000 abortion 666 homosexuality biblical hudson mr beast ...
-
-    classification report:
-                        precision    recall  f1-score   support
-
-           alt.atheism       0.86      0.79      0.82       319
-         comp.graphics       0.93      0.96      0.95       389
-             sci.space       0.93      0.96      0.94       394
-    talk.religion.misc       0.77      0.77      0.77       251
-
-              accuracy                           0.89      1353
-             macro avg       0.87      0.87      0.87      1353
-          weighted avg       0.88      0.89      0.88      1353
-
-    confusion matrix:
-    [[252   6  12  49]
-     [  1 375   8   5]
-     [  2  11 378   3]
-     [ 39  11   8 193]]
 
     ================================================================================
-    Elastic-Net penalty
-    ________________________________________________________________________________
-    Training: 
-    SGDClassifier(max_iter=50, penalty='elasticnet')
-    train time: 0.121s
-    test time:  0.002s
-    accuracy:   0.902
-    dimensionality: 33809
-    density: 0.187731
-    top 10 keywords per class:
-    alt.atheism: okcforum caltech cobb atheist rushdie wingate islamic keith athe...
-    comp.graphics: video points hi 3do 42 3d file animation image graphics
-    sci.space: shuttle pat launch planets sci dc nasa moon orbit space
-    talk.religion.misc: order abortion 666 biblical morality mr 2000 fbi beast ch...
-
-    classification report:
-                        precision    recall  f1-score   support
-
-           alt.atheism       0.86      0.85      0.85       319
-         comp.graphics       0.92      0.98      0.95       389
-             sci.space       0.96      0.94      0.95       394
-    talk.religion.misc       0.83      0.78      0.81       251
-
-              accuracy                           0.90      1353
-             macro avg       0.89      0.89      0.89      1353
-          weighted avg       0.90      0.90      0.90      1353
-
-    confusion matrix:
-    [[270   6   9  34]
-     [  0 381   3   5]
-     [  1  20 372   1]
-     [ 42   7   5 197]]
-
-    ================================================================================
-    NearestCentroid (aka Rocchio classifier)
+    NearestCentroid
     ________________________________________________________________________________
     Training: 
     NearestCentroid()
-    train time: 0.004s
-    test time:  0.002s
-    accuracy:   0.855
-    classification report:
-                        precision    recall  f1-score   support
-
-           alt.atheism       0.88      0.69      0.77       319
-         comp.graphics       0.84      0.97      0.90       389
-             sci.space       0.96      0.92      0.94       394
-    talk.religion.misc       0.72      0.79      0.75       251
-
-              accuracy                           0.86      1353
-             macro avg       0.85      0.84      0.84      1353
-          weighted avg       0.86      0.86      0.85      1353
-
-    confusion matrix:
-    [[219  25   5  70]
-     [  1 379   5   4]
-     [  1  30 361   2]
-     [ 29  19   5 198]]
+    train time: 0.00279s
+    test time:  0.000801s
+    accuracy:   0.748
 
     ================================================================================
-    Naive Bayes
-    ________________________________________________________________________________
-    Training: 
-    MultinomialNB(alpha=0.01)
-    train time: 0.003s
-    test time:  0.001s
-    accuracy:   0.899
-    classification report:
-                        precision    recall  f1-score   support
-
-           alt.atheism       0.85      0.87      0.86       319
-         comp.graphics       0.95      0.95      0.95       389
-             sci.space       0.92      0.95      0.94       394
-    talk.religion.misc       0.86      0.77      0.81       251
-
-              accuracy                           0.90      1353
-             macro avg       0.89      0.89      0.89      1353
-          weighted avg       0.90      0.90      0.90      1353
-
-    confusion matrix:
-    [[279   2   8  30]
-     [  2 369  16   2]
-     [  3  15 376   0]
-     [ 45   4   9 193]]
-
-    ________________________________________________________________________________
-    Training: 
-    BernoulliNB(alpha=0.01)
-    train time: 0.005s
-    test time:  0.004s
-    accuracy:   0.884
-    classification report:
-                        precision    recall  f1-score   support
-
-           alt.atheism       0.83      0.88      0.86       319
-         comp.graphics       0.88      0.96      0.92       389
-             sci.space       0.94      0.91      0.92       394
-    talk.religion.misc       0.87      0.73      0.79       251
-
-              accuracy                           0.88      1353
-             macro avg       0.88      0.87      0.87      1353
-          weighted avg       0.88      0.88      0.88      1353
-
-    confusion matrix:
-    [[282   9   3  25]
-     [  1 373  13   2]
-     [  5  31 358   0]
-     [ 50  10   8 183]]
-
+    Complement naive Bayes
     ________________________________________________________________________________
     Training: 
     ComplementNB(alpha=0.1)
-    train time: 0.004s
-    test time:  0.001s
-    accuracy:   0.911
-    classification report:
-                        precision    recall  f1-score   support
-
-           alt.atheism       0.85      0.89      0.87       319
-         comp.graphics       0.95      0.97      0.96       389
-             sci.space       0.94      0.97      0.95       394
-    talk.religion.misc       0.88      0.75      0.81       251
-
-              accuracy                           0.91      1353
-             macro avg       0.90      0.90      0.90      1353
-          weighted avg       0.91      0.91      0.91      1353
-
-    confusion matrix:
-    [[284   2   8  25]
-     [  2 379   7   1]
-     [  0  13 381   0]
-     [ 49   5   9 188]]
-
-    ================================================================================
-    LinearSVC with L1-based feature selection
-    ________________________________________________________________________________
-    Training: 
-    Pipeline(steps=[('feature_selection',
-                     SelectFromModel(estimator=LinearSVC(dual=False, penalty='l1',
-                                                         tol=0.001))),
-                    ('classification', LinearSVC())])
-    train time: 0.194s
-    test time:  0.002s
-    accuracy:   0.880
-    classification report:
-                        precision    recall  f1-score   support
-
-           alt.atheism       0.84      0.80      0.82       319
-         comp.graphics       0.91      0.96      0.93       389
-             sci.space       0.93      0.95      0.94       394
-    talk.religion.misc       0.81      0.76      0.78       251
-
-              accuracy                           0.88      1353
-             macro avg       0.87      0.87      0.87      1353
-          weighted avg       0.88      0.88      0.88      1353
-
-    confusion matrix:
-    [[254  11  13  41]
-     [  2 374   9   4]
-     [  2  18 373   1]
-     [ 44   9   8 190]]
+    train time: 0.0016s
+    test time:  0.000417s
+    accuracy:   0.779
 
 
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 269-273
+.. GENERATED FROM PYTHON SOURCE LINES 373-377
 
-Add plots
-------------------------------------
-The bar plot indicates the accuracy, training time (normalized) and test time
-(normalized) of each classifier.
+Plot accuracy, training and test time of each classifier
+--------------------------------------------------------
+The scatter plots show the trade-off between the test accuracy and the
+training and testing time of each classifier.
 
-.. GENERATED FROM PYTHON SOURCE LINES 273-298
+.. GENERATED FROM PYTHON SOURCE LINES 377-407
 
 .. code-block:: default
 
-    import matplotlib.pyplot as plt
 
     indices = np.arange(len(results))
 
     results = [[x[i] for x in results] for i in range(4)]
 
     clf_names, score, training_time, test_time = results
-    training_time = np.array(training_time) / np.max(training_time)
-    test_time = np.array(test_time) / np.max(test_time)
+    training_time = np.array(training_time)
+    test_time = np.array(test_time)
 
-    plt.figure(figsize=(12, 8))
-    plt.title("Score")
-    plt.barh(indices, score, 0.2, label="score", color="navy")
-    plt.barh(indices + 0.3, training_time, 0.2, label="training time", color="c")
-    plt.barh(indices + 0.6, test_time, 0.2, label="test time", color="darkorange")
-    plt.yticks(())
-    plt.legend(loc="best")
-    plt.subplots_adjust(left=0.25)
-    plt.subplots_adjust(top=0.95)
-    plt.subplots_adjust(bottom=0.05)
+    fig, ax1 = plt.subplots(figsize=(10, 8))
+    ax1.scatter(score, training_time, s=60)
+    ax1.set(
+        title="Score-training time trade-off",
+        yscale="log",
+        xlabel="test accuracy",
+        ylabel="training time (s)",
+    )
+    fig, ax2 = plt.subplots(figsize=(10, 8))
+    ax2.scatter(score, test_time, s=60)
+    ax2.set(
+        title="Score-test time trade-off",
+        yscale="log",
+        xlabel="test accuracy",
+        ylabel="test time (s)",
+    )
 
-    for i, c in zip(indices, clf_names):
-        plt.text(-0.3, i, c)
-
-    plt.show()
-
-
-
-.. image-sg:: /auto_examples/text/images/sphx_glr_plot_document_classification_20newsgroups_001.png
-   :alt: Score
-   :srcset: /auto_examples/text/images/sphx_glr_plot_document_classification_20newsgroups_001.png
-   :class: sphx-glr-single-img
+    for i, txt in enumerate(clf_names):
+        ax1.annotate(txt, (score[i], training_time[i]))
+        ax2.annotate(txt, (score[i], test_time[i]))
 
 
 
 
+.. rst-class:: sphx-glr-horizontal
+
+
+    *
+
+      .. image-sg:: /auto_examples/text/images/sphx_glr_plot_document_classification_20newsgroups_005.png
+         :alt: Score-training time trade-off
+         :srcset: /auto_examples/text/images/sphx_glr_plot_document_classification_20newsgroups_005.png
+         :class: sphx-glr-multi-img
+
+    *
+
+      .. image-sg:: /auto_examples/text/images/sphx_glr_plot_document_classification_20newsgroups_006.png
+         :alt: Score-test time trade-off
+         :srcset: /auto_examples/text/images/sphx_glr_plot_document_classification_20newsgroups_006.png
+         :class: sphx-glr-multi-img
+
+
+
+
+
+.. GENERATED FROM PYTHON SOURCE LINES 408-430
+
+The naive Bayes model has the best trade-off between score and
+training/testing time, while Random Forest is both slow to train, expensive to
+predict and has a comparatively bad accuracy. This is expected: for
+high-dimensional prediction problems, linear models are often better suited as
+most problems become linearly separable when the feature space has 10,000
+dimensions or more.
+
+The difference in training speed and accuracy of the linear models can be
+explained by the choice of the loss function they optimize and the kind of
+regularization they use. Be aware that some linear models with the same loss
+but a different solver or regularization configuration may yield different
+fitting times and test accuracy. We can observe on the second plot that once
+trained, all linear models have approximately the same prediction speed which
+is expected because they all implement the same prediction function.
+
+KNeighborsClassifier has a relatively low accuracy and has the highest testing
+time. The long prediction time is also expected: for each prediction the model
+has to compute the pairwise distances between the testing sample and each
+document in the training set, which is computationally expensive. Furthermore,
+the "curse of dimensionality" harms the ability of this model to yield
+competitive accuracy in the high dimensional feature space of text
+classification problems.
 
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** ( 0 minutes  4.096 seconds)
+   **Total running time of the script:** ( 0 minutes  5.893 seconds)
 
 
 .. _sphx_glr_download_auto_examples_text_plot_document_classification_20newsgroups.py:
