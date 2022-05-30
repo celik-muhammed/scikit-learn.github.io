@@ -838,18 +838,18 @@ parameters of composite or nested estimators such as
 <span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">sklearn.datasets</span> <span class="kn">import</span> <span class="n">make_moons</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">X</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="n">make_moons</span><span class="p">()</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">calibrated_forest</span> <span class="o">=</span> <span class="n">CalibratedClassifierCV</span><span class="p">(</span>
-<span class="gp">... </span>   <span class="n">base_estimator</span><span class="o">=</span><span class="n">RandomForestClassifier</span><span class="p">(</span><span class="n">n_estimators</span><span class="o">=</span><span class="mi">10</span><span class="p">))</span>
+<span class="gp">... </span>   <span class="n">estimator</span><span class="o">=</span><span class="n">RandomForestClassifier</span><span class="p">(</span><span class="n">n_estimators</span><span class="o">=</span><span class="mi">10</span><span class="p">))</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">param_grid</span> <span class="o">=</span> <span class="p">{</span>
-<span class="gp">... </span>   <span class="s1">&#39;base_estimator__max_depth&#39;</span><span class="p">:</span> <span class="p">[</span><span class="mi">2</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">6</span><span class="p">,</span> <span class="mi">8</span><span class="p">]}</span>
+<span class="gp">... </span>   <span class="s1">&#39;estimator__max_depth&#39;</span><span class="p">:</span> <span class="p">[</span><span class="mi">2</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">6</span><span class="p">,</span> <span class="mi">8</span><span class="p">]}</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">search</span> <span class="o">=</span> <span class="n">GridSearchCV</span><span class="p">(</span><span class="n">calibrated_forest</span><span class="p">,</span> <span class="n">param_grid</span><span class="p">,</span> <span class="n">cv</span><span class="o">=</span><span class="mi">5</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">search</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
 <span class="go">GridSearchCV(cv=5,</span>
 <span class="go">             estimator=CalibratedClassifierCV(...),</span>
-<span class="go">             param_grid={&#39;base_estimator__max_depth&#39;: [2, 4, 6, 8]})</span>
+<span class="go">             param_grid={&#39;estimator__max_depth&#39;: [2, 4, 6, 8]})</span>
 </pre></div>
 </div>
 <p>Here, <code class="docutils literal notranslate"><span class="pre">&lt;estimator&gt;</span></code> is the parameter name of the nested estimator,
-in this case <code class="docutils literal notranslate"><span class="pre">base_estimator</span></code>.
+in this case <code class="docutils literal notranslate"><span class="pre">estimator</span></code>.
 If the meta-estimator is constructed as a collection of estimators as in
 <code class="docutils literal notranslate"><span class="pre">pipeline.Pipeline</span></code>, then <code class="docutils literal notranslate"><span class="pre">&lt;estimator&gt;</span></code> refers to the name of the estimator,
 see <a class="reference internal" href="compose.html#pipeline-nested-parameters"><span class="std std-ref">Nested parameters</span></a>.  In practice, there can be several
@@ -861,7 +861,7 @@ levels of nesting:</p>
 <span class="gp">... </span>   <span class="p">(</span><span class="s1">&#39;model&#39;</span><span class="p">,</span> <span class="n">calibrated_forest</span><span class="p">)])</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">param_grid</span> <span class="o">=</span> <span class="p">{</span>
 <span class="gp">... </span>   <span class="s1">&#39;select__k&#39;</span><span class="p">:</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">],</span>
-<span class="gp">... </span>   <span class="s1">&#39;model__base_estimator__max_depth&#39;</span><span class="p">:</span> <span class="p">[</span><span class="mi">2</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">6</span><span class="p">,</span> <span class="mi">8</span><span class="p">]}</span>
+<span class="gp">... </span>   <span class="s1">&#39;model__estimator__max_depth&#39;</span><span class="p">:</span> <span class="p">[</span><span class="mi">2</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">6</span><span class="p">,</span> <span class="mi">8</span><span class="p">]}</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">search</span> <span class="o">=</span> <span class="n">GridSearchCV</span><span class="p">(</span><span class="n">pipe</span><span class="p">,</span> <span class="n">param_grid</span><span class="p">,</span> <span class="n">cv</span><span class="o">=</span><span class="mi">5</span><span class="p">)</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
 </pre></div>
 </div>
