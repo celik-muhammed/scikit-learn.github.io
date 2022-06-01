@@ -191,6 +191,7 @@
 <li><a class="reference internal" href="#sklearn-cluster"><code class="xref py py-mod docutils literal notranslate"><span class="pre">sklearn.cluster</span></code></a></li>
 <li><a class="reference internal" href="#sklearn-datasets"><code class="xref py py-mod docutils literal notranslate"><span class="pre">sklearn.datasets</span></code></a></li>
 <li><a class="reference internal" href="#sklearn-ensemble"><code class="xref py py-mod docutils literal notranslate"><span class="pre">sklearn.ensemble</span></code></a></li>
+<li><a class="reference internal" href="#sklearn-impute"><code class="xref py py-mod docutils literal notranslate"><span class="pre">sklearn.impute</span></code></a></li>
 <li><a class="reference internal" href="#sklearn-metrics"><code class="xref py py-mod docutils literal notranslate"><span class="pre">sklearn.metrics</span></code></a></li>
 <li><a class="reference internal" href="#sklearn-neighbors"><code class="xref py py-mod docutils literal notranslate"><span class="pre">sklearn.neighbors</span></code></a></li>
 <li><a class="reference internal" href="#sklearn-svm"><code class="xref py py-mod docutils literal notranslate"><span class="pre">sklearn.svm</span></code></a></li>
@@ -234,6 +235,11 @@ parameters, may produce different models from the previous version. This often
 occurs due to changes in the modelling logic (bug fixes or enhancements), or in
 random sampling procedures.</p>
 <ul class="simple">
+<li><p><span class="raw-html"><span class="badge badge-info">Enhancement</span></span>  The default <code class="docutils literal notranslate"><span class="pre">eigen_tol</span></code> for <a class="reference internal" href="../modules/generated/sklearn.cluster.SpectralClustering.html#sklearn.cluster.SpectralClustering" title="sklearn.cluster.SpectralClustering"><code class="xref py py-class docutils literal notranslate"><span class="pre">cluster.SpectralClustering</span></code></a>,
+<a class="reference internal" href="../modules/generated/sklearn.manifold.SpectralEmbedding.html#sklearn.manifold.SpectralEmbedding" title="sklearn.manifold.SpectralEmbedding"><code class="xref py py-class docutils literal notranslate"><span class="pre">manifold.SpectralEmbedding</span></code></a>, <a class="reference internal" href="../modules/generated/sklearn.cluster.spectral_clustering.html#sklearn.cluster.spectral_clustering" title="sklearn.cluster.spectral_clustering"><code class="xref py py-func docutils literal notranslate"><span class="pre">cluster.spectral_clustering</span></code></a>,
+and <a class="reference internal" href="../modules/generated/sklearn.manifold.spectral_embedding.html#sklearn.manifold.spectral_embedding" title="sklearn.manifold.spectral_embedding"><code class="xref py py-func docutils literal notranslate"><span class="pre">manifold.spectral_embedding</span></code></a> is now <code class="docutils literal notranslate"><span class="pre">None</span></code> when using the <code class="docutils literal notranslate"><span class="pre">'amg'</span></code>
+or <code class="docutils literal notranslate"><span class="pre">'lobpcg'</span></code> solvers. This change improves numerical stability of the
+solver, but may result in a different model.</p></li>
 <li><p><span class="raw-html"><span class="badge badge-danger">Fix</span></span>  <a class="reference internal" href="../modules/generated/sklearn.manifold.TSNE.html#sklearn.manifold.TSNE" title="sklearn.manifold.TSNE"><code class="xref py py-class docutils literal notranslate"><span class="pre">manifold.TSNE</span></code></a> now throws a <code class="docutils literal notranslate"><span class="pre">ValueError</span></code> when fit with
 <code class="docutils literal notranslate"><span class="pre">perplexity&gt;=n_samples</span></code> to ensure mathematical correctness of the algorithm.
 <a class="reference external" href="https://github.com/scikit-learn/scikit-learn/pull/10805">#10805</a> by <a class="reference external" href="https://github.com/MrMathias">Mathias Andersen</a> and
@@ -275,6 +281,12 @@ random initializations to one when using <code class="docutils literal notransla
 This begins deprecation for the default values of <code class="docutils literal notranslate"><span class="pre">n_init</span></code> in the two classes
 and both will have their defaults changed to <code class="docutils literal notranslate"><span class="pre">n_init='auto'</span></code> in 1.4.
 <a class="reference external" href="https://github.com/scikit-learn/scikit-learn/pull/23038">#23038</a> by <a class="reference external" href="https://github.com/micky774">Meekail Zain</a>.</p></li>
+<li><p><span class="raw-html"><span class="badge badge-info">Enhancement</span></span>  <a class="reference internal" href="../modules/generated/sklearn.cluster.SpectralClustering.html#sklearn.cluster.SpectralClustering" title="sklearn.cluster.SpectralClustering"><code class="xref py py-class docutils literal notranslate"><span class="pre">cluster.SpectralClustering</span></code></a> and
+<a class="reference internal" href="../modules/generated/sklearn.cluster.spectral_clustering.html#sklearn.cluster.spectral_clustering" title="sklearn.cluster.spectral_clustering"><code class="xref py py-func docutils literal notranslate"><span class="pre">cluster.spectral_clustering</span></code></a> now propogates the <code class="docutils literal notranslate"><span class="pre">eigen_tol</span></code> parameter
+to all choices of <code class="docutils literal notranslate"><span class="pre">eigen_solver</span></code>. Includes a new option <code class="docutils literal notranslate"><span class="pre">eigen_tol=&quot;auto&quot;</span></code>
+and begins deprecation to change the default from <code class="docutils literal notranslate"><span class="pre">eigen_tol=0</span></code> to
+<code class="docutils literal notranslate"><span class="pre">eigen_tol=&quot;auto&quot;</span></code> in version 1.3.
+<a class="reference external" href="https://github.com/scikit-learn/scikit-learn/pull/23210">#23210</a> by <a class="reference external" href="https://github.com/micky774">Meekail Zain</a>.</p></li>
 </ul>
 </section>
 <section id="sklearn-datasets">
@@ -297,6 +309,13 @@ in version 1.4
 <ul class="simple">
 <li><p><span class="raw-html"><span class="badge badge-info">Efficiency</span></span>  Improve runtime performance of <a class="reference internal" href="../modules/generated/sklearn.ensemble.IsolationForest.html#sklearn.ensemble.IsolationForest" title="sklearn.ensemble.IsolationForest"><code class="xref py py-class docutils literal notranslate"><span class="pre">ensemble.IsolationForest</span></code></a>
 by avoiding data copies. <a class="reference external" href="https://github.com/scikit-learn/scikit-learn/pull/23252">#23252</a> by <a class="reference external" href="https://github.com/MaxwellLZH">Zhehao Liu</a>.</p></li>
+</ul>
+</section>
+<section id="sklearn-impute">
+<h3><a class="reference internal" href="../modules/classes.html#module-sklearn.impute" title="sklearn.impute"><code class="xref py py-mod docutils literal notranslate"><span class="pre">sklearn.impute</span></code></a><a class="headerlink" href="#sklearn-impute" title="Permalink to this headline">¶</a></h3>
+<ul class="simple">
+<li><p><span class="raw-html"><span class="badge badge-danger">Fix</span></span>  <a class="reference internal" href="../modules/generated/sklearn.impute.SimpleImputer.html#sklearn.impute.SimpleImputer" title="sklearn.impute.SimpleImputer"><code class="xref py py-class docutils literal notranslate"><span class="pre">impute.SimpleImputer</span></code></a> uses the dtype seen in <code class="docutils literal notranslate"><span class="pre">fit</span></code> for
+<code class="docutils literal notranslate"><span class="pre">transform</span></code> when the dtype is object. <a class="reference external" href="https://github.com/scikit-learn/scikit-learn/pull/22063">#22063</a> by <a class="reference external" href="https://github.com/thomasjpfan">Thomas Fan</a>.</p></li>
 </ul>
 </section>
 <section id="sklearn-metrics">
@@ -352,6 +371,13 @@ deterministic SVD used by the randomized SVD algorithm.
 <section id="sklearn-manifold">
 <h3><a class="reference internal" href="../modules/classes.html#module-sklearn.manifold" title="sklearn.manifold"><code class="xref py py-mod docutils literal notranslate"><span class="pre">sklearn.manifold</span></code></a><a class="headerlink" href="#sklearn-manifold" title="Permalink to this headline">¶</a></h3>
 <ul class="simple">
+<li><p><span class="raw-html"><span class="badge badge-info">Enhancement</span></span>  Adds <code class="docutils literal notranslate"><span class="pre">eigen_tol</span></code> parameter to
+<a class="reference internal" href="../modules/generated/sklearn.manifold.SpectralEmbedding.html#sklearn.manifold.SpectralEmbedding" title="sklearn.manifold.SpectralEmbedding"><code class="xref py py-class docutils literal notranslate"><span class="pre">manifold.SpectralEmbedding</span></code></a>. Both <a class="reference internal" href="../modules/generated/sklearn.manifold.spectral_embedding.html#sklearn.manifold.spectral_embedding" title="sklearn.manifold.spectral_embedding"><code class="xref py py-func docutils literal notranslate"><span class="pre">manifold.spectral_embedding</span></code></a>
+and <a class="reference internal" href="../modules/generated/sklearn.manifold.SpectralEmbedding.html#sklearn.manifold.SpectralEmbedding" title="sklearn.manifold.SpectralEmbedding"><code class="xref py py-class docutils literal notranslate"><span class="pre">manifold.SpectralEmbedding</span></code></a> now propogate <code class="docutils literal notranslate"><span class="pre">eigen_tol</span></code> to all
+choices of <code class="docutils literal notranslate"><span class="pre">eigen_solver</span></code>. Includes a new option <code class="docutils literal notranslate"><span class="pre">eigen_tol=&quot;auto&quot;</span></code>
+and begins deprecation to change the default from <code class="docutils literal notranslate"><span class="pre">eigen_tol=0</span></code> to
+<code class="docutils literal notranslate"><span class="pre">eigen_tol=&quot;auto&quot;</span></code> in version 1.3.
+<a class="reference external" href="https://github.com/scikit-learn/scikit-learn/pull/23210">#23210</a> by <a class="reference external" href="https://github.com/micky774">Meekail Zain</a>.</p></li>
 <li><p><span class="raw-html"><span class="badge badge-danger">Fix</span></span>  <a class="reference internal" href="../modules/generated/sklearn.manifold.TSNE.html#sklearn.manifold.TSNE" title="sklearn.manifold.TSNE"><code class="xref py py-class docutils literal notranslate"><span class="pre">manifold.TSNE</span></code></a> now throws a <code class="docutils literal notranslate"><span class="pre">ValueError</span></code> when fit with
 <code class="docutils literal notranslate"><span class="pre">perplexity&gt;=n_samples</span></code> to ensure mathematical correctness of the algorithm.
 <a class="reference external" href="https://github.com/scikit-learn/scikit-learn/pull/10805">#10805</a> by <a class="reference external" href="https://github.com/MrMathias">Mathias Andersen</a> and
