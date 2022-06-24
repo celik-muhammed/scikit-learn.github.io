@@ -186,7 +186,24 @@ three linear models, one for each quantile.
 We will use the quantiles at 5% and 95% to find the outliers in the training
 sample beyond the central 90% interval.
 
-.. GENERATED FROM PYTHON SOURCE LINES 114-133
+.. GENERATED FROM PYTHON SOURCE LINES 114-120
+
+.. code-block:: default
+
+    from sklearn.utils.fixes import sp_version, parse_version
+
+    # This is line is to avoid incompatibility if older SciPy version.
+    # You should use `solver="highs"` with recent version of SciPy.
+    solver = "highs" if sp_version >= parse_version("1.6.0") else "interior-point"
+
+
+
+
+
+
+
+
+.. GENERATED FROM PYTHON SOURCE LINES 121-140
 
 .. code-block:: default
 
@@ -196,7 +213,7 @@ sample beyond the central 90% interval.
     predictions = {}
     out_bounds_predictions = np.zeros_like(y_true_mean, dtype=np.bool_)
     for quantile in quantiles:
-        qr = QuantileRegressor(quantile=quantile, alpha=0)
+        qr = QuantileRegressor(quantile=quantile, alpha=0, solver=solver)
         y_pred = qr.fit(X, y_normal).predict(X)
         predictions[quantile] = y_pred
 
@@ -216,13 +233,13 @@ sample beyond the central 90% interval.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 134-137
+.. GENERATED FROM PYTHON SOURCE LINES 141-144
 
 Now, we can plot the three linear models and the distinguished samples that
 are within the central 90% interval from samples that are outside this
 interval.
 
-.. GENERATED FROM PYTHON SOURCE LINES 137-163
+.. GENERATED FROM PYTHON SOURCE LINES 144-170
 
 .. code-block:: default
 
@@ -264,7 +281,7 @@ interval.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 164-178
+.. GENERATED FROM PYTHON SOURCE LINES 171-185
 
 Since the noise is still Normally distributed, in particular is symmetric,
 the true conditional mean and the true conditional median coincide. Indeed,
@@ -281,7 +298,7 @@ that we have a total of 100 samples.
 We can repeat the same experiment using the asymmetric Pareto distributed
 target.
 
-.. GENERATED FROM PYTHON SOURCE LINES 178-195
+.. GENERATED FROM PYTHON SOURCE LINES 185-202
 
 .. code-block:: default
 
@@ -289,7 +306,7 @@ target.
     predictions = {}
     out_bounds_predictions = np.zeros_like(y_true_mean, dtype=np.bool_)
     for quantile in quantiles:
-        qr = QuantileRegressor(quantile=quantile, alpha=0)
+        qr = QuantileRegressor(quantile=quantile, alpha=0, solver=solver)
         y_pred = qr.fit(X, y_pareto).predict(X)
         predictions[quantile] = y_pred
 
@@ -309,7 +326,7 @@ target.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 196-223
+.. GENERATED FROM PYTHON SOURCE LINES 203-230
 
 .. code-block:: default
 
@@ -352,7 +369,7 @@ target.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 224-248
+.. GENERATED FROM PYTHON SOURCE LINES 231-255
 
 Due to the asymmetry of the distribution of the noise, we observe that the
 true mean and estimated conditional median are different. We also observe
@@ -379,7 +396,7 @@ squared error and mean absolute error. We will use the asymmetric Pareto
 distributed target to make it more interesting as mean and median are not
 equal.
 
-.. GENERATED FROM PYTHON SOURCE LINES 248-269
+.. GENERATED FROM PYTHON SOURCE LINES 255-276
 
 .. code-block:: default
 
@@ -388,7 +405,7 @@ equal.
     from sklearn.metrics import mean_squared_error
 
     linear_regression = LinearRegression()
-    quantile_regression = QuantileRegressor(quantile=0.5, alpha=0)
+    quantile_regression = QuantileRegressor(quantile=0.5, alpha=0, solver=solver)
 
     y_pred_lr = linear_regression.fit(X, y_pareto).predict(X)
     y_pred_qr = quantile_regression.fit(X, y_pareto).predict(X)
@@ -426,7 +443,7 @@ equal.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 270-281
+.. GENERATED FROM PYTHON SOURCE LINES 277-288
 
 On the training set, we see that MAE is lower for
 :class:`~sklearn.linear_model.QuantileRegressor` than
@@ -440,7 +457,7 @@ while MSE is the loss minimized
 We can make a similar evaluation but looking a the test error obtained by
 cross-validation.
 
-.. GENERATED FROM PYTHON SOURCE LINES 281-308
+.. GENERATED FROM PYTHON SOURCE LINES 288-315
 
 .. code-block:: default
 
@@ -493,14 +510,14 @@ cross-validation.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 309-310
+.. GENERATED FROM PYTHON SOURCE LINES 316-317
 
 We reach similar conclusions on the out-of-sample evaluation.
 
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** ( 0 minutes  1.087 seconds)
+   **Total running time of the script:** ( 0 minutes  0.496 seconds)
 
 
 .. _sphx_glr_download_auto_examples_linear_model_plot_quantile_regression.py:
