@@ -5,7 +5,7 @@
 <!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
 <head>
   <meta charset="utf-8">
-  <meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+  <meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
 <meta property="og:title" content="1.16. Probability calibration" />
   
@@ -202,7 +202,7 @@
       <div class="sk-page-content container-fluid body px-md-3" role="main">
         
   <section id="probability-calibration">
-<span id="calibration"></span><h1><span class="section-number">1.16. </span>Probability calibration<a class="headerlink" href="#probability-calibration" title="Permalink to this headline">¶</a></h1>
+<span id="calibration"></span><h1><span class="section-number">1.16. </span>Probability calibration<a class="headerlink" href="#probability-calibration" title="Permalink to this heading">¶</a></h1>
 <p>When performing classification you often want not only to predict the class
 label, but also obtain a probability of the respective label. This probability
 gives you some kind of confidence on the prediction. Some models can give you
@@ -220,7 +220,7 @@ such that among the samples to which it gave a <a class="reference internal" hre
 close to 0.8,
 approximately 80% actually belong to the positive class.</p>
 <section id="calibration-curves">
-<span id="calibration-curve"></span><h2><span class="section-number">1.16.1. </span>Calibration curves<a class="headerlink" href="#calibration-curves" title="Permalink to this headline">¶</a></h2>
+<span id="calibration-curve"></span><h2><span class="section-number">1.16.1. </span>Calibration curves<a class="headerlink" href="#calibration-curves" title="Permalink to this heading">¶</a></h2>
 <p>Calibration curves (also known as reliability diagrams) compare how well the
 probabilistic predictions of a binary classifier are calibrated. It plots
 the true frequency of the positive label against its predicted probability,
@@ -252,7 +252,7 @@ case in this dataset which contains 2 redundant features.</p>
 <p><a class="reference internal" href="generated/sklearn.ensemble.RandomForestClassifier.html#sklearn.ensemble.RandomForestClassifier" title="sklearn.ensemble.RandomForestClassifier"><code class="xref py py-class docutils literal notranslate"><span class="pre">RandomForestClassifier</span></code></a> shows the opposite behavior: the histograms
 show peaks at approximately 0.2 and 0.9 probability, while probabilities
 close to 0 or 1 are very rare. An explanation for this is given by
-Niculescu-Mizil and Caruana <a class="footnote-reference brackets" href="#id10" id="id1">1</a>: “Methods such as bagging and random
+Niculescu-Mizil and Caruana <a class="footnote-reference brackets" href="#id10" id="id1" role="doc-noteref"><span class="fn-bracket">[</span>1<span class="fn-bracket">]</span></a>: “Methods such as bagging and random
 forests that average predictions from a base set of models can have
 difficulty making predictions near 0 and 1 because variance in the
 underlying base models will bias predictions that should be near zero or one
@@ -266,17 +266,17 @@ prediction of the bagged ensemble away from 0. We observe this effect most
 strongly with random forests because the base-level trees trained with
 random forests have relatively high variance due to feature subsetting.” As
 a result, the calibration curve also referred to as the reliability diagram
-(Wilks 1995 <a class="footnote-reference brackets" href="#id11" id="id2">2</a>) shows a characteristic sigmoid shape, indicating that the
+(Wilks 1995 <a class="footnote-reference brackets" href="#id11" id="id2" role="doc-noteref"><span class="fn-bracket">[</span>2<span class="fn-bracket">]</span></a>) shows a characteristic sigmoid shape, indicating that the
 classifier could trust its “intuition” more and return probabilities closer
 to 0 or 1 typically.</p>
 <p>Linear Support Vector Classification (<a class="reference internal" href="generated/sklearn.svm.LinearSVC.html#sklearn.svm.LinearSVC" title="sklearn.svm.LinearSVC"><code class="xref py py-class docutils literal notranslate"><span class="pre">LinearSVC</span></code></a>) shows an even more
 sigmoid curve than <a class="reference internal" href="generated/sklearn.ensemble.RandomForestClassifier.html#sklearn.ensemble.RandomForestClassifier" title="sklearn.ensemble.RandomForestClassifier"><code class="xref py py-class docutils literal notranslate"><span class="pre">RandomForestClassifier</span></code></a>, which is
-typical for maximum-margin methods (compare Niculescu-Mizil and Caruana <a class="footnote-reference brackets" href="#id10" id="id3">1</a>),
+typical for maximum-margin methods (compare Niculescu-Mizil and Caruana <a class="footnote-reference brackets" href="#id10" id="id3" role="doc-noteref"><span class="fn-bracket">[</span>1<span class="fn-bracket">]</span></a>),
 which focus on difficult to classify samples that are close to the decision
 boundary (the support vectors).</p>
 </section>
 <section id="calibrating-a-classifier">
-<h2><span class="section-number">1.16.2. </span>Calibrating a classifier<a class="headerlink" href="#calibrating-a-classifier" title="Permalink to this headline">¶</a></h2>
+<h2><span class="section-number">1.16.2. </span>Calibrating a classifier<a class="headerlink" href="#calibrating-a-classifier" title="Permalink to this heading">¶</a></h2>
 <p>Calibrating a classifier consists of fitting a regressor (called a
 <em>calibrator</em>) that maps the output of the classifier (as given by
 <a class="reference internal" href="../glossary.html#term-decision_function"><span class="xref std std-term">decision_function</span></a> or <a class="reference internal" href="../glossary.html#term-predict_proba"><span class="xref std std-term">predict_proba</span></a>) to a calibrated probability
@@ -290,7 +290,7 @@ to fit the calibrator would thus result in a biased calibrator that maps to
 probabilities closer to 0 and 1 than it should.</p>
 </section>
 <section id="usage">
-<h2><span class="section-number">1.16.3. </span>Usage<a class="headerlink" href="#usage" title="Permalink to this headline">¶</a></h2>
+<h2><span class="section-number">1.16.3. </span>Usage<a class="headerlink" href="#usage" title="Permalink to this heading">¶</a></h2>
 <p>The <a class="reference internal" href="generated/sklearn.calibration.CalibratedClassifierCV.html#sklearn.calibration.CalibratedClassifierCV" title="sklearn.calibration.CalibratedClassifierCV"><code class="xref py py-class docutils literal notranslate"><span class="pre">CalibratedClassifierCV</span></code></a> class is used to calibrate a classifier.</p>
 <p><a class="reference internal" href="generated/sklearn.calibration.CalibratedClassifierCV.html#sklearn.calibration.CalibratedClassifierCV" title="sklearn.calibration.CalibratedClassifierCV"><code class="xref py py-class docutils literal notranslate"><span class="pre">CalibratedClassifierCV</span></code></a> uses a cross-validation approach to ensure
 unbiased data is always used to fit the calibrator. The data is split into k
@@ -341,8 +341,8 @@ mean a better calibrated model.</p>
 <p><a class="reference internal" href="generated/sklearn.calibration.CalibratedClassifierCV.html#sklearn.calibration.CalibratedClassifierCV" title="sklearn.calibration.CalibratedClassifierCV"><code class="xref py py-class docutils literal notranslate"><span class="pre">CalibratedClassifierCV</span></code></a> supports the use of two ‘calibration’
 regressors: ‘sigmoid’ and ‘isotonic’.</p>
 <section id="sigmoid">
-<span id="sigmoid-regressor"></span><h3><span class="section-number">1.16.3.1. </span>Sigmoid<a class="headerlink" href="#sigmoid" title="Permalink to this headline">¶</a></h3>
-<p>The sigmoid regressor is based on Platt’s logistic model <a class="footnote-reference brackets" href="#id12" id="id4">3</a>:</p>
+<span id="sigmoid-regressor"></span><h3><span class="section-number">1.16.3.1. </span>Sigmoid<a class="headerlink" href="#sigmoid" title="Permalink to this heading">¶</a></h3>
+<p>The sigmoid regressor is based on Platt’s logistic model <a class="footnote-reference brackets" href="#id12" id="id4" role="doc-noteref"><span class="fn-bracket">[</span>3<span class="fn-bracket">]</span></a>:</p>
 <div class="math notranslate nohighlight">
 \[p(y_i = 1 | f_i) = \frac{1}{1 + \exp(A f_i + B)}\]</div>
 <p>where <span class="math notranslate nohighlight">\(y_i\)</span> is the true label of sample <span class="math notranslate nohighlight">\(i\)</span> and <span class="math notranslate nohighlight">\(f_i\)</span>
@@ -353,17 +353,17 @@ maximum likelihood.</p>
 can be corrected by applying a sigmoid function to the raw predictions. This
 assumption has been empirically justified in the case of <a class="reference internal" href="svm.html#svm"><span class="std std-ref">Support Vector Machines</span></a> with
 common kernel functions on various benchmark datasets in section 2.1 of Platt
-1999 <a class="footnote-reference brackets" href="#id12" id="id5">3</a> but does not necessarily hold in general. Additionally, the
+1999 <a class="footnote-reference brackets" href="#id12" id="id5" role="doc-noteref"><span class="fn-bracket">[</span>3<span class="fn-bracket">]</span></a> but does not necessarily hold in general. Additionally, the
 logistic model works best if the calibration error is symmetrical, meaning
 the classifier output for each binary class is normally distributed with
-the same variance <a class="footnote-reference brackets" href="#id15" id="id6">6</a>. This can be a problem for highly imbalanced
+the same variance <a class="footnote-reference brackets" href="#id15" id="id6" role="doc-noteref"><span class="fn-bracket">[</span>6<span class="fn-bracket">]</span></a>. This can be a problem for highly imbalanced
 classification problems, where outputs do not have equal variance.</p>
 <p>In general this method is most effective when the un-calibrated model is
 under-confident and has similar calibration errors for both high and low
 outputs.</p>
 </section>
 <section id="isotonic">
-<h3><span class="section-number">1.16.3.2. </span>Isotonic<a class="headerlink" href="#isotonic" title="Permalink to this headline">¶</a></h3>
+<h3><span class="section-number">1.16.3.2. </span>Isotonic<a class="headerlink" href="#isotonic" title="Permalink to this heading">¶</a></h3>
 <p>The ‘isotonic’ method fits a non-parametric isotonic regressor, which outputs
 a step-wise non-decreasing function (see <a class="reference internal" href="classes.html#module-sklearn.isotonic" title="sklearn.isotonic"><code class="xref py py-mod docutils literal notranslate"><span class="pre">sklearn.isotonic</span></code></a>). It
 minimizes:</p>
@@ -376,23 +376,23 @@ calibrated classifier for sample <span class="math notranslate nohighlight">\(i\
 This method is more general when compared to ‘sigmoid’ as the only restriction
 is that the mapping function is monotonically increasing. It is thus more
 powerful as it can correct any monotonic distortion of the un-calibrated model.
-However, it is more prone to overfitting, especially on small datasets <a class="footnote-reference brackets" href="#id14" id="id7">5</a>.</p>
+However, it is more prone to overfitting, especially on small datasets <a class="footnote-reference brackets" href="#id14" id="id7" role="doc-noteref"><span class="fn-bracket">[</span>5<span class="fn-bracket">]</span></a>.</p>
 <p>Overall, ‘isotonic’ will perform as well as or better than ‘sigmoid’ when
-there is enough data (greater than ~ 1000 samples) to avoid overfitting <a class="footnote-reference brackets" href="#id10" id="id8">1</a>.</p>
+there is enough data (greater than ~ 1000 samples) to avoid overfitting <a class="footnote-reference brackets" href="#id10" id="id8" role="doc-noteref"><span class="fn-bracket">[</span>1<span class="fn-bracket">]</span></a>.</p>
 </section>
 <section id="multiclass-support">
-<h3><span class="section-number">1.16.3.3. </span>Multiclass support<a class="headerlink" href="#multiclass-support" title="Permalink to this headline">¶</a></h3>
+<h3><span class="section-number">1.16.3.3. </span>Multiclass support<a class="headerlink" href="#multiclass-support" title="Permalink to this heading">¶</a></h3>
 <p>Both isotonic and sigmoid regressors only
 support 1-dimensional data (e.g., binary classification output) but are
 extended for multiclass classification if the <code class="docutils literal notranslate"><span class="pre">base_estimator</span></code> supports
 multiclass predictions. For multiclass predictions,
 <a class="reference internal" href="generated/sklearn.calibration.CalibratedClassifierCV.html#sklearn.calibration.CalibratedClassifierCV" title="sklearn.calibration.CalibratedClassifierCV"><code class="xref py py-class docutils literal notranslate"><span class="pre">CalibratedClassifierCV</span></code></a> calibrates for
-each class separately in a <a class="reference internal" href="multiclass.html#ovr-classification"><span class="std std-ref">OneVsRestClassifier</span></a> fashion <a class="footnote-reference brackets" href="#id13" id="id9">4</a>. When
+each class separately in a <a class="reference internal" href="multiclass.html#ovr-classification"><span class="std std-ref">OneVsRestClassifier</span></a> fashion <a class="footnote-reference brackets" href="#id13" id="id9" role="doc-noteref"><span class="fn-bracket">[</span>4<span class="fn-bracket">]</span></a>. When
 predicting
 probabilities, the calibrated probabilities for each class
 are predicted separately. As those probabilities do not necessarily sum to
 one, a postprocessing is performed to normalize them.</p>
-<div class="topic">
+<aside class="topic">
 <p class="topic-title">Examples:</p>
 <ul class="simple">
 <li><p><a class="reference internal" href="../auto_examples/calibration/plot_calibration_curve.html#sphx-glr-auto-examples-calibration-plot-calibration-curve-py"><span class="std std-ref">Probability Calibration curves</span></a></p></li>
@@ -400,41 +400,47 @@ one, a postprocessing is performed to normalize them.</p>
 <li><p><a class="reference internal" href="../auto_examples/calibration/plot_calibration.html#sphx-glr-auto-examples-calibration-plot-calibration-py"><span class="std std-ref">Probability calibration of classifiers</span></a></p></li>
 <li><p><a class="reference internal" href="../auto_examples/calibration/plot_compare_calibration.html#sphx-glr-auto-examples-calibration-plot-compare-calibration-py"><span class="std std-ref">Comparison of Calibration of Classifiers</span></a></p></li>
 </ul>
-</div>
-<div class="topic">
+</aside>
+<aside class="topic">
 <p class="topic-title">References:</p>
-<dl class="footnote brackets">
-<dt class="label" id="id10"><span class="brackets">1</span><span class="fn-backref">(<a href="#id1">1</a>,<a href="#id3">2</a>,<a href="#id8">3</a>)</span></dt>
-<dd><p><a class="reference external" href="https://www.cs.cornell.edu/~alexn/papers/calibration.icml05.crc.rev3.pdf">Predicting Good Probabilities with Supervised Learning</a>,
+<aside class="footnote brackets" id="id10" role="note">
+<span class="label"><span class="fn-bracket">[</span>1<span class="fn-bracket">]</span></span>
+<span class="backrefs">(<a role="doc-backlink" href="#id1">1</a>,<a role="doc-backlink" href="#id3">2</a>,<a role="doc-backlink" href="#id8">3</a>)</span>
+<p><a class="reference external" href="https://www.cs.cornell.edu/~alexn/papers/calibration.icml05.crc.rev3.pdf">Predicting Good Probabilities with Supervised Learning</a>,
 A. Niculescu-Mizil &amp; R. Caruana, ICML 2005</p>
-</dd>
-<dt class="label" id="id11"><span class="brackets"><a class="fn-backref" href="#id2">2</a></span></dt>
-<dd><p><a class="reference external" href="https://journals.ametsoc.org/waf/article/5/4/640/40179">On the combination of forecast probabilities for
+</aside>
+<aside class="footnote brackets" id="id11" role="note">
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id2">2</a><span class="fn-bracket">]</span></span>
+<p><a class="reference external" href="https://journals.ametsoc.org/waf/article/5/4/640/40179">On the combination of forecast probabilities for
 consecutive precipitation periods.</a>
 Wea. Forecasting, 5, 640–650., Wilks, D. S., 1990a</p>
-</dd>
-<dt class="label" id="id12"><span class="brackets">3</span><span class="fn-backref">(<a href="#id4">1</a>,<a href="#id5">2</a>)</span></dt>
-<dd><p><a class="reference external" href="https://www.cs.colorado.edu/~mozer/Teaching/syllabi/6622/papers/Platt1999.pdf">Probabilistic Outputs for Support Vector Machines and Comparisons
+</aside>
+<aside class="footnote brackets" id="id12" role="note">
+<span class="label"><span class="fn-bracket">[</span>3<span class="fn-bracket">]</span></span>
+<span class="backrefs">(<a role="doc-backlink" href="#id4">1</a>,<a role="doc-backlink" href="#id5">2</a>)</span>
+<p><a class="reference external" href="https://www.cs.colorado.edu/~mozer/Teaching/syllabi/6622/papers/Platt1999.pdf">Probabilistic Outputs for Support Vector Machines and Comparisons
 to Regularized Likelihood Methods.</a>
 J. Platt, (1999)</p>
-</dd>
-<dt class="label" id="id13"><span class="brackets"><a class="fn-backref" href="#id9">4</a></span></dt>
-<dd><p><a class="reference external" href="https://dl.acm.org/doi/pdf/10.1145/775047.775151">Transforming Classifier Scores into Accurate Multiclass
+</aside>
+<aside class="footnote brackets" id="id13" role="note">
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id9">4</a><span class="fn-bracket">]</span></span>
+<p><a class="reference external" href="https://dl.acm.org/doi/pdf/10.1145/775047.775151">Transforming Classifier Scores into Accurate Multiclass
 Probability Estimates.</a>
 B. Zadrozny &amp; C. Elkan, (KDD 2002)</p>
-</dd>
-<dt class="label" id="id14"><span class="brackets"><a class="fn-backref" href="#id7">5</a></span></dt>
-<dd><p><a class="reference external" href="https://www.ncbi.nlm.nih.gov/pmc/articles/PMC4180410/">Predicting accurate probabilities with a ranking loss.</a>
+</aside>
+<aside class="footnote brackets" id="id14" role="note">
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id7">5</a><span class="fn-bracket">]</span></span>
+<p><a class="reference external" href="https://www.ncbi.nlm.nih.gov/pmc/articles/PMC4180410/">Predicting accurate probabilities with a ranking loss.</a>
 Menon AK, Jiang XJ, Vembu S, Elkan C, Ohno-Machado L.
 Proc Int Conf Mach Learn. 2012;2012:703-710</p>
-</dd>
-<dt class="label" id="id15"><span class="brackets"><a class="fn-backref" href="#id6">6</a></span></dt>
-<dd><p><a class="reference external" href="https://projecteuclid.org/euclid.ejs/1513306867">Beyond sigmoids: How to obtain well-calibrated probabilities from
+</aside>
+<aside class="footnote brackets" id="id15" role="note">
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id6">6</a><span class="fn-bracket">]</span></span>
+<p><a class="reference external" href="https://projecteuclid.org/euclid.ejs/1513306867">Beyond sigmoids: How to obtain well-calibrated probabilities from
 binary classifiers with beta calibration</a>
 Kull, M., Silva Filho, T. M., &amp; Flach, P. (2017).</p>
-</dd>
-</dl>
-</div>
+</aside>
+</aside>
 </section>
 </section>
 </section>

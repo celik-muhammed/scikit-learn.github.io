@@ -5,7 +5,7 @@
 <!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
 <head>
   <meta charset="utf-8">
-  <meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+  <meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
 <meta property="og:title" content="Statistical comparison of models using grid search" />
   
@@ -207,7 +207,7 @@
 to download the full example code or to run this example in your browser via Binder</p>
 </div>
 <section class="sphx-glr-example-title" id="statistical-comparison-of-models-using-grid-search">
-<span id="sphx-glr-auto-examples-model-selection-plot-grid-search-stats-py"></span><h1>Statistical comparison of models using grid search<a class="headerlink" href="#statistical-comparison-of-models-using-grid-search" title="Permalink to this headline">¶</a></h1>
+<span id="sphx-glr-auto-examples-model-selection-plot-grid-search-stats-py"></span><h1>Statistical comparison of models using grid search<a class="headerlink" href="#statistical-comparison-of-models-using-grid-search" title="Permalink to this heading">¶</a></h1>
 <p>This example illustrates how to statistically compare the performance of models
 trained and evaluated using <a class="reference internal" href="../../modules/generated/sklearn.model_selection.GridSearchCV.html#sklearn.model_selection.GridSearchCV" title="sklearn.model_selection.GridSearchCV"><code class="xref py py-class docutils literal notranslate"><span class="pre">GridSearchCV</span></code></a>.</p>
 <p>We will start by simulating moon shaped data (where the ideal separation
@@ -426,26 +426,26 @@ linear  0.882561  1.000000  0.746492  0.298688
 <p>As a consequence, if we assume independence between samples we will be
 underestimating the variance computed in our statistical tests, increasing
 the number of false positive errors (i.e. detecting a significant difference
-between models when such does not exist) <a class="footnote-reference brackets" href="#id10" id="id1">1</a>.</p>
+between models when such does not exist) <a class="footnote-reference brackets" href="#id10" id="id1" role="doc-noteref"><span class="fn-bracket">[</span>1<span class="fn-bracket">]</span></a>.</p>
 <p>Several variance-corrected statistical tests have been developed for these
 cases. In this example we will show how to implement one of them (the so
 called Nadeau and Bengio’s corrected t-test) under two different statistical
 frameworks: frequentist and Bayesian.</p>
 <section id="comparing-two-models-frequentist-approach">
-<h2>Comparing two models: frequentist approach<a class="headerlink" href="#comparing-two-models-frequentist-approach" title="Permalink to this headline">¶</a></h2>
+<h2>Comparing two models: frequentist approach<a class="headerlink" href="#comparing-two-models-frequentist-approach" title="Permalink to this heading">¶</a></h2>
 <p>We can start by asking: “Is the first model significantly better than the
 second model (when ranked by <code class="docutils literal notranslate"><span class="pre">mean_test_score</span></code>)?”</p>
 <p>To answer this question using a frequentist approach we could
 run a paired t-test and compute the p-value. This is also known as
-Diebold-Mariano test in the forecast literature <a class="footnote-reference brackets" href="#id14" id="id2">5</a>.
+Diebold-Mariano test in the forecast literature <a class="footnote-reference brackets" href="#id14" id="id2" role="doc-noteref"><span class="fn-bracket">[</span>5<span class="fn-bracket">]</span></a>.
 Many variants of such a t-test have been developed to account for the
 ‘non-independence of samples problem’
 described in the previous section. We will use the one proven to obtain the
 highest replicability scores (which rate how similar the performance of a
 model is when evaluating it on different random partitions of the same
 dataset) while maintaining a low rate of false positives and false negatives:
-the Nadeau and Bengio’s corrected t-test <a class="footnote-reference brackets" href="#id11" id="id3">2</a> that uses a 10 times repeated
-10-fold cross validation <a class="footnote-reference brackets" href="#id12" id="id4">3</a>.</p>
+the Nadeau and Bengio’s corrected t-test <a class="footnote-reference brackets" href="#id11" id="id3" role="doc-noteref"><span class="fn-bracket">[</span>2<span class="fn-bracket">]</span></a> that uses a 10 times repeated
+10-fold cross validation <a class="footnote-reference brackets" href="#id12" id="id4" role="doc-noteref"><span class="fn-bracket">[</span>3<span class="fn-bracket">]</span></a>.</p>
 <p>This corrected paired t-test is computed as:</p>
 <div class="math notranslate nohighlight">
 \[t=\frac{\frac{1}{k \cdot r}\sum_{i=1}^{k}\sum_{j=1}^{r}x_{ij}}
@@ -561,7 +561,7 @@ conclude that the first and second model have an equivalent performance. If
 we wanted to make this assertion we need to use a Bayesian approach.</p>
 </section>
 <section id="comparing-two-models-bayesian-approach">
-<h2>Comparing two models: Bayesian approach<a class="headerlink" href="#comparing-two-models-bayesian-approach" title="Permalink to this headline">¶</a></h2>
+<h2>Comparing two models: Bayesian approach<a class="headerlink" href="#comparing-two-models-bayesian-approach" title="Permalink to this heading">¶</a></h2>
 <p>We can use Bayesian estimation to calculate the probability that the first
 model is better than the second. Bayesian estimation will output a
 distribution followed by the mean <span class="math notranslate nohighlight">\(\mu\)</span> of the differences in the
@@ -573,9 +573,9 @@ observed differences are, given the values that the mean of differences
 could take.</p>
 <p>Bayesian estimation can be carried out in many forms to answer our question,
 but in this example we will implement the approach suggested by Benavoli and
-colleagues <a class="footnote-reference brackets" href="#id13" id="id5">4</a>.</p>
+colleagues <a class="footnote-reference brackets" href="#id13" id="id5" role="doc-noteref"><span class="fn-bracket">[</span>4<span class="fn-bracket">]</span></a>.</p>
 <p>One way of defining our posterior using a closed-form expression is to select
-a prior conjugate to the likelihood function. Benavoli and colleagues <a class="footnote-reference brackets" href="#id13" id="id6">4</a>
+a prior conjugate to the likelihood function. Benavoli and colleagues <a class="footnote-reference brackets" href="#id13" id="id6" role="doc-noteref"><span class="fn-bracket">[</span>4<span class="fn-bracket">]</span></a>
 show that when comparing the performance of two classifiers we can model the
 prior as a Normal-Gamma distribution (with both mean and variance unknown)
 conjugate to a normal likelihood, to thus express the posterior as a normal
@@ -640,10 +640,10 @@ that one model is better than the other.</p>
 Given our choice of priors, we are essentially performing the same
 computations, but we are allowed to make different assertions.</p>
 <section id="region-of-practical-equivalence">
-<h3>Region of Practical Equivalence<a class="headerlink" href="#region-of-practical-equivalence" title="Permalink to this headline">¶</a></h3>
+<h3>Region of Practical Equivalence<a class="headerlink" href="#region-of-practical-equivalence" title="Permalink to this heading">¶</a></h3>
 <p>Sometimes we are interested in determining the probabilities that our models
 have an equivalent performance, where “equivalent” is defined in a practical
-way. A naive approach <a class="footnote-reference brackets" href="#id13" id="id7">4</a> would be to define estimators as practically
+way. A naive approach <a class="footnote-reference brackets" href="#id13" id="id7" role="doc-noteref"><span class="fn-bracket">[</span>4<span class="fn-bracket">]</span></a> would be to define estimators as practically
 equivalent when they differ by less than 1% in their accuracy. But we could
 also define this practical equivalence taking into account the problem we are
 trying to solve. For example, a difference of 5% in accuracy would mean an
@@ -682,7 +682,7 @@ interval:</p>
 <a href="https://matplotlib.org/stable/api/_as_gen/matplotlib.pyplot.show.html#matplotlib.pyplot.show" title="matplotlib.pyplot.show" class="sphx-glr-backref-module-matplotlib-pyplot sphx-glr-backref-type-py-function"><span class="n">plt</span><span class="o">.</span><span class="n">show</span></a><span class="p">()</span>
 </pre></div>
 </div>
-<img src="../../_images/sphx_glr_plot_grid_search_stats_004.png" srcset="../../_images/sphx_glr_plot_grid_search_stats_004.png" alt="Posterior distribution under the ROPE" class = "sphx-glr-single-img"/><p>As suggested in <a class="footnote-reference brackets" href="#id13" id="id8">4</a>, we can further interpret these probabilities using the
+<img src="../../_images/sphx_glr_plot_grid_search_stats_004.png" srcset="../../_images/sphx_glr_plot_grid_search_stats_004.png" alt="Posterior distribution under the ROPE" class = "sphx-glr-single-img"/><p>As suggested in <a class="footnote-reference brackets" href="#id13" id="id8" role="doc-noteref"><span class="fn-bracket">[</span>4<span class="fn-bracket">]</span></a>, we can further interpret these probabilities using the
 same criteria as the frequentist approach: is the probability of falling
 inside the ROPE bigger than 95% (alpha value of 5%)?  In that case we can
 conclude that both models are practically equivalent.</p>
@@ -764,7 +764,7 @@ probability that it will be between -0.016445   and 0.036445.</p>
 </section>
 </section>
 <section id="pairwise-comparison-of-all-models-frequentist-approach">
-<h2>Pairwise comparison of all models: frequentist approach<a class="headerlink" href="#pairwise-comparison-of-all-models-frequentist-approach" title="Permalink to this headline">¶</a></h2>
+<h2>Pairwise comparison of all models: frequentist approach<a class="headerlink" href="#pairwise-comparison-of-all-models-frequentist-approach" title="Permalink to this heading">¶</a></h2>
 <p>We could also be interested in comparing the performance of all our models
 evaluated with <a class="reference internal" href="../../modules/generated/sklearn.model_selection.GridSearchCV.html#sklearn.model_selection.GridSearchCV" title="sklearn.model_selection.GridSearchCV"><code class="xref py py-class docutils literal notranslate"><span class="pre">GridSearchCV</span></code></a>. In this case
 we would be running our statistical test multiple times, which leads us to
@@ -880,9 +880,9 @@ that significantly differs from the others is <code class="docutils literal notr
 differ from <code class="docutils literal notranslate"><span class="pre">'linear'</span></code> or <code class="docutils literal notranslate"><span class="pre">'3_poly'</span></code>.</p>
 </section>
 <section id="pairwise-comparison-of-all-models-bayesian-approach">
-<h2>Pairwise comparison of all models: Bayesian approach<a class="headerlink" href="#pairwise-comparison-of-all-models-bayesian-approach" title="Permalink to this headline">¶</a></h2>
+<h2>Pairwise comparison of all models: Bayesian approach<a class="headerlink" href="#pairwise-comparison-of-all-models-bayesian-approach" title="Permalink to this heading">¶</a></h2>
 <p>When using Bayesian estimation to compare multiple models, we don’t need to
-correct for multiple comparisons (for reasons why see <a class="footnote-reference brackets" href="#id13" id="id9">4</a>).</p>
+correct for multiple comparisons (for reasons why see <a class="footnote-reference brackets" href="#id13" id="id9" role="doc-noteref"><span class="fn-bracket">[</span>4<span class="fn-bracket">]</span></a>).</p>
 <p>We can carry out our pairwise comparisons the same way as in the first
 section:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">pairwise_bayesian</span> <span class="o">=</span> <span class="p">[]</span>
@@ -1015,7 +1015,7 @@ models have a 100% probability of being better than <code class="docutils litera
 a practically equivalent performance with the latter.</p>
 </section>
 <section id="take-home-messages">
-<h2>Take-home messages<a class="headerlink" href="#take-home-messages" title="Permalink to this headline">¶</a></h2>
+<h2>Take-home messages<a class="headerlink" href="#take-home-messages" title="Permalink to this heading">¶</a></h2>
 <ul class="simple">
 <li><p>Small differences in performance measures might easily turn out to be
 merely by chance, but not because one model predicts systematically better
@@ -1035,38 +1035,42 @@ fall under a certain range of values.</p></li>
 <li><p>If multiple models are statistically compared, a multiple comparisons
 correction is needed when using the frequentist approach.</p></li>
 </ul>
-<div class="topic">
+<aside class="topic">
 <p class="topic-title">References</p>
-<dl class="footnote brackets">
-<dt class="label" id="id10"><span class="brackets"><a class="fn-backref" href="#id1">1</a></span></dt>
-<dd><p>Dietterich, T. G. (1998). <a class="reference external" href="http://web.cs.iastate.edu/~jtian/cs573/Papers/Dietterich-98.pdf">Approximate statistical tests for
+<aside class="footnote brackets" id="id10" role="note">
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id1">1</a><span class="fn-bracket">]</span></span>
+<p>Dietterich, T. G. (1998). <a class="reference external" href="http://web.cs.iastate.edu/~jtian/cs573/Papers/Dietterich-98.pdf">Approximate statistical tests for
 comparing supervised classification learning algorithms</a>.
 Neural computation, 10(7).</p>
-</dd>
-<dt class="label" id="id11"><span class="brackets"><a class="fn-backref" href="#id3">2</a></span></dt>
-<dd><p>Nadeau, C., &amp; Bengio, Y. (2000). <a class="reference external" href="https://papers.nips.cc/paper/1661-inference-for-the-generalization-error.pdf">Inference for the generalization
+</aside>
+<aside class="footnote brackets" id="id11" role="note">
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id3">2</a><span class="fn-bracket">]</span></span>
+<p>Nadeau, C., &amp; Bengio, Y. (2000). <a class="reference external" href="https://papers.nips.cc/paper/1661-inference-for-the-generalization-error.pdf">Inference for the generalization
 error</a>.
 In Advances in neural information processing systems.</p>
-</dd>
-<dt class="label" id="id12"><span class="brackets"><a class="fn-backref" href="#id4">3</a></span></dt>
-<dd><p>Bouckaert, R. R., &amp; Frank, E. (2004). <a class="reference external" href="https://www.cms.waikato.ac.nz/~ml/publications/2004/bouckaert-frank.pdf">Evaluating the replicability
+</aside>
+<aside class="footnote brackets" id="id12" role="note">
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id4">3</a><span class="fn-bracket">]</span></span>
+<p>Bouckaert, R. R., &amp; Frank, E. (2004). <a class="reference external" href="https://www.cms.waikato.ac.nz/~ml/publications/2004/bouckaert-frank.pdf">Evaluating the replicability
 of significance tests for comparing learning algorithms</a>.
 In Pacific-Asia Conference on Knowledge Discovery and Data Mining.</p>
-</dd>
-<dt class="label" id="id13"><span class="brackets">4</span><span class="fn-backref">(<a href="#id5">1</a>,<a href="#id6">2</a>,<a href="#id7">3</a>,<a href="#id8">4</a>,<a href="#id9">5</a>)</span></dt>
-<dd><p>Benavoli, A., Corani, G., Demšar, J., &amp; Zaffalon, M. (2017). <a class="reference external" href="http://www.jmlr.org/papers/volume18/16-305/16-305.pdf">Time
+</aside>
+<aside class="footnote brackets" id="id13" role="note">
+<span class="label"><span class="fn-bracket">[</span>4<span class="fn-bracket">]</span></span>
+<span class="backrefs">(<a role="doc-backlink" href="#id5">1</a>,<a role="doc-backlink" href="#id6">2</a>,<a role="doc-backlink" href="#id7">3</a>,<a role="doc-backlink" href="#id8">4</a>,<a role="doc-backlink" href="#id9">5</a>)</span>
+<p>Benavoli, A., Corani, G., Demšar, J., &amp; Zaffalon, M. (2017). <a class="reference external" href="http://www.jmlr.org/papers/volume18/16-305/16-305.pdf">Time
 for a change: a tutorial for comparing multiple classifiers through
 Bayesian analysis</a>.
 The Journal of Machine Learning Research, 18(1). See the Python
 library that accompanies this paper <a class="reference external" href="https://github.com/janezd/baycomp">here</a>.</p>
-</dd>
-<dt class="label" id="id14"><span class="brackets"><a class="fn-backref" href="#id2">5</a></span></dt>
-<dd><p>Diebold, F.X. &amp; Mariano R.S. (1995). <a class="reference external" href="http://www.est.uc3m.es/esp/nueva_docencia/comp_col_get/lade/tecnicas_prediccion/Practicas0708/Comparing%20Predictive%20Accuracy%20(Dielbold).pdf">Comparing predictive accuracy</a>
+</aside>
+<aside class="footnote brackets" id="id14" role="note">
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id2">5</a><span class="fn-bracket">]</span></span>
+<p>Diebold, F.X. &amp; Mariano R.S. (1995). <a class="reference external" href="http://www.est.uc3m.es/esp/nueva_docencia/comp_col_get/lade/tecnicas_prediccion/Practicas0708/Comparing%20Predictive%20Accuracy%20(Dielbold).pdf">Comparing predictive accuracy</a>
 Journal of Business &amp; economic statistics, 20(1), 134-144.</p>
-</dd>
-</dl>
-</div>
-<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> ( 0 minutes  1.820 seconds)</p>
+</aside>
+</aside>
+<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> ( 0 minutes  1.168 seconds)</p>
 <div class="sphx-glr-footer class sphx-glr-footer-example docutils container" id="sphx-glr-download-auto-examples-model-selection-plot-grid-search-stats-py">
 <div class="binder-badge docutils container">
 <a class="reference external image-reference" href="https://mybinder.org/v2/gh/scikit-learn/scikit-learn/main?urlpath=lab/tree/notebooks/auto_examples/model_selection/plot_grid_search_stats.ipynb"><img alt="Launch binder" src="../../_images/binder_badge_logo21.svg" width="150px" /></a>
