@@ -198,17 +198,18 @@
 <h1><a class="reference internal" href="../classes.html#module-sklearn.linear_model" title="sklearn.linear_model"><code class="xref py py-mod docutils literal notranslate"><span class="pre">sklearn.linear_model</span></code></a>.HuberRegressor<a class="headerlink" href="#sklearn-linear-model-huberregressor" title="Permalink to this heading">¶</a></h1>
 <dl class="py class">
 <dt class="sig sig-object py" id="sklearn.linear_model.HuberRegressor">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">sklearn.linear_model.</span></span><span class="sig-name descname"><span class="pre">HuberRegressor</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">epsilon</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1.35</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_iter</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">100</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">alpha</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.0001</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">warm_start</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fit_intercept</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tol</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1e-05</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/scikit-learn/scikit-learn/blob/1dd34a9e9/sklearn/linear_model/_huber.py#L128"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#sklearn.linear_model.HuberRegressor" title="Permalink to this definition">¶</a></dt>
-<dd><p>Linear regression model that is robust to outliers.</p>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">sklearn.linear_model.</span></span><span class="sig-name descname"><span class="pre">HuberRegressor</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">epsilon</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1.35</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_iter</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">100</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">alpha</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.0001</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">warm_start</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fit_intercept</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tol</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1e-05</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/scikit-learn/scikit-learn/blob/1c9cd14b8/sklearn/linear_model/_huber.py#L128"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#sklearn.linear_model.HuberRegressor" title="Permalink to this definition">¶</a></dt>
+<dd><p>L2-regularized linear regression model that is robust to outliers.</p>
 <p>The Huber Regressor optimizes the squared loss for the samples where
-<code class="docutils literal notranslate"><span class="pre">|(y</span> <span class="pre">-</span> <span class="pre">X'w)</span> <span class="pre">/</span> <span class="pre">sigma|</span> <span class="pre">&lt;</span> <span class="pre">epsilon</span></code> and the absolute loss for the samples
-where <code class="docutils literal notranslate"><span class="pre">|(y</span> <span class="pre">-</span> <span class="pre">X'w)</span> <span class="pre">/</span> <span class="pre">sigma|</span> <span class="pre">&gt;</span> <span class="pre">epsilon</span></code>, where w and sigma are parameters
+<code class="docutils literal notranslate"><span class="pre">|(y</span> <span class="pre">-</span> <span class="pre">Xw</span> <span class="pre">-</span> <span class="pre">c)</span> <span class="pre">/</span> <span class="pre">sigma|</span> <span class="pre">&lt;</span> <span class="pre">epsilon</span></code> and the absolute loss for the samples
+where <code class="docutils literal notranslate"><span class="pre">|(y</span> <span class="pre">-</span> <span class="pre">Xw</span> <span class="pre">-</span> <span class="pre">c)</span> <span class="pre">/</span> <span class="pre">sigma|</span> <span class="pre">&gt;</span> <span class="pre">epsilon</span></code>, where the model coefficients
+<code class="docutils literal notranslate"><span class="pre">w</span></code>, the intercept <code class="docutils literal notranslate"><span class="pre">c</span></code> and the scale <code class="docutils literal notranslate"><span class="pre">sigma</span></code> are parameters
 to be optimized. The parameter sigma makes sure that if y is scaled up
 or down by a certain factor, one does not need to rescale epsilon to
 achieve the same robustness. Note that this does not take into account
 the fact that the different features of X may be of different scales.</p>
-<p>This makes sure that the loss function is not heavily influenced by the
-outliers while not completely ignoring their effect.</p>
+<p>The Huber loss function has the advantage of not being heavily influenced
+by the outliers while not completely ignoring their effect.</p>
 <p>Read more in the <a class="reference internal" href="../linear_model.html#huber-regression"><span class="std std-ref">User Guide</span></a></p>
 <div class="versionadded">
 <p><span class="versionmodified added">New in version 0.18.</span></p>
@@ -223,7 +224,9 @@ to outliers. Epsilon must be in the range <code class="docutils literal notransl
 <dt><strong>max_iter</strong><span class="classifier">int, default=100</span></dt><dd><p>Maximum number of iterations that
 <code class="docutils literal notranslate"><span class="pre">scipy.optimize.minimize(method=&quot;L-BFGS-B&quot;)</span></code> should run for.</p>
 </dd>
-<dt><strong>alpha</strong><span class="classifier">float, default=0.0001</span></dt><dd><p>Regularization parameter. Must be in the range <code class="docutils literal notranslate"><span class="pre">[0,</span> <span class="pre">inf)</span></code>.</p>
+<dt><strong>alpha</strong><span class="classifier">float, default=0.0001</span></dt><dd><p>Strength of the squared L2 regularization. Note that the penalty is
+equal to <code class="docutils literal notranslate"><span class="pre">alpha</span> <span class="pre">*</span> <span class="pre">||w||^2</span></code>.
+Must be in the range <code class="docutils literal notranslate"><span class="pre">[0,</span> <span class="pre">inf)</span></code>.</p>
 </dd>
 <dt><strong>warm_start</strong><span class="classifier">bool, default=False</span></dt><dd><p>This is useful if the stored attributes of a previously used model
 has to be reused. If set to False, then the coefficients will
@@ -241,11 +244,11 @@ where pg_i is the i-th component of the projected gradient.</p>
 </dd>
 <dt class="field-even">Attributes<span class="colon">:</span></dt>
 <dd class="field-even"><dl>
-<dt><strong>coef_</strong><span class="classifier">array, shape (n_features,)</span></dt><dd><p>Features got by optimizing the Huber loss.</p>
+<dt><strong>coef_</strong><span class="classifier">array, shape (n_features,)</span></dt><dd><p>Features got by optimizing the L2-regularized Huber loss.</p>
 </dd>
 <dt><strong>intercept_</strong><span class="classifier">float</span></dt><dd><p>Bias.</p>
 </dd>
-<dt><strong>scale_</strong><span class="classifier">float</span></dt><dd><p>The value by which <code class="docutils literal notranslate"><span class="pre">|y</span> <span class="pre">-</span> <span class="pre">X'w</span> <span class="pre">-</span> <span class="pre">c|</span></code> is scaled down.</p>
+<dt><strong>scale_</strong><span class="classifier">float</span></dt><dd><p>The value by which <code class="docutils literal notranslate"><span class="pre">|y</span> <span class="pre">-</span> <span class="pre">Xw</span> <span class="pre">-</span> <span class="pre">c|</span></code> is scaled down.</p>
 </dd>
 <dt><strong>n_features_in_</strong><span class="classifier">int</span></dt><dd><p>Number of features seen during <a class="reference internal" href="../../glossary.html#term-fit"><span class="xref std std-term">fit</span></a>.</p>
 <div class="versionadded">
@@ -340,7 +343,7 @@ Concomitant scale estimates, pg 172</p>
 </table>
 <dl class="py method">
 <dt class="sig sig-object py" id="sklearn.linear_model.HuberRegressor.fit">
-<span class="sig-name descname"><span class="pre">fit</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sample_weight</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/scikit-learn/scikit-learn/blob/1dd34a9e9/sklearn/linear_model/_huber.py#L273"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#sklearn.linear_model.HuberRegressor.fit" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">fit</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sample_weight</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/scikit-learn/scikit-learn/blob/1c9cd14b8/sklearn/linear_model/_huber.py#L276"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#sklearn.linear_model.HuberRegressor.fit" title="Permalink to this definition">¶</a></dt>
 <dd><p>Fit the model according to the given training data.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -365,7 +368,7 @@ Concomitant scale estimates, pg 172</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="sklearn.linear_model.HuberRegressor.get_params">
-<span class="sig-name descname"><span class="pre">get_params</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">deep</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/scikit-learn/scikit-learn/blob/1dd34a9e9/sklearn/base.py#L145"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#sklearn.linear_model.HuberRegressor.get_params" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">get_params</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">deep</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/scikit-learn/scikit-learn/blob/1c9cd14b8/sklearn/base.py#L145"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#sklearn.linear_model.HuberRegressor.get_params" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get parameters for this estimator.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -386,7 +389,7 @@ contained subobjects that are estimators.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="sklearn.linear_model.HuberRegressor.predict">
-<span class="sig-name descname"><span class="pre">predict</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/scikit-learn/scikit-learn/blob/1dd34a9e9/sklearn/linear_model/_base.py#L374"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#sklearn.linear_model.HuberRegressor.predict" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">predict</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/scikit-learn/scikit-learn/blob/1c9cd14b8/sklearn/linear_model/_base.py#L374"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#sklearn.linear_model.HuberRegressor.predict" title="Permalink to this definition">¶</a></dt>
 <dd><p>Predict using the linear model.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -406,7 +409,7 @@ contained subobjects that are estimators.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="sklearn.linear_model.HuberRegressor.score">
-<span class="sig-name descname"><span class="pre">score</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sample_weight</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/scikit-learn/scikit-learn/blob/1dd34a9e9/sklearn/base.py#L642"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#sklearn.linear_model.HuberRegressor.score" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">score</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sample_weight</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/scikit-learn/scikit-learn/blob/1c9cd14b8/sklearn/base.py#L642"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#sklearn.linear_model.HuberRegressor.score" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return the coefficient of determination of the prediction.</p>
 <p>The coefficient of determination <span class="math notranslate nohighlight">\(R^2\)</span> is defined as
 <span class="math notranslate nohighlight">\((1 - \frac{u}{v})\)</span>, where <span class="math notranslate nohighlight">\(u\)</span> is the residual
@@ -448,7 +451,7 @@ regressors (except for
 
 <dl class="py method">
 <dt class="sig sig-object py" id="sklearn.linear_model.HuberRegressor.set_params">
-<span class="sig-name descname"><span class="pre">set_params</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">params</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/scikit-learn/scikit-learn/blob/1dd34a9e9/sklearn/base.py#L169"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#sklearn.linear_model.HuberRegressor.set_params" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">set_params</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">params</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/scikit-learn/scikit-learn/blob/1c9cd14b8/sklearn/base.py#L169"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#sklearn.linear_model.HuberRegressor.set_params" title="Permalink to this definition">¶</a></dt>
 <dd><p>Set the parameters of this estimator.</p>
 <p>The method works on simple estimators as well as on nested objects
 (such as <a class="reference internal" href="sklearn.pipeline.Pipeline.html#sklearn.pipeline.Pipeline" title="sklearn.pipeline.Pipeline"><code class="xref py py-class docutils literal notranslate"><span class="pre">Pipeline</span></code></a>). The latter have
