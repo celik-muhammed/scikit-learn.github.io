@@ -280,6 +280,7 @@ arbitrary.</p>
             <span class="sa">f</span><span class="s2">&quot; recall: </span><span class="si">{</span><span class="n">mean_recall</span><span class="si">:</span><span class="s2">0.3f</span><span class="si">}</span><span class="s2"> (±</span><span class="si">{</span><span class="n">std_recall</span><span class="si">:</span><span class="s2">0.03f</span><span class="si">}</span><span class="s2">),&quot;</span>
             <span class="sa">f</span><span class="s2">&quot; for </span><span class="si">{</span><span class="n">params</span><span class="si">}</span><span class="s2">&quot;</span>
         <span class="p">)</span>
+    <span class="nb">print</span><span class="p">()</span>
 
 
 <span class="k">def</span> <span class="nf">refit_strategy</span><span class="p">(</span><span class="n">cv_results</span><span class="p">):</span>
@@ -304,7 +305,7 @@ arbitrary.</p>
     <span class="n">precision_threshold</span> <span class="o">=</span> <span class="mf">0.98</span>
 
     <span class="n">cv_results_</span> <span class="o">=</span> <a href="https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.DataFrame.html#pandas.DataFrame" title="pandas.DataFrame" class="sphx-glr-backref-module-pandas sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span></a><span class="p">(</span><span class="n">cv_results</span><span class="p">)</span>
-    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Models with a precision higher than </span><span class="si">{</span><span class="n">precision_threshold</span><span class="si">}</span><span class="s2">:&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;All grid-search results:&quot;</span><span class="p">)</span>
     <span class="n">print_dataframe</span><span class="p">(</span><span class="n">cv_results_</span><span class="p">)</span>
 
     <span class="c1"># Filter-out all results below the threshold</span>
@@ -358,9 +359,11 @@ arbitrary.</p>
     <span class="k">return</span> <span class="n">fastest_top_recall_high_precision_index</span>
 </pre></div>
 </div>
-<p>Once we defined our strategy to select the best model, we define the values of
-the hyper-parameters and create the
-grid-search instance. Subsequently, we can check the best parameters found.</p>
+</section>
+<section id="tuning-hyper-parameters">
+<h2>Tuning hyper-parameters<a class="headerlink" href="#tuning-hyper-parameters" title="Permalink to this heading">¶</a></h2>
+<p>Once we defined our strategy to select the best model, we define the values
+of the hyper-parameters and create the grid-search instance:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">sklearn.model_selection</span> <span class="kn">import</span> <a href="../../modules/generated/sklearn.model_selection.GridSearchCV.html#sklearn.model_selection.GridSearchCV" title="sklearn.model_selection.GridSearchCV" class="sphx-glr-backref-module-sklearn-model_selection sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">GridSearchCV</span></a>
 <span class="kn">from</span> <span class="nn">sklearn.svm</span> <span class="kn">import</span> <a href="../../modules/generated/sklearn.svm.SVC.html#sklearn.svm.SVC" title="sklearn.svm.SVC" class="sphx-glr-backref-module-sklearn-svm sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">SVC</span></a>
 
@@ -372,17 +375,11 @@ grid-search instance. Subsequently, we can check the best parameters found.</p>
 <span class="n">grid_search</span> <span class="o">=</span> <a href="../../modules/generated/sklearn.model_selection.GridSearchCV.html#sklearn.model_selection.GridSearchCV" title="sklearn.model_selection.GridSearchCV" class="sphx-glr-backref-module-sklearn-model_selection sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">GridSearchCV</span></a><span class="p">(</span>
     <a href="../../modules/generated/sklearn.svm.SVC.html#sklearn.svm.SVC" title="sklearn.svm.SVC" class="sphx-glr-backref-module-sklearn-svm sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">SVC</span></a><span class="p">(),</span> <span class="n">tuned_parameters</span><span class="p">,</span> <span class="n">scoring</span><span class="o">=</span><span class="n">scores</span><span class="p">,</span> <span class="n">refit</span><span class="o">=</span><span class="n">refit_strategy</span>
 <span class="p">)</span>
-</pre></div>
-</div>
-</section>
-<section id="tuning-hyper-parameters">
-<h2>Tuning hyper-parameters<a class="headerlink" href="#tuning-hyper-parameters" title="Permalink to this heading">¶</a></h2>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">grid_search</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X_train</span><span class="p">,</span> <span class="n">y_train</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">The best set of parameters found are:</span><span class="se">\n</span><span class="si">{</span><span class="n">grid_search</span><span class="o">.</span><span class="n">best_params_</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="n">grid_search</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X_train</span><span class="p">,</span> <span class="n">y_train</span><span class="p">)</span>
 </pre></div>
 </div>
 <p class="sphx-glr-script-out">Out:</p>
-<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>Models with a precision higher than 0.98:
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>All grid-search results:
 precision: 1.000 (±0.000), recall: 0.854 (±0.063), for {&#39;C&#39;: 1, &#39;gamma&#39;: 0.001, &#39;kernel&#39;: &#39;rbf&#39;}
 precision: 1.000 (±0.000), recall: 0.257 (±0.061), for {&#39;C&#39;: 1, &#39;gamma&#39;: 0.0001, &#39;kernel&#39;: &#39;rbf&#39;}
 precision: 1.000 (±0.000), recall: 0.877 (±0.069), for {&#39;C&#39;: 10, &#39;gamma&#39;: 0.001, &#39;kernel&#39;: &#39;rbf&#39;}
@@ -395,12 +392,14 @@ precision: 0.695 (±0.073), recall: 0.743 (±0.065), for {&#39;C&#39;: 1, &#39;k
 precision: 0.643 (±0.066), recall: 0.757 (±0.066), for {&#39;C&#39;: 10, &#39;kernel&#39;: &#39;linear&#39;}
 precision: 0.611 (±0.028), recall: 0.744 (±0.044), for {&#39;C&#39;: 100, &#39;kernel&#39;: &#39;linear&#39;}
 precision: 0.618 (±0.039), recall: 0.744 (±0.044), for {&#39;C&#39;: 1000, &#39;kernel&#39;: &#39;linear&#39;}
+
 Models with a precision higher than 0.98:
 precision: 1.000 (±0.000), recall: 0.854 (±0.063), for {&#39;C&#39;: 1, &#39;gamma&#39;: 0.001, &#39;kernel&#39;: &#39;rbf&#39;}
 precision: 1.000 (±0.000), recall: 0.257 (±0.061), for {&#39;C&#39;: 1, &#39;gamma&#39;: 0.0001, &#39;kernel&#39;: &#39;rbf&#39;}
 precision: 1.000 (±0.000), recall: 0.877 (±0.069), for {&#39;C&#39;: 10, &#39;gamma&#39;: 0.001, &#39;kernel&#39;: &#39;rbf&#39;}
 precision: 1.000 (±0.000), recall: 0.877 (±0.069), for {&#39;C&#39;: 100, &#39;gamma&#39;: 0.001, &#39;kernel&#39;: &#39;rbf&#39;}
 precision: 1.000 (±0.000), recall: 0.877 (±0.069), for {&#39;C&#39;: 1000, &#39;gamma&#39;: 0.001, &#39;kernel&#39;: &#39;rbf&#39;}
+
 Out of the previously selected high precision models, we keep all the
 the models within one standard deviation of the highest recall model:
 precision: 1.000 (±0.000), recall: 0.854 (±0.063), for {&#39;C&#39;: 1, &#39;gamma&#39;: 0.001, &#39;kernel&#39;: &#39;rbf&#39;}
@@ -408,45 +407,64 @@ precision: 1.000 (±0.000), recall: 0.877 (±0.069), for {&#39;C&#39;: 10, &#39;
 precision: 1.000 (±0.000), recall: 0.877 (±0.069), for {&#39;C&#39;: 100, &#39;gamma&#39;: 0.001, &#39;kernel&#39;: &#39;rbf&#39;}
 precision: 1.000 (±0.000), recall: 0.877 (±0.069), for {&#39;C&#39;: 1000, &#39;gamma&#39;: 0.001, &#39;kernel&#39;: &#39;rbf&#39;}
 
+
 The selected final model is the fastest to predict out of the previously
 selected subset of best models based on precision and recall.
 Its scoring time is:
 
-mean_score_time                                           0.00446
-mean_test_recall                                         0.877206
-std_test_recall                                          0.069196
-mean_test_precision                                           1.0
-std_test_precision                                            0.0
-rank_test_recall                                                3
-rank_test_precision                                             1
-params                 {&#39;C&#39;: 10, &#39;gamma&#39;: 0.001, &#39;kernel&#39;: &#39;rbf&#39;}
-Name: 2, dtype: object
-
-The best set of parameters found are:
-{&#39;C&#39;: 10, &#39;gamma&#39;: 0.001, &#39;kernel&#39;: &#39;rbf&#39;}
+mean_score_time                                         0.003199
+mean_test_recall                                        0.853676
+std_test_recall                                         0.063184
+mean_test_precision                                          1.0
+std_test_precision                                           0.0
+rank_test_recall                                               6
+rank_test_precision                                            1
+params                 {&#39;C&#39;: 1, &#39;gamma&#39;: 0.001, &#39;kernel&#39;: &#39;rbf&#39;}
+Name: 0, dtype: object
 </pre></div>
 </div>
-<p>Finally, we evaluate the fine-tuned model on the left-out evaluation set.</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">sklearn.metrics</span> <span class="kn">import</span> <a href="../../modules/generated/sklearn.metrics.classification_report.html#sklearn.metrics.classification_report" title="sklearn.metrics.classification_report" class="sphx-glr-backref-module-sklearn-metrics sphx-glr-backref-type-py-function"><span class="n">classification_report</span></a>
-
-<span class="n">y_pred</span> <span class="o">=</span> <span class="n">grid_search</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">X_test</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span>
-    <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Our selected model has the following performance on the &quot;</span>
-    <span class="sa">f</span><span class="s2">&quot;testing set:</span><span class="se">\n\n</span><span class="s2"> </span><span class="si">{</span><a href="../../modules/generated/sklearn.metrics.classification_report.html#sklearn.metrics.classification_report" title="sklearn.metrics.classification_report" class="sphx-glr-backref-module-sklearn-metrics sphx-glr-backref-type-py-function"><span class="n">classification_report</span></a><span class="p">(</span><span class="n">y_test</span><span class="p">,</span> <span class="n">y_pred</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span>
-<span class="p">)</span>
+<div class="output_subarea output_html rendered_html output_result">
+<style>#sk-container-id-40 {color: black;background-color: white;}#sk-container-id-40 pre{padding: 0;}#sk-container-id-40 div.sk-toggleable {background-color: white;}#sk-container-id-40 label.sk-toggleable__label {cursor: pointer;display: block;width: 100%;margin-bottom: 0;padding: 0.3em;box-sizing: border-box;text-align: center;}#sk-container-id-40 label.sk-toggleable__label-arrow:before {content: "▸";float: left;margin-right: 0.25em;color: #696969;}#sk-container-id-40 label.sk-toggleable__label-arrow:hover:before {color: black;}#sk-container-id-40 div.sk-estimator:hover label.sk-toggleable__label-arrow:before {color: black;}#sk-container-id-40 div.sk-toggleable__content {max-height: 0;max-width: 0;overflow: hidden;text-align: left;background-color: #f0f8ff;}#sk-container-id-40 div.sk-toggleable__content pre {margin: 0.2em;color: black;border-radius: 0.25em;background-color: #f0f8ff;}#sk-container-id-40 input.sk-toggleable__control:checked~div.sk-toggleable__content {max-height: 200px;max-width: 100%;overflow: auto;}#sk-container-id-40 input.sk-toggleable__control:checked~label.sk-toggleable__label-arrow:before {content: "▾";}#sk-container-id-40 div.sk-estimator input.sk-toggleable__control:checked~label.sk-toggleable__label {background-color: #d4ebff;}#sk-container-id-40 div.sk-label input.sk-toggleable__control:checked~label.sk-toggleable__label {background-color: #d4ebff;}#sk-container-id-40 input.sk-hidden--visually {border: 0;clip: rect(1px 1px 1px 1px);clip: rect(1px, 1px, 1px, 1px);height: 1px;margin: -1px;overflow: hidden;padding: 0;position: absolute;width: 1px;}#sk-container-id-40 div.sk-estimator {font-family: monospace;background-color: #f0f8ff;border: 1px dotted black;border-radius: 0.25em;box-sizing: border-box;margin-bottom: 0.5em;}#sk-container-id-40 div.sk-estimator:hover {background-color: #d4ebff;}#sk-container-id-40 div.sk-parallel-item::after {content: "";width: 100%;border-bottom: 1px solid gray;flex-grow: 1;}#sk-container-id-40 div.sk-label:hover label.sk-toggleable__label {background-color: #d4ebff;}#sk-container-id-40 div.sk-serial::before {content: "";position: absolute;border-left: 1px solid gray;box-sizing: border-box;top: 0;bottom: 0;left: 50%;z-index: 0;}#sk-container-id-40 div.sk-serial {display: flex;flex-direction: column;align-items: center;background-color: white;padding-right: 0.2em;padding-left: 0.2em;position: relative;}#sk-container-id-40 div.sk-item {position: relative;z-index: 1;}#sk-container-id-40 div.sk-parallel {display: flex;align-items: stretch;justify-content: center;background-color: white;position: relative;}#sk-container-id-40 div.sk-item::before, #sk-container-id-40 div.sk-parallel-item::before {content: "";position: absolute;border-left: 1px solid gray;box-sizing: border-box;top: 0;bottom: 0;left: 50%;z-index: -1;}#sk-container-id-40 div.sk-parallel-item {display: flex;flex-direction: column;z-index: 1;position: relative;background-color: white;}#sk-container-id-40 div.sk-parallel-item:first-child::after {align-self: flex-end;width: 50%;}#sk-container-id-40 div.sk-parallel-item:last-child::after {align-self: flex-start;width: 50%;}#sk-container-id-40 div.sk-parallel-item:only-child::after {width: 0;}#sk-container-id-40 div.sk-dashed-wrapped {border: 1px dashed gray;margin: 0 0.4em 0.5em 0.4em;box-sizing: border-box;padding-bottom: 0.4em;background-color: white;}#sk-container-id-40 div.sk-label label {font-family: monospace;font-weight: bold;display: inline-block;line-height: 1.2em;}#sk-container-id-40 div.sk-label-container {text-align: center;}#sk-container-id-40 div.sk-container {/* jupyter's `normalize.less` sets `[hidden] { display: none; }` but bootstrap.min.css set `[hidden] { display: none !important; }` so we also need the `!important` here to be able to override the default hidden behavior on the sphinx rendered scikit-learn.org. See: https://github.com/scikit-learn/scikit-learn/issues/21755 */display: inline-block !important;position: relative;}#sk-container-id-40 div.sk-text-repr-fallback {display: none;}</style><div id="sk-container-id-40" class="sk-top-container"><div class="sk-text-repr-fallback"><pre>GridSearchCV(estimator=SVC(),
+             param_grid=[{&#x27;C&#x27;: [1, 10, 100, 1000], &#x27;gamma&#x27;: [0.001, 0.0001],
+                          &#x27;kernel&#x27;: [&#x27;rbf&#x27;]},
+                         {&#x27;C&#x27;: [1, 10, 100, 1000], &#x27;kernel&#x27;: [&#x27;linear&#x27;]}],
+             refit=&lt;function refit_strategy at 0x7f1c25b0e160&gt;,
+             scoring=[&#x27;precision&#x27;, &#x27;recall&#x27;])</pre><b>In a Jupyter environment, please rerun this cell to show the HTML representation or trust the notebook. <br />On GitHub, the HTML representation is unable to render, please try loading this page with nbviewer.org.</b></div><div class="sk-container" hidden><div class="sk-item sk-dashed-wrapped"><div class="sk-label-container"><div class="sk-label sk-toggleable"><input class="sk-toggleable__control sk-hidden--visually" id="sk-estimator-id-189" type="checkbox" ><label for="sk-estimator-id-189" class="sk-toggleable__label sk-toggleable__label-arrow">GridSearchCV</label><div class="sk-toggleable__content"><pre>GridSearchCV(estimator=SVC(),
+             param_grid=[{&#x27;C&#x27;: [1, 10, 100, 1000], &#x27;gamma&#x27;: [0.001, 0.0001],
+                          &#x27;kernel&#x27;: [&#x27;rbf&#x27;]},
+                         {&#x27;C&#x27;: [1, 10, 100, 1000], &#x27;kernel&#x27;: [&#x27;linear&#x27;]}],
+             refit=&lt;function refit_strategy at 0x7f1c25b0e160&gt;,
+             scoring=[&#x27;precision&#x27;, &#x27;recall&#x27;])</pre></div></div></div><div class="sk-parallel"><div class="sk-parallel-item"><div class="sk-item"><div class="sk-label-container"><div class="sk-label sk-toggleable"><input class="sk-toggleable__control sk-hidden--visually" id="sk-estimator-id-190" type="checkbox" ><label for="sk-estimator-id-190" class="sk-toggleable__label sk-toggleable__label-arrow">estimator: SVC</label><div class="sk-toggleable__content"><pre>SVC()</pre></div></div></div><div class="sk-serial"><div class="sk-item"><div class="sk-estimator sk-toggleable"><input class="sk-toggleable__control sk-hidden--visually" id="sk-estimator-id-191" type="checkbox" ><label for="sk-estimator-id-191" class="sk-toggleable__label sk-toggleable__label-arrow">SVC</label><div class="sk-toggleable__content"><pre>SVC()</pre></div></div></div></div></div></div></div></div></div></div>
+</div>
+<br />
+<br /><p>The parameters selected by the grid-search with our custom strategy are:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">grid_search</span><span class="o">.</span><span class="n">best_params_</span>
 </pre></div>
 </div>
 <p class="sphx-glr-script-out">Out:</p>
-<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>Our selected model has the following performance on the testing set:
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>{&#39;C&#39;: 1, &#39;gamma&#39;: 0.001, &#39;kernel&#39;: &#39;rbf&#39;}
+</pre></div>
+</div>
+<p>Finally, we evaluate the fine-tuned model on the left-out evaluation set: the
+<code class="docutils literal notranslate"><span class="pre">grid_search</span></code> object <strong>has automatically been refit</strong> on the full training
+set with the parameters selected by our custom refit strategy.</p>
+<p>We can use the classification report to compute standard classification
+metrics on the left-out set:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">sklearn.metrics</span> <span class="kn">import</span> <a href="../../modules/generated/sklearn.metrics.classification_report.html#sklearn.metrics.classification_report" title="sklearn.metrics.classification_report" class="sphx-glr-backref-module-sklearn-metrics sphx-glr-backref-type-py-function"><span class="n">classification_report</span></a>
 
-               precision    recall  f1-score   support
+<span class="n">y_pred</span> <span class="o">=</span> <span class="n">grid_search</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">X_test</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><a href="../../modules/generated/sklearn.metrics.classification_report.html#sklearn.metrics.classification_report" title="sklearn.metrics.classification_report" class="sphx-glr-backref-module-sklearn-metrics sphx-glr-backref-type-py-function"><span class="n">classification_report</span></a><span class="p">(</span><span class="n">y_test</span><span class="p">,</span> <span class="n">y_pred</span><span class="p">))</span>
+</pre></div>
+</div>
+<p class="sphx-glr-script-out">Out:</p>
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>              precision    recall  f1-score   support
 
-       False       0.99      1.00      0.99       807
-        True       1.00      0.87      0.93        92
+       False       0.98      1.00      0.99       807
+        True       1.00      0.85      0.92        92
 
-    accuracy                           0.99       899
-   macro avg       0.99      0.93      0.96       899
-weighted avg       0.99      0.99      0.99       899
+    accuracy                           0.98       899
+   macro avg       0.99      0.92      0.95       899
+weighted avg       0.98      0.98      0.98       899
 </pre></div>
 </div>
 <div class="admonition note">
@@ -454,7 +472,7 @@ weighted avg       0.99      0.99      0.99       899
 <p>The problem is too easy: the hyperparameter plateau is too flat and the
 output model is the same for precision and recall with ties in quality.</p>
 </div>
-<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> ( 0 minutes  10.579 seconds)</p>
+<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> ( 0 minutes  11.193 seconds)</p>
 <div class="sphx-glr-footer class sphx-glr-footer-example docutils container" id="sphx-glr-download-auto-examples-model-selection-plot-grid-search-digits-py">
 <div class="binder-badge docutils container">
 <a class="reference external image-reference" href="https://mybinder.org/v2/gh/scikit-learn/scikit-learn/main?urlpath=lab/tree/notebooks/auto_examples/model_selection/plot_grid_search_digits.ipynb"><img alt="Launch binder" src="../../_images/binder_badge_logo21.svg" width="150px" /></a>
