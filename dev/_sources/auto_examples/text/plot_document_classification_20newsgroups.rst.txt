@@ -23,11 +23,15 @@ Classification of text documents using sparse features
 ======================================================
 
 This is an example showing how scikit-learn can be used to classify documents by
-topics using a bag-of-words approach. This example uses a Tf-idf-weighted
-document-term sparse matrix to encode the features and demonstrates various
-classifiers that can efficiently handle sparse matrices.
+topics using a `Bag of Words approach
+<https://en.wikipedia.org/wiki/Bag-of-words_model>`_. This example uses a
+Tf-idf-weighted document-term sparse matrix to encode the features and
+demonstrates various classifiers that can efficiently handle sparse matrices.
 
-.. GENERATED FROM PYTHON SOURCE LINES 12-21
+For document analysis via an unsupervised learning approach, see the example
+script :ref:`sphx_glr_auto_examples_text_plot_document_clustering.py`.
+
+.. GENERATED FROM PYTHON SOURCE LINES 16-25
 
 .. code-block:: default
 
@@ -47,13 +51,14 @@ classifiers that can efficiently handle sparse matrices.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 22-33
+.. GENERATED FROM PYTHON SOURCE LINES 26-38
 
-Load data
----------
+Loading and vectorizing the 20 newsgroups text dataset
+======================================================
+
 We define a function to load data from :ref:`20newsgroups_dataset`, which
-comprises around 18000 newsgroups posts on 20 topics split in two subsets: one
-for training (or development) and the other one for testing (or for
+comprises around 18,000 newsgroups posts on 20 topics split in two subsets:
+one for training (or development) and the other one for testing (or for
 performance evaluation). Note that, by default, the text samples contain some
 message metadata such as `'headers'`, `'footers'` (signatures) and `'quotes'`
 to other posts. The `fetch_20newsgroups` function therefore accepts a
@@ -61,7 +66,7 @@ parameter named `remove` to attempt stripping such information that can make
 the classification problem "too easy". This is achieved using simple
 heuristics that are neither perfect nor standard, hence disabled by default.
 
-.. GENERATED FROM PYTHON SOURCE LINES 33-116
+.. GENERATED FROM PYTHON SOURCE LINES 38-121
 
 .. code-block:: default
 
@@ -155,14 +160,24 @@ heuristics that are neither perfect nor standard, hence disabled by default.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 117-121
+.. GENERATED FROM PYTHON SOURCE LINES 122-136
 
-Compare feature effects
------------------------
-We train a first classification model without attempting to strip the metadata
-of the dataset.
+Analysis of a bag-of-words document classifier
+==============================================
 
-.. GENERATED FROM PYTHON SOURCE LINES 121-126
+We will now train a classifier twice, once on the text samples including
+metadata and once after stripping the metadata. For both cases we will analyze
+the classification errors on a test set using a confusion matrix and inspect
+the coefficients that define the classification function of the trained
+models.
+
+Model without metadata stripping
+--------------------------------
+
+We start by using the custom function `load_dataset` to load the data without
+metadata stripping.
+
+.. GENERATED FROM PYTHON SOURCE LINES 136-141
 
 .. code-block:: default
 
@@ -184,15 +199,15 @@ of the dataset.
     2034 documents - 3.98MB (training set)
     1353 documents - 2.87MB (test set)
     4 categories
-    vectorize training done in 0.373s at 10.673MB/s
+    vectorize training done in 0.387s at 10.292MB/s
     n_samples: 2034, n_features: 7831
-    vectorize testing done in 0.244s at 11.758MB/s
+    vectorize testing done in 0.245s at 11.710MB/s
     n_samples: 1353, n_features: 7831
 
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 127-135
+.. GENERATED FROM PYTHON SOURCE LINES 142-150
 
 Our first model is an instance of the
 :class:`~sklearn.linear_model.RidgeClassifier` class. This is a linear
@@ -203,7 +218,7 @@ targets, one for each possible class. Contrary to
 provide probabilistic predictions (no `predict_proba` method),
 but it is often faster to train.
 
-.. GENERATED FROM PYTHON SOURCE LINES 135-142
+.. GENERATED FROM PYTHON SOURCE LINES 150-157
 
 .. code-block:: default
 
@@ -221,12 +236,12 @@ but it is often faster to train.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 143-145
+.. GENERATED FROM PYTHON SOURCE LINES 158-160
 
 We plot the confusion matrix of this classifier to find if there is a pattern
 in the classification errors.
 
-.. GENERATED FROM PYTHON SOURCE LINES 145-157
+.. GENERATED FROM PYTHON SOURCE LINES 160-172
 
 .. code-block:: default
 
@@ -254,7 +269,7 @@ in the classification errors.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 158-170
+.. GENERATED FROM PYTHON SOURCE LINES 173-185
 
 The confusion matrix highlights that documents of the `alt.atheism` class are
 often confused with documents with the class `talk.religion.misc` class and
@@ -269,7 +284,7 @@ be more specific than the vocabulary for computer graphics.
 We can gain a deeper understanding of how this classifier makes its decisions
 by looking at the words with the highest average feature effects:
 
-.. GENERATED FROM PYTHON SOURCE LINES 170-221
+.. GENERATED FROM PYTHON SOURCE LINES 185-236
 
 .. code-block:: default
 
@@ -350,7 +365,7 @@ by looking at the words with the highest average feature effects:
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 222-233
+.. GENERATED FROM PYTHON SOURCE LINES 237-248
 
 We can observe that the most predictive words are often strongly positively
 associated with a single class and negatively associated with all the other
@@ -364,7 +379,7 @@ share some common vocabulary. Notice however that there are also words such as
 in the dataset coming from some sort of metadata such as the email addresses
 of the sender of previous emails in the discussion as can be seen below:
 
-.. GENERATED FROM PYTHON SOURCE LINES 233-243
+.. GENERATED FROM PYTHON SOURCE LINES 248-258
 
 .. code-block:: default
 
@@ -493,13 +508,16 @@ of the sender of previous emails in the discussion as can be seen below:
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 244-257
+.. GENERATED FROM PYTHON SOURCE LINES 259-275
 
 Such headers, signature footers (and quoted metadata from previous messages)
 can be considered side information that artificially reveals the newsgroup by
 identifying the registered members and one would rather want our text
 classifier to only learn from the "main content" of each text document instead
 of relying on the leaked identity of the writers.
+
+Model with metadata stripping
+-----------------------------
 
 The `remove` option of the 20 newsgroups dataset loader in scikit-learn allows
 to heuristically attempt to filter out some of this unwanted metadata that
@@ -509,7 +527,7 @@ filtering of the text contents is far from perfect.
 Let us try to leverage this option to train a text classifier that does not
 rely too much on this kind of metadata to make its decisions:
 
-.. GENERATED FROM PYTHON SOURCE LINES 257-278
+.. GENERATED FROM PYTHON SOURCE LINES 275-296
 
 .. code-block:: default
 
@@ -546,14 +564,14 @@ rely too much on this kind of metadata to make its decisions:
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 279-283
+.. GENERATED FROM PYTHON SOURCE LINES 297-301
 
 By looking at the confusion matrix, it is more evident that the scores of the
 model trained with metadata were over-optimistic. The classification problem
 without access to the metadata is less accurate but more representative of the
 intended text classification problem.
 
-.. GENERATED FROM PYTHON SOURCE LINES 283-286
+.. GENERATED FROM PYTHON SOURCE LINES 301-304
 
 .. code-block:: default
 
@@ -586,19 +604,24 @@ intended text classification problem.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 287-289
+.. GENERATED FROM PYTHON SOURCE LINES 305-307
 
 In the next section we keep the dataset without metadata to compare several
 classifiers.
 
-.. GENERATED FROM PYTHON SOURCE LINES 291-295
+.. GENERATED FROM PYTHON SOURCE LINES 309-318
 
 Benchmarking classifiers
-------------------------
+========================
 
-First we define small benchmarking utilities
+Scikit-learn provides many different kinds of classification algorithms. In
+this section we will train a selection of those classifiers on the same text
+classification problem and measure both their generalization performance
+(accuracy on the test set) and their computation performance (speed), both at
+training time and testing time. For such purpose we define the following
+benchmarking utilities:
 
-.. GENERATED FROM PYTHON SOURCE LINES 295-330
+.. GENERATED FROM PYTHON SOURCE LINES 318-353
 
 .. code-block:: default
 
@@ -644,7 +667,7 @@ First we define small benchmarking utilities
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 331-338
+.. GENERATED FROM PYTHON SOURCE LINES 354-361
 
 We now train and test the datasets with 8 different classification models and
 get performance results for each model. The goal of this study is to highlight
@@ -654,7 +677,7 @@ such a multi-class text classification problem.
 Notice that the most important hyperparameters values were tuned using a grid
 search procedure not shown in this notebook for the sake of simplicity.
 
-.. GENERATED FROM PYTHON SOURCE LINES 338-372
+.. GENERATED FROM PYTHON SOURCE LINES 361-395
 
 .. code-block:: default
 
@@ -707,8 +730,8 @@ search procedure not shown in this notebook for the sake of simplicity.
     ________________________________________________________________________________
     Training: 
     LogisticRegression(C=5, max_iter=1000)
-    train time: 0.352s
-    test time:  0.000615s
+    train time: 0.331s
+    test time:  0.000622s
     accuracy:   0.773
     dimensionality: 5316
     density: 1.0
@@ -719,8 +742,8 @@ search procedure not shown in this notebook for the sake of simplicity.
     ________________________________________________________________________________
     Training: 
     RidgeClassifier(solver='sparse_cg')
-    train time: 0.0297s
-    test time:  0.00058s
+    train time: 0.0315s
+    test time:  0.000676s
     accuracy:   0.76
     dimensionality: 5316
     density: 1.0
@@ -731,8 +754,8 @@ search procedure not shown in this notebook for the sake of simplicity.
     ________________________________________________________________________________
     Training: 
     KNeighborsClassifier(n_neighbors=100)
-    train time: 0.000733s
-    test time:  0.117s
+    train time: 0.000925s
+    test time:  0.111s
     accuracy:   0.753
 
     ================================================================================
@@ -740,8 +763,8 @@ search procedure not shown in this notebook for the sake of simplicity.
     ________________________________________________________________________________
     Training: 
     RandomForestClassifier()
-    train time: 1.39s
-    test time:  0.0705s
+    train time: 1.21s
+    test time:  0.0695s
     accuracy:   0.704
 
     ================================================================================
@@ -749,8 +772,8 @@ search procedure not shown in this notebook for the sake of simplicity.
     ________________________________________________________________________________
     Training: 
     LinearSVC(C=0.1, dual=False)
-    train time: 0.032s
-    test time:  0.000549s
+    train time: 0.0318s
+    test time:  0.000636s
     accuracy:   0.752
     dimensionality: 5316
     density: 1.0
@@ -761,8 +784,8 @@ search procedure not shown in this notebook for the sake of simplicity.
     ________________________________________________________________________________
     Training: 
     SGDClassifier(early_stopping=True, loss='log_loss', n_iter_no_change=3)
-    train time: 0.0228s
-    test time:  0.000554s
+    train time: 0.0247s
+    test time:  0.000661s
     accuracy:   0.762
     dimensionality: 5316
     density: 1.0
@@ -773,8 +796,8 @@ search procedure not shown in this notebook for the sake of simplicity.
     ________________________________________________________________________________
     Training: 
     NearestCentroid()
-    train time: 0.00264s
-    test time:  0.000905s
+    train time: 0.00306s
+    test time:  0.000981s
     accuracy:   0.748
 
     ================================================================================
@@ -782,22 +805,23 @@ search procedure not shown in this notebook for the sake of simplicity.
     ________________________________________________________________________________
     Training: 
     ComplementNB(alpha=0.1)
-    train time: 0.0017s
-    test time:  0.000524s
+    train time: 0.00172s
+    test time:  0.000472s
     accuracy:   0.779
 
 
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 373-377
+.. GENERATED FROM PYTHON SOURCE LINES 396-401
 
 Plot accuracy, training and test time of each classifier
---------------------------------------------------------
+========================================================
+
 The scatter plots show the trade-off between the test accuracy and the
 training and testing time of each classifier.
 
-.. GENERATED FROM PYTHON SOURCE LINES 377-407
+.. GENERATED FROM PYTHON SOURCE LINES 401-431
 
 .. code-block:: default
 
@@ -855,7 +879,7 @@ training and testing time of each classifier.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 408-430
+.. GENERATED FROM PYTHON SOURCE LINES 432-454
 
 The naive Bayes model has the best trade-off between score and
 training/testing time, while Random Forest is both slow to train, expensive to
@@ -883,7 +907,7 @@ classification problems.
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** ( 0 minutes  6.708 seconds)
+   **Total running time of the script:** ( 0 minutes  6.125 seconds)
 
 
 .. _sphx_glr_download_auto_examples_text_plot_document_classification_20newsgroups.py:
