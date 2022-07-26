@@ -202,7 +202,7 @@
 <li><a class="reference internal" href="#stratified-shuffle-split">3.1.2.2.2. Stratified Shuffle Split</a></li>
 </ul>
 </li>
-<li><a class="reference internal" href="#cross-validation-iterators-for-grouped-data">3.1.2.3. Cross-validation iterators for grouped data.</a><ul>
+<li><a class="reference internal" href="#cross-validation-iterators-for-grouped-data">3.1.2.3. Cross-validation iterators for grouped data</a><ul>
 <li><a class="reference internal" href="#group-k-fold">3.1.2.3.1. Group k-fold</a></li>
 <li><a class="reference internal" href="#stratifiedgroupkfold">3.1.2.3.2. StratifiedGroupKFold</a></li>
 <li><a class="reference internal" href="#leave-one-group-out">3.1.2.3.3. Leave One Group Out</a></li>
@@ -738,7 +738,7 @@ percentage for each target class as in the complete set.</p>
 </section>
 </section>
 <section id="cross-validation-iterators-for-grouped-data">
-<span id="group-cv"></span><h3><span class="section-number">3.1.2.3. </span>Cross-validation iterators for grouped data.<a class="headerlink" href="#cross-validation-iterators-for-grouped-data" title="Permalink to this heading">¶</a></h3>
+<span id="group-cv"></span><h3><span class="section-number">3.1.2.3. </span>Cross-validation iterators for grouped data<a class="headerlink" href="#cross-validation-iterators-for-grouped-data" title="Permalink to this heading">¶</a></h3>
 <p>The i.i.d. assumption is broken if the underlying generative process yield
 groups of dependent samples.</p>
 <p>Such a grouping of data is domain specific. An example would be when there is
@@ -777,11 +777,16 @@ to detect this kind of overfitting situations.</p>
 </div>
 <p>Each subject is in a different testing fold, and the same subject is never in
 both testing and training. Notice that the folds do not have exactly the same
-size due to the imbalance in the data.</p>
+size due to the imbalance in the data. If class proportions must be balanced
+across folds, <a class="reference internal" href="generated/sklearn.model_selection.StratifiedGroupKFold.html#sklearn.model_selection.StratifiedGroupKFold" title="sklearn.model_selection.StratifiedGroupKFold"><code class="xref py py-class docutils literal notranslate"><span class="pre">StratifiedGroupKFold</span></code></a> is a better option.</p>
 <p>Here is a visualization of the cross-validation behavior.</p>
 <figure class="align-center">
 <a class="reference external image-reference" href="../auto_examples/model_selection/plot_cv_indices.html"><img alt="../_images/sphx_glr_plot_cv_indices_007.png" src="../_images/sphx_glr_plot_cv_indices_007.png" style="width: 450.0px; height: 225.0px;" /></a>
 </figure>
+<p>Similar to <a class="reference internal" href="generated/sklearn.model_selection.KFold.html#sklearn.model_selection.KFold" title="sklearn.model_selection.KFold"><code class="xref py py-class docutils literal notranslate"><span class="pre">KFold</span></code></a>, the test sets from <a class="reference internal" href="generated/sklearn.model_selection.GroupKFold.html#sklearn.model_selection.GroupKFold" title="sklearn.model_selection.GroupKFold"><code class="xref py py-class docutils literal notranslate"><span class="pre">GroupKFold</span></code></a> will form a
+complete partition of all the data. Unlike <a class="reference internal" href="generated/sklearn.model_selection.KFold.html#sklearn.model_selection.KFold" title="sklearn.model_selection.KFold"><code class="xref py py-class docutils literal notranslate"><span class="pre">KFold</span></code></a>, <a class="reference internal" href="generated/sklearn.model_selection.GroupKFold.html#sklearn.model_selection.GroupKFold" title="sklearn.model_selection.GroupKFold"><code class="xref py py-class docutils literal notranslate"><span class="pre">GroupKFold</span></code></a>
+is not randomized at all, whereas <a class="reference internal" href="generated/sklearn.model_selection.KFold.html#sklearn.model_selection.KFold" title="sklearn.model_selection.KFold"><code class="xref py py-class docutils literal notranslate"><span class="pre">KFold</span></code></a> is randomized when
+<code class="docutils literal notranslate"><span class="pre">shuffle=True</span></code>.</p>
 </section>
 <section id="stratifiedgroupkfold">
 <span id="stratified-group-k-fold"></span><h4><span class="section-number">3.1.2.3.2. </span>StratifiedGroupKFold<a class="headerlink" href="#stratifiedgroupkfold" title="Permalink to this heading">¶</a></h4>
@@ -837,7 +842,8 @@ the samples according to a third-party provided array of integer groups. This
 group information can be used to encode arbitrary domain specific pre-defined
 cross-validation folds.</p>
 <p>Each training set is thus constituted by all the samples except the ones
-related to a specific group.</p>
+related to a specific group. This is basically the same as
+<a class="reference internal" href="generated/sklearn.model_selection.LeavePGroupsOut.html#sklearn.model_selection.LeavePGroupsOut" title="sklearn.model_selection.LeavePGroupsOut"><code class="xref py py-class docutils literal notranslate"><span class="pre">LeavePGroupsOut</span></code></a> with <code class="docutils literal notranslate"><span class="pre">n_groups=1</span></code>.</p>
 <p>For example, in the cases of multiple experiments, <a class="reference internal" href="generated/sklearn.model_selection.LeaveOneGroupOut.html#sklearn.model_selection.LeaveOneGroupOut" title="sklearn.model_selection.LeaveOneGroupOut"><code class="xref py py-class docutils literal notranslate"><span class="pre">LeaveOneGroupOut</span></code></a>
 can be used to create a cross-validation based on the different experiments:
 we create a training set using the samples of all the experiments except one:</p>
@@ -861,7 +867,9 @@ for cross-validation against time-based splits.</p>
 <section id="leave-p-groups-out">
 <span id="id8"></span><h4><span class="section-number">3.1.2.3.4. </span>Leave P Groups Out<a class="headerlink" href="#leave-p-groups-out" title="Permalink to this heading">¶</a></h4>
 <p><a class="reference internal" href="generated/sklearn.model_selection.LeavePGroupsOut.html#sklearn.model_selection.LeavePGroupsOut" title="sklearn.model_selection.LeavePGroupsOut"><code class="xref py py-class docutils literal notranslate"><span class="pre">LeavePGroupsOut</span></code></a> is similar as <a class="reference internal" href="generated/sklearn.model_selection.LeaveOneGroupOut.html#sklearn.model_selection.LeaveOneGroupOut" title="sklearn.model_selection.LeaveOneGroupOut"><code class="xref py py-class docutils literal notranslate"><span class="pre">LeaveOneGroupOut</span></code></a>, but removes
-samples related to <span class="math notranslate nohighlight">\(P\)</span> groups for each training/test set.</p>
+samples related to <span class="math notranslate nohighlight">\(P\)</span> groups for each training/test set. All possible
+combinations of <span class="math notranslate nohighlight">\(P\)</span> groups are left out, meaning test sets will overlap
+for <span class="math notranslate nohighlight">\(P&gt;1\)</span>.</p>
 <p>Example of Leave-2-Group Out:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">sklearn.model_selection</span> <span class="kn">import</span> <span class="n">LeavePGroupsOut</span>
 
@@ -882,7 +890,8 @@ samples related to <span class="math notranslate nohighlight">\(P\)</span> group
 <p>The <a class="reference internal" href="generated/sklearn.model_selection.GroupShuffleSplit.html#sklearn.model_selection.GroupShuffleSplit" title="sklearn.model_selection.GroupShuffleSplit"><code class="xref py py-class docutils literal notranslate"><span class="pre">GroupShuffleSplit</span></code></a> iterator behaves as a combination of
 <a class="reference internal" href="generated/sklearn.model_selection.ShuffleSplit.html#sklearn.model_selection.ShuffleSplit" title="sklearn.model_selection.ShuffleSplit"><code class="xref py py-class docutils literal notranslate"><span class="pre">ShuffleSplit</span></code></a> and <a class="reference internal" href="generated/sklearn.model_selection.LeavePGroupsOut.html#sklearn.model_selection.LeavePGroupsOut" title="sklearn.model_selection.LeavePGroupsOut"><code class="xref py py-class docutils literal notranslate"><span class="pre">LeavePGroupsOut</span></code></a>, and generates a
 sequence of randomized partitions in which a subset of groups are held
-out for each split.</p>
+out for each split. Each train/test split is performed independently meaning
+there is no guaranteed relationship between successive test sets.</p>
 <p>Here is a usage example:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">sklearn.model_selection</span> <span class="kn">import</span> <span class="n">GroupShuffleSplit</span>
 
