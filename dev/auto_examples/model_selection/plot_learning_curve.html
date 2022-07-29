@@ -228,6 +228,7 @@ the models for each training sizes.</p>
     <span class="n">ylim</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
     <span class="n">cv</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
     <span class="n">n_jobs</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+    <span class="n">scoring</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
     <span class="n">train_sizes</span><span class="o">=</span><a href="https://numpy.org/doc/stable/reference/generated/numpy.linspace.html#numpy.linspace" title="numpy.linspace" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-function"><span class="n">np</span><span class="o">.</span><span class="n">linspace</span></a><span class="p">(</span><span class="mf">0.1</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mi">5</span><span class="p">),</span>
 <span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
@@ -279,6 +280,11 @@ the models for each training sizes.</p>
 <span class="sd">        ``-1`` means using all processors. See :term:`Glossary &lt;n_jobs&gt;`</span>
 <span class="sd">        for more details.</span>
 
+<span class="sd">    scoring : str or callable, default=None</span>
+<span class="sd">        A str (see model evaluation documentation) or</span>
+<span class="sd">        a scorer callable object / function with signature</span>
+<span class="sd">        ``scorer(estimator, X, y)``.</span>
+
 <span class="sd">    train_sizes : array-like of shape (n_ticks,)</span>
 <span class="sd">        Relative or absolute numbers of training examples that will be used to</span>
 <span class="sd">        generate the learning curve. If the ``dtype`` is float, it is regarded</span>
@@ -302,6 +308,7 @@ the models for each training sizes.</p>
         <span class="n">estimator</span><span class="p">,</span>
         <span class="n">X</span><span class="p">,</span>
         <span class="n">y</span><span class="p">,</span>
+        <span class="n">scoring</span><span class="o">=</span><span class="n">scoring</span><span class="p">,</span>
         <span class="n">cv</span><span class="o">=</span><span class="n">cv</span><span class="p">,</span>
         <span class="n">n_jobs</span><span class="o">=</span><span class="n">n_jobs</span><span class="p">,</span>
         <span class="n">train_sizes</span><span class="o">=</span><span class="n">train_sizes</span><span class="p">,</span>
@@ -382,7 +389,15 @@ the models for each training sizes.</p>
 
 <span class="n">estimator</span> <span class="o">=</span> <a href="../../modules/generated/sklearn.naive_bayes.GaussianNB.html#sklearn.naive_bayes.GaussianNB" title="sklearn.naive_bayes.GaussianNB" class="sphx-glr-backref-module-sklearn-naive_bayes sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">GaussianNB</span></a><span class="p">()</span>
 <span class="n">plot_learning_curve</span><span class="p">(</span>
-    <span class="n">estimator</span><span class="p">,</span> <span class="n">title</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">axes</span><span class="o">=</span><span class="n">axes</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">],</span> <span class="n">ylim</span><span class="o">=</span><span class="p">(</span><span class="mf">0.7</span><span class="p">,</span> <span class="mf">1.01</span><span class="p">),</span> <span class="n">cv</span><span class="o">=</span><span class="n">cv</span><span class="p">,</span> <span class="n">n_jobs</span><span class="o">=</span><span class="mi">4</span>
+    <span class="n">estimator</span><span class="p">,</span>
+    <span class="n">title</span><span class="p">,</span>
+    <span class="n">X</span><span class="p">,</span>
+    <span class="n">y</span><span class="p">,</span>
+    <span class="n">axes</span><span class="o">=</span><span class="n">axes</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">],</span>
+    <span class="n">ylim</span><span class="o">=</span><span class="p">(</span><span class="mf">0.7</span><span class="p">,</span> <span class="mf">1.01</span><span class="p">),</span>
+    <span class="n">cv</span><span class="o">=</span><span class="n">cv</span><span class="p">,</span>
+    <span class="n">n_jobs</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span>
+    <span class="n">scoring</span><span class="o">=</span><span class="s2">&quot;accuracy&quot;</span><span class="p">,</span>
 <span class="p">)</span>
 
 <span class="n">title</span> <span class="o">=</span> <span class="sa">r</span><span class="s2">&quot;Learning Curves (SVM, RBF kernel, $\gamma=0.001$)&quot;</span>
@@ -396,7 +411,7 @@ the models for each training sizes.</p>
 <a href="https://matplotlib.org/stable/api/_as_gen/matplotlib.pyplot.show.html#matplotlib.pyplot.show" title="matplotlib.pyplot.show" class="sphx-glr-backref-module-matplotlib-pyplot sphx-glr-backref-type-py-function"><span class="n">plt</span><span class="o">.</span><span class="n">show</span></a><span class="p">()</span>
 </pre></div>
 </div>
-<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> ( 0 minutes  2.851 seconds)</p>
+<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> ( 0 minutes  2.954 seconds)</p>
 <div class="sphx-glr-footer class sphx-glr-footer-example docutils container" id="sphx-glr-download-auto-examples-model-selection-plot-learning-curve-py">
 <div class="binder-badge docutils container">
 <a class="reference external image-reference" href="https://mybinder.org/v2/gh/scikit-learn/scikit-learn/main?urlpath=lab/tree/notebooks/auto_examples/model_selection/plot_learning_curve.ipynb"><img alt="Launch binder" src="../../_images/binder_badge_logo21.svg" width="150px" /></a>
