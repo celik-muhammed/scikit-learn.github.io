@@ -5,7 +5,7 @@
 <!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
 <head>
   <meta charset="utf-8">
-  <meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+  <meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
 <meta property="og:title" content="How to optimize for speed" />
   
@@ -24,7 +24,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
   
-  <title>How to optimize for speed &mdash; scikit-learn 1.1.1 documentation</title>
+  <title>How to optimize for speed &mdash; scikit-learn 1.1.2 documentation</title>
   
   <link rel="canonical" href="http://scikit-learn.org/stable/developers/performance.html" />
 
@@ -173,7 +173,7 @@
         </div>
         <div class="alert alert-danger p-1 mb-2" role="alert">
           <p class="text-center mb-0">
-          <strong>scikit-learn 1.1.1</strong><br/>
+          <strong>scikit-learn 1.1.2</strong><br/>
           <a href="http://scikit-learn.org/dev/versions.html">Other versions</a>
           </p>
         </div>
@@ -214,7 +214,7 @@
       <div class="sk-page-content container-fluid body px-md-3" role="main">
         
   <section id="how-to-optimize-for-speed">
-<span id="performance-howto"></span><h1>How to optimize for speed<a class="headerlink" href="#how-to-optimize-for-speed" title="Permalink to this headline">¶</a></h1>
+<span id="performance-howto"></span><h1>How to optimize for speed<a class="headerlink" href="#how-to-optimize-for-speed" title="Permalink to this heading">¶</a></h1>
 <p>The following gives some practical guidelines to help you write efficient
 code for the scikit-learn project.</p>
 <div class="admonition note">
@@ -231,7 +231,7 @@ altogether that is better suited to the problem.</p>
 <p>The section <a class="reference internal" href="#warm-restarts"><span class="std std-ref">A simple algorithmic trick: warm restarts</span></a> gives an example of such a trick.</p>
 </div>
 <section id="python-cython-or-c-c">
-<h2>Python, Cython or C/C++?<a class="headerlink" href="#python-cython-or-c-c" title="Permalink to this headline">¶</a></h2>
+<h2>Python, Cython or C/C++?<a class="headerlink" href="#python-cython-or-c-c" title="Permalink to this heading">¶</a></h2>
 <p>In general, the scikit-learn project emphasizes the <strong>readability</strong> of
 the source code to make it easy for the project users to dive into the
 source code so as to understand how the algorithm behaves on their data
@@ -273,11 +273,7 @@ parallelism</strong> that is amenable to <strong>multi-processing</strong> by us
 </ol>
 </div></blockquote>
 <p>When using Cython, use either</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><style type="text/css">
-span.prompt1:before {
-  content: "$ ";
-}
-</style><span class="prompt1">python setup.py build_ext -i</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span class="prompt1">python setup.py build_ext -i</span>
 <span class="prompt1">python setup.py install</span>
 </pre></div></div><p>to generate C files. You are responsible for adding .c/.cpp extensions along
 with build parameters in each submodule <code class="docutils literal notranslate"><span class="pre">setup.py</span></code>.</p>
@@ -286,7 +282,7 @@ to make it possible to install scikit-learn stable version
 on any machine with Python, Numpy, Scipy and C/C++ compiler.</p>
 </section>
 <section id="profiling-python-code">
-<span id="id1"></span><h2>Profiling Python code<a class="headerlink" href="#profiling-python-code" title="Permalink to this headline">¶</a></h2>
+<span id="id1"></span><h2>Profiling Python code<a class="headerlink" href="#profiling-python-code" title="Permalink to this heading">¶</a></h2>
 <p>In order to profile Python code we recommend to write a script that
 loads and prepare you data and then use the IPython integrated profiler
 for interactively exploring the relevant part for the code.</p>
@@ -436,7 +432,7 @@ us install <code class="docutils literal notranslate"><span class="pre">line_pro
 pin-point the most expensive expressions that would deserve additional care.</p>
 </section>
 <section id="memory-usage-profiling">
-<h2>Memory usage profiling<a class="headerlink" href="#memory-usage-profiling" title="Permalink to this headline">¶</a></h2>
+<h2>Memory usage profiling<a class="headerlink" href="#memory-usage-profiling" title="Permalink to this heading">¶</a></h2>
 <p>You can analyze in detail the memory usage of any Python code with the help of
 <a class="reference external" href="https://pypi.org/project/memory_profiler/">memory_profiler</a>. First,
 install the latest version:</p>
@@ -486,7 +482,7 @@ analogous to <code class="docutils literal notranslate"><span class="pre">%timei
 <code class="docutils literal notranslate"><span class="pre">%mprun?</span></code>.</p>
 </section>
 <section id="performance-tips-for-the-cython-developer">
-<h2>Performance tips for the Cython developer<a class="headerlink" href="#performance-tips-for-the-cython-developer" title="Permalink to this headline">¶</a></h2>
+<h2>Performance tips for the Cython developer<a class="headerlink" href="#performance-tips-for-the-cython-developer" title="Permalink to this heading">¶</a></h2>
 <p>If profiling of the Python code reveals that the Python interpreter
 overhead is larger by one order of magnitude or more than the cost of the
 actual numerical computation (e.g. <code class="docutils literal notranslate"><span class="pre">for</span></code> loops over vector components,
@@ -508,7 +504,7 @@ memory alignment, direct blas calls…</p>
 <li><p><a class="reference external" href="http://conference.scipy.org/proceedings/SciPy2009/paper_2/">http://conference.scipy.org/proceedings/SciPy2009/paper_2/</a></p></li>
 </ul>
 <section id="using-openmp">
-<h3>Using OpenMP<a class="headerlink" href="#using-openmp" title="Permalink to this headline">¶</a></h3>
+<h3>Using OpenMP<a class="headerlink" href="#using-openmp" title="Permalink to this heading">¶</a></h3>
 <p>Since scikit-learn can be built without OpenMP, it’s necessary to
 protect each direct call to OpenMP. This can be done using the following
 syntax:</p>
@@ -530,13 +526,13 @@ syntax:</p>
 </section>
 </section>
 <section id="profiling-compiled-extensions">
-<span id="profiling-compiled-extension"></span><h2>Profiling compiled extensions<a class="headerlink" href="#profiling-compiled-extensions" title="Permalink to this headline">¶</a></h2>
+<span id="profiling-compiled-extension"></span><h2>Profiling compiled extensions<a class="headerlink" href="#profiling-compiled-extensions" title="Permalink to this heading">¶</a></h2>
 <p>When working with compiled extensions (written in C/C++ with a wrapper or
 directly as Cython extension), the default Python profiler is useless:
 we need a dedicated tool to introspect what’s happening inside the
 compiled extension it-self.</p>
 <section id="using-yep-and-gperftools">
-<h3>Using yep and gperftools<a class="headerlink" href="#using-yep-and-gperftools" title="Permalink to this headline">¶</a></h3>
+<h3>Using yep and gperftools<a class="headerlink" href="#using-yep-and-gperftools" title="Permalink to this heading">¶</a></h3>
 <p>Easy profiling without special compilation options use yep:</p>
 <ul class="simple">
 <li><p><a class="reference external" href="https://pypi.org/project/yep/">https://pypi.org/project/yep/</a></p></li>
@@ -544,7 +540,7 @@ compiled extension it-self.</p>
 </ul>
 </section>
 <section id="using-gprof">
-<h3>Using gprof<a class="headerlink" href="#using-gprof" title="Permalink to this headline">¶</a></h3>
+<h3>Using gprof<a class="headerlink" href="#using-gprof" title="Permalink to this heading">¶</a></h3>
 <p>In order to profile compiled Python extensions one could use <code class="docutils literal notranslate"><span class="pre">gprof</span></code>
 after having recompiled the project with <code class="docutils literal notranslate"><span class="pre">gcc</span> <span class="pre">-pg</span></code> and using the
 <code class="docutils literal notranslate"><span class="pre">python-dbg</span></code> variant of the interpreter on debian / ubuntu: however
@@ -554,9 +550,9 @@ with <code class="docutils literal notranslate"><span class="pre">-pg</span></co
 recompile everything.</p>
 </section>
 <section id="using-valgrind-callgrind-kcachegrind">
-<h3>Using valgrind / callgrind / kcachegrind<a class="headerlink" href="#using-valgrind-callgrind-kcachegrind" title="Permalink to this headline">¶</a></h3>
+<h3>Using valgrind / callgrind / kcachegrind<a class="headerlink" href="#using-valgrind-callgrind-kcachegrind" title="Permalink to this heading">¶</a></h3>
 <section id="kcachegrind">
-<h4>kcachegrind<a class="headerlink" href="#kcachegrind" title="Permalink to this headline">¶</a></h4>
+<h4>kcachegrind<a class="headerlink" href="#kcachegrind" title="Permalink to this heading">¶</a></h4>
 <p><code class="docutils literal notranslate"><span class="pre">yep</span></code> can be used to create a profiling report.
 <code class="docutils literal notranslate"><span class="pre">kcachegrind</span></code> provides a graphical environment to visualize this report:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span class="prompt1"><span class="c1"># Run yep to profile some python script</span></span>
@@ -572,12 +568,12 @@ a profiling report ‘line by line’.</p>
 </section>
 </section>
 <section id="multi-core-parallelism-using-joblib-parallel">
-<h2>Multi-core parallelism using <code class="docutils literal notranslate"><span class="pre">joblib.Parallel</span></code><a class="headerlink" href="#multi-core-parallelism-using-joblib-parallel" title="Permalink to this headline">¶</a></h2>
+<h2>Multi-core parallelism using <code class="docutils literal notranslate"><span class="pre">joblib.Parallel</span></code><a class="headerlink" href="#multi-core-parallelism-using-joblib-parallel" title="Permalink to this heading">¶</a></h2>
 <p>See <a class="reference external" href="https://joblib.readthedocs.io">joblib documentation</a></p>
 </section>
 <section id="a-simple-algorithmic-trick-warm-restarts">
-<span id="warm-restarts"></span><h2>A simple algorithmic trick: warm restarts<a class="headerlink" href="#a-simple-algorithmic-trick-warm-restarts" title="Permalink to this headline">¶</a></h2>
-<p>See the glossary entry for <a class="reference external" href="http://scikit-learn.org/dev/glossary.html#term-warm-start">warm_start</a></p>
+<span id="warm-restarts"></span><h2>A simple algorithmic trick: warm restarts<a class="headerlink" href="#a-simple-algorithmic-trick-warm-restarts" title="Permalink to this heading">¶</a></h2>
+<p>See the glossary entry for <a class="reference internal" href="../glossary.html#term-warm_start"><span class="xref std std-term">warm_start</span></a></p>
 </section>
 </section>
 

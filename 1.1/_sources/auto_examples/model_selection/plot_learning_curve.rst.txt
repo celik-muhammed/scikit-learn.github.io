@@ -34,7 +34,7 @@ show the times required by the models to train with various sizes of training
 dataset. The plots in the third row show how much time was required to train
 the models for each training sizes.
 
-.. GENERATED FROM PYTHON SOURCE LINES 19-204
+.. GENERATED FROM PYTHON SOURCE LINES 19-219
 
 
 
@@ -68,6 +68,7 @@ the models for each training sizes.
         ylim=None,
         cv=None,
         n_jobs=None,
+        scoring=None,
         train_sizes=np.linspace(0.1, 1.0, 5),
     ):
         """
@@ -119,6 +120,11 @@ the models for each training sizes.
             ``-1`` means using all processors. See :term:`Glossary <n_jobs>`
             for more details.
 
+        scoring : str or callable, default=None
+            A str (see model evaluation documentation) or
+            a scorer callable object / function with signature
+            ``scorer(estimator, X, y)``.
+
         train_sizes : array-like of shape (n_ticks,)
             Relative or absolute numbers of training examples that will be used to
             generate the learning curve. If the ``dtype`` is float, it is regarded
@@ -142,6 +148,7 @@ the models for each training sizes.
             estimator,
             X,
             y,
+            scoring=scoring,
             cv=cv,
             n_jobs=n_jobs,
             train_sizes=train_sizes,
@@ -222,7 +229,15 @@ the models for each training sizes.
 
     estimator = GaussianNB()
     plot_learning_curve(
-        estimator, title, X, y, axes=axes[:, 0], ylim=(0.7, 1.01), cv=cv, n_jobs=4
+        estimator,
+        title,
+        X,
+        y,
+        axes=axes[:, 0],
+        ylim=(0.7, 1.01),
+        cv=cv,
+        n_jobs=4,
+        scoring="accuracy",
     )
 
     title = r"Learning Curves (SVM, RBF kernel, $\gamma=0.001$)"
@@ -238,7 +253,7 @@ the models for each training sizes.
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** ( 0 minutes  3.037 seconds)
+   **Total running time of the script:** ( 0 minutes  2.812 seconds)
 
 
 .. _sphx_glr_download_auto_examples_model_selection_plot_learning_curve.py:

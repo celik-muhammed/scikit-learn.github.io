@@ -5,7 +5,7 @@
 <!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
 <head>
   <meta charset="utf-8">
-  <meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+  <meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
 <meta property="og:title" content="Developing scikit-learn estimators" />
   
@@ -24,7 +24,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
   
-  <title>Developing scikit-learn estimators &mdash; scikit-learn 1.1.1 documentation</title>
+  <title>Developing scikit-learn estimators &mdash; scikit-learn 1.1.2 documentation</title>
   
   <link rel="canonical" href="http://scikit-learn.org/stable/developers/develop.html" />
 
@@ -173,7 +173,7 @@
         </div>
         <div class="alert alert-danger p-1 mb-2" role="alert">
           <p class="text-center mb-0">
-          <strong>scikit-learn 1.1.1</strong><br/>
+          <strong>scikit-learn 1.1.2</strong><br/>
           <a href="http://scikit-learn.org/dev/versions.html">Other versions</a>
           </p>
         </div>
@@ -224,14 +224,14 @@
       <div class="sk-page-content container-fluid body px-md-3" role="main">
         
   <section id="developing-scikit-learn-estimators">
-<span id="develop"></span><h1>Developing scikit-learn estimators<a class="headerlink" href="#developing-scikit-learn-estimators" title="Permalink to this headline">¶</a></h1>
+<span id="develop"></span><h1>Developing scikit-learn estimators<a class="headerlink" href="#developing-scikit-learn-estimators" title="Permalink to this heading">¶</a></h1>
 <p>Whether you are proposing an estimator for inclusion in scikit-learn,
 developing a separate package compatible with scikit-learn, or
 implementing custom components for your own projects, this chapter
 details how to develop objects that safely interact with scikit-learn
 Pipelines and model selection tools.</p>
 <section id="apis-of-scikit-learn-objects">
-<span id="api-overview"></span><h2>APIs of scikit-learn objects<a class="headerlink" href="#apis-of-scikit-learn-objects" title="Permalink to this headline">¶</a></h2>
+<span id="api-overview"></span><h2>APIs of scikit-learn objects<a class="headerlink" href="#apis-of-scikit-learn-objects" title="Permalink to this heading">¶</a></h2>
 <p>To have a uniform API, we try to have a common basic API for all the
 objects. In addition, to avoid the proliferation of framework code, we
 try to adopt simple conventions and limit to a minimum the number of
@@ -239,11 +239,11 @@ methods an object must implement.</p>
 <p>Elements of the scikit-learn API are described more definitively in the
 <a class="reference internal" href="../glossary.html#glossary"><span class="std std-ref">Glossary of Common Terms and API Elements</span></a>.</p>
 <section id="different-objects">
-<h3>Different objects<a class="headerlink" href="#different-objects" title="Permalink to this headline">¶</a></h3>
+<h3>Different objects<a class="headerlink" href="#different-objects" title="Permalink to this heading">¶</a></h3>
 <p>The main objects in scikit-learn are (one class can implement
 multiple interfaces):</p>
 <dl class="field-list">
-<dt class="field-odd">Estimator</dt>
+<dt class="field-odd">Estimator<span class="colon">:</span></dt>
 <dd class="field-odd"><p>The base object, implements a <code class="docutils literal notranslate"><span class="pre">fit</span></code> method to learn from data, either:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">estimator</span> <span class="o">=</span> <span class="n">estimator</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">targets</span><span class="p">)</span>
 </pre></div>
@@ -253,7 +253,7 @@ multiple interfaces):</p>
 </pre></div>
 </div>
 </dd>
-<dt class="field-even">Predictor</dt>
+<dt class="field-even">Predictor<span class="colon">:</span></dt>
 <dd class="field-even"><p>For supervised learning, or some unsupervised problems, implements:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">prediction</span> <span class="o">=</span> <span class="n">predictor</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
 </pre></div>
@@ -264,7 +264,7 @@ of a prediction, either using <code class="docutils literal notranslate"><span c
 </pre></div>
 </div>
 </dd>
-<dt class="field-odd">Transformer</dt>
+<dt class="field-odd">Transformer<span class="colon">:</span></dt>
 <dd class="field-odd"><p>For filtering or modifying the data, in a supervised or unsupervised
 way, implements:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">new_data</span> <span class="o">=</span> <span class="n">transformer</span><span class="o">.</span><span class="n">transform</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
@@ -276,7 +276,7 @@ together than separately, implements:</p>
 </pre></div>
 </div>
 </dd>
-<dt class="field-even">Model</dt>
+<dt class="field-even">Model<span class="colon">:</span></dt>
 <dd class="field-even"><p>A model that can give a <a class="reference external" href="https://en.wikipedia.org/wiki/Goodness_of_fit">goodness of fit</a>
 measure or a likelihood of unseen data, implements (higher is better):</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">score</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">score</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
@@ -286,7 +286,7 @@ measure or a likelihood of unseen data, implements (higher is better):</p>
 </dl>
 </section>
 <section id="estimators">
-<h3>Estimators<a class="headerlink" href="#estimators" title="Permalink to this headline">¶</a></h3>
+<h3>Estimators<a class="headerlink" href="#estimators" title="Permalink to this heading">¶</a></h3>
 <p>The API has one predominant object: the estimator. An estimator is an
 object that fits a model based on some training data and is capable of
 inferring some properties on new data. It can be, for instance, a
@@ -300,7 +300,7 @@ to <code class="docutils literal notranslate"><span class="pre">__init__</span><
 <p>All estimators in the main scikit-learn codebase should inherit from
 <code class="docutils literal notranslate"><span class="pre">sklearn.base.BaseEstimator</span></code>.</p>
 <section id="instantiation">
-<h4>Instantiation<a class="headerlink" href="#instantiation" title="Permalink to this headline">¶</a></h4>
+<h4>Instantiation<a class="headerlink" href="#instantiation" title="Permalink to this heading">¶</a></h4>
 <p>This concerns the creation of an object. The object’s <code class="docutils literal notranslate"><span class="pre">__init__</span></code> method
 might accept constants as arguments that determine the estimator’s behavior
 (like the C constant in SVMs). It should not, however, take the actual training
@@ -346,7 +346,7 @@ would have to be performed in <code class="docutils literal notranslate"><span c
 which is used in algorithms like <code class="docutils literal notranslate"><span class="pre">GridSearchCV</span></code>.</p>
 </section>
 <section id="fitting">
-<h4>Fitting<a class="headerlink" href="#fitting" title="Permalink to this headline">¶</a></h4>
+<h4>Fitting<a class="headerlink" href="#fitting" title="Permalink to this heading">¶</a></h4>
 <p>The next thing you will probably want to do is to estimate some
 parameters in the model. This is implemented in the <code class="docutils literal notranslate"><span class="pre">fit()</span></code> method.</p>
 <p>The <code class="docutils literal notranslate"><span class="pre">fit()</span></code> method takes the training data as arguments, which can be one
@@ -357,10 +357,6 @@ reference to <code class="docutils literal notranslate"><span class="pre">X</spa
 the case of precomputed kernels where this data must be stored for use by
 the predict method.</p>
 <table class="docutils align-default">
-<colgroup>
-<col style="width: 19%" />
-<col style="width: 81%" />
-</colgroup>
 <thead>
 <tr class="row-odd"><th class="head"><p>Parameters</p></th>
 <th class="head"></th>
@@ -413,7 +409,7 @@ trainable parameters of the estimator are reused instead of using the
 default initialization strategy.</p>
 </section>
 <section id="estimated-attributes">
-<h4>Estimated Attributes<a class="headerlink" href="#estimated-attributes" title="Permalink to this headline">¶</a></h4>
+<h4>Estimated Attributes<a class="headerlink" href="#estimated-attributes" title="Permalink to this heading">¶</a></h4>
 <p>Attributes that have been estimated from the data must always have a name
 ending with trailing underscore, for example the coefficients of
 some regression estimator would be stored in a <code class="docutils literal notranslate"><span class="pre">coef_</span></code> attribute after
@@ -422,12 +418,12 @@ some regression estimator would be stored in a <code class="docutils literal not
 a second time.</p>
 </section>
 <section id="optional-arguments">
-<h4>Optional Arguments<a class="headerlink" href="#optional-arguments" title="Permalink to this headline">¶</a></h4>
+<h4>Optional Arguments<a class="headerlink" href="#optional-arguments" title="Permalink to this heading">¶</a></h4>
 <p>In iterative algorithms, the number of iterations should be specified by
 an integer called <code class="docutils literal notranslate"><span class="pre">n_iter</span></code>.</p>
 </section>
 <section id="universal-attributes">
-<h4>Universal attributes<a class="headerlink" href="#universal-attributes" title="Permalink to this headline">¶</a></h4>
+<h4>Universal attributes<a class="headerlink" href="#universal-attributes" title="Permalink to this heading">¶</a></h4>
 <p>Estimators that expect tabular input should set a <code class="docutils literal notranslate"><span class="pre">n_features_in_</span></code>
 attribute at <code class="docutils literal notranslate"><span class="pre">fit</span></code> time to indicate the number of features that the estimator
 expects for subsequent calls to <code class="docutils literal notranslate"><span class="pre">predict</span></code> or <code class="docutils literal notranslate"><span class="pre">transform</span></code>.
@@ -438,7 +434,7 @@ for details.</p>
 </section>
 </section>
 <section id="rolling-your-own-estimator">
-<span id="id1"></span><h2>Rolling your own estimator<a class="headerlink" href="#rolling-your-own-estimator" title="Permalink to this headline">¶</a></h2>
+<span id="id1"></span><h2>Rolling your own estimator<a class="headerlink" href="#rolling-your-own-estimator" title="Permalink to this heading">¶</a></h2>
 <p>If you want to implement a new estimator that is scikit-learn-compatible,
 whether it is just for you or for contributing it to scikit-learn, there are
 several internals of scikit-learn that you should be aware of in addition to
@@ -459,7 +455,7 @@ selection tools such as <a class="reference internal" href="../modules/generated
 <a class="reference internal" href="../modules/generated/sklearn.pipeline.Pipeline.html#sklearn.pipeline.Pipeline" title="sklearn.pipeline.Pipeline"><code class="xref py py-class docutils literal notranslate"><span class="pre">pipeline.Pipeline</span></code></a>.</p>
 <p>Before detailing the required interface below, we describe two ways to achieve
 the correct interface more easily.</p>
-<div class="topic">
+<aside class="topic">
 <p class="topic-title">Project template:</p>
 <p>We provide a <a class="reference external" href="https://github.com/scikit-learn-contrib/project-template/">project template</a>
 which helps in the creation of Python packages containing scikit-learn compatible estimators.
@@ -473,8 +469,8 @@ galleries</p></li>
 <li><p>scripts to manage continuous integration (testing on Linux and Windows)</p></li>
 <li><p>instructions from getting started to publishing on <a class="reference external" href="https://pypi.org/">PyPi</a></p></li>
 </ul>
-</div>
-<div class="topic">
+</aside>
+<aside class="topic">
 <p class="topic-title"><code class="docutils literal notranslate"><span class="pre">BaseEstimator</span></code> and mixins:</p>
 <p>We tend to use “duck typing”, so building an estimator which follows
 the API suffices for compatibility, without needing to inherit from or
@@ -520,9 +516,9 @@ in the scikit-learn-contrib
 <span class="gp">... </span>        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">y_</span><span class="p">[</span><span class="n">closest</span><span class="p">]</span>
 </pre></div>
 </div>
-</div>
+</aside>
 <section id="get-params-and-set-params">
-<h3>get_params and set_params<a class="headerlink" href="#get-params-and-set-params" title="Permalink to this headline">¶</a></h3>
+<h3>get_params and set_params<a class="headerlink" href="#get-params-and-set-params" title="Permalink to this heading">¶</a></h3>
 <p>All scikit-learn estimators have <code class="docutils literal notranslate"><span class="pre">get_params</span></code> and <code class="docutils literal notranslate"><span class="pre">set_params</span></code> functions.
 The <code class="docutils literal notranslate"><span class="pre">get_params</span></code> function takes no arguments and returns a dict of the
 <code class="docutils literal notranslate"><span class="pre">__init__</span></code> parameters of the estimator, together with their values.</p>
@@ -573,9 +569,10 @@ become <code class="docutils literal notranslate"><span class="pre">&lt;name&gt;
 <span class="go">subestimator -&gt; LogisticRegression()</span>
 </pre></div>
 </div>
-<p>The <code class="docutils literal notranslate"><span class="pre">set_params</span></code> on the other hand takes as input a dict of the form
-<code class="docutils literal notranslate"><span class="pre">'parameter':</span> <span class="pre">value</span></code> and sets the parameter of the estimator using this dict.
-Return value must be estimator itself.</p>
+<p>On the other hand, <code class="docutils literal notranslate"><span class="pre">set_params</span></code> takes the parameters of <code class="docutils literal notranslate"><span class="pre">__init__</span></code>
+as keyword arguments, unpacks them into a dict of the form
+<code class="docutils literal notranslate"><span class="pre">'parameter':</span> <span class="pre">value</span></code> and sets the parameters of the estimator using this dict.
+Return value must be the estimator itself.</p>
 <p>While the <code class="docutils literal notranslate"><span class="pre">get_params</span></code> mechanism is not essential (see <a class="reference internal" href="#cloning"><span class="std std-ref">Cloning</span></a> below),
 the <code class="docutils literal notranslate"><span class="pre">set_params</span></code> function is necessary as it is used to set parameters during
 grid searches.</p>
@@ -595,7 +592,7 @@ implement the interface is:</p>
 </div>
 </section>
 <section id="parameters-and-init">
-<h3>Parameters and init<a class="headerlink" href="#parameters-and-init" title="Permalink to this headline">¶</a></h3>
+<h3>Parameters and init<a class="headerlink" href="#parameters-and-init" title="Permalink to this heading">¶</a></h3>
 <p>As <a class="reference internal" href="../modules/generated/sklearn.model_selection.GridSearchCV.html#sklearn.model_selection.GridSearchCV" title="sklearn.model_selection.GridSearchCV"><code class="xref py py-class docutils literal notranslate"><span class="pre">model_selection.GridSearchCV</span></code></a> uses <code class="docutils literal notranslate"><span class="pre">set_params</span></code>
 to apply parameter setting to estimators,
 it is essential that calling <code class="docutils literal notranslate"><span class="pre">set_params</span></code> has the same effect
@@ -610,7 +607,7 @@ fit have a trailing <code class="docutils literal notranslate"><span class="pre"
 trailing <code class="docutils literal notranslate"><span class="pre">_</span></code> is used to check if the estimator has been fitted.</p>
 </section>
 <section id="cloning">
-<span id="id2"></span><h3>Cloning<a class="headerlink" href="#cloning" title="Permalink to this headline">¶</a></h3>
+<span id="id2"></span><h3>Cloning<a class="headerlink" href="#cloning" title="Permalink to this heading">¶</a></h3>
 <p>For use with the <code class="xref py py-mod docutils literal notranslate"><span class="pre">model_selection</span></code> module,
 an estimator must support the <code class="docutils literal notranslate"><span class="pre">base.clone</span></code> function to replicate an estimator.
 This can be done by providing a <code class="docutils literal notranslate"><span class="pre">get_params</span></code> method.
@@ -622,7 +619,7 @@ the result of <code class="docutils literal notranslate"><span class="pre">estim
 if <code class="docutils literal notranslate"><span class="pre">safe=False</span></code> is passed to <code class="docutils literal notranslate"><span class="pre">clone</span></code>.</p>
 </section>
 <section id="pipeline-compatibility">
-<h3>Pipeline compatibility<a class="headerlink" href="#pipeline-compatibility" title="Permalink to this headline">¶</a></h3>
+<h3>Pipeline compatibility<a class="headerlink" href="#pipeline-compatibility" title="Permalink to this heading">¶</a></h3>
 <p>For an estimator to be usable together with <code class="docutils literal notranslate"><span class="pre">pipeline.Pipeline</span></code> in any but the
 last step, it needs to provide a <code class="docutils literal notranslate"><span class="pre">fit</span></code> or <code class="docutils literal notranslate"><span class="pre">fit_transform</span></code> function.
 To be able to evaluate the pipeline on any data but the training set,
@@ -634,7 +631,7 @@ usable, the last step of the pipeline needs to have a <code class="docutils lite
 accepts an optional <code class="docutils literal notranslate"><span class="pre">y</span></code>.</p>
 </section>
 <section id="estimator-types">
-<h3>Estimator types<a class="headerlink" href="#estimator-types" title="Permalink to this headline">¶</a></h3>
+<h3>Estimator types<a class="headerlink" href="#estimator-types" title="Permalink to this heading">¶</a></h3>
 <p>Some common functionality depends on the kind of estimator passed.
 For example, cross-validation in <a class="reference internal" href="../modules/generated/sklearn.model_selection.GridSearchCV.html#sklearn.model_selection.GridSearchCV" title="sklearn.model_selection.GridSearchCV"><code class="xref py py-class docutils literal notranslate"><span class="pre">model_selection.GridSearchCV</span></code></a> and
 <a class="reference internal" href="../modules/generated/sklearn.model_selection.cross_val_score.html#sklearn.model_selection.cross_val_score" title="sklearn.model_selection.cross_val_score"><code class="xref py py-func docutils literal notranslate"><span class="pre">model_selection.cross_val_score</span></code></a> defaults to being stratified when used
@@ -650,7 +647,7 @@ among estimator types, instead of checking <code class="docutils literal notrans
 like <a class="reference internal" href="../modules/generated/sklearn.base.is_classifier.html#sklearn.base.is_classifier" title="sklearn.base.is_classifier"><code class="xref py py-func docutils literal notranslate"><span class="pre">base.is_classifier</span></code></a> should be used.</p>
 </section>
 <section id="specific-models">
-<h3>Specific models<a class="headerlink" href="#specific-models" title="Permalink to this headline">¶</a></h3>
+<h3>Specific models<a class="headerlink" href="#specific-models" title="Permalink to this heading">¶</a></h3>
 <p>Classifiers should accept <code class="docutils literal notranslate"><span class="pre">y</span></code> (target) arguments to <code class="docutils literal notranslate"><span class="pre">fit</span></code> that are
 sequences (lists, arrays) of either strings or integers.  They should not
 assume that the class labels are a contiguous range of integers; instead, they
@@ -680,7 +677,7 @@ patterns.</p>
 for working with multiclass and multilabel problems.</p>
 </section>
 <section id="estimator-tags">
-<span id="id3"></span><h3>Estimator Tags<a class="headerlink" href="#estimator-tags" title="Permalink to this headline">¶</a></h3>
+<span id="id3"></span><h3>Estimator Tags<a class="headerlink" href="#estimator-tags" title="Permalink to this heading">¶</a></h3>
 <div class="admonition warning">
 <p class="admonition-title">Warning</p>
 <p>The estimator tags are experimental and the API is subject to change.</p>
@@ -808,7 +805,7 @@ closed-form solutions.</p>
 </section>
 </section>
 <section id="coding-guidelines">
-<span id="id4"></span><h2>Coding guidelines<a class="headerlink" href="#coding-guidelines" title="Permalink to this headline">¶</a></h2>
+<span id="id4"></span><h2>Coding guidelines<a class="headerlink" href="#coding-guidelines" title="Permalink to this heading">¶</a></h2>
 <p>The following are some guidelines on how new code should be written for
 inclusion in scikit-learn, and which may be appropriate to adopt in external
 projects. Of course, there are special cases and there will be exceptions to
@@ -837,11 +834,12 @@ It makes the code harder to read as the origin of symbols is no
 longer explicitly referenced, but most important, it prevents
 using a static analysis tool like <a class="reference external" href="https://divmod.readthedocs.io/en/latest/products/pyflakes.html">pyflakes</a> to automatically
 find bugs in scikit-learn.</p></li>
-<li><p>Use the <a class="reference external" href="https://numpydoc.readthedocs.io/en/latest/format.html#numpydoc-docstring-guide">numpy docstring standard</a> in all your docstrings.</p></li>
+<li><p>Use the <a class="reference external" href="https://numpydoc.readthedocs.io/en/latest/format.html#docstring-standard">numpy docstring standard</a>
+in all your docstrings.</p></li>
 </ul>
 <p>A good example of code that we like can be found <a class="reference external" href="https://gist.github.com/nateGeorge/5455d2c57fb33c1ae04706f2dc4fee01">here</a>.</p>
 <section id="input-validation">
-<h3>Input validation<a class="headerlink" href="#input-validation" title="Permalink to this headline">¶</a></h3>
+<h3>Input validation<a class="headerlink" href="#input-validation" title="Permalink to this heading">¶</a></h3>
 <p>The module <a class="reference internal" href="../modules/classes.html#module-sklearn.utils" title="sklearn.utils"><code class="xref py py-mod docutils literal notranslate"><span class="pre">sklearn.utils</span></code></a> contains various functions for doing input
 validation and conversion. Sometimes, <code class="docutils literal notranslate"><span class="pre">np.asarray</span></code> suffices for validation;
 do <em>not</em> use <code class="docutils literal notranslate"><span class="pre">np.asanyarray</span></code> or <code class="docutils literal notranslate"><span class="pre">np.atleast_2d</span></code>, since those let NumPy’s
@@ -854,7 +852,7 @@ mainly on whether and which <code class="docutils literal notranslate"><span cla
 <p>For more information, refer to the <a class="reference internal" href="utilities.html#developers-utils"><span class="std std-ref">Utilities for Developers</span></a> page.</p>
 </section>
 <section id="random-numbers">
-<h3>Random Numbers<a class="headerlink" href="#random-numbers" title="Permalink to this headline">¶</a></h3>
+<h3>Random Numbers<a class="headerlink" href="#random-numbers" title="Permalink to this heading">¶</a></h3>
 <p>If your code depends on a random number generator, do not use
 <code class="docutils literal notranslate"><span class="pre">numpy.random.random()</span></code> or similar routines.  To ensure
 repeatability in error checking, the routine should accept a keyword
@@ -925,7 +923,7 @@ it should produce an identical model both times,
 hence the validation in <code class="docutils literal notranslate"><span class="pre">fit</span></code>, not <code class="docutils literal notranslate"><span class="pre">__init__</span></code>.</p>
 </section>
 <section id="numerical-assertions-in-tests">
-<h3>Numerical assertions in tests<a class="headerlink" href="#numerical-assertions-in-tests" title="Permalink to this headline">¶</a></h3>
+<h3>Numerical assertions in tests<a class="headerlink" href="#numerical-assertions-in-tests" title="Permalink to this heading">¶</a></h3>
 <p>When asserting the quasi-equality of arrays of continuous values,
 do use <code class="xref py py-func docutils literal notranslate"><span class="pre">sklearn.utils._testing.assert_allclose</span></code>.</p>
 <p>The relative tolerance is automatically inferred from the provided arrays

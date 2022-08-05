@@ -5,7 +5,7 @@
 <!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
 <head>
   <meta charset="utf-8">
-  <meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+  <meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
 <meta property="og:title" content="Image denoising using kernel PCA" />
   
@@ -24,7 +24,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
   
-  <title>Image denoising using kernel PCA &mdash; scikit-learn 1.1.1 documentation</title>
+  <title>Image denoising using kernel PCA &mdash; scikit-learn 1.1.2 documentation</title>
   
   <link rel="canonical" href="http://scikit-learn.org/stable/auto_examples/applications/plot_digits_denoising.html" />
 
@@ -173,7 +173,7 @@
         </div>
         <div class="alert alert-danger p-1 mb-2" role="alert">
           <p class="text-center mb-0">
-          <strong>scikit-learn 1.1.1</strong><br/>
+          <strong>scikit-learn 1.1.2</strong><br/>
           <a href="http://scikit-learn.org/dev/versions.html">Other versions</a>
           </p>
         </div>
@@ -204,29 +204,28 @@
 to download the full example code or to run this example in your browser via Binder</p>
 </div>
 <section class="sphx-glr-example-title" id="image-denoising-using-kernel-pca">
-<span id="sphx-glr-auto-examples-applications-plot-digits-denoising-py"></span><h1>Image denoising using kernel PCA<a class="headerlink" href="#image-denoising-using-kernel-pca" title="Permalink to this headline">¶</a></h1>
+<span id="sphx-glr-auto-examples-applications-plot-digits-denoising-py"></span><h1>Image denoising using kernel PCA<a class="headerlink" href="#image-denoising-using-kernel-pca" title="Permalink to this heading">¶</a></h1>
 <p>This example shows how to use <a class="reference internal" href="../../modules/generated/sklearn.decomposition.KernelPCA.html#sklearn.decomposition.KernelPCA" title="sklearn.decomposition.KernelPCA"><code class="xref py py-class docutils literal notranslate"><span class="pre">KernelPCA</span></code></a> to
 denoise images. In short, we take advantage of the approximation function
 learned during <code class="docutils literal notranslate"><span class="pre">fit</span></code> to reconstruct the original image.</p>
 <p>We will compare the results with an exact reconstruction using
 <a class="reference internal" href="../../modules/generated/sklearn.decomposition.PCA.html#sklearn.decomposition.PCA" title="sklearn.decomposition.PCA"><code class="xref py py-class docutils literal notranslate"><span class="pre">PCA</span></code></a>.</p>
-<p>We will use USPS digits dataset to reproduce presented in Sect. 4 of <a class="footnote-reference brackets" href="#id2" id="id1">1</a>.</p>
-<div class="topic">
+<p>We will use USPS digits dataset to reproduce presented in Sect. 4 of <a class="footnote-reference brackets" href="#id2" id="id1" role="doc-noteref"><span class="fn-bracket">[</span>1<span class="fn-bracket">]</span></a>.</p>
+<aside class="topic">
 <p class="topic-title">References</p>
-<dl class="footnote brackets">
-<dt class="label" id="id2"><span class="brackets"><a class="fn-backref" href="#id1">1</a></span></dt>
-<dd><p><a class="reference external" href="https://papers.nips.cc/paper/2003/file/ac1ad983e08ad3304a97e147f522747e-Paper.pdf">Bakır, Gökhan H., Jason Weston, and Bernhard Schölkopf.
+<aside class="footnote brackets" id="id2" role="note">
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id1">1</a><span class="fn-bracket">]</span></span>
+<p><a class="reference external" href="https://papers.nips.cc/paper/2003/file/ac1ad983e08ad3304a97e147f522747e-Paper.pdf">Bakır, Gökhan H., Jason Weston, and Bernhard Schölkopf.
 “Learning to find pre-images.”
 Advances in neural information processing systems 16 (2004): 449-456.</a></p>
-</dd>
-</dl>
-</div>
+</aside>
+</aside>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># Authors: Guillaume Lemaitre &lt;guillaume.lemaitre@inria.fr&gt;</span>
 <span class="c1"># Licence: BSD 3 clause</span>
 </pre></div>
 </div>
 <section id="load-the-dataset-via-openml">
-<h2>Load the dataset via OpenML<a class="headerlink" href="#load-the-dataset-via-openml" title="Permalink to this headline">¶</a></h2>
+<h2>Load the dataset via OpenML<a class="headerlink" href="#load-the-dataset-via-openml" title="Permalink to this heading">¶</a></h2>
 <p>The USPS digits datasets is available in OpenML. We use
 <a class="reference internal" href="../../modules/generated/sklearn.datasets.fetch_openml.html#sklearn.datasets.fetch_openml" title="sklearn.datasets.fetch_openml"><code class="xref py py-func docutils literal notranslate"><span class="pre">fetch_openml</span></code></a> to get this dataset. In addition, we
 normalize the dataset such that all pixel values are in the range (0, 1).</p>
@@ -292,7 +291,7 @@ images. We will check the test set in this regard.</p>
 </ul>
 </section>
 <section id="learn-the-pca-basis">
-<h2>Learn the <code class="docutils literal notranslate"><span class="pre">PCA</span></code> basis<a class="headerlink" href="#learn-the-pca-basis" title="Permalink to this headline">¶</a></h2>
+<h2>Learn the <code class="docutils literal notranslate"><span class="pre">PCA</span></code> basis<a class="headerlink" href="#learn-the-pca-basis" title="Permalink to this heading">¶</a></h2>
 <p>We can now learn our PCA basis using both a linear PCA and a kernel PCA that
 uses a radial basis function (RBF) kernel.</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">sklearn.decomposition</span> <span class="kn">import</span> <a href="../../modules/generated/sklearn.decomposition.PCA.html#sklearn.decomposition.PCA" title="sklearn.decomposition.PCA" class="sphx-glr-backref-module-sklearn-decomposition sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">PCA</span></a><span class="p">,</span> <a href="../../modules/generated/sklearn.decomposition.KernelPCA.html#sklearn.decomposition.KernelPCA" title="sklearn.decomposition.KernelPCA" class="sphx-glr-backref-module-sklearn-decomposition sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">KernelPCA</span></a>
@@ -308,7 +307,7 @@ uses a radial basis function (RBF) kernel.</p>
 </div>
 </section>
 <section id="reconstruct-and-denoise-test-images">
-<h2>Reconstruct and denoise test images<a class="headerlink" href="#reconstruct-and-denoise-test-images" title="Permalink to this headline">¶</a></h2>
+<h2>Reconstruct and denoise test images<a class="headerlink" href="#reconstruct-and-denoise-test-images" title="Permalink to this heading">¶</a></h2>
 <p>Now, we can transform and reconstruct the noisy test set. Since we used less
 components than the number of original features, we will get an approximation
 of the original set. Indeed, by dropping the components explaining variance
@@ -344,10 +343,10 @@ not favor PCA instead of kernel PCA. We observe that kernel PCA is able to
 remove background noise and provide a smoother image.</p>
 <p>However, it should be noted that the results of the denoising with kernel PCA
 will depend of the parameters <code class="docutils literal notranslate"><span class="pre">n_components</span></code>, <code class="docutils literal notranslate"><span class="pre">gamma</span></code>, and <code class="docutils literal notranslate"><span class="pre">alpha</span></code>.</p>
-<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> ( 0 minutes  14.904 seconds)</p>
+<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> ( 0 minutes  16.308 seconds)</p>
 <div class="sphx-glr-footer class sphx-glr-footer-example docutils container" id="sphx-glr-download-auto-examples-applications-plot-digits-denoising-py">
 <div class="binder-badge docutils container">
-<a class="reference external image-reference" href="https://mybinder.org/v2/gh/scikit-learn/scikit-learn/1.1.X?urlpath=lab/tree/notebooks/auto_examples/applications/plot_digits_denoising.ipynb"><img alt="Launch binder" src="../../_images/binder_badge_logo.svg" width="150px" /></a>
+<a class="reference external image-reference" href="https://mybinder.org/v2/gh/scikit-learn/scikit-learn/1.1.X?urlpath=lab/tree/notebooks/auto_examples/applications/plot_digits_denoising.ipynb"><img alt="Launch binder" src="../../_images/binder_badge_logo8.svg" width="150px" /></a>
 </div>
 <div class="sphx-glr-download sphx-glr-download-python docutils container">
 <p><a class="reference download internal" download="" href="../../_downloads/32173eb704d697c23dffbbf3fd74942a/plot_digits_denoising.py"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Python</span> <span class="pre">source</span> <span class="pre">code:</span> <span class="pre">plot_digits_denoising.py</span></code></a></p>
