@@ -198,7 +198,7 @@
 <h1><a class="reference internal" href="../classes.html#module-sklearn.metrics" title="sklearn.metrics"><code class="xref py py-mod docutils literal notranslate"><span class="pre">sklearn.metrics</span></code></a>.adjusted_rand_score<a class="headerlink" href="#sklearn-metrics-adjusted-rand-score" title="Permalink to this heading">¶</a></h1>
 <dl class="py function">
 <dt class="sig sig-object py" id="sklearn.metrics.adjusted_rand_score">
-<span class="sig-prename descclassname"><span class="pre">sklearn.metrics.</span></span><span class="sig-name descname"><span class="pre">adjusted_rand_score</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">labels_true</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">labels_pred</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/scikit-learn/scikit-learn/blob/82f489202/sklearn/metrics/cluster/_supervised.py#L310"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#sklearn.metrics.adjusted_rand_score" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">sklearn.metrics.</span></span><span class="sig-name descname"><span class="pre">adjusted_rand_score</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">labels_true</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">labels_pred</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/scikit-learn/scikit-learn/blob/dffe9dd4f/sklearn/metrics/cluster/_supervised.py#L310"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#sklearn.metrics.adjusted_rand_score" title="Permalink to this definition">¶</a></dt>
 <dd><p>Rand index adjusted for chance.</p>
 <p>The Rand Index computes a similarity measure between two clusterings
 by considering all pairs of samples and counting pairs that are
@@ -212,7 +212,8 @@ using the following scheme:</p>
 <p>The adjusted Rand index is thus ensured to have a value close to
 0.0 for random labeling independently of the number of clusters and
 samples and exactly 1.0 when the clusterings are identical (up to
-a permutation).</p>
+a permutation). The adjusted Rand index is bounded below by -0.5 for
+especially discordant clusterings.</p>
 <p>ARI is a symmetric measure:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">adjusted_rand_score</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">)</span> <span class="o">==</span> <span class="n">adjusted_rand_score</span><span class="p">(</span><span class="n">b</span><span class="p">,</span> <span class="n">a</span><span class="p">)</span>
 </pre></div>
@@ -229,7 +230,7 @@ a permutation).</p>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><dl class="simple">
-<dt><strong>ARI</strong><span class="classifier">float</span></dt><dd><p>Similarity score between -1.0 and 1.0. Random labelings have an ARI
+<dt><strong>ARI</strong><span class="classifier">float</span></dt><dd><p>Similarity score between -0.5 and 1.0. Random labelings have an ARI
 close to 0.0. 1.0 stands for perfect match.</p>
 </dd>
 </dl>
@@ -259,6 +260,11 @@ adjusted Rand index, Psychological Methods 2004</p>
 <span class="label"><span class="fn-bracket">[</span>wk<span class="fn-bracket">]</span></span>
 <p><a class="reference external" href="https://en.wikipedia.org/wiki/Rand_index#Adjusted_Rand_index">https://en.wikipedia.org/wiki/Rand_index#Adjusted_Rand_index</a></p>
 </div>
+<div class="citation" id="rab8b7c17ab82-chacon" role="doc-biblioentry">
+<span class="label"><span class="fn-bracket">[</span>Chacon<span class="fn-bracket">]</span></span>
+<p><a class="reference external" href="https://doi.org/10.1007/s11634-022-00491-w">Minimum adjusted Rand index for two clusterings of a given size,
+2022, J. E. Chacón and A. I. Rastrojo</a></p>
+</div>
 </div>
 <p class="rubric">Examples</p>
 <p>Perfectly matching labelings have a score of 1 even</p>
@@ -285,6 +291,12 @@ coming from the same classes but unnecessary splits are penalized:</p>
 assignment is totally incomplete, hence the ARI is very low:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">adjusted_rand_score</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">])</span>
 <span class="go">0.0</span>
+</pre></div>
+</div>
+<p>ARI may take a negative value for especially discordant labelings that
+are a worse choice than the expected value of random labels:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">adjusted_rand_score</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">])</span>
+<span class="go">-0.5</span>
 </pre></div>
 </div>
 </dd></dl>
