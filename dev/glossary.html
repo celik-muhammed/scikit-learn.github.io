@@ -1143,7 +1143,7 @@ is usually only some observed data, <a class="reference internal" href="#term-X"
 <p>If the estimator was not already <a class="reference internal" href="#term-fitted"><span class="xref std std-term">fitted</span></a>, calling this method
 should raise a <a class="reference internal" href="modules/generated/sklearn.exceptions.NotFittedError.html#sklearn.exceptions.NotFittedError" title="sklearn.exceptions.NotFittedError"><code class="xref py py-class docutils literal notranslate"><span class="pre">exceptions.NotFittedError</span></code></a>.</p>
 <p>Output conventions:</p>
-<dl>
+<dl class="simple">
 <dt>binary classification</dt><dd><p>A 1-dimensional array, where values strictly greater than zero
 indicate the positive class (i.e. the last class in
 <a class="reference internal" href="#term-classes_"><span class="xref std std-term">classes_</span></a>).</p>
@@ -1152,16 +1152,18 @@ indicate the positive class (i.e. the last class in
 predicted class.  Columns are ordered according to
 <a class="reference internal" href="#term-classes_"><span class="xref std std-term">classes_</span></a>.</p>
 </dd>
-<dt>multilabel classification</dt><dd><p>Scikit-learn is inconsistent in its representation of multilabel
-decision functions.  Some estimators represent it like multiclass
-multioutput, i.e. a list of 2d arrays, each with two columns. Others
-represent it with a single 2d array, whose columns correspond to
-the individual binary classification decisions. The latter
-representation is ambiguously identical to the multiclass
-classification format, though its semantics differ: it should be
-interpreted, like in the binary case, by thresholding at 0.</p>
-<p>TODO: <a class="reference external" href="https://gist.github.com/jnothman/4807b1b0266613c20ba4d1f88d0f8cf5">This gist</a>
-highlights the use of the different formats for multilabel.</p>
+<dt>multilabel classification</dt><dd><p>Scikit-learn is inconsistent in its representation of <a class="reference internal" href="#term-multilabel"><span class="xref std std-term">multilabel</span></a>
+decision functions. It may be represented one of two ways:</p>
+<ul class="simple">
+<li><p>List of 2d arrays, each array of shape: (<code class="docutils literal notranslate"><span class="pre">n_samples</span></code>, 2), like in
+multiclass multioutput. List is of length <code class="docutils literal notranslate"><span class="pre">n_labels</span></code>.</p></li>
+<li><p>Single 2d array of shape (<code class="docutils literal notranslate"><span class="pre">n_samples</span></code>, <code class="docutils literal notranslate"><span class="pre">n_labels</span></code>), with each
+‘column’ in the array corresponding to the individual binary
+classification decisions. This is identical to the
+multiclass classification format, though its semantics differ: it
+should be interpreted, like in the binary case, by thresholding at
+0.</p></li>
+</ul>
 </dd>
 <dt>multioutput classification</dt><dd><p>A list of 2d arrays, corresponding to each multiclass decision
 function.</p>
