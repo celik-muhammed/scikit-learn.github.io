@@ -203,6 +203,7 @@
 <li><a class="reference internal" href="#documentation">Documentation</a><ul>
 <li><a class="reference internal" href="#building-the-documentation">Building the documentation</a></li>
 <li><a class="reference internal" href="#guidelines-for-writing-documentation">Guidelines for writing documentation</a></li>
+<li><a class="reference internal" href="#cross-referencing">Cross-referencing</a></li>
 <li><a class="reference internal" href="#generated-documentation-on-github-actions">Generated documentation on GitHub Actions</a></li>
 </ul>
 </li>
@@ -942,11 +943,60 @@ use the sphinx directives <code class="docutils literal notranslate"><span class
 </li>
 <li><p>When editing reStructuredText (<code class="docutils literal notranslate"><span class="pre">.rst</span></code>) files, try to keep line length under
 80 characters when possible (exceptions include links and tables).</p></li>
-<li><p>Do not modify sphinx labels as this would break existing cross references and
-external links pointing to specific sections in the
-scikit-learn documentation.</p></li>
 <li><p>Before submitting your pull request check if your modifications have
 introduced new sphinx warnings and try to fix them.</p></li>
+</ul>
+</section>
+<section id="cross-referencing">
+<h3>Cross-referencing<a class="headerlink" href="#cross-referencing" title="Permalink to this heading">¶</a></h3>
+<p>It is often useful to cross-reference to other pages in the scikit-learn
+documentation. This should be done with reStructuredText cross-referencing
+syntax:</p>
+<ul>
+<li><p>Section - to link to an arbitrary section in the documentation, use reference
+labels (see
+<a class="reference external" href="https://www.sphinx-doc.org/en/master/usage/restructuredtext/roles.html#ref-role">Sphinx docs</a>).
+For example:</p>
+<div class="highlight-rst notranslate"><div class="highlight"><pre><span></span><span class="p">..</span> <span class="nt">_my-section:</span>
+
+<span class="gh">My section</span>
+<span class="gh">----------</span>
+
+This is the text of the section.
+
+To refer to itself use <span class="na">:ref:</span><span class="nv">`my-section`</span>.
+</pre></div>
+</div>
+<p>You should not modify existing sphinx reference labels as this would break
+existing cross references and external links pointing to specific sections in
+the scikit-learn documentation.</p>
+</li>
+<li><p>Glossary - linking to a term in the <a class="reference internal" href="../glossary.html#glossary"><span class="std std-ref">Glossary of Common Terms and API Elements</span></a>:</p>
+<div class="highlight-rst notranslate"><div class="highlight"><pre><span></span><span class="na">:term:</span><span class="nv">`cross_validation`</span>
+</pre></div>
+</div>
+</li>
+<li><p>Function - to link to the documentation of a function, use the full
+import path to the function:</p>
+<div class="highlight-rst notranslate"><div class="highlight"><pre><span></span><span class="na">:func:</span><span class="nv">`~sklearn.model_selection.cross_val_score`</span>
+</pre></div>
+</div>
+<p>However, if there is a ‘currentmodule’ directive above you in the document,
+you will only need to use the path to the function succeeding the current
+module specified. For example:</p>
+<div class="highlight-rst notranslate"><div class="highlight"><pre><span></span><span class="p">..</span> <span class="ow">currentmodule</span><span class="p">::</span> sklearn.model_selection
+
+<span class="na">:func:</span><span class="nv">`cross_val_score`</span>
+</pre></div>
+</div>
+</li>
+<li><p>Class - to link to documentation of a class, use the full import path to the
+class, unless there is a ‘currentmodule’ directive in the document above
+(see above):</p>
+<div class="highlight-rst notranslate"><div class="highlight"><pre><span></span><span class="na">:class:</span><span class="nv">`~sklearn.preprocessing.StandardScaler`</span>
+</pre></div>
+</div>
+</li>
 </ul>
 </section>
 <section id="generated-documentation-on-github-actions">
