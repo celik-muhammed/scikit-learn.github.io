@@ -390,7 +390,8 @@ example that you can run and study:
 predictive.  These are described in more detail in the <a class="reference internal" href="../../glossary.html#glossary"><span class="std std-ref">Glossary of Common Terms and API Elements</span></a>.</p>
 <section id="type-casting">
 <h3>Type casting<a class="headerlink" href="#type-casting" title="Permalink to this heading">¶</a></h3>
-<p>Unless otherwise specified, input will be cast to <code class="docutils literal notranslate"><span class="pre">float64</span></code>:</p>
+<p>Where possible, input of type <code class="docutils literal notranslate"><span class="pre">float32</span></code> will maintain its data type. Otherwise
+input will be cast to <code class="docutils literal notranslate"><span class="pre">float64</span></code>:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">sklearn</span> <span class="kn">import</span> <span class="n">kernel_approximation</span>
 
@@ -403,11 +404,21 @@ predictive.  These are described in more detail in the <a class="reference inter
 <span class="gp">&gt;&gt;&gt; </span><span class="n">transformer</span> <span class="o">=</span> <span class="n">kernel_approximation</span><span class="o">.</span><span class="n">RBFSampler</span><span class="p">()</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">X_new</span> <span class="o">=</span> <span class="n">transformer</span><span class="o">.</span><span class="n">fit_transform</span><span class="p">(</span><span class="n">X</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">X_new</span><span class="o">.</span><span class="n">dtype</span>
-<span class="go">dtype(&#39;float64&#39;)</span>
+<span class="go">dtype(&#39;float32&#39;)</span>
 </pre></div>
 </div>
-<p>In this example, <code class="docutils literal notranslate"><span class="pre">X</span></code> is <code class="docutils literal notranslate"><span class="pre">float32</span></code>, which is cast to <code class="docutils literal notranslate"><span class="pre">float64</span></code> by
-<code class="docutils literal notranslate"><span class="pre">fit_transform(X)</span></code>.</p>
+<p>In this example, <code class="docutils literal notranslate"><span class="pre">X</span></code> is <code class="docutils literal notranslate"><span class="pre">float32</span></code>, and is unchanged by <code class="docutils literal notranslate"><span class="pre">fit_transform(X)</span></code>.</p>
+<p>Using <code class="docutils literal notranslate"><span class="pre">float32</span></code>-typed training (or testing) data is often more
+efficient than using the usual <code class="docutils literal notranslate"><span class="pre">float64</span></code> <code class="docutils literal notranslate"><span class="pre">dtype</span></code>: it allows to
+reduce the memory usage and sometimes also reduces processing time
+by leveraging the vector instructions of the CPU. However it can
+sometimes lead to numerical stability problems causing the algorithm
+to be more sensitive to the scale of the values and <a class="reference internal" href="../../modules/preprocessing.html#preprocessing-scaler"><span class="std std-ref">require
+adequate preprocessing</span></a>.</p>
+<p>Keep in mind however that not all scikit-learn estimators attempt to
+work in <code class="docutils literal notranslate"><span class="pre">float32</span></code> mode. For instance, some transformers will always
+cast there input to <code class="docutils literal notranslate"><span class="pre">float64</span></code> and return <code class="docutils literal notranslate"><span class="pre">float64</span></code> transformed
+values as a result.</p>
 <p>Regression targets are cast to <code class="docutils literal notranslate"><span class="pre">float64</span></code> and classification targets are
 maintained:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">sklearn</span> <span class="kn">import</span> <span class="n">datasets</span>
