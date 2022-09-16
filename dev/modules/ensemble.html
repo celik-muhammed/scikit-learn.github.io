@@ -1313,28 +1313,44 @@ on the target value. For example, all else being equal, a higher credit
 score should increase the probability of getting approved for a loan.
 Monotonic constraints allow you to incorporate such prior knowledge into the
 model.</p>
-<p>A positive monotonic constraint is a constraint of the form:</p>
-<p><span class="math notranslate nohighlight">\(x_1 \leq x_1' \implies F(x_1, x_2) \leq F(x_1', x_2)\)</span>,
-where <span class="math notranslate nohighlight">\(F\)</span> is the predictor with two features.</p>
-<p>Similarly, a negative monotonic constraint is of the form:</p>
-<p><span class="math notranslate nohighlight">\(x_1 \leq x_1' \implies F(x_1, x_2) \geq F(x_1', x_2)\)</span>.</p>
-<p>Note that monotonic constraints only constraint the output “all else being
-equal”. Indeed, the following relation <strong>is not enforced</strong> by a positive
-constraint: <span class="math notranslate nohighlight">\(x_1 \leq x_1' \implies F(x_1, x_2) \leq F(x_1', x_2')\)</span>.</p>
+<p>For a predictor <span class="math notranslate nohighlight">\(F\)</span> with two features:</p>
+<blockquote>
+<div><ul>
+<li><dl>
+<dt>a <strong>monotonic increase constraint</strong> is a constraint of the form:</dt><dd><div class="math notranslate nohighlight">
+\[x_1 \leq x_1' \implies F(x_1, x_2) \leq F(x_1', x_2)\]</div>
+</dd>
+</dl>
+</li>
+<li><dl>
+<dt>a <strong>monotonic decrease constraint</strong> is a constraint of the form:</dt><dd><div class="math notranslate nohighlight">
+\[x_1 \leq x_1' \implies F(x_1, x_2) \geq F(x_1', x_2)\]</div>
+</dd>
+</dl>
+</li>
+</ul>
+</div></blockquote>
 <p>You can specify a monotonic constraint on each feature using the
 <code class="docutils literal notranslate"><span class="pre">monotonic_cst</span></code> parameter. For each feature, a value of 0 indicates no
-constraint, while -1 and 1 indicate a negative and positive constraint,
-respectively:</p>
+constraint, while 1 and -1 indicate a monotonic increase and
+monotonic decrease constraint, respectively:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">sklearn.ensemble</span> <span class="kn">import</span> <span class="n">HistGradientBoostingRegressor</span>
 
-<span class="gp">... </span><span class="c1"># positive, negative, and no constraint on the 3 features</span>
+<span class="gp">... </span><span class="c1"># monotonic increase, monotonic decrease, and no constraint on the 3 features</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">gbdt</span> <span class="o">=</span> <span class="n">HistGradientBoostingRegressor</span><span class="p">(</span><span class="n">monotonic_cst</span><span class="o">=</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">])</span>
 </pre></div>
 </div>
-<p>In a binary classification context, imposing a monotonic constraint means
-that the feature is supposed to have a positive / negative effect on the
-probability to belong to the positive class. Monotonic constraints are not
-supported for multiclass context.</p>
+<p>In a binary classification context, imposing a monotonic increase (decrease) constraint means that higher values of the feature are supposed
+to have a positive (negative) effect on the probability of samples
+to belong to the positive class.</p>
+<p>Nevertheless, monotonic constraints only marginally constrain feature effects on the output.
+For instance, monotonic increase and decrease constraints cannot be used to enforce the
+following modelling constraint:</p>
+<blockquote>
+<div><div class="math notranslate nohighlight">
+\[x_1 \leq x_1' \implies F(x_1, x_2) \leq F(x_1', x_2')\]</div>
+</div></blockquote>
+<p>Also, monotonic constraints are not supported for multiclass classification.</p>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
 <p>Since categories are unordered quantities, it is not possible to enforce
