@@ -193,18 +193,24 @@
 <h1><code class="xref py py-mod docutils literal notranslate"><span class="pre">sklearn.utils.graph</span></code>.single_source_shortest_path_length<a class="headerlink" href="#sklearn-utils-graph-single-source-shortest-path-length" title="Permalink to this heading">¶</a></h1>
 <dl class="py function">
 <dt class="sig sig-object py" id="sklearn.utils.graph.single_source_shortest_path_length">
-<span class="sig-prename descclassname"><span class="pre">sklearn.utils.graph.</span></span><span class="sig-name descname"><span class="pre">single_source_shortest_path_length</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">graph</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">source</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cutoff</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/scikit-learn/scikit-learn/blob/1645a8a28/sklearn/utils/graph.py#L23"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#sklearn.utils.graph.single_source_shortest_path_length" title="Permalink to this definition">¶</a></dt>
-<dd><p>Return the shortest path length from source to all reachable nodes.</p>
-<p>Returns a dictionary of shortest path lengths keyed by target.</p>
+<span class="sig-prename descclassname"><span class="pre">sklearn.utils.graph.</span></span><span class="sig-name descname"><span class="pre">single_source_shortest_path_length</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">graph</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">source</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cutoff</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/scikit-learn/scikit-learn/blob/7b0a16206/sklearn/utils/graph.py#L22"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#sklearn.utils.graph.single_source_shortest_path_length" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the length of the shortest path from source to all reachable nodes.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><dl class="simple">
-<dt><strong>graph</strong><span class="classifier">{sparse matrix, ndarray} of shape (n, n)</span></dt><dd><p>Adjacency matrix of the graph. Sparse matrix of format LIL is
+<dt><strong>graph</strong><span class="classifier">{sparse matrix, ndarray} of shape (n_nodes, n_nodes)</span></dt><dd><p>Adjacency matrix of the graph. Sparse matrix of format LIL is
 preferred.</p>
 </dd>
-<dt><strong>source</strong><span class="classifier">int</span></dt><dd><p>Starting node for path.</p>
+<dt><strong>source</strong><span class="classifier">int</span></dt><dd><p>Start node for path.</p>
 </dd>
 <dt><strong>cutoff</strong><span class="classifier">int, default=None</span></dt><dd><p>Depth to stop the search - only paths of length &lt;= cutoff are returned.</p>
+</dd>
+</dl>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><dl class="simple">
+<dt><strong>paths</strong><span class="classifier">dict</span></dt><dd><p>Reachable end nodes mapped to length of path from source,
+i.e. <code class="docutils literal notranslate"><span class="pre">{end:</span> <span class="pre">path_length}</span></code>.</p>
 </dd>
 </dl>
 </dd>
@@ -214,12 +220,12 @@ preferred.</p>
 <span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">graph</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([[</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span>
 <span class="gp">... </span>                  <span class="p">[</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span>
-<span class="gp">... </span>                  <span class="p">[</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span>
-<span class="gp">... </span>                  <span class="p">[</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">]])</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="nb">list</span><span class="p">(</span><span class="nb">sorted</span><span class="p">(</span><span class="n">single_source_shortest_path_length</span><span class="p">(</span><span class="n">graph</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span><span class="o">.</span><span class="n">items</span><span class="p">()))</span>
-<span class="go">[(0, 0), (1, 1), (2, 2), (3, 3)]</span>
+<span class="gp">... </span>                  <span class="p">[</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span>
+<span class="gp">... </span>                  <span class="p">[</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">]])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">single_source_shortest_path_length</span><span class="p">(</span><span class="n">graph</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+<span class="go">{0: 0, 1: 1, 2: 2}</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">graph</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">((</span><span class="mi">6</span><span class="p">,</span> <span class="mi">6</span><span class="p">))</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="nb">list</span><span class="p">(</span><span class="nb">sorted</span><span class="p">(</span><span class="n">single_source_shortest_path_length</span><span class="p">(</span><span class="n">graph</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span><span class="o">.</span><span class="n">items</span><span class="p">()))</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">sorted</span><span class="p">(</span><span class="n">single_source_shortest_path_length</span><span class="p">(</span><span class="n">graph</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span><span class="o">.</span><span class="n">items</span><span class="p">())</span>
 <span class="go">[(0, 1), (1, 1), (2, 0), (3, 1), (4, 1), (5, 1)]</span>
 </pre></div>
 </div>

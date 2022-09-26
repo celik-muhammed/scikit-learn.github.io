@@ -82,8 +82,8 @@ the :ref:`User Guide <Generalized_linear_regression>`. Additionally,
 
  .. code-block:: none
 
-    0.35776189065725783
-    0.42425183539869415
+    0.3577618906572577
+    0.42425183539869404
 
 
 
@@ -221,7 +221,7 @@ please refer to our :ref:`parallelism` notes.
 
     The default value of `n_init` will change from 10 to 'auto' in 1.4. Set the value of `n_init` explicitly to suppress the warning
 
-    0.6585602198584783
+    0.6394815436638173
 
 
 
@@ -243,14 +243,16 @@ generally positively correlated with the first feature, with some noise.
 Applying monotoinc constraints allows the prediction to capture the global
 effect of the first feature, instead of fitting the noise.
 
-.. GENERATED FROM PYTHON SOURCE LINES 126-163
+.. GENERATED FROM PYTHON SOURCE LINES 126-169
 
 .. code-block:: default
 
     import numpy as np
     from matplotlib import pyplot as plt
     from sklearn.model_selection import train_test_split
-    from sklearn.inspection import plot_partial_dependence
+
+    # from sklearn.inspection import plot_partial_dependence
+    from sklearn.inspection import PartialDependenceDisplay
     from sklearn.ensemble import HistGradientBoostingRegressor
 
     n_samples = 500
@@ -262,14 +264,18 @@ effect of the first feature, instead of fitting the noise.
     gbdt_no_cst = HistGradientBoostingRegressor().fit(X, y)
     gbdt_cst = HistGradientBoostingRegressor(monotonic_cst=[1, 0]).fit(X, y)
 
-    disp = plot_partial_dependence(
+    # plot_partial_dependence has been removed in version 1.2. From 1.2, use
+    # PartialDependenceDisplay instead.
+    # disp = plot_partial_dependence(
+    disp = PartialDependenceDisplay.from_estimator(
         gbdt_no_cst,
         X,
         features=[0],
         feature_names=["feature 0"],
         line_kw={"linewidth": 4, "label": "unconstrained", "color": "tab:blue"},
     )
-    plot_partial_dependence(
+    # plot_partial_dependence(
+    PartialDependenceDisplay.from_estimator(
         gbdt_cst,
         X,
         features=[0],
@@ -293,26 +299,17 @@ effect of the first feature, instead of fitting the noise.
    :class: sphx-glr-single-img
 
 
-.. rst-class:: sphx-glr-script-out
-
- .. code-block:: none
-
-    /home/runner/work/scikit-learn/scikit-learn/sklearn/utils/deprecation.py:87: FutureWarning:
-
-    Function plot_partial_dependence is deprecated; Function `plot_partial_dependence` is deprecated in 1.0 and will be removed in 1.2. Use PartialDependenceDisplay.from_estimator instead.
 
 
 
-
-
-.. GENERATED FROM PYTHON SOURCE LINES 164-168
+.. GENERATED FROM PYTHON SOURCE LINES 170-174
 
 Sample-weight support for Lasso and ElasticNet
 ----------------------------------------------
 The two linear regressors :class:`~sklearn.linear_model.Lasso` and
 :class:`~sklearn.linear_model.ElasticNet` now support sample weights.
 
-.. GENERATED FROM PYTHON SOURCE LINES 168-184
+.. GENERATED FROM PYTHON SOURCE LINES 174-190
 
 .. code-block:: default
 
@@ -348,7 +345,7 @@ The two linear regressors :class:`~sklearn.linear_model.Lasso` and
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** ( 0 minutes  1.010 seconds)
+   **Total running time of the script:** ( 0 minutes  0.682 seconds)
 
 
 .. _sphx_glr_download_auto_examples_release_highlights_plot_release_highlights_0_23_0.py:
