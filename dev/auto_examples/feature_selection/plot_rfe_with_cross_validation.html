@@ -15,7 +15,7 @@
   
 <meta property="og:site_name" content="scikit-learn" />
   
-<meta property="og:description" content="A recursive feature elimination example with automatic tuning of the number of features selected with cross-validation., Total running time of the script:( 0 minutes 2.116 seconds) Launch binder Do..." />
+<meta property="og:description" content="A recursive feature elimination example with automatic tuning of the number of features selected with cross-validation., Total running time of the script:( 0 minutes 2.095 seconds) Launch binder Do..." />
   
 <meta property="og:image" content="https://scikit-learn.org/stable/_static/scikit-learn-logo-small.png" />
   
@@ -201,15 +201,13 @@ to download the full example code or to run this example in your browser via Bin
 <p>A recursive feature elimination example with automatic tuning of the
 number of features selected with cross-validation.</p>
 <img src="../../_images/sphx_glr_plot_rfe_with_cross_validation_001.png" srcset="../../_images/sphx_glr_plot_rfe_with_cross_validation_001.png" alt="plot rfe with cross validation" class = "sphx-glr-single-img"/><div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>Optimal number of features : 3
-/home/runner/work/scikit-learn/scikit-learn/sklearn/utils/deprecation.py:103: FutureWarning:
-
-The `grid_scores_` attribute is deprecated in version 1.0 in favor of `cv_results_` and will be removed in version 1.2.
 </pre></div>
 </div>
 <div class="line-block">
 <div class="line"><br /></div>
 </div>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
 <span class="kn">from</span> <span class="nn">sklearn.svm</span> <span class="kn">import</span> <a href="../../modules/generated/sklearn.svm.SVC.html#sklearn.svm.SVC" title="sklearn.svm.SVC" class="sphx-glr-backref-module-sklearn-svm sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">SVC</span></a>
 <span class="kn">from</span> <span class="nn">sklearn.model_selection</span> <span class="kn">import</span> <a href="../../modules/generated/sklearn.model_selection.StratifiedKFold.html#sklearn.model_selection.StratifiedKFold" title="sklearn.model_selection.StratifiedKFold" class="sphx-glr-backref-module-sklearn-model_selection sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">StratifiedKFold</span></a>
 <span class="kn">from</span> <span class="nn">sklearn.feature_selection</span> <span class="kn">import</span> <a href="../../modules/generated/sklearn.feature_selection.RFECV.html#sklearn.feature_selection.RFECV" title="sklearn.feature_selection.RFECV" class="sphx-glr-backref-module-sklearn-feature_selection sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">RFECV</span></a>
@@ -243,18 +241,23 @@ The `grid_scores_` attribute is deprecated in version 1.0 in favor of `cv_result
 
 <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Optimal number of features : </span><span class="si">%d</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="n">rfecv</span><span class="o">.</span><span class="n">n_features_</span><span class="p">)</span>
 
+<span class="n">n_scores</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">rfecv</span><span class="o">.</span><span class="n">cv_results_</span><span class="p">[</span><span class="s2">&quot;split0_test_score&quot;</span><span class="p">])</span>
+<span class="n">cv_scores</span> <span class="o">=</span> <a href="https://numpy.org/doc/stable/reference/generated/numpy.vstack.html#numpy.vstack" title="numpy.vstack" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-function"><span class="n">np</span><span class="o">.</span><span class="n">vstack</span></a><span class="p">(</span>
+    <span class="p">(</span><span class="n">rfecv</span><span class="o">.</span><span class="n">cv_results_</span><span class="p">[</span><span class="s2">&quot;split0_test_score&quot;</span><span class="p">],</span> <span class="n">rfecv</span><span class="o">.</span><span class="n">cv_results_</span><span class="p">[</span><span class="s2">&quot;split1_test_score&quot;</span><span class="p">])</span>
+<span class="p">)</span><span class="o">.</span><span class="n">T</span>
+
 <span class="c1"># Plot number of features VS. cross-validation scores</span>
 <a href="https://matplotlib.org/stable/api/_as_gen/matplotlib.pyplot.figure.html#matplotlib.pyplot.figure" title="matplotlib.pyplot.figure" class="sphx-glr-backref-module-matplotlib-pyplot sphx-glr-backref-type-py-function"><span class="n">plt</span><span class="o">.</span><span class="n">figure</span></a><span class="p">()</span>
 <a href="https://matplotlib.org/stable/api/_as_gen/matplotlib.pyplot.xlabel.html#matplotlib.pyplot.xlabel" title="matplotlib.pyplot.xlabel" class="sphx-glr-backref-module-matplotlib-pyplot sphx-glr-backref-type-py-function"><span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span></a><span class="p">(</span><span class="s2">&quot;Number of features selected&quot;</span><span class="p">)</span>
 <a href="https://matplotlib.org/stable/api/_as_gen/matplotlib.pyplot.ylabel.html#matplotlib.pyplot.ylabel" title="matplotlib.pyplot.ylabel" class="sphx-glr-backref-module-matplotlib-pyplot sphx-glr-backref-type-py-function"><span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span></a><span class="p">(</span><span class="s2">&quot;Cross validation score (accuracy)&quot;</span><span class="p">)</span>
 <a href="https://matplotlib.org/stable/api/_as_gen/matplotlib.pyplot.plot.html#matplotlib.pyplot.plot" title="matplotlib.pyplot.plot" class="sphx-glr-backref-module-matplotlib-pyplot sphx-glr-backref-type-py-function"><span class="n">plt</span><span class="o">.</span><span class="n">plot</span></a><span class="p">(</span>
-    <span class="nb">range</span><span class="p">(</span><span class="n">min_features_to_select</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">rfecv</span><span class="o">.</span><span class="n">grid_scores_</span><span class="p">)</span> <span class="o">+</span> <span class="n">min_features_to_select</span><span class="p">),</span>
-    <span class="n">rfecv</span><span class="o">.</span><span class="n">grid_scores_</span><span class="p">,</span>
+    <span class="nb">range</span><span class="p">(</span><span class="n">min_features_to_select</span><span class="p">,</span> <span class="n">n_scores</span> <span class="o">+</span> <span class="n">min_features_to_select</span><span class="p">),</span>
+    <span class="n">cv_scores</span><span class="p">,</span>
 <span class="p">)</span>
 <a href="https://matplotlib.org/stable/api/_as_gen/matplotlib.pyplot.show.html#matplotlib.pyplot.show" title="matplotlib.pyplot.show" class="sphx-glr-backref-module-matplotlib-pyplot sphx-glr-backref-type-py-function"><span class="n">plt</span><span class="o">.</span><span class="n">show</span></a><span class="p">()</span>
 </pre></div>
 </div>
-<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> ( 0 minutes  2.116 seconds)</p>
+<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> ( 0 minutes  2.095 seconds)</p>
 <div class="sphx-glr-footer sphx-glr-footer-example docutils container" id="sphx-glr-download-auto-examples-feature-selection-plot-rfe-with-cross-validation-py">
 <div class="binder-badge docutils container">
 <a class="reference external image-reference" href="https://mybinder.org/v2/gh/scikit-learn/scikit-learn/main?urlpath=lab/tree/notebooks/auto_examples/feature_selection/plot_rfe_with_cross_validation.ipynb"><img alt="Launch binder" src="../../_images/binder_badge_logo7.svg" width="150px" /></a>
