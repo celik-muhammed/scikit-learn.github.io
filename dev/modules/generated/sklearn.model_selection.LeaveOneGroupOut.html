@@ -193,7 +193,7 @@
 <h1><a class="reference internal" href="../classes.html#module-sklearn.model_selection" title="sklearn.model_selection"><code class="xref py py-mod docutils literal notranslate"><span class="pre">sklearn.model_selection</span></code></a>.LeaveOneGroupOut<a class="headerlink" href="#sklearn-model-selection-leaveonegroupout" title="Permalink to this heading">¶</a></h1>
 <dl class="py class">
 <dt class="sig sig-object py" id="sklearn.model_selection.LeaveOneGroupOut">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">sklearn.model_selection.</span></span><span class="sig-name descname"><span class="pre">LeaveOneGroupOut</span></span><a class="reference external" href="https://github.com/scikit-learn/scikit-learn/blob/d824c4dd3/sklearn/model_selection/_split.py#L1107"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#sklearn.model_selection.LeaveOneGroupOut" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">sklearn.model_selection.</span></span><span class="sig-name descname"><span class="pre">LeaveOneGroupOut</span></span><a class="reference external" href="https://github.com/scikit-learn/scikit-learn/blob/57a243c95/sklearn/model_selection/_split.py#L1156"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#sklearn.model_selection.LeaveOneGroupOut" title="Permalink to this definition">¶</a></dt>
 <dd><p>Leave One Group Out cross-validator</p>
 <p>Provides train/test indices to split data such that each training set is
 comprised of all samples except ones belonging to one specific group.
@@ -226,19 +226,16 @@ lowest, and so on.</p>
 <span class="go">2</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">logo</span><span class="p">)</span>
 <span class="go">LeaveOneGroupOut()</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="k">for</span> <span class="n">train_index</span><span class="p">,</span> <span class="n">test_index</span> <span class="ow">in</span> <span class="n">logo</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">groups</span><span class="p">):</span>
-<span class="gp">... </span>    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;TRAIN:&quot;</span><span class="p">,</span> <span class="n">train_index</span><span class="p">,</span> <span class="s2">&quot;TEST:&quot;</span><span class="p">,</span> <span class="n">test_index</span><span class="p">)</span>
-<span class="gp">... </span>    <span class="n">X_train</span><span class="p">,</span> <span class="n">X_test</span> <span class="o">=</span> <span class="n">X</span><span class="p">[</span><span class="n">train_index</span><span class="p">],</span> <span class="n">X</span><span class="p">[</span><span class="n">test_index</span><span class="p">]</span>
-<span class="gp">... </span>    <span class="n">y_train</span><span class="p">,</span> <span class="n">y_test</span> <span class="o">=</span> <span class="n">y</span><span class="p">[</span><span class="n">train_index</span><span class="p">],</span> <span class="n">y</span><span class="p">[</span><span class="n">test_index</span><span class="p">]</span>
-<span class="gp">... </span>    <span class="nb">print</span><span class="p">(</span><span class="n">X_train</span><span class="p">,</span> <span class="n">X_test</span><span class="p">,</span> <span class="n">y_train</span><span class="p">,</span> <span class="n">y_test</span><span class="p">)</span>
-<span class="go">TRAIN: [2 3] TEST: [0 1]</span>
-<span class="go">[[5 6]</span>
-<span class="go"> [7 8]] [[1 2]</span>
-<span class="go"> [3 4]] [1 2] [1 2]</span>
-<span class="go">TRAIN: [0 1] TEST: [2 3]</span>
-<span class="go">[[1 2]</span>
-<span class="go"> [3 4]] [[5 6]</span>
-<span class="go"> [7 8]] [1 2] [1 2]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="p">(</span><span class="n">train_index</span><span class="p">,</span> <span class="n">test_index</span><span class="p">)</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">logo</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">groups</span><span class="p">)):</span>
+<span class="gp">... </span>    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Fold </span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s2">:&quot;</span><span class="p">)</span>
+<span class="gp">... </span>    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;  Train: index=</span><span class="si">{</span><span class="n">train_index</span><span class="si">}</span><span class="s2">, group=</span><span class="si">{</span><span class="n">groups</span><span class="p">[</span><span class="n">train_index</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="gp">... </span>    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;  Test:  index=</span><span class="si">{</span><span class="n">test_index</span><span class="si">}</span><span class="s2">, group=</span><span class="si">{</span><span class="n">groups</span><span class="p">[</span><span class="n">test_index</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="go">Fold 0:</span>
+<span class="go">  Train: index=[2 3], group=[2 2]</span>
+<span class="go">  Test:  index=[0 1], group=[1 1]</span>
+<span class="go">Fold 1:</span>
+<span class="go">  Train: index=[0 1], group=[1 1]</span>
+<span class="go">  Test:  index=[2 3], group=[2 2]</span>
 </pre></div>
 </div>
 <p class="rubric">Methods</p>
@@ -254,7 +251,7 @@ lowest, and so on.</p>
 </table>
 <dl class="py method">
 <dt class="sig sig-object py" id="sklearn.model_selection.LeaveOneGroupOut.get_n_splits">
-<span class="sig-name descname"><span class="pre">get_n_splits</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">groups</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/scikit-learn/scikit-learn/blob/d824c4dd3/sklearn/model_selection/_split.py#L1175"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#sklearn.model_selection.LeaveOneGroupOut.get_n_splits" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">get_n_splits</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">groups</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/scikit-learn/scikit-learn/blob/57a243c95/sklearn/model_selection/_split.py#L1221"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#sklearn.model_selection.LeaveOneGroupOut.get_n_splits" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns the number of splitting iterations in the cross-validator</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -281,7 +278,7 @@ omitted.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="sklearn.model_selection.LeaveOneGroupOut.split">
-<span class="sig-name descname"><span class="pre">split</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">groups</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/scikit-learn/scikit-learn/blob/d824c4dd3/sklearn/model_selection/_split.py#L1202"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#sklearn.model_selection.LeaveOneGroupOut.split" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">split</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">groups</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/scikit-learn/scikit-learn/blob/57a243c95/sklearn/model_selection/_split.py#L1248"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#sklearn.model_selection.LeaveOneGroupOut.split" title="Permalink to this definition">¶</a></dt>
 <dd><p>Generate indices to split data into training and test set.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>

@@ -198,7 +198,7 @@
 <h1><a class="reference internal" href="../classes.html#module-sklearn.model_selection" title="sklearn.model_selection"><code class="xref py py-mod docutils literal notranslate"><span class="pre">sklearn.model_selection</span></code></a>.TimeSeriesSplit<a class="headerlink" href="#sklearn-model-selection-timeseriessplit" title="Permalink to this heading">¶</a></h1>
 <dl class="py class">
 <dt class="sig sig-object py" id="sklearn.model_selection.TimeSeriesSplit">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">sklearn.model_selection.</span></span><span class="sig-name descname"><span class="pre">TimeSeriesSplit</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">n_splits</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">5</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_train_size</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">test_size</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">gap</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/scikit-learn/scikit-learn/blob/d824c4dd3/sklearn/model_selection/_split.py#L950"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#sklearn.model_selection.TimeSeriesSplit" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">sklearn.model_selection.</span></span><span class="sig-name descname"><span class="pre">TimeSeriesSplit</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">n_splits</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">5</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_train_size</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">test_size</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">gap</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/scikit-learn/scikit-learn/blob/57a243c95/sklearn/model_selection/_split.py#L977"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#sklearn.model_selection.TimeSeriesSplit" title="Permalink to this definition">¶</a></dt>
 <dd><p>Time Series cross-validator</p>
 <p>Provides train/test indices to split time series data samples
 that are observed at fixed time intervals, in train/test sets.
@@ -252,35 +252,57 @@ where <code class="docutils literal notranslate"><span class="pre">n_samples</sp
 <span class="gp">&gt;&gt;&gt; </span><span class="n">tscv</span> <span class="o">=</span> <span class="n">TimeSeriesSplit</span><span class="p">()</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">tscv</span><span class="p">)</span>
 <span class="go">TimeSeriesSplit(gap=0, max_train_size=None, n_splits=5, test_size=None)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="k">for</span> <span class="n">train_index</span><span class="p">,</span> <span class="n">test_index</span> <span class="ow">in</span> <span class="n">tscv</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="n">X</span><span class="p">):</span>
-<span class="gp">... </span>    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;TRAIN:&quot;</span><span class="p">,</span> <span class="n">train_index</span><span class="p">,</span> <span class="s2">&quot;TEST:&quot;</span><span class="p">,</span> <span class="n">test_index</span><span class="p">)</span>
-<span class="gp">... </span>    <span class="n">X_train</span><span class="p">,</span> <span class="n">X_test</span> <span class="o">=</span> <span class="n">X</span><span class="p">[</span><span class="n">train_index</span><span class="p">],</span> <span class="n">X</span><span class="p">[</span><span class="n">test_index</span><span class="p">]</span>
-<span class="gp">... </span>    <span class="n">y_train</span><span class="p">,</span> <span class="n">y_test</span> <span class="o">=</span> <span class="n">y</span><span class="p">[</span><span class="n">train_index</span><span class="p">],</span> <span class="n">y</span><span class="p">[</span><span class="n">test_index</span><span class="p">]</span>
-<span class="go">TRAIN: [0] TEST: [1]</span>
-<span class="go">TRAIN: [0 1] TEST: [2]</span>
-<span class="go">TRAIN: [0 1 2] TEST: [3]</span>
-<span class="go">TRAIN: [0 1 2 3] TEST: [4]</span>
-<span class="go">TRAIN: [0 1 2 3 4] TEST: [5]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="p">(</span><span class="n">train_index</span><span class="p">,</span> <span class="n">test_index</span><span class="p">)</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">tscv</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="n">X</span><span class="p">)):</span>
+<span class="gp">... </span>    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Fold </span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s2">:&quot;</span><span class="p">)</span>
+<span class="gp">... </span>    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;  Train: index=</span><span class="si">{</span><span class="n">train_index</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="gp">... </span>    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;  Test:  index=</span><span class="si">{</span><span class="n">test_index</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="go">Fold 0:</span>
+<span class="go">  Train: index=[0]</span>
+<span class="go">  Test:  index=[1]</span>
+<span class="go">Fold 1:</span>
+<span class="go">  Train: index=[0 1]</span>
+<span class="go">  Test:  index=[2]</span>
+<span class="go">Fold 2:</span>
+<span class="go">  Train: index=[0 1 2]</span>
+<span class="go">  Test:  index=[3]</span>
+<span class="go">Fold 3:</span>
+<span class="go">  Train: index=[0 1 2 3]</span>
+<span class="go">  Test:  index=[4]</span>
+<span class="go">Fold 4:</span>
+<span class="go">  Train: index=[0 1 2 3 4]</span>
+<span class="go">  Test:  index=[5]</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="c1"># Fix test_size to 2 with 12 samples</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">X</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="mi">12</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">y</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">randint</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">12</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">tscv</span> <span class="o">=</span> <span class="n">TimeSeriesSplit</span><span class="p">(</span><span class="n">n_splits</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">test_size</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="k">for</span> <span class="n">train_index</span><span class="p">,</span> <span class="n">test_index</span> <span class="ow">in</span> <span class="n">tscv</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="n">X</span><span class="p">):</span>
-<span class="gp">... </span>   <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;TRAIN:&quot;</span><span class="p">,</span> <span class="n">train_index</span><span class="p">,</span> <span class="s2">&quot;TEST:&quot;</span><span class="p">,</span> <span class="n">test_index</span><span class="p">)</span>
-<span class="gp">... </span>   <span class="n">X_train</span><span class="p">,</span> <span class="n">X_test</span> <span class="o">=</span> <span class="n">X</span><span class="p">[</span><span class="n">train_index</span><span class="p">],</span> <span class="n">X</span><span class="p">[</span><span class="n">test_index</span><span class="p">]</span>
-<span class="gp">... </span>   <span class="n">y_train</span><span class="p">,</span> <span class="n">y_test</span> <span class="o">=</span> <span class="n">y</span><span class="p">[</span><span class="n">train_index</span><span class="p">],</span> <span class="n">y</span><span class="p">[</span><span class="n">test_index</span><span class="p">]</span>
-<span class="go">TRAIN: [0 1 2 3 4 5] TEST: [6 7]</span>
-<span class="go">TRAIN: [0 1 2 3 4 5 6 7] TEST: [8 9]</span>
-<span class="go">TRAIN: [0 1 2 3 4 5 6 7 8 9] TEST: [10 11]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="p">(</span><span class="n">train_index</span><span class="p">,</span> <span class="n">test_index</span><span class="p">)</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">tscv</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="n">X</span><span class="p">)):</span>
+<span class="gp">... </span>    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Fold </span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s2">:&quot;</span><span class="p">)</span>
+<span class="gp">... </span>    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;  Train: index=</span><span class="si">{</span><span class="n">train_index</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="gp">... </span>    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;  Test:  index=</span><span class="si">{</span><span class="n">test_index</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="go">Fold 0:</span>
+<span class="go">  Train: index=[0 1 2 3 4 5]</span>
+<span class="go">  Test:  index=[6 7]</span>
+<span class="go">Fold 1:</span>
+<span class="go">  Train: index=[0 1 2 3 4 5 6 7]</span>
+<span class="go">  Test:  index=[8 9]</span>
+<span class="go">Fold 2:</span>
+<span class="go">  Train: index=[0 1 2 3 4 5 6 7 8 9]</span>
+<span class="go">  Test:  index=[10 11]</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="c1"># Add in a 2 period gap</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">tscv</span> <span class="o">=</span> <span class="n">TimeSeriesSplit</span><span class="p">(</span><span class="n">n_splits</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">test_size</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">gap</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="k">for</span> <span class="n">train_index</span><span class="p">,</span> <span class="n">test_index</span> <span class="ow">in</span> <span class="n">tscv</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="n">X</span><span class="p">):</span>
-<span class="gp">... </span>   <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;TRAIN:&quot;</span><span class="p">,</span> <span class="n">train_index</span><span class="p">,</span> <span class="s2">&quot;TEST:&quot;</span><span class="p">,</span> <span class="n">test_index</span><span class="p">)</span>
-<span class="gp">... </span>   <span class="n">X_train</span><span class="p">,</span> <span class="n">X_test</span> <span class="o">=</span> <span class="n">X</span><span class="p">[</span><span class="n">train_index</span><span class="p">],</span> <span class="n">X</span><span class="p">[</span><span class="n">test_index</span><span class="p">]</span>
-<span class="gp">... </span>   <span class="n">y_train</span><span class="p">,</span> <span class="n">y_test</span> <span class="o">=</span> <span class="n">y</span><span class="p">[</span><span class="n">train_index</span><span class="p">],</span> <span class="n">y</span><span class="p">[</span><span class="n">test_index</span><span class="p">]</span>
-<span class="go">TRAIN: [0 1 2 3] TEST: [6 7]</span>
-<span class="go">TRAIN: [0 1 2 3 4 5] TEST: [8 9]</span>
-<span class="go">TRAIN: [0 1 2 3 4 5 6 7] TEST: [10 11]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="p">(</span><span class="n">train_index</span><span class="p">,</span> <span class="n">test_index</span><span class="p">)</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">tscv</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="n">X</span><span class="p">)):</span>
+<span class="gp">... </span>    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Fold </span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s2">:&quot;</span><span class="p">)</span>
+<span class="gp">... </span>    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;  Train: index=</span><span class="si">{</span><span class="n">train_index</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="gp">... </span>    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;  Test:  index=</span><span class="si">{</span><span class="n">test_index</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="go">Fold 0:</span>
+<span class="go">  Train: index=[0 1 2 3]</span>
+<span class="go">  Test:  index=[6 7]</span>
+<span class="go">Fold 1:</span>
+<span class="go">  Train: index=[0 1 2 3 4 5]</span>
+<span class="go">  Test:  index=[8 9]</span>
+<span class="go">Fold 2:</span>
+<span class="go">  Train: index=[0 1 2 3 4 5 6 7]</span>
+<span class="go">  Test:  index=[10 11]</span>
 </pre></div>
 </div>
 <p class="rubric">Methods</p>
@@ -296,7 +318,7 @@ where <code class="docutils literal notranslate"><span class="pre">n_samples</sp
 </table>
 <dl class="py method">
 <dt class="sig sig-object py" id="sklearn.model_selection.TimeSeriesSplit.get_n_splits">
-<span class="sig-name descname"><span class="pre">get_n_splits</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">groups</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/scikit-learn/scikit-learn/blob/d824c4dd3/sklearn/model_selection/_split.py#L344"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#sklearn.model_selection.TimeSeriesSplit.get_n_splits" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">get_n_splits</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">groups</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/scikit-learn/scikit-learn/blob/57a243c95/sklearn/model_selection/_split.py#L355"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#sklearn.model_selection.TimeSeriesSplit.get_n_splits" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns the number of splitting iterations in the cross-validator</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -320,7 +342,7 @@ where <code class="docutils literal notranslate"><span class="pre">n_samples</sp
 
 <dl class="py method">
 <dt class="sig sig-object py" id="sklearn.model_selection.TimeSeriesSplit.split">
-<span class="sig-name descname"><span class="pre">split</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">groups</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/scikit-learn/scikit-learn/blob/d824c4dd3/sklearn/model_selection/_split.py#L1046"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#sklearn.model_selection.TimeSeriesSplit.split" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">split</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">groups</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/scikit-learn/scikit-learn/blob/57a243c95/sklearn/model_selection/_split.py#L1095"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#sklearn.model_selection.TimeSeriesSplit.split" title="Permalink to this definition">¶</a></dt>
 <dd><p>Generate indices to split data into training and test set.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
