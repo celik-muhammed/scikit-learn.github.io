@@ -190,7 +190,10 @@
 <li><a class="reference internal" href="#analysis-of-the-plots">Analysis of the plots</a></li>
 </ul>
 </li>
-<li><a class="reference internal" href="#d-interaction-plots">2D interaction plots</a></li>
+<li><a class="reference internal" href="#d-interaction-plots">2D interaction plots</a><ul>
+<li><a class="reference internal" href="#interaction-constraints">Interaction constraints</a></li>
+</ul>
+</li>
 <li><a class="reference internal" href="#id7">3D interaction plots</a></li>
 </ul>
 </li>
@@ -295,7 +298,7 @@ single-variable partial dependence plots.</p>
 </pre></div>
 </div>
 <div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>Training MLPRegressor...
-done in 3.177s
+done in 2.910s
 Test R2 score: 0.82
 </pre></div>
 </div>
@@ -342,7 +345,7 @@ a poor model.</p>
 </pre></div>
 </div>
 <img src="../../_images/sphx_glr_plot_partial_dependence_001.png" srcset="../../_images/sphx_glr_plot_partial_dependence_001.png" alt="Partial dependence of house value on non-location features for the California housing dataset, with MLPRegressor" class = "sphx-glr-single-img"/><div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>Computing partial dependence plots...
-done in 1.482s
+done in 1.496s
 </pre></div>
 </div>
 </section>
@@ -361,7 +364,7 @@ compute the partial dependence on the same features.</p>
 </pre></div>
 </div>
 <div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>Training HistGradientBoostingRegressor...
-done in 0.392s
+done in 0.415s
 Test R2 score: 0.85
 </pre></div>
 </div>
@@ -392,7 +395,7 @@ to work well while this is not often the case for neural networks).</p>
 </pre></div>
 </div>
 <img src="../../_images/sphx_glr_plot_partial_dependence_002.png" srcset="../../_images/sphx_glr_plot_partial_dependence_002.png" alt="Partial dependence of house value on non-location features for the California housing dataset, with Gradient Boosting" class = "sphx-glr-single-img"/><div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>Computing partial dependence plots...
-done in 6.755s
+done in 7.202s
 </pre></div>
 </div>
 </section>
@@ -456,7 +459,7 @@ on an efficient way using the <code class="docutils literal notranslate"><span c
 </pre></div>
 </div>
 <img src="../../_images/sphx_glr_plot_partial_dependence_003.png" srcset="../../_images/sphx_glr_plot_partial_dependence_003.png" alt="Partial dependence of house value on non-location features for the California housing dataset, with Gradient Boosting" class = "sphx-glr-single-img"/><div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>Computing partial dependence plots...
-done in 3.514s
+done in 3.648s
 </pre></div>
 </div>
 <p>The two-way partial dependence plot shows the dependence of median house
@@ -465,6 +468,92 @@ can clearly see an interaction between the two features: for an average
 occupancy greater than two, the house price is nearly independent of the
 house age, whereas for values less than two there is a strong dependence on
 age.</p>
+<section id="interaction-constraints">
+<h3>Interaction constraints<a class="headerlink" href="#interaction-constraints" title="Permalink to this heading">¶</a></h3>
+<p>The histogram gradient boosters have an interesting option to constrain
+possible interactions among features. In the following, we do not allow any
+interactions and thus render the model as a version of a tree-based boosted
+generalized additive model (GAM). This makes the model more interpretable
+as the effect of each feature can be investigated independently of all others.</p>
+<p>We train the <a class="reference internal" href="../../modules/generated/sklearn.ensemble.HistGradientBoostingRegressor.html#sklearn.ensemble.HistGradientBoostingRegressor" title="sklearn.ensemble.HistGradientBoostingRegressor"><code class="xref py py-class docutils literal notranslate"><span class="pre">HistGradientBoostingRegressor</span></code></a> again,
+now with <code class="docutils literal notranslate"><span class="pre">interaction_cst</span></code>, where we  pass for each feature a list containing
+only its own index, e.g. <code class="docutils literal notranslate"><span class="pre">[[0],</span> <span class="pre">[1],</span> <span class="pre">[2],</span> <span class="pre">..]</span></code>.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Training interaction constraint HistGradientBoostingRegressor...&quot;</span><span class="p">)</span>
+<span class="n">tic</span> <span class="o">=</span> <a href="https://docs.python.org/3/library/time.html#time.time" title="time.time" class="sphx-glr-backref-module-time sphx-glr-backref-type-py-function"><span class="n">time</span></a><span class="p">()</span>
+<span class="n">est_no_interactions</span> <span class="o">=</span> <a href="../../modules/generated/sklearn.ensemble.HistGradientBoostingRegressor.html#sklearn.ensemble.HistGradientBoostingRegressor" title="sklearn.ensemble.HistGradientBoostingRegressor" class="sphx-glr-backref-module-sklearn-ensemble sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">HistGradientBoostingRegressor</span></a><span class="p">(</span>
+    <span class="n">interaction_cst</span><span class="o">=</span><span class="p">[[</span><span class="n">i</span><span class="p">]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">X_train</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">])]</span>
+<span class="p">)</span>
+<span class="n">est_no_interactions</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X_train</span><span class="p">,</span> <span class="n">y_train</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;done in </span><span class="si">{</span><a href="https://docs.python.org/3/library/time.html#time.time" title="time.time" class="sphx-glr-backref-module-time sphx-glr-backref-type-py-function"><span class="n">time</span></a><span class="p">()</span> <span class="o">-</span> <span class="n">tic</span><span class="si">:</span><span class="s2">.3f</span><span class="si">}</span><span class="s2">s&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>Training interaction constraint HistGradientBoostingRegressor...
+done in 0.382s
+</pre></div>
+</div>
+<p>The easiest way to show the effect of forbidden interactions is again the
+ICE plots.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Computing partial dependence plots...&quot;</span><span class="p">)</span>
+<span class="n">tic</span> <span class="o">=</span> <a href="https://docs.python.org/3/library/time.html#time.time" title="time.time" class="sphx-glr-backref-module-time sphx-glr-backref-type-py-function"><span class="n">time</span></a><span class="p">()</span>
+<span class="n">display</span> <span class="o">=</span> <a href="../../modules/generated/sklearn.inspection.PartialDependenceDisplay.html#sklearn.inspection.PartialDependenceDisplay.from_estimator" title="sklearn.inspection.PartialDependenceDisplay.from_estimator" class="sphx-glr-backref-module-sklearn-inspection-PartialDependenceDisplay sphx-glr-backref-type-py-method"><span class="n">PartialDependenceDisplay</span><span class="o">.</span><span class="n">from_estimator</span></a><span class="p">(</span>
+    <span class="n">est_no_interactions</span><span class="p">,</span>
+    <span class="n">X_train</span><span class="p">,</span>
+    <span class="p">[</span><span class="s2">&quot;MedInc&quot;</span><span class="p">,</span> <span class="s2">&quot;AveOccup&quot;</span><span class="p">,</span> <span class="s2">&quot;HouseAge&quot;</span><span class="p">,</span> <span class="s2">&quot;AveRooms&quot;</span><span class="p">],</span>
+    <span class="n">kind</span><span class="o">=</span><span class="s2">&quot;both&quot;</span><span class="p">,</span>
+    <span class="n">subsample</span><span class="o">=</span><span class="mi">50</span><span class="p">,</span>
+    <span class="n">n_jobs</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span>
+    <span class="n">grid_resolution</span><span class="o">=</span><span class="mi">20</span><span class="p">,</span>
+    <span class="n">random_state</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+    <span class="n">ice_lines_kw</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;color&quot;</span><span class="p">:</span> <span class="s2">&quot;tab:blue&quot;</span><span class="p">,</span> <span class="s2">&quot;alpha&quot;</span><span class="p">:</span> <span class="mf">0.2</span><span class="p">,</span> <span class="s2">&quot;linewidth&quot;</span><span class="p">:</span> <span class="mf">0.5</span><span class="p">},</span>
+    <span class="n">pd_line_kw</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;color&quot;</span><span class="p">:</span> <span class="s2">&quot;tab:orange&quot;</span><span class="p">,</span> <span class="s2">&quot;linestyle&quot;</span><span class="p">:</span> <span class="s2">&quot;--&quot;</span><span class="p">},</span>
+<span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;done in </span><span class="si">{</span><a href="https://docs.python.org/3/library/time.html#time.time" title="time.time" class="sphx-glr-backref-module-time sphx-glr-backref-type-py-function"><span class="n">time</span></a><span class="p">()</span> <span class="o">-</span> <span class="n">tic</span><span class="si">:</span><span class="s2">.3f</span><span class="si">}</span><span class="s2">s&quot;</span><span class="p">)</span>
+<span class="n">display</span><span class="o">.</span><span class="n">figure_</span><span class="o">.</span><span class="n">suptitle</span><span class="p">(</span>
+    <span class="s2">&quot;Partial dependence of house value with Gradient Boosting</span><span class="se">\n</span><span class="s2">&quot;</span>
+    <span class="s2">&quot;and no interactions allowed&quot;</span>
+<span class="p">)</span>
+<span class="n">display</span><span class="o">.</span><span class="n">figure_</span><span class="o">.</span><span class="n">subplots_adjust</span><span class="p">(</span><span class="n">wspace</span><span class="o">=</span><span class="mf">0.4</span><span class="p">,</span> <span class="n">hspace</span><span class="o">=</span><span class="mf">0.3</span><span class="p">)</span>
+</pre></div>
+</div>
+<img src="../../_images/sphx_glr_plot_partial_dependence_004.png" srcset="../../_images/sphx_glr_plot_partial_dependence_004.png" alt="Partial dependence of house value with Gradient Boosting and no interactions allowed" class = "sphx-glr-single-img"/><div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>Computing partial dependence plots...
+done in 8.516s
+</pre></div>
+</div>
+<p>All 4 plots have parallel ICE lines meaning there is no interaction in the
+model.
+Let us also have a look at the corresponding 2D-plot.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Computing partial dependence plots...&quot;</span><span class="p">)</span>
+<span class="n">tic</span> <span class="o">=</span> <a href="https://docs.python.org/3/library/time.html#time.time" title="time.time" class="sphx-glr-backref-module-time sphx-glr-backref-type-py-function"><span class="n">time</span></a><span class="p">()</span>
+<span class="n">_</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <a href="https://matplotlib.org/stable/api/_as_gen/matplotlib.pyplot.subplots.html#matplotlib.pyplot.subplots" title="matplotlib.pyplot.subplots" class="sphx-glr-backref-module-matplotlib-pyplot sphx-glr-backref-type-py-function"><span class="n">plt</span><span class="o">.</span><span class="n">subplots</span></a><span class="p">(</span><span class="n">ncols</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">9</span><span class="p">,</span> <span class="mi">4</span><span class="p">))</span>
+<span class="n">display</span> <span class="o">=</span> <a href="../../modules/generated/sklearn.inspection.PartialDependenceDisplay.html#sklearn.inspection.PartialDependenceDisplay.from_estimator" title="sklearn.inspection.PartialDependenceDisplay.from_estimator" class="sphx-glr-backref-module-sklearn-inspection-PartialDependenceDisplay sphx-glr-backref-type-py-method"><span class="n">PartialDependenceDisplay</span><span class="o">.</span><span class="n">from_estimator</span></a><span class="p">(</span>
+    <span class="n">est_no_interactions</span><span class="p">,</span>
+    <span class="n">X_train</span><span class="p">,</span>
+    <span class="p">[</span><span class="s2">&quot;AveOccup&quot;</span><span class="p">,</span> <span class="s2">&quot;HouseAge&quot;</span><span class="p">,</span> <span class="p">(</span><span class="s2">&quot;AveOccup&quot;</span><span class="p">,</span> <span class="s2">&quot;HouseAge&quot;</span><span class="p">)],</span>
+    <span class="n">kind</span><span class="o">=</span><span class="s2">&quot;average&quot;</span><span class="p">,</span>
+    <span class="n">n_jobs</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span>
+    <span class="n">grid_resolution</span><span class="o">=</span><span class="mi">20</span><span class="p">,</span>
+    <span class="n">ax</span><span class="o">=</span><span class="n">ax</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;done in </span><span class="si">{</span><a href="https://docs.python.org/3/library/time.html#time.time" title="time.time" class="sphx-glr-backref-module-time sphx-glr-backref-type-py-function"><span class="n">time</span></a><span class="p">()</span> <span class="o">-</span> <span class="n">tic</span><span class="si">:</span><span class="s2">.3f</span><span class="si">}</span><span class="s2">s&quot;</span><span class="p">)</span>
+<span class="n">display</span><span class="o">.</span><span class="n">figure_</span><span class="o">.</span><span class="n">suptitle</span><span class="p">(</span>
+    <span class="s2">&quot;Partial dependence of house value with Gradient Boosting</span><span class="se">\n</span><span class="s2">&quot;</span>
+    <span class="s2">&quot;and no interactions allowed&quot;</span>
+<span class="p">)</span>
+<span class="n">display</span><span class="o">.</span><span class="n">figure_</span><span class="o">.</span><span class="n">subplots_adjust</span><span class="p">(</span><span class="n">wspace</span><span class="o">=</span><span class="mf">0.4</span><span class="p">,</span> <span class="n">hspace</span><span class="o">=</span><span class="mf">0.3</span><span class="p">)</span>
+</pre></div>
+</div>
+<img src="../../_images/sphx_glr_plot_partial_dependence_005.png" srcset="../../_images/sphx_glr_plot_partial_dependence_005.png" alt="Partial dependence of house value with Gradient Boosting and no interactions allowed" class = "sphx-glr-single-img"/><div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>Computing partial dependence plots...
+done in 0.503s
+</pre></div>
+</div>
+<p>Although the 2D-plot shows much less interaction compared with the 2D-plot
+from above, it is much harder to come to the conclusion that there is no
+interaction at all. This might be a cause of the discrete predictions of
+trees in combination with numerically precision of partial dependence.
+We also observe that the univariate dependence plots have slightly changed
+as the model tries to compensate for the forbidden interactions.</p>
+</section>
 </section>
 <section id="id7">
 <h2>3D interaction plots<a class="headerlink" href="#id7" title="Permalink to this heading">¶</a></h2>
@@ -503,7 +592,7 @@ this time in 3 dimensions.</p>
 <a href="https://matplotlib.org/stable/api/_as_gen/matplotlib.pyplot.show.html#matplotlib.pyplot.show" title="matplotlib.pyplot.show" class="sphx-glr-backref-module-matplotlib-pyplot sphx-glr-backref-type-py-function"><span class="n">plt</span><span class="o">.</span><span class="n">show</span></a><span class="p">()</span>
 </pre></div>
 </div>
-<img src="../../_images/sphx_glr_plot_partial_dependence_004.png" srcset="../../_images/sphx_glr_plot_partial_dependence_004.png" alt="Partial dependence of house value on median age and average occupancy, with Gradient Boosting" class = "sphx-glr-single-img"/><p class="sphx-glr-timing"><strong>Total running time of the script:</strong> ( 0 minutes  15.968 seconds)</p>
+<img src="../../_images/sphx_glr_plot_partial_dependence_006.png" srcset="../../_images/sphx_glr_plot_partial_dependence_006.png" alt="Partial dependence of house value on median age and average occupancy, with Gradient Boosting" class = "sphx-glr-single-img"/><p class="sphx-glr-timing"><strong>Total running time of the script:</strong> ( 0 minutes  26.042 seconds)</p>
 <div class="sphx-glr-footer sphx-glr-footer-example docutils container" id="sphx-glr-download-auto-examples-inspection-plot-partial-dependence-py">
 <div class="binder-badge docutils container">
 <a class="reference external image-reference" href="https://mybinder.org/v2/gh/scikit-learn/scikit-learn/main?urlpath=lab/tree/notebooks/auto_examples/inspection/plot_partial_dependence.ipynb"><img alt="Launch binder" src="../../_images/binder_badge_logo29.svg" width="150px" /></a>
