@@ -1697,10 +1697,10 @@ rate) vs. the fraction of false positives out of the negatives (FPR = false
 positive rate), at various threshold settings. TPR is also known as
 sensitivity, and FPR is one minus the specificity or true negative rate.”</p>
 </div></blockquote>
-<p>This function requires the true binary
-value and the target scores, which can either be probability estimates of the
-positive class, confidence values, or binary decisions.
-Here is a small example of how to use the <a class="reference internal" href="generated/sklearn.metrics.roc_curve.html#sklearn.metrics.roc_curve" title="sklearn.metrics.roc_curve"><code class="xref py py-func docutils literal notranslate"><span class="pre">roc_curve</span></code></a> function:</p>
+<p>This function requires the true binary value and the target scores, which can
+either be probability estimates of the positive class, confidence values, or
+binary decisions. Here is a small example of how to use the <a class="reference internal" href="generated/sklearn.metrics.roc_curve.html#sklearn.metrics.roc_curve" title="sklearn.metrics.roc_curve"><code class="xref py py-func docutils literal notranslate"><span class="pre">roc_curve</span></code></a>
+function:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">sklearn.metrics</span> <span class="kn">import</span> <span class="n">roc_curve</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">y</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">])</span>
@@ -1714,15 +1714,16 @@ Here is a small example of how to use the <a class="reference internal" href="ge
 <span class="go">array([1.8 , 0.8 , 0.4 , 0.35, 0.1 ])</span>
 </pre></div>
 </div>
-<p>This figure shows an example of such an ROC curve:</p>
-<a class="reference external image-reference" href="../auto_examples/model_selection/plot_roc.html"><img alt="../_images/sphx_glr_plot_roc_001.png" class="align-center" src="../_images/sphx_glr_plot_roc_001.png" style="width: 480.0px; height: 360.0px;" /></a>
-<p>The <a class="reference internal" href="generated/sklearn.metrics.roc_auc_score.html#sklearn.metrics.roc_auc_score" title="sklearn.metrics.roc_auc_score"><code class="xref py py-func docutils literal notranslate"><span class="pre">roc_auc_score</span></code></a> function computes the area under the receiver
-operating characteristic (ROC) curve, which is also denoted by
-AUC or AUROC.  By computing the
-area under the roc curve, the curve information is summarized in one number.
-For more information see the <a class="reference external" href="https://en.wikipedia.org/wiki/Receiver_operating_characteristic#Area_under_the_curve">Wikipedia article on AUC</a>.</p>
 <p>Compared to metrics such as the subset accuracy, the Hamming loss, or the
 F1 score, ROC doesn’t require optimizing a threshold for each label.</p>
+<p>The <a class="reference internal" href="generated/sklearn.metrics.roc_auc_score.html#sklearn.metrics.roc_auc_score" title="sklearn.metrics.roc_auc_score"><code class="xref py py-func docutils literal notranslate"><span class="pre">roc_auc_score</span></code></a> function, denoted by ROC-AUC or AUROC, computes the
+area under the ROC curve. By doing so, the curve information is summarized in
+one number.</p>
+<p>The following figure shows the ROC curve and ROC-AUC score for a classifier
+aimed to distinguish the virginica flower from the rest of the species in the
+<a class="reference internal" href="../datasets/toy_dataset.html#iris-dataset"><span class="std std-ref">Iris plants dataset</span></a>:</p>
+<a class="reference external image-reference" href="../auto_examples/model_selection/plot_roc.html"><img alt="../_images/sphx_glr_plot_roc_001.png" class="align-center" src="../_images/sphx_glr_plot_roc_001.png" style="width: 480.0px; height: 360.0px;" /></a>
+<p>For more information see the <a class="reference external" href="https://en.wikipedia.org/wiki/Receiver_operating_characteristic#Area_under_the_curve">Wikipedia article on AUC</a>.</p>
 <section id="binary-case">
 <span id="roc-auc-binary"></span><h4><span class="section-number">3.3.2.15.1. </span>Binary case<a class="headerlink" href="#binary-case" title="Permalink to this heading">¶</a></h4>
 <p>In the <strong>binary case</strong>, you can either provide the probability estimates, using
@@ -1788,11 +1789,14 @@ as described in <a class="reference internal" href="#fc2009" id="id28"><span>[FC
 <p><strong>One-vs-rest Algorithm</strong>: Computes the AUC of each class against the rest
 <a class="reference internal" href="#pd2000" id="id29"><span>[PD2000]</span></a>. The algorithm is functionally the same as the multilabel case. To
 enable this algorithm set the keyword argument <code class="docutils literal notranslate"><span class="pre">multiclass</span></code> to <code class="docutils literal notranslate"><span class="pre">'ovr'</span></code>.
-Like OvO, OvR supports two types of averaging: <code class="docutils literal notranslate"><span class="pre">'macro'</span></code> <a class="reference internal" href="#f2006" id="id30"><span>[F2006]</span></a> and
-<code class="docutils literal notranslate"><span class="pre">'weighted'</span></code> <a class="reference internal" href="#f2001" id="id31"><span>[F2001]</span></a>.</p>
+Additionally to <code class="docutils literal notranslate"><span class="pre">'macro'</span></code> <a class="reference internal" href="#f2006" id="id30"><span>[F2006]</span></a> and <code class="docutils literal notranslate"><span class="pre">'weighted'</span></code> <a class="reference internal" href="#f2001" id="id31"><span>[F2001]</span></a> averaging, OvR
+supports <code class="docutils literal notranslate"><span class="pre">'micro'</span></code> averaging.</p>
 <p>In applications where a high false positive rate is not tolerable the parameter
 <code class="docutils literal notranslate"><span class="pre">max_fpr</span></code> of <a class="reference internal" href="generated/sklearn.metrics.roc_auc_score.html#sklearn.metrics.roc_auc_score" title="sklearn.metrics.roc_auc_score"><code class="xref py py-func docutils literal notranslate"><span class="pre">roc_auc_score</span></code></a> can be used to summarize the ROC curve up
 to the given limit.</p>
+<p>The following figure shows the micro-averaged ROC curve and its corresponding
+ROC-AUC score for a classifier aimed to distinguish the the different species in
+the <a class="reference internal" href="../datasets/toy_dataset.html#iris-dataset"><span class="std std-ref">Iris plants dataset</span></a>:</p>
 <a class="reference external image-reference" href="../auto_examples/model_selection/plot_roc.html"><img alt="../_images/sphx_glr_plot_roc_002.png" class="align-center" src="../_images/sphx_glr_plot_roc_002.png" style="width: 480.0px; height: 360.0px;" /></a>
 </section>
 <section id="multi-label-case">
@@ -1823,7 +1827,7 @@ class with the greater label for each output.</p>
 <aside class="topic">
 <p class="topic-title">Examples:</p>
 <ul class="simple">
-<li><p>See <a class="reference internal" href="../auto_examples/model_selection/plot_roc.html#sphx-glr-auto-examples-model-selection-plot-roc-py"><span class="std std-ref">Receiver Operating Characteristic (ROC)</span></a>
+<li><p>See <a class="reference internal" href="../auto_examples/model_selection/plot_roc.html#sphx-glr-auto-examples-model-selection-plot-roc-py"><span class="std std-ref">Multiclass Receiver Operating Characteristic (ROC)</span></a>
 for an example of using ROC to
 evaluate the quality of the output of a classifier.</p></li>
 <li><p>See <a class="reference internal" href="../auto_examples/model_selection/plot_roc_crossval.html#sphx-glr-auto-examples-model-selection-plot-roc-crossval-py"><span class="std std-ref">Receiver Operating Characteristic (ROC) with cross validation</span></a>

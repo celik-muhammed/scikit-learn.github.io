@@ -205,6 +205,7 @@
 <li><a class="reference internal" href="#estimator-tags">Estimator Tags</a></li>
 </ul>
 </li>
+<li><a class="reference internal" href="#developer-api-for-set-output">Developer API for <code class="docutils literal notranslate"><span class="pre">set_output</span></code></a></li>
 <li><a class="reference internal" href="#coding-guidelines">Coding guidelines</a><ul>
 <li><a class="reference internal" href="#input-validation">Input validation</a></li>
 <li><a class="reference internal" href="#random-numbers">Random Numbers</a></li>
@@ -801,6 +802,31 @@ instantiated with an instance of <code class="docutils literal notranslate"><spa
 of these two models is somewhat idiosyncratic but both should provide robust
 closed-form solutions.</p>
 </section>
+</section>
+<section id="developer-api-for-set-output">
+<span id="developer-api-set-output"></span><h2>Developer API for <code class="docutils literal notranslate"><span class="pre">set_output</span></code><a class="headerlink" href="#developer-api-for-set-output" title="Permalink to this heading">¶</a></h2>
+<p>With
+<a class="reference external" href="https://scikit-learn-enhancement-proposals.readthedocs.io/en/latest/slep018/proposal.html">SLEP018</a>,
+scikit-learn introduces the <code class="docutils literal notranslate"><span class="pre">set_output</span></code> API for configuring transformers to
+output pandas DataFrames. The <code class="docutils literal notranslate"><span class="pre">set_output</span></code> API is automatically defined if the
+transformer defines <a class="reference internal" href="../glossary.html#term-get_feature_names_out"><span class="xref std std-term">get_feature_names_out</span></a> and subclasses
+<a class="reference internal" href="../modules/generated/sklearn.base.TransformerMixin.html#sklearn.base.TransformerMixin" title="sklearn.base.TransformerMixin"><code class="xref py py-class docutils literal notranslate"><span class="pre">base.TransformerMixin</span></code></a>. <a class="reference internal" href="../glossary.html#term-get_feature_names_out"><span class="xref std std-term">get_feature_names_out</span></a> is used to get the
+column names of pandas output. You can opt-out of the <code class="docutils literal notranslate"><span class="pre">set_output</span></code> API by
+setting <code class="docutils literal notranslate"><span class="pre">auto_wrap_output_keys=None</span></code> when defining a custom subclass:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">MyTransformer</span><span class="p">(</span><span class="n">TransformerMixin</span><span class="p">,</span> <span class="n">BaseEstimator</span><span class="p">,</span> <span class="n">auto_wrap_output_keys</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+
+    <span class="k">def</span> <span class="nf">fit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span>
+    <span class="k">def</span> <span class="nf">transform</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">X</span>
+    <span class="k">def</span> <span class="nf">get_feature_names_out</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">input_features</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="o">...</span>
+</pre></div>
+</div>
+<p>For transformers that return multiple arrays in <code class="docutils literal notranslate"><span class="pre">transform</span></code>, auto wrapping will
+only wrap the first array and not alter the other arrays.</p>
+<p>See <a class="reference internal" href="../auto_examples/miscellaneous/plot_set_output.html#sphx-glr-auto-examples-miscellaneous-plot-set-output-py"><span class="std std-ref">Introducing the set_output API</span></a>
+for an example on how to use the API.</p>
 </section>
 <section id="coding-guidelines">
 <span id="id4"></span><h2>Coding guidelines<a class="headerlink" href="#coding-guidelines" title="Permalink to this heading">¶</a></h2>
