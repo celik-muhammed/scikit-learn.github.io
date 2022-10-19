@@ -503,9 +503,14 @@ memory alignment, direct blas calls…</p>
 </ul>
 <section id="using-openmp">
 <h3>Using OpenMP<a class="headerlink" href="#using-openmp" title="Permalink to this heading">¶</a></h3>
-<p>Since scikit-learn can be built without OpenMP, it’s necessary to
-protect each direct call to OpenMP. This can be done using the following
-syntax:</p>
+<p>Since scikit-learn can be built without OpenMP, it’s necessary to protect each
+direct call to OpenMP.</p>
+<p>There are some helpers in
+[sklearn/utils/_openmp_helpers.pyx](<a class="reference external" href="https://github.com/scikit-learn/scikit-learn/blob/main/sklearn/utils/_openmp_helpers.pyx">https://github.com/scikit-learn/scikit-learn/blob/main/sklearn/utils/_openmp_helpers.pyx</a>)
+that you can reuse for the main useful functionalities and already have the
+necessary protection to be built without OpenMP.</p>
+<p>If the helpers are not enough, you need to protect your OpenMP code using the
+following syntax:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># importing OpenMP</span>
 <span class="n">IF</span> <span class="n">SKLEARN_OPENMP_PARALLELISM_ENABLED</span><span class="p">:</span>
     <span class="n">cimport</span> <span class="n">openmp</span>
