@@ -510,7 +510,11 @@ necessary to perform standard feature transformations as follows:</p>
 <span class="n">linear_model_preprocessor</span> <span class="o">=</span> <a href="../../modules/generated/sklearn.compose.ColumnTransformer.html#sklearn.compose.ColumnTransformer" title="sklearn.compose.ColumnTransformer" class="sphx-glr-backref-module-sklearn-compose sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">ColumnTransformer</span></a><span class="p">(</span>
     <span class="p">[</span>
         <span class="p">(</span><span class="s2">&quot;passthrough_numeric&quot;</span><span class="p">,</span> <span class="s2">&quot;passthrough&quot;</span><span class="p">,</span> <span class="p">[</span><span class="s2">&quot;BonusMalus&quot;</span><span class="p">]),</span>
-        <span class="p">(</span><span class="s2">&quot;binned_numeric&quot;</span><span class="p">,</span> <a href="../../modules/generated/sklearn.preprocessing.KBinsDiscretizer.html#sklearn.preprocessing.KBinsDiscretizer" title="sklearn.preprocessing.KBinsDiscretizer" class="sphx-glr-backref-module-sklearn-preprocessing sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">KBinsDiscretizer</span></a><span class="p">(</span><span class="n">n_bins</span><span class="o">=</span><span class="mi">10</span><span class="p">),</span> <span class="p">[</span><span class="s2">&quot;VehAge&quot;</span><span class="p">,</span> <span class="s2">&quot;DrivAge&quot;</span><span class="p">]),</span>
+        <span class="p">(</span>
+            <span class="s2">&quot;binned_numeric&quot;</span><span class="p">,</span>
+            <a href="../../modules/generated/sklearn.preprocessing.KBinsDiscretizer.html#sklearn.preprocessing.KBinsDiscretizer" title="sklearn.preprocessing.KBinsDiscretizer" class="sphx-glr-backref-module-sklearn-preprocessing sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">KBinsDiscretizer</span></a><span class="p">(</span><span class="n">n_bins</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">subsample</span><span class="o">=</span><span class="nb">int</span><span class="p">(</span><span class="mf">2e5</span><span class="p">),</span> <span class="n">random_state</span><span class="o">=</span><span class="mi">0</span><span class="p">),</span>
+            <span class="p">[</span><span class="s2">&quot;VehAge&quot;</span><span class="p">,</span> <span class="s2">&quot;DrivAge&quot;</span><span class="p">],</span>
+        <span class="p">),</span>
         <span class="p">(</span><span class="s2">&quot;log_scaled_numeric&quot;</span><span class="p">,</span> <span class="n">log_scale_transformer</span><span class="p">,</span> <span class="p">[</span><span class="s2">&quot;Density&quot;</span><span class="p">]),</span>
         <span class="p">(</span>
             <span class="s2">&quot;onehot_categorical&quot;</span><span class="p">,</span>
@@ -544,11 +548,6 @@ the training sample.</p>
         <span class="p">(</span><span class="s2">&quot;regressor&quot;</span><span class="p">,</span> <a href="../../modules/generated/sklearn.dummy.DummyRegressor.html#sklearn.dummy.DummyRegressor" title="sklearn.dummy.DummyRegressor" class="sphx-glr-backref-module-sklearn-dummy sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">DummyRegressor</span></a><span class="p">(</span><span class="n">strategy</span><span class="o">=</span><span class="s2">&quot;mean&quot;</span><span class="p">)),</span>
     <span class="p">]</span>
 <span class="p">)</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">df_train</span><span class="p">,</span> <span class="n">df_train</span><span class="p">[</span><span class="s2">&quot;Frequency&quot;</span><span class="p">],</span> <span class="n">regressor__sample_weight</span><span class="o">=</span><span class="n">df_train</span><span class="p">[</span><span class="s2">&quot;Exposure&quot;</span><span class="p">])</span>
-</pre></div>
-</div>
-<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>/home/runner/work/scikit-learn/scikit-learn/sklearn/preprocessing/_discretization.py:216: FutureWarning:
-
-In version 1.3 onwards, subsample=2e5 will be used by default. Set subsample explicitly to silence this warning in the mean time. Set subsample=None to disable subsampling explicitly.
 </pre></div>
 </div>
 <p>Let’s compute the performance of this constant prediction baseline with 3
@@ -624,11 +623,6 @@ on such a large dataset.</p>
 <span class="p">)</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">df_train</span><span class="p">,</span> <span class="n">df_train</span><span class="p">[</span><span class="s2">&quot;Frequency&quot;</span><span class="p">],</span> <span class="n">regressor__sample_weight</span><span class="o">=</span><span class="n">df_train</span><span class="p">[</span><span class="s2">&quot;Exposure&quot;</span><span class="p">])</span>
 </pre></div>
 </div>
-<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>/home/runner/work/scikit-learn/scikit-learn/sklearn/preprocessing/_discretization.py:216: FutureWarning:
-
-In version 1.3 onwards, subsample=2e5 will be used by default. Set subsample explicitly to silence this warning in the mean time. Set subsample=None to disable subsampling explicitly.
-</pre></div>
-</div>
 <p>The Poisson deviance cannot be computed on non-positive values predicted by
 the model. For models that do return a few non-positive predictions (e.g.
 <a class="reference internal" href="../../modules/generated/sklearn.linear_model.Ridge.html#sklearn.linear_model.Ridge" title="sklearn.linear_model.Ridge"><code class="xref py py-class docutils literal notranslate"><span class="pre">Ridge</span></code></a>) we ignore the corresponding samples,
@@ -662,7 +656,7 @@ vanilla linear model as is the case for Ridge regression.</p>
 <span class="n">poisson_glm</span> <span class="o">=</span> <a href="../../modules/generated/sklearn.pipeline.Pipeline.html#sklearn.pipeline.Pipeline" title="sklearn.pipeline.Pipeline" class="sphx-glr-backref-module-sklearn-pipeline sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">Pipeline</span></a><span class="p">(</span>
     <span class="p">[</span>
         <span class="p">(</span><span class="s2">&quot;preprocessor&quot;</span><span class="p">,</span> <span class="n">linear_model_preprocessor</span><span class="p">),</span>
-        <span class="p">(</span><span class="s2">&quot;regressor&quot;</span><span class="p">,</span> <a href="../../modules/generated/sklearn.linear_model.PoissonRegressor.html#sklearn.linear_model.PoissonRegressor" title="sklearn.linear_model.PoissonRegressor" class="sphx-glr-backref-module-sklearn-linear_model sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">PoissonRegressor</span></a><span class="p">(</span><span class="n">alpha</span><span class="o">=</span><span class="mf">1e-12</span><span class="p">,</span> <span class="n">max_iter</span><span class="o">=</span><span class="mi">300</span><span class="p">)),</span>
+        <span class="p">(</span><span class="s2">&quot;regressor&quot;</span><span class="p">,</span> <a href="../../modules/generated/sklearn.linear_model.PoissonRegressor.html#sklearn.linear_model.PoissonRegressor" title="sklearn.linear_model.PoissonRegressor" class="sphx-glr-backref-module-sklearn-linear_model sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">PoissonRegressor</span></a><span class="p">(</span><span class="n">alpha</span><span class="o">=</span><span class="mf">1e-12</span><span class="p">,</span> <span class="n">solver</span><span class="o">=</span><span class="s2">&quot;newton-cholesky&quot;</span><span class="p">)),</span>
     <span class="p">]</span>
 <span class="p">)</span>
 <span class="n">poisson_glm</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span>
@@ -673,11 +667,7 @@ vanilla linear model as is the case for Ridge regression.</p>
 <span class="n">score_estimator</span><span class="p">(</span><span class="n">poisson_glm</span><span class="p">,</span> <span class="n">df_test</span><span class="p">)</span>
 </pre></div>
 </div>
-<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>/home/runner/work/scikit-learn/scikit-learn/sklearn/preprocessing/_discretization.py:216: FutureWarning:
-
-In version 1.3 onwards, subsample=2e5 will be used by default. Set subsample explicitly to silence this warning in the mean time. Set subsample=None to disable subsampling explicitly.
-
-PoissonRegressor evaluation:
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>PoissonRegressor evaluation:
 MSE: 0.560
 MAE: 0.186
 mean Poisson deviance: 0.594
@@ -874,9 +864,9 @@ with the mean observed target:</p>
 <a href="https://matplotlib.org/stable/api/_as_gen/matplotlib.pyplot.tight_layout.html#matplotlib.pyplot.tight_layout" title="matplotlib.pyplot.tight_layout" class="sphx-glr-backref-module-matplotlib-pyplot sphx-glr-backref-type-py-function"><span class="n">plt</span><span class="o">.</span><span class="n">tight_layout</span></a><span class="p">()</span>
 </pre></div>
 </div>
-<img src="../../_images/sphx_glr_plot_poisson_regression_non_normal_loss_003.png" srcset="../../_images/sphx_glr_plot_poisson_regression_non_normal_loss_003.png" alt="Ridge(alpha=1e-06), PoissonRegressor(alpha=1e-12, max_iter=300), HistGradientBoostingRegressor(loss='poisson', max_leaf_nodes=128), DummyRegressor()" class = "sphx-glr-single-img"/><div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>Actual number of claims: 11935
+<img src="../../_images/sphx_glr_plot_poisson_regression_non_normal_loss_003.png" srcset="../../_images/sphx_glr_plot_poisson_regression_non_normal_loss_003.png" alt="Ridge(alpha=1e-06), PoissonRegressor(alpha=1e-12, solver='newton-cholesky'), HistGradientBoostingRegressor(loss='poisson', max_leaf_nodes=128), DummyRegressor()" class = "sphx-glr-single-img"/><div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>Actual number of claims: 11935
 Predicted number of claims by Ridge(alpha=1e-06): 11933.4
-Predicted number of claims by PoissonRegressor(alpha=1e-12, max_iter=300): 11937.0
+Predicted number of claims by PoissonRegressor(alpha=1e-12, solver=&#39;newton-cholesky&#39;): 11932.0
 Predicted number of claims by HistGradientBoostingRegressor(loss=&#39;poisson&#39;, max_leaf_nodes=128): 12196.1
 Predicted number of claims by DummyRegressor(): 11931.2
 </pre></div>
@@ -953,7 +943,7 @@ each model.</p>
 <span class="n">ax</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="n">loc</span><span class="o">=</span><span class="s2">&quot;upper left&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
-<img src="../../_images/sphx_glr_plot_poisson_regression_non_normal_loss_004.png" srcset="../../_images/sphx_glr_plot_poisson_regression_non_normal_loss_004.png" alt="Lorenz curves by model" class = "sphx-glr-single-img"/><div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>&lt;matplotlib.legend.Legend object at 0x7fa502840460&gt;
+<img src="../../_images/sphx_glr_plot_poisson_regression_non_normal_loss_004.png" srcset="../../_images/sphx_glr_plot_poisson_regression_non_normal_loss_004.png" alt="Lorenz curves by model" class = "sphx-glr-single-img"/><div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>&lt;matplotlib.legend.Legend object at 0x7f51d8120820&gt;
 </pre></div>
 </div>
 <p>As expected, the dummy regressor is unable to correctly rank the samples and
@@ -1003,7 +993,7 @@ Error are hard to meaningfully interpret on count values with many zeros.</p></l
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><a href="https://matplotlib.org/stable/api/_as_gen/matplotlib.pyplot.show.html#matplotlib.pyplot.show" title="matplotlib.pyplot.show" class="sphx-glr-backref-module-matplotlib-pyplot sphx-glr-backref-type-py-function"><span class="n">plt</span><span class="o">.</span><span class="n">show</span></a><span class="p">()</span>
 </pre></div>
 </div>
-<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> ( 0 minutes  30.943 seconds)</p>
+<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> ( 0 minutes  29.270 seconds)</p>
 <div class="sphx-glr-footer sphx-glr-footer-example docutils container" id="sphx-glr-download-auto-examples-linear-model-plot-poisson-regression-non-normal-loss-py">
 <div class="binder-badge docutils container">
 <a class="reference external image-reference" href="https://mybinder.org/v2/gh/scikit-learn/scikit-learn/main?urlpath=lab/tree/notebooks/auto_examples/linear_model/plot_poisson_regression_non_normal_loss.ipynb"><img alt="Launch binder" src="../../_images/binder_badge_logo21.svg" width="150px" /></a>

@@ -252,12 +252,12 @@ Third-Party Liability Claims (November 8, 2018). <a class="reference external" h
 <span class="kn">from</span> <span class="nn">sklearn.metrics</span> <span class="kn">import</span> <a href="../../modules/generated/sklearn.metrics.mean_squared_error.html#sklearn.metrics.mean_squared_error" title="sklearn.metrics.mean_squared_error" class="sphx-glr-backref-module-sklearn-metrics sphx-glr-backref-type-py-function"><span class="n">mean_squared_error</span></a>
 
 
-<span class="k">def</span> <span class="nf">load_mtpl2</span><span class="p">(</span><span class="n">n_samples</span><span class="o">=</span><span class="mi">100000</span><span class="p">):</span>
+<span class="k">def</span> <span class="nf">load_mtpl2</span><span class="p">(</span><span class="n">n_samples</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Fetch the French Motor Third-Party Liability Claims dataset.</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
-<span class="sd">    n_samples: int, default=100000</span>
+<span class="sd">    n_samples: int, default=None</span>
 <span class="sd">      number of samples to select (for faster run time). Full dataset has</span>
 <span class="sd">      678013 samples.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
@@ -409,7 +409,7 @@ containing the claim amount (<code class="docutils literal notranslate"><span cl
 <span class="kn">from</span> <span class="nn">sklearn.compose</span> <span class="kn">import</span> <a href="../../modules/generated/sklearn.compose.ColumnTransformer.html#sklearn.compose.ColumnTransformer" title="sklearn.compose.ColumnTransformer" class="sphx-glr-backref-module-sklearn-compose sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">ColumnTransformer</span></a>
 
 
-<span class="n">df</span> <span class="o">=</span> <span class="n">load_mtpl2</span><span class="p">(</span><span class="n">n_samples</span><span class="o">=</span><span class="mi">60000</span><span class="p">)</span>
+<span class="n">df</span> <span class="o">=</span> <span class="n">load_mtpl2</span><span class="p">()</span>
 
 <span class="c1"># Note: filter out claims with zero amount, as the severity model</span>
 <span class="c1"># requires strictly positive target values.</span>
@@ -427,7 +427,11 @@ containing the claim amount (<code class="docutils literal notranslate"><span cl
 
 <span class="n">column_trans</span> <span class="o">=</span> <a href="../../modules/generated/sklearn.compose.ColumnTransformer.html#sklearn.compose.ColumnTransformer" title="sklearn.compose.ColumnTransformer" class="sphx-glr-backref-module-sklearn-compose sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">ColumnTransformer</span></a><span class="p">(</span>
     <span class="p">[</span>
-        <span class="p">(</span><span class="s2">&quot;binned_numeric&quot;</span><span class="p">,</span> <a href="../../modules/generated/sklearn.preprocessing.KBinsDiscretizer.html#sklearn.preprocessing.KBinsDiscretizer" title="sklearn.preprocessing.KBinsDiscretizer" class="sphx-glr-backref-module-sklearn-preprocessing sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">KBinsDiscretizer</span></a><span class="p">(</span><span class="n">n_bins</span><span class="o">=</span><span class="mi">10</span><span class="p">),</span> <span class="p">[</span><span class="s2">&quot;VehAge&quot;</span><span class="p">,</span> <span class="s2">&quot;DrivAge&quot;</span><span class="p">]),</span>
+        <span class="p">(</span>
+            <span class="s2">&quot;binned_numeric&quot;</span><span class="p">,</span>
+            <a href="../../modules/generated/sklearn.preprocessing.KBinsDiscretizer.html#sklearn.preprocessing.KBinsDiscretizer" title="sklearn.preprocessing.KBinsDiscretizer" class="sphx-glr-backref-module-sklearn-preprocessing sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">KBinsDiscretizer</span></a><span class="p">(</span><span class="n">n_bins</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">subsample</span><span class="o">=</span><span class="nb">int</span><span class="p">(</span><span class="mf">2e5</span><span class="p">),</span> <span class="n">random_state</span><span class="o">=</span><span class="mi">0</span><span class="p">),</span>
+            <span class="p">[</span><span class="s2">&quot;VehAge&quot;</span><span class="p">,</span> <span class="s2">&quot;DrivAge&quot;</span><span class="p">],</span>
+        <span class="p">),</span>
         <span class="p">(</span>
             <span class="s2">&quot;onehot_categorical&quot;</span><span class="p">,</span>
             <a href="../../modules/generated/sklearn.preprocessing.OneHotEncoder.html#sklearn.preprocessing.OneHotEncoder" title="sklearn.preprocessing.OneHotEncoder" class="sphx-glr-backref-module-sklearn-preprocessing sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">OneHotEncoder</span></a><span class="p">(),</span>
@@ -454,11 +458,7 @@ containing the claim amount (<code class="docutils literal notranslate"><span cl
     <span class="nb">print</span><span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="n">df</span><span class="o">.</span><span class="n">ClaimAmount</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">head</span><span class="p">())</span>
 </pre></div>
 </div>
-<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>/home/runner/work/scikit-learn/scikit-learn/sklearn/preprocessing/_discretization.py:279: UserWarning:
-
-Bins whose width are too small (i.e., &lt;= 1e-8) in feature 0 are removed. Consider decreasing the number of bins.
-
-       ClaimNb  Exposure Area  VehPower  VehAge  DrivAge  BonusMalus VehBrand  \
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>       ClaimNb  Exposure Area  VehPower  VehAge  DrivAge  BonusMalus VehBrand  \
 IDpol
 139          1      0.75    F         7       1       61          50      B12
 190          1      0.14    B        12       5       50          60      B12
@@ -497,11 +497,30 @@ Here we model the frequency <code class="docutils literal notranslate"><span cla
 
 
 <span class="n">df_train</span><span class="p">,</span> <span class="n">df_test</span><span class="p">,</span> <span class="n">X_train</span><span class="p">,</span> <span class="n">X_test</span> <span class="o">=</span> <a href="../../modules/generated/sklearn.model_selection.train_test_split.html#sklearn.model_selection.train_test_split" title="sklearn.model_selection.train_test_split" class="sphx-glr-backref-module-sklearn-model_selection sphx-glr-backref-type-py-function"><span class="n">train_test_split</span></a><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
-
-<span class="c1"># The parameters of the model are estimated by minimizing the Poisson deviance</span>
-<span class="c1"># on the training set via a quasi-Newton solver: l-BFGS. Some of the features</span>
-<span class="c1"># are collinear, we use a weak penalization to avoid numerical issues.</span>
-<span class="n">glm_freq</span> <span class="o">=</span> <a href="../../modules/generated/sklearn.linear_model.PoissonRegressor.html#sklearn.linear_model.PoissonRegressor" title="sklearn.linear_model.PoissonRegressor" class="sphx-glr-backref-module-sklearn-linear_model sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">PoissonRegressor</span></a><span class="p">(</span><span class="n">alpha</span><span class="o">=</span><span class="mf">1e-3</span><span class="p">,</span> <span class="n">max_iter</span><span class="o">=</span><span class="mi">400</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Let us keep in mind that despite the seemingly large number of data points in
+this dataset, the number of evaluation points where the claim amount is
+non-zero is quite small:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="nb">len</span><span class="p">(</span><span class="n">df_test</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>169504
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="nb">len</span><span class="p">(</span><span class="n">df_test</span><span class="p">[</span><span class="n">df_test</span><span class="p">[</span><span class="s2">&quot;ClaimAmount&quot;</span><span class="p">]</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">])</span>
+</pre></div>
+</div>
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>6237
+</pre></div>
+</div>
+<p>As a consequence, we expect a significant variability in our
+evaluation upon random resampling of the train test split.</p>
+<p>The parameters of the model are estimated by minimizing the Poisson deviance
+on the training set via a Newton solver. Some of the features are collinear
+(e.g. because we did not drop any categorical level in the <code class="docutils literal notranslate"><span class="pre">OneHotEncoder</span></code>),
+we use a weak L2 penalization to avoid numerical issues.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">glm_freq</span> <span class="o">=</span> <a href="../../modules/generated/sklearn.linear_model.PoissonRegressor.html#sklearn.linear_model.PoissonRegressor" title="sklearn.linear_model.PoissonRegressor" class="sphx-glr-backref-module-sklearn-linear_model sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">PoissonRegressor</span></a><span class="p">(</span><span class="n">alpha</span><span class="o">=</span><span class="mf">1e-4</span><span class="p">,</span> <span class="n">solver</span><span class="o">=</span><span class="s2">&quot;newton-cholesky&quot;</span><span class="p">)</span>
 <span class="n">glm_freq</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X_train</span><span class="p">,</span> <span class="n">df_train</span><span class="p">[</span><span class="s2">&quot;Frequency&quot;</span><span class="p">],</span> <span class="n">sample_weight</span><span class="o">=</span><span class="n">df_train</span><span class="p">[</span><span class="s2">&quot;Exposure&quot;</span><span class="p">])</span>
 
 <span class="n">scores</span> <span class="o">=</span> <span class="n">score_estimator</span><span class="p">(</span>
@@ -520,11 +539,15 @@ Here we model the frequency <code class="docutils literal notranslate"><span cla
 <div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>Evaluation of PoissonRegressor on target Frequency
 subset               train    test
 metric
-D² explained        0.0242  0.0214
-mean abs. error     0.1706  0.1661
-mean squared error  0.3041  0.3043
+D² explained        0.0201  0.0219
+mean abs. error     0.1379  0.1378
+mean squared error  0.2441  0.2246
 </pre></div>
 </div>
+<p>Note that the score measured on the test set is surprisingly better than on
+the training set. This might be specific to this random train-test split.
+Proper cross-validation could help us to assess the sampling variability of
+these results.</p>
 <p>We can visually compare observed and predicted values, aggregated by the
 drivers age (<code class="docutils literal notranslate"><span class="pre">DrivAge</span></code>), vehicle age (<code class="docutils literal notranslate"><span class="pre">VehAge</span></code>) and the insurance
 bonus/malus (<code class="docutils literal notranslate"><span class="pre">BonusMalus</span></code>).</p>
@@ -602,7 +625,7 @@ more than one claim.</p></li>
 <span class="n">mask_train</span> <span class="o">=</span> <span class="n">df_train</span><span class="p">[</span><span class="s2">&quot;ClaimAmount&quot;</span><span class="p">]</span> <span class="o">&gt;</span> <span class="mi">0</span>
 <span class="n">mask_test</span> <span class="o">=</span> <span class="n">df_test</span><span class="p">[</span><span class="s2">&quot;ClaimAmount&quot;</span><span class="p">]</span> <span class="o">&gt;</span> <span class="mi">0</span>
 
-<span class="n">glm_sev</span> <span class="o">=</span> <a href="../../modules/generated/sklearn.linear_model.GammaRegressor.html#sklearn.linear_model.GammaRegressor" title="sklearn.linear_model.GammaRegressor" class="sphx-glr-backref-module-sklearn-linear_model sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">GammaRegressor</span></a><span class="p">(</span><span class="n">alpha</span><span class="o">=</span><span class="mf">10.0</span><span class="p">,</span> <span class="n">max_iter</span><span class="o">=</span><span class="mi">10000</span><span class="p">)</span>
+<span class="n">glm_sev</span> <span class="o">=</span> <a href="../../modules/generated/sklearn.linear_model.GammaRegressor.html#sklearn.linear_model.GammaRegressor" title="sklearn.linear_model.GammaRegressor" class="sphx-glr-backref-module-sklearn-linear_model sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">GammaRegressor</span></a><span class="p">(</span><span class="n">alpha</span><span class="o">=</span><span class="mf">10.0</span><span class="p">,</span> <span class="n">solver</span><span class="o">=</span><span class="s2">&quot;newton-cholesky&quot;</span><span class="p">)</span>
 
 <span class="n">glm_sev</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span>
     <span class="n">X_train</span><span class="p">[</span><span class="n">mask_train</span><span class="o">.</span><span class="n">values</span><span class="p">],</span>
@@ -626,17 +649,53 @@ more than one claim.</p></li>
 <div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>Evaluation of GammaRegressor on target AvgClaimAmount
 subset                     train          test
 metric
-D² explained        3.000000e-03 -9.600000e-03
-mean abs. error     1.699197e+03  2.027923e+03
-mean squared error  4.548147e+07  6.094863e+07
+D² explained        2.400000e-03  2.700000e-03
+mean abs. error     1.756746e+03  1.744042e+03
+mean squared error  5.801770e+07  5.030677e+07
 </pre></div>
 </div>
-<p>Here, the scores for the test data call for caution as they are
-significantly worse than for the training data indicating an overfit despite
-the strong regularization.</p>
-<p>Note that the resulting model is the average claim amount per claim. As
-such, it is conditional on having at least one claim, and cannot be used to
-predict the average claim amount per policy in general.</p>
+<p>Those values of the metrics are not necessarily easy to interpret. It can be
+insightful to compare them with a model that does not use any input
+features and always predicts a constant value, i.e. the average claim
+amount, in the same setting:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">sklearn.dummy</span> <span class="kn">import</span> <a href="../../modules/generated/sklearn.dummy.DummyRegressor.html#sklearn.dummy.DummyRegressor" title="sklearn.dummy.DummyRegressor" class="sphx-glr-backref-module-sklearn-dummy sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">DummyRegressor</span></a>
+
+<span class="n">dummy_sev</span> <span class="o">=</span> <a href="../../modules/generated/sklearn.dummy.DummyRegressor.html#sklearn.dummy.DummyRegressor" title="sklearn.dummy.DummyRegressor" class="sphx-glr-backref-module-sklearn-dummy sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">DummyRegressor</span></a><span class="p">(</span><span class="n">strategy</span><span class="o">=</span><span class="s2">&quot;mean&quot;</span><span class="p">)</span>
+<span class="n">dummy_sev</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span>
+    <span class="n">X_train</span><span class="p">[</span><span class="n">mask_train</span><span class="o">.</span><span class="n">values</span><span class="p">],</span>
+    <span class="n">df_train</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">mask_train</span><span class="p">,</span> <span class="s2">&quot;AvgClaimAmount&quot;</span><span class="p">],</span>
+    <span class="n">sample_weight</span><span class="o">=</span><span class="n">df_train</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">mask_train</span><span class="p">,</span> <span class="s2">&quot;ClaimNb&quot;</span><span class="p">],</span>
+<span class="p">)</span>
+
+<span class="n">scores</span> <span class="o">=</span> <span class="n">score_estimator</span><span class="p">(</span>
+    <span class="n">dummy_sev</span><span class="p">,</span>
+    <span class="n">X_train</span><span class="p">[</span><span class="n">mask_train</span><span class="o">.</span><span class="n">values</span><span class="p">],</span>
+    <span class="n">X_test</span><span class="p">[</span><span class="n">mask_test</span><span class="o">.</span><span class="n">values</span><span class="p">],</span>
+    <span class="n">df_train</span><span class="p">[</span><span class="n">mask_train</span><span class="p">],</span>
+    <span class="n">df_test</span><span class="p">[</span><span class="n">mask_test</span><span class="p">],</span>
+    <span class="n">target</span><span class="o">=</span><span class="s2">&quot;AvgClaimAmount&quot;</span><span class="p">,</span>
+    <span class="n">weights</span><span class="o">=</span><span class="s2">&quot;ClaimNb&quot;</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Evaluation of a mean predictor on target AvgClaimAmount&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">scores</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>Evaluation of a mean predictor on target AvgClaimAmount
+subset                     train          test
+metric
+D² explained        0.000000e+00 -0.000000e+00
+mean abs. error     1.756687e+03  1.744497e+03
+mean squared error  5.803882e+07  5.033764e+07
+</pre></div>
+</div>
+<p>We conclude that the claim amount is very challenging to predict. Still, the
+<code class="xref py py-class docutils literal notranslate"><span class="pre">GammaRegressor</span></code> is able to leverage some information
+from the input features to slighly improve upon the mean baseline in terms
+of D².</p>
+<p>Note that the resulting model is the average claim amount per claim. As such,
+it is conditional on having at least one claim, and cannot be used to predict
+the average claim amount per policy. For this, it needs to be combined with
+a claims frequency model.</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="nb">print</span><span class="p">(</span>
     <span class="s2">&quot;Mean AvgClaim Amount per policy:              </span><span class="si">%.2f</span><span class="s2"> &quot;</span>
     <span class="o">%</span> <span class="n">df_train</span><span class="p">[</span><span class="s2">&quot;AvgClaimAmount&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span>
@@ -649,11 +708,16 @@ predict the average claim amount per policy in general.</p>
     <span class="s2">&quot;Predicted Mean AvgClaim Amount | NbClaim &gt; 0: </span><span class="si">%.2f</span><span class="s2">&quot;</span>
     <span class="o">%</span> <span class="n">glm_sev</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">X_train</span><span class="p">)</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span>
 <span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span>
+    <span class="s2">&quot;Predicted Mean AvgClaim Amount (dummy) | NbClaim &gt; 0: </span><span class="si">%.2f</span><span class="s2">&quot;</span>
+    <span class="o">%</span> <span class="n">dummy_sev</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">X_train</span><span class="p">)</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span>
+<span class="p">)</span>
 </pre></div>
 </div>
-<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>Mean AvgClaim Amount per policy:              97.89
-Mean AvgClaim Amount | NbClaim &gt; 0:           1899.60
-Predicted Mean AvgClaim Amount | NbClaim &gt; 0: 1884.40
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>Mean AvgClaim Amount per policy:              71.78
+Mean AvgClaim Amount | NbClaim &gt; 0:           1951.21
+Predicted Mean AvgClaim Amount | NbClaim &gt; 0: 1940.95
+Predicted Mean AvgClaim Amount (dummy) | NbClaim &gt; 0: 1978.59
 </pre></div>
 </div>
 <p>We can visually compare observed and predicted values, aggregated for
@@ -715,7 +779,7 @@ regardless of <code class="docutils literal notranslate"><span class="pre">power
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">sklearn.linear_model</span> <span class="kn">import</span> <a href="../../modules/generated/sklearn.linear_model.TweedieRegressor.html#sklearn.linear_model.TweedieRegressor" title="sklearn.linear_model.TweedieRegressor" class="sphx-glr-backref-module-sklearn-linear_model sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">TweedieRegressor</span></a>
 
 
-<span class="n">glm_pure_premium</span> <span class="o">=</span> <a href="../../modules/generated/sklearn.linear_model.TweedieRegressor.html#sklearn.linear_model.TweedieRegressor" title="sklearn.linear_model.TweedieRegressor" class="sphx-glr-backref-module-sklearn-linear_model sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">TweedieRegressor</span></a><span class="p">(</span><span class="n">power</span><span class="o">=</span><span class="mf">1.9</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.1</span><span class="p">,</span> <span class="n">max_iter</span><span class="o">=</span><span class="mi">10000</span><span class="p">)</span>
+<span class="n">glm_pure_premium</span> <span class="o">=</span> <a href="../../modules/generated/sklearn.linear_model.TweedieRegressor.html#sklearn.linear_model.TweedieRegressor" title="sklearn.linear_model.TweedieRegressor" class="sphx-glr-backref-module-sklearn-linear_model sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">TweedieRegressor</span></a><span class="p">(</span><span class="n">power</span><span class="o">=</span><span class="mf">1.9</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.1</span><span class="p">,</span> <span class="n">solver</span><span class="o">=</span><span class="s2">&quot;newton-cholesky&quot;</span><span class="p">)</span>
 <span class="n">glm_pure_premium</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span>
     <span class="n">X_train</span><span class="p">,</span> <span class="n">df_train</span><span class="p">[</span><span class="s2">&quot;PurePremium&quot;</span><span class="p">],</span> <span class="n">sample_weight</span><span class="o">=</span><span class="n">df_train</span><span class="p">[</span><span class="s2">&quot;Exposure&quot;</span><span class="p">]</span>
 <span class="p">)</span>
@@ -759,16 +823,16 @@ regardless of <code class="docutils literal notranslate"><span class="pre">power
                           Product Model               TweedieRegressor
 subset                            train          test            train          test
 metric
-D² explained                        NaN           NaN     2.650000e-02  2.580000e-02
-mean Tweedie dev p=1.5000  8.216730e+01  8.640830e+01     7.960810e+01  8.618800e+01
-mean Tweedie dev p=1.7000  3.833290e+01  3.920670e+01     3.737390e+01  3.917490e+01
-mean Tweedie dev p=1.8000  3.106640e+01  3.148900e+01     3.047900e+01  3.148150e+01
-mean Tweedie dev p=1.9000  3.396080e+01  3.420700e+01     3.360070e+01  3.420840e+01
-mean Tweedie dev p=1.9900  1.989232e+02  1.996426e+02     1.986911e+02  1.996462e+02
-mean Tweedie dev p=1.9990  1.886428e+03  1.892749e+03     1.886206e+03  1.892753e+03
-mean Tweedie dev p=1.9999  1.876452e+04  1.882692e+04     1.876430e+04  1.882692e+04
-mean abs. error            3.246568e+02  3.469359e+02     3.202462e+02  3.397027e+02
-mean squared error         1.469184e+08  3.325903e+07     1.469327e+08  3.325470e+07
+D² explained                        NaN           NaN     1.690000e-02  1.420000e-02
+mean Tweedie dev p=1.5000  7.669930e+01  7.617050e+01     7.640770e+01  7.640880e+01
+mean Tweedie dev p=1.7000  3.695740e+01  3.683980e+01     3.682880e+01  3.692270e+01
+mean Tweedie dev p=1.8000  3.046010e+01  3.040530e+01     3.037600e+01  3.045390e+01
+mean Tweedie dev p=1.9000  3.387580e+01  3.385000e+01     3.382120e+01  3.387830e+01
+mean Tweedie dev p=1.9900  2.015716e+02  2.015414e+02     2.015347e+02  2.015587e+02
+mean Tweedie dev p=1.9990  1.914573e+03  1.914370e+03     1.914538e+03  1.914387e+03
+mean Tweedie dev p=1.9999  1.904751e+04  1.904556e+04     1.904747e+04  1.904558e+04
+mean abs. error            2.730119e+02  2.722128e+02     2.739865e+02  2.731249e+02
+mean squared error         3.295040e+07  3.212197e+07     3.295505e+07  3.213056e+07
 </pre></div>
 </div>
 <p>In this example, both modeling approaches yield comparable performance
@@ -800,9 +864,9 @@ behavior depends on the amount of regularization).</p>
 </pre></div>
 </div>
 <div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>subset                                      train          test
-observed                             4.577616e+06  1.725665e+06
-predicted, frequency*severity model  4.564861e+06  1.495183e+06
-predicted, tweedie, power=1.90       4.451556e+06  1.431967e+06
+observed                             3.917618e+07  1.299546e+07
+predicted, frequency*severity model  3.916555e+07  1.313276e+07
+predicted, tweedie, power=1.90       3.951751e+07  1.325198e+07
 </pre></div>
 </div>
 <p>Finally, we can compare the two models using a plot of cumulated claims: for
@@ -885,7 +949,7 @@ of models, each with its own set of hyperparameters.</p>
 <img src="../../_images/sphx_glr_plot_tweedie_regression_insurance_claims_003.png" srcset="../../_images/sphx_glr_plot_tweedie_regression_insurance_claims_003.png" alt="Lorenz Curves" class = "sphx-glr-single-img"/><div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>[]
 </pre></div>
 </div>
-<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> ( 0 minutes  6.917 seconds)</p>
+<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> ( 0 minutes  13.165 seconds)</p>
 <div class="sphx-glr-footer sphx-glr-footer-example docutils container" id="sphx-glr-download-auto-examples-linear-model-plot-tweedie-regression-insurance-claims-py">
 <div class="binder-badge docutils container">
 <a class="reference external image-reference" href="https://mybinder.org/v2/gh/scikit-learn/scikit-learn/main?urlpath=lab/tree/notebooks/auto_examples/linear_model/plot_tweedie_regression_insurance_claims.ipynb"><img alt="Launch binder" src="../../_images/binder_badge_logo21.svg" width="150px" /></a>
