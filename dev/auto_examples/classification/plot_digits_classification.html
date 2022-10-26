@@ -324,7 +324,48 @@ true digit values and the predicted digit values.</p>
  [ 0  0  0  1  0  1  0  0  0 90]]
 </pre></div>
 </div>
-<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> ( 0 minutes  0.447 seconds)</p>
+<p>If the results from evaluating a classifier are stored in the form of a
+<a class="reference internal" href="../../modules/model_evaluation.html#confusion-matrix"><span class="std std-ref">confusion matrix</span></a> and not in terms of <code class="docutils literal notranslate"><span class="pre">y_true</span></code> and
+<code class="docutils literal notranslate"><span class="pre">y_pred</span></code>, one can still build a <a class="reference internal" href="../../modules/generated/sklearn.metrics.classification_report.html#sklearn.metrics.classification_report" title="sklearn.metrics.classification_report"><code class="xref py py-func docutils literal notranslate"><span class="pre">classification_report</span></code></a>
+as follows:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># The ground truth and predicted lists</span>
+<span class="n">y_true</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="n">y_pred</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="n">cm</span> <span class="o">=</span> <span class="n">disp</span><span class="o">.</span><span class="n">confusion_matrix</span>
+
+<span class="c1"># For each cell in the confusion matrix, add the corresponding ground truths</span>
+<span class="c1"># and predictions to the lists</span>
+<span class="k">for</span> <span class="n">gt</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">cm</span><span class="p">)):</span>
+    <span class="k">for</span> <span class="n">pred</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">cm</span><span class="p">)):</span>
+        <span class="n">y_true</span> <span class="o">+=</span> <span class="p">[</span><span class="n">gt</span><span class="p">]</span> <span class="o">*</span> <span class="n">cm</span><span class="p">[</span><span class="n">gt</span><span class="p">][</span><span class="n">pred</span><span class="p">]</span>
+        <span class="n">y_pred</span> <span class="o">+=</span> <span class="p">[</span><span class="n">pred</span><span class="p">]</span> <span class="o">*</span> <span class="n">cm</span><span class="p">[</span><span class="n">gt</span><span class="p">][</span><span class="n">pred</span><span class="p">]</span>
+
+<span class="nb">print</span><span class="p">(</span>
+    <span class="s2">&quot;Classification report rebuilt from confusion matrix:</span><span class="se">\n</span><span class="s2">&quot;</span>
+    <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><a href="../../modules/generated/sklearn.metrics.classification_report.html#sklearn.metrics.classification_report" title="sklearn.metrics.classification_report" class="sphx-glr-backref-module-sklearn-metrics sphx-glr-backref-type-py-function"><span class="n">metrics</span><span class="o">.</span><span class="n">classification_report</span></a><span class="p">(</span><span class="n">y_true</span><span class="p">,</span> <span class="n">y_pred</span><span class="p">)</span><span class="si">}</span><span class="se">\n</span><span class="s2">&quot;</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>Classification report rebuilt from confusion matrix:
+              precision    recall  f1-score   support
+
+           0       1.00      0.99      0.99        88
+           1       0.99      0.97      0.98        91
+           2       0.99      0.99      0.99        86
+           3       0.98      0.87      0.92        91
+           4       0.99      0.96      0.97        92
+           5       0.95      0.97      0.96        91
+           6       0.99      0.99      0.99        91
+           7       0.96      0.99      0.97        89
+           8       0.94      1.00      0.97        88
+           9       0.93      0.98      0.95        92
+
+    accuracy                           0.97       899
+   macro avg       0.97      0.97      0.97       899
+weighted avg       0.97      0.97      0.97       899
+</pre></div>
+</div>
+<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> ( 0 minutes  0.448 seconds)</p>
 <div class="sphx-glr-footer sphx-glr-footer-example docutils container" id="sphx-glr-download-auto-examples-classification-plot-digits-classification-py">
 <div class="binder-badge docutils container">
 <a class="reference external image-reference" href="https://mybinder.org/v2/gh/scikit-learn/scikit-learn/main?urlpath=lab/tree/notebooks/auto_examples/classification/plot_digits_classification.ipynb"><img alt="Launch binder" src="../../_images/binder_badge_logo11.svg" width="150px" /></a>

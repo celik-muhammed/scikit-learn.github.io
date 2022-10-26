@@ -213,7 +213,7 @@ the main classification metrics.
 We can also plot a :ref:`confusion matrix <confusion_matrix>` of the
 true digit values and the predicted digit values.
 
-.. GENERATED FROM PYTHON SOURCE LINES 99-105
+.. GENERATED FROM PYTHON SOURCE LINES 99-106
 
 .. code-block:: default
 
@@ -223,6 +223,7 @@ true digit values and the predicted digit values.
     print(f"Confusion matrix:\n{disp.confusion_matrix}")
 
     plt.show()
+
 
 
 
@@ -251,10 +252,70 @@ true digit values and the predicted digit values.
 
 
 
+.. GENERATED FROM PYTHON SOURCE LINES 107-111
+
+If the results from evaluating a classifier are stored in the form of a
+:ref:`confusion matrix <confusion_matrix>` and not in terms of `y_true` and
+`y_pred`, one can still build a :func:`~sklearn.metrics.classification_report`
+as follows:
+
+.. GENERATED FROM PYTHON SOURCE LINES 111-129
+
+.. code-block:: default
+
+
+
+    # The ground truth and predicted lists
+    y_true = []
+    y_pred = []
+    cm = disp.confusion_matrix
+
+    # For each cell in the confusion matrix, add the corresponding ground truths
+    # and predictions to the lists
+    for gt in range(len(cm)):
+        for pred in range(len(cm)):
+            y_true += [gt] * cm[gt][pred]
+            y_pred += [pred] * cm[gt][pred]
+
+    print(
+        "Classification report rebuilt from confusion matrix:\n"
+        f"{metrics.classification_report(y_true, y_pred)}\n"
+    )
+
+
+
+
+.. rst-class:: sphx-glr-script-out
+
+ .. code-block:: none
+
+    Classification report rebuilt from confusion matrix:
+                  precision    recall  f1-score   support
+
+               0       1.00      0.99      0.99        88
+               1       0.99      0.97      0.98        91
+               2       0.99      0.99      0.99        86
+               3       0.98      0.87      0.92        91
+               4       0.99      0.96      0.97        92
+               5       0.95      0.97      0.96        91
+               6       0.99      0.99      0.99        91
+               7       0.96      0.99      0.97        89
+               8       0.94      1.00      0.97        88
+               9       0.93      0.98      0.95        92
+
+        accuracy                           0.97       899
+       macro avg       0.97      0.97      0.97       899
+    weighted avg       0.97      0.97      0.97       899
+
+
+
+
+
+
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** ( 0 minutes  0.447 seconds)
+   **Total running time of the script:** ( 0 minutes  0.448 seconds)
 
 
 .. _sphx_glr_download_auto_examples_classification_plot_digits_classification.py:
