@@ -1085,13 +1085,16 @@ grid search with nested cross-validation.</p></li>
 <p>The <a class="reference internal" href="generated/sklearn.metrics.hamming_loss.html#sklearn.metrics.hamming_loss" title="sklearn.metrics.hamming_loss"><code class="xref py py-func docutils literal notranslate"><span class="pre">hamming_loss</span></code></a> computes the average Hamming loss or <a class="reference external" href="https://en.wikipedia.org/wiki/Hamming_distance">Hamming
 distance</a> between two sets
 of samples.</p>
-<p>If <span class="math notranslate nohighlight">\(\hat{y}_j\)</span> is the predicted value for the <span class="math notranslate nohighlight">\(j\)</span>-th label of
-a given sample, <span class="math notranslate nohighlight">\(y_j\)</span> is the corresponding true value, and
-<span class="math notranslate nohighlight">\(n_\text{labels}\)</span> is the number of classes or labels, then the
-Hamming loss <span class="math notranslate nohighlight">\(L_{Hamming}\)</span> between two samples is defined as:</p>
+<p>If <span class="math notranslate nohighlight">\(\hat{y}_{i,j}\)</span> is the predicted value for the <span class="math notranslate nohighlight">\(j\)</span>-th label of a
+given sample <span class="math notranslate nohighlight">\(i\)</span>, <span class="math notranslate nohighlight">\(y_{i,j}\)</span> is the corresponding true value,
+<span class="math notranslate nohighlight">\(n_\text{samples}\)</span> is the number of samples and <span class="math notranslate nohighlight">\(n_\text{labels}\)</span>
+is the number of labels, then the Hamming loss <span class="math notranslate nohighlight">\(L_{Hamming}\)</span> is defined
+as:</p>
 <div class="math notranslate nohighlight">
-\[L_{Hamming}(y, \hat{y}) = \frac{1}{n_\text{labels}} \sum_{j=0}^{n_\text{labels} - 1} 1(\hat{y}_j \not= y_j)\]</div>
+\[L_{Hamming}(y, \hat{y}) = \frac{1}{n_\text{samples} * n_\text{labels}} \sum_{i=0}^{n_\text{samples}-1} \sum_{j=0}^{n_\text{labels} - 1} 1(\hat{y}_{i,j} \not= y_{i,j})\]</div>
 <p>where <span class="math notranslate nohighlight">\(1(x)\)</span> is the <a class="reference external" href="https://en.wikipedia.org/wiki/Indicator_function">indicator function</a>.</p>
+<p>The equation above does not hold true in the case of multiclass classification.
+Please refer to the note below for more information.</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">sklearn.metrics</span> <span class="kn">import</span> <span class="n">hamming_loss</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">y_pred</span> <span class="o">=</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">]</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">y_true</span> <span class="o">=</span> <span class="p">[</span><span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">]</span>
@@ -1390,14 +1393,13 @@ sets <span class="math notranslate nohighlight">\(A\)</span> and <span class="ma
 <p>The <a class="reference internal" href="generated/sklearn.metrics.jaccard_score.html#sklearn.metrics.jaccard_score" title="sklearn.metrics.jaccard_score"><code class="xref py py-func docutils literal notranslate"><span class="pre">jaccard_score</span></code></a> function computes the average of <a class="reference external" href="https://en.wikipedia.org/wiki/Jaccard_index">Jaccard similarity
 coefficients</a>, also called the
 Jaccard index, between pairs of label sets.</p>
-<p>The Jaccard similarity coefficient of the <span class="math notranslate nohighlight">\(i\)</span>-th samples,
-with a ground truth label set <span class="math notranslate nohighlight">\(y_i\)</span> and predicted label set
-<span class="math notranslate nohighlight">\(\hat{y}_i\)</span>, is defined as</p>
+<p>The Jaccard similarity coefficient with a ground truth label set <span class="math notranslate nohighlight">\(y\)</span> and
+predicted label set <span class="math notranslate nohighlight">\(\hat{y}\)</span>, is defined as</p>
 <div class="math notranslate nohighlight">
-\[J(y_i, \hat{y}_i) = \frac{|y_i \cap \hat{y}_i|}{|y_i \cup \hat{y}_i|}.\]</div>
-<p><a class="reference internal" href="generated/sklearn.metrics.jaccard_score.html#sklearn.metrics.jaccard_score" title="sklearn.metrics.jaccard_score"><code class="xref py py-func docutils literal notranslate"><span class="pre">jaccard_score</span></code></a> works like <a class="reference internal" href="generated/sklearn.metrics.precision_recall_fscore_support.html#sklearn.metrics.precision_recall_fscore_support" title="sklearn.metrics.precision_recall_fscore_support"><code class="xref py py-func docutils literal notranslate"><span class="pre">precision_recall_fscore_support</span></code></a> as a
-naively set-wise measure applying natively to binary targets, and extended to
-apply to multilabel and multiclass through the use of <code class="docutils literal notranslate"><span class="pre">average</span></code> (see
+\[J(y, \hat{y}) = \frac{|y \cap \hat{y}|}{|y \cup \hat{y}|}.\]</div>
+<p>The <a class="reference internal" href="generated/sklearn.metrics.jaccard_score.html#sklearn.metrics.jaccard_score" title="sklearn.metrics.jaccard_score"><code class="xref py py-func docutils literal notranslate"><span class="pre">jaccard_score</span></code></a> (like <a class="reference internal" href="generated/sklearn.metrics.precision_recall_fscore_support.html#sklearn.metrics.precision_recall_fscore_support" title="sklearn.metrics.precision_recall_fscore_support"><code class="xref py py-func docutils literal notranslate"><span class="pre">precision_recall_fscore_support</span></code></a>) applies
+natively to binary targets. By computing it set-wise it can be extended to apply
+to multilabel and multiclass through the use of <code class="docutils literal notranslate"><span class="pre">average</span></code> (see
 <a class="reference internal" href="#average"><span class="std std-ref">above</span></a>).</p>
 <p>In the binary case:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
@@ -1444,22 +1446,28 @@ the model and the data using
 <a class="reference external" href="https://en.wikipedia.org/wiki/Hinge_loss">hinge loss</a>, a one-sided metric
 that considers only prediction errors. (Hinge
 loss is used in maximal margin classifiers such as support vector machines.)</p>
-<p>If the labels are encoded with +1 and -1,  <span class="math notranslate nohighlight">\(y\)</span>: is the true
-value, and <span class="math notranslate nohighlight">\(w\)</span> is the predicted decisions as output by
-<code class="docutils literal notranslate"><span class="pre">decision_function</span></code>, then the hinge loss is defined as:</p>
+<p>If the true label <span class="math notranslate nohighlight">\(y_i\)</span> of a binary classification task is encoded as
+<span class="math notranslate nohighlight">\(y_i=\left\{-1, +1\right\}\)</span> for every sample <span class="math notranslate nohighlight">\(i\)</span>; and <span class="math notranslate nohighlight">\(w_i\)</span>
+is the corresponding predicted decision (an array of shape (<code class="docutils literal notranslate"><span class="pre">n_samples</span></code>,) as
+output by the <code class="docutils literal notranslate"><span class="pre">decision_function</span></code> method), then the hinge loss is defined as:</p>
 <div class="math notranslate nohighlight">
-\[L_\text{Hinge}(y, w) = \max\left\{1 - wy, 0\right\} = \left|1 - wy\right|_+\]</div>
+\[L_\text{Hinge}(y, w) = \frac{1}{n_\text{samples}} \sum_{i=0}^{n_\text{samples}-1} \max\left\{1 - w_i y_i, 0\right\}\]</div>
 <p>If there are more than two labels, <a class="reference internal" href="generated/sklearn.metrics.hinge_loss.html#sklearn.metrics.hinge_loss" title="sklearn.metrics.hinge_loss"><code class="xref py py-func docutils literal notranslate"><span class="pre">hinge_loss</span></code></a> uses a multiclass variant
 due to Crammer &amp; Singer.
 <a class="reference external" href="http://jmlr.csail.mit.edu/papers/volume2/crammer01a/crammer01a.pdf">Here</a> is
 the paper describing it.</p>
-<p>If <span class="math notranslate nohighlight">\(y_w\)</span> is the predicted decision for true label and <span class="math notranslate nohighlight">\(y_t\)</span> is the
-maximum of the predicted decisions for all other labels, where predicted
-decisions are output by decision function, then multiclass hinge loss is defined
-by:</p>
+<p>In this case the predicted decision is an array of shape (<code class="docutils literal notranslate"><span class="pre">n_samples</span></code>,
+<code class="docutils literal notranslate"><span class="pre">n_labels</span></code>). If <span class="math notranslate nohighlight">\(w_{i, y_i}\)</span> is the predicted decision for the true label
+<span class="math notranslate nohighlight">\(y_i\)</span> of the <span class="math notranslate nohighlight">\(i\)</span>-th sample; and
+<span class="math notranslate nohighlight">\(\hat{w}_{i, y_i} = \max\left\{w_{i, y_j}~|~y_j \ne y_i \right\}\)</span>
+is the maximum of the
+predicted decisions for all the other labels, then the multi-class hinge loss
+is defined by:</p>
 <div class="math notranslate nohighlight">
-\[L_\text{Hinge}(y_w, y_t) = \max\left\{1 + y_t - y_w, 0\right\}\]</div>
-<p>Here a small example demonstrating the use of the <a class="reference internal" href="generated/sklearn.metrics.hinge_loss.html#sklearn.metrics.hinge_loss" title="sklearn.metrics.hinge_loss"><code class="xref py py-func docutils literal notranslate"><span class="pre">hinge_loss</span></code></a> function
+\[L_\text{Hinge}(y, w) = \frac{1}{n_\text{samples}}
+\sum_{i=0}^{n_\text{samples}-1} \max\left\{1 + \hat{w}_{i, y_i}
+- w_{i, y_i}, 0\right\}\]</div>
+<p>Here is a small example demonstrating the use of the <a class="reference internal" href="generated/sklearn.metrics.hinge_loss.html#sklearn.metrics.hinge_loss" title="sklearn.metrics.hinge_loss"><code class="xref py py-func docutils literal notranslate"><span class="pre">hinge_loss</span></code></a> function
 with a svm classifier in a binary class problem:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">sklearn</span> <span class="kn">import</span> <span class="n">svm</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">sklearn.metrics</span> <span class="kn">import</span> <span class="n">hinge_loss</span>
@@ -1975,8 +1983,9 @@ predicted subsets.  To get the count of such subsets instead, set
 the <span class="math notranslate nohighlight">\(i\)</span>-th sample and <span class="math notranslate nohighlight">\(y_i\)</span> is the corresponding true value,
 then the 0-1 loss <span class="math notranslate nohighlight">\(L_{0-1}\)</span> is defined as:</p>
 <div class="math notranslate nohighlight">
-\[L_{0-1}(y_i, \hat{y}_i) = 1(\hat{y}_i \not= y_i)\]</div>
-<p>where <span class="math notranslate nohighlight">\(1(x)\)</span> is the <a class="reference external" href="https://en.wikipedia.org/wiki/Indicator_function">indicator function</a>.</p>
+\[L_{0-1}(y, \hat{y}) = \frac{1}{n_\text{samples}} \sum_{i=0}^{n_\text{samples}-1} 1(\hat{y}_i \not= y_i)\]</div>
+<p>where <span class="math notranslate nohighlight">\(1(x)\)</span> is the <a class="reference external" href="https://en.wikipedia.org/wiki/Indicator_function">indicator function</a>. The zero one
+loss can also be computed as <span class="math notranslate nohighlight">\(zero-one loss = 1 - accuracy\)</span>.</p>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">sklearn.metrics</span> <span class="kn">import</span> <span class="n">zero_one_loss</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">y_pred</span> <span class="o">=</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">]</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">y_true</span> <span class="o">=</span> <span class="p">[</span><span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">]</span>
