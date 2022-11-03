@@ -1092,7 +1092,7 @@ for the regularization term <span class="math notranslate nohighlight">\(r(W)\)<
 <section id="solvers">
 <h3><span class="section-number">1.1.11.3. </span>Solvers<a class="headerlink" href="#solvers" title="Permalink to this heading">¶</a></h3>
 <p>The solvers implemented in the class <a class="reference internal" href="generated/sklearn.linear_model.LogisticRegression.html#sklearn.linear_model.LogisticRegression" title="sklearn.linear_model.LogisticRegression"><code class="xref py py-class docutils literal notranslate"><span class="pre">LogisticRegression</span></code></a>
-are “liblinear”, “newton-cg”, “lbfgs”, “sag” and “saga”:</p>
+are “lbfgs”, “liblinear”, “newton-cg”, “newton-cholesky”, “sag” and “saga”:</p>
 <p>The solver “liblinear” uses a coordinate descent (CD) algorithm, and relies
 on the excellent C++ <a class="reference external" href="https://www.csie.ntu.edu.tw/~cjlin/liblinear/">LIBLINEAR library</a>, which is shipped with
 scikit-learn. However, the CD algorithm implemented in liblinear cannot learn
@@ -1103,7 +1103,7 @@ trained for all classes. This happens under the hood, so
 classifiers. For <span class="math notranslate nohighlight">\(\ell_1\)</span> regularization <a class="reference internal" href="generated/sklearn.svm.l1_min_c.html#sklearn.svm.l1_min_c" title="sklearn.svm.l1_min_c"><code class="xref py py-func docutils literal notranslate"><span class="pre">sklearn.svm.l1_min_c</span></code></a> allows to
 calculate the lower bound for C in order to get a non “null” (all feature
 weights to zero) model.</p>
-<p>The “lbfgs”, “sag” and “newton-cg” solvers only support <span class="math notranslate nohighlight">\(\ell_2\)</span>
+<p>The “lbfgs”, “newton-cg” and “sag” solvers only support <span class="math notranslate nohighlight">\(\ell_2\)</span>
 regularization or no regularization, and are found to converge faster for some
 high-dimensional data. Setting <code class="docutils literal notranslate"><span class="pre">multi_class</span></code> to “multinomial” with these solvers
 learns a true multinomial logistic regression model <a class="footnote-reference brackets" href="#id32" id="id27" role="doc-noteref"><span class="fn-bracket">[</span>5<span class="fn-bracket">]</span></a>, which means that its
@@ -1120,28 +1120,38 @@ multinomial logistic regression. It is also the only solver that supports
 Broyden–Fletcher–Goldfarb–Shanno algorithm <a class="footnote-reference brackets" href="#id35" id="id30" role="doc-noteref"><span class="fn-bracket">[</span>8<span class="fn-bracket">]</span></a>, which belongs to
 quasi-Newton methods. The “lbfgs” solver is recommended for use for
 small data-sets but for larger datasets its performance suffers. <a class="footnote-reference brackets" href="#id36" id="id31" role="doc-noteref"><span class="fn-bracket">[</span>9<span class="fn-bracket">]</span></a></p>
+<p>The “newton-cholesky” solver is an exact Newton solver that calculates the hessian
+matrix and solves the resulting linear system. It is a very good choice for
+<code class="docutils literal notranslate"><span class="pre">n_samples</span></code> &gt;&gt; <code class="docutils literal notranslate"><span class="pre">n_features</span></code>, but has a few shortcomings: Only <span class="math notranslate nohighlight">\(\ell_2\)</span>
+regularization is supported. Furthermore, because the hessian matrix is explicitly
+computed, the memory usage has a quadratic dependency on <code class="docutils literal notranslate"><span class="pre">n_features</span></code> as well as on
+<code class="docutils literal notranslate"><span class="pre">n_classes</span></code>. As a consequence, only the one-vs-rest scheme is implemented for the
+multiclass case.</p>
 <p>The following table summarizes the penalties supported by each solver:</p>
 <table class="docutils align-default">
 <tbody>
 <tr class="row-odd"><td></td>
-<td colspan="5"><p><strong>Solvers</strong></p></td>
+<td colspan="7"><p><strong>Solvers</strong></p></td>
 </tr>
 <tr class="row-even"><td><p><strong>Penalties</strong></p></td>
-<td><p><strong>‘liblinear’</strong></p></td>
 <td><p><strong>‘lbfgs’</strong></p></td>
+<td colspan="2"><p><strong>‘liblinear’</strong></p></td>
 <td><p><strong>‘newton-cg’</strong></p></td>
+<td><p><strong>‘newton-cholesky’</strong></p></td>
 <td><p><strong>‘sag’</strong></p></td>
 <td><p><strong>‘saga’</strong></p></td>
 </tr>
 <tr class="row-odd"><td><p>Multinomial + L2 penalty</p></td>
+<td><p>yes</p></td>
+<td colspan="2"><p>no</p></td>
+<td><p>yes</p></td>
 <td><p>no</p></td>
-<td><p>yes</p></td>
-<td><p>yes</p></td>
 <td><p>yes</p></td>
 <td><p>yes</p></td>
 </tr>
 <tr class="row-even"><td><p>OVR + L2 penalty</p></td>
 <td><p>yes</p></td>
+<td colspan="2"><p>yes</p></td>
 <td><p>yes</p></td>
 <td><p>yes</p></td>
 <td><p>yes</p></td>
@@ -1149,13 +1159,15 @@ small data-sets but for larger datasets its performance suffers. <a class="footn
 </tr>
 <tr class="row-odd"><td><p>Multinomial + L1 penalty</p></td>
 <td><p>no</p></td>
+<td colspan="2"><p>no</p></td>
 <td><p>no</p></td>
 <td><p>no</p></td>
 <td><p>no</p></td>
 <td><p>yes</p></td>
 </tr>
 <tr class="row-even"><td><p>OVR + L1 penalty</p></td>
-<td><p>yes</p></td>
+<td><p>no</p></td>
+<td colspan="2"><p>yes</p></td>
 <td><p>no</p></td>
 <td><p>no</p></td>
 <td><p>no</p></td>
@@ -1163,23 +1175,26 @@ small data-sets but for larger datasets its performance suffers. <a class="footn
 </tr>
 <tr class="row-odd"><td><p>Elastic-Net</p></td>
 <td><p>no</p></td>
+<td colspan="2"><p>no</p></td>
 <td><p>no</p></td>
 <td><p>no</p></td>
 <td><p>no</p></td>
 <td><p>yes</p></td>
 </tr>
 <tr class="row-even"><td><p>No penalty (‘none’)</p></td>
-<td><p>no</p></td>
+<td><p>yes</p></td>
+<td colspan="2"><p>no</p></td>
 <td><p>yes</p></td>
 <td><p>yes</p></td>
 <td><p>yes</p></td>
 <td><p>yes</p></td>
 </tr>
 <tr class="row-odd"><td><p><strong>Behaviors</strong></p></td>
-<td colspan="5"></td>
+<td colspan="7"></td>
 </tr>
 <tr class="row-even"><td><p>Penalize the intercept (bad)</p></td>
-<td><p>yes</p></td>
+<td><p>no</p></td>
+<td colspan="2"><p>yes</p></td>
 <td><p>no</p></td>
 <td><p>no</p></td>
 <td><p>no</p></td>
@@ -1187,6 +1202,7 @@ small data-sets but for larger datasets its performance suffers. <a class="footn
 </tr>
 <tr class="row-odd"><td><p>Faster for large datasets</p></td>
 <td><p>no</p></td>
+<td colspan="2"><p>no</p></td>
 <td><p>no</p></td>
 <td><p>no</p></td>
 <td><p>yes</p></td>
@@ -1194,6 +1210,7 @@ small data-sets but for larger datasets its performance suffers. <a class="footn
 </tr>
 <tr class="row-even"><td><p>Robust to unscaled datasets</p></td>
 <td><p>yes</p></td>
+<td colspan="2"><p>yes</p></td>
 <td><p>yes</p></td>
 <td><p>yes</p></td>
 <td><p>no</p></td>
