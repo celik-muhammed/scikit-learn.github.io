@@ -210,10 +210,6 @@
 <li><a class="reference internal" href="#freebsd">FreeBSD</a></li>
 </ul>
 </li>
-<li><a class="reference internal" href="#alternative-compilers">Alternative compilers</a><ul>
-<li><a class="reference internal" href="#building-with-intel-c-compiler-icc-using-oneapi-on-linux">Building with Intel C Compiler (ICC) using oneAPI on Linux</a></li>
-</ul>
-</li>
 <li><a class="reference internal" href="#parallel-builds">Parallel builds</a></li>
 </ul>
 </li>
@@ -525,39 +521,6 @@ can set the environment variables to these locations:</p>
 </pre></div></div><p>For the upcoming FreeBSD 12.1 and 11.3 versions, OpenMP will be included in
 the base system and these steps will not be necessary.</p>
 </section>
-</section>
-<section id="alternative-compilers">
-<h2>Alternative compilers<a class="headerlink" href="#alternative-compilers" title="Permalink to this heading">¶</a></h2>
-<p>The command:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span class="prompt1">pip install --verbose --editable .</span>
-</pre></div></div><p>will build scikit-learn using your default C/C++ compiler. If you want to build
-scikit-learn with another compiler handled by <code class="docutils literal notranslate"><span class="pre">distutils</span></code> or by
-<code class="docutils literal notranslate"><span class="pre">numpy.distutils</span></code>, use the following command:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span class="prompt1">python setup.py build_ext --compiler<span class="o">=</span>&lt;compiler&gt; -i build_clib --compiler<span class="o">=</span>&lt;compiler&gt;</span>
-</pre></div></div><p>To see the list of available compilers run:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span class="prompt1">python setup.py build_ext --help-compiler</span>
-</pre></div></div><p>If your compiler is not listed here, you can specify it via the <code class="docutils literal notranslate"><span class="pre">CC</span></code> and
-<code class="docutils literal notranslate"><span class="pre">LDSHARED</span></code> environment variables (does not work on windows):</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span class="prompt1"><span class="nv">CC</span><span class="o">=</span>&lt;compiler&gt; <span class="nv">LDSHARED</span><span class="o">=</span><span class="s2">&quot;&lt;compiler&gt; -shared&quot;</span> python setup.py build_ext -i</span>
-</pre></div></div><section id="building-with-intel-c-compiler-icc-using-oneapi-on-linux">
-<h3>Building with Intel C Compiler (ICC) using oneAPI on Linux<a class="headerlink" href="#building-with-intel-c-compiler-icc-using-oneapi-on-linux" title="Permalink to this heading">¶</a></h3>
-<p>Intel provides access to all of its oneAPI toolkits and packages through a
-public APT repository. First you need to get and install the public key of this
-repository:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span class="prompt1">wget https://apt.repos.intel.com/intel-gpg-keys/GPG-PUB-KEY-INTEL-SW-PRODUCTS.PUB</span>
-<span class="prompt1">sudo apt-key add GPG-PUB-KEY-INTEL-SW-PRODUCTS.PUB</span>
-<span class="prompt1">rm GPG-PUB-KEY-INTEL-SW-PRODUCTS.PUB</span>
-</pre></div></div><p>Then, add the oneAPI repository to your APT repositories:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span class="prompt1">sudo add-apt-repository <span class="s2">&quot;deb https://apt.repos.intel.com/oneapi all main&quot;</span></span>
-<span class="prompt1">sudo apt-get update</span>
-</pre></div></div><p>Install ICC, packaged under the name
-<code class="docutils literal notranslate"><span class="pre">intel-oneapi-compiler-dpcpp-cpp-and-cpp-classic</span></code>:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span class="prompt1">sudo apt-get install intel-oneapi-compiler-dpcpp-cpp-and-cpp-classic</span>
-</pre></div></div><p>Before using ICC, you need to set up environment variables:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span class="prompt1"><span class="nb">source</span> /opt/intel/oneapi/setvars.sh</span>
-</pre></div></div><p>Finally, you can build scikit-learn. For example on Linux x86_64:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span class="prompt1">python setup.py build_ext --compiler<span class="o">=</span>intelem -i build_clib --compiler<span class="o">=</span>intelem</span>
-</pre></div></div></section>
 </section>
 <section id="parallel-builds">
 <h2>Parallel builds<a class="headerlink" href="#parallel-builds" title="Permalink to this heading">¶</a></h2>
