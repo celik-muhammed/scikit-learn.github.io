@@ -21,7 +21,6 @@
 ==========================================================
 Adjustment for chance in clustering performance evaluation
 ==========================================================
-
 This notebook explores the impact of uniformly-distributed random labeling on
 the behavior of some clustering evaluation metrics. For such purpose, the
 metrics are computed with a fixed number of samples and as a function of the number
@@ -34,7 +33,7 @@ experiments:
   labels". The "predicted labels" have the same number of classes and clusters
   as the "ground truth labels".
 
-.. GENERATED FROM PYTHON SOURCE LINES 19-24
+.. GENERATED FROM PYTHON SOURCE LINES 17-22
 
 .. code-block:: default
 
@@ -50,7 +49,7 @@ experiments:
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 25-59
+.. GENERATED FROM PYTHON SOURCE LINES 23-57
 
 Defining the list of metrics to evaluate
 ----------------------------------------
@@ -87,7 +86,7 @@ clusters. Examples of such metrics are the following:
 
 For more information, see the :ref:`clustering_evaluation` module.
 
-.. GENERATED FROM PYTHON SOURCE LINES 59-71
+.. GENERATED FROM PYTHON SOURCE LINES 57-69
 
 .. code-block:: default
 
@@ -110,14 +109,14 @@ For more information, see the :ref:`clustering_evaluation` module.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 72-76
+.. GENERATED FROM PYTHON SOURCE LINES 70-74
 
 First experiment: fixed ground truth labels and growing number of clusters
 --------------------------------------------------------------------------
 
 We first define a function that creates uniformly-distributed random labeling.
 
-.. GENERATED FROM PYTHON SOURCE LINES 76-86
+.. GENERATED FROM PYTHON SOURCE LINES 74-84
 
 .. code-block:: default
 
@@ -138,14 +137,14 @@ We first define a function that creates uniformly-distributed random labeling.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 87-91
+.. GENERATED FROM PYTHON SOURCE LINES 85-89
 
 Another function will use the `random_labels` function to create a fixed set
 of ground truth labels (`labels_a`) distributed in `n_classes` and then score
 several sets of randomly "predicted" labels (`labels_b`) to assess the
 variability of a given metric at a given `n_clusters`.
 
-.. GENERATED FROM PYTHON SOURCE LINES 91-106
+.. GENERATED FROM PYTHON SOURCE LINES 89-104
 
 .. code-block:: default
 
@@ -171,19 +170,19 @@ variability of a given metric at a given `n_clusters`.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 107-110
+.. GENERATED FROM PYTHON SOURCE LINES 105-108
 
 In this first example we set the number of clases (true number of clusters) to
 `n_classes=10`. The number of clusters varies over the values provided by
 `n_clusters_range`.
 
-.. GENERATED FROM PYTHON SOURCE LINES 110-150
+.. GENERATED FROM PYTHON SOURCE LINES 108-147
 
 .. code-block:: default
 
 
     import matplotlib.pyplot as plt
-    import matplotlib.style as style
+    import seaborn as sns
 
     n_samples = 1000
     n_classes = 10
@@ -191,11 +190,10 @@ In this first example we set the number of clases (true number of clusters) to
     plots = []
     names = []
 
-    style.use("seaborn-colorblind")
+    sns.color_palette("colorblind")
     plt.figure(1)
 
     for marker, (score_name, score_func) in zip("d^vx.,", score_funcs):
-
         scores = fixed_classes_uniform_labelings_scores(
             score_func, n_samples, n_clusters_range, n_classes=n_classes
         )
@@ -218,7 +216,7 @@ In this first example we set the number of clases (true number of clusters) to
     plt.xlabel(f"Number of clusters (Number of samples is fixed to {n_samples})")
     plt.ylabel("Score value")
     plt.ylim(bottom=-0.05, top=1.05)
-    plt.legend(plots, names)
+    plt.legend(plots, names, bbox_to_anchor=(0.5, 0.5))
     plt.show()
 
 
@@ -230,19 +228,10 @@ In this first example we set the number of clases (true number of clusters) to
    :class: sphx-glr-single-img
 
 
-.. rst-class:: sphx-glr-script-out
-
- .. code-block:: none
-
-    /home/runner/work/scikit-learn/scikit-learn/examples/cluster/plot_adjusted_for_chance_measures.py:120: MatplotlibDeprecationWarning:
-
-    The seaborn styles shipped by Matplotlib are deprecated since 3.6, as they no longer correspond to the styles shipped by seaborn. However, they will remain available as 'seaborn-v0_8-<style>'. Alternatively, directly use the seaborn API instead.
 
 
 
-
-
-.. GENERATED FROM PYTHON SOURCE LINES 151-166
+.. GENERATED FROM PYTHON SOURCE LINES 148-163
 
 The Rand index saturates for `n_clusters` > `n_classes`. Other non-adjusted
 measures such as the V-Measure show a linear dependency between the number of
@@ -260,7 +249,7 @@ score 2 uniformly-distributed random labelings. In this case, the number of
 classes and assigned number of clusters are matched for each possible value in
 `n_clusters_range`.
 
-.. GENERATED FROM PYTHON SOURCE LINES 166-179
+.. GENERATED FROM PYTHON SOURCE LINES 163-176
 
 .. code-block:: default
 
@@ -284,12 +273,12 @@ classes and assigned number of clusters are matched for each possible value in
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 180-182
+.. GENERATED FROM PYTHON SOURCE LINES 177-179
 
 In this case, we use `n_samples=100` to show the effect of having a number of
 clusters similar or equal to the number of samples.
 
-.. GENERATED FROM PYTHON SOURCE LINES 182-215
+.. GENERATED FROM PYTHON SOURCE LINES 179-211
 
 .. code-block:: default
 
@@ -303,7 +292,6 @@ clusters similar or equal to the number of samples.
     names = []
 
     for marker, (score_name, score_func) in zip("d^vx.,", score_funcs):
-
         scores = uniform_labelings_scores(score_func, n_samples, n_clusters_range)
         plots.append(
             plt.errorbar(
@@ -338,7 +326,7 @@ clusters similar or equal to the number of samples.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 216-234
+.. GENERATED FROM PYTHON SOURCE LINES 212-231
 
 We observe similar results as for the first experiment: adjusted for chance
 metrics stay constantly near zero while other metrics tend to get larger with
@@ -346,7 +334,8 @@ finer-grained labelings. The mean V-measure of random labeling increases
 significantly as the number of clusters is closer to the total number of
 samples used to compute the measure. Furthermore, raw Mutual Information is
 unbounded from above and its scale depends on the dimensions of the clustering
-problem and the cardinality of the ground truth classes.
+problem and the cardinality of the ground truth classes. This is why the
+curve goes off the chart.
 
 Only adjusted measures can hence be safely used as a consensus index to
 evaluate the average stability of clustering algorithms for a given value of k
@@ -362,7 +351,7 @@ of clusters.
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** ( 0 minutes  1.106 seconds)
+   **Total running time of the script:** ( 0 minutes  1.133 seconds)
 
 
 .. _sphx_glr_download_auto_examples_cluster_plot_adjusted_for_chance_measures.py:
