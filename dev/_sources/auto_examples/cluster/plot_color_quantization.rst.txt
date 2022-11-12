@@ -36,7 +36,7 @@ palette.
 For comparison, a quantized image using a random codebook (colors picked up
 randomly) is also shown.
 
-.. GENERATED FROM PYTHON SOURCE LINES 22-96
+.. GENERATED FROM PYTHON SOURCE LINES 22-98
 
 
 
@@ -70,15 +70,11 @@ randomly) is also shown.
  .. code-block:: none
 
     Fitting model on a small sub-sample of the data
-    /home/runner/work/scikit-learn/scikit-learn/sklearn/cluster/_kmeans.py:867: FutureWarning:
-
-    The default value of `n_init` will change from 10 to 'auto' in 1.4. Set the value of `n_init` explicitly to suppress the warning
-
-    done in 0.119s.
+    done in 0.022s.
     Predicting color indices on the full image (k-means)
-    done in 0.051s.
+    done in 0.048s.
     Predicting color indices on the full image (random)
-    done in 0.068s.
+    done in 0.087s.
 
 
 
@@ -122,7 +118,9 @@ randomly) is also shown.
     print("Fitting model on a small sub-sample of the data")
     t0 = time()
     image_array_sample = shuffle(image_array, random_state=0, n_samples=1_000)
-    kmeans = KMeans(n_clusters=n_colors, random_state=0).fit(image_array_sample)
+    kmeans = KMeans(n_clusters=n_colors, n_init="auto", random_state=0).fit(
+        image_array_sample
+    )
     print(f"done in {time() - t0:0.3f}s.")
 
     # Get labels for all points
