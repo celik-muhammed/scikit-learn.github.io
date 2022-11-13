@@ -1481,7 +1481,7 @@ categories when using cross-validation.
 The numerical variables need no preprocessing and, for the sake of simplicity,
 we only try the default hyper-parameters for this model:
 
-.. GENERATED FROM PYTHON SOURCE LINES 184-218
+.. GENERATED FROM PYTHON SOURCE LINES 184-222
 
 .. code-block:: default
 
@@ -1513,11 +1513,15 @@ we only try the default hyper-parameters for this model:
                 ("categorical", ordinal_encoder, categorical_columns),
             ],
             remainder="passthrough",
+            # Use short feature names to make it easier to specify the categorical
+            # variables in the HistGradientBoostingRegressor in the next
+            # step of the pipeline.
+            verbose_feature_names_out=False,
         ),
         HistGradientBoostingRegressor(
-            categorical_features=range(4),
+            categorical_features=categorical_columns,
         ),
-    )
+    ).set_output(transform="pandas")
 
 
 
@@ -1526,12 +1530,12 @@ we only try the default hyper-parameters for this model:
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 219-221
+.. GENERATED FROM PYTHON SOURCE LINES 223-225
 
 Lets evaluate our gradient boosting model with the mean absolute error of the
 relative demand averaged across our 5 time-based cross-validation splits:
 
-.. GENERATED FROM PYTHON SOURCE LINES 222-242
+.. GENERATED FROM PYTHON SOURCE LINES 226-246
 
 .. code-block:: default
 
@@ -1569,7 +1573,7 @@ relative demand averaged across our 5 time-based cross-validation splits:
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 243-260
+.. GENERATED FROM PYTHON SOURCE LINES 247-264
 
 This model has an average error around 4 to 5% of the maximum demand. This is
 quite good for a first trial without any hyper-parameter tuning! We just had
@@ -1589,7 +1593,7 @@ For consistency, we scale the numerical features to the same 0-1 range using
 class:`sklearn.preprocessing.MinMaxScaler`, although in this case it does not
 impact the results much because they are already on comparable scales:
 
-.. GENERATED FROM PYTHON SOURCE LINES 260-282
+.. GENERATED FROM PYTHON SOURCE LINES 264-286
 
 .. code-block:: default
 
@@ -1629,7 +1633,7 @@ impact the results much because they are already on comparable scales:
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 283-309
+.. GENERATED FROM PYTHON SOURCE LINES 287-313
 
 The performance is not good: the average error is around 14% of the maximum
 demand. This is more than three times higher than the average error of the
@@ -1658,7 +1662,7 @@ Using one-hot encoding for the time features gives the linear model a lot
 more flexibility as we introduce one additional feature per discrete time
 level.
 
-.. GENERATED FROM PYTHON SOURCE LINES 310-323
+.. GENERATED FROM PYTHON SOURCE LINES 314-327
 
 .. code-block:: default
 
@@ -1689,7 +1693,7 @@ level.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 324-353
+.. GENERATED FROM PYTHON SOURCE LINES 328-357
 
 The average error rate of this model is 10% which is much better than using
 the original (ordinal) encoding of the time feature, confirming our intuition
@@ -1721,7 +1725,7 @@ Each ordinal time feature is transformed into 2 features that together encode
 equivalent information in a non-monotonic way, and more importantly without
 any jump between the first and the last value of the periodic range.
 
-.. GENERATED FROM PYTHON SOURCE LINES 353-364
+.. GENERATED FROM PYTHON SOURCE LINES 357-368
 
 .. code-block:: default
 
@@ -1743,12 +1747,12 @@ any jump between the first and the last value of the periodic range.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 365-367
+.. GENERATED FROM PYTHON SOURCE LINES 369-371
 
 Let us visualize the effect of this feature expansion on some synthetic hour
 data with a bit of extrapolation beyond hour=23:
 
-.. GENERATED FROM PYTHON SOURCE LINES 368-379
+.. GENERATED FROM PYTHON SOURCE LINES 372-383
 
 .. code-block:: default
 
@@ -1775,7 +1779,7 @@ data with a bit of extrapolation beyond hour=23:
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 380-385
+.. GENERATED FROM PYTHON SOURCE LINES 384-389
 
 Let's use a 2D scatter plot with the hours encoded as colors to better see
 how this representation maps the 24 hours of the day to a 2D space, akin to
@@ -1783,7 +1787,7 @@ some sort of a 24 hour version of an analog clock. Note that the "25th" hour
 is mapped back to the 1st hour because of the periodic nature of the
 sine/cosine representation.
 
-.. GENERATED FROM PYTHON SOURCE LINES 386-394
+.. GENERATED FROM PYTHON SOURCE LINES 390-398
 
 .. code-block:: default
 
@@ -1807,11 +1811,11 @@ sine/cosine representation.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 395-396
+.. GENERATED FROM PYTHON SOURCE LINES 399-400
 
 We can now build a feature extraction pipeline using this strategy:
 
-.. GENERATED FROM PYTHON SOURCE LINES 397-416
+.. GENERATED FROM PYTHON SOURCE LINES 401-420
 
 .. code-block:: default
 
@@ -1848,7 +1852,7 @@ We can now build a feature extraction pipeline using this strategy:
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 417-429
+.. GENERATED FROM PYTHON SOURCE LINES 421-433
 
 The performance of our linear regression model with this simple feature
 engineering is a bit better than using the original ordinal time features but
@@ -1863,7 +1867,7 @@ using spline transformations with a large enough number of splines, and as a
 result a larger number of expanded features compared to the sine/cosine
 transformation:
 
-.. GENERATED FROM PYTHON SOURCE LINES 430-446
+.. GENERATED FROM PYTHON SOURCE LINES 434-450
 
 .. code-block:: default
 
@@ -1890,12 +1894,12 @@ transformation:
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 447-449
+.. GENERATED FROM PYTHON SOURCE LINES 451-453
 
 Again, let us visualize the effect of this feature expansion on some
 synthetic hour data with a bit of extrapolation beyond hour=23:
 
-.. GENERATED FROM PYTHON SOURCE LINES 450-463
+.. GENERATED FROM PYTHON SOURCE LINES 454-467
 
 .. code-block:: default
 
@@ -1924,7 +1928,7 @@ synthetic hour data with a bit of extrapolation beyond hour=23:
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 464-473
+.. GENERATED FROM PYTHON SOURCE LINES 468-477
 
 Thanks to the use of the `extrapolation="periodic"` parameter, we observe
 that the feature encoding stays smooth when extrapolating beyond midnight.
@@ -1936,7 +1940,7 @@ It is possible to use fewer splines than discrete levels for those ordinal
 values. This makes spline-based encoding more efficient than one-hot encoding
 while preserving most of the expressivity:
 
-.. GENERATED FROM PYTHON SOURCE LINES 473-488
+.. GENERATED FROM PYTHON SOURCE LINES 477-492
 
 .. code-block:: default
 
@@ -1969,7 +1973,7 @@ while preserving most of the expressivity:
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 489-502
+.. GENERATED FROM PYTHON SOURCE LINES 493-506
 
 Spline features make it possible for the linear model to successfully
 leverage the periodic time-related features and reduce the error from ~14% to
@@ -1985,7 +1989,7 @@ the time related shape of the predictions.
 To do so we consider an arbitrary time-based split to compare the predictions
 on a range of held out data points.
 
-.. GENERATED FROM PYTHON SOURCE LINES 502-514
+.. GENERATED FROM PYTHON SOURCE LINES 506-518
 
 .. code-block:: default
 
@@ -2008,12 +2012,12 @@ on a range of held out data points.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 515-517
+.. GENERATED FROM PYTHON SOURCE LINES 519-521
 
 We visualize those predictions by zooming on the last 96 hours (4 days) of
 the test set to get some qualitative insights:
 
-.. GENERATED FROM PYTHON SOURCE LINES 517-545
+.. GENERATED FROM PYTHON SOURCE LINES 521-549
 
 .. code-block:: default
 
@@ -2057,7 +2061,7 @@ the test set to get some qualitative insights:
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 546-572
+.. GENERATED FROM PYTHON SOURCE LINES 550-576
 
 We can draw the following conclusions from the above plot:
 
@@ -2086,12 +2090,12 @@ We can draw the following conclusions from the above plot:
   advantage for linear models is not necessarily one for more expressive
   models.
 
-.. GENERATED FROM PYTHON SOURCE LINES 574-576
+.. GENERATED FROM PYTHON SOURCE LINES 578-580
 
 We can also compare the number of features extracted by each feature
 engineering pipeline:
 
-.. GENERATED FROM PYTHON SOURCE LINES 576-578
+.. GENERATED FROM PYTHON SOURCE LINES 580-582
 
 .. code-block:: default
 
@@ -2110,7 +2114,7 @@ engineering pipeline:
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 579-581
+.. GENERATED FROM PYTHON SOURCE LINES 583-585
 
 .. code-block:: default
 
@@ -2129,7 +2133,7 @@ engineering pipeline:
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 582-584
+.. GENERATED FROM PYTHON SOURCE LINES 586-588
 
 .. code-block:: default
 
@@ -2148,7 +2152,7 @@ engineering pipeline:
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 585-587
+.. GENERATED FROM PYTHON SOURCE LINES 589-591
 
 .. code-block:: default
 
@@ -2167,7 +2171,7 @@ engineering pipeline:
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 588-604
+.. GENERATED FROM PYTHON SOURCE LINES 592-608
 
 This confirms that the one-hot encoding and the spline encoding strategies
 create a lot more features for the time representation than the alternatives,
@@ -2186,7 +2190,7 @@ explained by the lack of interactions terms between features, e.g.
 "workingday" and features derived from "hours". This issue will be addressed
 in the following section.
 
-.. GENERATED FROM PYTHON SOURCE LINES 606-617
+.. GENERATED FROM PYTHON SOURCE LINES 610-621
 
 Modeling pairwise interactions with splines and polynomial features
 -------------------------------------------------------------------
@@ -2200,7 +2204,7 @@ However, it is possible to use the `PolynomialFeatures` class on coarse
 grained spline encoded hours to model the "workingday"/"hours" interaction
 explicitly without introducing too many new variables:
 
-.. GENERATED FROM PYTHON SOURCE LINES 617-631
+.. GENERATED FROM PYTHON SOURCE LINES 621-635
 
 .. code-block:: default
 
@@ -2225,13 +2229,13 @@ explicitly without introducing too many new variables:
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 632-635
+.. GENERATED FROM PYTHON SOURCE LINES 636-639
 
 Those features are then combined with the ones already computed in the
 previous spline-base pipeline. We can observe a nice performance improvemnt
 by modeling this pairwise interaction explicitly:
 
-.. GENERATED FROM PYTHON SOURCE LINES 635-647
+.. GENERATED FROM PYTHON SOURCE LINES 639-651
 
 .. code-block:: default
 
@@ -2261,7 +2265,7 @@ by modeling this pairwise interaction explicitly:
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 648-664
+.. GENERATED FROM PYTHON SOURCE LINES 652-668
 
 Modeling non-linear feature interactions with kernels
 -----------------------------------------------------
@@ -2280,7 +2284,7 @@ and computational tractability issues.
 Alternatively, we can use the Nyström method to compute an approximate
 polynomial kernel expansion. Let us try the latter:
 
-.. GENERATED FROM PYTHON SOURCE LINES 664-674
+.. GENERATED FROM PYTHON SOURCE LINES 668-678
 
 .. code-block:: default
 
@@ -2308,7 +2312,7 @@ polynomial kernel expansion. Let us try the latter:
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 675-685
+.. GENERATED FROM PYTHON SOURCE LINES 679-689
 
 We observe that this model can almost rival the performance of the gradient
 boosted trees with an average error around 5% of the maximum demand.
@@ -2321,7 +2325,7 @@ is much more expressive than a simple linear regression model with raw features.
 For the sake of completeness, we also evaluate the combination of one-hot
 encoding and kernel approximation:
 
-.. GENERATED FROM PYTHON SOURCE LINES 686-701
+.. GENERATED FROM PYTHON SOURCE LINES 690-705
 
 .. code-block:: default
 
@@ -2354,7 +2358,7 @@ encoding and kernel approximation:
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 702-711
+.. GENERATED FROM PYTHON SOURCE LINES 706-715
 
 While one-hot encoded features were competitive with spline-based features
 when using linear models, this is no longer the case when using a low-rank
@@ -2366,7 +2370,7 @@ Let us now have a qualitative look at the predictions of the kernel models
 and of the gradient boosted trees that should be able to better model
 non-linear interactions between features:
 
-.. GENERATED FROM PYTHON SOURCE LINES 711-720
+.. GENERATED FROM PYTHON SOURCE LINES 715-724
 
 .. code-block:: default
 
@@ -2386,11 +2390,11 @@ non-linear interactions between features:
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 721-722
+.. GENERATED FROM PYTHON SOURCE LINES 725-726
 
 Again we zoom on the last 4 days of the test set:
 
-.. GENERATED FROM PYTHON SOURCE LINES 722-751
+.. GENERATED FROM PYTHON SOURCE LINES 726-755
 
 .. code-block:: default
 
@@ -2435,7 +2439,7 @@ Again we zoom on the last 4 days of the test set:
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 752-773
+.. GENERATED FROM PYTHON SOURCE LINES 756-777
 
 First, note that trees can naturally model non-linear feature interactions
 since, by default, decision trees are allowed to grow beyond a depth of 2
@@ -2459,7 +2463,7 @@ fraction of bikes that are immobilized because they need servicing.
 Let us finally get a more quantative look at the prediction errors of those
 three models using the true vs predicted demand scatter plots:
 
-.. GENERATED FROM PYTHON SOURCE LINES 773-797
+.. GENERATED FROM PYTHON SOURCE LINES 777-801
 
 .. code-block:: default
 
@@ -2499,7 +2503,7 @@ three models using the true vs predicted demand scatter plots:
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 798-834
+.. GENERATED FROM PYTHON SOURCE LINES 802-838
 
 This visualization confirms the conclusions we draw on the previous plot.
 
@@ -2541,7 +2545,7 @@ instead of `RidgeCV`.
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** ( 0 minutes  30.051 seconds)
+   **Total running time of the script:** ( 0 minutes  21.048 seconds)
 
 
 .. _sphx_glr_download_auto_examples_applications_plot_cyclical_feature_engineering.py:

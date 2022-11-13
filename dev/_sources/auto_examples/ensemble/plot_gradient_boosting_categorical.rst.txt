@@ -47,7 +47,7 @@ Load Ames Housing dataset
 First, we load the Ames Housing data as a pandas dataframe. The features
 are either categorical or numerical:
 
-.. GENERATED FROM PYTHON SOURCE LINES 31-73
+.. GENERATED FROM PYTHON SOURCE LINES 31-74
 
 .. code-block:: default
 
@@ -85,7 +85,8 @@ are either categorical or numerical:
     X = X[categorical_columns_subset + numerical_columns_subset]
     X[categorical_columns_subset] = X[categorical_columns_subset].astype("category")
 
-    n_categorical_features = X.select_dtypes(include="category").shape[1]
+    categorical_columns = X.select_dtypes(include="category").columns
+    n_categorical_features = len(categorical_columns)
     n_numerical_features = X.select_dtypes(include="number").shape[1]
 
     print(f"Number of samples: {X.shape[0]}")
@@ -109,14 +110,14 @@ are either categorical or numerical:
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 74-78
+.. GENERATED FROM PYTHON SOURCE LINES 75-79
 
 Gradient boosting estimator with dropped categorical features
 -------------------------------------------------------------
 As a baseline, we create an estimator where the categorical features are
 dropped:
 
-.. GENERATED FROM PYTHON SOURCE LINES 78-89
+.. GENERATED FROM PYTHON SOURCE LINES 79-90
 
 .. code-block:: default
 
@@ -138,14 +139,14 @@ dropped:
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 90-94
+.. GENERATED FROM PYTHON SOURCE LINES 91-95
 
 Gradient boosting estimator with one-hot encoding
 -------------------------------------------------
 Next, we create a pipeline that will one-hot encode the categorical features
 and let the rest of the numerical data to passthrough:
 
-.. GENERATED FROM PYTHON SOURCE LINES 94-109
+.. GENERATED FROM PYTHON SOURCE LINES 95-110
 
 .. code-block:: default
 
@@ -171,7 +172,7 @@ and let the rest of the numerical data to passthrough:
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 110-115
+.. GENERATED FROM PYTHON SOURCE LINES 111-116
 
 Gradient boosting estimator with ordinal encoding
 -------------------------------------------------
@@ -179,7 +180,7 @@ Next, we create a pipeline that will treat categorical features as if they
 were ordered quantities, i.e. the categories will be encoded as 0, 1, 2,
 etc., and treated as continuous features.
 
-.. GENERATED FROM PYTHON SOURCE LINES 115-131
+.. GENERATED FROM PYTHON SOURCE LINES 116-136
 
 .. code-block:: default
 
@@ -193,6 +194,10 @@ etc., and treated as continuous features.
             make_column_selector(dtype_include="category"),
         ),
         remainder="passthrough",
+        # Use short feature names to make it easier to specify the categorical
+        # variables in the HistGradientBoostingRegressor in the next step
+        # of the pipeline.
+        verbose_feature_names_out=False,
     )
 
     hist_ordinal = make_pipeline(
@@ -206,7 +211,7 @@ etc., and treated as continuous features.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 132-145
+.. GENERATED FROM PYTHON SOURCE LINES 137-150
 
 Gradient boosting estimator with native categorical support
 -----------------------------------------------------------
@@ -222,7 +227,7 @@ The main difference between this pipeline and the previous one is that in
 this one, we let the :class:`~ensemble.HistGradientBoostingRegressor` know
 which features are categorical.
 
-.. GENERATED FROM PYTHON SOURCE LINES 145-157
+.. GENERATED FROM PYTHON SOURCE LINES 150-162
 
 .. code-block:: default
 
@@ -230,13 +235,13 @@ which features are categorical.
     # The ordinal encoder will first output the categorical features, and then the
     # continuous (passed-through) features
 
-    categorical_mask = [True] * n_categorical_features + [False] * n_numerical_features
     hist_native = make_pipeline(
         ordinal_encoder,
         HistGradientBoostingRegressor(
-            random_state=42, categorical_features=categorical_mask
+            random_state=42,
+            categorical_features=categorical_columns,
         ),
-    )
+    ).set_output(transform="pandas")
 
 
 
@@ -245,7 +250,7 @@ which features are categorical.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 158-163
+.. GENERATED FROM PYTHON SOURCE LINES 163-168
 
 Model comparison
 ----------------
@@ -253,7 +258,7 @@ Finally, we evaluate the models using cross validation. Here we compare the
 models performance in terms of
 :func:`~metrics.mean_absolute_percentage_error` and fit times.
 
-.. GENERATED FROM PYTHON SOURCE LINES 163-215
+.. GENERATED FROM PYTHON SOURCE LINES 168-220
 
 .. code-block:: default
 
@@ -321,7 +326,7 @@ models performance in terms of
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 216-229
+.. GENERATED FROM PYTHON SOURCE LINES 221-234
 
 We see that the model with one-hot-encoded data is by far the slowest. This
 is to be expected, since one-hot-encoding creates one additional feature per
@@ -337,7 +342,7 @@ In terms of prediction performance, dropping the categorical features leads
 to poorer performance. The three models that use categorical features have
 comparable error rates, with a slight edge for the native handling.
 
-.. GENERATED FROM PYTHON SOURCE LINES 231-251
+.. GENERATED FROM PYTHON SOURCE LINES 236-256
 
 Limiting the number of splits
 -----------------------------
@@ -360,7 +365,7 @@ To see this, let us re-run the same analysis with under-fitting models where
 we artificially limit the total number of splits by both limiting the number
 of trees and the depth of each tree.
 
-.. GENERATED FROM PYTHON SOURCE LINES 251-267
+.. GENERATED FROM PYTHON SOURCE LINES 256-272
 
 .. code-block:: default
 
@@ -392,7 +397,7 @@ of trees and the depth of each tree.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 268-273
+.. GENERATED FROM PYTHON SOURCE LINES 273-278
 
 The results for these under-fitting models confirm our previous intuition:
 the native category handling strategy performs the best when the splitting
@@ -403,7 +408,7 @@ to the baseline model that just dropped the categorical features altogether.
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** ( 0 minutes  14.897 seconds)
+   **Total running time of the script:** ( 0 minutes  9.712 seconds)
 
 
 .. _sphx_glr_download_auto_examples_ensemble_plot_gradient_boosting_categorical.py:

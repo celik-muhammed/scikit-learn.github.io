@@ -254,7 +254,8 @@ are either categorical or numerical:</p>
 <span class="n">X</span> <span class="o">=</span> <span class="n">X</span><span class="p">[</span><span class="n">categorical_columns_subset</span> <span class="o">+</span> <span class="n">numerical_columns_subset</span><span class="p">]</span>
 <span class="n">X</span><span class="p">[</span><span class="n">categorical_columns_subset</span><span class="p">]</span> <span class="o">=</span> <span class="n">X</span><span class="p">[</span><span class="n">categorical_columns_subset</span><span class="p">]</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="s2">&quot;category&quot;</span><span class="p">)</span>
 
-<span class="n">n_categorical_features</span> <span class="o">=</span> <span class="n">X</span><span class="o">.</span><span class="n">select_dtypes</span><span class="p">(</span><span class="n">include</span><span class="o">=</span><span class="s2">&quot;category&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+<span class="n">categorical_columns</span> <span class="o">=</span> <span class="n">X</span><span class="o">.</span><span class="n">select_dtypes</span><span class="p">(</span><span class="n">include</span><span class="o">=</span><span class="s2">&quot;category&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">columns</span>
+<span class="n">n_categorical_features</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">categorical_columns</span><span class="p">)</span>
 <span class="n">n_numerical_features</span> <span class="o">=</span> <span class="n">X</span><span class="o">.</span><span class="n">select_dtypes</span><span class="p">(</span><span class="n">include</span><span class="o">=</span><span class="s2">&quot;number&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
 
 <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Number of samples: </span><span class="si">{</span><span class="n">X</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
@@ -320,6 +321,10 @@ etc., and treated as continuous features.</p>
         <a href="../../modules/generated/sklearn.compose.make_column_selector.html#sklearn.compose.make_column_selector" title="sklearn.compose.make_column_selector" class="sphx-glr-backref-module-sklearn-compose sphx-glr-backref-type-py-function"><span class="n">make_column_selector</span></a><span class="p">(</span><span class="n">dtype_include</span><span class="o">=</span><span class="s2">&quot;category&quot;</span><span class="p">),</span>
     <span class="p">),</span>
     <span class="n">remainder</span><span class="o">=</span><span class="s2">&quot;passthrough&quot;</span><span class="p">,</span>
+    <span class="c1"># Use short feature names to make it easier to specify the categorical</span>
+    <span class="c1"># variables in the HistGradientBoostingRegressor in the next step</span>
+    <span class="c1"># of the pipeline.</span>
+    <span class="n">verbose_feature_names_out</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
 <span class="p">)</span>
 
 <span class="n">hist_ordinal</span> <span class="o">=</span> <a href="../../modules/generated/sklearn.pipeline.make_pipeline.html#sklearn.pipeline.make_pipeline" title="sklearn.pipeline.make_pipeline" class="sphx-glr-backref-module-sklearn-pipeline sphx-glr-backref-type-py-function"><span class="n">make_pipeline</span></a><span class="p">(</span>
@@ -342,13 +347,13 @@ which features are categorical.</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># The ordinal encoder will first output the categorical features, and then the</span>
 <span class="c1"># continuous (passed-through) features</span>
 
-<span class="n">categorical_mask</span> <span class="o">=</span> <span class="p">[</span><span class="kc">True</span><span class="p">]</span> <span class="o">*</span> <span class="n">n_categorical_features</span> <span class="o">+</span> <span class="p">[</span><span class="kc">False</span><span class="p">]</span> <span class="o">*</span> <span class="n">n_numerical_features</span>
 <span class="n">hist_native</span> <span class="o">=</span> <a href="../../modules/generated/sklearn.pipeline.make_pipeline.html#sklearn.pipeline.make_pipeline" title="sklearn.pipeline.make_pipeline" class="sphx-glr-backref-module-sklearn-pipeline sphx-glr-backref-type-py-function"><span class="n">make_pipeline</span></a><span class="p">(</span>
     <span class="n">ordinal_encoder</span><span class="p">,</span>
     <a href="../../modules/generated/sklearn.ensemble.HistGradientBoostingRegressor.html#sklearn.ensemble.HistGradientBoostingRegressor" title="sklearn.ensemble.HistGradientBoostingRegressor" class="sphx-glr-backref-module-sklearn-ensemble sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">HistGradientBoostingRegressor</span></a><span class="p">(</span>
-        <span class="n">random_state</span><span class="o">=</span><span class="mi">42</span><span class="p">,</span> <span class="n">categorical_features</span><span class="o">=</span><span class="n">categorical_mask</span>
+        <span class="n">random_state</span><span class="o">=</span><span class="mi">42</span><span class="p">,</span>
+        <span class="n">categorical_features</span><span class="o">=</span><span class="n">categorical_columns</span><span class="p">,</span>
     <span class="p">),</span>
-<span class="p">)</span>
+<span class="p">)</span><span class="o">.</span><span class="n">set_output</span><span class="p">(</span><span class="n">transform</span><span class="o">=</span><span class="s2">&quot;pandas&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
 </section>
@@ -460,7 +465,7 @@ the native category handling strategy performs the best when the splitting
 budget is constrained. The two other strategies (one-hot encoding and
 treating categories as ordinal values) lead to error values comparable
 to the baseline model that just dropped the categorical features altogether.</p>
-<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> ( 0 minutes  14.897 seconds)</p>
+<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> ( 0 minutes  9.712 seconds)</p>
 <div class="sphx-glr-footer sphx-glr-footer-example docutils container" id="sphx-glr-download-auto-examples-ensemble-plot-gradient-boosting-categorical-py">
 <div class="binder-badge docutils container">
 <a class="reference external image-reference" href="https://mybinder.org/v2/gh/scikit-learn/scikit-learn/main?urlpath=lab/tree/notebooks/auto_examples/ensemble/plot_gradient_boosting_categorical.ipynb"><img alt="Launch binder" src="../../_images/binder_badge_logo5.svg" width="150px" /></a>
