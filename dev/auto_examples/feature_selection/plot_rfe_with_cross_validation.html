@@ -10,10 +10,10 @@
 <meta property="og:type" content="website" />
 <meta property="og:url" content="https://scikit-learn/stable/auto_examples/feature_selection/plot_rfe_with_cross_validation.html" />
 <meta property="og:site_name" content="scikit-learn" />
-<meta property="og:description" content="A recursive feature elimination example with automatic tuning of the number of features selected with cross-validation., Total running time of the script:( 0 minutes 2.142 seconds) Launch binder Do..." />
+<meta property="og:description" content="A Recursive Feature Elimination (RFE) example with automatic tuning of the number of features selected with cross-validation. Data generation: We build a classification task using 3 informative fea..." />
 <meta property="og:image" content="https://scikit-learn.org/stable/_static/scikit-learn-logo-small.png" />
 <meta property="og:image:alt" content="scikit-learn" />
-<meta name="description" content="A recursive feature elimination example with automatic tuning of the number of features selected with cross-validation., Total running time of the script:( 0 minutes 2.142 seconds) Launch binder Do..." />
+<meta name="description" content="A Recursive Feature Elimination (RFE) example with automatic tuning of the number of features selected with cross-validation. Data generation: We build a classification task using 3 informative fea..." />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
@@ -176,7 +176,12 @@
         </div>
             <div class="sk-sidebar-toc">
               <ul>
-<li><a class="reference internal" href="#">Recursive feature elimination with cross-validation</a></li>
+<li><a class="reference internal" href="#">Recursive feature elimination with cross-validation</a><ul>
+<li><a class="reference internal" href="#data-generation">Data generation</a></li>
+<li><a class="reference internal" href="#model-training-and-selection">Model training and selection</a></li>
+<li><a class="reference internal" href="#plot-number-of-features-vs-cross-validation-scores">Plot number of features VS. cross-validation scores</a></li>
+</ul>
+</li>
 </ul>
 
             </div>
@@ -192,66 +197,86 @@ to download the full example code or to run this example in your browser via Bin
 </div>
 <section class="sphx-glr-example-title" id="recursive-feature-elimination-with-cross-validation">
 <span id="sphx-glr-auto-examples-feature-selection-plot-rfe-with-cross-validation-py"></span><h1>Recursive feature elimination with cross-validation<a class="headerlink" href="#recursive-feature-elimination-with-cross-validation" title="Permalink to this heading">¶</a></h1>
-<p>A recursive feature elimination example with automatic tuning of the
+<p>A Recursive Feature Elimination (RFE) example with automatic tuning of the
 number of features selected with cross-validation.</p>
-<img src="../../_images/sphx_glr_plot_rfe_with_cross_validation_001.png" srcset="../../_images/sphx_glr_plot_rfe_with_cross_validation_001.png" alt="plot rfe with cross validation" class = "sphx-glr-single-img"/><div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>Optimal number of features : 3
-</pre></div>
-</div>
-<div class="line-block">
-<div class="line"><br /></div>
-</div>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
-<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
-<span class="kn">from</span> <span class="nn">sklearn.svm</span> <span class="kn">import</span> <a href="../../modules/generated/sklearn.svm.SVC.html#sklearn.svm.SVC" title="sklearn.svm.SVC" class="sphx-glr-backref-module-sklearn-svm sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">SVC</span></a>
-<span class="kn">from</span> <span class="nn">sklearn.model_selection</span> <span class="kn">import</span> <a href="../../modules/generated/sklearn.model_selection.StratifiedKFold.html#sklearn.model_selection.StratifiedKFold" title="sklearn.model_selection.StratifiedKFold" class="sphx-glr-backref-module-sklearn-model_selection sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">StratifiedKFold</span></a>
-<span class="kn">from</span> <span class="nn">sklearn.feature_selection</span> <span class="kn">import</span> <a href="../../modules/generated/sklearn.feature_selection.RFECV.html#sklearn.feature_selection.RFECV" title="sklearn.feature_selection.RFECV" class="sphx-glr-backref-module-sklearn-feature_selection sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">RFECV</span></a>
-<span class="kn">from</span> <span class="nn">sklearn.datasets</span> <span class="kn">import</span> <a href="../../modules/generated/sklearn.datasets.make_classification.html#sklearn.datasets.make_classification" title="sklearn.datasets.make_classification" class="sphx-glr-backref-module-sklearn-datasets sphx-glr-backref-type-py-function"><span class="n">make_classification</span></a>
+<section id="data-generation">
+<h2>Data generation<a class="headerlink" href="#data-generation" title="Permalink to this heading">¶</a></h2>
+<p>We build a classification task using 3 informative features. The introduction
+of 2 additional redundant (i.e. correlated) features has the effect that the
+selected features vary depending on the cross-validation fold. The remaining
+features are non-informative as they are drawn at random.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">sklearn.datasets</span> <span class="kn">import</span> <a href="../../modules/generated/sklearn.datasets.make_classification.html#sklearn.datasets.make_classification" title="sklearn.datasets.make_classification" class="sphx-glr-backref-module-sklearn-datasets sphx-glr-backref-type-py-function"><span class="n">make_classification</span></a>
 
-<span class="c1"># Build a classification task using 3 informative features</span>
 <span class="n">X</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <a href="../../modules/generated/sklearn.datasets.make_classification.html#sklearn.datasets.make_classification" title="sklearn.datasets.make_classification" class="sphx-glr-backref-module-sklearn-datasets sphx-glr-backref-type-py-function"><span class="n">make_classification</span></a><span class="p">(</span>
-    <span class="n">n_samples</span><span class="o">=</span><span class="mi">1000</span><span class="p">,</span>
-    <span class="n">n_features</span><span class="o">=</span><span class="mi">25</span><span class="p">,</span>
+    <span class="n">n_samples</span><span class="o">=</span><span class="mi">500</span><span class="p">,</span>
+    <span class="n">n_features</span><span class="o">=</span><span class="mi">15</span><span class="p">,</span>
     <span class="n">n_informative</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span>
     <span class="n">n_redundant</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span>
     <span class="n">n_repeated</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
     <span class="n">n_classes</span><span class="o">=</span><span class="mi">8</span><span class="p">,</span>
     <span class="n">n_clusters_per_class</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+    <span class="n">class_sep</span><span class="o">=</span><span class="mf">0.8</span><span class="p">,</span>
     <span class="n">random_state</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
 <span class="p">)</span>
-
-<span class="c1"># Create the RFE object and compute a cross-validated score.</span>
-<span class="n">svc</span> <span class="o">=</span> <a href="../../modules/generated/sklearn.svm.SVC.html#sklearn.svm.SVC" title="sklearn.svm.SVC" class="sphx-glr-backref-module-sklearn-svm sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">SVC</span></a><span class="p">(</span><span class="n">kernel</span><span class="o">=</span><span class="s2">&quot;linear&quot;</span><span class="p">)</span>
-<span class="c1"># The &quot;accuracy&quot; scoring shows the proportion of correct classifications</span>
+</pre></div>
+</div>
+</section>
+<section id="model-training-and-selection">
+<h2>Model training and selection<a class="headerlink" href="#model-training-and-selection" title="Permalink to this heading">¶</a></h2>
+<p>We create the RFE object and compute the cross-validated scores. The scoring
+strategy “accuracy” optimizes the proportion of correctly classified samples.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">sklearn.feature_selection</span> <span class="kn">import</span> <a href="../../modules/generated/sklearn.feature_selection.RFECV.html#sklearn.feature_selection.RFECV" title="sklearn.feature_selection.RFECV" class="sphx-glr-backref-module-sklearn-feature_selection sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">RFECV</span></a>
+<span class="kn">from</span> <span class="nn">sklearn.model_selection</span> <span class="kn">import</span> <a href="../../modules/generated/sklearn.model_selection.StratifiedKFold.html#sklearn.model_selection.StratifiedKFold" title="sklearn.model_selection.StratifiedKFold" class="sphx-glr-backref-module-sklearn-model_selection sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">StratifiedKFold</span></a>
+<span class="kn">from</span> <span class="nn">sklearn.linear_model</span> <span class="kn">import</span> <a href="../../modules/generated/sklearn.linear_model.LogisticRegression.html#sklearn.linear_model.LogisticRegression" title="sklearn.linear_model.LogisticRegression" class="sphx-glr-backref-module-sklearn-linear_model sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">LogisticRegression</span></a>
 
 <span class="n">min_features_to_select</span> <span class="o">=</span> <span class="mi">1</span>  <span class="c1"># Minimum number of features to consider</span>
+<span class="n">clf</span> <span class="o">=</span> <a href="../../modules/generated/sklearn.linear_model.LogisticRegression.html#sklearn.linear_model.LogisticRegression" title="sklearn.linear_model.LogisticRegression" class="sphx-glr-backref-module-sklearn-linear_model sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">LogisticRegression</span></a><span class="p">()</span>
+<span class="n">cv</span> <span class="o">=</span> <a href="../../modules/generated/sklearn.model_selection.StratifiedKFold.html#sklearn.model_selection.StratifiedKFold" title="sklearn.model_selection.StratifiedKFold" class="sphx-glr-backref-module-sklearn-model_selection sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">StratifiedKFold</span></a><span class="p">(</span><span class="mi">5</span><span class="p">)</span>
+
 <span class="n">rfecv</span> <span class="o">=</span> <a href="../../modules/generated/sklearn.feature_selection.RFECV.html#sklearn.feature_selection.RFECV" title="sklearn.feature_selection.RFECV" class="sphx-glr-backref-module-sklearn-feature_selection sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">RFECV</span></a><span class="p">(</span>
-    <span class="n">estimator</span><span class="o">=</span><span class="n">svc</span><span class="p">,</span>
+    <span class="n">estimator</span><span class="o">=</span><span class="n">clf</span><span class="p">,</span>
     <span class="n">step</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
-    <span class="n">cv</span><span class="o">=</span><a href="../../modules/generated/sklearn.model_selection.StratifiedKFold.html#sklearn.model_selection.StratifiedKFold" title="sklearn.model_selection.StratifiedKFold" class="sphx-glr-backref-module-sklearn-model_selection sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">StratifiedKFold</span></a><span class="p">(</span><span class="mi">2</span><span class="p">),</span>
+    <span class="n">cv</span><span class="o">=</span><span class="n">cv</span><span class="p">,</span>
     <span class="n">scoring</span><span class="o">=</span><span class="s2">&quot;accuracy&quot;</span><span class="p">,</span>
     <span class="n">min_features_to_select</span><span class="o">=</span><span class="n">min_features_to_select</span><span class="p">,</span>
+    <span class="n">n_jobs</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span>
 <span class="p">)</span>
 <span class="n">rfecv</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
 
-<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Optimal number of features : </span><span class="si">%d</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="n">rfecv</span><span class="o">.</span><span class="n">n_features_</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Optimal number of features: </span><span class="si">{</span><span class="n">rfecv</span><span class="o">.</span><span class="n">n_features_</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>Optimal number of features: 3
+</pre></div>
+</div>
+<p>In the present case, the model with 3 features (which corresponds to the true
+generative model) is found to be the most optimal.</p>
+</section>
+<section id="plot-number-of-features-vs-cross-validation-scores">
+<h2>Plot number of features VS. cross-validation scores<a class="headerlink" href="#plot-number-of-features-vs-cross-validation-scores" title="Permalink to this heading">¶</a></h2>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
 
-<span class="n">n_scores</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">rfecv</span><span class="o">.</span><span class="n">cv_results_</span><span class="p">[</span><span class="s2">&quot;split0_test_score&quot;</span><span class="p">])</span>
-<span class="n">cv_scores</span> <span class="o">=</span> <a href="https://numpy.org/doc/stable/reference/generated/numpy.vstack.html#numpy.vstack" title="numpy.vstack" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-function"><span class="n">np</span><span class="o">.</span><span class="n">vstack</span></a><span class="p">(</span>
-    <span class="p">(</span><span class="n">rfecv</span><span class="o">.</span><span class="n">cv_results_</span><span class="p">[</span><span class="s2">&quot;split0_test_score&quot;</span><span class="p">],</span> <span class="n">rfecv</span><span class="o">.</span><span class="n">cv_results_</span><span class="p">[</span><span class="s2">&quot;split1_test_score&quot;</span><span class="p">])</span>
-<span class="p">)</span><span class="o">.</span><span class="n">T</span>
-
-<span class="c1"># Plot number of features VS. cross-validation scores</span>
+<span class="n">n_scores</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">rfecv</span><span class="o">.</span><span class="n">cv_results_</span><span class="p">[</span><span class="s2">&quot;mean_test_score&quot;</span><span class="p">])</span>
 <a href="https://matplotlib.org/stable/api/_as_gen/matplotlib.pyplot.figure.html#matplotlib.pyplot.figure" title="matplotlib.pyplot.figure" class="sphx-glr-backref-module-matplotlib-pyplot sphx-glr-backref-type-py-function"><span class="n">plt</span><span class="o">.</span><span class="n">figure</span></a><span class="p">()</span>
 <a href="https://matplotlib.org/stable/api/_as_gen/matplotlib.pyplot.xlabel.html#matplotlib.pyplot.xlabel" title="matplotlib.pyplot.xlabel" class="sphx-glr-backref-module-matplotlib-pyplot sphx-glr-backref-type-py-function"><span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span></a><span class="p">(</span><span class="s2">&quot;Number of features selected&quot;</span><span class="p">)</span>
-<a href="https://matplotlib.org/stable/api/_as_gen/matplotlib.pyplot.ylabel.html#matplotlib.pyplot.ylabel" title="matplotlib.pyplot.ylabel" class="sphx-glr-backref-module-matplotlib-pyplot sphx-glr-backref-type-py-function"><span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span></a><span class="p">(</span><span class="s2">&quot;Cross validation score (accuracy)&quot;</span><span class="p">)</span>
-<a href="https://matplotlib.org/stable/api/_as_gen/matplotlib.pyplot.plot.html#matplotlib.pyplot.plot" title="matplotlib.pyplot.plot" class="sphx-glr-backref-module-matplotlib-pyplot sphx-glr-backref-type-py-function"><span class="n">plt</span><span class="o">.</span><span class="n">plot</span></a><span class="p">(</span>
+<a href="https://matplotlib.org/stable/api/_as_gen/matplotlib.pyplot.ylabel.html#matplotlib.pyplot.ylabel" title="matplotlib.pyplot.ylabel" class="sphx-glr-backref-module-matplotlib-pyplot sphx-glr-backref-type-py-function"><span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span></a><span class="p">(</span><span class="s2">&quot;Mean test accuracy&quot;</span><span class="p">)</span>
+<a href="https://matplotlib.org/stable/api/_as_gen/matplotlib.pyplot.errorbar.html#matplotlib.pyplot.errorbar" title="matplotlib.pyplot.errorbar" class="sphx-glr-backref-module-matplotlib-pyplot sphx-glr-backref-type-py-function"><span class="n">plt</span><span class="o">.</span><span class="n">errorbar</span></a><span class="p">(</span>
     <span class="nb">range</span><span class="p">(</span><span class="n">min_features_to_select</span><span class="p">,</span> <span class="n">n_scores</span> <span class="o">+</span> <span class="n">min_features_to_select</span><span class="p">),</span>
-    <span class="n">cv_scores</span><span class="p">,</span>
+    <span class="n">rfecv</span><span class="o">.</span><span class="n">cv_results_</span><span class="p">[</span><span class="s2">&quot;mean_test_score&quot;</span><span class="p">],</span>
+    <span class="n">yerr</span><span class="o">=</span><span class="n">rfecv</span><span class="o">.</span><span class="n">cv_results_</span><span class="p">[</span><span class="s2">&quot;std_test_score&quot;</span><span class="p">],</span>
 <span class="p">)</span>
+<a href="https://matplotlib.org/stable/api/_as_gen/matplotlib.pyplot.title.html#matplotlib.pyplot.title" title="matplotlib.pyplot.title" class="sphx-glr-backref-module-matplotlib-pyplot sphx-glr-backref-type-py-function"><span class="n">plt</span><span class="o">.</span><span class="n">title</span></a><span class="p">(</span><span class="s2">&quot;Recursive Feature Elimination </span><span class="se">\n</span><span class="s2">with correlated features&quot;</span><span class="p">)</span>
 <a href="https://matplotlib.org/stable/api/_as_gen/matplotlib.pyplot.show.html#matplotlib.pyplot.show" title="matplotlib.pyplot.show" class="sphx-glr-backref-module-matplotlib-pyplot sphx-glr-backref-type-py-function"><span class="n">plt</span><span class="o">.</span><span class="n">show</span></a><span class="p">()</span>
 </pre></div>
 </div>
-<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> ( 0 minutes  2.142 seconds)</p>
+<img src="../../_images/sphx_glr_plot_rfe_with_cross_validation_001.png" srcset="../../_images/sphx_glr_plot_rfe_with_cross_validation_001.png" alt="Recursive Feature Elimination  with correlated features" class = "sphx-glr-single-img"/><p>From the plot above one can further notice a plateau of equivalent scores
+(similar mean value and overlapping errorbars) for 3 to 5 selected features.
+This is the result of introducing correlated features. Indeed, the optimal
+model selected by the RFE can lie within this range, depending on the
+cross-validation technique. The test accuracy decreases above 5 selected
+features, this is, keeping non-informative features leads to over-fitting and
+is therefore detrimental for the statistical performance of the models.</p>
+<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> ( 0 minutes  0.846 seconds)</p>
 <div class="sphx-glr-footer sphx-glr-footer-example docutils container" id="sphx-glr-download-auto-examples-feature-selection-plot-rfe-with-cross-validation-py">
 <div class="binder-badge docutils container">
 <a class="reference external image-reference" href="https://mybinder.org/v2/gh/scikit-learn/scikit-learn/main?urlpath=lab/tree/notebooks/auto_examples/feature_selection/plot_rfe_with_cross_validation.ipynb"><img alt="Launch binder" src="../../_images/binder_badge_logo7.svg" width="150px" /></a>
@@ -264,6 +289,7 @@ number of features selected with cross-validation.</p>
 </div>
 </div>
 <p class="sphx-glr-signature"><a class="reference external" href="https://sphinx-gallery.github.io">Gallery generated by Sphinx-Gallery</a></p>
+</section>
 </section>
 
 
