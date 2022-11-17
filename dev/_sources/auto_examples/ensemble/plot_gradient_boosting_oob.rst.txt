@@ -40,7 +40,7 @@ The figure also shows the performance of 3-fold cross validation which
 usually gives a better estimate of the test loss
 but is computationally more demanding.
 
-.. GENERATED FROM PYTHON SOURCE LINES 24-150
+.. GENERATED FROM PYTHON SOURCE LINES 24-147
 
 
 
@@ -76,6 +76,7 @@ but is computationally more demanding.
     from sklearn import ensemble
     from sklearn.model_selection import KFold
     from sklearn.model_selection import train_test_split
+    from sklearn.metrics import log_loss
 
     from scipy.special import expit
 
@@ -113,15 +114,11 @@ but is computationally more demanding.
     x = np.arange(n_estimators) + 1
 
 
-    def binomial_deviance(y, raw_predictions):
-        return -2 * np.mean((y * raw_predictions) - np.logaddexp(0, raw_predictions))
-
-
     def heldout_score(clf, X_test, y_test):
         """compute deviance scores on ``X_test`` and ``y_test``."""
         score = np.zeros((n_estimators,), dtype=np.float64)
-        for i, y_pred in enumerate(clf.staged_decision_function(X_test)):
-            score[i] = binomial_deviance(y_test, y_pred.ravel())
+        for i, y_proba in enumerate(clf.staged_predict_proba(X_test)):
+            score[i] = 2 * log_loss(y_test, y_proba[:, 1])
         return score
 
 
@@ -195,7 +192,7 @@ but is computationally more demanding.
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** ( 0 minutes  5.269 seconds)
+   **Total running time of the script:** ( 0 minutes  7.445 seconds)
 
 
 .. _sphx_glr_download_auto_examples_ensemble_plot_gradient_boosting_oob.py:
