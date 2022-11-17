@@ -182,10 +182,11 @@
 <li><a class="reference internal" href="#multivariate-feature-imputation">6.4.3. Multivariate feature imputation</a><ul>
 <li><a class="reference internal" href="#flexibility-of-iterativeimputer">6.4.3.1. Flexibility of IterativeImputer</a></li>
 <li><a class="reference internal" href="#multiple-vs-single-imputation">6.4.3.2. Multiple vs. Single Imputation</a></li>
+<li><a class="reference internal" href="#references">6.4.3.3. References</a></li>
 </ul>
 </li>
-<li><a class="reference internal" href="#references">6.4.4. References</a></li>
-<li><a class="reference internal" href="#nearest-neighbors-imputation">6.4.5. Nearest neighbors imputation</a></li>
+<li><a class="reference internal" href="#nearest-neighbors-imputation">6.4.4. Nearest neighbors imputation</a></li>
+<li><a class="reference internal" href="#keeping-the-number-of-features-constants">6.4.5. Keeping the number of features constants</a></li>
 <li><a class="reference internal" href="#marking-imputed-values">6.4.6. Marking imputed values</a></li>
 <li><a class="reference internal" href="#estimators-that-handle-nan-values">6.4.7. Estimators that handle NaN values</a></li>
 </ul>
@@ -344,9 +345,8 @@ interested in measuring uncertainty due to missing values.</p>
 not allowed to change the number of samples. Therefore multiple imputations
 cannot be achieved by a single call to <code class="docutils literal notranslate"><span class="pre">transform</span></code>.</p>
 </section>
-</section>
 <section id="references">
-<h2><span class="section-number">6.4.4. </span>References<a class="headerlink" href="#references" title="Permalink to this heading">¶</a></h2>
+<h3><span class="section-number">6.4.3.3. </span>References<a class="headerlink" href="#references" title="Permalink to this heading">¶</a></h3>
 <aside class="footnote-list brackets">
 <aside class="footnote brackets" id="id3" role="note">
 <span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id1">1</a><span class="fn-bracket">]</span></span>
@@ -361,8 +361,9 @@ with Missing Data”. John Wiley &amp; Sons, Inc., New York, NY, USA.</p>
 </aside>
 </aside>
 </section>
+</section>
 <section id="nearest-neighbors-imputation">
-<span id="knnimpute"></span><h2><span class="section-number">6.4.5. </span>Nearest neighbors imputation<a class="headerlink" href="#nearest-neighbors-imputation" title="Permalink to this heading">¶</a></h2>
+<span id="knnimpute"></span><h2><span class="section-number">6.4.4. </span>Nearest neighbors imputation<a class="headerlink" href="#nearest-neighbors-imputation" title="Permalink to this heading">¶</a></h2>
 <p>The <a class="reference internal" href="generated/sklearn.impute.KNNImputer.html#sklearn.impute.KNNImputer" title="sklearn.impute.KNNImputer"><code class="xref py py-class docutils literal notranslate"><span class="pre">KNNImputer</span></code></a> class provides imputation for filling in missing values
 using the k-Nearest Neighbors approach. By default, a euclidean distance metric
 that supports missing values, <code class="xref py py-func docutils literal notranslate"><span class="pre">nan_euclidean_distances</span></code>,
@@ -393,6 +394,8 @@ neighbors of samples with missing values:</p>
 <span class="go">       [8. , 8. , 7. ]])</span>
 </pre></div>
 </div>
+<aside class="topic">
+<p class="topic-title">References</p>
 <div role="list" class="citation-list">
 <div class="citation" id="ol2001" role="doc-biblioentry">
 <span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id5">OL2001</a><span class="fn-bracket">]</span></span>
@@ -401,6 +404,34 @@ Trevor Hastie, Robert Tibshirani, David Botstein and Russ B. Altman,
 Missing value estimation methods for DNA microarrays, BIOINFORMATICS
 Vol. 17 no. 6, 2001 Pages 520-525.</p>
 </div>
+</div>
+</aside>
+</section>
+<section id="keeping-the-number-of-features-constants">
+<h2><span class="section-number">6.4.5. </span>Keeping the number of features constants<a class="headerlink" href="#keeping-the-number-of-features-constants" title="Permalink to this heading">¶</a></h2>
+<p>By default, the scikit-learn imputers will drop fully empty features, i.e.
+columns containing only missing values. For instance:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">imputer</span> <span class="o">=</span> <span class="n">SimpleImputer</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">X</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([[</span><span class="n">np</span><span class="o">.</span><span class="n">nan</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span> <span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">nan</span><span class="p">,</span> <span class="mi">2</span><span class="p">],</span> <span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">nan</span><span class="p">,</span> <span class="mi">3</span><span class="p">]])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">imputer</span><span class="o">.</span><span class="n">fit_transform</span><span class="p">(</span><span class="n">X</span><span class="p">)</span>
+<span class="go">array([[1.],</span>
+<span class="go">       [2.],</span>
+<span class="go">       [3.]])</span>
+</pre></div>
+</div>
+<p>The first feature in <code class="docutils literal notranslate"><span class="pre">X</span></code> containing only <code class="docutils literal notranslate"><span class="pre">np.nan</span></code> was dropped after the
+imputation. While this feature will not help in predictive setting, dropping
+the columns will change the shape of <code class="docutils literal notranslate"><span class="pre">X</span></code> which could be problematic when using
+imputers in a more complex machine-learning pipeline. The parameter
+<code class="docutils literal notranslate"><span class="pre">keep_empty_features</span></code> offers the option to keep the empty features by imputing
+with a constant values. In most of the cases, this constant value is zero:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">imputer</span><span class="o">.</span><span class="n">set_params</span><span class="p">(</span><span class="n">keep_empty_features</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="go">SimpleImputer(keep_empty_features=True)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">imputer</span><span class="o">.</span><span class="n">fit_transform</span><span class="p">(</span><span class="n">X</span><span class="p">)</span>
+<span class="go">array([[0., 1.],</span>
+<span class="go">       [0., 2.],</span>
+<span class="go">       [0., 3.]])</span>
+</pre></div>
 </div>
 </section>
 <section id="marking-imputed-values">
@@ -494,7 +525,7 @@ wrap this in a <code class="xref py py-class docutils literal notranslate"><span
 <h2><span class="section-number">6.4.7. </span>Estimators that handle NaN values<a class="headerlink" href="#estimators-that-handle-nan-values" title="Permalink to this heading">¶</a></h2>
 <p>Some estimators are designed to handle NaN values without preprocessing.
 Below is the list of these estimators, classified by type
-(cluster, regressor, classifier, transform) :</p>
+(cluster, regressor, classifier, transform):</p>
 <ul>
 <li><strong>Estimators that allow NaN values for type </strong><code class="docutils literal notranslate"><span class="pre">regressor</span></code><strong>:
 </strong><ul class="simple">
