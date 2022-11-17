@@ -94,7 +94,7 @@ estimator, and compute the time required to train a
 
 We now plot heatmaps for both search estimators.
 
-.. GENERATED FROM PYTHON SOURCE LINES 53-119
+.. GENERATED FROM PYTHON SOURCE LINES 53-121
 
 .. code-block:: default
 
@@ -102,8 +102,10 @@ We now plot heatmaps for both search estimators.
 
     def make_heatmap(ax, gs, is_sh=False, make_cbar=False):
         """Helper to make a heatmap."""
-        results = pd.DataFrame.from_dict(gs.cv_results_)
-        results["params_str"] = results.params.apply(str)
+        results = pd.DataFrame(gs.cv_results_)
+        results[["param_C", "param_gamma"]] = results[["param_C", "param_gamma"]].astype(
+            np.float64
+        )
         if is_sh:
             # SH dataframe: get mean_test_score values for the highest iter
             scores_matrix = results.sort_values("iter").pivot_table(
@@ -168,24 +170,15 @@ We now plot heatmaps for both search estimators.
 
 
 .. image-sg:: /auto_examples/model_selection/images/sphx_glr_plot_successive_halving_heatmap_001.png
-   :alt: Successive Halving time = 1.837s, GridSearch time = 9.122s
+   :alt: Successive Halving time = 1.219s, GridSearch time = 5.983s
    :srcset: /auto_examples/model_selection/images/sphx_glr_plot_successive_halving_heatmap_001.png
    :class: sphx-glr-single-img
 
 
-.. rst-class:: sphx-glr-script-out
-
- .. code-block:: none
-
-    /home/runner/work/scikit-learn/scikit-learn/examples/model_selection/plot_successive_halving_heatmap.py:68: FutureWarning:
-
-    In a future version, the Index constructor will not infer numeric dtypes when passed object-dtype sequences (matching Series behavior)
 
 
 
-
-
-.. GENERATED FROM PYTHON SOURCE LINES 120-130
+.. GENERATED FROM PYTHON SOURCE LINES 122-132
 
 The heatmaps show the mean test score of the parameter combinations for an
 :class:`~sklearn.svm.SVC` instance. The
@@ -201,7 +194,7 @@ class is able to find parameter combinations that are just as accurate as
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** ( 0 minutes  11.210 seconds)
+   **Total running time of the script:** ( 0 minutes  7.368 seconds)
 
 
 .. _sphx_glr_download_auto_examples_model_selection_plot_successive_halving_heatmap.py:
