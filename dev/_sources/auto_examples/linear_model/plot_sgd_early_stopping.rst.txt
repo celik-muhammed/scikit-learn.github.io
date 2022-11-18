@@ -54,14 +54,26 @@ significantly reduce training time. Note that scores differ between the
 stopping criteria even from early iterations because some of the training data
 is held out with the validation stopping criterion.
 
-.. GENERATED FROM PYTHON SOURCE LINES 39-154
+.. GENERATED FROM PYTHON SOURCE LINES 39-156
 
 
 
-.. image-sg:: /auto_examples/linear_model/images/sphx_glr_plot_sgd_early_stopping_001.png
-   :alt: Train score, Test score, n_iter_, Fit time (sec)
-   :srcset: /auto_examples/linear_model/images/sphx_glr_plot_sgd_early_stopping_001.png
-   :class: sphx-glr-single-img
+.. rst-class:: sphx-glr-horizontal
+
+
+    *
+
+      .. image-sg:: /auto_examples/linear_model/images/sphx_glr_plot_sgd_early_stopping_001.png
+         :alt: Train score, Test score
+         :srcset: /auto_examples/linear_model/images/sphx_glr_plot_sgd_early_stopping_001.png
+         :class: sphx-glr-multi-img
+
+    *
+
+      .. image-sg:: /auto_examples/linear_model/images/sphx_glr_plot_sgd_early_stopping_002.png
+         :alt: n_iter_, Fit time (sec)
+         :srcset: /auto_examples/linear_model/images/sphx_glr_plot_sgd_early_stopping_002.png
+         :class: sphx-glr-multi-img
 
 
 .. rst-class:: sphx-glr-script-out
@@ -71,10 +83,6 @@ is held out with the validation stopping criterion.
     No stopping criterion: .................................................
     Training loss: .................................................
     Validation score: .................................................
-    /home/runner/work/scikit-learn/scikit-learn/examples/linear_model/plot_sgd_early_stopping.py:144: MatplotlibDeprecationWarning:
-
-    The join function was deprecated in Matplotlib 3.6 and will be removed two minor releases later.
-
 
 
 
@@ -178,33 +186,35 @@ is held out with the validation stopping criterion.
     ]
     results_df = pd.DataFrame(results, columns=columns)
 
-    # Define what to plot (x_axis, y_axis)
+    # Define what to plot
     lines = "Stopping criterion"
-    plot_list = [
-        ("max_iter", "Train score"),
-        ("max_iter", "Test score"),
-        ("max_iter", "n_iter_"),
-        ("max_iter", "Fit time (sec)"),
-    ]
+    x_axis = "max_iter"
+    styles = ["-.", "--", "-"]
 
-    nrows = 2
-    ncols = int(np.ceil(len(plot_list) / 2.0))
-    fig, axes = plt.subplots(nrows=nrows, ncols=ncols, figsize=(6 * ncols, 4 * nrows))
-    axes[0, 0].get_shared_y_axes().join(axes[0, 0], axes[0, 1])
-
-    for ax, (x_axis, y_axis) in zip(axes.ravel(), plot_list):
-        for criterion, group_df in results_df.groupby(lines):
-            group_df.plot(x=x_axis, y=y_axis, label=criterion, ax=ax)
+    # First plot: train and test scores
+    fig, axes = plt.subplots(nrows=1, ncols=2, sharey=True, figsize=(12, 4))
+    for ax, y_axis in zip(axes, ["Train score", "Test score"]):
+        for style, (criterion, group_df) in zip(styles, results_df.groupby(lines)):
+            group_df.plot(x=x_axis, y=y_axis, label=criterion, ax=ax, style=style)
         ax.set_title(y_axis)
         ax.legend(title=lines)
-
     fig.tight_layout()
+
+    # Second plot: n_iter and fit time
+    fig, axes = plt.subplots(nrows=1, ncols=2, figsize=(12, 4))
+    for ax, y_axis in zip(axes, ["n_iter_", "Fit time (sec)"]):
+        for style, (criterion, group_df) in zip(styles, results_df.groupby(lines)):
+            group_df.plot(x=x_axis, y=y_axis, label=criterion, ax=ax, style=style)
+        ax.set_title(y_axis)
+        ax.legend(title=lines)
+    fig.tight_layout()
+
     plt.show()
 
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** ( 0 minutes  34.167 seconds)
+   **Total running time of the script:** ( 0 minutes  29.123 seconds)
 
 
 .. _sphx_glr_download_auto_examples_linear_model_plot_sgd_early_stopping.py:
