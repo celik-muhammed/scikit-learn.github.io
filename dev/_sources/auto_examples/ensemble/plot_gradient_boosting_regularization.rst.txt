@@ -38,7 +38,7 @@ analogous to the random splits in Random Forests
 .. [1] T. Hastie, R. Tibshirani and J. Friedman, "Elements of Statistical
     Learning Ed. 2", Springer, 2009.
 
-.. GENERATED FROM PYTHON SOURCE LINES 23-94
+.. GENERATED FROM PYTHON SOURCE LINES 23-93
 
 
 
@@ -48,37 +48,8 @@ analogous to the random splits in Random Forests
    :class: sphx-glr-single-img
 
 
-.. rst-class:: sphx-glr-script-out
-
- .. code-block:: none
-
-    /home/runner/work/scikit-learn/scikit-learn/sklearn/utils/deprecation.py:101: FutureWarning:
-
-    Attribute `loss_` was deprecated in version 1.1 and will be removed in 1.3.
-
-    /home/runner/work/scikit-learn/scikit-learn/sklearn/utils/deprecation.py:101: FutureWarning:
-
-    Attribute `loss_` was deprecated in version 1.1 and will be removed in 1.3.
-
-    /home/runner/work/scikit-learn/scikit-learn/sklearn/utils/deprecation.py:101: FutureWarning:
-
-    Attribute `loss_` was deprecated in version 1.1 and will be removed in 1.3.
-
-    /home/runner/work/scikit-learn/scikit-learn/sklearn/utils/deprecation.py:101: FutureWarning:
-
-    Attribute `loss_` was deprecated in version 1.1 and will be removed in 1.3.
-
-    /home/runner/work/scikit-learn/scikit-learn/sklearn/utils/deprecation.py:101: FutureWarning:
-
-    Attribute `loss_` was deprecated in version 1.1 and will be removed in 1.3.
 
 
-
-
-
-
-
-|
 
 .. code-block:: default
 
@@ -92,7 +63,7 @@ analogous to the random splits in Random Forests
 
     from sklearn import ensemble
     from sklearn import datasets
-
+    from sklearn.metrics import log_loss
     from sklearn.model_selection import train_test_split
 
     X, y = datasets.make_hastie_10_2(n_samples=4000, random_state=1)
@@ -136,9 +107,8 @@ analogous to the random splits in Random Forests
         # compute test set deviance
         test_deviance = np.zeros((params["n_estimators"],), dtype=np.float64)
 
-        for i, y_pred in enumerate(clf.staged_decision_function(X_test)):
-            # clf.loss_ assumes that y_test[i] in {0, 1}
-            test_deviance[i] = clf.loss_(y_test, y_pred)
+        for i, y_proba in enumerate(clf.staged_predict_proba(X_test)):
+            test_deviance[i] = 2 * log_loss(y_test, y_proba[:, 1])
 
         plt.plot(
             (np.arange(test_deviance.shape[0]) + 1)[::5],
@@ -157,7 +127,7 @@ analogous to the random splits in Random Forests
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** ( 0 minutes  4.741 seconds)
+   **Total running time of the script:** ( 0 minutes  8.849 seconds)
 
 
 .. _sphx_glr_download_auto_examples_ensemble_plot_gradient_boosting_regularization.py:
