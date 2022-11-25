@@ -10,10 +10,10 @@
 <meta property="og:type" content="website" />
 <meta property="og:url" content="https://scikit-learn/stable/computing/parallelism.html" />
 <meta property="og:site_name" content="scikit-learn" />
-<meta property="og:description" content="Parallelism: Some scikit-learn estimators and utilities can parallelize costly operations using multiple CPU cores, thanks to the following components: via the joblib library. In this case the numb..." />
+<meta property="og:description" content="Parallelism: Some scikit-learn estimators and utilities parallelize costly operations using multiple CPU cores. Depending on the type of estimator and sometimes the values of the constructor parame..." />
 <meta property="og:image" content="https://scikit-learn.org/stable/_static/scikit-learn-logo-small.png" />
 <meta property="og:image:alt" content="scikit-learn" />
-<meta name="description" content="Parallelism: Some scikit-learn estimators and utilities can parallelize costly operations using multiple CPU cores, thanks to the following components: via the joblib library. In this case the numb..." />
+<meta name="description" content="Parallelism: Some scikit-learn estimators and utilities parallelize costly operations using multiple CPU cores. Depending on the type of estimator and sometimes the values of the constructor parame..." />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
@@ -283,33 +283,39 @@
 <h1><span class="section-number">8.3. </span>Parallelism, resource management, and configuration<a class="headerlink" href="#parallelism-resource-management-and-configuration" title="Permalink to this heading">¶</a></h1>
 <section id="parallelism">
 <span id="id1"></span><h2><span class="section-number">8.3.1. </span>Parallelism<a class="headerlink" href="#parallelism" title="Permalink to this heading">¶</a></h2>
-<p>Some scikit-learn estimators and utilities can parallelize costly operations
-using multiple CPU cores, thanks to the following components:</p>
+<p>Some scikit-learn estimators and utilities parallelize costly operations
+using multiple CPU cores.</p>
+<p>Depending on the type of estimator and sometimes the values of the
+constructor parameters, this is either done:</p>
 <ul class="simple">
-<li><p>via the <a class="reference external" href="https://joblib.readthedocs.io/en/latest/">joblib</a> library. In
-this case the number of threads or processes can be controlled with the
-<code class="docutils literal notranslate"><span class="pre">n_jobs</span></code> parameter.</p></li>
-<li><p>via OpenMP, used in C or Cython code.</p></li>
+<li><p>with higher-level parallelism via <a class="reference external" href="https://joblib.readthedocs.io/en/latest/">joblib</a>.</p></li>
+<li><p>with lower-level parallelism via OpenMP, used in C or Cython code.</p></li>
+<li><p>with lower-level parallelism via BLAS, used by NumPy and SciPy for generic operations
+on arrays.</p></li>
 </ul>
-<p>In addition, some of the numpy routines that are used internally by
-scikit-learn may also be parallelized if numpy is installed with specific
-numerical libraries such as MKL, OpenBLAS, or BLIS.</p>
-<p>We describe these 3 scenarios in the following subsections.</p>
-<section id="joblib-based-parallelism">
-<h3><span class="section-number">8.3.1.1. </span>Joblib-based parallelism<a class="headerlink" href="#joblib-based-parallelism" title="Permalink to this heading">¶</a></h3>
+<p>The <code class="docutils literal notranslate"><span class="pre">n_jobs</span></code> parameters of estimators always controls the amount of parallelism
+managed by joblib (processes or threads depending on the joblib backend).
+The thread-level parallelism managed by OpenMP in scikit-learn’s own Cython code
+or by BLAS &amp; LAPACK libraries used by NumPy and SciPy operations used in scikit-learn
+is always controlled by environment variables or <code class="docutils literal notranslate"><span class="pre">threadpoolctl</span></code> as explained below.
+Note that some estimators can leverage all three kinds of parallelism at different
+points of their training and prediction methods.</p>
+<p>We describe these 3 types of parallelism in the following subsections in more details.</p>
+<section id="higher-level-parallelism-with-joblib">
+<h3><span class="section-number">8.3.1.1. </span>Higher-level parallelism with joblib<a class="headerlink" href="#higher-level-parallelism-with-joblib" title="Permalink to this heading">¶</a></h3>
 <p>When the underlying implementation uses joblib, the number of workers
 (threads or processes) that are spawned in parallel can be controlled via the
 <code class="docutils literal notranslate"><span class="pre">n_jobs</span></code> parameter.</p>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
-<p>Where (and how) parallelization happens in the estimators is currently
-poorly documented. Please help us by improving our docs and tackle <a class="reference external" href="https://github.com/scikit-learn/scikit-learn/issues/14228">issue
-14228</a>!</p>
+<p>Where (and how) parallelization happens in the estimators using joblib by
+specifying <code class="docutils literal notranslate"><span class="pre">n_jobs</span></code> is currently poorly documented.
+Please help us by improving our docs and tackle <a class="reference external" href="https://github.com/scikit-learn/scikit-learn/issues/14228">issue 14228</a>!</p>
 </div>
 <p>Joblib is able to support both multi-processing and multi-threading. Whether
 joblib chooses to spawn a thread or a process depends on the <strong>backend</strong>
 that it’s using.</p>
-<p>Scikit-learn generally relies on the <code class="docutils literal notranslate"><span class="pre">loky</span></code> backend, which is joblib’s
+<p>scikit-learn generally relies on the <code class="docutils literal notranslate"><span class="pre">loky</span></code> backend, which is joblib’s
 default backend. Loky is a multi-processing backend. When doing
 multi-processing, in order to avoid duplicating the memory in each process
 (which isn’t reasonable with big datasets), joblib will create a <a class="reference external" href="https://docs.scipy.org/doc/numpy/reference/generated/numpy.memmap.html">memmap</a>
@@ -333,36 +339,60 @@ that increasing the number of workers is always a good thing. In some cases
 it can be highly detrimental to performance to run multiple copies of some
 estimators or functions in parallel (see oversubscription below).</p>
 </section>
-<section id="openmp-based-parallelism">
-<h3><span class="section-number">8.3.1.2. </span>OpenMP-based parallelism<a class="headerlink" href="#openmp-based-parallelism" title="Permalink to this heading">¶</a></h3>
+<section id="lower-level-parallelism-with-openmp">
+<h3><span class="section-number">8.3.1.2. </span>Lower-level parallelism with OpenMP<a class="headerlink" href="#lower-level-parallelism-with-openmp" title="Permalink to this heading">¶</a></h3>
 <p>OpenMP is used to parallelize code written in Cython or C, relying on
-multi-threading exclusively. By default (and unless joblib is trying to
-avoid oversubscription), the implementation will use as many threads as
-possible.</p>
-<p>You can control the exact number of threads that are used via the
-<code class="docutils literal notranslate"><span class="pre">OMP_NUM_THREADS</span></code> environment variable:</p>
+multi-threading exclusively. By default, the implementations using OpenMP
+will use as many threads as possible, i.e. as many threads as logical cores.</p>
+<p>You can control the exact number of threads that are used either:</p>
+<blockquote>
+<div><ul>
+<li><p>via the <code class="docutils literal notranslate"><span class="pre">OMP_NUM_THREADS</span></code> environment variable, for instance when:
+running a python script:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><style type="text/css">
 span.prompt1:before {
   content: "$ ";
 }
 </style><span class="prompt1"><span class="nv">OMP_NUM_THREADS</span><span class="o">=</span><span class="m">4</span> python my_script.py</span>
-</pre></div></div></section>
-<section id="parallel-numpy-routines-from-numerical-libraries">
-<h3><span class="section-number">8.3.1.3. </span>Parallel Numpy routines from numerical libraries<a class="headerlink" href="#parallel-numpy-routines-from-numerical-libraries" title="Permalink to this heading">¶</a></h3>
-<p>Scikit-learn relies heavily on NumPy and SciPy, which internally call
-multi-threaded linear algebra routines implemented in libraries such as MKL,
-OpenBLAS or BLIS.</p>
-<p>The number of threads used by the OpenBLAS, MKL or BLIS libraries can be set
-via the <code class="docutils literal notranslate"><span class="pre">MKL_NUM_THREADS</span></code>, <code class="docutils literal notranslate"><span class="pre">OPENBLAS_NUM_THREADS</span></code>, and
-<code class="docutils literal notranslate"><span class="pre">BLIS_NUM_THREADS</span></code> environment variables.</p>
-<p>Please note that scikit-learn has no direct control over these
-implementations. Scikit-learn solely relies on Numpy and Scipy.</p>
+</pre></div></div></li>
+<li><p>or via <code class="docutils literal notranslate"><span class="pre">threadpoolctl</span></code> as explained by <a class="reference external" href="https://github.com/joblib/threadpoolctl/#setting-the-maximum-size-of-thread-pools">this piece of documentation</a>.</p></li>
+</ul>
+</div></blockquote>
+</section>
+<section id="parallel-numpy-and-scipy-routines-from-numerical-libraries">
+<h3><span class="section-number">8.3.1.3. </span>Parallel NumPy and SciPy routines from numerical libraries<a class="headerlink" href="#parallel-numpy-and-scipy-routines-from-numerical-libraries" title="Permalink to this heading">¶</a></h3>
+<p>scikit-learn relies heavily on NumPy and SciPy, which internally call
+multi-threaded linear algebra routines (BLAS &amp; LAPACK) implemented in libraries
+such as MKL, OpenBLAS or BLIS.</p>
+<p>You can control the exact number of threads used by BLAS for each library
+using environment variables, namely:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">MKL_NUM_THREADS</span></code> sets the number of thread MKL uses,</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">OPENBLAS_NUM_THREADS</span></code> sets the number of threads OpenBLAS uses</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">BLIS_NUM_THREADS</span></code> sets the number of threads BLIS uses</p></li>
+</ul>
+</div></blockquote>
+<p>Note that BLAS &amp; LAPACK implementations can also be impacted by
+<code class="docutils literal notranslate"><span class="pre">OMP_NUM_THREADS</span></code>. To check whether this is the case in your environment,
+you can inspect how the number of threads effectively used by those libraries
+is affected when running the the following command in a bash or zsh terminal
+for different values of <code class="docutils literal notranslate"><span class="pre">OMP_NUM_THREADS</span></code>:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>.. prompt:: bash $
+</pre></div>
+</div>
+<blockquote>
+<div><p>OMP_NUM_THREADS=2 python -m threadpoolctl -i numpy scipy</p>
+</div></blockquote>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
-<p>At the time of writing (2019), NumPy and SciPy packages distributed on
-pypi.org (used by <code class="docutils literal notranslate"><span class="pre">pip</span></code>) and on the conda-forge channel are linked
-with OpenBLAS, while conda packages shipped on the “defaults” channel
-from anaconda.org are linked by default with MKL.</p>
+<p>At the time of writing (2022), NumPy and SciPy packages which are
+distributed on pypi.org (i.e. the ones installed via <code class="docutils literal notranslate"><span class="pre">pip</span> <span class="pre">install</span></code>)
+and on the conda-forge channel (i.e. the ones installed via
+<code class="docutils literal notranslate"><span class="pre">conda</span> <span class="pre">install</span> <span class="pre">--channel</span> <span class="pre">conda-forge</span></code>) are linked with OpenBLAS, while
+NumPy and SciPy packages packages shipped on the <code class="docutils literal notranslate"><span class="pre">defaults</span></code> conda
+channel from Anaconda.org (i.e. the ones installed via <code class="docutils literal notranslate"><span class="pre">conda</span> <span class="pre">install</span></code>)
+are linked by default with MKL.</p>
 </div>
 </section>
 <section id="oversubscription-spawning-too-many-threads">
@@ -377,8 +407,8 @@ with <code class="docutils literal notranslate"><span class="pre">n_jobs=8</span
 OpenMP). Each instance of
 <a class="reference internal" href="../modules/generated/sklearn.ensemble.HistGradientBoostingClassifier.html#sklearn.ensemble.HistGradientBoostingClassifier" title="sklearn.ensemble.HistGradientBoostingClassifier"><code class="xref py py-class docutils literal notranslate"><span class="pre">HistGradientBoostingClassifier</span></code></a> will spawn 8 threads
 (since you have 8 CPUs). That’s a total of <code class="docutils literal notranslate"><span class="pre">8</span> <span class="pre">*</span> <span class="pre">8</span> <span class="pre">=</span> <span class="pre">64</span></code> threads, which
-leads to oversubscription of physical CPU resources and to scheduling
-overhead.</p>
+leads to oversubscription of threads for physical CPU resources and thus
+to scheduling overhead.</p>
 <p>Oversubscription can arise in the exact same fashion with parallelized
 routines from MKL, OpenBLAS or BLIS that are nested in joblib calls.</p>
 <p>Starting from <code class="docutils literal notranslate"><span class="pre">joblib</span> <span class="pre">&gt;=</span> <span class="pre">0.14</span></code>, when the <code class="docutils literal notranslate"><span class="pre">loky</span></code> backend is used (which
@@ -400,28 +430,26 @@ limit will also impact your computations in the main process, which will
 only use <code class="docutils literal notranslate"><span class="pre">&lt;LIB&gt;_NUM_THREADS</span></code>. Joblib exposes a context manager for
 finer control over the number of threads in its workers (see joblib docs
 linked below).</p></li>
-<li><p>Joblib is currently unable to avoid oversubscription in a
-multi-threading context. It can only do so with the <code class="docutils literal notranslate"><span class="pre">loky</span></code> backend
-(which spawns processes).</p></li>
+<li><p>When joblib is configured to use the <code class="docutils literal notranslate"><span class="pre">threading</span></code> backend, there is no
+mechanism to avoid oversubscriptions when calling into parallel native
+libraries in the joblib-managed threads.</p></li>
+<li><p>All scikit-learn estimators that explicitly rely on OpenMP in their Cython code
+always use <code class="docutils literal notranslate"><span class="pre">threadpoolctl</span></code> internally to automatically adapt the numbers of
+threads used by OpenMP and potentially nested BLAS calls so as to avoid
+oversubscription.</p></li>
 </ul>
 <p>You will find additional details about joblib mitigation of oversubscription
 in <a class="reference external" href="https://joblib.readthedocs.io/en/latest/parallel.html#avoiding-over-subscription-of-cpu-resources">joblib documentation</a>.</p>
+<p>You will find additional details about parallelism in numerical python libraries
+in <a class="reference external" href="https://thomasjpfan.github.io/parallelism-python-libraries-design/">this document from Thomas J. Fan</a>.</p>
 </section>
 </section>
 <section id="configuration-switches">
 <h2><span class="section-number">8.3.2. </span>Configuration switches<a class="headerlink" href="#configuration-switches" title="Permalink to this heading">¶</a></h2>
-<section id="python-runtime">
-<h3><span class="section-number">8.3.2.1. </span>Python runtime<a class="headerlink" href="#python-runtime" title="Permalink to this heading">¶</a></h3>
-<p><a class="reference internal" href="../modules/generated/sklearn.set_config.html#sklearn.set_config" title="sklearn.set_config"><code class="xref py py-func docutils literal notranslate"><span class="pre">sklearn.set_config</span></code></a> controls the following behaviors:</p>
-<section id="assume-finite">
-<h4><span class="section-number">8.3.2.1.1. </span><code class="docutils literal notranslate"><span class="pre">assume_finite</span></code><a class="headerlink" href="#assume-finite" title="Permalink to this heading">¶</a></h4>
-<p>Used to skip validation, which enables faster computations but may lead to
-segmentation faults if the data contains NaNs.</p>
-</section>
-<section id="working-memory">
-<h4><span class="section-number">8.3.2.1.2. </span><code class="docutils literal notranslate"><span class="pre">working_memory</span></code><a class="headerlink" href="#working-memory" title="Permalink to this heading">¶</a></h4>
-<p>The optimal size of temporary arrays used by some algorithms.</p>
-</section>
+<section id="python-api">
+<h3><span class="section-number">8.3.2.1. </span>Python API<a class="headerlink" href="#python-api" title="Permalink to this heading">¶</a></h3>
+<p><a class="reference internal" href="../modules/generated/sklearn.set_config.html#sklearn.set_config" title="sklearn.set_config"><code class="xref py py-func docutils literal notranslate"><span class="pre">sklearn.set_config</span></code></a> and <a class="reference internal" href="../modules/generated/sklearn.config_context.html#sklearn.config_context" title="sklearn.config_context"><code class="xref py py-func docutils literal notranslate"><span class="pre">sklearn.config_context</span></code></a> can be used to change
+parameters of the configuration which control aspect of parallelism.</p>
 </section>
 <section id="environment-variables">
 <span id="environment-variable"></span><h3><span class="section-number">8.3.2.2. </span>Environment variables<a class="headerlink" href="#environment-variables" title="Permalink to this heading">¶</a></h3>
@@ -506,6 +534,15 @@ float64 data.</p>
 <p>When this environment variable is set to a non zero value, the <code class="docutils literal notranslate"><span class="pre">Cython</span></code>
 derivative, <code class="docutils literal notranslate"><span class="pre">boundscheck</span></code> is set to <code class="docutils literal notranslate"><span class="pre">True</span></code>. This is useful for finding
 segfaults.</p>
+</section>
+<section id="sklearn-pairwise-dist-chunk-size">
+<h4><span class="section-number">8.3.2.2.8. </span><code class="docutils literal notranslate"><span class="pre">SKLEARN_PAIRWISE_DIST_CHUNK_SIZE</span></code><a class="headerlink" href="#sklearn-pairwise-dist-chunk-size" title="Permalink to this heading">¶</a></h4>
+<p>This sets the size of chunk to be used by the underlying <code class="docutils literal notranslate"><span class="pre">PairwiseDistancesReductions</span></code>
+implementations. The default value is <code class="docutils literal notranslate"><span class="pre">256</span></code> which has been showed to be adequate on
+most machines.</p>
+<p>Users looking for the best performance might want to tune this variable using
+powers of 2 so as to get the best parallelism behavior for their hardware,
+especially with respect to their caches’ sizes.</p>
 </section>
 </section>
 </section>
