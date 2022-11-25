@@ -193,7 +193,7 @@
 <h1><a class="reference internal" href="../classes.html#module-sklearn.inspection" title="sklearn.inspection"><code class="xref py py-mod docutils literal notranslate"><span class="pre">sklearn.inspection</span></code></a>.partial_dependence<a class="headerlink" href="#sklearn-inspection-partial-dependence" title="Permalink to this heading">¶</a></h1>
 <dl class="py function">
 <dt class="sig sig-object py" id="sklearn.inspection.partial_dependence">
-<span class="sig-prename descclassname"><span class="pre">sklearn.inspection.</span></span><span class="sig-name descname"><span class="pre">partial_dependence</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">estimator</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">X</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">features</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">response_method</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'auto'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">percentiles</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">(0.05,</span> <span class="pre">0.95)</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">grid_resolution</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">100</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">method</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'auto'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">kind</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'average'</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/scikit-learn/scikit-learn/blob/7d1c31892/sklearn/inspection/_partial_dependence.py#L205"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#sklearn.inspection.partial_dependence" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">sklearn.inspection.</span></span><span class="sig-name descname"><span class="pre">partial_dependence</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">estimator</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">X</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">features</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">categorical_features</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">feature_names</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">response_method</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'auto'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">percentiles</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">(0.05,</span> <span class="pre">0.95)</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">grid_resolution</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">100</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">method</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'auto'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">kind</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'average'</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/scikit-learn/scikit-learn/blob/c1cfc4d4f/sklearn/inspection/_partial_dependence.py#L215"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#sklearn.inspection.partial_dependence" title="Permalink to this definition">¶</a></dt>
 <dd><p>Partial dependence of <code class="docutils literal notranslate"><span class="pre">features</span></code>.</p>
 <p>Partial dependence of a feature (or a set of features) corresponds to
 the average response of an estimator for each possible value of the
@@ -230,6 +230,33 @@ also to generate values for the complement features when the
 </dd>
 <dt><strong>features</strong><span class="classifier">array-like of {int, str}</span></dt><dd><p>The feature (e.g. <code class="docutils literal notranslate"><span class="pre">[0]</span></code>) or pair of interacting features
 (e.g. <code class="docutils literal notranslate"><span class="pre">[(0,</span> <span class="pre">1)]</span></code>) for which the partial dependency should be computed.</p>
+</dd>
+<dt><strong>categorical_features</strong><span class="classifier">array-like of shape (n_features,) or shape             (n_categorical_features,), dtype={bool, int, str}, default=None</span></dt><dd><p>Indicates the categorical features.</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">None</span></code>: no feature will be considered categorical;</p></li>
+<li><dl class="simple">
+<dt>boolean array-like: boolean mask of shape <code class="docutils literal notranslate"><span class="pre">(n_features,)</span></code></dt><dd><p>indicating which features are categorical. Thus, this array has
+the same shape has <code class="docutils literal notranslate"><span class="pre">X.shape[1]</span></code>;</p>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>integer or string array-like: integer indices or strings</dt><dd><p>indicating categorical features.</p>
+</dd>
+</dl>
+</li>
+</ul>
+<div class="versionadded">
+<p><span class="versionmodified added">New in version 1.2.</span></p>
+</div>
+</dd>
+<dt><strong>feature_names</strong><span class="classifier">array-like of shape (n_features,), dtype=str, default=None</span></dt><dd><p>Name of each feature; <code class="docutils literal notranslate"><span class="pre">feature_names[i]</span></code> holds the name of the feature
+with index <code class="docutils literal notranslate"><span class="pre">i</span></code>.
+By default, the name of the feature corresponds to their numerical
+index for NumPy array and their column name for pandas dataframe.</p>
+<div class="versionadded">
+<p><span class="versionmodified added">New in version 1.2.</span></p>
+</div>
 </dd>
 <dt><strong>response_method</strong><span class="classifier">{‘auto’, ‘predict_proba’, ‘decision_function’},             default=’auto’</span></dt><dd><p>Specifies whether to use <a class="reference internal" href="../../glossary.html#term-predict_proba"><span class="xref std std-term">predict_proba</span></a> or
 <a class="reference internal" href="../../glossary.html#term-decision_function"><span class="xref std std-term">decision_function</span></a> as the target response. For regressors
@@ -272,10 +299,10 @@ and <code class="docutils literal notranslate"><span class="pre">'brute'</span><
 differences between the <code class="docutils literal notranslate"><span class="pre">'brute'</span></code> and <code class="docutils literal notranslate"><span class="pre">'recursion'</span></code> method.</p>
 </dd>
 <dt><strong>kind</strong><span class="classifier">{‘average’, ‘individual’, ‘both’}, default=’average’</span></dt><dd><p>Whether to return the partial dependence averaged across all the
-samples in the dataset or one line per sample or both.
+samples in the dataset or one value per sample or both.
 See Returns below.</p>
 <p>Note that the fast <code class="docutils literal notranslate"><span class="pre">method='recursion'</span></code> option is only available for
-<code class="docutils literal notranslate"><span class="pre">kind='average'</span></code>. Plotting individual dependencies requires using the
+<code class="docutils literal notranslate"><span class="pre">kind='average'</span></code>. Computing individual dependencies requires using the
 slower <code class="docutils literal notranslate"><span class="pre">method='brute'</span></code> option.</p>
 <div class="versionadded">
 <p><span class="versionmodified added">New in version 0.24.</span></p>
