@@ -69,6 +69,31 @@ hist_no_interact = HistGradientBoostingRegressor(
 hist_no_interact.fit(X, y)
 
 # %%
+# New and enhanced displays
+# -------------------------
+# :class:`~metrics.PredictionErrorDisplay` provides a way to analyze regression
+# models in a qualitative manner.
+import matplotlib.pyplot as plt
+from sklearn.metrics import PredictionErrorDisplay
+
+fig, axs = plt.subplots(nrows=1, ncols=2, figsize=(12, 5))
+_ = PredictionErrorDisplay.from_estimator(
+    hist_no_interact, X, y, kind="actual_vs_predicted", ax=axs[0]
+)
+_ = PredictionErrorDisplay.from_estimator(
+    hist_no_interact, X, y, kind="residual_vs_predicted", ax=axs[1]
+)
+
+# %%
+# :class:`~model_selection.LearningCurveDisplay` is now available to plot
+# results from :func:`~model_selection.learning_curve`.
+from sklearn.model_selection import LearningCurveDisplay
+
+_ = LearningCurveDisplay.from_estimator(
+    hist_no_interact, X, y, cv=5, n_jobs=2, train_sizes=np.linspace(0.1, 1, 5)
+)
+
+# %%
 # Faster parser in :func:`~datasets.fetch_openml`
 # -----------------------------------------------
 # :func:`~datasets.fetch_openml` now supports a new `"pandas"` parser that is
@@ -95,10 +120,13 @@ X.head()
 # Improved efficiency of many estimators
 # --------------------------------------
 # In version 1.1 the efficiency of many estimators relying on the computation of
-# pairwise distances was greatly improved for float64 dense input. In version 1.2,
-# the efficiency of these estimators was further improved for all combinations of
-# float32/float64 and dense/sparse input (for all metrics except euclidean). It
-# concerns essentially clustering, manifold learning and neighbor search algorithms.
-# A detailed list of the impacted estimators can be found in the
-# :ref:`changelog <changes_1_2>`. The main benefits are a reduced memory footprint
+# pairwise distances (essentially estimators related to clustering, manifold
+# learning and neighbors search algorithms) was greatly improved for float64
+# dense input. Efficiency improvement especially were a reduced memory footprint
 # and a much better scalability on multi-core machines.
+# In version 1.2, the efficiency of these estimators was further improved for all
+# combinations of dense and sparse inputs on float32 and float64 datasets, except
+# the sparse-dense and dense-sparse combinations for the Euclidean and Squared
+# Euclidean Distance metrics.
+# A detailed list of the impacted estimators can be found in the
+# :ref:`changelog <changes_1_2>`.

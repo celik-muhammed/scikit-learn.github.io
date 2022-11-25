@@ -188,7 +188,68 @@ allowed to interact.
     <br />
     <br />
 
-.. GENERATED FROM PYTHON SOURCE LINES 72-78
+.. GENERATED FROM PYTHON SOURCE LINES 72-76
+
+New and enhanced displays
+-------------------------
+:class:`~metrics.PredictionErrorDisplay` provides a way to analyze regression
+models in a qualitative manner.
+
+.. GENERATED FROM PYTHON SOURCE LINES 76-87
+
+.. code-block:: default
+
+    import matplotlib.pyplot as plt
+    from sklearn.metrics import PredictionErrorDisplay
+
+    fig, axs = plt.subplots(nrows=1, ncols=2, figsize=(12, 5))
+    _ = PredictionErrorDisplay.from_estimator(
+        hist_no_interact, X, y, kind="actual_vs_predicted", ax=axs[0]
+    )
+    _ = PredictionErrorDisplay.from_estimator(
+        hist_no_interact, X, y, kind="residual_vs_predicted", ax=axs[1]
+    )
+
+
+
+
+.. image-sg:: /auto_examples/release_highlights/images/sphx_glr_plot_release_highlights_1_2_0_001.png
+   :alt: plot release highlights 1 2 0
+   :srcset: /auto_examples/release_highlights/images/sphx_glr_plot_release_highlights_1_2_0_001.png
+   :class: sphx-glr-single-img
+
+
+
+
+
+.. GENERATED FROM PYTHON SOURCE LINES 88-90
+
+:class:`~model_selection.LearningCurveDisplay` is now available to plot
+results from :func:`~model_selection.learning_curve`.
+
+.. GENERATED FROM PYTHON SOURCE LINES 90-96
+
+.. code-block:: default
+
+    from sklearn.model_selection import LearningCurveDisplay
+
+    _ = LearningCurveDisplay.from_estimator(
+        hist_no_interact, X, y, cv=5, n_jobs=2, train_sizes=np.linspace(0.1, 1, 5)
+    )
+
+
+
+
+.. image-sg:: /auto_examples/release_highlights/images/sphx_glr_plot_release_highlights_1_2_0_002.png
+   :alt: plot release highlights 1 2 0
+   :srcset: /auto_examples/release_highlights/images/sphx_glr_plot_release_highlights_1_2_0_002.png
+   :class: sphx-glr-single-img
+
+
+
+
+
+.. GENERATED FROM PYTHON SOURCE LINES 97-103
 
 Faster parser in :func:`~datasets.fetch_openml`
 -----------------------------------------------
@@ -197,7 +258,7 @@ more memory and CPU efficient. In v1.4, the default will change to
 `parser="auto"` which will automatically use the `"pandas"` parser for dense
 data and `"liac-arff"` for sparse data.
 
-.. GENERATED FROM PYTHON SOURCE LINES 78-85
+.. GENERATED FROM PYTHON SOURCE LINES 103-110
 
 .. code-block:: default
 
@@ -210,6 +271,15 @@ data and `"liac-arff"` for sparse data.
 
 
 
+
+
+.. rst-class:: sphx-glr-script-out
+
+ .. code-block:: none
+
+    /home/runner/work/scikit-learn/scikit-learn/sklearn/datasets/_openml.py:91: UserWarning:
+
+    A network error occurred while downloading https://openml.org/api/v1/json/data/list/data_name/titanic/limit/2/data_version/1. Retrying...
 
 
 
@@ -337,7 +407,7 @@ data and `"liac-arff"` for sparse data.
     <br />
     <br />
 
-.. GENERATED FROM PYTHON SOURCE LINES 86-93
+.. GENERATED FROM PYTHON SOURCE LINES 111-118
 
 Experimental Array API support in :class:`~discriminant_analysis.LinearDiscriminantAnalysis`
 --------------------------------------------------------------------------------------------
@@ -347,23 +417,26 @@ The estimator can now run on any Array API compliant libraries such as
 `CuPy <https://docs.cupy.dev/en/stable/overview.html>`__, a GPU-accelerated array
 library. For details, see the :ref:`User Guide <array_api>`.
 
-.. GENERATED FROM PYTHON SOURCE LINES 95-105
+.. GENERATED FROM PYTHON SOURCE LINES 120-133
 
 Improved efficiency of many estimators
 --------------------------------------
 In version 1.1 the efficiency of many estimators relying on the computation of
-pairwise distances was greatly improved for float64 dense input. In version 1.2,
-the efficiency of these estimators was further improved for all combinations of
-float32/float64 and dense/sparse input (for all metrics except euclidean). It
-concerns essentially clustering, manifold learning and neighbor search algorithms.
-A detailed list of the impacted estimators can be found in the
-:ref:`changelog <changes_1_2>`. The main benefits are a reduced memory footprint
+pairwise distances (essentially estimators related to clustering, manifold
+learning and neighbors search algorithms) was greatly improved for float64
+dense input. Efficiency improvement especially were a reduced memory footprint
 and a much better scalability on multi-core machines.
+In version 1.2, the efficiency of these estimators was further improved for all
+combinations of dense and sparse inputs on float32 and float64 datasets, except
+the sparse-dense and dense-sparse combinations for the Euclidean and Squared
+Euclidean Distance metrics.
+A detailed list of the impacted estimators can be found in the
+:ref:`changelog <changes_1_2>`.
 
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** ( 3 minutes  58.813 seconds)
+   **Total running time of the script:** ( 2 minutes  30.936 seconds)
 
 
 .. _sphx_glr_download_auto_examples_release_highlights_plot_release_highlights_1_2_0.py:
