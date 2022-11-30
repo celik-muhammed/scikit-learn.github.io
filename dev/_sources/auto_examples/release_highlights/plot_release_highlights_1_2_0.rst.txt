@@ -249,7 +249,81 @@ results from :func:`~model_selection.learning_curve`.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 97-103
+.. GENERATED FROM PYTHON SOURCE LINES 97-100
+
+:class:`~inspection.PartialDependenceDisplay` exposes a new parameter
+`categorical_features` to display partial dependence for categorical features
+using bar plots and heatmaps.
+
+.. GENERATED FROM PYTHON SOURCE LINES 100-107
+
+.. code-block:: default
+
+    from sklearn.datasets import fetch_openml
+
+    X, y = fetch_openml(
+        "titanic", version=1, as_frame=True, return_X_y=True, parser="pandas"
+    )
+    X = X.select_dtypes(["number", "category"]).drop(columns=["body"])
+
+
+
+
+
+
+
+
+.. GENERATED FROM PYTHON SOURCE LINES 108-120
+
+.. code-block:: default
+
+    from sklearn.preprocessing import OrdinalEncoder
+    from sklearn.pipeline import make_pipeline
+
+    categorical_features = ["pclass", "sex", "embarked"]
+    model = make_pipeline(
+        ColumnTransformer(
+            transformers=[("cat", OrdinalEncoder(), categorical_features)],
+            remainder="passthrough",
+        ),
+        HistGradientBoostingRegressor(random_state=0),
+    ).fit(X, y)
+
+
+
+
+
+
+
+
+.. GENERATED FROM PYTHON SOURCE LINES 121-132
+
+.. code-block:: default
+
+    from sklearn.inspection import PartialDependenceDisplay
+
+    fig, ax = plt.subplots(figsize=(14, 4), constrained_layout=True)
+    _ = PartialDependenceDisplay.from_estimator(
+        model,
+        X,
+        features=["age", "sex", ("pclass", "sex")],
+        categorical_features=categorical_features,
+        ax=ax,
+    )
+
+
+
+
+.. image-sg:: /auto_examples/release_highlights/images/sphx_glr_plot_release_highlights_1_2_0_003.png
+   :alt: plot release highlights 1 2 0
+   :srcset: /auto_examples/release_highlights/images/sphx_glr_plot_release_highlights_1_2_0_003.png
+   :class: sphx-glr-single-img
+
+
+
+
+
+.. GENERATED FROM PYTHON SOURCE LINES 133-139
 
 Faster parser in :func:`~datasets.fetch_openml`
 -----------------------------------------------
@@ -258,11 +332,9 @@ more memory and CPU efficient. In v1.4, the default will change to
 `parser="auto"` which will automatically use the `"pandas"` parser for dense
 data and `"liac-arff"` for sparse data.
 
-.. GENERATED FROM PYTHON SOURCE LINES 103-110
+.. GENERATED FROM PYTHON SOURCE LINES 139-144
 
 .. code-block:: default
-
-    from sklearn.datasets import fetch_openml
 
     X, y = fetch_openml(
         "titanic", version=1, as_frame=True, return_X_y=True, parser="pandas"
@@ -398,7 +470,7 @@ data and `"liac-arff"` for sparse data.
     <br />
     <br />
 
-.. GENERATED FROM PYTHON SOURCE LINES 111-118
+.. GENERATED FROM PYTHON SOURCE LINES 145-152
 
 Experimental Array API support in :class:`~discriminant_analysis.LinearDiscriminantAnalysis`
 --------------------------------------------------------------------------------------------
@@ -408,7 +480,7 @@ The estimator can now run on any Array API compliant libraries such as
 `CuPy <https://docs.cupy.dev/en/stable/overview.html>`__, a GPU-accelerated array
 library. For details, see the :ref:`User Guide <array_api>`.
 
-.. GENERATED FROM PYTHON SOURCE LINES 120-133
+.. GENERATED FROM PYTHON SOURCE LINES 154-167
 
 Improved efficiency of many estimators
 --------------------------------------
@@ -427,7 +499,7 @@ A detailed list of the impacted estimators can be found in the
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** ( 0 minutes  13.470 seconds)
+   **Total running time of the script:** ( 0 minutes  10.572 seconds)
 
 
 .. _sphx_glr_download_auto_examples_release_highlights_plot_release_highlights_1_2_0.py:
