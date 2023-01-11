@@ -161,7 +161,7 @@
         </div>
         <div class="btn-group w-100 mb-2" role="group" aria-label="rellinks">
             <a href="index.html" role="button" class="btn sk-btn-rellink py-1" sk-rellink-tooltip="Inspection">Prev</a><a href="index.html" role="button" class="btn sk-btn-rellink py-1" sk-rellink-tooltip="Inspection">Up</a>
-            <a href="plot_partial_dependence.html" role="button" class="btn sk-btn-rellink py-1" sk-rellink-tooltip="Partial Dependence and Individual Conditional Expectation Plots">Next</a>
+            <a href="plot_causal_interpretation.html" role="button" class="btn sk-btn-rellink py-1" sk-rellink-tooltip="Failure of Machine Learning to infer causal effects">Next</a>
         </div>
         <div class="alert alert-danger p-1 mb-2" role="alert">
           <p class="text-center mb-0">
@@ -186,6 +186,8 @@
 <li><a class="reference internal" href="#preprocessing-numerical-variables">Preprocessing numerical variables</a></li>
 <li><a class="reference internal" href="#linear-models-with-regularization">Linear models with regularization</a></li>
 <li><a class="reference internal" href="#linear-models-with-sparse-coefficients">Linear models with sparse coefficients</a></li>
+<li><a class="reference internal" href="#wrong-causal-interpretation">Wrong causal interpretation</a></li>
+<li><a class="reference internal" href="#warning-data-and-model-quality">Warning: data and model quality</a></li>
 <li><a class="reference internal" href="#lessons-learned">Lessons learned</a></li>
 </ul>
 </li>
@@ -230,7 +232,9 @@ wage as a function of various features such as experience, age, or education.</p
 <li><p><a class="reference internal" href="#preprocessing-numerical-variables" id="id7">Preprocessing numerical variables</a></p></li>
 <li><p><a class="reference internal" href="#linear-models-with-regularization" id="id8">Linear models with regularization</a></p></li>
 <li><p><a class="reference internal" href="#linear-models-with-sparse-coefficients" id="id9">Linear models with sparse coefficients</a></p></li>
-<li><p><a class="reference internal" href="#lessons-learned" id="id10">Lessons learned</a></p></li>
+<li><p><a class="reference internal" href="#wrong-causal-interpretation" id="id10">Wrong causal interpretation</a></p></li>
+<li><p><a class="reference internal" href="#warning-data-and-model-quality" id="id11">Warning: data and model quality</a></p></li>
+<li><p><a class="reference internal" href="#lessons-learned" id="id12">Lessons learned</a></p></li>
 </ul>
 </nav>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
@@ -1381,8 +1385,39 @@ caution.</p>
 <img src="../../_images/sphx_glr_plot_linear_model_coefficient_interpretation_017.png" srcset="../../_images/sphx_glr_plot_linear_model_coefficient_interpretation_017.png" alt="Coefficient variability" class = "sphx-glr-single-img"/><p>We observe that the AGE and EXPERIENCE coefficients are varying a lot
 depending of the fold.</p>
 </section>
+<section id="wrong-causal-interpretation">
+<h2><a class="toc-backref" href="#id10" role="doc-backlink">Wrong causal interpretation</a><a class="headerlink" href="#wrong-causal-interpretation" title="Permalink to this heading">¶</a></h2>
+<p>Policy makers might want to know the effect of education on wage to assess
+whether or not a certain policy designed to entice people to pursue more
+education would make economic sense. While Machine Learning models are great
+for measuring statistical associations, they are generally unable to infer
+causal effects.</p>
+<p>It might be tempting to look at the coefficient of education on wage from our
+last model (or any model for that matter) and conclude that it captures the
+true effect of a change in the standardized education variable on wages.</p>
+<p>Unfortunately there are likely unobserved confounding variables that either
+inflate or deflate that coefficient. A confounding variable is a variable that
+causes both EDUCATION and WAGE. One example of such variable is ability.
+Presumably, more able people are more likely to pursue education while at the
+same time being more likely to earn a higher hourly wage at any level of
+education. In this case, ability induces a positive <a class="reference external" href="https://en.wikipedia.org/wiki/Omitted-variable_bias">Omitted Variable Bias</a> (OVB) on the EDUCATION
+coefficient, thereby exaggerating the effect of education on wages.</p>
+<p>See the <a class="reference internal" href="plot_causal_interpretation.html#sphx-glr-auto-examples-inspection-plot-causal-interpretation-py"><span class="std std-ref">Failure of Machine Learning to infer causal effects</span></a>
+for a simulated case of ability OVB.</p>
+</section>
+<section id="warning-data-and-model-quality">
+<h2><a class="toc-backref" href="#id11" role="doc-backlink">Warning: data and model quality</a><a class="headerlink" href="#warning-data-and-model-quality" title="Permalink to this heading">¶</a></h2>
+<p>Keep in mind that the outcome <code class="docutils literal notranslate"><span class="pre">y</span></code> and features <code class="docutils literal notranslate"><span class="pre">X</span></code> are the product
+of a data generating process that is hidden from us. Machine
+learning models are trained to approximate the unobserved
+mathematical function that links <code class="docutils literal notranslate"><span class="pre">X</span></code> to <code class="docutils literal notranslate"><span class="pre">y</span></code> from sample data. As a
+result, any interpretation made about a model may not necessarily
+generalize to the true data generating process. This is especially
+true when the model is of bad quality or when the sample data is
+not representative of the population.</p>
+</section>
 <section id="lessons-learned">
-<h2><a class="toc-backref" href="#id10" role="doc-backlink">Lessons learned</a><a class="headerlink" href="#lessons-learned" title="Permalink to this heading">¶</a></h2>
+<h2><a class="toc-backref" href="#id12" role="doc-backlink">Lessons learned</a><a class="headerlink" href="#lessons-learned" title="Permalink to this heading">¶</a></h2>
 <ul class="simple">
 <li><p>Coefficients must be scaled to the same unit of measure to retrieve
 feature importance. Scaling them with the standard-deviation of the
@@ -1396,8 +1431,12 @@ models and their effects cannot be well teased apart.</p></li>
 coefficients could significantly vary from one another.</p></li>
 <li><p>Inspecting coefficients across the folds of a cross-validation loop
 gives an idea of their stability.</p></li>
+<li><p>Coefficients are unlikely to have any causal meaning. They tend
+to be biased by unobserved confounders.</p></li>
+<li><p>Inspection tools may not necessarily provide insights on the true
+data generating process.</p></li>
 </ul>
-<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> ( 0 minutes  19.355 seconds)</p>
+<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> ( 0 minutes  17.341 seconds)</p>
 <div class="sphx-glr-footer sphx-glr-footer-example docutils container" id="sphx-glr-download-auto-examples-inspection-plot-linear-model-coefficient-interpretation-py">
 <div class="binder-badge docutils container">
 <a class="reference external image-reference" href="https://mybinder.org/v2/gh/scikit-learn/scikit-learn/main?urlpath=lab/tree/notebooks/auto_examples/inspection/plot_linear_model_coefficient_interpretation.ipynb"><img alt="Launch binder" src="../../_images/binder_badge_logo29.svg" width="150px" /></a>
