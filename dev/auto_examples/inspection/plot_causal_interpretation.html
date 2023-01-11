@@ -23,8 +23,6 @@
   <link rel="canonical" href="http://scikit-learn.org/stable/auto_examples/inspection/plot_causal_interpretation.html" />
 
   
-  <link rel="shortcut icon" href="../../_static/favicon.ico"/>
-  
 
   <link rel="stylesheet" href="../../_static/css/vendor/bootstrap.min.css" type="text/css" />
   <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
@@ -45,12 +43,6 @@
 
 <nav id="navbar" class="sk-docs-navbar navbar navbar-expand-md navbar-light bg-light py-0">
   <div class="container-fluid sk-docs-container px-0">
-      <a class="navbar-brand py-0" href="../../index.html">
-        <img
-          class="sk-brand-img"
-          src="../../_static/scikit-learn-logo-small.png"
-          alt="logo"/>
-      </a>
     <button
       id="sk-navbar-toggler"
       class="navbar-toggler"
@@ -152,12 +144,6 @@
     <div id="sk-sidebar-wrapper" class="border-right">
       <div class="sk-sidebar-toc-wrapper">
         <div class="sk-sidebar-toc-logo">
-          <a href="../../index.html">
-            <img
-              class="sk-brand-img"
-              src="../../_static/scikit-learn-logo-small.png"
-              alt="logo"/>
-          </a>
         </div>
         <div class="btn-group w-100 mb-2" role="group" aria-label="rellinks">
             <a href="plot_linear_model_coefficient_interpretation.html" role="button" class="btn sk-btn-rellink py-1" sk-rellink-tooltip="Common pitfalls in the interpretation of coefficients of linear models">Prev</a><a href="index.html" role="button" class="btn sk-btn-rellink py-1" sk-rellink-tooltip="Inspection">Up</a>
@@ -274,11 +260,11 @@ ability and college degree.</p>
 <img src="../../_images/sphx_glr_plot_causal_interpretation_001.png" srcset="../../_images/sphx_glr_plot_causal_interpretation_001.png" alt="plot causal interpretation" class = "sphx-glr-single-img"/><p>In the next section, we train predictive models and we therefore split the
 target column from over features and we split the data into a training and a
 testing set.</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">sklearn.model_selection</span> <span class="kn">import</span> <a href="../../modules/generated/sklearn.model_selection.train_test_split.html#sklearn.model_selection.train_test_split" title="sklearn.model_selection.train_test_split" class="sphx-glr-backref-module-sklearn-model_selection sphx-glr-backref-type-py-function"><span class="n">train_test_split</span></a>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">sklearn.model_selection</span> <span class="kn">import</span> <span class="n">train_test_split</span>
 
 <span class="n">target_name</span> <span class="o">=</span> <span class="s2">&quot;hourly wage&quot;</span>
 <span class="n">X</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">drop</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="n">target_name</span><span class="p">),</span> <span class="n">df</span><span class="p">[</span><span class="n">target_name</span><span class="p">]</span>
-<span class="n">X_train</span><span class="p">,</span> <span class="n">X_test</span><span class="p">,</span> <span class="n">y_train</span><span class="p">,</span> <span class="n">y_test</span> <span class="o">=</span> <a href="../../modules/generated/sklearn.model_selection.train_test_split.html#sklearn.model_selection.train_test_split" title="sklearn.model_selection.train_test_split" class="sphx-glr-backref-module-sklearn-model_selection sphx-glr-backref-type-py-function"><span class="n">train_test_split</span></a><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">test_size</span><span class="o">=</span><span class="mf">0.2</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+<span class="n">X_train</span><span class="p">,</span> <span class="n">X_test</span><span class="p">,</span> <span class="n">y_train</span><span class="p">,</span> <span class="n">y_test</span> <span class="o">=</span> <span class="n">train_test_split</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">test_size</span><span class="o">=</span><span class="mf">0.2</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
 </pre></div>
 </div>
 </section>
@@ -287,15 +273,15 @@ testing set.</p>
 <p>First, we train a predictive model, a
 <a class="reference internal" href="../../modules/generated/sklearn.linear_model.LinearRegression.html#sklearn.linear_model.LinearRegression" title="sklearn.linear_model.LinearRegression"><code class="xref py py-class docutils literal notranslate"><span class="pre">LinearRegression</span></code></a> model. In this experiment,
 we assume that all variables used by the true generative model are available.</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">sklearn.linear_model</span> <span class="kn">import</span> <a href="../../modules/generated/sklearn.linear_model.LinearRegression.html#sklearn.linear_model.LinearRegression" title="sklearn.linear_model.LinearRegression" class="sphx-glr-backref-module-sklearn-linear_model sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">LinearRegression</span></a>
-<span class="kn">from</span> <span class="nn">sklearn.metrics</span> <span class="kn">import</span> <a href="../../modules/generated/sklearn.metrics.r2_score.html#sklearn.metrics.r2_score" title="sklearn.metrics.r2_score" class="sphx-glr-backref-module-sklearn-metrics sphx-glr-backref-type-py-function"><span class="n">r2_score</span></a>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">sklearn.linear_model</span> <span class="kn">import</span> <span class="n">LinearRegression</span>
+<span class="kn">from</span> <span class="nn">sklearn.metrics</span> <span class="kn">import</span> <span class="n">r2_score</span>
 
 <span class="n">features_names</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;experience&quot;</span><span class="p">,</span> <span class="s2">&quot;parent hourly wage&quot;</span><span class="p">,</span> <span class="s2">&quot;college degree&quot;</span><span class="p">,</span> <span class="s2">&quot;ability&quot;</span><span class="p">]</span>
 
-<span class="n">regressor_with_ability</span> <span class="o">=</span> <a href="../../modules/generated/sklearn.linear_model.LinearRegression.html#sklearn.linear_model.LinearRegression" title="sklearn.linear_model.LinearRegression" class="sphx-glr-backref-module-sklearn-linear_model sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">LinearRegression</span></a><span class="p">()</span>
+<span class="n">regressor_with_ability</span> <span class="o">=</span> <span class="n">LinearRegression</span><span class="p">()</span>
 <span class="n">regressor_with_ability</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X_train</span><span class="p">[</span><span class="n">features_names</span><span class="p">],</span> <span class="n">y_train</span><span class="p">)</span>
 <span class="n">y_pred_with_ability</span> <span class="o">=</span> <span class="n">regressor_with_ability</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">X_test</span><span class="p">[</span><span class="n">features_names</span><span class="p">])</span>
-<span class="n">R2_with_ability</span> <span class="o">=</span> <a href="../../modules/generated/sklearn.metrics.r2_score.html#sklearn.metrics.r2_score" title="sklearn.metrics.r2_score" class="sphx-glr-backref-module-sklearn-metrics sphx-glr-backref-type-py-function"><span class="n">r2_score</span></a><span class="p">(</span><span class="n">y_test</span><span class="p">,</span> <span class="n">y_pred_with_ability</span><span class="p">)</span>
+<span class="n">R2_with_ability</span> <span class="o">=</span> <span class="n">r2_score</span><span class="p">(</span><span class="n">y_test</span><span class="p">,</span> <span class="n">y_pred_with_ability</span><span class="p">)</span>
 
 <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;R2 score with ability: </span><span class="si">{</span><span class="n">R2_with_ability</span><span class="si">:</span><span class="s2">.3f</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
 </pre></div>
@@ -330,10 +316,10 @@ But omitting the “ability” feature from a linear model inflates the estimate
 via a positive OVB.</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">features_names</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;experience&quot;</span><span class="p">,</span> <span class="s2">&quot;parent hourly wage&quot;</span><span class="p">,</span> <span class="s2">&quot;college degree&quot;</span><span class="p">]</span>
 
-<span class="n">regressor_without_ability</span> <span class="o">=</span> <a href="../../modules/generated/sklearn.linear_model.LinearRegression.html#sklearn.linear_model.LinearRegression" title="sklearn.linear_model.LinearRegression" class="sphx-glr-backref-module-sklearn-linear_model sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">LinearRegression</span></a><span class="p">()</span>
+<span class="n">regressor_without_ability</span> <span class="o">=</span> <span class="n">LinearRegression</span><span class="p">()</span>
 <span class="n">regressor_without_ability</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X_train</span><span class="p">[</span><span class="n">features_names</span><span class="p">],</span> <span class="n">y_train</span><span class="p">)</span>
 <span class="n">y_pred_without_ability</span> <span class="o">=</span> <span class="n">regressor_without_ability</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">X_test</span><span class="p">[</span><span class="n">features_names</span><span class="p">])</span>
-<span class="n">R2_without_ability</span> <span class="o">=</span> <a href="../../modules/generated/sklearn.metrics.r2_score.html#sklearn.metrics.r2_score" title="sklearn.metrics.r2_score" class="sphx-glr-backref-module-sklearn-metrics sphx-glr-backref-type-py-function"><span class="n">r2_score</span></a><span class="p">(</span><span class="n">y_test</span><span class="p">,</span> <span class="n">y_pred_without_ability</span><span class="p">)</span>
+<span class="n">R2_without_ability</span> <span class="o">=</span> <span class="n">r2_score</span><span class="p">(</span><span class="n">y_test</span><span class="p">,</span> <span class="n">y_pred_without_ability</span><span class="p">)</span>
 
 <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;R2 score without ability: </span><span class="si">{</span><span class="n">R2_without_ability</span><span class="si">:</span><span class="s2">.3f</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
 </pre></div>
@@ -375,7 +361,7 @@ college degree) is randomized. When an experiment is prohibitively expensive
 or unethical, researchers can sometimes use other causal inference techniques
 such as <a class="reference external" href="https://en.wikipedia.org/wiki/Instrumental_variables_estimation">Instrumental Variables</a> (IV)
 estimations.</p>
-<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> ( 0 minutes  2.185 seconds)</p>
+<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> ( 0 minutes  2.879 seconds)</p>
 <div class="sphx-glr-footer sphx-glr-footer-example docutils container" id="sphx-glr-download-auto-examples-inspection-plot-causal-interpretation-py">
 <div class="binder-badge docutils container">
 <a class="reference external image-reference" href="https://mybinder.org/v2/gh/scikit-learn/scikit-learn/main?urlpath=lab/tree/notebooks/auto_examples/inspection/plot_causal_interpretation.ipynb"><img alt="Launch binder" src="../../_images/binder_badge_logo29.svg" width="150px" /></a>

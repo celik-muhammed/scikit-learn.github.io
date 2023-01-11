@@ -23,8 +23,6 @@
   <link rel="canonical" href="http://scikit-learn.org/stable/auto_examples/calibration/plot_calibration.html" />
 
   
-  <link rel="shortcut icon" href="../../_static/favicon.ico"/>
-  
 
   <link rel="stylesheet" href="../../_static/css/vendor/bootstrap.min.css" type="text/css" />
   <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
@@ -45,12 +43,6 @@
 
 <nav id="navbar" class="sk-docs-navbar navbar navbar-expand-md navbar-light bg-light py-0">
   <div class="container-fluid sk-docs-container px-0">
-      <a class="navbar-brand py-0" href="../../index.html">
-        <img
-          class="sk-brand-img"
-          src="../../_static/scikit-learn-logo-small.png"
-          alt="logo"/>
-      </a>
     <button
       id="sk-navbar-toggler"
       class="navbar-toggler"
@@ -152,12 +144,6 @@
     <div id="sk-sidebar-wrapper" class="border-right">
       <div class="sk-sidebar-toc-wrapper">
         <div class="sk-sidebar-toc-logo">
-          <a href="../../index.html">
-            <img
-              class="sk-brand-img"
-              src="../../_static/scikit-learn-logo-small.png"
-              alt="logo"/>
-          </a>
         </div>
         <div class="btn-group w-100 mb-2" role="group" aria-label="rellinks">
             <a href="plot_calibration_multiclass.html" role="button" class="btn sk-btn-rellink py-1" sk-rellink-tooltip="Probability Calibration for 3-class classification">Prev</a><a href="index.html" role="button" class="btn sk-btn-rellink py-1" sk-rellink-tooltip="Calibration">Up</a>
@@ -225,8 +211,8 @@ Brier score.</p>
 <h2>Generate synthetic dataset<a class="headerlink" href="#generate-synthetic-dataset" title="Permalink to this heading">¶</a></h2>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 
-<span class="kn">from</span> <span class="nn">sklearn.datasets</span> <span class="kn">import</span> <a href="../../modules/generated/sklearn.datasets.make_blobs.html#sklearn.datasets.make_blobs" title="sklearn.datasets.make_blobs" class="sphx-glr-backref-module-sklearn-datasets sphx-glr-backref-type-py-function"><span class="n">make_blobs</span></a>
-<span class="kn">from</span> <span class="nn">sklearn.model_selection</span> <span class="kn">import</span> <a href="../../modules/generated/sklearn.model_selection.train_test_split.html#sklearn.model_selection.train_test_split" title="sklearn.model_selection.train_test_split" class="sphx-glr-backref-module-sklearn-model_selection sphx-glr-backref-type-py-function"><span class="n">train_test_split</span></a>
+<span class="kn">from</span> <span class="nn">sklearn.datasets</span> <span class="kn">import</span> <span class="n">make_blobs</span>
+<span class="kn">from</span> <span class="nn">sklearn.model_selection</span> <span class="kn">import</span> <span class="n">train_test_split</span>
 
 <span class="n">n_samples</span> <span class="o">=</span> <span class="mi">50000</span>
 <span class="n">n_bins</span> <span class="o">=</span> <span class="mi">3</span>  <span class="c1"># use 3 bins for calibration_curve as we have 3 clusters here</span>
@@ -235,14 +221,14 @@ Brier score.</p>
 <span class="c1"># half positive samples and half negative samples. Probability in this</span>
 <span class="c1"># blob is therefore 0.5.</span>
 <span class="n">centers</span> <span class="o">=</span> <span class="p">[(</span><span class="o">-</span><span class="mi">5</span><span class="p">,</span> <span class="o">-</span><span class="mi">5</span><span class="p">),</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span> <span class="p">(</span><span class="mi">5</span><span class="p">,</span> <span class="mi">5</span><span class="p">)]</span>
-<span class="n">X</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <a href="../../modules/generated/sklearn.datasets.make_blobs.html#sklearn.datasets.make_blobs" title="sklearn.datasets.make_blobs" class="sphx-glr-backref-module-sklearn-datasets sphx-glr-backref-type-py-function"><span class="n">make_blobs</span></a><span class="p">(</span><span class="n">n_samples</span><span class="o">=</span><span class="n">n_samples</span><span class="p">,</span> <span class="n">centers</span><span class="o">=</span><span class="n">centers</span><span class="p">,</span> <span class="n">shuffle</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="mi">42</span><span class="p">)</span>
+<span class="n">X</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="n">make_blobs</span><span class="p">(</span><span class="n">n_samples</span><span class="o">=</span><span class="n">n_samples</span><span class="p">,</span> <span class="n">centers</span><span class="o">=</span><span class="n">centers</span><span class="p">,</span> <span class="n">shuffle</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="mi">42</span><span class="p">)</span>
 
 <span class="n">y</span><span class="p">[:</span> <span class="n">n_samples</span> <span class="o">//</span> <span class="mi">2</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span>
 <span class="n">y</span><span class="p">[</span><span class="n">n_samples</span> <span class="o">//</span> <span class="mi">2</span> <span class="p">:]</span> <span class="o">=</span> <span class="mi">1</span>
 <span class="n">sample_weight</span> <span class="o">=</span> <a href="https://numpy.org/doc/stable/reference/random/legacy.html#numpy.random.RandomState" title="numpy.random.RandomState" class="sphx-glr-backref-module-numpy-random sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">RandomState</span></a><span class="p">(</span><span class="mi">42</span><span class="p">)</span><span class="o">.</span><span class="n">rand</span><span class="p">(</span><span class="n">y</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
 
 <span class="c1"># split train, test for calibration</span>
-<span class="n">X_train</span><span class="p">,</span> <span class="n">X_test</span><span class="p">,</span> <span class="n">y_train</span><span class="p">,</span> <span class="n">y_test</span><span class="p">,</span> <span class="n">sw_train</span><span class="p">,</span> <span class="n">sw_test</span> <span class="o">=</span> <a href="../../modules/generated/sklearn.model_selection.train_test_split.html#sklearn.model_selection.train_test_split" title="sklearn.model_selection.train_test_split" class="sphx-glr-backref-module-sklearn-model_selection sphx-glr-backref-type-py-function"><span class="n">train_test_split</span></a><span class="p">(</span>
+<span class="n">X_train</span><span class="p">,</span> <span class="n">X_test</span><span class="p">,</span> <span class="n">y_train</span><span class="p">,</span> <span class="n">y_test</span><span class="p">,</span> <span class="n">sw_train</span><span class="p">,</span> <span class="n">sw_test</span> <span class="o">=</span> <span class="n">train_test_split</span><span class="p">(</span>
     <span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">sample_weight</span><span class="p">,</span> <span class="n">test_size</span><span class="o">=</span><span class="mf">0.9</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="mi">42</span>
 <span class="p">)</span>
 </pre></div>
@@ -250,34 +236,34 @@ Brier score.</p>
 </section>
 <section id="gaussian-naive-bayes">
 <h2>Gaussian Naive-Bayes<a class="headerlink" href="#gaussian-naive-bayes" title="Permalink to this heading">¶</a></h2>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">sklearn.calibration</span> <span class="kn">import</span> <a href="../../modules/generated/sklearn.calibration.CalibratedClassifierCV.html#sklearn.calibration.CalibratedClassifierCV" title="sklearn.calibration.CalibratedClassifierCV" class="sphx-glr-backref-module-sklearn-calibration sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">CalibratedClassifierCV</span></a>
-<span class="kn">from</span> <span class="nn">sklearn.metrics</span> <span class="kn">import</span> <a href="../../modules/generated/sklearn.metrics.brier_score_loss.html#sklearn.metrics.brier_score_loss" title="sklearn.metrics.brier_score_loss" class="sphx-glr-backref-module-sklearn-metrics sphx-glr-backref-type-py-function"><span class="n">brier_score_loss</span></a>
-<span class="kn">from</span> <span class="nn">sklearn.naive_bayes</span> <span class="kn">import</span> <a href="../../modules/generated/sklearn.naive_bayes.GaussianNB.html#sklearn.naive_bayes.GaussianNB" title="sklearn.naive_bayes.GaussianNB" class="sphx-glr-backref-module-sklearn-naive_bayes sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">GaussianNB</span></a>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">sklearn.calibration</span> <span class="kn">import</span> <span class="n">CalibratedClassifierCV</span>
+<span class="kn">from</span> <span class="nn">sklearn.metrics</span> <span class="kn">import</span> <span class="n">brier_score_loss</span>
+<span class="kn">from</span> <span class="nn">sklearn.naive_bayes</span> <span class="kn">import</span> <span class="n">GaussianNB</span>
 
 <span class="c1"># With no calibration</span>
-<span class="n">clf</span> <span class="o">=</span> <a href="../../modules/generated/sklearn.naive_bayes.GaussianNB.html#sklearn.naive_bayes.GaussianNB" title="sklearn.naive_bayes.GaussianNB" class="sphx-glr-backref-module-sklearn-naive_bayes sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">GaussianNB</span></a><span class="p">()</span>
+<span class="n">clf</span> <span class="o">=</span> <span class="n">GaussianNB</span><span class="p">()</span>
 <span class="n">clf</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X_train</span><span class="p">,</span> <span class="n">y_train</span><span class="p">)</span>  <span class="c1"># GaussianNB itself does not support sample-weights</span>
 <span class="n">prob_pos_clf</span> <span class="o">=</span> <span class="n">clf</span><span class="o">.</span><span class="n">predict_proba</span><span class="p">(</span><span class="n">X_test</span><span class="p">)[:,</span> <span class="mi">1</span><span class="p">]</span>
 
 <span class="c1"># With isotonic calibration</span>
-<span class="n">clf_isotonic</span> <span class="o">=</span> <a href="../../modules/generated/sklearn.calibration.CalibratedClassifierCV.html#sklearn.calibration.CalibratedClassifierCV" title="sklearn.calibration.CalibratedClassifierCV" class="sphx-glr-backref-module-sklearn-calibration sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">CalibratedClassifierCV</span></a><span class="p">(</span><span class="n">clf</span><span class="p">,</span> <span class="n">cv</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">method</span><span class="o">=</span><span class="s2">&quot;isotonic&quot;</span><span class="p">)</span>
+<span class="n">clf_isotonic</span> <span class="o">=</span> <span class="n">CalibratedClassifierCV</span><span class="p">(</span><span class="n">clf</span><span class="p">,</span> <span class="n">cv</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">method</span><span class="o">=</span><span class="s2">&quot;isotonic&quot;</span><span class="p">)</span>
 <span class="n">clf_isotonic</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X_train</span><span class="p">,</span> <span class="n">y_train</span><span class="p">,</span> <span class="n">sample_weight</span><span class="o">=</span><span class="n">sw_train</span><span class="p">)</span>
 <span class="n">prob_pos_isotonic</span> <span class="o">=</span> <span class="n">clf_isotonic</span><span class="o">.</span><span class="n">predict_proba</span><span class="p">(</span><span class="n">X_test</span><span class="p">)[:,</span> <span class="mi">1</span><span class="p">]</span>
 
 <span class="c1"># With sigmoid calibration</span>
-<span class="n">clf_sigmoid</span> <span class="o">=</span> <a href="../../modules/generated/sklearn.calibration.CalibratedClassifierCV.html#sklearn.calibration.CalibratedClassifierCV" title="sklearn.calibration.CalibratedClassifierCV" class="sphx-glr-backref-module-sklearn-calibration sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">CalibratedClassifierCV</span></a><span class="p">(</span><span class="n">clf</span><span class="p">,</span> <span class="n">cv</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">method</span><span class="o">=</span><span class="s2">&quot;sigmoid&quot;</span><span class="p">)</span>
+<span class="n">clf_sigmoid</span> <span class="o">=</span> <span class="n">CalibratedClassifierCV</span><span class="p">(</span><span class="n">clf</span><span class="p">,</span> <span class="n">cv</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">method</span><span class="o">=</span><span class="s2">&quot;sigmoid&quot;</span><span class="p">)</span>
 <span class="n">clf_sigmoid</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X_train</span><span class="p">,</span> <span class="n">y_train</span><span class="p">,</span> <span class="n">sample_weight</span><span class="o">=</span><span class="n">sw_train</span><span class="p">)</span>
 <span class="n">prob_pos_sigmoid</span> <span class="o">=</span> <span class="n">clf_sigmoid</span><span class="o">.</span><span class="n">predict_proba</span><span class="p">(</span><span class="n">X_test</span><span class="p">)[:,</span> <span class="mi">1</span><span class="p">]</span>
 
 <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Brier score losses: (the smaller the better)&quot;</span><span class="p">)</span>
 
-<span class="n">clf_score</span> <span class="o">=</span> <a href="../../modules/generated/sklearn.metrics.brier_score_loss.html#sklearn.metrics.brier_score_loss" title="sklearn.metrics.brier_score_loss" class="sphx-glr-backref-module-sklearn-metrics sphx-glr-backref-type-py-function"><span class="n">brier_score_loss</span></a><span class="p">(</span><span class="n">y_test</span><span class="p">,</span> <span class="n">prob_pos_clf</span><span class="p">,</span> <span class="n">sample_weight</span><span class="o">=</span><span class="n">sw_test</span><span class="p">)</span>
+<span class="n">clf_score</span> <span class="o">=</span> <span class="n">brier_score_loss</span><span class="p">(</span><span class="n">y_test</span><span class="p">,</span> <span class="n">prob_pos_clf</span><span class="p">,</span> <span class="n">sample_weight</span><span class="o">=</span><span class="n">sw_test</span><span class="p">)</span>
 <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;No calibration: </span><span class="si">%1.3f</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="n">clf_score</span><span class="p">)</span>
 
-<span class="n">clf_isotonic_score</span> <span class="o">=</span> <a href="../../modules/generated/sklearn.metrics.brier_score_loss.html#sklearn.metrics.brier_score_loss" title="sklearn.metrics.brier_score_loss" class="sphx-glr-backref-module-sklearn-metrics sphx-glr-backref-type-py-function"><span class="n">brier_score_loss</span></a><span class="p">(</span><span class="n">y_test</span><span class="p">,</span> <span class="n">prob_pos_isotonic</span><span class="p">,</span> <span class="n">sample_weight</span><span class="o">=</span><span class="n">sw_test</span><span class="p">)</span>
+<span class="n">clf_isotonic_score</span> <span class="o">=</span> <span class="n">brier_score_loss</span><span class="p">(</span><span class="n">y_test</span><span class="p">,</span> <span class="n">prob_pos_isotonic</span><span class="p">,</span> <span class="n">sample_weight</span><span class="o">=</span><span class="n">sw_test</span><span class="p">)</span>
 <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;With isotonic calibration: </span><span class="si">%1.3f</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="n">clf_isotonic_score</span><span class="p">)</span>
 
-<span class="n">clf_sigmoid_score</span> <span class="o">=</span> <a href="../../modules/generated/sklearn.metrics.brier_score_loss.html#sklearn.metrics.brier_score_loss" title="sklearn.metrics.brier_score_loss" class="sphx-glr-backref-module-sklearn-metrics sphx-glr-backref-type-py-function"><span class="n">brier_score_loss</span></a><span class="p">(</span><span class="n">y_test</span><span class="p">,</span> <span class="n">prob_pos_sigmoid</span><span class="p">,</span> <span class="n">sample_weight</span><span class="o">=</span><span class="n">sw_test</span><span class="p">)</span>
+<span class="n">clf_sigmoid_score</span> <span class="o">=</span> <span class="n">brier_score_loss</span><span class="p">(</span><span class="n">y_test</span><span class="p">,</span> <span class="n">prob_pos_sigmoid</span><span class="p">,</span> <span class="n">sample_weight</span><span class="o">=</span><span class="n">sw_test</span><span class="p">)</span>
 <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;With sigmoid calibration: </span><span class="si">%1.3f</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="n">clf_sigmoid_score</span><span class="p">)</span>
 </pre></div>
 </div>
@@ -347,7 +333,7 @@ With sigmoid calibration: 0.109
 <li><img src="../../_images/sphx_glr_plot_calibration_001.png" srcset="../../_images/sphx_glr_plot_calibration_001.png" alt="Data" class = "sphx-glr-multi-img"/></li>
 <li><img src="../../_images/sphx_glr_plot_calibration_002.png" srcset="../../_images/sphx_glr_plot_calibration_002.png" alt="Gaussian naive Bayes probabilities" class = "sphx-glr-multi-img"/></li>
 </ul>
-<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> ( 0 minutes  0.351 seconds)</p>
+<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> ( 0 minutes  0.469 seconds)</p>
 <div class="sphx-glr-footer sphx-glr-footer-example docutils container" id="sphx-glr-download-auto-examples-calibration-plot-calibration-py">
 <div class="binder-badge docutils container">
 <a class="reference external image-reference" href="https://mybinder.org/v2/gh/scikit-learn/scikit-learn/main?urlpath=lab/tree/notebooks/auto_examples/calibration/plot_calibration.ipynb"><img alt="Launch binder" src="../../_images/binder_badge_logo10.svg" width="150px" /></a>

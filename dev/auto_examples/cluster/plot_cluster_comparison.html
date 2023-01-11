@@ -23,8 +23,6 @@
   <link rel="canonical" href="http://scikit-learn.org/stable/auto_examples/cluster/plot_cluster_comparison.html" />
 
   
-  <link rel="shortcut icon" href="../../_static/favicon.ico"/>
-  
 
   <link rel="stylesheet" href="../../_static/css/vendor/bootstrap.min.css" type="text/css" />
   <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
@@ -45,12 +43,6 @@
 
 <nav id="navbar" class="sk-docs-navbar navbar navbar-expand-md navbar-light bg-light py-0">
   <div class="container-fluid sk-docs-container px-0">
-      <a class="navbar-brand py-0" href="../../index.html">
-        <img
-          class="sk-brand-img"
-          src="../../_static/scikit-learn-logo-small.png"
-          alt="logo"/>
-      </a>
     <button
       id="sk-navbar-toggler"
       class="navbar-toggler"
@@ -152,12 +144,6 @@
     <div id="sk-sidebar-wrapper" class="border-right">
       <div class="sk-sidebar-toc-wrapper">
         <div class="sk-sidebar-toc-logo">
-          <a href="../../index.html">
-            <img
-              class="sk-brand-img"
-              src="../../_static/scikit-learn-logo-small.png"
-              alt="logo"/>
-          </a>
         </div>
         <div class="btn-group w-100 mb-2" role="group" aria-label="rellinks">
             <a href="plot_birch_vs_minibatchkmeans.html" role="button" class="btn sk-btn-rellink py-1" sk-rellink-tooltip="Compare BIRCH and MiniBatchKMeans">Prev</a><a href="index.html" role="button" class="btn sk-btn-rellink py-1" sk-rellink-tooltip="Clustering">Up</a>
@@ -214,9 +200,9 @@ dimensional data.</p>
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 <span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
 
-<span class="kn">from</span> <span class="nn">sklearn</span> <span class="kn">import</span> <span class="n">cluster</span><span class="p">,</span> <a href="../../modules/classes.html#module-sklearn.datasets" title="sklearn.datasets" class="sphx-glr-backref-module-sklearn sphx-glr-backref-type-py-module"><span class="n">datasets</span></a><span class="p">,</span> <span class="n">mixture</span>
-<span class="kn">from</span> <span class="nn">sklearn.neighbors</span> <span class="kn">import</span> <a href="../../modules/generated/sklearn.neighbors.kneighbors_graph.html#sklearn.neighbors.kneighbors_graph" title="sklearn.neighbors.kneighbors_graph" class="sphx-glr-backref-module-sklearn-neighbors sphx-glr-backref-type-py-function"><span class="n">kneighbors_graph</span></a>
-<span class="kn">from</span> <span class="nn">sklearn.preprocessing</span> <span class="kn">import</span> <a href="../../modules/generated/sklearn.preprocessing.StandardScaler.html#sklearn.preprocessing.StandardScaler" title="sklearn.preprocessing.StandardScaler" class="sphx-glr-backref-module-sklearn-preprocessing sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">StandardScaler</span></a>
+<span class="kn">from</span> <span class="nn">sklearn</span> <span class="kn">import</span> <span class="n">cluster</span><span class="p">,</span> <span class="n">datasets</span><span class="p">,</span> <span class="n">mixture</span>
+<span class="kn">from</span> <span class="nn">sklearn.neighbors</span> <span class="kn">import</span> <span class="n">kneighbors_graph</span>
+<span class="kn">from</span> <span class="nn">sklearn.preprocessing</span> <span class="kn">import</span> <span class="n">StandardScaler</span>
 <span class="kn">from</span> <span class="nn">itertools</span> <span class="kn">import</span> <a href="https://docs.python.org/3/library/itertools.html#itertools.cycle" title="itertools.cycle" class="sphx-glr-backref-module-itertools sphx-glr-backref-type-py-function"><span class="n">cycle</span></a><span class="p">,</span> <a href="https://docs.python.org/3/library/itertools.html#itertools.islice" title="itertools.islice" class="sphx-glr-backref-module-itertools sphx-glr-backref-type-py-function"><span class="n">islice</span></a>
 
 <a href="https://numpy.org/doc/stable/reference/random/generated/numpy.random.seed.html#numpy.random.seed" title="numpy.random.seed" class="sphx-glr-backref-module-numpy-random sphx-glr-backref-type-py-function"><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">seed</span></a><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
@@ -226,20 +212,20 @@ dimensional data.</p>
 <span class="c1"># of the algorithms, but not too big to avoid too long running times</span>
 <span class="c1"># ============</span>
 <span class="n">n_samples</span> <span class="o">=</span> <span class="mi">500</span>
-<span class="n">noisy_circles</span> <span class="o">=</span> <a href="../../modules/generated/sklearn.datasets.make_circles.html#sklearn.datasets.make_circles" title="sklearn.datasets.make_circles" class="sphx-glr-backref-module-sklearn-datasets sphx-glr-backref-type-py-function"><span class="n">datasets</span><span class="o">.</span><span class="n">make_circles</span></a><span class="p">(</span><span class="n">n_samples</span><span class="o">=</span><span class="n">n_samples</span><span class="p">,</span> <span class="n">factor</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">noise</span><span class="o">=</span><span class="mf">0.05</span><span class="p">)</span>
-<span class="n">noisy_moons</span> <span class="o">=</span> <a href="../../modules/generated/sklearn.datasets.make_moons.html#sklearn.datasets.make_moons" title="sklearn.datasets.make_moons" class="sphx-glr-backref-module-sklearn-datasets sphx-glr-backref-type-py-function"><span class="n">datasets</span><span class="o">.</span><span class="n">make_moons</span></a><span class="p">(</span><span class="n">n_samples</span><span class="o">=</span><span class="n">n_samples</span><span class="p">,</span> <span class="n">noise</span><span class="o">=</span><span class="mf">0.05</span><span class="p">)</span>
-<span class="n">blobs</span> <span class="o">=</span> <a href="../../modules/generated/sklearn.datasets.make_blobs.html#sklearn.datasets.make_blobs" title="sklearn.datasets.make_blobs" class="sphx-glr-backref-module-sklearn-datasets sphx-glr-backref-type-py-function"><span class="n">datasets</span><span class="o">.</span><span class="n">make_blobs</span></a><span class="p">(</span><span class="n">n_samples</span><span class="o">=</span><span class="n">n_samples</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="mi">8</span><span class="p">)</span>
+<span class="n">noisy_circles</span> <span class="o">=</span> <span class="n">datasets</span><span class="o">.</span><span class="n">make_circles</span><span class="p">(</span><span class="n">n_samples</span><span class="o">=</span><span class="n">n_samples</span><span class="p">,</span> <span class="n">factor</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">noise</span><span class="o">=</span><span class="mf">0.05</span><span class="p">)</span>
+<span class="n">noisy_moons</span> <span class="o">=</span> <span class="n">datasets</span><span class="o">.</span><span class="n">make_moons</span><span class="p">(</span><span class="n">n_samples</span><span class="o">=</span><span class="n">n_samples</span><span class="p">,</span> <span class="n">noise</span><span class="o">=</span><span class="mf">0.05</span><span class="p">)</span>
+<span class="n">blobs</span> <span class="o">=</span> <span class="n">datasets</span><span class="o">.</span><span class="n">make_blobs</span><span class="p">(</span><span class="n">n_samples</span><span class="o">=</span><span class="n">n_samples</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="mi">8</span><span class="p">)</span>
 <span class="n">no_structure</span> <span class="o">=</span> <a href="https://numpy.org/doc/stable/reference/random/generated/numpy.random.rand.html#numpy.random.rand" title="numpy.random.rand" class="sphx-glr-backref-module-numpy-random sphx-glr-backref-type-py-function"><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">rand</span></a><span class="p">(</span><span class="n">n_samples</span><span class="p">,</span> <span class="mi">2</span><span class="p">),</span> <span class="kc">None</span>
 
 <span class="c1"># Anisotropicly distributed data</span>
 <span class="n">random_state</span> <span class="o">=</span> <span class="mi">170</span>
-<span class="n">X</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <a href="../../modules/generated/sklearn.datasets.make_blobs.html#sklearn.datasets.make_blobs" title="sklearn.datasets.make_blobs" class="sphx-glr-backref-module-sklearn-datasets sphx-glr-backref-type-py-function"><span class="n">datasets</span><span class="o">.</span><span class="n">make_blobs</span></a><span class="p">(</span><span class="n">n_samples</span><span class="o">=</span><span class="n">n_samples</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="n">random_state</span><span class="p">)</span>
+<span class="n">X</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="n">datasets</span><span class="o">.</span><span class="n">make_blobs</span><span class="p">(</span><span class="n">n_samples</span><span class="o">=</span><span class="n">n_samples</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="n">random_state</span><span class="p">)</span>
 <span class="n">transformation</span> <span class="o">=</span> <span class="p">[[</span><span class="mf">0.6</span><span class="p">,</span> <span class="o">-</span><span class="mf">0.6</span><span class="p">],</span> <span class="p">[</span><span class="o">-</span><span class="mf">0.4</span><span class="p">,</span> <span class="mf">0.8</span><span class="p">]]</span>
 <span class="n">X_aniso</span> <span class="o">=</span> <a href="https://numpy.org/doc/stable/reference/generated/numpy.dot.html#numpy.dot" title="numpy.dot" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-function"><span class="n">np</span><span class="o">.</span><span class="n">dot</span></a><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">transformation</span><span class="p">)</span>
 <span class="n">aniso</span> <span class="o">=</span> <span class="p">(</span><span class="n">X_aniso</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
 
 <span class="c1"># blobs with varied variances</span>
-<span class="n">varied</span> <span class="o">=</span> <a href="../../modules/generated/sklearn.datasets.make_blobs.html#sklearn.datasets.make_blobs" title="sklearn.datasets.make_blobs" class="sphx-glr-backref-module-sklearn-datasets sphx-glr-backref-type-py-function"><span class="n">datasets</span><span class="o">.</span><span class="n">make_blobs</span></a><span class="p">(</span>
+<span class="n">varied</span> <span class="o">=</span> <span class="n">datasets</span><span class="o">.</span><span class="n">make_blobs</span><span class="p">(</span>
     <span class="n">n_samples</span><span class="o">=</span><span class="n">n_samples</span><span class="p">,</span> <span class="n">cluster_std</span><span class="o">=</span><span class="p">[</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">2.5</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">],</span> <span class="n">random_state</span><span class="o">=</span><span class="n">random_state</span>
 <span class="p">)</span>
 
@@ -265,7 +251,7 @@ dimensional data.</p>
     <span class="s2">&quot;min_cluster_size&quot;</span><span class="p">:</span> <span class="mf">0.1</span><span class="p">,</span>
 <span class="p">}</span>
 
-<a href="../../modules/classes.html#module-sklearn.datasets" title="sklearn.datasets" class="sphx-glr-backref-module-sklearn sphx-glr-backref-type-py-module"><span class="n">datasets</span></a> <span class="o">=</span> <span class="p">[</span>
+<span class="n">datasets</span> <span class="o">=</span> <span class="p">[</span>
     <span class="p">(</span>
         <span class="n">noisy_circles</span><span class="p">,</span>
         <span class="p">{</span>
@@ -311,7 +297,7 @@ dimensional data.</p>
     <span class="p">(</span><span class="n">no_structure</span><span class="p">,</span> <span class="p">{}),</span>
 <span class="p">]</span>
 
-<span class="k">for</span> <span class="n">i_dataset</span><span class="p">,</span> <span class="p">(</span><span class="n">dataset</span><span class="p">,</span> <span class="n">algo_params</span><span class="p">)</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><a href="../../modules/classes.html#module-sklearn.datasets" title="sklearn.datasets" class="sphx-glr-backref-module-sklearn sphx-glr-backref-type-py-module"><span class="n">datasets</span></a><span class="p">):</span>
+<span class="k">for</span> <span class="n">i_dataset</span><span class="p">,</span> <span class="p">(</span><span class="n">dataset</span><span class="p">,</span> <span class="n">algo_params</span><span class="p">)</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">datasets</span><span class="p">):</span>
     <span class="c1"># update parameters with dataset-specific values</span>
     <span class="n">params</span> <span class="o">=</span> <span class="n">default_base</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
     <span class="n">params</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">algo_params</span><span class="p">)</span>
@@ -319,13 +305,13 @@ dimensional data.</p>
     <span class="n">X</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="n">dataset</span>
 
     <span class="c1"># normalize dataset for easier parameter selection</span>
-    <span class="n">X</span> <span class="o">=</span> <a href="../../modules/generated/sklearn.preprocessing.StandardScaler.html#sklearn.preprocessing.StandardScaler" title="sklearn.preprocessing.StandardScaler" class="sphx-glr-backref-module-sklearn-preprocessing sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">StandardScaler</span></a><span class="p">()</span><span class="o">.</span><span class="n">fit_transform</span><span class="p">(</span><span class="n">X</span><span class="p">)</span>
+    <span class="n">X</span> <span class="o">=</span> <span class="n">StandardScaler</span><span class="p">()</span><span class="o">.</span><span class="n">fit_transform</span><span class="p">(</span><span class="n">X</span><span class="p">)</span>
 
     <span class="c1"># estimate bandwidth for mean shift</span>
-    <span class="n">bandwidth</span> <span class="o">=</span> <a href="../../modules/generated/sklearn.cluster.estimate_bandwidth.html#sklearn.cluster.estimate_bandwidth" title="sklearn.cluster.estimate_bandwidth" class="sphx-glr-backref-module-sklearn-cluster sphx-glr-backref-type-py-function"><span class="n">cluster</span><span class="o">.</span><span class="n">estimate_bandwidth</span></a><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">quantile</span><span class="o">=</span><span class="n">params</span><span class="p">[</span><span class="s2">&quot;quantile&quot;</span><span class="p">])</span>
+    <span class="n">bandwidth</span> <span class="o">=</span> <span class="n">cluster</span><span class="o">.</span><span class="n">estimate_bandwidth</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">quantile</span><span class="o">=</span><span class="n">params</span><span class="p">[</span><span class="s2">&quot;quantile&quot;</span><span class="p">])</span>
 
     <span class="c1"># connectivity matrix for structured Ward</span>
-    <span class="n">connectivity</span> <span class="o">=</span> <a href="../../modules/generated/sklearn.neighbors.kneighbors_graph.html#sklearn.neighbors.kneighbors_graph" title="sklearn.neighbors.kneighbors_graph" class="sphx-glr-backref-module-sklearn-neighbors sphx-glr-backref-type-py-function"><span class="n">kneighbors_graph</span></a><span class="p">(</span>
+    <span class="n">connectivity</span> <span class="o">=</span> <span class="n">kneighbors_graph</span><span class="p">(</span>
         <span class="n">X</span><span class="p">,</span> <span class="n">n_neighbors</span><span class="o">=</span><span class="n">params</span><span class="p">[</span><span class="s2">&quot;n_neighbors&quot;</span><span class="p">],</span> <span class="n">include_self</span><span class="o">=</span><span class="kc">False</span>
     <span class="p">)</span>
     <span class="c1"># make connectivity symmetric</span>
@@ -334,33 +320,33 @@ dimensional data.</p>
     <span class="c1"># ============</span>
     <span class="c1"># Create cluster objects</span>
     <span class="c1"># ============</span>
-    <span class="n">ms</span> <span class="o">=</span> <a href="../../modules/generated/sklearn.cluster.MeanShift.html#sklearn.cluster.MeanShift" title="sklearn.cluster.MeanShift" class="sphx-glr-backref-module-sklearn-cluster sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">cluster</span><span class="o">.</span><span class="n">MeanShift</span></a><span class="p">(</span><span class="n">bandwidth</span><span class="o">=</span><span class="n">bandwidth</span><span class="p">,</span> <span class="n">bin_seeding</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-    <span class="n">two_means</span> <span class="o">=</span> <a href="../../modules/generated/sklearn.cluster.MiniBatchKMeans.html#sklearn.cluster.MiniBatchKMeans" title="sklearn.cluster.MiniBatchKMeans" class="sphx-glr-backref-module-sklearn-cluster sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">cluster</span><span class="o">.</span><span class="n">MiniBatchKMeans</span></a><span class="p">(</span><span class="n">n_clusters</span><span class="o">=</span><span class="n">params</span><span class="p">[</span><span class="s2">&quot;n_clusters&quot;</span><span class="p">],</span> <span class="n">n_init</span><span class="o">=</span><span class="s2">&quot;auto&quot;</span><span class="p">)</span>
-    <span class="n">ward</span> <span class="o">=</span> <a href="../../modules/generated/sklearn.cluster.AgglomerativeClustering.html#sklearn.cluster.AgglomerativeClustering" title="sklearn.cluster.AgglomerativeClustering" class="sphx-glr-backref-module-sklearn-cluster sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">cluster</span><span class="o">.</span><span class="n">AgglomerativeClustering</span></a><span class="p">(</span>
+    <span class="n">ms</span> <span class="o">=</span> <span class="n">cluster</span><span class="o">.</span><span class="n">MeanShift</span><span class="p">(</span><span class="n">bandwidth</span><span class="o">=</span><span class="n">bandwidth</span><span class="p">,</span> <span class="n">bin_seeding</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">two_means</span> <span class="o">=</span> <span class="n">cluster</span><span class="o">.</span><span class="n">MiniBatchKMeans</span><span class="p">(</span><span class="n">n_clusters</span><span class="o">=</span><span class="n">params</span><span class="p">[</span><span class="s2">&quot;n_clusters&quot;</span><span class="p">],</span> <span class="n">n_init</span><span class="o">=</span><span class="s2">&quot;auto&quot;</span><span class="p">)</span>
+    <span class="n">ward</span> <span class="o">=</span> <span class="n">cluster</span><span class="o">.</span><span class="n">AgglomerativeClustering</span><span class="p">(</span>
         <span class="n">n_clusters</span><span class="o">=</span><span class="n">params</span><span class="p">[</span><span class="s2">&quot;n_clusters&quot;</span><span class="p">],</span> <span class="n">linkage</span><span class="o">=</span><span class="s2">&quot;ward&quot;</span><span class="p">,</span> <span class="n">connectivity</span><span class="o">=</span><span class="n">connectivity</span>
     <span class="p">)</span>
-    <span class="n">spectral</span> <span class="o">=</span> <a href="../../modules/generated/sklearn.cluster.SpectralClustering.html#sklearn.cluster.SpectralClustering" title="sklearn.cluster.SpectralClustering" class="sphx-glr-backref-module-sklearn-cluster sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">cluster</span><span class="o">.</span><span class="n">SpectralClustering</span></a><span class="p">(</span>
+    <span class="n">spectral</span> <span class="o">=</span> <span class="n">cluster</span><span class="o">.</span><span class="n">SpectralClustering</span><span class="p">(</span>
         <span class="n">n_clusters</span><span class="o">=</span><span class="n">params</span><span class="p">[</span><span class="s2">&quot;n_clusters&quot;</span><span class="p">],</span>
         <span class="n">eigen_solver</span><span class="o">=</span><span class="s2">&quot;arpack&quot;</span><span class="p">,</span>
         <span class="n">affinity</span><span class="o">=</span><span class="s2">&quot;nearest_neighbors&quot;</span><span class="p">,</span>
     <span class="p">)</span>
-    <span class="n">dbscan</span> <span class="o">=</span> <a href="../../modules/generated/sklearn.cluster.DBSCAN.html#sklearn.cluster.DBSCAN" title="sklearn.cluster.DBSCAN" class="sphx-glr-backref-module-sklearn-cluster sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">cluster</span><span class="o">.</span><span class="n">DBSCAN</span></a><span class="p">(</span><span class="n">eps</span><span class="o">=</span><span class="n">params</span><span class="p">[</span><span class="s2">&quot;eps&quot;</span><span class="p">])</span>
-    <span class="n">optics</span> <span class="o">=</span> <a href="../../modules/generated/sklearn.cluster.OPTICS.html#sklearn.cluster.OPTICS" title="sklearn.cluster.OPTICS" class="sphx-glr-backref-module-sklearn-cluster sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">cluster</span><span class="o">.</span><span class="n">OPTICS</span></a><span class="p">(</span>
+    <span class="n">dbscan</span> <span class="o">=</span> <span class="n">cluster</span><span class="o">.</span><span class="n">DBSCAN</span><span class="p">(</span><span class="n">eps</span><span class="o">=</span><span class="n">params</span><span class="p">[</span><span class="s2">&quot;eps&quot;</span><span class="p">])</span>
+    <span class="n">optics</span> <span class="o">=</span> <span class="n">cluster</span><span class="o">.</span><span class="n">OPTICS</span><span class="p">(</span>
         <span class="n">min_samples</span><span class="o">=</span><span class="n">params</span><span class="p">[</span><span class="s2">&quot;min_samples&quot;</span><span class="p">],</span>
         <span class="n">xi</span><span class="o">=</span><span class="n">params</span><span class="p">[</span><span class="s2">&quot;xi&quot;</span><span class="p">],</span>
         <span class="n">min_cluster_size</span><span class="o">=</span><span class="n">params</span><span class="p">[</span><span class="s2">&quot;min_cluster_size&quot;</span><span class="p">],</span>
     <span class="p">)</span>
-    <span class="n">affinity_propagation</span> <span class="o">=</span> <a href="../../modules/generated/sklearn.cluster.AffinityPropagation.html#sklearn.cluster.AffinityPropagation" title="sklearn.cluster.AffinityPropagation" class="sphx-glr-backref-module-sklearn-cluster sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">cluster</span><span class="o">.</span><span class="n">AffinityPropagation</span></a><span class="p">(</span>
+    <span class="n">affinity_propagation</span> <span class="o">=</span> <span class="n">cluster</span><span class="o">.</span><span class="n">AffinityPropagation</span><span class="p">(</span>
         <span class="n">damping</span><span class="o">=</span><span class="n">params</span><span class="p">[</span><span class="s2">&quot;damping&quot;</span><span class="p">],</span> <span class="n">preference</span><span class="o">=</span><span class="n">params</span><span class="p">[</span><span class="s2">&quot;preference&quot;</span><span class="p">],</span> <span class="n">random_state</span><span class="o">=</span><span class="mi">0</span>
     <span class="p">)</span>
-    <span class="n">average_linkage</span> <span class="o">=</span> <a href="../../modules/generated/sklearn.cluster.AgglomerativeClustering.html#sklearn.cluster.AgglomerativeClustering" title="sklearn.cluster.AgglomerativeClustering" class="sphx-glr-backref-module-sklearn-cluster sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">cluster</span><span class="o">.</span><span class="n">AgglomerativeClustering</span></a><span class="p">(</span>
+    <span class="n">average_linkage</span> <span class="o">=</span> <span class="n">cluster</span><span class="o">.</span><span class="n">AgglomerativeClustering</span><span class="p">(</span>
         <span class="n">linkage</span><span class="o">=</span><span class="s2">&quot;average&quot;</span><span class="p">,</span>
         <span class="n">metric</span><span class="o">=</span><span class="s2">&quot;cityblock&quot;</span><span class="p">,</span>
         <span class="n">n_clusters</span><span class="o">=</span><span class="n">params</span><span class="p">[</span><span class="s2">&quot;n_clusters&quot;</span><span class="p">],</span>
         <span class="n">connectivity</span><span class="o">=</span><span class="n">connectivity</span><span class="p">,</span>
     <span class="p">)</span>
-    <span class="n">birch</span> <span class="o">=</span> <a href="../../modules/generated/sklearn.cluster.Birch.html#sklearn.cluster.Birch" title="sklearn.cluster.Birch" class="sphx-glr-backref-module-sklearn-cluster sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">cluster</span><span class="o">.</span><span class="n">Birch</span></a><span class="p">(</span><span class="n">n_clusters</span><span class="o">=</span><span class="n">params</span><span class="p">[</span><span class="s2">&quot;n_clusters&quot;</span><span class="p">])</span>
-    <span class="n">gmm</span> <span class="o">=</span> <a href="../../modules/generated/sklearn.mixture.GaussianMixture.html#sklearn.mixture.GaussianMixture" title="sklearn.mixture.GaussianMixture" class="sphx-glr-backref-module-sklearn-mixture sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">mixture</span><span class="o">.</span><span class="n">GaussianMixture</span></a><span class="p">(</span>
+    <span class="n">birch</span> <span class="o">=</span> <span class="n">cluster</span><span class="o">.</span><span class="n">Birch</span><span class="p">(</span><span class="n">n_clusters</span><span class="o">=</span><span class="n">params</span><span class="p">[</span><span class="s2">&quot;n_clusters&quot;</span><span class="p">])</span>
+    <span class="n">gmm</span> <span class="o">=</span> <span class="n">mixture</span><span class="o">.</span><span class="n">GaussianMixture</span><span class="p">(</span>
         <span class="n">n_components</span><span class="o">=</span><span class="n">params</span><span class="p">[</span><span class="s2">&quot;n_clusters&quot;</span><span class="p">],</span> <span class="n">covariance_type</span><span class="o">=</span><span class="s2">&quot;full&quot;</span>
     <span class="p">)</span>
 
@@ -403,7 +389,7 @@ dimensional data.</p>
         <span class="k">else</span><span class="p">:</span>
             <span class="n">y_pred</span> <span class="o">=</span> <span class="n">algorithm</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">X</span><span class="p">)</span>
 
-        <a href="https://matplotlib.org/stable/api/_as_gen/matplotlib.pyplot.subplot.html#matplotlib.pyplot.subplot" title="matplotlib.pyplot.subplot" class="sphx-glr-backref-module-matplotlib-pyplot sphx-glr-backref-type-py-function"><span class="n">plt</span><span class="o">.</span><span class="n">subplot</span></a><span class="p">(</span><span class="nb">len</span><span class="p">(</span><a href="../../modules/classes.html#module-sklearn.datasets" title="sklearn.datasets" class="sphx-glr-backref-module-sklearn sphx-glr-backref-type-py-module"><span class="n">datasets</span></a><span class="p">),</span> <span class="nb">len</span><span class="p">(</span><span class="n">clustering_algorithms</span><span class="p">),</span> <span class="n">plot_num</span><span class="p">)</span>
+        <a href="https://matplotlib.org/stable/api/_as_gen/matplotlib.pyplot.subplot.html#matplotlib.pyplot.subplot" title="matplotlib.pyplot.subplot" class="sphx-glr-backref-module-matplotlib-pyplot sphx-glr-backref-type-py-function"><span class="n">plt</span><span class="o">.</span><span class="n">subplot</span></a><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">datasets</span><span class="p">),</span> <span class="nb">len</span><span class="p">(</span><span class="n">clustering_algorithms</span><span class="p">),</span> <span class="n">plot_num</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">i_dataset</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
             <a href="https://matplotlib.org/stable/api/_as_gen/matplotlib.pyplot.title.html#matplotlib.pyplot.title" title="matplotlib.pyplot.title" class="sphx-glr-backref-module-matplotlib-pyplot sphx-glr-backref-type-py-function"><span class="n">plt</span><span class="o">.</span><span class="n">title</span></a><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="mi">18</span><span class="p">)</span>
 
@@ -448,7 +434,7 @@ dimensional data.</p>
 <a href="https://matplotlib.org/stable/api/_as_gen/matplotlib.pyplot.show.html#matplotlib.pyplot.show" title="matplotlib.pyplot.show" class="sphx-glr-backref-module-matplotlib-pyplot sphx-glr-backref-type-py-function"><span class="n">plt</span><span class="o">.</span><span class="n">show</span></a><span class="p">()</span>
 </pre></div>
 </div>
-<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> ( 0 minutes  5.327 seconds)</p>
+<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> ( 0 minutes  7.162 seconds)</p>
 <div class="sphx-glr-footer sphx-glr-footer-example docutils container" id="sphx-glr-download-auto-examples-cluster-plot-cluster-comparison-py">
 <div class="binder-badge docutils container">
 <a class="reference external image-reference" href="https://mybinder.org/v2/gh/scikit-learn/scikit-learn/main?urlpath=lab/tree/notebooks/auto_examples/cluster/plot_cluster_comparison.ipynb"><img alt="Launch binder" src="../../_images/binder_badge_logo12.svg" width="150px" /></a>
