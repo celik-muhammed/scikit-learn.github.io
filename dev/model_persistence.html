@@ -294,6 +294,20 @@ with:</p>
 instead of filenames. More information on data persistence with Joblib is
 available <a class="reference external" href="https://joblib.readthedocs.io/en/latest/persistence.html">here</a>.</p>
 </div>
+<p>When an estimator is unpickled with a scikit-learn version that is inconsistent
+with the version the estimator was pickled with, a
+<a class="reference internal" href="modules/generated/sklearn.exceptions.InconsistentVersionWarning.html#sklearn.exceptions.InconsistentVersionWarning" title="sklearn.exceptions.InconsistentVersionWarning"><code class="xref py py-class docutils literal notranslate"><span class="pre">InconsistentVersionWarning</span></code></a> is raised. This warning
+can be caught to obtain the original version the estimator was pickled with:</p>
+<blockquote>
+<div><p>from sklearn.exceptions import InconsistentVersionWarning
+warnings.simplefilter(“error”, InconsistentVersionWarning)</p>
+<dl class="simple">
+<dt>try:</dt><dd><p>est = pickle.loads(“model_from_prevision_version.pickle”)</p>
+</dd>
+<dt>except InconsistentVersionWarning as w:</dt><dd><p>print(w.original_sklearn_version)</p>
+</dd>
+</dl>
+</div></blockquote>
 <section id="security-maintainability-limitations">
 <span id="persistence-limitations"></span><h3><span class="section-number">9.1.1. </span>Security &amp; maintainability limitations<a class="headerlink" href="#security-maintainability-limitations" title="Permalink to this heading">¶</a></h3>
 <p>pickle (and joblib by extension), has some issues regarding maintainability
