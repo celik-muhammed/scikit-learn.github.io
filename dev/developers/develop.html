@@ -604,6 +604,31 @@ the result of <code class="docutils literal notranslate"><span class="pre">estim
 <p>Objects that do not provide this method will be deep-copied
 (using the Python standard function <code class="docutils literal notranslate"><span class="pre">copy.deepcopy</span></code>)
 if <code class="docutils literal notranslate"><span class="pre">safe=False</span></code> is passed to <code class="docutils literal notranslate"><span class="pre">clone</span></code>.</p>
+<p>Estimators can customize the behavior of <a class="reference internal" href="../modules/generated/sklearn.base.clone.html#sklearn.base.clone" title="sklearn.base.clone"><code class="xref py py-func docutils literal notranslate"><span class="pre">base.clone</span></code></a> by defining a
+<code class="docutils literal notranslate"><span class="pre">__sklearn_clone__</span></code> method. <code class="docutils literal notranslate"><span class="pre">__sklearn_clone__</span></code> must return an instance of the
+estimator. <code class="docutils literal notranslate"><span class="pre">__sklearn_clone__</span></code> is useful when an estimator needs to hold on to
+some state when <a class="reference internal" href="../modules/generated/sklearn.base.clone.html#sklearn.base.clone" title="sklearn.base.clone"><code class="xref py py-func docutils literal notranslate"><span class="pre">base.clone</span></code></a> is called on the estimator. For example, a
+frozen meta-estimator for transformers can be defined as follows:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">FrozenTransformer</span><span class="p">(</span><span class="n">BaseEstimator</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">fitted_transformer</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">fitted_transformer</span> <span class="o">=</span> <span class="n">fitted_transformer</span>
+
+    <span class="k">def</span> <span class="fm">__getattr__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
+        <span class="c1"># `fitted_transformer`&#39;s attributes are now accessible</span>
+        <span class="k">return</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">fitted_transformer</span><span class="p">,</span> <span class="n">name</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">__sklearn_clone__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span>
+
+    <span class="k">def</span> <span class="nf">fit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">):</span>
+        <span class="c1"># Fitting does not change the state of the estimator</span>
+        <span class="k">return</span> <span class="bp">self</span>
+
+    <span class="k">def</span> <span class="nf">fit_transform</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="c1"># fit_transform only transforms the data</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">fitted_transformer</span><span class="o">.</span><span class="n">transform</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
+</pre></div>
+</div>
 </section>
 <section id="pipeline-compatibility">
 <h3>Pipeline compatibility<a class="headerlink" href="#pipeline-compatibility" title="Permalink to this heading">¶</a></h3>
