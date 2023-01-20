@@ -181,7 +181,6 @@
 <li><a class="reference internal" href="#linear-models-with-regularization">Linear models with regularization</a></li>
 <li><a class="reference internal" href="#linear-models-with-sparse-coefficients">Linear models with sparse coefficients</a></li>
 <li><a class="reference internal" href="#wrong-causal-interpretation">Wrong causal interpretation</a></li>
-<li><a class="reference internal" href="#warning-data-and-model-quality">Warning: data and model quality</a></li>
 <li><a class="reference internal" href="#lessons-learned">Lessons learned</a></li>
 </ul>
 </li>
@@ -200,21 +199,31 @@ to download the full example code or to run this example in your browser via Bin
 </div>
 <section class="sphx-glr-example-title" id="common-pitfalls-in-the-interpretation-of-coefficients-of-linear-models">
 <span id="sphx-glr-auto-examples-inspection-plot-linear-model-coefficient-interpretation-py"></span><h1>Common pitfalls in the interpretation of coefficients of linear models<a class="headerlink" href="#common-pitfalls-in-the-interpretation-of-coefficients-of-linear-models" title="Permalink to this heading">¶</a></h1>
-<p>In linear models, the target value is modeled as
-a linear combination of the features (see the <a class="reference internal" href="../../modules/linear_model.html#linear-model"><span class="std std-ref">Linear Models</span></a> User Guide
-section for a description of a set of linear models available in
-scikit-learn).
-Coefficients in multiple linear models represent the relationship between the
-given feature, <span class="math notranslate nohighlight">\(X_i\)</span> and the target, <span class="math notranslate nohighlight">\(y\)</span>, assuming that all the
-other features remain constant (<a class="reference external" href="https://en.wikipedia.org/wiki/Conditional_dependence">conditional dependence</a>).
-This is different from plotting <span class="math notranslate nohighlight">\(X_i\)</span> versus <span class="math notranslate nohighlight">\(y\)</span> and fitting a
-linear relationship: in that case all possible values of the other features are
-taken into account in the estimation (marginal dependence).</p>
+<p>In linear models, the target value is modeled as a linear combination of the
+features (see the <a class="reference internal" href="../../modules/linear_model.html#linear-model"><span class="std std-ref">Linear Models</span></a> User Guide section for a description of a
+set of linear models available in scikit-learn). Coefficients in multiple linear
+models represent the relationship between the given feature, <span class="math notranslate nohighlight">\(X_i\)</span> and the
+target, <span class="math notranslate nohighlight">\(y\)</span>, assuming that all the other features remain constant
+(<a class="reference external" href="https://en.wikipedia.org/wiki/Conditional_dependence">conditional dependence</a>). This is different
+from plotting <span class="math notranslate nohighlight">\(X_i\)</span> versus <span class="math notranslate nohighlight">\(y\)</span> and fitting a linear relationship: in
+that case all possible values of the other features are taken into account in
+the estimation (marginal dependence).</p>
 <p>This example will provide some hints in interpreting coefficient in linear
 models, pointing at problems that arise when either the linear model is not
 appropriate to describe the dataset, or when features are correlated.</p>
-<p>We will use data from the <a class="reference external" href="https://www.openml.org/d/534">“Current Population Survey”</a> from 1985 to predict
-wage as a function of various features such as experience, age, or education.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Keep in mind that the features <span class="math notranslate nohighlight">\(X\)</span> and the outcome <span class="math notranslate nohighlight">\(y\)</span> are in
+general the result of a data generating process that is unknown to us.
+Machine learning models are trained to approximate the unobserved
+mathematical function that links <span class="math notranslate nohighlight">\(X\)</span> to <span class="math notranslate nohighlight">\(y\)</span> from sample data. As
+a result, any interpretation made about a model may not necessarily
+generalize to the true data generating process. This is especially true when
+the model is of bad quality or when the sample data is not representative of
+the population.</p>
+</div>
+<p>We will use data from the <a class="reference external" href="https://www.openml.org/d/534">“Current Population Survey”</a> from 1985 to predict wage as a function of
+various features such as experience, age, or education.</p>
 <nav class="contents local" id="contents">
 <ul class="simple">
 <li><p><a class="reference internal" href="#the-dataset-wages" id="id1">The dataset: wages</a></p></li>
@@ -227,8 +236,7 @@ wage as a function of various features such as experience, age, or education.</p
 <li><p><a class="reference internal" href="#linear-models-with-regularization" id="id8">Linear models with regularization</a></p></li>
 <li><p><a class="reference internal" href="#linear-models-with-sparse-coefficients" id="id9">Linear models with sparse coefficients</a></p></li>
 <li><p><a class="reference internal" href="#wrong-causal-interpretation" id="id10">Wrong causal interpretation</a></p></li>
-<li><p><a class="reference internal" href="#warning-data-and-model-quality" id="id11">Warning: data and model quality</a></p></li>
-<li><p><a class="reference internal" href="#lessons-learned" id="id12">Lessons learned</a></p></li>
+<li><p><a class="reference internal" href="#lessons-learned" id="id11">Lessons learned</a></p></li>
 </ul>
 </nav>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
@@ -1399,19 +1407,8 @@ coefficient, thereby exaggerating the effect of education on wages.</p>
 <p>See the <a class="reference internal" href="plot_causal_interpretation.html#sphx-glr-auto-examples-inspection-plot-causal-interpretation-py"><span class="std std-ref">Failure of Machine Learning to infer causal effects</span></a>
 for a simulated case of ability OVB.</p>
 </section>
-<section id="warning-data-and-model-quality">
-<h2><a class="toc-backref" href="#id11" role="doc-backlink">Warning: data and model quality</a><a class="headerlink" href="#warning-data-and-model-quality" title="Permalink to this heading">¶</a></h2>
-<p>Keep in mind that the outcome <code class="docutils literal notranslate"><span class="pre">y</span></code> and features <code class="docutils literal notranslate"><span class="pre">X</span></code> are the product
-of a data generating process that is hidden from us. Machine
-learning models are trained to approximate the unobserved
-mathematical function that links <code class="docutils literal notranslate"><span class="pre">X</span></code> to <code class="docutils literal notranslate"><span class="pre">y</span></code> from sample data. As a
-result, any interpretation made about a model may not necessarily
-generalize to the true data generating process. This is especially
-true when the model is of bad quality or when the sample data is
-not representative of the population.</p>
-</section>
 <section id="lessons-learned">
-<h2><a class="toc-backref" href="#id12" role="doc-backlink">Lessons learned</a><a class="headerlink" href="#lessons-learned" title="Permalink to this heading">¶</a></h2>
+<h2><a class="toc-backref" href="#id11" role="doc-backlink">Lessons learned</a><a class="headerlink" href="#lessons-learned" title="Permalink to this heading">¶</a></h2>
 <ul class="simple">
 <li><p>Coefficients must be scaled to the same unit of measure to retrieve
 feature importance. Scaling them with the standard-deviation of the
@@ -1430,7 +1427,7 @@ to be biased by unobserved confounders.</p></li>
 <li><p>Inspection tools may not necessarily provide insights on the true
 data generating process.</p></li>
 </ul>
-<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> ( 0 minutes  18.249 seconds)</p>
+<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> ( 0 minutes  17.796 seconds)</p>
 <div class="sphx-glr-footer sphx-glr-footer-example docutils container" id="sphx-glr-download-auto-examples-inspection-plot-linear-model-coefficient-interpretation-py">
 <div class="binder-badge docutils container">
 <a class="reference external image-reference" href="https://mybinder.org/v2/gh/scikit-learn/scikit-learn/main?urlpath=lab/tree/notebooks/auto_examples/inspection/plot_linear_model_coefficient_interpretation.ipynb"><img alt="Launch binder" src="../../_images/binder_badge_logo29.svg" width="150px" /></a>
