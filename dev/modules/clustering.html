@@ -597,17 +597,27 @@ samples. It is a centroid based algorithm, which works by updating candidates
 for centroids to be the mean of the points within a given region. These
 candidates are then filtered in a post-processing stage to eliminate
 near-duplicates to form the final set of centroids.</p>
-<p>Given a candidate centroid <span class="math notranslate nohighlight">\(x_i\)</span> for iteration <span class="math notranslate nohighlight">\(t\)</span>, the candidate
+<p>The position of centroid candidates is iteratively adjusted using a technique called hill
+climbing, which finds local maxima of the estimated probability density.
+Given a candidate centroid <span class="math notranslate nohighlight">\(x\)</span> for iteration <span class="math notranslate nohighlight">\(t\)</span>, the candidate
 is updated according to the following equation:</p>
 <div class="math notranslate nohighlight">
-\[x_i^{t+1} = m(x_i^t)\]</div>
-<p>Where <span class="math notranslate nohighlight">\(N(x_i)\)</span> is the neighborhood of samples within a given distance
-around <span class="math notranslate nohighlight">\(x_i\)</span> and <span class="math notranslate nohighlight">\(m\)</span> is the <em>mean shift</em> vector that is computed for each
+\[x^{t+1} = x^t + m(x^t)\]</div>
+<p>Where <span class="math notranslate nohighlight">\(m\)</span> is the <em>mean shift</em> vector that is computed for each
 centroid that points towards a region of the maximum increase in the density of points.
-This is computed using the following equation, effectively updating a centroid
-to be the mean of the samples within its neighborhood:</p>
+To compute <span class="math notranslate nohighlight">\(m\)</span> we define <span class="math notranslate nohighlight">\(N(x)\)</span> as the neighborhood of samples within
+a given distance around <span class="math notranslate nohighlight">\(x\)</span>. Then <span class="math notranslate nohighlight">\(m\)</span> is computed using the following
+equation, effectively updating a centroid to be the mean of the samples within
+its neighborhood:</p>
 <div class="math notranslate nohighlight">
-\[m(x_i) = \frac{\sum_{x_j \in N(x_i)}K(x_j - x_i)x_j}{\sum_{x_j \in N(x_i)}K(x_j - x_i)}\]</div>
+\[m(x) = \frac{1}{|N(x)|} \sum_{x_j \in N(x)}x_j - x\]</div>
+<p>In general, the equation for <span class="math notranslate nohighlight">\(m\)</span> depends on a kernel used for density estimation.
+The generic formula is:</p>
+<div class="math notranslate nohighlight">
+\[m(x) = \frac{\sum_{x_j \in N(x)}K(x_j - x)x_j}{\sum_{x_j \in N(x)}K(x_j - x)} - x\]</div>
+<p>In our implementation, <span class="math notranslate nohighlight">\(K(x)\)</span> is equal to 1 if <span class="math notranslate nohighlight">\(x\)</span> is small enough and is
+equal to 0 otherwise. Effectively <span class="math notranslate nohighlight">\(K(y - x)\)</span> indicates whether <span class="math notranslate nohighlight">\(y\)</span> is in
+the neighborhood of <span class="math notranslate nohighlight">\(x\)</span>.</p>
 <p>The algorithm automatically sets the number of clusters, instead of relying on a
 parameter <code class="docutils literal notranslate"><span class="pre">bandwidth</span></code>, which dictates the size of the region to search through.
 This parameter can be set manually, but can be estimated using the provided
