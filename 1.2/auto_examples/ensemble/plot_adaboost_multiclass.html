@@ -18,7 +18,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
   
-  <title>Multi-class AdaBoosted Decision Trees &mdash; scikit-learn 1.2.0 documentation</title>
+  <title>Multi-class AdaBoosted Decision Trees &mdash; scikit-learn 1.2.1 documentation</title>
   
   <link rel="canonical" href="http://scikit-learn.org/stable/auto_examples/ensemble/plot_adaboost_multiclass.html" />
 
@@ -36,7 +36,7 @@
   <link rel="stylesheet" href="../../_static/sg_gallery-rendered-html.css" type="text/css" />
   <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
 <script id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
-<script src="../../_static/jquery.js"></script> 
+<script src="../../_static/js/vendor/jquery-3.6.3.slim.min.js"></script> 
 </head>
 <body>
 
@@ -154,12 +154,6 @@
     <div id="sk-sidebar-wrapper" class="border-right">
       <div class="sk-sidebar-toc-wrapper">
         <div class="sk-sidebar-toc-logo">
-          <a href="../../index.html">
-            <img
-              class="sk-brand-img"
-              src="../../_static/scikit-learn-logo-small.png"
-              alt="logo"/>
-          </a>
         </div>
         <div class="btn-group w-100 mb-2" role="group" aria-label="rellinks">
             <a href="plot_monotonic_constraints.html" role="button" class="btn sk-btn-rellink py-1" sk-rellink-tooltip="Monotonic Constraints">Prev</a><a href="index.html" role="button" class="btn sk-btn-rellink py-1" sk-rellink-tooltip="Ensemble methods">Up</a>
@@ -167,7 +161,7 @@
         </div>
         <div class="alert alert-danger p-1 mb-2" role="alert">
           <p class="text-center mb-0">
-          <strong>scikit-learn 1.2.0</strong><br/>
+          <strong>scikit-learn 1.2.1</strong><br/>
           <a href="http://scikit-learn.org/dev/versions.html">Other versions</a>
           </p>
         </div>
@@ -224,13 +218,13 @@ therefore are not shown.</p>
 
 <span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
 
-<span class="kn">from</span> <span class="nn">sklearn.datasets</span> <span class="kn">import</span> <a href="../../modules/generated/sklearn.datasets.make_gaussian_quantiles.html#sklearn.datasets.make_gaussian_quantiles" title="sklearn.datasets.make_gaussian_quantiles" class="sphx-glr-backref-module-sklearn-datasets sphx-glr-backref-type-py-function"><span class="n">make_gaussian_quantiles</span></a>
-<span class="kn">from</span> <span class="nn">sklearn.ensemble</span> <span class="kn">import</span> <a href="../../modules/generated/sklearn.ensemble.AdaBoostClassifier.html#sklearn.ensemble.AdaBoostClassifier" title="sklearn.ensemble.AdaBoostClassifier" class="sphx-glr-backref-module-sklearn-ensemble sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">AdaBoostClassifier</span></a>
-<span class="kn">from</span> <span class="nn">sklearn.metrics</span> <span class="kn">import</span> <a href="../../modules/generated/sklearn.metrics.accuracy_score.html#sklearn.metrics.accuracy_score" title="sklearn.metrics.accuracy_score" class="sphx-glr-backref-module-sklearn-metrics sphx-glr-backref-type-py-function"><span class="n">accuracy_score</span></a>
-<span class="kn">from</span> <span class="nn">sklearn.tree</span> <span class="kn">import</span> <a href="../../modules/generated/sklearn.tree.DecisionTreeClassifier.html#sklearn.tree.DecisionTreeClassifier" title="sklearn.tree.DecisionTreeClassifier" class="sphx-glr-backref-module-sklearn-tree sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">DecisionTreeClassifier</span></a>
+<span class="kn">from</span> <span class="nn">sklearn.datasets</span> <span class="kn">import</span> <span class="n">make_gaussian_quantiles</span>
+<span class="kn">from</span> <span class="nn">sklearn.ensemble</span> <span class="kn">import</span> <span class="n">AdaBoostClassifier</span>
+<span class="kn">from</span> <span class="nn">sklearn.metrics</span> <span class="kn">import</span> <span class="n">accuracy_score</span>
+<span class="kn">from</span> <span class="nn">sklearn.tree</span> <span class="kn">import</span> <span class="n">DecisionTreeClassifier</span>
 
 
-<span class="n">X</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <a href="../../modules/generated/sklearn.datasets.make_gaussian_quantiles.html#sklearn.datasets.make_gaussian_quantiles" title="sklearn.datasets.make_gaussian_quantiles" class="sphx-glr-backref-module-sklearn-datasets sphx-glr-backref-type-py-function"><span class="n">make_gaussian_quantiles</span></a><span class="p">(</span>
+<span class="n">X</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="n">make_gaussian_quantiles</span><span class="p">(</span>
     <span class="n">n_samples</span><span class="o">=</span><span class="mi">13000</span><span class="p">,</span> <span class="n">n_features</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">n_classes</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="mi">1</span>
 <span class="p">)</span>
 
@@ -239,12 +233,12 @@ therefore are not shown.</p>
 <span class="n">X_train</span><span class="p">,</span> <span class="n">X_test</span> <span class="o">=</span> <span class="n">X</span><span class="p">[:</span><span class="n">n_split</span><span class="p">],</span> <span class="n">X</span><span class="p">[</span><span class="n">n_split</span><span class="p">:]</span>
 <span class="n">y_train</span><span class="p">,</span> <span class="n">y_test</span> <span class="o">=</span> <span class="n">y</span><span class="p">[:</span><span class="n">n_split</span><span class="p">],</span> <span class="n">y</span><span class="p">[</span><span class="n">n_split</span><span class="p">:]</span>
 
-<span class="n">bdt_real</span> <span class="o">=</span> <a href="../../modules/generated/sklearn.ensemble.AdaBoostClassifier.html#sklearn.ensemble.AdaBoostClassifier" title="sklearn.ensemble.AdaBoostClassifier" class="sphx-glr-backref-module-sklearn-ensemble sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">AdaBoostClassifier</span></a><span class="p">(</span>
-    <a href="../../modules/generated/sklearn.tree.DecisionTreeClassifier.html#sklearn.tree.DecisionTreeClassifier" title="sklearn.tree.DecisionTreeClassifier" class="sphx-glr-backref-module-sklearn-tree sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">DecisionTreeClassifier</span></a><span class="p">(</span><span class="n">max_depth</span><span class="o">=</span><span class="mi">2</span><span class="p">),</span> <span class="n">n_estimators</span><span class="o">=</span><span class="mi">300</span><span class="p">,</span> <span class="n">learning_rate</span><span class="o">=</span><span class="mi">1</span>
+<span class="n">bdt_real</span> <span class="o">=</span> <span class="n">AdaBoostClassifier</span><span class="p">(</span>
+    <span class="n">DecisionTreeClassifier</span><span class="p">(</span><span class="n">max_depth</span><span class="o">=</span><span class="mi">2</span><span class="p">),</span> <span class="n">n_estimators</span><span class="o">=</span><span class="mi">300</span><span class="p">,</span> <span class="n">learning_rate</span><span class="o">=</span><span class="mi">1</span>
 <span class="p">)</span>
 
-<span class="n">bdt_discrete</span> <span class="o">=</span> <a href="../../modules/generated/sklearn.ensemble.AdaBoostClassifier.html#sklearn.ensemble.AdaBoostClassifier" title="sklearn.ensemble.AdaBoostClassifier" class="sphx-glr-backref-module-sklearn-ensemble sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">AdaBoostClassifier</span></a><span class="p">(</span>
-    <a href="../../modules/generated/sklearn.tree.DecisionTreeClassifier.html#sklearn.tree.DecisionTreeClassifier" title="sklearn.tree.DecisionTreeClassifier" class="sphx-glr-backref-module-sklearn-tree sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">DecisionTreeClassifier</span></a><span class="p">(</span><span class="n">max_depth</span><span class="o">=</span><span class="mi">2</span><span class="p">),</span>
+<span class="n">bdt_discrete</span> <span class="o">=</span> <span class="n">AdaBoostClassifier</span><span class="p">(</span>
+    <span class="n">DecisionTreeClassifier</span><span class="p">(</span><span class="n">max_depth</span><span class="o">=</span><span class="mi">2</span><span class="p">),</span>
     <span class="n">n_estimators</span><span class="o">=</span><span class="mi">300</span><span class="p">,</span>
     <span class="n">learning_rate</span><span class="o">=</span><span class="mf">1.5</span><span class="p">,</span>
     <span class="n">algorithm</span><span class="o">=</span><span class="s2">&quot;SAMME&quot;</span><span class="p">,</span>
@@ -259,8 +253,8 @@ therefore are not shown.</p>
 <span class="k">for</span> <span class="n">real_test_predict</span><span class="p">,</span> <span class="n">discrete_test_predict</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span>
     <span class="n">bdt_real</span><span class="o">.</span><span class="n">staged_predict</span><span class="p">(</span><span class="n">X_test</span><span class="p">),</span> <span class="n">bdt_discrete</span><span class="o">.</span><span class="n">staged_predict</span><span class="p">(</span><span class="n">X_test</span><span class="p">)</span>
 <span class="p">):</span>
-    <span class="n">real_test_errors</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="mf">1.0</span> <span class="o">-</span> <a href="../../modules/generated/sklearn.metrics.accuracy_score.html#sklearn.metrics.accuracy_score" title="sklearn.metrics.accuracy_score" class="sphx-glr-backref-module-sklearn-metrics sphx-glr-backref-type-py-function"><span class="n">accuracy_score</span></a><span class="p">(</span><span class="n">real_test_predict</span><span class="p">,</span> <span class="n">y_test</span><span class="p">))</span>
-    <span class="n">discrete_test_errors</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="mf">1.0</span> <span class="o">-</span> <a href="../../modules/generated/sklearn.metrics.accuracy_score.html#sklearn.metrics.accuracy_score" title="sklearn.metrics.accuracy_score" class="sphx-glr-backref-module-sklearn-metrics sphx-glr-backref-type-py-function"><span class="n">accuracy_score</span></a><span class="p">(</span><span class="n">discrete_test_predict</span><span class="p">,</span> <span class="n">y_test</span><span class="p">))</span>
+    <span class="n">real_test_errors</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="mf">1.0</span> <span class="o">-</span> <span class="n">accuracy_score</span><span class="p">(</span><span class="n">real_test_predict</span><span class="p">,</span> <span class="n">y_test</span><span class="p">))</span>
+    <span class="n">discrete_test_errors</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="mf">1.0</span> <span class="o">-</span> <span class="n">accuracy_score</span><span class="p">(</span><span class="n">discrete_test_predict</span><span class="p">,</span> <span class="n">y_test</span><span class="p">))</span>
 
 <span class="n">n_trees_discrete</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">bdt_discrete</span><span class="p">)</span>
 <span class="n">n_trees_real</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">bdt_real</span><span class="p">)</span>
@@ -317,7 +311,7 @@ therefore are not shown.</p>
 <a href="https://matplotlib.org/stable/api/_as_gen/matplotlib.pyplot.show.html#matplotlib.pyplot.show" title="matplotlib.pyplot.show" class="sphx-glr-backref-module-matplotlib-pyplot sphx-glr-backref-type-py-function"><span class="n">plt</span><span class="o">.</span><span class="n">show</span></a><span class="p">()</span>
 </pre></div>
 </div>
-<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> ( 0 minutes  6.459 seconds)</p>
+<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> ( 0 minutes  7.066 seconds)</p>
 <div class="sphx-glr-footer sphx-glr-footer-example docutils container" id="sphx-glr-download-auto-examples-ensemble-plot-adaboost-multiclass-py">
 <div class="binder-badge docutils container">
 <a class="reference external image-reference" href="https://mybinder.org/v2/gh/scikit-learn/scikit-learn/1.2.X?urlpath=lab/tree/notebooks/auto_examples/ensemble/plot_adaboost_multiclass.ipynb"><img alt="Launch binder" src="../../_images/binder_badge_logo5.svg" width="150px" /></a>
@@ -336,7 +330,7 @@ therefore are not shown.</p>
       </div>
     <div class="container">
       <footer class="sk-content-footer">
-            &copy; 2007 - 2022, scikit-learn developers (BSD License).
+            &copy; 2007 - 2023, scikit-learn developers (BSD License).
           <a href="../../_sources/auto_examples/ensemble/plot_adaboost_multiclass.rst.txt" rel="nofollow">Show this page source</a>
       </footer>
     </div>

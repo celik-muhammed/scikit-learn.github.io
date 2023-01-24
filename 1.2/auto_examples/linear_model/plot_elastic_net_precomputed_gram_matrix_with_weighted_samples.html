@@ -18,7 +18,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
   
-  <title>Fitting an Elastic Net with a precomputed Gram Matrix and Weighted Samples &mdash; scikit-learn 1.2.0 documentation</title>
+  <title>Fitting an Elastic Net with a precomputed Gram Matrix and Weighted Samples &mdash; scikit-learn 1.2.1 documentation</title>
   
   <link rel="canonical" href="http://scikit-learn.org/stable/auto_examples/linear_model/plot_elastic_net_precomputed_gram_matrix_with_weighted_samples.html" />
 
@@ -36,7 +36,7 @@
   <link rel="stylesheet" href="../../_static/sg_gallery-rendered-html.css" type="text/css" />
   <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
 <script id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
-<script src="../../_static/jquery.js"></script> 
+<script src="../../_static/js/vendor/jquery-3.6.3.slim.min.js"></script> 
 </head>
 <body>
 
@@ -154,12 +154,6 @@
     <div id="sk-sidebar-wrapper" class="border-right">
       <div class="sk-sidebar-toc-wrapper">
         <div class="sk-sidebar-toc-logo">
-          <a href="../../index.html">
-            <img
-              class="sk-brand-img"
-              src="../../_static/scikit-learn-logo-small.png"
-              alt="logo"/>
-          </a>
         </div>
         <div class="btn-group w-100 mb-2" role="group" aria-label="rellinks">
             <a href="plot_sgd_early_stopping.html" role="button" class="btn sk-btn-rellink py-1" sk-rellink-tooltip="Early stopping of Stochastic Gradient Descent">Prev</a><a href="index.html" role="button" class="btn sk-btn-rellink py-1" sk-rellink-tooltip="Generalized Linear Models">Up</a>
@@ -167,7 +161,7 @@
         </div>
         <div class="alert alert-danger p-1 mb-2" role="alert">
           <p class="text-center mb-0">
-          <strong>scikit-learn 1.2.0</strong><br/>
+          <strong>scikit-learn 1.2.1</strong><br/>
           <a href="http://scikit-learn.org/dev/versions.html">Other versions</a>
           </p>
         </div>
@@ -209,12 +203,12 @@ is computed.</p>
 </div>
 <p>Let’s start by loading the dataset and creating some sample weights.</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
-<span class="kn">from</span> <span class="nn">sklearn.datasets</span> <span class="kn">import</span> <a href="../../modules/generated/sklearn.datasets.make_regression.html#sklearn.datasets.make_regression" title="sklearn.datasets.make_regression" class="sphx-glr-backref-module-sklearn-datasets sphx-glr-backref-type-py-function"><span class="n">make_regression</span></a>
+<span class="kn">from</span> <span class="nn">sklearn.datasets</span> <span class="kn">import</span> <span class="n">make_regression</span>
 
 <span class="n">rng</span> <span class="o">=</span> <a href="https://numpy.org/doc/stable/reference/random/legacy.html#numpy.random.RandomState" title="numpy.random.RandomState" class="sphx-glr-backref-module-numpy-random sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">RandomState</span></a><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
 
 <span class="n">n_samples</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="mf">1e5</span><span class="p">)</span>
-<span class="n">X</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <a href="../../modules/generated/sklearn.datasets.make_regression.html#sklearn.datasets.make_regression" title="sklearn.datasets.make_regression" class="sphx-glr-backref-module-sklearn-datasets sphx-glr-backref-type-py-function"><span class="n">make_regression</span></a><span class="p">(</span><span class="n">n_samples</span><span class="o">=</span><span class="n">n_samples</span><span class="p">,</span> <span class="n">noise</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="n">rng</span><span class="p">)</span>
+<span class="n">X</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="n">make_regression</span><span class="p">(</span><span class="n">n_samples</span><span class="o">=</span><span class="n">n_samples</span><span class="p">,</span> <span class="n">noise</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="n">rng</span><span class="p">)</span>
 
 <span class="n">sample_weight</span> <span class="o">=</span> <span class="n">rng</span><span class="o">.</span><span class="n">lognormal</span><span class="p">(</span><span class="n">size</span><span class="o">=</span><span class="n">n_samples</span><span class="p">)</span>
 <span class="c1"># normalize the sample weights</span>
@@ -234,9 +228,9 @@ normalized weights prior to computing the gram matrix.</p>
 <code class="docutils literal notranslate"><span class="pre">fit</span></code> otherwise the elastic net estimator will detect that it is uncentered
 and discard the gram matrix we passed. However, if we pass the scaled design
 matrix, the preprocessing code will incorrectly rescale it a second time.</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">sklearn.linear_model</span> <span class="kn">import</span> <a href="../../modules/generated/sklearn.linear_model.ElasticNet.html#sklearn.linear_model.ElasticNet" title="sklearn.linear_model.ElasticNet" class="sphx-glr-backref-module-sklearn-linear_model sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">ElasticNet</span></a>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">sklearn.linear_model</span> <span class="kn">import</span> <span class="n">ElasticNet</span>
 
-<span class="n">lm</span> <span class="o">=</span> <a href="../../modules/generated/sklearn.linear_model.ElasticNet.html#sklearn.linear_model.ElasticNet" title="sklearn.linear_model.ElasticNet" class="sphx-glr-backref-module-sklearn-linear_model sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">ElasticNet</span></a><span class="p">(</span><span class="n">alpha</span><span class="o">=</span><span class="mf">0.01</span><span class="p">,</span> <span class="n">precompute</span><span class="o">=</span><span class="n">gram</span><span class="p">)</span>
+<span class="n">lm</span> <span class="o">=</span> <span class="n">ElasticNet</span><span class="p">(</span><span class="n">alpha</span><span class="o">=</span><span class="mf">0.01</span><span class="p">,</span> <span class="n">precompute</span><span class="o">=</span><span class="n">gram</span><span class="p">)</span>
 <span class="n">lm</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X_centered</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">sample_weight</span><span class="o">=</span><span class="n">normalized_weights</span><span class="p">)</span>
 </pre></div>
 </div>
@@ -270,7 +264,7 @@ matrix, the preprocessing code will incorrectly rescale it a second time.</p>
         -1.58667835e+02,  5.60836363e+02,  1.00911944e+05]]))</pre></div></div></div></div></div>
 </div>
 <br />
-<br /><p class="sphx-glr-timing"><strong>Total running time of the script:</strong> ( 0 minutes  1.081 seconds)</p>
+<br /><p class="sphx-glr-timing"><strong>Total running time of the script:</strong> ( 0 minutes  0.733 seconds)</p>
 <div class="sphx-glr-footer sphx-glr-footer-example docutils container" id="sphx-glr-download-auto-examples-linear-model-plot-elastic-net-precomputed-gram-matrix-with-weighted-samples-py">
 <div class="binder-badge docutils container">
 <a class="reference external image-reference" href="https://mybinder.org/v2/gh/scikit-learn/scikit-learn/1.2.X?urlpath=lab/tree/notebooks/auto_examples/linear_model/plot_elastic_net_precomputed_gram_matrix_with_weighted_samples.ipynb"><img alt="Launch binder" src="../../_images/binder_badge_logo21.svg" width="150px" /></a>
@@ -289,7 +283,7 @@ matrix, the preprocessing code will incorrectly rescale it a second time.</p>
       </div>
     <div class="container">
       <footer class="sk-content-footer">
-            &copy; 2007 - 2022, scikit-learn developers (BSD License).
+            &copy; 2007 - 2023, scikit-learn developers (BSD License).
           <a href="../../_sources/auto_examples/linear_model/plot_elastic_net_precomputed_gram_matrix_with_weighted_samples.rst.txt" rel="nofollow">Show this page source</a>
       </footer>
     </div>

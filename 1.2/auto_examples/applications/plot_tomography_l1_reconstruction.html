@@ -18,7 +18,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
   
-  <title>Compressive sensing: tomography reconstruction with L1 prior (Lasso) &mdash; scikit-learn 1.2.0 documentation</title>
+  <title>Compressive sensing: tomography reconstruction with L1 prior (Lasso) &mdash; scikit-learn 1.2.1 documentation</title>
   
   <link rel="canonical" href="http://scikit-learn.org/stable/auto_examples/applications/plot_tomography_l1_reconstruction.html" />
 
@@ -36,7 +36,7 @@
   <link rel="stylesheet" href="../../_static/sg_gallery-rendered-html.css" type="text/css" />
   <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
 <script id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
-<script src="../../_static/jquery.js"></script> 
+<script src="../../_static/js/vendor/jquery-3.6.3.slim.min.js"></script> 
 </head>
 <body>
 
@@ -154,12 +154,6 @@
     <div id="sk-sidebar-wrapper" class="border-right">
       <div class="sk-sidebar-toc-wrapper">
         <div class="sk-sidebar-toc-logo">
-          <a href="../../index.html">
-            <img
-              class="sk-brand-img"
-              src="../../_static/scikit-learn-logo-small.png"
-              alt="logo"/>
-          </a>
         </div>
         <div class="btn-group w-100 mb-2" role="group" aria-label="rellinks">
             <a href="index.html" role="button" class="btn sk-btn-rellink py-1" sk-rellink-tooltip="Examples based on real world datasets">Prev</a><a href="index.html" role="button" class="btn sk-btn-rellink py-1" sk-rellink-tooltip="Examples based on real world datasets">Up</a>
@@ -167,7 +161,7 @@
         </div>
         <div class="alert alert-danger p-1 mb-2" role="alert">
           <p class="text-center mb-0">
-          <strong>scikit-learn 1.2.0</strong><br/>
+          <strong>scikit-learn 1.2.1</strong><br/>
           <a href="http://scikit-learn.org/dev/versions.html">Other versions</a>
           </p>
         </div>
@@ -227,8 +221,8 @@ contributed to fewer projections than the central disk.</p>
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 <span class="kn">from</span> <span class="nn">scipy</span> <span class="kn">import</span> <span class="n">sparse</span>
 <span class="kn">from</span> <span class="nn">scipy</span> <span class="kn">import</span> <span class="n">ndimage</span>
-<span class="kn">from</span> <span class="nn">sklearn.linear_model</span> <span class="kn">import</span> <a href="../../modules/generated/sklearn.linear_model.Lasso.html#sklearn.linear_model.Lasso" title="sklearn.linear_model.Lasso" class="sphx-glr-backref-module-sklearn-linear_model sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">Lasso</span></a>
-<span class="kn">from</span> <span class="nn">sklearn.linear_model</span> <span class="kn">import</span> <a href="../../modules/generated/sklearn.linear_model.Ridge.html#sklearn.linear_model.Ridge" title="sklearn.linear_model.Ridge" class="sphx-glr-backref-module-sklearn-linear_model sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">Ridge</span></a>
+<span class="kn">from</span> <span class="nn">sklearn.linear_model</span> <span class="kn">import</span> <span class="n">Lasso</span>
+<span class="kn">from</span> <span class="nn">sklearn.linear_model</span> <span class="kn">import</span> <span class="n">Ridge</span>
 <span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
 
 
@@ -248,7 +242,7 @@ contributed to fewer projections than the central disk.</p>
 
 
 <span class="k">def</span> <span class="nf">build_projection_operator</span><span class="p">(</span><span class="n">l_x</span><span class="p">,</span> <span class="n">n_dir</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Compute the tomography design matrix.</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Compute the tomography design matrix.</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
@@ -280,7 +274,7 @@ contributed to fewer projections than the central disk.</p>
 
 
 <span class="k">def</span> <span class="nf">generate_synthetic_data</span><span class="p">():</span>
-    <span class="sd">&quot;&quot;&quot;Synthetic binary data&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Synthetic binary data&quot;&quot;&quot;</span>
     <span class="n">rs</span> <span class="o">=</span> <a href="https://numpy.org/doc/stable/reference/random/legacy.html#numpy.random.RandomState" title="numpy.random.RandomState" class="sphx-glr-backref-module-numpy-random sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">RandomState</span></a><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
     <span class="n">n_pts</span> <span class="o">=</span> <span class="mi">36</span>
     <span class="n">x</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <a href="https://numpy.org/doc/stable/reference/generated/numpy.ogrid.html#numpy.ogrid" title="numpy.ogrid" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-data"><span class="n">np</span><span class="o">.</span><span class="n">ogrid</span></a><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="n">l</span><span class="p">,</span> <span class="mi">0</span><span class="p">:</span><span class="n">l</span><span class="p">]</span>
@@ -301,14 +295,14 @@ contributed to fewer projections than the central disk.</p>
 <span class="n">proj</span> <span class="o">+=</span> <span class="mf">0.15</span> <span class="o">*</span> <a href="https://numpy.org/doc/stable/reference/random/generated/numpy.random.randn.html#numpy.random.randn" title="numpy.random.randn" class="sphx-glr-backref-module-numpy-random sphx-glr-backref-type-py-function"><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">randn</span></a><span class="p">(</span><span class="o">*</span><span class="n">proj</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
 
 <span class="c1"># Reconstruction with L2 (Ridge) penalization</span>
-<span class="n">rgr_ridge</span> <span class="o">=</span> <a href="../../modules/generated/sklearn.linear_model.Ridge.html#sklearn.linear_model.Ridge" title="sklearn.linear_model.Ridge" class="sphx-glr-backref-module-sklearn-linear_model sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">Ridge</span></a><span class="p">(</span><span class="n">alpha</span><span class="o">=</span><span class="mf">0.2</span><span class="p">)</span>
+<span class="n">rgr_ridge</span> <span class="o">=</span> <span class="n">Ridge</span><span class="p">(</span><span class="n">alpha</span><span class="o">=</span><span class="mf">0.2</span><span class="p">)</span>
 <span class="n">rgr_ridge</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">proj_operator</span><span class="p">,</span> <span class="n">proj</span><span class="o">.</span><span class="n">ravel</span><span class="p">())</span>
 <span class="n">rec_l2</span> <span class="o">=</span> <span class="n">rgr_ridge</span><span class="o">.</span><span class="n">coef_</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">l</span><span class="p">,</span> <span class="n">l</span><span class="p">)</span>
 
 <span class="c1"># Reconstruction with L1 (Lasso) penalization</span>
 <span class="c1"># the best value of alpha was determined using cross validation</span>
 <span class="c1"># with LassoCV</span>
-<span class="n">rgr_lasso</span> <span class="o">=</span> <a href="../../modules/generated/sklearn.linear_model.Lasso.html#sklearn.linear_model.Lasso" title="sklearn.linear_model.Lasso" class="sphx-glr-backref-module-sklearn-linear_model sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">Lasso</span></a><span class="p">(</span><span class="n">alpha</span><span class="o">=</span><span class="mf">0.001</span><span class="p">)</span>
+<span class="n">rgr_lasso</span> <span class="o">=</span> <span class="n">Lasso</span><span class="p">(</span><span class="n">alpha</span><span class="o">=</span><span class="mf">0.001</span><span class="p">)</span>
 <span class="n">rgr_lasso</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">proj_operator</span><span class="p">,</span> <span class="n">proj</span><span class="o">.</span><span class="n">ravel</span><span class="p">())</span>
 <span class="n">rec_l1</span> <span class="o">=</span> <span class="n">rgr_lasso</span><span class="o">.</span><span class="n">coef_</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">l</span><span class="p">,</span> <span class="n">l</span><span class="p">)</span>
 
@@ -331,7 +325,7 @@ contributed to fewer projections than the central disk.</p>
 <a href="https://matplotlib.org/stable/api/_as_gen/matplotlib.pyplot.show.html#matplotlib.pyplot.show" title="matplotlib.pyplot.show" class="sphx-glr-backref-module-matplotlib-pyplot sphx-glr-backref-type-py-function"><span class="n">plt</span><span class="o">.</span><span class="n">show</span></a><span class="p">()</span>
 </pre></div>
 </div>
-<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> ( 0 minutes  10.637 seconds)</p>
+<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> ( 0 minutes  12.498 seconds)</p>
 <div class="sphx-glr-footer sphx-glr-footer-example docutils container" id="sphx-glr-download-auto-examples-applications-plot-tomography-l1-reconstruction-py">
 <div class="binder-badge docutils container">
 <a class="reference external image-reference" href="https://mybinder.org/v2/gh/scikit-learn/scikit-learn/1.2.X?urlpath=lab/tree/notebooks/auto_examples/applications/plot_tomography_l1_reconstruction.ipynb"><img alt="Launch binder" src="../../_images/binder_badge_logo8.svg" width="150px" /></a>
@@ -350,7 +344,7 @@ contributed to fewer projections than the central disk.</p>
       </div>
     <div class="container">
       <footer class="sk-content-footer">
-            &copy; 2007 - 2022, scikit-learn developers (BSD License).
+            &copy; 2007 - 2023, scikit-learn developers (BSD License).
           <a href="../../_sources/auto_examples/applications/plot_tomography_l1_reconstruction.rst.txt" rel="nofollow">Show this page source</a>
       </footer>
     </div>

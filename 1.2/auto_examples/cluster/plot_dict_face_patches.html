@@ -18,7 +18,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
   
-  <title>Online learning of a dictionary of parts of faces &mdash; scikit-learn 1.2.0 documentation</title>
+  <title>Online learning of a dictionary of parts of faces &mdash; scikit-learn 1.2.1 documentation</title>
   
   <link rel="canonical" href="http://scikit-learn.org/stable/auto_examples/cluster/plot_dict_face_patches.html" />
 
@@ -36,7 +36,7 @@
   <link rel="stylesheet" href="../../_static/sg_gallery-rendered-html.css" type="text/css" />
   <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
 <script id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
-<script src="../../_static/jquery.js"></script> 
+<script src="../../_static/js/vendor/jquery-3.6.3.slim.min.js"></script> 
 </head>
 <body>
 
@@ -154,12 +154,6 @@
     <div id="sk-sidebar-wrapper" class="border-right">
       <div class="sk-sidebar-toc-wrapper">
         <div class="sk-sidebar-toc-logo">
-          <a href="../../index.html">
-            <img
-              class="sk-brand-img"
-              src="../../_static/scikit-learn-logo-small.png"
-              alt="logo"/>
-          </a>
         </div>
         <div class="btn-group w-100 mb-2" role="group" aria-label="rellinks">
             <a href="plot_cluster_iris.html" role="button" class="btn sk-btn-rellink py-1" sk-rellink-tooltip="K-means Clustering">Prev</a><a href="index.html" role="button" class="btn sk-btn-rellink py-1" sk-rellink-tooltip="Clustering">Up</a>
@@ -167,7 +161,7 @@
         </div>
         <div class="alert alert-danger p-1 mb-2" role="alert">
           <p class="text-center mb-0">
-          <strong>scikit-learn 1.2.0</strong><br/>
+          <strong>scikit-learn 1.2.1</strong><br/>
           <a href="http://scikit-learn.org/dev/versions.html">Other versions</a>
           </p>
         </div>
@@ -217,7 +211,7 @@ cluster.</p>
 <h2>Load the data<a class="headerlink" href="#load-the-data" title="Permalink to this heading">¶</a></h2>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">sklearn</span> <span class="kn">import</span> <span class="n">datasets</span>
 
-<span class="n">faces</span> <span class="o">=</span> <a href="../../modules/generated/sklearn.datasets.fetch_olivetti_faces.html#sklearn.datasets.fetch_olivetti_faces" title="sklearn.datasets.fetch_olivetti_faces" class="sphx-glr-backref-module-sklearn-datasets sphx-glr-backref-type-py-function"><span class="n">datasets</span><span class="o">.</span><span class="n">fetch_olivetti_faces</span></a><span class="p">()</span>
+<span class="n">faces</span> <span class="o">=</span> <span class="n">datasets</span><span class="o">.</span><span class="n">fetch_olivetti_faces</span><span class="p">()</span>
 </pre></div>
 </div>
 <div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>downloading Olivetti faces from https://ndownloader.figshare.com/files/5976027 to /home/runner/scikit_learn_data
@@ -230,12 +224,12 @@ cluster.</p>
 
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 
-<span class="kn">from</span> <span class="nn">sklearn.cluster</span> <span class="kn">import</span> <a href="../../modules/generated/sklearn.cluster.MiniBatchKMeans.html#sklearn.cluster.MiniBatchKMeans" title="sklearn.cluster.MiniBatchKMeans" class="sphx-glr-backref-module-sklearn-cluster sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">MiniBatchKMeans</span></a>
-<span class="kn">from</span> <span class="nn">sklearn.feature_extraction.image</span> <span class="kn">import</span> <a href="../../modules/generated/sklearn.feature_extraction.image.extract_patches_2d.html#sklearn.feature_extraction.image.extract_patches_2d" title="sklearn.feature_extraction.image.extract_patches_2d" class="sphx-glr-backref-module-sklearn-feature_extraction-image sphx-glr-backref-type-py-function"><span class="n">extract_patches_2d</span></a>
+<span class="kn">from</span> <span class="nn">sklearn.cluster</span> <span class="kn">import</span> <span class="n">MiniBatchKMeans</span>
+<span class="kn">from</span> <span class="nn">sklearn.feature_extraction.image</span> <span class="kn">import</span> <span class="n">extract_patches_2d</span>
 
 <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Learning the dictionary... &quot;</span><span class="p">)</span>
 <span class="n">rng</span> <span class="o">=</span> <a href="https://numpy.org/doc/stable/reference/random/legacy.html#numpy.random.RandomState" title="numpy.random.RandomState" class="sphx-glr-backref-module-numpy-random sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">RandomState</span></a><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
-<span class="n">kmeans</span> <span class="o">=</span> <a href="../../modules/generated/sklearn.cluster.MiniBatchKMeans.html#sklearn.cluster.MiniBatchKMeans" title="sklearn.cluster.MiniBatchKMeans" class="sphx-glr-backref-module-sklearn-cluster sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">MiniBatchKMeans</span></a><span class="p">(</span><span class="n">n_clusters</span><span class="o">=</span><span class="mi">81</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="n">rng</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">n_init</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>
+<span class="n">kmeans</span> <span class="o">=</span> <span class="n">MiniBatchKMeans</span><span class="p">(</span><span class="n">n_clusters</span><span class="o">=</span><span class="mi">81</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="n">rng</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">n_init</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>
 <span class="n">patch_size</span> <span class="o">=</span> <span class="p">(</span><span class="mi">20</span><span class="p">,</span> <span class="mi">20</span><span class="p">)</span>
 
 <span class="n">buffer</span> <span class="o">=</span> <span class="p">[]</span>
@@ -245,7 +239,7 @@ cluster.</p>
 <span class="n">index</span> <span class="o">=</span> <span class="mi">0</span>
 <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">6</span><span class="p">):</span>
     <span class="k">for</span> <span class="n">img</span> <span class="ow">in</span> <span class="n">faces</span><span class="o">.</span><span class="n">images</span><span class="p">:</span>
-        <span class="n">data</span> <span class="o">=</span> <a href="../../modules/generated/sklearn.feature_extraction.image.extract_patches_2d.html#sklearn.feature_extraction.image.extract_patches_2d" title="sklearn.feature_extraction.image.extract_patches_2d" class="sphx-glr-backref-module-sklearn-feature_extraction-image sphx-glr-backref-type-py-function"><span class="n">extract_patches_2d</span></a><span class="p">(</span><span class="n">img</span><span class="p">,</span> <span class="n">patch_size</span><span class="p">,</span> <span class="n">max_patches</span><span class="o">=</span><span class="mi">50</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="n">rng</span><span class="p">)</span>
+        <span class="n">data</span> <span class="o">=</span> <span class="n">extract_patches_2d</span><span class="p">(</span><span class="n">img</span><span class="p">,</span> <span class="n">patch_size</span><span class="p">,</span> <span class="n">max_patches</span><span class="o">=</span><span class="mi">50</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="n">rng</span><span class="p">)</span>
         <span class="n">data</span> <span class="o">=</span> <a href="https://numpy.org/doc/stable/reference/generated/numpy.reshape.html#numpy.reshape" title="numpy.reshape" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-function"><span class="n">np</span><span class="o">.</span><span class="n">reshape</span></a><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">data</span><span class="p">),</span> <span class="o">-</span><span class="mi">1</span><span class="p">))</span>
         <span class="n">buffer</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
         <span class="n">index</span> <span class="o">+=</span> <span class="mi">1</span>
@@ -293,7 +287,7 @@ Partial fit of 2100 out of 2400
 Partial fit of 2200 out of 2400
 Partial fit of 2300 out of 2400
 Partial fit of 2400 out of 2400
-done in 0.95s.
+done in 0.92s.
 </pre></div>
 </div>
 </section>
@@ -318,7 +312,7 @@ done in 0.95s.
 <a href="https://matplotlib.org/stable/api/_as_gen/matplotlib.pyplot.show.html#matplotlib.pyplot.show" title="matplotlib.pyplot.show" class="sphx-glr-backref-module-matplotlib-pyplot sphx-glr-backref-type-py-function"><span class="n">plt</span><span class="o">.</span><span class="n">show</span></a><span class="p">()</span>
 </pre></div>
 </div>
-<img src="../../_images/sphx_glr_plot_dict_face_patches_001.png" srcset="../../_images/sphx_glr_plot_dict_face_patches_001.png" alt="Patches of faces Train time 0.9s on 3200 patches" class = "sphx-glr-single-img"/><p class="sphx-glr-timing"><strong>Total running time of the script:</strong> ( 0 minutes  3.566 seconds)</p>
+<img src="../../_images/sphx_glr_plot_dict_face_patches_001.png" srcset="../../_images/sphx_glr_plot_dict_face_patches_001.png" alt="Patches of faces Train time 0.9s on 3200 patches" class = "sphx-glr-single-img"/><p class="sphx-glr-timing"><strong>Total running time of the script:</strong> ( 0 minutes  4.464 seconds)</p>
 <div class="sphx-glr-footer sphx-glr-footer-example docutils container" id="sphx-glr-download-auto-examples-cluster-plot-dict-face-patches-py">
 <div class="binder-badge docutils container">
 <a class="reference external image-reference" href="https://mybinder.org/v2/gh/scikit-learn/scikit-learn/1.2.X?urlpath=lab/tree/notebooks/auto_examples/cluster/plot_dict_face_patches.ipynb"><img alt="Launch binder" src="../../_images/binder_badge_logo12.svg" width="150px" /></a>
@@ -338,7 +332,7 @@ done in 0.95s.
       </div>
     <div class="container">
       <footer class="sk-content-footer">
-            &copy; 2007 - 2022, scikit-learn developers (BSD License).
+            &copy; 2007 - 2023, scikit-learn developers (BSD License).
           <a href="../../_sources/auto_examples/cluster/plot_dict_face_patches.rst.txt" rel="nofollow">Show this page source</a>
       </footer>
     </div>

@@ -18,7 +18,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
   
-  <title>SVM-Anova: SVM with univariate feature selection &mdash; scikit-learn 1.2.0 documentation</title>
+  <title>SVM-Anova: SVM with univariate feature selection &mdash; scikit-learn 1.2.1 documentation</title>
   
   <link rel="canonical" href="http://scikit-learn.org/stable/auto_examples/svm/plot_svm_anova.html" />
 
@@ -36,7 +36,7 @@
   <link rel="stylesheet" href="../../_static/sg_gallery-rendered-html.css" type="text/css" />
   <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
 <script id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
-<script src="../../_static/jquery.js"></script> 
+<script src="../../_static/js/vendor/jquery-3.6.3.slim.min.js"></script> 
 </head>
 <body>
 
@@ -154,12 +154,6 @@
     <div id="sk-sidebar-wrapper" class="border-right">
       <div class="sk-sidebar-toc-wrapper">
         <div class="sk-sidebar-toc-logo">
-          <a href="../../index.html">
-            <img
-              class="sk-brand-img"
-              src="../../_static/scikit-learn-logo-small.png"
-              alt="logo"/>
-          </a>
         </div>
         <div class="btn-group w-100 mb-2" role="group" aria-label="rellinks">
             <a href="plot_custom_kernel.html" role="button" class="btn sk-btn-rellink py-1" sk-rellink-tooltip="SVM with custom kernel">Prev</a><a href="index.html" role="button" class="btn sk-btn-rellink py-1" sk-rellink-tooltip="Support Vector Machines">Up</a>
@@ -167,7 +161,7 @@
         </div>
         <div class="alert alert-danger p-1 mb-2" role="alert">
           <p class="text-center mb-0">
-          <strong>scikit-learn 1.2.0</strong><br/>
+          <strong>scikit-learn 1.2.1</strong><br/>
           <a href="http://scikit-learn.org/dev/versions.html">Other versions</a>
           </p>
         </div>
@@ -206,9 +200,9 @@ that our model achieves best performance when we select around 10% of features.<
 <section id="load-some-data-to-play-with">
 <h2>Load some data to play with<a class="headerlink" href="#load-some-data-to-play-with" title="Permalink to this heading">¶</a></h2>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
-<span class="kn">from</span> <span class="nn">sklearn.datasets</span> <span class="kn">import</span> <a href="../../modules/generated/sklearn.datasets.load_iris.html#sklearn.datasets.load_iris" title="sklearn.datasets.load_iris" class="sphx-glr-backref-module-sklearn-datasets sphx-glr-backref-type-py-function"><span class="n">load_iris</span></a>
+<span class="kn">from</span> <span class="nn">sklearn.datasets</span> <span class="kn">import</span> <span class="n">load_iris</span>
 
-<span class="n">X</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <a href="../../modules/generated/sklearn.datasets.load_iris.html#sklearn.datasets.load_iris" title="sklearn.datasets.load_iris" class="sphx-glr-backref-module-sklearn-datasets sphx-glr-backref-type-py-function"><span class="n">load_iris</span></a><span class="p">(</span><span class="n">return_X_y</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">X</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="n">load_iris</span><span class="p">(</span><span class="n">return_X_y</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 
 <span class="c1"># Add non-informative features</span>
 <span class="n">rng</span> <span class="o">=</span> <a href="https://numpy.org/doc/stable/reference/random/legacy.html#numpy.random.RandomState" title="numpy.random.RandomState" class="sphx-glr-backref-module-numpy-random sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">RandomState</span></a><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
@@ -218,19 +212,19 @@ that our model achieves best performance when we select around 10% of features.<
 </section>
 <section id="create-the-pipeline">
 <h2>Create the pipeline<a class="headerlink" href="#create-the-pipeline" title="Permalink to this heading">¶</a></h2>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">sklearn.pipeline</span> <span class="kn">import</span> <a href="../../modules/generated/sklearn.pipeline.Pipeline.html#sklearn.pipeline.Pipeline" title="sklearn.pipeline.Pipeline" class="sphx-glr-backref-module-sklearn-pipeline sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">Pipeline</span></a>
-<span class="kn">from</span> <span class="nn">sklearn.feature_selection</span> <span class="kn">import</span> <a href="../../modules/generated/sklearn.feature_selection.SelectPercentile.html#sklearn.feature_selection.SelectPercentile" title="sklearn.feature_selection.SelectPercentile" class="sphx-glr-backref-module-sklearn-feature_selection sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">SelectPercentile</span></a><span class="p">,</span> <a href="../../modules/generated/sklearn.feature_selection.chi2.html#sklearn.feature_selection.chi2" title="sklearn.feature_selection.chi2" class="sphx-glr-backref-module-sklearn-feature_selection sphx-glr-backref-type-py-function"><span class="n">chi2</span></a>
-<span class="kn">from</span> <span class="nn">sklearn.preprocessing</span> <span class="kn">import</span> <a href="../../modules/generated/sklearn.preprocessing.StandardScaler.html#sklearn.preprocessing.StandardScaler" title="sklearn.preprocessing.StandardScaler" class="sphx-glr-backref-module-sklearn-preprocessing sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">StandardScaler</span></a>
-<span class="kn">from</span> <span class="nn">sklearn.svm</span> <span class="kn">import</span> <a href="../../modules/generated/sklearn.svm.SVC.html#sklearn.svm.SVC" title="sklearn.svm.SVC" class="sphx-glr-backref-module-sklearn-svm sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">SVC</span></a>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">sklearn.pipeline</span> <span class="kn">import</span> <span class="n">Pipeline</span>
+<span class="kn">from</span> <span class="nn">sklearn.feature_selection</span> <span class="kn">import</span> <span class="n">SelectPercentile</span><span class="p">,</span> <span class="n">f_classif</span>
+<span class="kn">from</span> <span class="nn">sklearn.preprocessing</span> <span class="kn">import</span> <span class="n">StandardScaler</span>
+<span class="kn">from</span> <span class="nn">sklearn.svm</span> <span class="kn">import</span> <span class="n">SVC</span>
 
 <span class="c1"># Create a feature-selection transform, a scaler and an instance of SVM that we</span>
 <span class="c1"># combine together to have a full-blown estimator</span>
 
-<span class="n">clf</span> <span class="o">=</span> <a href="../../modules/generated/sklearn.pipeline.Pipeline.html#sklearn.pipeline.Pipeline" title="sklearn.pipeline.Pipeline" class="sphx-glr-backref-module-sklearn-pipeline sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">Pipeline</span></a><span class="p">(</span>
+<span class="n">clf</span> <span class="o">=</span> <span class="n">Pipeline</span><span class="p">(</span>
     <span class="p">[</span>
-        <span class="p">(</span><span class="s2">&quot;anova&quot;</span><span class="p">,</span> <a href="../../modules/generated/sklearn.feature_selection.SelectPercentile.html#sklearn.feature_selection.SelectPercentile" title="sklearn.feature_selection.SelectPercentile" class="sphx-glr-backref-module-sklearn-feature_selection sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">SelectPercentile</span></a><span class="p">(</span><a href="../../modules/generated/sklearn.feature_selection.chi2.html#sklearn.feature_selection.chi2" title="sklearn.feature_selection.chi2" class="sphx-glr-backref-module-sklearn-feature_selection sphx-glr-backref-type-py-function"><span class="n">chi2</span></a><span class="p">)),</span>
-        <span class="p">(</span><span class="s2">&quot;scaler&quot;</span><span class="p">,</span> <a href="../../modules/generated/sklearn.preprocessing.StandardScaler.html#sklearn.preprocessing.StandardScaler" title="sklearn.preprocessing.StandardScaler" class="sphx-glr-backref-module-sklearn-preprocessing sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">StandardScaler</span></a><span class="p">()),</span>
-        <span class="p">(</span><span class="s2">&quot;svc&quot;</span><span class="p">,</span> <a href="../../modules/generated/sklearn.svm.SVC.html#sklearn.svm.SVC" title="sklearn.svm.SVC" class="sphx-glr-backref-module-sklearn-svm sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">SVC</span></a><span class="p">(</span><span class="n">gamma</span><span class="o">=</span><span class="s2">&quot;auto&quot;</span><span class="p">)),</span>
+        <span class="p">(</span><span class="s2">&quot;anova&quot;</span><span class="p">,</span> <span class="n">SelectPercentile</span><span class="p">(</span><span class="n">f_classif</span><span class="p">)),</span>
+        <span class="p">(</span><span class="s2">&quot;scaler&quot;</span><span class="p">,</span> <span class="n">StandardScaler</span><span class="p">()),</span>
+        <span class="p">(</span><span class="s2">&quot;svc&quot;</span><span class="p">,</span> <span class="n">SVC</span><span class="p">(</span><span class="n">gamma</span><span class="o">=</span><span class="s2">&quot;auto&quot;</span><span class="p">)),</span>
     <span class="p">]</span>
 <span class="p">)</span>
 </pre></div>
@@ -239,7 +233,7 @@ that our model achieves best performance when we select around 10% of features.<
 <section id="plot-the-cross-validation-score-as-a-function-of-percentile-of-features">
 <h2>Plot the cross-validation score as a function of percentile of features<a class="headerlink" href="#plot-the-cross-validation-score-as-a-function-of-percentile-of-features" title="Permalink to this heading">¶</a></h2>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
-<span class="kn">from</span> <span class="nn">sklearn.model_selection</span> <span class="kn">import</span> <a href="../../modules/generated/sklearn.model_selection.cross_val_score.html#sklearn.model_selection.cross_val_score" title="sklearn.model_selection.cross_val_score" class="sphx-glr-backref-module-sklearn-model_selection sphx-glr-backref-type-py-function"><span class="n">cross_val_score</span></a>
+<span class="kn">from</span> <span class="nn">sklearn.model_selection</span> <span class="kn">import</span> <span class="n">cross_val_score</span>
 
 <span class="n">score_means</span> <span class="o">=</span> <span class="nb">list</span><span class="p">()</span>
 <span class="n">score_stds</span> <span class="o">=</span> <span class="nb">list</span><span class="p">()</span>
@@ -247,7 +241,7 @@ that our model achieves best performance when we select around 10% of features.<
 
 <span class="k">for</span> <span class="n">percentile</span> <span class="ow">in</span> <span class="n">percentiles</span><span class="p">:</span>
     <span class="n">clf</span><span class="o">.</span><span class="n">set_params</span><span class="p">(</span><span class="n">anova__percentile</span><span class="o">=</span><span class="n">percentile</span><span class="p">)</span>
-    <span class="n">this_scores</span> <span class="o">=</span> <a href="../../modules/generated/sklearn.model_selection.cross_val_score.html#sklearn.model_selection.cross_val_score" title="sklearn.model_selection.cross_val_score" class="sphx-glr-backref-module-sklearn-model_selection sphx-glr-backref-type-py-function"><span class="n">cross_val_score</span></a><span class="p">(</span><span class="n">clf</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
+    <span class="n">this_scores</span> <span class="o">=</span> <span class="n">cross_val_score</span><span class="p">(</span><span class="n">clf</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
     <span class="n">score_means</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">this_scores</span><span class="o">.</span><span class="n">mean</span><span class="p">())</span>
     <span class="n">score_stds</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">this_scores</span><span class="o">.</span><span class="n">std</span><span class="p">())</span>
 
@@ -260,7 +254,7 @@ that our model achieves best performance when we select around 10% of features.<
 <a href="https://matplotlib.org/stable/api/_as_gen/matplotlib.pyplot.show.html#matplotlib.pyplot.show" title="matplotlib.pyplot.show" class="sphx-glr-backref-module-matplotlib-pyplot sphx-glr-backref-type-py-function"><span class="n">plt</span><span class="o">.</span><span class="n">show</span></a><span class="p">()</span>
 </pre></div>
 </div>
-<img src="../../_images/sphx_glr_plot_svm_anova_001.png" srcset="../../_images/sphx_glr_plot_svm_anova_001.png" alt="Performance of the SVM-Anova varying the percentile of features selected" class = "sphx-glr-single-img"/><p class="sphx-glr-timing"><strong>Total running time of the script:</strong> ( 0 minutes  0.338 seconds)</p>
+<img src="../../_images/sphx_glr_plot_svm_anova_001.png" srcset="../../_images/sphx_glr_plot_svm_anova_001.png" alt="Performance of the SVM-Anova varying the percentile of features selected" class = "sphx-glr-single-img"/><p class="sphx-glr-timing"><strong>Total running time of the script:</strong> ( 0 minutes  0.295 seconds)</p>
 <div class="sphx-glr-footer sphx-glr-footer-example docutils container" id="sphx-glr-download-auto-examples-svm-plot-svm-anova-py">
 <div class="binder-badge docutils container">
 <a class="reference external image-reference" href="https://mybinder.org/v2/gh/scikit-learn/scikit-learn/1.2.X?urlpath=lab/tree/notebooks/auto_examples/svm/plot_svm_anova.ipynb"><img alt="Launch binder" src="../../_images/binder_badge_logo18.svg" width="150px" /></a>
@@ -280,7 +274,7 @@ that our model achieves best performance when we select around 10% of features.<
       </div>
     <div class="container">
       <footer class="sk-content-footer">
-            &copy; 2007 - 2022, scikit-learn developers (BSD License).
+            &copy; 2007 - 2023, scikit-learn developers (BSD License).
           <a href="../../_sources/auto_examples/svm/plot_svm_anova.rst.txt" rel="nofollow">Show this page source</a>
       </footer>
     </div>

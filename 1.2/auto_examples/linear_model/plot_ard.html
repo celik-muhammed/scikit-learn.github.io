@@ -18,7 +18,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
   
-  <title>Comparing Linear Bayesian Regressors &mdash; scikit-learn 1.2.0 documentation</title>
+  <title>Comparing Linear Bayesian Regressors &mdash; scikit-learn 1.2.1 documentation</title>
   
   <link rel="canonical" href="http://scikit-learn.org/stable/auto_examples/linear_model/plot_ard.html" />
 
@@ -36,7 +36,7 @@
   <link rel="stylesheet" href="../../_static/sg_gallery-rendered-html.css" type="text/css" />
   <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
 <script id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
-<script src="../../_static/jquery.js"></script> 
+<script src="../../_static/js/vendor/jquery-3.6.3.slim.min.js"></script> 
 </head>
 <body>
 
@@ -154,12 +154,6 @@
     <div id="sk-sidebar-wrapper" class="border-right">
       <div class="sk-sidebar-toc-wrapper">
         <div class="sk-sidebar-toc-logo">
-          <a href="../../index.html">
-            <img
-              class="sk-brand-img"
-              src="../../_static/scikit-learn-logo-small.png"
-              alt="logo"/>
-          </a>
         </div>
         <div class="btn-group w-100 mb-2" role="group" aria-label="rellinks">
             <a href="index.html" role="button" class="btn sk-btn-rellink py-1" sk-rellink-tooltip="Generalized Linear Models">Prev</a><a href="index.html" role="button" class="btn sk-btn-rellink py-1" sk-rellink-tooltip="Generalized Linear Models">Up</a>
@@ -167,7 +161,7 @@
         </div>
         <div class="alert alert-danger p-1 mb-2" role="alert">
           <p class="text-center mb-0">
-          <strong>scikit-learn 1.2.0</strong><br/>
+          <strong>scikit-learn 1.2.1</strong><br/>
           <a href="http://scikit-learn.org/dev/versions.html">Other versions</a>
           </p>
         </div>
@@ -236,9 +230,9 @@ useful at predicting <code class="docutils literal notranslate"><span class="pre
 <span class="pre">==</span> <span class="pre">n_features</span></code>. Such a setting is challenging for an OLS model and leads
 potentially to arbitrary large weights. Having a prior on the weights and a
 penalty alleviates the problem. Finally, gaussian noise is added.</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">sklearn.datasets</span> <span class="kn">import</span> <a href="../../modules/generated/sklearn.datasets.make_regression.html#sklearn.datasets.make_regression" title="sklearn.datasets.make_regression" class="sphx-glr-backref-module-sklearn-datasets sphx-glr-backref-type-py-function"><span class="n">make_regression</span></a>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">sklearn.datasets</span> <span class="kn">import</span> <span class="n">make_regression</span>
 
-<span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">true_weights</span> <span class="o">=</span> <a href="../../modules/generated/sklearn.datasets.make_regression.html#sklearn.datasets.make_regression" title="sklearn.datasets.make_regression" class="sphx-glr-backref-module-sklearn-datasets sphx-glr-backref-type-py-function"><span class="n">make_regression</span></a><span class="p">(</span>
+<span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">true_weights</span> <span class="o">=</span> <span class="n">make_regression</span><span class="p">(</span>
     <span class="n">n_samples</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span>
     <span class="n">n_features</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span>
     <span class="n">n_informative</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span>
@@ -254,11 +248,11 @@ penalty alleviates the problem. Finally, gaussian noise is added.</p>
 <p>We now fit both Bayesian models and the OLS to later compare the models’
 coefficients.</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
-<span class="kn">from</span> <span class="nn">sklearn.linear_model</span> <span class="kn">import</span> <a href="../../modules/generated/sklearn.linear_model.ARDRegression.html#sklearn.linear_model.ARDRegression" title="sklearn.linear_model.ARDRegression" class="sphx-glr-backref-module-sklearn-linear_model sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">ARDRegression</span></a><span class="p">,</span> <a href="../../modules/generated/sklearn.linear_model.LinearRegression.html#sklearn.linear_model.LinearRegression" title="sklearn.linear_model.LinearRegression" class="sphx-glr-backref-module-sklearn-linear_model sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">LinearRegression</span></a><span class="p">,</span> <a href="../../modules/generated/sklearn.linear_model.BayesianRidge.html#sklearn.linear_model.BayesianRidge" title="sklearn.linear_model.BayesianRidge" class="sphx-glr-backref-module-sklearn-linear_model sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">BayesianRidge</span></a>
+<span class="kn">from</span> <span class="nn">sklearn.linear_model</span> <span class="kn">import</span> <span class="n">ARDRegression</span><span class="p">,</span> <span class="n">LinearRegression</span><span class="p">,</span> <span class="n">BayesianRidge</span>
 
-<span class="n">olr</span> <span class="o">=</span> <a href="../../modules/generated/sklearn.linear_model.LinearRegression.html#sklearn.linear_model.LinearRegression" title="sklearn.linear_model.LinearRegression" class="sphx-glr-backref-module-sklearn-linear_model sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">LinearRegression</span></a><span class="p">()</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
-<span class="n">brr</span> <span class="o">=</span> <a href="../../modules/generated/sklearn.linear_model.BayesianRidge.html#sklearn.linear_model.BayesianRidge" title="sklearn.linear_model.BayesianRidge" class="sphx-glr-backref-module-sklearn-linear_model sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">BayesianRidge</span></a><span class="p">(</span><span class="n">compute_score</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">n_iter</span><span class="o">=</span><span class="mi">30</span><span class="p">)</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
-<span class="n">ard</span> <span class="o">=</span> <a href="../../modules/generated/sklearn.linear_model.ARDRegression.html#sklearn.linear_model.ARDRegression" title="sklearn.linear_model.ARDRegression" class="sphx-glr-backref-module-sklearn-linear_model sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">ARDRegression</span></a><span class="p">(</span><span class="n">compute_score</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">n_iter</span><span class="o">=</span><span class="mi">30</span><span class="p">)</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
+<span class="n">olr</span> <span class="o">=</span> <span class="n">LinearRegression</span><span class="p">()</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
+<span class="n">brr</span> <span class="o">=</span> <span class="n">BayesianRidge</span><span class="p">(</span><span class="n">compute_score</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">n_iter</span><span class="o">=</span><span class="mi">30</span><span class="p">)</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
+<span class="n">ard</span> <span class="o">=</span> <span class="n">ARDRegression</span><span class="p">(</span><span class="n">compute_score</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">n_iter</span><span class="o">=</span><span class="mi">30</span><span class="p">)</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
 <span class="n">df</span> <span class="o">=</span> <a href="https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.DataFrame.html#pandas.DataFrame" title="pandas.DataFrame" class="sphx-glr-backref-module-pandas sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span></a><span class="p">(</span>
     <span class="p">{</span>
         <span class="s2">&quot;Weights of true generative process&quot;</span><span class="p">:</span> <span class="n">true_weights</span><span class="p">,</span>
@@ -324,8 +318,8 @@ defined by the <code class="docutils literal notranslate"><span class="pre">n_it
 <h3>Generate synthetic dataset<a class="headerlink" href="#id1" title="Permalink to this heading">¶</a></h3>
 <p>We create a target that is a non-linear function of the input feature.
 Noise following a standard uniform distribution is added.</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">sklearn.pipeline</span> <span class="kn">import</span> <a href="../../modules/generated/sklearn.pipeline.make_pipeline.html#sklearn.pipeline.make_pipeline" title="sklearn.pipeline.make_pipeline" class="sphx-glr-backref-module-sklearn-pipeline sphx-glr-backref-type-py-function"><span class="n">make_pipeline</span></a>
-<span class="kn">from</span> <span class="nn">sklearn.preprocessing</span> <span class="kn">import</span> <a href="../../modules/generated/sklearn.preprocessing.PolynomialFeatures.html#sklearn.preprocessing.PolynomialFeatures" title="sklearn.preprocessing.PolynomialFeatures" class="sphx-glr-backref-module-sklearn-preprocessing sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">PolynomialFeatures</span></a><span class="p">,</span> <a href="../../modules/generated/sklearn.preprocessing.StandardScaler.html#sklearn.preprocessing.StandardScaler" title="sklearn.preprocessing.StandardScaler" class="sphx-glr-backref-module-sklearn-preprocessing sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">StandardScaler</span></a>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">sklearn.pipeline</span> <span class="kn">import</span> <span class="n">make_pipeline</span>
+<span class="kn">from</span> <span class="nn">sklearn.preprocessing</span> <span class="kn">import</span> <span class="n">PolynomialFeatures</span><span class="p">,</span> <span class="n">StandardScaler</span>
 
 <span class="n">rng</span> <span class="o">=</span> <a href="https://numpy.org/doc/stable/reference/random/legacy.html#numpy.random.RandomState" title="numpy.random.RandomState" class="sphx-glr-backref-module-numpy-random sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">RandomState</span></a><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
 <span class="n">n_samples</span> <span class="o">=</span> <span class="mi">110</span>
@@ -356,15 +350,15 @@ linear models regularize the size of the polynomial coefficients. As
 additional bias feature. By setting <code class="docutils literal notranslate"><span class="pre">return_std=True</span></code>, the bayesian regressors
 return the standard deviation of the posterior distribution for the model
 parameters.</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">ard_poly</span> <span class="o">=</span> <a href="../../modules/generated/sklearn.pipeline.make_pipeline.html#sklearn.pipeline.make_pipeline" title="sklearn.pipeline.make_pipeline" class="sphx-glr-backref-module-sklearn-pipeline sphx-glr-backref-type-py-function"><span class="n">make_pipeline</span></a><span class="p">(</span>
-    <a href="../../modules/generated/sklearn.preprocessing.PolynomialFeatures.html#sklearn.preprocessing.PolynomialFeatures" title="sklearn.preprocessing.PolynomialFeatures" class="sphx-glr-backref-module-sklearn-preprocessing sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">PolynomialFeatures</span></a><span class="p">(</span><span class="n">degree</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">include_bias</span><span class="o">=</span><span class="kc">False</span><span class="p">),</span>
-    <a href="../../modules/generated/sklearn.preprocessing.StandardScaler.html#sklearn.preprocessing.StandardScaler" title="sklearn.preprocessing.StandardScaler" class="sphx-glr-backref-module-sklearn-preprocessing sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">StandardScaler</span></a><span class="p">(),</span>
-    <a href="../../modules/generated/sklearn.linear_model.ARDRegression.html#sklearn.linear_model.ARDRegression" title="sklearn.linear_model.ARDRegression" class="sphx-glr-backref-module-sklearn-linear_model sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">ARDRegression</span></a><span class="p">(),</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">ard_poly</span> <span class="o">=</span> <span class="n">make_pipeline</span><span class="p">(</span>
+    <span class="n">PolynomialFeatures</span><span class="p">(</span><span class="n">degree</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">include_bias</span><span class="o">=</span><span class="kc">False</span><span class="p">),</span>
+    <span class="n">StandardScaler</span><span class="p">(),</span>
+    <span class="n">ARDRegression</span><span class="p">(),</span>
 <span class="p">)</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
-<span class="n">brr_poly</span> <span class="o">=</span> <a href="../../modules/generated/sklearn.pipeline.make_pipeline.html#sklearn.pipeline.make_pipeline" title="sklearn.pipeline.make_pipeline" class="sphx-glr-backref-module-sklearn-pipeline sphx-glr-backref-type-py-function"><span class="n">make_pipeline</span></a><span class="p">(</span>
-    <a href="../../modules/generated/sklearn.preprocessing.PolynomialFeatures.html#sklearn.preprocessing.PolynomialFeatures" title="sklearn.preprocessing.PolynomialFeatures" class="sphx-glr-backref-module-sklearn-preprocessing sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">PolynomialFeatures</span></a><span class="p">(</span><span class="n">degree</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">include_bias</span><span class="o">=</span><span class="kc">False</span><span class="p">),</span>
-    <a href="../../modules/generated/sklearn.preprocessing.StandardScaler.html#sklearn.preprocessing.StandardScaler" title="sklearn.preprocessing.StandardScaler" class="sphx-glr-backref-module-sklearn-preprocessing sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">StandardScaler</span></a><span class="p">(),</span>
-    <a href="../../modules/generated/sklearn.linear_model.BayesianRidge.html#sklearn.linear_model.BayesianRidge" title="sklearn.linear_model.BayesianRidge" class="sphx-glr-backref-module-sklearn-linear_model sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">BayesianRidge</span></a><span class="p">(),</span>
+<span class="n">brr_poly</span> <span class="o">=</span> <span class="n">make_pipeline</span><span class="p">(</span>
+    <span class="n">PolynomialFeatures</span><span class="p">(</span><span class="n">degree</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">include_bias</span><span class="o">=</span><span class="kc">False</span><span class="p">),</span>
+    <span class="n">StandardScaler</span><span class="p">(),</span>
+    <span class="n">BayesianRidge</span><span class="p">(),</span>
 <span class="p">)</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
 
 <span class="n">y_ard</span><span class="p">,</span> <span class="n">y_ard_std</span> <span class="o">=</span> <span class="n">ard_poly</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">X_plot</span><span class="p">,</span> <span class="n">return_std</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
@@ -406,7 +400,7 @@ reduce its bias (see example
 <a class="reference internal" href="plot_bayesian_ridge_curvefit.html#sphx-glr-auto-examples-linear-model-plot-bayesian-ridge-curvefit-py"><span class="std std-ref">Curve Fitting with Bayesian Ridge Regression</span></a>).
 Finally, due to the intrinsic limitations of a polynomial regression, both
 models fail when extrapolating.</p>
-<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> ( 0 minutes  0.629 seconds)</p>
+<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> ( 0 minutes  0.592 seconds)</p>
 <div class="sphx-glr-footer sphx-glr-footer-example docutils container" id="sphx-glr-download-auto-examples-linear-model-plot-ard-py">
 <div class="binder-badge docutils container">
 <a class="reference external image-reference" href="https://mybinder.org/v2/gh/scikit-learn/scikit-learn/1.2.X?urlpath=lab/tree/notebooks/auto_examples/linear_model/plot_ard.ipynb"><img alt="Launch binder" src="../../_images/binder_badge_logo21.svg" width="150px" /></a>
@@ -427,7 +421,7 @@ models fail when extrapolating.</p>
       </div>
     <div class="container">
       <footer class="sk-content-footer">
-            &copy; 2007 - 2022, scikit-learn developers (BSD License).
+            &copy; 2007 - 2023, scikit-learn developers (BSD License).
           <a href="../../_sources/auto_examples/linear_model/plot_ard.rst.txt" rel="nofollow">Show this page source</a>
       </footer>
     </div>

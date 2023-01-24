@@ -18,7 +18,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
   
-  <title>How to optimize for speed &mdash; scikit-learn 1.2.0 documentation</title>
+  <title>How to optimize for speed &mdash; scikit-learn 1.2.1 documentation</title>
   
   <link rel="canonical" href="http://scikit-learn.org/stable/developers/performance.html" />
 
@@ -36,7 +36,7 @@
   <link rel="stylesheet" href="../_static/sg_gallery-rendered-html.css" type="text/css" />
   <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
 <script id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
-<script src="../_static/jquery.js"></script> 
+<script src="../_static/js/vendor/jquery-3.6.3.slim.min.js"></script> 
 </head>
 <body>
 
@@ -154,12 +154,6 @@
     <div id="sk-sidebar-wrapper" class="border-right">
       <div class="sk-sidebar-toc-wrapper">
         <div class="sk-sidebar-toc-logo">
-          <a href="../index.html">
-            <img
-              class="sk-brand-img"
-              src="../_static/scikit-learn-logo-small.png"
-              alt="logo"/>
-          </a>
         </div>
         <div class="btn-group w-100 mb-2" role="group" aria-label="rellinks">
             <a href="utilities.html" role="button" class="btn sk-btn-rellink py-1" sk-rellink-tooltip="Utilities for Developers">Prev</a><a href="index.html" role="button" class="btn sk-btn-rellink py-1" sk-rellink-tooltip="Developer’s Guide">Up</a>
@@ -167,7 +161,7 @@
         </div>
         <div class="alert alert-danger p-1 mb-2" role="alert">
           <p class="text-center mb-0">
-          <strong>scikit-learn 1.2.0</strong><br/>
+          <strong>scikit-learn 1.2.1</strong><br/>
           <a href="http://scikit-learn.org/dev/versions.html">Other versions</a>
           </p>
         </div>
@@ -267,8 +261,8 @@ parallelism</strong> that is amenable to <strong>multi-processing</strong> by us
 </ol>
 </div></blockquote>
 <p>When using Cython, use either</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span class="prompt1">python setup.py build_ext -i</span>
-<span class="prompt1">python setup.py install</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span class="prompt1">python<span class="w"> </span>setup.py<span class="w"> </span>build_ext<span class="w"> </span>-i</span>
+<span class="prompt1">python<span class="w"> </span>setup.py<span class="w"> </span>install</span>
 </pre></div></div><p>to generate C files. You are responsible for adding .c/.cpp extensions along
 with build parameters in each submodule <code class="docutils literal notranslate"><span class="pre">setup.py</span></code>.</p>
 <p>C/C++ generated files are embedded in distributed stable packages. The goal is
@@ -363,11 +357,11 @@ trying to optimize their implementation).</p>
 Python code: it takes around 100% of the accumulated time of the module. In
 order to better understand the profile of this specific function, let
 us install <code class="docutils literal notranslate"><span class="pre">line_profiler</span></code> and wire it to IPython:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span class="prompt1">pip install line_profiler</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span class="prompt1">pip<span class="w"> </span>install<span class="w"> </span>line_profiler</span>
 </pre></div></div><ul class="simple">
 <li><p><strong>Under IPython 0.13+</strong>, first create a configuration profile:</p></li>
 </ul>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span class="prompt1">ipython profile create</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span class="prompt1">ipython<span class="w"> </span>profile<span class="w"> </span>create</span>
 </pre></div></div><p>Then register the line_profiler extension in
 <code class="docutils literal notranslate"><span class="pre">~/.ipython/profile_default/ipython_config.py</span></code>:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">c</span><span class="o">.</span><span class="n">TerminalIPythonApp</span><span class="o">.</span><span class="n">extensions</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">&#39;line_profiler&#39;</span><span class="p">)</span>
@@ -430,12 +424,12 @@ pin-point the most expensive expressions that would deserve additional care.</p>
 <p>You can analyze in detail the memory usage of any Python code with the help of
 <a class="reference external" href="https://pypi.org/project/memory_profiler/">memory_profiler</a>. First,
 install the latest version:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span class="prompt1">pip install -U memory_profiler</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span class="prompt1">pip<span class="w"> </span>install<span class="w"> </span>-U<span class="w"> </span>memory_profiler</span>
 </pre></div></div><p>Then, setup the magics in a manner similar to <code class="docutils literal notranslate"><span class="pre">line_profiler</span></code>.</p>
 <ul class="simple">
 <li><p><strong>Under IPython 0.11+</strong>, first create a configuration profile:</p></li>
 </ul>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span class="prompt1">ipython profile create</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span class="prompt1">ipython<span class="w"> </span>profile<span class="w"> </span>create</span>
 </pre></div></div><p>Then register the extension in
 <code class="docutils literal notranslate"><span class="pre">~/.ipython/profile_default/ipython_config.py</span></code>
 alongside the line profiler:</p>
@@ -502,7 +496,7 @@ memory alignment, direct blas calls…</p>
 <p>Since scikit-learn can be built without OpenMP, it’s necessary to protect each
 direct call to OpenMP.</p>
 <p>There are some helpers in
-[sklearn/utils/_openmp_helpers.pyx](<a class="reference external" href="https://github.com/scikit-learn/scikit-learn/blob/main/sklearn/utils/_openmp_helpers.pyx">https://github.com/scikit-learn/scikit-learn/blob/main/sklearn/utils/_openmp_helpers.pyx</a>)
+<a class="reference external" href="https://github.com/scikit-learn/scikit-learn/blob/main/sklearn/utils/_openmp_helpers.pyx">sklearn/utils/_openmp_helpers.pyx</a>
 that you can reuse for the main useful functionalities and already have the
 necessary protection to be built without OpenMP.</p>
 <p>If the helpers are not enough, you need to protect your OpenMP code using the
@@ -555,9 +549,9 @@ recompile everything.</p>
 <p><code class="docutils literal notranslate"><span class="pre">yep</span></code> can be used to create a profiling report.
 <code class="docutils literal notranslate"><span class="pre">kcachegrind</span></code> provides a graphical environment to visualize this report:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span class="prompt1"><span class="c1"># Run yep to profile some python script</span></span>
-<span class="prompt1">python -m yep -c my_file.py</span>
+<span class="prompt1">python<span class="w"> </span>-m<span class="w"> </span>yep<span class="w"> </span>-c<span class="w"> </span>my_file.py</span>
 </pre></div></div><div class="highlight-default notranslate"><div class="highlight"><pre><span class="prompt1"><span class="c1"># open my_file.py.callgrin with kcachegrind</span></span>
-<span class="prompt1">kcachegrind my_file.py.prof</span>
+<span class="prompt1">kcachegrind<span class="w"> </span>my_file.py.prof</span>
 </pre></div></div><div class="admonition note">
 <p class="admonition-title">Note</p>
 <p><code class="docutils literal notranslate"><span class="pre">yep</span></code> can be executed with the argument <code class="docutils literal notranslate"><span class="pre">--lines</span></code> or <code class="docutils literal notranslate"><span class="pre">-l</span></code> to compile
@@ -580,7 +574,7 @@ a profiling report ‘line by line’.</p>
       </div>
     <div class="container">
       <footer class="sk-content-footer">
-            &copy; 2007 - 2022, scikit-learn developers (BSD License).
+            &copy; 2007 - 2023, scikit-learn developers (BSD License).
           <a href="../_sources/developers/performance.rst.txt" rel="nofollow">Show this page source</a>
       </footer>
     </div>

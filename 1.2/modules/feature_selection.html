@@ -18,7 +18,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
   
-  <title>1.13. Feature selection &mdash; scikit-learn 1.2.0 documentation</title>
+  <title>1.13. Feature selection &mdash; scikit-learn 1.2.1 documentation</title>
   
   <link rel="canonical" href="http://scikit-learn.org/stable/modules/feature_selection.html" />
 
@@ -36,7 +36,7 @@
   <link rel="stylesheet" href="../_static/sg_gallery-rendered-html.css" type="text/css" />
   <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
 <script id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
-<script src="../_static/jquery.js"></script> 
+<script src="../_static/js/vendor/jquery-3.6.3.slim.min.js"></script> 
 </head>
 <body>
 
@@ -154,12 +154,6 @@
     <div id="sk-sidebar-wrapper" class="border-right">
       <div class="sk-sidebar-toc-wrapper">
         <div class="sk-sidebar-toc-logo">
-          <a href="../index.html">
-            <img
-              class="sk-brand-img"
-              src="../_static/scikit-learn-logo-small.png"
-              alt="logo"/>
-          </a>
         </div>
         <div class="btn-group w-100 mb-2" role="group" aria-label="rellinks">
             <a href="multiclass.html" role="button" class="btn sk-btn-rellink py-1" sk-rellink-tooltip="1.12. Multiclass and multioutput algorithms">Prev</a><a href="../supervised_learning.html" role="button" class="btn sk-btn-rellink py-1" sk-rellink-tooltip="1. Supervised learning">Up</a>
@@ -167,7 +161,7 @@
         </div>
         <div class="alert alert-danger p-1 mb-2" role="alert">
           <p class="text-center mb-0">
-          <strong>scikit-learn 1.2.0</strong><br/>
+          <strong>scikit-learn 1.2.1</strong><br/>
           <a href="http://scikit-learn.org/dev/versions.html">Other versions</a>
           </p>
         </div>
@@ -253,15 +247,15 @@ selection with a configurable strategy. This allows to select the best
 univariate selection strategy with hyper-parameter search estimator.</p></li>
 </ul>
 </div></blockquote>
-<p>For instance, we can perform a <span class="math notranslate nohighlight">\(\chi^2\)</span> test to the samples
-to retrieve only the two best features as follows:</p>
+<p>For instance, we can use a F-test to retrieve the two
+best features for a dataset as follows:</p>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">sklearn.datasets</span> <span class="kn">import</span> <span class="n">load_iris</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">sklearn.feature_selection</span> <span class="kn">import</span> <span class="n">SelectKBest</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">sklearn.feature_selection</span> <span class="kn">import</span> <span class="n">chi2</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">sklearn.feature_selection</span> <span class="kn">import</span> <span class="n">f_classif</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">X</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="n">load_iris</span><span class="p">(</span><span class="n">return_X_y</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">X</span><span class="o">.</span><span class="n">shape</span>
 <span class="go">(150, 4)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">X_new</span> <span class="o">=</span> <span class="n">SelectKBest</span><span class="p">(</span><span class="n">chi2</span><span class="p">,</span> <span class="n">k</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span><span class="o">.</span><span class="n">fit_transform</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">X_new</span> <span class="o">=</span> <span class="n">SelectKBest</span><span class="p">(</span><span class="n">f_classif</span><span class="p">,</span> <span class="n">k</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span><span class="o">.</span><span class="n">fit_transform</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">X_new</span><span class="o">.</span><span class="n">shape</span>
 <span class="go">(150, 2)</span>
 </pre></div>
@@ -278,7 +272,8 @@ and p-values (or only scores for <a class="reference internal" href="generated/s
 <p>The methods based on F-test estimate the degree of linear dependency between
 two random variables. On the other hand, mutual information methods can capture
 any kind of statistical dependency, but being nonparametric, they require more
-samples for accurate estimation.</p>
+samples for accurate estimation. Note that the <span class="math notranslate nohighlight">\(\chi^2\)</span>-test should only be
+applied to non-negative features, such as frequencies.</p>
 <aside class="topic">
 <p class="topic-title">Feature selection with sparse data</p>
 <p>If you use sparse data (i.e. data represented as sparse matrices),
@@ -506,7 +501,7 @@ See the <a class="reference internal" href="generated/sklearn.pipeline.Pipeline.
       </div>
     <div class="container">
       <footer class="sk-content-footer">
-            &copy; 2007 - 2022, scikit-learn developers (BSD License).
+            &copy; 2007 - 2023, scikit-learn developers (BSD License).
           <a href="../_sources/modules/feature_selection.rst.txt" rel="nofollow">Show this page source</a>
       </footer>
     </div>

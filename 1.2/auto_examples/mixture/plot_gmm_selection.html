@@ -18,7 +18,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
   
-  <title>Gaussian Mixture Model Selection &mdash; scikit-learn 1.2.0 documentation</title>
+  <title>Gaussian Mixture Model Selection &mdash; scikit-learn 1.2.1 documentation</title>
   
   <link rel="canonical" href="http://scikit-learn.org/stable/auto_examples/mixture/plot_gmm_selection.html" />
 
@@ -36,7 +36,7 @@
   <link rel="stylesheet" href="../../_static/sg_gallery-rendered-html.css" type="text/css" />
   <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
 <script id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
-<script src="../../_static/jquery.js"></script> 
+<script src="../../_static/js/vendor/jquery-3.6.3.slim.min.js"></script> 
 </head>
 <body>
 
@@ -154,12 +154,6 @@
     <div id="sk-sidebar-wrapper" class="border-right">
       <div class="sk-sidebar-toc-wrapper">
         <div class="sk-sidebar-toc-logo">
-          <a href="../../index.html">
-            <img
-              class="sk-brand-img"
-              src="../../_static/scikit-learn-logo-small.png"
-              alt="logo"/>
-          </a>
         </div>
         <div class="btn-group w-100 mb-2" role="group" aria-label="rellinks">
             <a href="plot_gmm.html" role="button" class="btn sk-btn-rellink py-1" sk-rellink-tooltip="Gaussian Mixture Model Ellipsoids">Prev</a><a href="index.html" role="button" class="btn sk-btn-rellink py-1" sk-rellink-tooltip="Gaussian Mixture Models">Up</a>
@@ -167,7 +161,7 @@
         </div>
         <div class="alert alert-danger p-1 mb-2" role="alert">
           <p class="text-center mb-0">
-          <strong>scikit-learn 1.2.0</strong><br/>
+          <strong>scikit-learn 1.2.1</strong><br/>
           <a href="http://scikit-learn.org/dev/versions.html">Other versions</a>
           </p>
         </div>
@@ -252,12 +246,12 @@ user-defined score function which returns the negative BIC score, as
 score (maximizing the negative BIC is equivalent to minimizing the BIC).</p>
 <p>The best set of parameters and estimator are stored in <code class="docutils literal notranslate"><span class="pre">best_parameters_</span></code> and
 <code class="docutils literal notranslate"><span class="pre">best_estimator_</span></code>, respectively.</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">sklearn.mixture</span> <span class="kn">import</span> <a href="../../modules/generated/sklearn.mixture.GaussianMixture.html#sklearn.mixture.GaussianMixture" title="sklearn.mixture.GaussianMixture" class="sphx-glr-backref-module-sklearn-mixture sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">GaussianMixture</span></a>
-<span class="kn">from</span> <span class="nn">sklearn.model_selection</span> <span class="kn">import</span> <a href="../../modules/generated/sklearn.model_selection.GridSearchCV.html#sklearn.model_selection.GridSearchCV" title="sklearn.model_selection.GridSearchCV" class="sphx-glr-backref-module-sklearn-model_selection sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">GridSearchCV</span></a>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">sklearn.mixture</span> <span class="kn">import</span> <span class="n">GaussianMixture</span>
+<span class="kn">from</span> <span class="nn">sklearn.model_selection</span> <span class="kn">import</span> <span class="n">GridSearchCV</span>
 
 
 <span class="k">def</span> <span class="nf">gmm_bic_score</span><span class="p">(</span><span class="n">estimator</span><span class="p">,</span> <span class="n">X</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Callable to pass to GridSearchCV that will use the BIC score.&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Callable to pass to GridSearchCV that will use the BIC score.&quot;&quot;&quot;</span>
     <span class="c1"># Make it negative since GridSearchCV expects a score to maximize</span>
     <span class="k">return</span> <span class="o">-</span><span class="n">estimator</span><span class="o">.</span><span class="n">bic</span><span class="p">(</span><span class="n">X</span><span class="p">)</span>
 
@@ -266,8 +260,8 @@ score (maximizing the negative BIC is equivalent to minimizing the BIC).</p>
     <span class="s2">&quot;n_components&quot;</span><span class="p">:</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">7</span><span class="p">),</span>
     <span class="s2">&quot;covariance_type&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;spherical&quot;</span><span class="p">,</span> <span class="s2">&quot;tied&quot;</span><span class="p">,</span> <span class="s2">&quot;diag&quot;</span><span class="p">,</span> <span class="s2">&quot;full&quot;</span><span class="p">],</span>
 <span class="p">}</span>
-<span class="n">grid_search</span> <span class="o">=</span> <a href="../../modules/generated/sklearn.model_selection.GridSearchCV.html#sklearn.model_selection.GridSearchCV" title="sklearn.model_selection.GridSearchCV" class="sphx-glr-backref-module-sklearn-model_selection sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">GridSearchCV</span></a><span class="p">(</span>
-    <a href="../../modules/generated/sklearn.mixture.GaussianMixture.html#sklearn.mixture.GaussianMixture" title="sklearn.mixture.GaussianMixture" class="sphx-glr-backref-module-sklearn-mixture sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">GaussianMixture</span></a><span class="p">(),</span> <span class="n">param_grid</span><span class="o">=</span><span class="n">param_grid</span><span class="p">,</span> <span class="n">scoring</span><span class="o">=</span><span class="n">gmm_bic_score</span>
+<span class="n">grid_search</span> <span class="o">=</span> <span class="n">GridSearchCV</span><span class="p">(</span>
+    <span class="n">GaussianMixture</span><span class="p">(),</span> <span class="n">param_grid</span><span class="o">=</span><span class="n">param_grid</span><span class="p">,</span> <span class="n">scoring</span><span class="o">=</span><span class="n">gmm_bic_score</span>
 <span class="p">)</span>
 <span class="n">grid_search</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X</span><span class="p">)</span>
 </pre></div>
@@ -277,11 +271,11 @@ score (maximizing the negative BIC is equivalent to minimizing the BIC).</p>
              param_grid={&#x27;covariance_type&#x27;: [&#x27;spherical&#x27;, &#x27;tied&#x27;, &#x27;diag&#x27;,
                                              &#x27;full&#x27;],
                          &#x27;n_components&#x27;: range(1, 7)},
-             scoring=&lt;function gmm_bic_score at 0x7f50de4ccf70&gt;)</pre><b>In a Jupyter environment, please rerun this cell to show the HTML representation or trust the notebook. <br />On GitHub, the HTML representation is unable to render, please try loading this page with nbviewer.org.</b></div><div class="sk-container" hidden><div class="sk-item sk-dashed-wrapped"><div class="sk-label-container"><div class="sk-label sk-toggleable"><input class="sk-toggleable__control sk-hidden--visually" id="sk-estimator-id-113" type="checkbox" ><label for="sk-estimator-id-113" class="sk-toggleable__label sk-toggleable__label-arrow">GridSearchCV</label><div class="sk-toggleable__content"><pre>GridSearchCV(estimator=GaussianMixture(),
+             scoring=&lt;function gmm_bic_score at 0x7f710dbaba60&gt;)</pre><b>In a Jupyter environment, please rerun this cell to show the HTML representation or trust the notebook. <br />On GitHub, the HTML representation is unable to render, please try loading this page with nbviewer.org.</b></div><div class="sk-container" hidden><div class="sk-item sk-dashed-wrapped"><div class="sk-label-container"><div class="sk-label sk-toggleable"><input class="sk-toggleable__control sk-hidden--visually" id="sk-estimator-id-113" type="checkbox" ><label for="sk-estimator-id-113" class="sk-toggleable__label sk-toggleable__label-arrow">GridSearchCV</label><div class="sk-toggleable__content"><pre>GridSearchCV(estimator=GaussianMixture(),
              param_grid={&#x27;covariance_type&#x27;: [&#x27;spherical&#x27;, &#x27;tied&#x27;, &#x27;diag&#x27;,
                                              &#x27;full&#x27;],
                          &#x27;n_components&#x27;: range(1, 7)},
-             scoring=&lt;function gmm_bic_score at 0x7f50de4ccf70&gt;)</pre></div></div></div><div class="sk-parallel"><div class="sk-parallel-item"><div class="sk-item"><div class="sk-label-container"><div class="sk-label sk-toggleable"><input class="sk-toggleable__control sk-hidden--visually" id="sk-estimator-id-114" type="checkbox" ><label for="sk-estimator-id-114" class="sk-toggleable__label sk-toggleable__label-arrow">estimator: GaussianMixture</label><div class="sk-toggleable__content"><pre>GaussianMixture()</pre></div></div></div><div class="sk-serial"><div class="sk-item"><div class="sk-estimator sk-toggleable"><input class="sk-toggleable__control sk-hidden--visually" id="sk-estimator-id-115" type="checkbox" ><label for="sk-estimator-id-115" class="sk-toggleable__label sk-toggleable__label-arrow">GaussianMixture</label><div class="sk-toggleable__content"><pre>GaussianMixture()</pre></div></div></div></div></div></div></div></div></div></div>
+             scoring=&lt;function gmm_bic_score at 0x7f710dbaba60&gt;)</pre></div></div></div><div class="sk-parallel"><div class="sk-parallel-item"><div class="sk-item"><div class="sk-label-container"><div class="sk-label sk-toggleable"><input class="sk-toggleable__control sk-hidden--visually" id="sk-estimator-id-114" type="checkbox" ><label for="sk-estimator-id-114" class="sk-toggleable__label sk-toggleable__label-arrow">estimator: GaussianMixture</label><div class="sk-toggleable__content"><pre>GaussianMixture()</pre></div></div></div><div class="sk-serial"><div class="sk-item"><div class="sk-estimator sk-toggleable"><input class="sk-toggleable__control sk-hidden--visually" id="sk-estimator-id-115" type="checkbox" ><label for="sk-estimator-id-115" class="sk-toggleable__label sk-toggleable__label-arrow">GaussianMixture</label><div class="sk-toggleable__content"><pre>GaussianMixture()</pre></div></div></div></div></div></div></div></div></div></div>
 </div>
 <br />
 <br /></section>
@@ -430,7 +424,7 @@ on the <code class="docutils literal notranslate"><span class="pre">covariance_t
 <a href="https://matplotlib.org/stable/api/_as_gen/matplotlib.pyplot.show.html#matplotlib.pyplot.show" title="matplotlib.pyplot.show" class="sphx-glr-backref-module-matplotlib-pyplot sphx-glr-backref-type-py-function"><span class="n">plt</span><span class="o">.</span><span class="n">show</span></a><span class="p">()</span>
 </pre></div>
 </div>
-<img src="../../_images/sphx_glr_plot_gmm_selection_003.png" srcset="../../_images/sphx_glr_plot_gmm_selection_003.png" alt="Selected GMM: full model, 2 components" class = "sphx-glr-single-img"/><p class="sphx-glr-timing"><strong>Total running time of the script:</strong> ( 0 minutes  1.259 seconds)</p>
+<img src="../../_images/sphx_glr_plot_gmm_selection_003.png" srcset="../../_images/sphx_glr_plot_gmm_selection_003.png" alt="Selected GMM: full model, 2 components" class = "sphx-glr-single-img"/><p class="sphx-glr-timing"><strong>Total running time of the script:</strong> ( 0 minutes  1.188 seconds)</p>
 <div class="sphx-glr-footer sphx-glr-footer-example docutils container" id="sphx-glr-download-auto-examples-mixture-plot-gmm-selection-py">
 <div class="binder-badge docutils container">
 <a class="reference external image-reference" href="https://mybinder.org/v2/gh/scikit-learn/scikit-learn/1.2.X?urlpath=lab/tree/notebooks/auto_examples/mixture/plot_gmm_selection.ipynb"><img alt="Launch binder" src="../../_images/binder_badge_logo24.svg" width="150px" /></a>
@@ -450,7 +444,7 @@ on the <code class="docutils literal notranslate"><span class="pre">covariance_t
       </div>
     <div class="container">
       <footer class="sk-content-footer">
-            &copy; 2007 - 2022, scikit-learn developers (BSD License).
+            &copy; 2007 - 2023, scikit-learn developers (BSD License).
           <a href="../../_sources/auto_examples/mixture/plot_gmm_selection.rst.txt" rel="nofollow">Show this page source</a>
       </footer>
     </div>
