@@ -1555,10 +1555,22 @@ saving time.  When <code class="docutils literal notranslate"><span class="pre">
 model <a class="reference internal" href="#term-attributes"><span class="xref std std-term">attributes</span></a> are used to initialize the new model
 in a subsequent call to <a class="reference internal" href="#term-fit"><span class="xref std std-term">fit</span></a>.</p>
 <p>Note that this is only applicable for some models and some
-parameters, and even some orders of parameter values. For example,
-<code class="docutils literal notranslate"><span class="pre">warm_start</span></code> may be used when building random forests to add more
-trees to the forest (increasing <code class="docutils literal notranslate"><span class="pre">n_estimators</span></code>) but not to reduce
-their number.</p>
+parameters, and even some orders of parameter values. In general, there
+is an interaction between <code class="docutils literal notranslate"><span class="pre">warm_start</span></code> and the parameter controlling
+the number of iterations of the estimator.</p>
+<p>For estimators imported from <code class="xref py py-mod docutils literal notranslate"><span class="pre">ensemble</span></code>,
+<code class="docutils literal notranslate"><span class="pre">warm_start</span></code> will interact with <code class="docutils literal notranslate"><span class="pre">n_estimators</span></code> or <code class="docutils literal notranslate"><span class="pre">max_iter</span></code>.
+For these models, the number of iterations, reported via
+<code class="docutils literal notranslate"><span class="pre">len(estimators_)</span></code> or <code class="docutils literal notranslate"><span class="pre">n_iter_</span></code>, corresponds the total number of
+estimators/iterations learnt since the initialization of the model.
+Thus, if a model was already initialized with <code class="docutils literal notranslate"><span class="pre">N`</span></code> estimators, and <code class="docutils literal notranslate"><span class="pre">fit</span></code>
+is called with <code class="docutils literal notranslate"><span class="pre">n_estimators</span></code> or <code class="docutils literal notranslate"><span class="pre">max_iter</span></code> set to <code class="docutils literal notranslate"><span class="pre">M</span></code>, the model
+will train <code class="docutils literal notranslate"><span class="pre">M</span> <span class="pre">-</span> <span class="pre">N</span></code> new estimators.</p>
+<p>Other models, usually using gradient-based solvers, have a different
+behavior. They all expose a <code class="docutils literal notranslate"><span class="pre">max_iter</span></code> parameter. The reported
+<code class="docutils literal notranslate"><span class="pre">n_iter_</span></code> corresponds to the number of iteration done during the last
+call to <code class="docutils literal notranslate"><span class="pre">fit</span></code> and will be at most <code class="docutils literal notranslate"><span class="pre">max_iter</span></code>. Thus, we do not
+consider the state of the estimator since the initialization.</p>
 <p><a class="reference internal" href="#term-partial_fit"><span class="xref std std-term">partial_fit</span></a> also retains the model between calls, but differs:
 with <code class="docutils literal notranslate"><span class="pre">warm_start</span></code> the parameters change and the data is
 (more-or-less) constant across calls to <code class="docutils literal notranslate"><span class="pre">fit</span></code>; with <code class="docutils literal notranslate"><span class="pre">partial_fit</span></code>,
