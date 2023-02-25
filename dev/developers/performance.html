@@ -497,26 +497,18 @@ memory alignment, direct blas calls…</p>
 <h3>Using OpenMP<a class="headerlink" href="#using-openmp" title="Permalink to this heading">¶</a></h3>
 <p>Since scikit-learn can be built without OpenMP, it’s necessary to protect each
 direct call to OpenMP.</p>
-<p>There are some helpers in
+<p>The <code class="docutils literal notranslate"><span class="pre">_openmp_helpers</span></code> module, available in
 <a class="reference external" href="https://github.com/scikit-learn/scikit-learn/blob/main/sklearn/utils/_openmp_helpers.pyx">sklearn/utils/_openmp_helpers.pyx</a>
-that you can reuse for the main useful functionalities and already have the
-necessary protection to be built without OpenMP.</p>
-<p>If the helpers are not enough, you need to protect your OpenMP code using the
-following syntax:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># importing OpenMP</span>
-<span class="n">IF</span> <span class="n">SKLEARN_OPENMP_PARALLELISM_ENABLED</span><span class="p">:</span>
-    <span class="n">cimport</span> <span class="n">openmp</span>
-
-<span class="c1"># calling OpenMP</span>
-<span class="n">IF</span> <span class="n">SKLEARN_OPENMP_PARALLELISM_ENABLED</span><span class="p">:</span>
-    <span class="n">max_threads</span> <span class="o">=</span> <span class="n">openmp</span><span class="o">.</span><span class="n">omp_get_max_threads</span><span class="p">()</span>
-<span class="n">ELSE</span><span class="p">:</span>
-    <span class="n">max_threads</span> <span class="o">=</span> <span class="mi">1</span>
+provides protected versions of the OpenMP routines. To use OpenMP routines, they
+must be cimported from this module and not from the OpenMP library directly:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">sklearn.utils._openmp_helpers</span> <span class="n">cimport</span> <span class="n">omp_get_max_threads</span>
+<span class="n">max_threads</span> <span class="o">=</span> <span class="n">omp_get_max_threads</span><span class="p">()</span>
 </pre></div>
 </div>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
-<p>Protecting the parallel loop, <code class="docutils literal notranslate"><span class="pre">prange</span></code>, is already done by cython.</p>
+<p>The parallel loop, <code class="docutils literal notranslate"><span class="pre">prange</span></code>, is already protected by cython and can be used directly
+from <code class="docutils literal notranslate"><span class="pre">cython.parallel</span></code>.</p>
 </div>
 </section>
 </section>
