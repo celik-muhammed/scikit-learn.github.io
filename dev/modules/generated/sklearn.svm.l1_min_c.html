@@ -155,8 +155,6 @@
     <label id="sk-sidemenu-toggle" class="sk-btn-toggle-toc btn sk-btn-primary" for="sk-toggle-checkbox">Toggle Menu</label>
     <div id="sk-sidebar-wrapper" class="border-right">
       <div class="sk-sidebar-toc-wrapper">
-        <div class="sk-sidebar-toc-logo">
-        </div>
         <div class="btn-group w-100 mb-2" role="group" aria-label="rellinks">
             <a href="sklearn.svm.SVR.html" role="button" class="btn sk-btn-rellink py-1" sk-rellink-tooltip="sklearn.svm.SVR">Prev</a><a href="../classes.html" role="button" class="btn sk-btn-rellink py-1" sk-rellink-tooltip="API Reference">Up</a>
             <a href="sklearn.tree.DecisionTreeClassifier.html" role="button" class="btn sk-btn-rellink py-1" sk-rellink-tooltip="sklearn.tree.DecisionTreeClassifier">Next</a>
@@ -191,7 +189,7 @@
 <h1><a class="reference internal" href="../classes.html#module-sklearn.svm" title="sklearn.svm"><code class="xref py py-mod docutils literal notranslate"><span class="pre">sklearn.svm</span></code></a>.l1_min_c<a class="headerlink" href="#sklearn-svm-l1-min-c" title="Permalink to this heading">¶</a></h1>
 <dl class="py function">
 <dt class="sig sig-object py" id="sklearn.svm.l1_min_c">
-<span class="sig-prename descclassname"><span class="pre">sklearn.svm.</span></span><span class="sig-name descname"><span class="pre">l1_min_c</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">loss</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'squared_hinge'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fit_intercept</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">intercept_scaling</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1.0</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/scikit-learn/scikit-learn/blob/1a33e5655/sklearn/svm/_bounds.py#L15"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#sklearn.svm.l1_min_c" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">sklearn.svm.</span></span><span class="sig-name descname"><span class="pre">l1_min_c</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">loss</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'squared_hinge'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fit_intercept</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">intercept_scaling</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1.0</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/scikit-learn/scikit-learn/blob/41b4c63b8/sklearn/svm/_bounds.py#L15"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#sklearn.svm.l1_min_c" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return the lowest bound for C.</p>
 <p>The lower bound for C is computed such that for C in (l1_min_C, infinity)
 the model is guaranteed not to be empty. This applies to l1 penalized
@@ -318,75 +316,6 @@ $(document).ready(function() {
 			    this.getAttribute('id') +
 			    '" title="Permalink to this term">¶</a>');
 	});
-  /*** Hide navbar when scrolling down ***/
-  // Returns true when headerlink target matches hash in url
-  (function() {
-    hashTargetOnTop = function() {
-        var hash = window.location.hash;
-        if ( hash.length < 2 ) { return false; }
-
-        var target = document.getElementById( hash.slice(1) );
-        if ( target === null ) { return false; }
-
-        var top = target.getBoundingClientRect().top;
-        return (top < 2) && (top > -2);
-    };
-
-    // Hide navbar on load if hash target is on top
-    var navBar = document.getElementById("navbar");
-    var navBarToggler = document.getElementById("sk-navbar-toggler");
-    var navBarHeightHidden = "-" + navBar.getBoundingClientRect().height + "px";
-    var $window = $(window);
-
-    hideNavBar = function() {
-        navBar.style.top = navBarHeightHidden;
-    };
-
-    showNavBar = function() {
-        navBar.style.top = "0";
-    }
-
-    if (hashTargetOnTop()) {
-        hideNavBar()
-    }
-
-    var prevScrollpos = window.pageYOffset;
-    hideOnScroll = function(lastScrollTop) {
-        if (($window.width() < 768) && (navBarToggler.getAttribute("aria-expanded") === 'true')) {
-            return;
-        }
-        if (lastScrollTop > 2 && (prevScrollpos <= lastScrollTop) || hashTargetOnTop()){
-            hideNavBar()
-        } else {
-            showNavBar()
-        }
-        prevScrollpos = lastScrollTop;
-    };
-
-    /*** high performance scroll event listener***/
-    var raf = window.requestAnimationFrame ||
-        window.webkitRequestAnimationFrame ||
-        window.mozRequestAnimationFrame ||
-        window.msRequestAnimationFrame ||
-        window.oRequestAnimationFrame;
-    var lastScrollTop = $window.scrollTop();
-
-    if (raf) {
-        loop();
-    }
-
-    function loop() {
-        var scrollTop = $window.scrollTop();
-        if (lastScrollTop === scrollTop) {
-            raf(loop);
-            return;
-        } else {
-            lastScrollTop = scrollTop;
-            hideOnScroll(lastScrollTop);
-            raf(loop);
-        }
-    }
-  })();
 });
 
 </script>
