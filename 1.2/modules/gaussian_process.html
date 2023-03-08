@@ -18,7 +18,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
   
-  <title>1.7. Gaussian Processes &mdash; scikit-learn 1.2.1 documentation</title>
+  <title>1.7. Gaussian Processes &mdash; scikit-learn 1.2.2 documentation</title>
   
   <link rel="canonical" href="http://scikit-learn.org/stable/modules/gaussian_process.html" />
 
@@ -111,6 +111,9 @@
           <a class="sk-nav-link nav-link nav-more-item-mobile-items" href="../roadmap.html" >Roadmap</a>
         </li>
         <li class="nav-item">
+          <a class="sk-nav-link nav-link nav-more-item-mobile-items" href="../governance.html" >Governance</a>
+        </li>
+        <li class="nav-item">
           <a class="sk-nav-link nav-link nav-more-item-mobile-items" href="../about.html" >About us</a>
         </li>
         <li class="nav-item">
@@ -131,6 +134,7 @@
               <a class="sk-nav-dropdown-item dropdown-item" href="../support.html" >Support</a>
               <a class="sk-nav-dropdown-item dropdown-item" href="../related_projects.html" >Related packages</a>
               <a class="sk-nav-dropdown-item dropdown-item" href="../roadmap.html" >Roadmap</a>
+              <a class="sk-nav-dropdown-item dropdown-item" href="../governance.html" >Governance</a>
               <a class="sk-nav-dropdown-item dropdown-item" href="../about.html" >About us</a>
               <a class="sk-nav-dropdown-item dropdown-item" href="https://github.com/scikit-learn/scikit-learn" >GitHub</a>
               <a class="sk-nav-dropdown-item dropdown-item" href="https://scikit-learn.org/dev/versions.html" >Other Versions and Download</a>
@@ -153,15 +157,13 @@
     <label id="sk-sidemenu-toggle" class="sk-btn-toggle-toc btn sk-btn-primary" for="sk-toggle-checkbox">Toggle Menu</label>
     <div id="sk-sidebar-wrapper" class="border-right">
       <div class="sk-sidebar-toc-wrapper">
-        <div class="sk-sidebar-toc-logo">
-        </div>
         <div class="btn-group w-100 mb-2" role="group" aria-label="rellinks">
             <a href="neighbors.html" role="button" class="btn sk-btn-rellink py-1" sk-rellink-tooltip="1.6. Nearest Neighbors">Prev</a><a href="../supervised_learning.html" role="button" class="btn sk-btn-rellink py-1" sk-rellink-tooltip="1. Supervised learning">Up</a>
             <a href="cross_decomposition.html" role="button" class="btn sk-btn-rellink py-1" sk-rellink-tooltip="1.8. Cross decomposition">Next</a>
         </div>
         <div class="alert alert-danger p-1 mb-2" role="alert">
           <p class="text-center mb-0">
-          <strong>scikit-learn 1.2.1</strong><br/>
+          <strong>scikit-learn 1.2.2</strong><br/>
           <a href="http://scikit-learn.org/dev/versions.html">Other versions</a>
           </p>
         </div>
@@ -327,10 +329,7 @@ in the kernel and by the regularization parameter alpha of KRR.</p>
 <a class="reference external image-reference" href="../auto_examples/gaussian_process/plot_compare_gpr_krr.html"><img alt="../_images/sphx_glr_plot_compare_gpr_krr_005.png" src="../_images/sphx_glr_plot_compare_gpr_krr_005.png" /></a>
 </figure>
 <p>The figure shows that both methods learn reasonable models of the target
-function. GPR correctly identifies the periodicity of the function to be
-roughly <span class="math notranslate nohighlight">\(2*\pi\)</span> (6.28), while KRR chooses the doubled periodicity
-<span class="math notranslate nohighlight">\(4*\pi\)</span> . Besides
-that, GPR provides reasonable confidence bounds on the prediction which are not
+function. GPR provides reasonable confidence bounds on the prediction which are not
 available for KRR. A major difference between the two methods is the time
 required for fitting and predicting: while fitting KRR is fast in principle,
 the grid-search for hyperparameter optimization scales exponentially with the
@@ -812,75 +811,6 @@ $(document).ready(function() {
 			    this.getAttribute('id') +
 			    '" title="Permalink to this term">¶</a>');
 	});
-  /*** Hide navbar when scrolling down ***/
-  // Returns true when headerlink target matches hash in url
-  (function() {
-    hashTargetOnTop = function() {
-        var hash = window.location.hash;
-        if ( hash.length < 2 ) { return false; }
-
-        var target = document.getElementById( hash.slice(1) );
-        if ( target === null ) { return false; }
-
-        var top = target.getBoundingClientRect().top;
-        return (top < 2) && (top > -2);
-    };
-
-    // Hide navbar on load if hash target is on top
-    var navBar = document.getElementById("navbar");
-    var navBarToggler = document.getElementById("sk-navbar-toggler");
-    var navBarHeightHidden = "-" + navBar.getBoundingClientRect().height + "px";
-    var $window = $(window);
-
-    hideNavBar = function() {
-        navBar.style.top = navBarHeightHidden;
-    };
-
-    showNavBar = function() {
-        navBar.style.top = "0";
-    }
-
-    if (hashTargetOnTop()) {
-        hideNavBar()
-    }
-
-    var prevScrollpos = window.pageYOffset;
-    hideOnScroll = function(lastScrollTop) {
-        if (($window.width() < 768) && (navBarToggler.getAttribute("aria-expanded") === 'true')) {
-            return;
-        }
-        if (lastScrollTop > 2 && (prevScrollpos <= lastScrollTop) || hashTargetOnTop()){
-            hideNavBar()
-        } else {
-            showNavBar()
-        }
-        prevScrollpos = lastScrollTop;
-    };
-
-    /*** high performance scroll event listener***/
-    var raf = window.requestAnimationFrame ||
-        window.webkitRequestAnimationFrame ||
-        window.mozRequestAnimationFrame ||
-        window.msRequestAnimationFrame ||
-        window.oRequestAnimationFrame;
-    var lastScrollTop = $window.scrollTop();
-
-    if (raf) {
-        loop();
-    }
-
-    function loop() {
-        var scrollTop = $window.scrollTop();
-        if (lastScrollTop === scrollTop) {
-            raf(loop);
-            return;
-        } else {
-            lastScrollTop = scrollTop;
-            hideOnScroll(lastScrollTop);
-            raf(loop);
-        }
-    }
-  })();
 });
 
 </script>

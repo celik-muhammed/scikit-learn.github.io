@@ -18,7 +18,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
   
-  <title>Installing the development version of scikit-learn &mdash; scikit-learn 1.2.1 documentation</title>
+  <title>Installing the development version of scikit-learn &mdash; scikit-learn 1.2.2 documentation</title>
   
   <link rel="canonical" href="http://scikit-learn.org/stable/developers/advanced_installation.html" />
 
@@ -111,6 +111,9 @@
           <a class="sk-nav-link nav-link nav-more-item-mobile-items" href="../roadmap.html" >Roadmap</a>
         </li>
         <li class="nav-item">
+          <a class="sk-nav-link nav-link nav-more-item-mobile-items" href="../governance.html" >Governance</a>
+        </li>
+        <li class="nav-item">
           <a class="sk-nav-link nav-link nav-more-item-mobile-items" href="../about.html" >About us</a>
         </li>
         <li class="nav-item">
@@ -131,6 +134,7 @@
               <a class="sk-nav-dropdown-item dropdown-item" href="../support.html" >Support</a>
               <a class="sk-nav-dropdown-item dropdown-item" href="../related_projects.html" >Related packages</a>
               <a class="sk-nav-dropdown-item dropdown-item" href="../roadmap.html" >Roadmap</a>
+              <a class="sk-nav-dropdown-item dropdown-item" href="../governance.html" >Governance</a>
               <a class="sk-nav-dropdown-item dropdown-item" href="../about.html" >About us</a>
               <a class="sk-nav-dropdown-item dropdown-item" href="https://github.com/scikit-learn/scikit-learn" >GitHub</a>
               <a class="sk-nav-dropdown-item dropdown-item" href="https://scikit-learn.org/dev/versions.html" >Other Versions and Download</a>
@@ -153,15 +157,13 @@
     <label id="sk-sidemenu-toggle" class="sk-btn-toggle-toc btn sk-btn-primary" for="sk-toggle-checkbox">Toggle Menu</label>
     <div id="sk-sidebar-wrapper" class="border-right">
       <div class="sk-sidebar-toc-wrapper">
-        <div class="sk-sidebar-toc-logo">
-        </div>
         <div class="btn-group w-100 mb-2" role="group" aria-label="rellinks">
             <a href="performance.html" role="button" class="btn sk-btn-rellink py-1" sk-rellink-tooltip="How to optimize for speed">Prev</a><a href="index.html" role="button" class="btn sk-btn-rellink py-1" sk-rellink-tooltip="Developer’s Guide">Up</a>
             <a href="bug_triaging.html" role="button" class="btn sk-btn-rellink py-1" sk-rellink-tooltip="Bug triaging and issue curation">Next</a>
         </div>
         <div class="alert alert-danger p-1 mb-2" role="alert">
           <p class="text-center mb-0">
-          <strong>scikit-learn 1.2.1</strong><br/>
+          <strong>scikit-learn 1.2.2</strong><br/>
           <a href="http://scikit-learn.org/dev/versions.html">Other versions</a>
           </p>
         </div>
@@ -200,6 +202,7 @@
 <li><a class="reference internal" href="#freebsd">FreeBSD</a></li>
 </ul>
 </li>
+<li><a class="reference internal" href="#alternative-compilers">Alternative compilers</a></li>
 <li><a class="reference internal" href="#parallel-builds">Parallel builds</a></li>
 </ul>
 </li>
@@ -512,6 +515,30 @@ can set the environment variables to these locations:</p>
 the base system and these steps will not be necessary.</p>
 </section>
 </section>
+<section id="alternative-compilers">
+<h2>Alternative compilers<a class="headerlink" href="#alternative-compilers" title="Permalink to this heading">¶</a></h2>
+<p>The following command will build scikit-learn using your default C/C++ compiler.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span class="prompt1">pip<span class="w"> </span>install<span class="w"> </span>--verbose<span class="w"> </span>--editable<span class="w"> </span>.</span>
+</pre></div></div><p>If you want to build scikit-learn with another compiler handled by <code class="docutils literal notranslate"><span class="pre">setuptools</span></code>,
+use the following command:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span class="prompt1">python<span class="w"> </span>setup.py<span class="w"> </span>build_ext<span class="w"> </span>--compiler<span class="o">=</span>&lt;compiler&gt;<span class="w"> </span>-i<span class="w"> </span>build_clib<span class="w"> </span>--compiler<span class="o">=</span>&lt;compiler&gt;</span>
+</pre></div></div><p>To see the list of available compilers run:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span class="prompt1">python<span class="w"> </span>setup.py<span class="w"> </span>build_ext<span class="w"> </span>--help-compiler</span>
+</pre></div></div><p>If your compiler is not listed here, you can specify it through some environment
+variables (does not work on windows). This <a class="reference external" href="https://setuptools.pypa.io/en/stable/userguide/ext_modules.html#compiler-and-linker-options">section</a>
+of the setuptools documentation explains in details which environment variables
+are used by <code class="docutils literal notranslate"><span class="pre">setuptools</span></code>, and at which stage of the compilation, to set the
+compiler and linker options.</p>
+<p>When setting these environment variables, it is advised to first check their
+<code class="docutils literal notranslate"><span class="pre">sysconfig</span></code> counterparts variables and adapt them to your compiler. For instance:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">sysconfig</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">sysconfig</span><span class="o">.</span><span class="n">get_config_var</span><span class="p">(</span><span class="s1">&#39;CC&#39;</span><span class="p">))</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">sysconfig</span><span class="o">.</span><span class="n">get_config_var</span><span class="p">(</span><span class="s1">&#39;LDFLAGS&#39;</span><span class="p">))</span>
+</pre></div>
+</div>
+<p>In addition, since Scikit-learn uses OpenMP, you need to include the appropriate OpenMP
+flag of your compiler into the <code class="docutils literal notranslate"><span class="pre">CFLAGS</span></code> and <code class="docutils literal notranslate"><span class="pre">CPPFLAGS</span></code> environment variables.</p>
+</section>
 <section id="parallel-builds">
 <h2>Parallel builds<a class="headerlink" href="#parallel-builds" title="Permalink to this heading">¶</a></h2>
 <p>It is possible to build scikit-learn compiled extensions in parallel by setting
@@ -607,75 +634,6 @@ $(document).ready(function() {
 			    this.getAttribute('id') +
 			    '" title="Permalink to this term">¶</a>');
 	});
-  /*** Hide navbar when scrolling down ***/
-  // Returns true when headerlink target matches hash in url
-  (function() {
-    hashTargetOnTop = function() {
-        var hash = window.location.hash;
-        if ( hash.length < 2 ) { return false; }
-
-        var target = document.getElementById( hash.slice(1) );
-        if ( target === null ) { return false; }
-
-        var top = target.getBoundingClientRect().top;
-        return (top < 2) && (top > -2);
-    };
-
-    // Hide navbar on load if hash target is on top
-    var navBar = document.getElementById("navbar");
-    var navBarToggler = document.getElementById("sk-navbar-toggler");
-    var navBarHeightHidden = "-" + navBar.getBoundingClientRect().height + "px";
-    var $window = $(window);
-
-    hideNavBar = function() {
-        navBar.style.top = navBarHeightHidden;
-    };
-
-    showNavBar = function() {
-        navBar.style.top = "0";
-    }
-
-    if (hashTargetOnTop()) {
-        hideNavBar()
-    }
-
-    var prevScrollpos = window.pageYOffset;
-    hideOnScroll = function(lastScrollTop) {
-        if (($window.width() < 768) && (navBarToggler.getAttribute("aria-expanded") === 'true')) {
-            return;
-        }
-        if (lastScrollTop > 2 && (prevScrollpos <= lastScrollTop) || hashTargetOnTop()){
-            hideNavBar()
-        } else {
-            showNavBar()
-        }
-        prevScrollpos = lastScrollTop;
-    };
-
-    /*** high performance scroll event listener***/
-    var raf = window.requestAnimationFrame ||
-        window.webkitRequestAnimationFrame ||
-        window.mozRequestAnimationFrame ||
-        window.msRequestAnimationFrame ||
-        window.oRequestAnimationFrame;
-    var lastScrollTop = $window.scrollTop();
-
-    if (raf) {
-        loop();
-    }
-
-    function loop() {
-        var scrollTop = $window.scrollTop();
-        if (lastScrollTop === scrollTop) {
-            raf(loop);
-            return;
-        } else {
-            lastScrollTop = scrollTop;
-            hideOnScroll(lastScrollTop);
-            raf(loop);
-        }
-    }
-  })();
 });
 
 </script>

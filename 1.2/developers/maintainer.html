@@ -18,7 +18,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
   
-  <title>Maintainer / core-developer information &mdash; scikit-learn 1.2.1 documentation</title>
+  <title>Maintainer / core-developer information &mdash; scikit-learn 1.2.2 documentation</title>
   
   <link rel="canonical" href="http://scikit-learn.org/stable/developers/maintainer.html" />
 
@@ -111,6 +111,9 @@
           <a class="sk-nav-link nav-link nav-more-item-mobile-items" href="../roadmap.html" >Roadmap</a>
         </li>
         <li class="nav-item">
+          <a class="sk-nav-link nav-link nav-more-item-mobile-items" href="../governance.html" >Governance</a>
+        </li>
+        <li class="nav-item">
           <a class="sk-nav-link nav-link nav-more-item-mobile-items" href="../about.html" >About us</a>
         </li>
         <li class="nav-item">
@@ -131,6 +134,7 @@
               <a class="sk-nav-dropdown-item dropdown-item" href="../support.html" >Support</a>
               <a class="sk-nav-dropdown-item dropdown-item" href="../related_projects.html" >Related packages</a>
               <a class="sk-nav-dropdown-item dropdown-item" href="../roadmap.html" >Roadmap</a>
+              <a class="sk-nav-dropdown-item dropdown-item" href="../governance.html" >Governance</a>
               <a class="sk-nav-dropdown-item dropdown-item" href="../about.html" >About us</a>
               <a class="sk-nav-dropdown-item dropdown-item" href="https://github.com/scikit-learn/scikit-learn" >GitHub</a>
               <a class="sk-nav-dropdown-item dropdown-item" href="https://scikit-learn.org/dev/versions.html" >Other Versions and Download</a>
@@ -153,15 +157,13 @@
     <label id="sk-sidemenu-toggle" class="sk-btn-toggle-toc btn sk-btn-primary" for="sk-toggle-checkbox">Toggle Menu</label>
     <div id="sk-sidebar-wrapper" class="border-right">
       <div class="sk-sidebar-toc-wrapper">
-        <div class="sk-sidebar-toc-logo">
-        </div>
         <div class="btn-group w-100 mb-2" role="group" aria-label="rellinks">
             <a href="bug_triaging.html" role="button" class="btn sk-btn-rellink py-1" sk-rellink-tooltip="Bug triaging and issue curation">Prev</a><a href="index.html" role="button" class="btn sk-btn-rellink py-1" sk-rellink-tooltip="Developer’s Guide">Up</a>
             <a href="plotting.html" role="button" class="btn sk-btn-rellink py-1" sk-rellink-tooltip="Developing with the Plotting API">Next</a>
         </div>
         <div class="alert alert-danger p-1 mb-2" role="alert">
           <p class="text-center mb-0">
-          <strong>scikit-learn 1.2.1</strong><br/>
+          <strong>scikit-learn 1.2.2</strong><br/>
           <a href="http://scikit-learn.org/dev/versions.html">Other versions</a>
           </p>
         </div>
@@ -177,7 +179,7 @@
 <li><a class="reference internal" href="#before-a-release">Before a release</a></li>
 <li><a class="reference internal" href="#preparing-a-release-pr">Preparing a release PR</a><ul>
 <li><a class="reference internal" href="#major-version-release">Major version release</a></li>
-<li><a class="reference internal" href="#minor-version-release">Minor version release</a></li>
+<li><a class="reference internal" href="#minor-version-release-also-known-as-bug-fix-release">Minor version release (also known as bug-fix release)</a></li>
 </ul>
 </li>
 <li><a class="reference internal" href="#making-a-release">Making a release</a></li>
@@ -210,6 +212,9 @@ post, and minor releases.</p>
 <h3>Before a release<a class="headerlink" href="#before-a-release" title="Permalink to this heading">¶</a></h3>
 <ol class="arabic">
 <li><p>Update authors table:</p>
+<p>Create a <a class="reference external" href="https://github.com/settings/tokens/new">classic token on GitHub</a>
+with the <code class="docutils literal notranslate"><span class="pre">read:org</span></code> following permission.</p>
+<p>Run the following script, entering the token in:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span class="prompt1"><span class="nb">cd</span><span class="w"> </span>build_tools<span class="p">;</span><span class="w"> </span>make<span class="w"> </span>authors<span class="p">;</span><span class="w"> </span><span class="nb">cd</span><span class="w"> </span>..</span>
 </pre></div></div><p>and commit. This is only needed if the authors have changed since the last
 release. This step is sometimes done independent of the release. This
@@ -231,15 +236,14 @@ requests that were merged but likely missing from What’s New.</p></li>
 been taken care of.</p></li>
 </ol>
 <p><strong>Permissions</strong></p>
-<p>The release manager requires a set of permissions on top of the usual
-permissions given to maintainers, which includes:</p>
-<ul class="simple">
-<li><p><em>maintainer</em> role on <code class="docutils literal notranslate"><span class="pre">scikit-learn</span></code> projects on <code class="docutils literal notranslate"><span class="pre">pypi.org</span></code> and
-<code class="docutils literal notranslate"><span class="pre">test.pypi.org</span></code>, separately.</p></li>
-<li><p>become a member of the <em>scikit-learn</em> team on conda-forge by editing the
-<code class="docutils literal notranslate"><span class="pre">recipe/meta.yaml</span></code> file on
-<code class="docutils literal notranslate"><span class="pre">https://github.com/conda-forge/scikit-learn-feedstock</span></code></p></li>
-</ul>
+<p>The release manager must be a <em>maintainer</em> of the <code class="docutils literal notranslate"><span class="pre">scikit-learn/scikit-learn</span></code>
+repository to be able to publish on <code class="docutils literal notranslate"><span class="pre">pypi.org</span></code> and <code class="docutils literal notranslate"><span class="pre">test.pypi.org</span></code>
+(via a manual trigger of a dedicated Github Actions workflow).</p>
+<p>The release manager does not need extra permissions on <code class="docutils literal notranslate"><span class="pre">pypi.org</span></code> to publish a
+release in particular.</p>
+<p>The release manager must be a <em>maintainer</em> of the <code class="docutils literal notranslate"><span class="pre">conda-forge/scikit-learn-feedstock</span></code>
+repository. This can be changed by editing the <code class="docutils literal notranslate"><span class="pre">recipe/meta.yaml</span></code> file in the
+first release pull-request.</p>
 </section>
 <section id="preparing-a-release-pr">
 <span id="id1"></span><h3>Preparing a release PR<a class="headerlink" href="#preparing-a-release-pr" title="Permalink to this heading">¶</a></h3>
@@ -284,22 +288,64 @@ under the <code class="docutils literal notranslate"><span class="pre">doc/whats
 contribute their changelog entries to this file in parallel to the release
 process.</p>
 </section>
-<section id="minor-version-release">
-<h4>Minor version release<a class="headerlink" href="#minor-version-release" title="Permalink to this heading">¶</a></h4>
+<section id="minor-version-release-also-known-as-bug-fix-release">
+<h4>Minor version release (also known as bug-fix release)<a class="headerlink" href="#minor-version-release-also-known-as-bug-fix-release" title="Permalink to this heading">¶</a></h4>
 <p>The minor releases should include bug fixes and some relevant documentation
 changes only. Any PR resulting in a behavior change which is not a bug fix
-should be excluded.</p>
-<p>First, create a branch, <strong>on your own fork</strong> (to release e.g. <code class="docutils literal notranslate"><span class="pre">0.99.3</span></code>):</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span class="prompt1"><span class="c1"># assuming main and upstream/main are the same</span></span>
-<span class="prompt1">git<span class="w"> </span>checkout<span class="w"> </span>-b<span class="w"> </span>release-0.99.3<span class="w"> </span>main</span>
-</pre></div></div><p>Then, create a PR <strong>to the</strong> <code class="docutils literal notranslate"><span class="pre">scikit-learn/0.99.X</span></code> <strong>branch</strong> (not to
-main!) with all the desired changes:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span class="prompt1">git<span class="w"> </span>rebase<span class="w"> </span>-i<span class="w"> </span>upstream/0.99.2</span>
-</pre></div></div><p>Copy the <a class="reference internal" href="#release-checklist"><span class="std std-ref">Release checklist</span></a> templates in the description of the Pull
-Request to track progress.</p>
-<p>Do not forget to add a commit updating <code class="docutils literal notranslate"><span class="pre">sklearn.__version__</span></code>.</p>
-<p>It’s nice to have a copy of the <code class="docutils literal notranslate"><span class="pre">git</span> <span class="pre">rebase</span> <span class="pre">-i</span></code> log in the PR to help others
-understand what’s included.</p>
+should be excluded. As an example, instructions are given for the <code class="docutils literal notranslate"><span class="pre">1.2.2</span></code> release.</p>
+<blockquote>
+<div><ul>
+<li><p>Create a branch, <strong>on your own fork</strong> (here referred to as <code class="docutils literal notranslate"><span class="pre">fork</span></code>) for the release
+from <code class="docutils literal notranslate"><span class="pre">upstream/main</span></code>.</p>
+<blockquote>
+<div><div class="highlight-default notranslate"><div class="highlight"><pre><span class="prompt1">git<span class="w"> </span>fetch<span class="w"> </span>upstream/main</span>
+<span class="prompt1">git<span class="w"> </span>checkout<span class="w"> </span>-b<span class="w"> </span>release-1.2.2<span class="w"> </span>upstream/main</span>
+<span class="prompt1">git<span class="w"> </span>push<span class="w"> </span>-u<span class="w"> </span>fork<span class="w"> </span>release-1.2.2:release-1.2.2</span>
+</pre></div></div></div></blockquote>
+</li>
+<li><p>Create a <strong>draft</strong> PR to the <code class="docutils literal notranslate"><span class="pre">upstream/1.2.X</span></code> branch (not to <code class="docutils literal notranslate"><span class="pre">upstream/main</span></code>)
+with all the desired changes.</p></li>
+<li><p>Do not push anything on that branch yet.</p></li>
+<li><p>Locally rebase <code class="docutils literal notranslate"><span class="pre">release-1.2.2</span></code> from the <code class="docutils literal notranslate"><span class="pre">upstream/1.2.X</span></code> branch using:</p>
+<blockquote>
+<div><div class="highlight-default notranslate"><div class="highlight"><pre><span class="prompt1">git<span class="w"> </span>rebase<span class="w"> </span>-i<span class="w"> </span>upstream/1.2.X</span>
+</pre></div></div></div></blockquote>
+<p>This will open an interactive rebase with the <code class="docutils literal notranslate"><span class="pre">git-rebase-todo</span></code> containing all
+the latest commit on <code class="docutils literal notranslate"><span class="pre">main</span></code>. At this stage, you have to perform
+this interactive rebase with at least someone else (being three people rebasing
+is better not to forget something and to avoid any doubt).</p>
+<blockquote>
+<div><ul class="simple">
+<li><p><strong>Do not remove lines but drop commit by replace</strong> <code class="docutils literal notranslate"><span class="pre">pick</span></code> <strong>with</strong> <code class="docutils literal notranslate"><span class="pre">drop</span></code></p></li>
+<li><p>Commits to pick for bug-fix release <em>generally</em> are prefixed with: <code class="docutils literal notranslate"><span class="pre">FIX</span></code>, <code class="docutils literal notranslate"><span class="pre">CI</span></code>,
+<code class="docutils literal notranslate"><span class="pre">DOC</span></code>. They should at least include all the commits of the merged PRs
+that were milestoned for this release on GitHub and/or documented as such in
+the changelog. It’s likely that some bugfixes were documented in the
+changelog of the main major release instead of the next bugfix release,
+in which case, the matching changelog entries will need to be moved,
+first in the <code class="docutils literal notranslate"><span class="pre">main</span></code> branch then backported in the release PR.</p></li>
+<li><p>Commits to drop for bug-fix release <em>generally</em> are prefixed with: <code class="docutils literal notranslate"><span class="pre">FEAT</span></code>,
+<code class="docutils literal notranslate"><span class="pre">MAINT</span></code>, <code class="docutils literal notranslate"><span class="pre">ENH</span></code>, <code class="docutils literal notranslate"><span class="pre">API</span></code>. Reasons for not including them is to prevent change of
+behavior (which only must feature in breaking or major releases).</p></li>
+<li><p>After having dropped or picked commit, <strong>do no exit</strong> but paste the content
+of the <code class="docutils literal notranslate"><span class="pre">git-rebase-todo</span></code> message in the PR.
+This file is located at <code class="docutils literal notranslate"><span class="pre">.git/rebase-merge/git-rebase-todo</span></code>.</p></li>
+<li><p>Save and exit, starting the interactive rebase.</p></li>
+<li><p>Resolve merge conflicts when they happen.</p></li>
+</ul>
+</div></blockquote>
+</li>
+<li><p>Force push the result of the rebase and the extra release commits to the release PR:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span class="prompt1">git<span class="w"> </span>push<span class="w"> </span>-f<span class="w"> </span>fork<span class="w"> </span>release-1.2.2:release-1.2.2</span>
+</pre></div></div></li>
+<li><p>Copy the <a class="reference internal" href="#release-checklist"><span class="std std-ref">Release checklist</span></a> template and paste it in the description of the
+Pull Request to track progress.</p></li>
+<li><p>Review all the commits included in the release to make sure that they do not
+introduce any new feature. We should not blindly trust the commit message prefixes.</p></li>
+<li><p>Remove the draft status of the release PR and invite other maintainers to review the
+list of included commits.</p></li>
+</ul>
+</div></blockquote>
 </section>
 </section>
 <section id="making-a-release">
@@ -603,75 +649,6 @@ $(document).ready(function() {
 			    this.getAttribute('id') +
 			    '" title="Permalink to this term">¶</a>');
 	});
-  /*** Hide navbar when scrolling down ***/
-  // Returns true when headerlink target matches hash in url
-  (function() {
-    hashTargetOnTop = function() {
-        var hash = window.location.hash;
-        if ( hash.length < 2 ) { return false; }
-
-        var target = document.getElementById( hash.slice(1) );
-        if ( target === null ) { return false; }
-
-        var top = target.getBoundingClientRect().top;
-        return (top < 2) && (top > -2);
-    };
-
-    // Hide navbar on load if hash target is on top
-    var navBar = document.getElementById("navbar");
-    var navBarToggler = document.getElementById("sk-navbar-toggler");
-    var navBarHeightHidden = "-" + navBar.getBoundingClientRect().height + "px";
-    var $window = $(window);
-
-    hideNavBar = function() {
-        navBar.style.top = navBarHeightHidden;
-    };
-
-    showNavBar = function() {
-        navBar.style.top = "0";
-    }
-
-    if (hashTargetOnTop()) {
-        hideNavBar()
-    }
-
-    var prevScrollpos = window.pageYOffset;
-    hideOnScroll = function(lastScrollTop) {
-        if (($window.width() < 768) && (navBarToggler.getAttribute("aria-expanded") === 'true')) {
-            return;
-        }
-        if (lastScrollTop > 2 && (prevScrollpos <= lastScrollTop) || hashTargetOnTop()){
-            hideNavBar()
-        } else {
-            showNavBar()
-        }
-        prevScrollpos = lastScrollTop;
-    };
-
-    /*** high performance scroll event listener***/
-    var raf = window.requestAnimationFrame ||
-        window.webkitRequestAnimationFrame ||
-        window.mozRequestAnimationFrame ||
-        window.msRequestAnimationFrame ||
-        window.oRequestAnimationFrame;
-    var lastScrollTop = $window.scrollTop();
-
-    if (raf) {
-        loop();
-    }
-
-    function loop() {
-        var scrollTop = $window.scrollTop();
-        if (lastScrollTop === scrollTop) {
-            raf(loop);
-            return;
-        } else {
-            lastScrollTop = scrollTop;
-            hideOnScroll(lastScrollTop);
-            raf(loop);
-        }
-    }
-  })();
 });
 
 </script>
