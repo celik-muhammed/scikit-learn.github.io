@@ -60,7 +60,7 @@ Bike sharing dataset preprocessing
 We will use the bike sharing dataset. The goal is to predict the number of bike
 rentals using weather and season data as well as the datetime information.
 
-.. GENERATED FROM PYTHON SOURCE LINES 43-49
+.. GENERATED FROM PYTHON SOURCE LINES 43-53
 
 .. code-block:: default
 
@@ -70,6 +70,9 @@ rentals using weather and season data as well as the datetime information.
     # Make an explicit copy to avoid "SettingWithCopyWarning" from pandas
     X, y = bikes.data.copy(), bikes.target
 
+    # We use only a subset of the data to speed up the example.
+    X = X.iloc[::5, :]
+    y = y[::5]
 
 
 
@@ -77,12 +80,13 @@ rentals using weather and season data as well as the datetime information.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 50-52
+
+.. GENERATED FROM PYTHON SOURCE LINES 54-56
 
 The feature `"weather"` has a particularity: the category `"heavy_rain"` is a rare
 category.
 
-.. GENERATED FROM PYTHON SOURCE LINES 52-54
+.. GENERATED FROM PYTHON SOURCE LINES 56-58
 
 .. code-block:: default
 
@@ -97,19 +101,19 @@ category.
  .. code-block:: none
 
 
-    clear         11413
-    misty          4544
-    rain           1419
-    heavy_rain        3
+    clear         2284
+    misty          904
+    rain           287
+    heavy_rain       1
     Name: weather, dtype: int64
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 55-56
+.. GENERATED FROM PYTHON SOURCE LINES 59-60
 
 Because of this rare category, we collapse it into `"rain"`.
 
-.. GENERATED FROM PYTHON SOURCE LINES 56-58
+.. GENERATED FROM PYTHON SOURCE LINES 60-62
 
 .. code-block:: default
 
@@ -122,11 +126,11 @@ Because of this rare category, we collapse it into `"rain"`.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 59-60
+.. GENERATED FROM PYTHON SOURCE LINES 63-64
 
 We now have a closer look at the `"year"` feature:
 
-.. GENERATED FROM PYTHON SOURCE LINES 60-62
+.. GENERATED FROM PYTHON SOURCE LINES 64-66
 
 .. code-block:: default
 
@@ -141,18 +145,18 @@ We now have a closer look at the `"year"` feature:
  .. code-block:: none
 
 
-    1    8734
-    0    8645
+    1    1747
+    0    1729
     Name: year, dtype: int64
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 63-65
+.. GENERATED FROM PYTHON SOURCE LINES 67-69
 
 We see that we have data from two years. We use the first year to train the
 model and the second year to test the model.
 
-.. GENERATED FROM PYTHON SOURCE LINES 65-70
+.. GENERATED FROM PYTHON SOURCE LINES 69-74
 
 .. code-block:: default
 
@@ -168,12 +172,12 @@ model and the second year to test the model.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 71-73
+.. GENERATED FROM PYTHON SOURCE LINES 75-77
 
 We can check the dataset information to see that we have heterogeneous data types. We
 have to preprocess the different columns accordingly.
 
-.. GENERATED FROM PYTHON SOURCE LINES 73-75
+.. GENERATED FROM PYTHON SOURCE LINES 77-79
 
 .. code-block:: default
 
@@ -188,28 +192,28 @@ have to preprocess the different columns accordingly.
  .. code-block:: none
 
     <class 'pandas.core.frame.DataFrame'>
-    Int64Index: 8645 entries, 0 to 8644
+    Int64Index: 1729 entries, 0 to 8640
     Data columns (total 11 columns):
      #   Column      Non-Null Count  Dtype   
     ---  ------      --------------  -----   
-     0   season      8645 non-null   category
-     1   month       8645 non-null   int64   
-     2   hour        8645 non-null   int64   
-     3   holiday     8645 non-null   category
-     4   weekday     8645 non-null   int64   
-     5   workingday  8645 non-null   category
-     6   weather     8645 non-null   category
-     7   temp        8645 non-null   float64 
-     8   feel_temp   8645 non-null   float64 
-     9   humidity    8645 non-null   float64 
-     10  windspeed   8645 non-null   float64 
+     0   season      1729 non-null   category
+     1   month       1729 non-null   int64   
+     2   hour        1729 non-null   int64   
+     3   holiday     1729 non-null   category
+     4   weekday     1729 non-null   int64   
+     5   workingday  1729 non-null   category
+     6   weather     1729 non-null   category
+     7   temp        1729 non-null   float64 
+     8   feel_temp   1729 non-null   float64 
+     9   humidity    1729 non-null   float64 
+     10  windspeed   1729 non-null   float64 
     dtypes: category(4), float64(4), int64(3)
-    memory usage: 574.7 KB
+    memory usage: 115.4 KB
 
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 76-82
+.. GENERATED FROM PYTHON SOURCE LINES 80-86
 
 From the previous information, we will consider the `category` columns as nominal
 categorical features. In addition, we will consider the date and time information as
@@ -218,7 +222,7 @@ categorical features as well.
 We manually define the columns containing numerical and categorical
 features.
 
-.. GENERATED FROM PYTHON SOURCE LINES 82-90
+.. GENERATED FROM PYTHON SOURCE LINES 86-94
 
 .. code-block:: default
 
@@ -237,7 +241,7 @@ features.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 91-98
+.. GENERATED FROM PYTHON SOURCE LINES 95-102
 
 Before we go into the details regarding the preprocessing of the different machine
 learning pipelines, we will try to get some additional intuition regarding the dataset
@@ -247,7 +251,7 @@ the partial dependence analysis.
 We plot the average number of bike rentals by grouping the data by season and
 by year.
 
-.. GENERATED FROM PYTHON SOURCE LINES 98-132
+.. GENERATED FROM PYTHON SOURCE LINES 102-136
 
 .. code-block:: default
 
@@ -297,7 +301,7 @@ by year.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 133-155
+.. GENERATED FROM PYTHON SOURCE LINES 137-159
 
 The first striking difference between the train and test set is that the number of
 bike rentals is higher in the test set. For this reason, it will not be surprising to
@@ -322,7 +326,7 @@ We will use a :class:`~sklearn.preprocessing.QuantileTransformer` to scale the
 numerical features and encode the categorical features with a
 :class:`~sklearn.preprocessing.OneHotEncoder`.
 
-.. GENERATED FROM PYTHON SOURCE LINES 155-167
+.. GENERATED FROM PYTHON SOURCE LINES 159-171
 
 .. code-block:: default
 
@@ -365,7 +369,7 @@ numerical features and encode the categorical features with a
     <br />
     <br />
 
-.. GENERATED FROM PYTHON SOURCE LINES 168-174
+.. GENERATED FROM PYTHON SOURCE LINES 172-178
 
 Preprocessor for the gradient boosting model
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -374,7 +378,7 @@ For the gradient boosting model, we leave the numerical features as-is and only
 encode the categorical features using a
 :class:`~sklearn.preprocessing.OrdinalEncoder`.
 
-.. GENERATED FROM PYTHON SOURCE LINES 174-186
+.. GENERATED FROM PYTHON SOURCE LINES 178-190
 
 .. code-block:: default
 
@@ -421,7 +425,7 @@ encode the categorical features using a
     <br />
     <br />
 
-.. GENERATED FROM PYTHON SOURCE LINES 187-201
+.. GENERATED FROM PYTHON SOURCE LINES 191-205
 
 1-way partial dependence with different models
 ----------------------------------------------
@@ -438,7 +442,7 @@ Multi-layer perceptron
 Let's fit a :class:`~sklearn.neural_network.MLPRegressor` and compute
 single-variable partial dependence plots.
 
-.. GENERATED FROM PYTHON SOURCE LINES 201-220
+.. GENERATED FROM PYTHON SOURCE LINES 205-224
 
 .. code-block:: default
 
@@ -470,13 +474,13 @@ single-variable partial dependence plots.
  .. code-block:: none
 
     Training MLPRegressor...
-    done in 1.649s
+    done in 0.685s
     Test R2 score: 0.61
 
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 221-240
+.. GENERATED FROM PYTHON SOURCE LINES 225-244
 
 We configured a pipeline using the preprocessor that we created specifically for the
 neural network and tuned the neural network size and learning rate to get a reasonable
@@ -498,7 +502,7 @@ reasonably well.
 
 We will plot the averaged partial dependence.
 
-.. GENERATED FROM PYTHON SOURCE LINES 240-275
+.. GENERATED FROM PYTHON SOURCE LINES 244-279
 
 .. code-block:: default
 
@@ -551,12 +555,12 @@ We will plot the averaged partial dependence.
  .. code-block:: none
 
     Computing partial dependence plots...
-    done in 2.155s
+    done in 1.062s
 
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 276-282
+.. GENERATED FROM PYTHON SOURCE LINES 280-286
 
 Gradient boosting
 """""""""""""""""
@@ -565,7 +569,7 @@ Let's now fit a :class:`~sklearn.ensemble.HistGradientBoostingRegressor` and
 compute the partial dependence on the same features. We also use the
 specific preprocessor we created for this model.
 
-.. GENERATED FROM PYTHON SOURCE LINES 282-296
+.. GENERATED FROM PYTHON SOURCE LINES 286-302
 
 .. code-block:: default
 
@@ -576,7 +580,9 @@ specific preprocessor we created for this model.
     hgbdt_model = make_pipeline(
         hgbdt_preprocessor,
         HistGradientBoostingRegressor(
-            categorical_features=categorical_features, random_state=0
+            categorical_features=categorical_features,
+            random_state=0,
+            max_iter=50,
         ),
     )
     hgbdt_model.fit(X_train, y_train)
@@ -592,13 +598,13 @@ specific preprocessor we created for this model.
  .. code-block:: none
 
     Training HistGradientBoostingRegressor...
-    done in 0.335s
-    Test R2 score: 0.64
+    done in 0.125s
+    Test R2 score: 0.62
 
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 297-308
+.. GENERATED FROM PYTHON SOURCE LINES 303-314
 
 Here, we used the default hyperparameters for the gradient boosting model
 without any preprocessing as tree-based models are naturally robust to
@@ -612,7 +618,7 @@ to work well while this is not often the case for neural networks).
 We will plot the partial dependence for some of the numerical and categorical
 features.
 
-.. GENERATED FROM PYTHON SOURCE LINES 308-325
+.. GENERATED FROM PYTHON SOURCE LINES 314-331
 
 .. code-block:: default
 
@@ -647,12 +653,12 @@ features.
  .. code-block:: none
 
     Computing partial dependence plots...
-    done in 5.772s
+    done in 1.261s
 
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 326-355
+.. GENERATED FROM PYTHON SOURCE LINES 332-361
 
 Analysis of the plots
 """""""""""""""""""""
@@ -684,7 +690,7 @@ this regard, it is possible to plot each individual response. This representatio
 called the Individual Effect Plot (ICE). In the plot below, we plot 50 randomly
 selected ICEs for the temperature and humidity features.
 
-.. GENERATED FROM PYTHON SOURCE LINES 355-375
+.. GENERATED FROM PYTHON SOURCE LINES 361-381
 
 .. code-block:: default
 
@@ -722,12 +728,12 @@ selected ICEs for the temperature and humidity features.
  .. code-block:: none
 
     Computing partial dependence plots and individual conditional expectation...
-    done in 2.320s
+    done in 0.516s
 
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 376-386
+.. GENERATED FROM PYTHON SOURCE LINES 382-392
 
 We see that the ICE for the temperature feature gives us some additional information:
 Some of the ICE lines are flat while some others show a decrease of the dependence
@@ -740,7 +746,7 @@ interactions between features. We can repeat the experiment by constraining the
 gradient boosting model to not use any interactions between features using the
 parameter `interaction_cst`:
 
-.. GENERATED FROM PYTHON SOURCE LINES 386-396
+.. GENERATED FROM PYTHON SOURCE LINES 392-402
 
 .. code-block:: default
 
@@ -762,12 +768,12 @@ parameter `interaction_cst`:
 
  .. code-block:: none
 
-    Test R2 score: 0.41
+    Test R2 score: 0.38
 
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 397-409
+.. GENERATED FROM PYTHON SOURCE LINES 403-415
 
 .. code-block:: default
 
@@ -795,7 +801,7 @@ parameter `interaction_cst`:
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 410-418
+.. GENERATED FROM PYTHON SOURCE LINES 416-424
 
 2D interaction plots
 --------------------
@@ -806,7 +812,7 @@ the representation of available in
 :meth:`~sklearn.inspection.PartialDependenceDisplay.from_estimator` that is a 2D
 heatmap.
 
-.. GENERATED FROM PYTHON SOURCE LINES 418-437
+.. GENERATED FROM PYTHON SOURCE LINES 424-443
 
 .. code-block:: default
 
@@ -843,12 +849,12 @@ heatmap.
  .. code-block:: none
 
     Computing partial dependence plots...
-    done in 43.816s
+    done in 8.056s
 
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 438-454
+.. GENERATED FROM PYTHON SOURCE LINES 444-460
 
 The two-way partial dependence plot shows the dependence of the number of bike rentals
 on joint values of temperature and humidity.
@@ -867,7 +873,7 @@ We now contrast those results with the same plots computed for the model
 constrained to learn a prediction function that does not depend on such
 non-linear feature interactions.
 
-.. GENERATED FROM PYTHON SOURCE LINES 454-473
+.. GENERATED FROM PYTHON SOURCE LINES 460-479
 
 .. code-block:: default
 
@@ -904,12 +910,12 @@ non-linear feature interactions.
  .. code-block:: none
 
     Computing partial dependence plots...
-    done in 39.021s
+    done in 6.750s
 
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 474-495
+.. GENERATED FROM PYTHON SOURCE LINES 480-501
 
 The 1D partial dependence plots for the model constrained to not model feature
 interactions show local spikes for each features individually, in particular for
@@ -933,7 +939,7 @@ The partial dependence between categorical features will provide a discrete
 representation that can be shown as a heatmap. For instance the interaction between
 the season, the weather, and the target would be as follow:
 
-.. GENERATED FROM PYTHON SOURCE LINES 495-516
+.. GENERATED FROM PYTHON SOURCE LINES 501-522
 
 .. code-block:: default
 
@@ -972,12 +978,12 @@ the season, the weather, and the target would be as follow:
  .. code-block:: none
 
     Computing partial dependence plots...
-    done in 1.623s
+    done in 0.334s
 
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 517-522
+.. GENERATED FROM PYTHON SOURCE LINES 523-528
 
 3D representation
 """""""""""""""""
@@ -985,7 +991,7 @@ the season, the weather, and the target would be as follow:
 Let's make the same partial dependence plot for the 2 features interaction,
 this time in 3 dimensions.
 
-.. GENERATED FROM PYTHON SOURCE LINES 522-553
+.. GENERATED FROM PYTHON SOURCE LINES 528-559
 
 .. code-block:: default
 
@@ -1035,7 +1041,7 @@ this time in 3 dimensions.
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** ( 1 minutes  52.294 seconds)
+   **Total running time of the script:** ( 0 minutes  23.983 seconds)
 
 
 .. _sphx_glr_download_auto_examples_inspection_plot_partial_dependence.py:

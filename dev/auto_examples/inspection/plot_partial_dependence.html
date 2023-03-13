@@ -242,6 +242,10 @@ rentals using weather and season data as well as the datetime information.</p>
 <span class="n">bikes</span> <span class="o">=</span> <a href="../../modules/generated/sklearn.datasets.fetch_openml.html#sklearn.datasets.fetch_openml" title="sklearn.datasets.fetch_openml" class="sphx-glr-backref-module-sklearn-datasets sphx-glr-backref-type-py-function"><span class="n">fetch_openml</span></a><span class="p">(</span><span class="s2">&quot;Bike_Sharing_Demand&quot;</span><span class="p">,</span> <span class="n">version</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">as_frame</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">parser</span><span class="o">=</span><span class="s2">&quot;pandas&quot;</span><span class="p">)</span>
 <span class="c1"># Make an explicit copy to avoid &quot;SettingWithCopyWarning&quot; from pandas</span>
 <span class="n">X</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="n">bikes</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">copy</span><span class="p">(),</span> <span class="n">bikes</span><span class="o">.</span><span class="n">target</span>
+
+<span class="c1"># We use only a subset of the data to speed up the example.</span>
+<span class="n">X</span> <span class="o">=</span> <span class="n">X</span><span class="o">.</span><span class="n">iloc</span><span class="p">[::</span><span class="mi">5</span><span class="p">,</span> <span class="p">:]</span>
+<span class="n">y</span> <span class="o">=</span> <span class="n">y</span><span class="p">[::</span><span class="mi">5</span><span class="p">]</span>
 </pre></div>
 </div>
 <p>The feature <code class="docutils literal notranslate"><span class="pre">&quot;weather&quot;</span></code> has a particularity: the category <code class="docutils literal notranslate"><span class="pre">&quot;heavy_rain&quot;</span></code> is a rare
@@ -249,10 +253,10 @@ category.</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">X</span><span class="p">[</span><span class="s2">&quot;weather&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">value_counts</span><span class="p">()</span>
 </pre></div>
 </div>
-<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>clear         11413
-misty          4544
-rain           1419
-heavy_rain        3
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>clear         2284
+misty          904
+rain           287
+heavy_rain       1
 Name: weather, dtype: int64
 </pre></div>
 </div>
@@ -264,8 +268,8 @@ Name: weather, dtype: int64
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">X</span><span class="p">[</span><span class="s2">&quot;year&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">value_counts</span><span class="p">()</span>
 </pre></div>
 </div>
-<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>1    8734
-0    8645
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>1    1747
+0    1729
 Name: year, dtype: int64
 </pre></div>
 </div>
@@ -283,23 +287,23 @@ have to preprocess the different columns accordingly.</p>
 </pre></div>
 </div>
 <div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>&lt;class &#39;pandas.core.frame.DataFrame&#39;&gt;
-Int64Index: 8645 entries, 0 to 8644
+Int64Index: 1729 entries, 0 to 8640
 Data columns (total 11 columns):
  #   Column      Non-Null Count  Dtype
 ---  ------      --------------  -----
- 0   season      8645 non-null   category
- 1   month       8645 non-null   int64
- 2   hour        8645 non-null   int64
- 3   holiday     8645 non-null   category
- 4   weekday     8645 non-null   int64
- 5   workingday  8645 non-null   category
- 6   weather     8645 non-null   category
- 7   temp        8645 non-null   float64
- 8   feel_temp   8645 non-null   float64
- 9   humidity    8645 non-null   float64
- 10  windspeed   8645 non-null   float64
+ 0   season      1729 non-null   category
+ 1   month       1729 non-null   int64
+ 2   hour        1729 non-null   int64
+ 3   holiday     1729 non-null   category
+ 4   weekday     1729 non-null   int64
+ 5   workingday  1729 non-null   category
+ 6   weather     1729 non-null   category
+ 7   temp        1729 non-null   float64
+ 8   feel_temp   1729 non-null   float64
+ 9   humidity    1729 non-null   float64
+ 10  windspeed   1729 non-null   float64
 dtypes: category(4), float64(4), int64(3)
-memory usage: 574.7 KB
+memory usage: 115.4 KB
 </pre></div>
 </div>
 <p>From the previous information, we will consider the <code class="docutils literal notranslate"><span class="pre">category</span></code> columns as nominal
@@ -480,7 +484,7 @@ single-variable partial dependence plots.</p>
 </pre></div>
 </div>
 <div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>Training MLPRegressor...
-done in 1.649s
+done in 0.685s
 Test R2 score: 0.61
 </pre></div>
 </div>
@@ -536,7 +540,7 @@ reasonably well.</p>
 </pre></div>
 </div>
 <img src="../../_images/sphx_glr_plot_partial_dependence_002.png" srcset="../../_images/sphx_glr_plot_partial_dependence_002.png" alt="Partial dependence of the number of bike rentals for the bike rental dataset with an MLPRegressor" class = "sphx-glr-single-img"/><div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>Computing partial dependence plots...
-done in 2.155s
+done in 1.062s
 </pre></div>
 </div>
 <p>Let’s now fit a <a class="reference internal" href="../../modules/generated/sklearn.ensemble.HistGradientBoostingRegressor.html#sklearn.ensemble.HistGradientBoostingRegressor" title="sklearn.ensemble.HistGradientBoostingRegressor"><code class="xref py py-class docutils literal notranslate"><span class="pre">HistGradientBoostingRegressor</span></code></a> and
@@ -549,7 +553,9 @@ specific preprocessor we created for this model.</p>
 <span class="n">hgbdt_model</span> <span class="o">=</span> <a href="../../modules/generated/sklearn.pipeline.make_pipeline.html#sklearn.pipeline.make_pipeline" title="sklearn.pipeline.make_pipeline" class="sphx-glr-backref-module-sklearn-pipeline sphx-glr-backref-type-py-function"><span class="n">make_pipeline</span></a><span class="p">(</span>
     <span class="n">hgbdt_preprocessor</span><span class="p">,</span>
     <a href="../../modules/generated/sklearn.ensemble.HistGradientBoostingRegressor.html#sklearn.ensemble.HistGradientBoostingRegressor" title="sklearn.ensemble.HistGradientBoostingRegressor" class="sphx-glr-backref-module-sklearn-ensemble sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">HistGradientBoostingRegressor</span></a><span class="p">(</span>
-        <span class="n">categorical_features</span><span class="o">=</span><span class="n">categorical_features</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="mi">0</span>
+        <span class="n">categorical_features</span><span class="o">=</span><span class="n">categorical_features</span><span class="p">,</span>
+        <span class="n">random_state</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+        <span class="n">max_iter</span><span class="o">=</span><span class="mi">50</span><span class="p">,</span>
     <span class="p">),</span>
 <span class="p">)</span>
 <span class="n">hgbdt_model</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X_train</span><span class="p">,</span> <span class="n">y_train</span><span class="p">)</span>
@@ -558,8 +564,8 @@ specific preprocessor we created for this model.</p>
 </pre></div>
 </div>
 <div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>Training HistGradientBoostingRegressor...
-done in 0.335s
-Test R2 score: 0.64
+done in 0.125s
+Test R2 score: 0.62
 </pre></div>
 </div>
 <p>Here, we used the default hyperparameters for the gradient boosting model
@@ -590,7 +596,7 @@ features.</p>
 </pre></div>
 </div>
 <img src="../../_images/sphx_glr_plot_partial_dependence_003.png" srcset="../../_images/sphx_glr_plot_partial_dependence_003.png" alt="Partial dependence of the number of bike rentals for the bike rental dataset with a gradient boosting" class = "sphx-glr-single-img"/><div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>Computing partial dependence plots...
-done in 5.772s
+done in 1.261s
 </pre></div>
 </div>
 <p>We will first look at the PDPs for the numerical features. For both models, the
@@ -635,7 +641,7 @@ selected ICEs for the temperature and humidity features.</p>
 </pre></div>
 </div>
 <img src="../../_images/sphx_glr_plot_partial_dependence_004.png" srcset="../../_images/sphx_glr_plot_partial_dependence_004.png" alt="ICE and PDP representations" class = "sphx-glr-single-img"/><div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>Computing partial dependence plots and individual conditional expectation...
-done in 2.320s
+done in 0.516s
 </pre></div>
 </div>
 <p>We see that the ICE for the temperature feature gives us some additional information:
@@ -658,7 +664,7 @@ parameter <code class="docutils literal notranslate"><span class="pre">interacti
 <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Test R2 score: </span><span class="si">{</span><span class="n">hgbdt_model_without_interactions</span><span class="o">.</span><span class="n">score</span><span class="p">(</span><span class="n">X_test</span><span class="p">,</span><span class="w"> </span><span class="n">y_test</span><span class="p">)</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
-<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>Test R2 score: 0.41
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>Test R2 score: 0.38
 </pre></div>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">_</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <a href="https://matplotlib.org/stable/api/_as_gen/matplotlib.pyplot.subplots.html#matplotlib.pyplot.subplots" title="matplotlib.pyplot.subplots" class="sphx-glr-backref-module-matplotlib-pyplot sphx-glr-backref-type-py-function"><span class="n">plt</span><span class="o">.</span><span class="n">subplots</span></a><span class="p">(</span><span class="n">ncols</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">6</span><span class="p">,</span> <span class="mi">4</span><span class="p">),</span> <span class="n">sharey</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">constrained_layout</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
@@ -703,7 +709,7 @@ heatmap.</p>
 </pre></div>
 </div>
 <img src="../../_images/sphx_glr_plot_partial_dependence_006.png" srcset="../../_images/sphx_glr_plot_partial_dependence_006.png" alt="1-way vs 2-way of numerical PDP using gradient boosting" class = "sphx-glr-single-img"/><div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>Computing partial dependence plots...
-done in 43.816s
+done in 8.056s
 </pre></div>
 </div>
 <p>The two-way partial dependence plot shows the dependence of the number of bike rentals
@@ -740,7 +746,7 @@ non-linear feature interactions.</p>
 </pre></div>
 </div>
 <img src="../../_images/sphx_glr_plot_partial_dependence_007.png" srcset="../../_images/sphx_glr_plot_partial_dependence_007.png" alt="1-way vs 2-way of numerical PDP using gradient boosting" class = "sphx-glr-single-img"/><div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>Computing partial dependence plots...
-done in 39.021s
+done in 6.750s
 </pre></div>
 </div>
 <p>The 1D partial dependence plots for the model constrained to not model feature
@@ -784,7 +790,7 @@ the season, the weather, and the target would be as follow:</p>
 </pre></div>
 </div>
 <img src="../../_images/sphx_glr_plot_partial_dependence_008.png" srcset="../../_images/sphx_glr_plot_partial_dependence_008.png" alt="1-way vs 2-way PDP of categorical features using gradient boosting" class = "sphx-glr-single-img"/><div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>Computing partial dependence plots...
-done in 1.623s
+done in 0.334s
 </pre></div>
 </div>
 <p>Let’s make the same partial dependence plot for the 2 features interaction,
@@ -821,7 +827,7 @@ this time in 3 dimensions.</p>
 <a href="https://matplotlib.org/stable/api/_as_gen/matplotlib.pyplot.show.html#matplotlib.pyplot.show" title="matplotlib.pyplot.show" class="sphx-glr-backref-module-matplotlib-pyplot sphx-glr-backref-type-py-function"><span class="n">plt</span><span class="o">.</span><span class="n">show</span></a><span class="p">()</span>
 </pre></div>
 </div>
-<img src="../../_images/sphx_glr_plot_partial_dependence_009.png" srcset="../../_images/sphx_glr_plot_partial_dependence_009.png" alt="PD of number of bike rentals on the temperature and humidity GBDT model, Partial dependence" class = "sphx-glr-single-img"/><p class="sphx-glr-timing"><strong>Total running time of the script:</strong> ( 1 minutes  52.294 seconds)</p>
+<img src="../../_images/sphx_glr_plot_partial_dependence_009.png" srcset="../../_images/sphx_glr_plot_partial_dependence_009.png" alt="PD of number of bike rentals on the temperature and humidity GBDT model, Partial dependence" class = "sphx-glr-single-img"/><p class="sphx-glr-timing"><strong>Total running time of the script:</strong> ( 0 minutes  23.983 seconds)</p>
 <div class="sphx-glr-footer sphx-glr-footer-example docutils container" id="sphx-glr-download-auto-examples-inspection-plot-partial-dependence-py">
 <div class="binder-badge docutils container">
 <a class="reference external image-reference" href="https://mybinder.org/v2/gh/scikit-learn/scikit-learn/main?urlpath=lab/tree/notebooks/auto_examples/inspection/plot_partial_dependence.ipynb"><img alt="Launch binder" src="../../_images/binder_badge_logo15.svg" width="150px" /></a>
