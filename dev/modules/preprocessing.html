@@ -862,10 +862,11 @@ separate categories:</p>
 <p>See <a class="reference internal" href="feature_extraction.html#dict-feature-extraction"><span class="std std-ref">Loading features from dicts</span></a> for categorical features that are
 represented as a dict, not as scalars.</p>
 <section id="infrequent-categories">
-<span id="one-hot-encoder-infrequent-categories"></span><h3><span class="section-number">6.3.4.1. </span>Infrequent categories<a class="headerlink" href="#infrequent-categories" title="Permalink to this heading">¶</a></h3>
-<p><a class="reference internal" href="generated/sklearn.preprocessing.OneHotEncoder.html#sklearn.preprocessing.OneHotEncoder" title="sklearn.preprocessing.OneHotEncoder"><code class="xref py py-class docutils literal notranslate"><span class="pre">OneHotEncoder</span></code></a> supports aggregating infrequent categories into a single
-output for each feature. The parameters to enable the gathering of infrequent
-categories are <code class="docutils literal notranslate"><span class="pre">min_frequency</span></code> and <code class="docutils literal notranslate"><span class="pre">max_categories</span></code>.</p>
+<span id="encoder-infrequent-categories"></span><h3><span class="section-number">6.3.4.1. </span>Infrequent categories<a class="headerlink" href="#infrequent-categories" title="Permalink to this heading">¶</a></h3>
+<p><a class="reference internal" href="generated/sklearn.preprocessing.OneHotEncoder.html#sklearn.preprocessing.OneHotEncoder" title="sklearn.preprocessing.OneHotEncoder"><code class="xref py py-class docutils literal notranslate"><span class="pre">OneHotEncoder</span></code></a> and <a class="reference internal" href="generated/sklearn.preprocessing.OrdinalEncoder.html#sklearn.preprocessing.OrdinalEncoder" title="sklearn.preprocessing.OrdinalEncoder"><code class="xref py py-class docutils literal notranslate"><span class="pre">OrdinalEncoder</span></code></a> support aggregating
+infrequent categories into a single output for each feature. The parameters to
+enable the gathering of infrequent categories are <code class="docutils literal notranslate"><span class="pre">min_frequency</span></code> and
+<code class="docutils literal notranslate"><span class="pre">max_categories</span></code>.</p>
 <ol class="arabic simple">
 <li><p><code class="docutils literal notranslate"><span class="pre">min_frequency</span></code> is either an  integer greater or equal to 1, or a float in
 the interval <code class="docutils literal notranslate"><span class="pre">(0.0,</span> <span class="pre">1.0)</span></code>. If <code class="docutils literal notranslate"><span class="pre">min_frequency</span></code> is an integer, categories with
@@ -878,11 +879,47 @@ parameter sets an upper limit to the number of output features for each
 input feature. <code class="docutils literal notranslate"><span class="pre">max_categories</span></code> includes the feature that combines
 infrequent categories.</p></li>
 </ol>
-<p>In the following example, the categories, <code class="docutils literal notranslate"><span class="pre">'dog',</span> <span class="pre">'snake'</span></code> are considered
-infrequent:</p>
+<p>In the following example with <a class="reference internal" href="generated/sklearn.preprocessing.OrdinalEncoder.html#sklearn.preprocessing.OrdinalEncoder" title="sklearn.preprocessing.OrdinalEncoder"><code class="xref py py-class docutils literal notranslate"><span class="pre">OrdinalEncoder</span></code></a>, the categories <code class="docutils literal notranslate"><span class="pre">'dog'</span> <span class="pre">and</span>
+<span class="pre">'snake'</span></code> are considered infrequent:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">X</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([[</span><span class="s1">&#39;dog&#39;</span><span class="p">]</span> <span class="o">*</span> <span class="mi">5</span> <span class="o">+</span> <span class="p">[</span><span class="s1">&#39;cat&#39;</span><span class="p">]</span> <span class="o">*</span> <span class="mi">20</span> <span class="o">+</span> <span class="p">[</span><span class="s1">&#39;rabbit&#39;</span><span class="p">]</span> <span class="o">*</span> <span class="mi">10</span> <span class="o">+</span>
 <span class="gp">... </span>              <span class="p">[</span><span class="s1">&#39;snake&#39;</span><span class="p">]</span> <span class="o">*</span> <span class="mi">3</span><span class="p">],</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">object</span><span class="p">)</span><span class="o">.</span><span class="n">T</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">enc</span> <span class="o">=</span> <span class="n">preprocessing</span><span class="o">.</span><span class="n">OneHotEncoder</span><span class="p">(</span><span class="n">min_frequency</span><span class="o">=</span><span class="mi">6</span><span class="p">,</span> <span class="n">sparse_output</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">enc</span> <span class="o">=</span> <span class="n">preprocessing</span><span class="o">.</span><span class="n">OrdinalEncoder</span><span class="p">(</span><span class="n">min_frequency</span><span class="o">=</span><span class="mi">6</span><span class="p">)</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">enc</span><span class="o">.</span><span class="n">infrequent_categories_</span>
+<span class="go">[array([&#39;dog&#39;, &#39;snake&#39;], dtype=object)]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">enc</span><span class="o">.</span><span class="n">transform</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([[</span><span class="s1">&#39;dog&#39;</span><span class="p">],</span> <span class="p">[</span><span class="s1">&#39;cat&#39;</span><span class="p">],</span> <span class="p">[</span><span class="s1">&#39;rabbit&#39;</span><span class="p">],</span> <span class="p">[</span><span class="s1">&#39;snake&#39;</span><span class="p">]]))</span>
+<span class="go">array([[2.],</span>
+<span class="go">       [0.],</span>
+<span class="go">       [1.],</span>
+<span class="go">       [2.]])</span>
+</pre></div>
+</div>
+<p><a class="reference internal" href="generated/sklearn.preprocessing.OrdinalEncoder.html#sklearn.preprocessing.OrdinalEncoder" title="sklearn.preprocessing.OrdinalEncoder"><code class="xref py py-class docutils literal notranslate"><span class="pre">OrdinalEncoder</span></code></a>’s <code class="docutils literal notranslate"><span class="pre">max_categories</span></code> do <strong>not</strong> take into account missing
+or unknown categories. Setting <code class="docutils literal notranslate"><span class="pre">unknown_value</span></code> or <code class="docutils literal notranslate"><span class="pre">encoded_missing_value</span></code> to an
+integer will increase the number of unique integer codes by one each. This can
+result in up to <code class="docutils literal notranslate"><span class="pre">max_categories</span> <span class="pre">+</span> <span class="pre">2</span></code> integer codes. In the following example,
+“a” and “d” are considered infrequent and grouped together into a single
+category, “b” and “c” are their own categories, unknown values are encoded as 3
+and missing values are encoded as 4.</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">X_train</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span>
+<span class="gp">... </span>    <span class="p">[[</span><span class="s2">&quot;a&quot;</span><span class="p">]</span> <span class="o">*</span> <span class="mi">5</span> <span class="o">+</span> <span class="p">[</span><span class="s2">&quot;b&quot;</span><span class="p">]</span> <span class="o">*</span> <span class="mi">20</span> <span class="o">+</span> <span class="p">[</span><span class="s2">&quot;c&quot;</span><span class="p">]</span> <span class="o">*</span> <span class="mi">10</span> <span class="o">+</span> <span class="p">[</span><span class="s2">&quot;d&quot;</span><span class="p">]</span> <span class="o">*</span> <span class="mi">3</span> <span class="o">+</span> <span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">nan</span><span class="p">]],</span>
+<span class="gp">... </span>    <span class="n">dtype</span><span class="o">=</span><span class="nb">object</span><span class="p">)</span><span class="o">.</span><span class="n">T</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">enc</span> <span class="o">=</span> <span class="n">preprocessing</span><span class="o">.</span><span class="n">OrdinalEncoder</span><span class="p">(</span>
+<span class="gp">... </span>    <span class="n">handle_unknown</span><span class="o">=</span><span class="s2">&quot;use_encoded_value&quot;</span><span class="p">,</span> <span class="n">unknown_value</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span>
+<span class="gp">... </span>    <span class="n">max_categories</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">encoded_missing_value</span><span class="o">=</span><span class="mi">4</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">_</span> <span class="o">=</span> <span class="n">enc</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X_train</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">X_test</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([[</span><span class="s2">&quot;a&quot;</span><span class="p">],</span> <span class="p">[</span><span class="s2">&quot;b&quot;</span><span class="p">],</span> <span class="p">[</span><span class="s2">&quot;c&quot;</span><span class="p">],</span> <span class="p">[</span><span class="s2">&quot;d&quot;</span><span class="p">],</span> <span class="p">[</span><span class="s2">&quot;e&quot;</span><span class="p">],</span> <span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">nan</span><span class="p">]],</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">object</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">enc</span><span class="o">.</span><span class="n">transform</span><span class="p">(</span><span class="n">X_test</span><span class="p">)</span>
+<span class="go">array([[2.],</span>
+<span class="go">       [0.],</span>
+<span class="go">       [1.],</span>
+<span class="go">       [2.],</span>
+<span class="go">       [3.],</span>
+<span class="go">       [4.]])</span>
+</pre></div>
+</div>
+<p>Similarity, <a class="reference internal" href="generated/sklearn.preprocessing.OneHotEncoder.html#sklearn.preprocessing.OneHotEncoder" title="sklearn.preprocessing.OneHotEncoder"><code class="xref py py-class docutils literal notranslate"><span class="pre">OneHotEncoder</span></code></a> can be configured to group together infrequent
+categories:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">enc</span> <span class="o">=</span> <span class="n">preprocessing</span><span class="o">.</span><span class="n">OneHotEncoder</span><span class="p">(</span><span class="n">min_frequency</span><span class="o">=</span><span class="mi">6</span><span class="p">,</span> <span class="n">sparse_output</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">enc</span><span class="o">.</span><span class="n">infrequent_categories_</span>
 <span class="go">[array([&#39;dog&#39;, &#39;snake&#39;], dtype=object)]</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">enc</span><span class="o">.</span><span class="n">transform</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([[</span><span class="s1">&#39;dog&#39;</span><span class="p">],</span> <span class="p">[</span><span class="s1">&#39;cat&#39;</span><span class="p">],</span> <span class="p">[</span><span class="s1">&#39;rabbit&#39;</span><span class="p">],</span> <span class="p">[</span><span class="s1">&#39;snake&#39;</span><span class="p">]]))</span>
