@@ -179,8 +179,17 @@
 <li><a class="reference internal" href="#preprocessor-for-the-gradient-boosting-model">Preprocessor for the gradient boosting model</a></li>
 </ul>
 </li>
-<li><a class="reference internal" href="#way-partial-dependence-with-different-models">1-way partial dependence with different models</a></li>
-<li><a class="reference internal" href="#d-interaction-plots">2D interaction plots</a></li>
+<li><a class="reference internal" href="#way-partial-dependence-with-different-models">1-way partial dependence with different models</a><ul>
+<li><a class="reference internal" href="#multi-layer-perceptron">Multi-layer perceptron</a></li>
+<li><a class="reference internal" href="#gradient-boosting">Gradient boosting</a></li>
+<li><a class="reference internal" href="#analysis-of-the-plots">Analysis of the plots</a></li>
+<li><a class="reference internal" href="#ice-vs-pdp">ICE vs. PDP</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#d-interaction-plots">2D interaction plots</a><ul>
+<li><a class="reference internal" href="#d-representation">3D representation</a></li>
+</ul>
+</li>
 </ul>
 </li>
 </ul>
@@ -461,6 +470,8 @@ machine-learning models: (i) a multi-layer perceptron and (ii) a
 gradient-boosting model. With these two models, we illustrate how to compute and
 interpret both partial dependence plot (PDP) for both numerical and categorical
 features and individual conditional expectation (ICE).</p>
+<section id="multi-layer-perceptron">
+<h3>Multi-layer perceptron<a class="headerlink" href="#multi-layer-perceptron" title="Permalink to this heading">¶</a></h3>
 <p>Let’s fit a <a class="reference internal" href="../../modules/generated/sklearn.neural_network.MLPRegressor.html#sklearn.neural_network.MLPRegressor" title="sklearn.neural_network.MLPRegressor"><code class="xref py py-class docutils literal notranslate"><span class="pre">MLPRegressor</span></code></a> and compute
 single-variable partial dependence plots.</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">time</span> <span class="kn">import</span> <a href="https://docs.python.org/3/library/time.html#time.time" title="time.time" class="sphx-glr-backref-module-time sphx-glr-backref-type-py-function"><span class="n">time</span></a>
@@ -484,7 +495,7 @@ single-variable partial dependence plots.</p>
 </pre></div>
 </div>
 <div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>Training MLPRegressor...
-done in 0.747s
+done in 0.680s
 Test R2 score: 0.61
 </pre></div>
 </div>
@@ -540,9 +551,12 @@ reasonably well.</p>
 </pre></div>
 </div>
 <img src="../../_images/sphx_glr_plot_partial_dependence_002.png" srcset="../../_images/sphx_glr_plot_partial_dependence_002.png" alt="Partial dependence of the number of bike rentals for the bike rental dataset with an MLPRegressor" class = "sphx-glr-single-img"/><div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>Computing partial dependence plots...
-done in 1.123s
+done in 0.881s
 </pre></div>
 </div>
+</section>
+<section id="gradient-boosting">
+<h3>Gradient boosting<a class="headerlink" href="#gradient-boosting" title="Permalink to this heading">¶</a></h3>
 <p>Let’s now fit a <a class="reference internal" href="../../modules/generated/sklearn.ensemble.HistGradientBoostingRegressor.html#sklearn.ensemble.HistGradientBoostingRegressor" title="sklearn.ensemble.HistGradientBoostingRegressor"><code class="xref py py-class docutils literal notranslate"><span class="pre">HistGradientBoostingRegressor</span></code></a> and
 compute the partial dependence on the same features. We also use the
 specific preprocessor we created for this model.</p>
@@ -564,7 +578,7 @@ specific preprocessor we created for this model.</p>
 </pre></div>
 </div>
 <div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>Training HistGradientBoostingRegressor...
-done in 0.152s
+done in 0.136s
 Test R2 score: 0.62
 </pre></div>
 </div>
@@ -596,9 +610,12 @@ features.</p>
 </pre></div>
 </div>
 <img src="../../_images/sphx_glr_plot_partial_dependence_003.png" srcset="../../_images/sphx_glr_plot_partial_dependence_003.png" alt="Partial dependence of the number of bike rentals for the bike rental dataset with a gradient boosting" class = "sphx-glr-single-img"/><div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>Computing partial dependence plots...
-done in 1.261s
+done in 1.125s
 </pre></div>
 </div>
+</section>
+<section id="analysis-of-the-plots">
+<h3>Analysis of the plots<a class="headerlink" href="#analysis-of-the-plots" title="Permalink to this heading">¶</a></h3>
 <p>We will first look at the PDPs for the numerical features. For both models, the
 general trend of the PDP of the temperature is that the number of bike rentals is
 increasing with temperature. We can make a similar analysis but with the opposite
@@ -614,6 +631,9 @@ we see two peaks around the 7 am and 6 pm. These findings are in line with the
 the observations we made earlier on the dataset.</p>
 <p>However, it is worth noting that we are creating potential meaningless
 synthetic samples if features are correlated.</p>
+</section>
+<section id="ice-vs-pdp">
+<h3>ICE vs. PDP<a class="headerlink" href="#ice-vs-pdp" title="Permalink to this heading">¶</a></h3>
 <p>PDP is an average of the marginal effects of the features. We are averaging the
 response of all samples of the provided set. Thus, some effects could be hidden. In
 this regard, it is possible to plot each individual response. This representation is
@@ -641,7 +661,7 @@ selected ICEs for the temperature and humidity features.</p>
 </pre></div>
 </div>
 <img src="../../_images/sphx_glr_plot_partial_dependence_004.png" srcset="../../_images/sphx_glr_plot_partial_dependence_004.png" alt="ICE and PDP representations" class = "sphx-glr-single-img"/><div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>Computing partial dependence plots and individual conditional expectation...
-done in 0.552s
+done in 0.500s
 </pre></div>
 </div>
 <p>We see that the ICE for the temperature feature gives us some additional information:
@@ -681,6 +701,7 @@ parameter <code class="docutils literal notranslate"><span class="pre">interacti
 </pre></div>
 </div>
 <img src="../../_images/sphx_glr_plot_partial_dependence_005.png" srcset="../../_images/sphx_glr_plot_partial_dependence_005.png" alt="ICE and PDP representations" class = "sphx-glr-single-img"/></section>
+</section>
 <section id="d-interaction-plots">
 <h2>2D interaction plots<a class="headerlink" href="#d-interaction-plots" title="Permalink to this heading">¶</a></h2>
 <p>PDPs with two features of interest enable us to visualize interactions among them.
@@ -709,7 +730,7 @@ heatmap.</p>
 </pre></div>
 </div>
 <img src="../../_images/sphx_glr_plot_partial_dependence_006.png" srcset="../../_images/sphx_glr_plot_partial_dependence_006.png" alt="1-way vs 2-way of numerical PDP using gradient boosting" class = "sphx-glr-single-img"/><div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>Computing partial dependence plots...
-done in 8.970s
+done in 8.567s
 </pre></div>
 </div>
 <p>The two-way partial dependence plot shows the dependence of the number of bike rentals
@@ -746,7 +767,7 @@ non-linear feature interactions.</p>
 </pre></div>
 </div>
 <img src="../../_images/sphx_glr_plot_partial_dependence_007.png" srcset="../../_images/sphx_glr_plot_partial_dependence_007.png" alt="1-way vs 2-way of numerical PDP using gradient boosting" class = "sphx-glr-single-img"/><div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>Computing partial dependence plots...
-done in 7.899s
+done in 7.743s
 </pre></div>
 </div>
 <p>The 1D partial dependence plots for the model constrained to not model feature
@@ -790,9 +811,11 @@ the season, the weather, and the target would be as follow:</p>
 </pre></div>
 </div>
 <img src="../../_images/sphx_glr_plot_partial_dependence_008.png" srcset="../../_images/sphx_glr_plot_partial_dependence_008.png" alt="1-way vs 2-way PDP of categorical features using gradient boosting" class = "sphx-glr-single-img"/><div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>Computing partial dependence plots...
-done in 0.394s
+done in 0.377s
 </pre></div>
 </div>
+<section id="d-representation">
+<h3>3D representation<a class="headerlink" href="#d-representation" title="Permalink to this heading">¶</a></h3>
 <p>Let’s make the same partial dependence plot for the 2 features interaction,
 this time in 3 dimensions.</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
@@ -827,7 +850,7 @@ this time in 3 dimensions.</p>
 <a href="https://matplotlib.org/stable/api/_as_gen/matplotlib.pyplot.show.html#matplotlib.pyplot.show" title="matplotlib.pyplot.show" class="sphx-glr-backref-module-matplotlib-pyplot sphx-glr-backref-type-py-function"><span class="n">plt</span><span class="o">.</span><span class="n">show</span></a><span class="p">()</span>
 </pre></div>
 </div>
-<img src="../../_images/sphx_glr_plot_partial_dependence_009.png" srcset="../../_images/sphx_glr_plot_partial_dependence_009.png" alt="PD of number of bike rentals on the temperature and humidity GBDT model, Partial dependence" class = "sphx-glr-single-img"/><p class="sphx-glr-timing"><strong>Total running time of the script:</strong> ( 0 minutes  27.425 seconds)</p>
+<img src="../../_images/sphx_glr_plot_partial_dependence_009.png" srcset="../../_images/sphx_glr_plot_partial_dependence_009.png" alt="PD of number of bike rentals on the temperature and humidity GBDT model, Partial dependence" class = "sphx-glr-single-img"/><p class="sphx-glr-timing"><strong>Total running time of the script:</strong> ( 0 minutes  25.859 seconds)</p>
 <div class="sphx-glr-footer sphx-glr-footer-example docutils container" id="sphx-glr-download-auto-examples-inspection-plot-partial-dependence-py">
 <div class="binder-badge docutils container">
 <a class="reference external image-reference" href="https://mybinder.org/v2/gh/scikit-learn/scikit-learn/main?urlpath=lab/tree/notebooks/auto_examples/inspection/plot_partial_dependence.ipynb"><img alt="Launch binder" src="../../_images/binder_badge_logo15.svg" width="150px" /></a>
@@ -840,6 +863,7 @@ this time in 3 dimensions.</p>
 </div>
 </div>
 <p class="sphx-glr-signature"><a class="reference external" href="https://sphinx-gallery.github.io">Gallery generated by Sphinx-Gallery</a></p>
+</section>
 </section>
 </section>
 
