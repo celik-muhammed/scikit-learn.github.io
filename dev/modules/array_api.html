@@ -10,10 +10,10 @@
 <meta property="og:type" content="website" />
 <meta property="og:url" content="https://scikit-learn/stable/modules/array_api.html" />
 <meta property="og:site_name" content="scikit-learn" />
-<meta property="og:description" content="The Array API specification defines a standard API for all array manipulation libraries with a NumPy-like API. Some scikit-learn estimators that primarily rely on NumPy (as opposed to using Cython)..." />
+<meta property="og:description" content="The Array API specification defines a standard API for all array manipulation libraries with a NumPy-like API. Scikit-learn’s Array API support requires array-api-compat to be installed. Some sciki..." />
 <meta property="og:image" content="https://scikit-learn.org/stable/_static/scikit-learn-logo-small.png" />
 <meta property="og:image:alt" content="scikit-learn" />
-<meta name="description" content="The Array API specification defines a standard API for all array manipulation libraries with a NumPy-like API. Some scikit-learn estimators that primarily rely on NumPy (as opposed to using Cython)..." />
+<meta name="description" content="The Array API specification defines a standard API for all array manipulation libraries with a NumPy-like API. Scikit-learn’s Array API support requires array-api-compat to be installed. Some sciki..." />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
@@ -272,7 +272,9 @@
   <section id="array-api-support-experimental">
 <span id="array-api"></span><h1><span class="section-number">11.1. </span>Array API support (experimental)<a class="headerlink" href="#array-api-support-experimental" title="Permalink to this heading">¶</a></h1>
 <p>The <a class="reference external" href="https://data-apis.org/array-api/latest/">Array API</a> specification defines
-a standard API for all array manipulation libraries with a NumPy-like API.</p>
+a standard API for all array manipulation libraries with a NumPy-like API.
+Scikit-learn’s Array API support requires
+<a class="reference external" href="https://github.com/data-apis/array-api-compat">array-api-compat</a> to be installed.</p>
 <p>Some scikit-learn estimators that primarily rely on NumPy (as opposed to using
 Cython) to implement the algorithmic logic of their <code class="docutils literal notranslate"><span class="pre">fit</span></code>, <code class="docutils literal notranslate"><span class="pre">predict</span></code> or
 <code class="docutils literal notranslate"><span class="pre">transform</span></code> methods can be configured to accept any Array API compatible input
@@ -282,8 +284,8 @@ instead of relying on NumPy.</p>
 explicitly as explained in the following.</p>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
-<p>Currently, only <code class="docutils literal notranslate"><span class="pre">cupy.array_api</span></code> and <code class="docutils literal notranslate"><span class="pre">numpy.array_api</span></code> are known to work
-with scikit-learn’s estimators.</p>
+<p>Currently, only <code class="docutils literal notranslate"><span class="pre">cupy.array_api</span></code>, <code class="docutils literal notranslate"><span class="pre">numpy.array_api</span></code>, <code class="docutils literal notranslate"><span class="pre">cupy</span></code>, and <code class="docutils literal notranslate"><span class="pre">PyTorch</span></code>
+are known to work with scikit-learn’s estimators.</p>
 </div>
 <section id="example-usage">
 <h2><span class="section-number">11.1.1. </span>Example usage<a class="headerlink" href="#example-usage" title="Permalink to this heading">¶</a></h2>
@@ -292,11 +294,11 @@ with scikit-learn’s estimators.</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">sklearn.datasets</span> <span class="kn">import</span> <span class="n">make_classification</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">sklearn</span> <span class="kn">import</span> <span class="n">config_context</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">sklearn.discriminant_analysis</span> <span class="kn">import</span> <span class="n">LinearDiscriminantAnalysis</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">cupy.array_api</span> <span class="k">as</span> <span class="nn">xp</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">cupy</span>
 
 <span class="gp">&gt;&gt;&gt; </span><span class="n">X_np</span><span class="p">,</span> <span class="n">y_np</span> <span class="o">=</span> <span class="n">make_classification</span><span class="p">(</span><span class="n">random_state</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">X_cu</span> <span class="o">=</span> <span class="n">xp</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">X_np</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">y_cu</span> <span class="o">=</span> <span class="n">xp</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">y_np</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">X_cu</span> <span class="o">=</span> <span class="n">cupy</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">X_np</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">y_cu</span> <span class="o">=</span> <span class="n">cupy</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">y_np</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">X_cu</span><span class="o">.</span><span class="n">device</span>
 <span class="go">&lt;CUDA Device 0&gt;</span>
 
@@ -313,13 +315,31 @@ Array API namespace was used for training, then fitted attributes will be on the
 GPU. We provide a experimental <code class="docutils literal notranslate"><span class="pre">_estimator_with_converted_arrays</span></code> utility that
 transfers an estimator attributes from Array API to a ndarray:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">sklearn.utils._array_api</span> <span class="kn">import</span> <span class="n">_estimator_with_converted_arrays</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">cupy_to_ndarray</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">array</span> <span class="p">:</span> <span class="n">array</span><span class="o">.</span><span class="n">_array</span><span class="o">.</span><span class="n">get</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">cupy_to_ndarray</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">array</span> <span class="p">:</span> <span class="n">array</span><span class="o">.</span><span class="n">get</span><span class="p">()</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">lda_np</span> <span class="o">=</span> <span class="n">_estimator_with_converted_arrays</span><span class="p">(</span><span class="n">lda</span><span class="p">,</span> <span class="n">cupy_to_ndarray</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">X_trans</span> <span class="o">=</span> <span class="n">lda_np</span><span class="o">.</span><span class="n">transform</span><span class="p">(</span><span class="n">X_np</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="nb">type</span><span class="p">(</span><span class="n">X_trans</span><span class="p">)</span>
 <span class="go">&lt;class &#39;numpy.ndarray&#39;&gt;</span>
 </pre></div>
 </div>
+<section id="pytorch-support">
+<h3><span class="section-number">11.1.1.1. </span>PyTorch Support<a class="headerlink" href="#pytorch-support" title="Permalink to this heading">¶</a></h3>
+<p>PyTorch Tensors are supported by setting <code class="docutils literal notranslate"><span class="pre">array_api_dispatch=True</span></code> and passing in
+the tensors directly:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">torch</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">X_torch</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">X_np</span><span class="p">,</span> <span class="n">device</span><span class="o">=</span><span class="s2">&quot;cuda&quot;</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">torch</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">y_torch</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">y_np</span><span class="p">,</span> <span class="n">device</span><span class="o">=</span><span class="s2">&quot;cuda&quot;</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">torch</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span>
+
+<span class="gp">&gt;&gt;&gt; </span><span class="k">with</span> <span class="n">config_context</span><span class="p">(</span><span class="n">array_api_dispatch</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+<span class="gp">... </span>    <span class="n">lda</span> <span class="o">=</span> <span class="n">LinearDiscriminantAnalysis</span><span class="p">()</span>
+<span class="gp">... </span>    <span class="n">X_trans</span> <span class="o">=</span> <span class="n">lda</span><span class="o">.</span><span class="n">fit_transform</span><span class="p">(</span><span class="n">X_torch</span><span class="p">,</span> <span class="n">y_torch</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">type</span><span class="p">(</span><span class="n">X_trans</span><span class="p">)</span>
+<span class="go">&lt;class &#39;torch.Tensor&#39;&gt;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">X_trans</span><span class="o">.</span><span class="n">device</span><span class="o">.</span><span class="n">type</span>
+<span class="go">&#39;cuda&#39;</span>
+</pre></div>
+</div>
+</section>
 </section>
 <section id="estimators-with-support-for-array-api-compatible-inputs">
 <span id="array-api-estimators"></span><h2><span class="section-number">11.1.2. </span>Estimators with support for <code class="docutils literal notranslate"><span class="pre">Array</span> <span class="pre">API</span></code>-compatible inputs<a class="headerlink" href="#estimators-with-support-for-array-api-compatible-inputs" title="Permalink to this heading">¶</a></h2>
