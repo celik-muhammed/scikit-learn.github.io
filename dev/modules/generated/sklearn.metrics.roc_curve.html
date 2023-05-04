@@ -191,7 +191,7 @@
 <h1><a class="reference internal" href="../classes.html#module-sklearn.metrics" title="sklearn.metrics"><code class="xref py py-mod docutils literal notranslate"><span class="pre">sklearn.metrics</span></code></a>.roc_curve<a class="headerlink" href="#sklearn-metrics-roc-curve" title="Permalink to this heading">¶</a></h1>
 <dl class="py function">
 <dt class="sig sig-object py" id="sklearn.metrics.roc_curve">
-<span class="sig-prename descclassname"><span class="pre">sklearn.metrics.</span></span><span class="sig-name descname"><span class="pre">roc_curve</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">y_true</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y_score</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pos_label</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sample_weight</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">drop_intermediate</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/scikit-learn/scikit-learn/blob/3d0df7b31/sklearn/metrics/_ranking.py#L964"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#sklearn.metrics.roc_curve" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">sklearn.metrics.</span></span><span class="sig-name descname"><span class="pre">roc_curve</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">y_true</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y_score</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pos_label</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sample_weight</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">drop_intermediate</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/scikit-learn/scikit-learn/blob/31c8c7554/sklearn/metrics/_ranking.py#L964"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#sklearn.metrics.roc_curve" title="Permalink to this definition">¶</a></dt>
 <dd><p>Compute Receiver operating characteristic (ROC).</p>
 <p>Note: this implementation is restricted to the binary classification task.</p>
 <p>Read more in the <a class="reference internal" href="../model_evaluation.html#roc-metrics"><span class="std std-ref">User Guide</span></a>.</p>
@@ -228,9 +228,9 @@ positive rate of predictions with score &gt;= <code class="docutils literal notr
 <dt><strong>tpr</strong><span class="classifier">ndarray of shape (&gt;2,)</span></dt><dd><p>Increasing true positive rates such that element <code class="docutils literal notranslate"><span class="pre">i</span></code> is the true
 positive rate of predictions with score &gt;= <code class="docutils literal notranslate"><span class="pre">thresholds[i]</span></code>.</p>
 </dd>
-<dt><strong>thresholds</strong><span class="classifier">ndarray of shape = (n_thresholds,)</span></dt><dd><p>Decreasing thresholds on the decision function used to compute
+<dt><strong>thresholds</strong><span class="classifier">ndarray of shape (n_thresholds,)</span></dt><dd><p>Decreasing thresholds on the decision function used to compute
 fpr and tpr. <code class="docutils literal notranslate"><span class="pre">thresholds[0]</span></code> represents no instances being predicted
-and is arbitrarily set to <code class="docutils literal notranslate"><span class="pre">max(y_score)</span> <span class="pre">+</span> <span class="pre">1</span></code>.</p>
+and is arbitrarily set to <code class="docutils literal notranslate"><span class="pre">np.inf</span></code>.</p>
 </dd>
 </dl>
 </dd>
@@ -252,6 +252,9 @@ and is arbitrarily set to <code class="docutils literal notranslate"><span class
 <p>Since the thresholds are sorted from low to high values, they
 are reversed upon returning them to ensure they correspond to both <code class="docutils literal notranslate"><span class="pre">fpr</span></code>
 and <code class="docutils literal notranslate"><span class="pre">tpr</span></code>, which are sorted in reversed order during their calculation.</p>
+<p>An arbritrary threshold is added for the case <code class="docutils literal notranslate"><span class="pre">tpr=0</span></code> and <code class="docutils literal notranslate"><span class="pre">fpr=0</span></code> to
+ensure that the curve starts at <code class="docutils literal notranslate"><span class="pre">(0,</span> <span class="pre">0)</span></code>. This threshold corresponds to the
+<code class="docutils literal notranslate"><span class="pre">np.inf</span></code>.</p>
 <p class="rubric">References</p>
 <div role="list" class="citation-list">
 <div class="citation" id="rfc6782941ac9-1" role="doc-biblioentry">
@@ -275,7 +278,7 @@ Letters, 2006, 27(8):861-874.</p>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">tpr</span>
 <span class="go">array([0. , 0.5, 0.5, 1. , 1. ])</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">thresholds</span>
-<span class="go">array([1.8 , 0.8 , 0.4 , 0.35, 0.1 ])</span>
+<span class="go">array([ inf, 0.8 , 0.4 , 0.35, 0.1 ])</span>
 </pre></div>
 </div>
 </dd></dl>
