@@ -186,7 +186,8 @@
 <li><a class="reference internal" href="#regression-criteria">1.10.7.2. Regression criteria</a></li>
 </ul>
 </li>
-<li><a class="reference internal" href="#minimal-cost-complexity-pruning">1.10.8. Minimal Cost-Complexity Pruning</a></li>
+<li><a class="reference internal" href="#missing-values-support">1.10.8. Missing Values Support</a></li>
+<li><a class="reference internal" href="#minimal-cost-complexity-pruning">1.10.9. Minimal Cost-Complexity Pruning</a></li>
 </ul>
 </li>
 </ul>
@@ -648,8 +649,70 @@ the MSE criterion.</p>
 <p>Note that it fits much slower than the MSE criterion.</p>
 </section>
 </section>
+<section id="missing-values-support">
+<span id="tree-missing-value-support"></span><h2><span class="section-number">1.10.8. </span>Missing Values Support<a class="headerlink" href="#missing-values-support" title="Permalink to this heading">¶</a></h2>
+<p><code class="xref py py-class docutils literal notranslate"><span class="pre">DecisionTreeClassifier</span></code> and <code class="xref py py-class docutils literal notranslate"><span class="pre">DecisionTreeRegressor</span></code>
+have built-in support for missing values when <code class="docutils literal notranslate"><span class="pre">splitter='best'</span></code> and criterion is
+<code class="docutils literal notranslate"><span class="pre">'gini'</span></code>, <code class="docutils literal notranslate"><span class="pre">'entropy</span></code>’, or <code class="docutils literal notranslate"><span class="pre">'log_loss'</span></code>, for classification or
+<code class="docutils literal notranslate"><span class="pre">'squared_error'</span></code>, <code class="docutils literal notranslate"><span class="pre">'friedman_mse'</span></code>, or <code class="docutils literal notranslate"><span class="pre">'poisson'</span></code> for regression.</p>
+<p>For each potential threshold on the non-missing data, the splitter will evaluate
+the split with all the missing values going to the left node or the right node.</p>
+<p>Decisions are made as follows:</p>
+<blockquote>
+<div><ul>
+<li><p>By default when predicting, the samples with missing values are classified
+with the class used in the split found during training:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">sklearn.tree</span> <span class="kn">import</span> <span class="n">DecisionTreeClassifier</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+
+<span class="gp">&gt;&gt;&gt; </span><span class="n">X</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">6</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span><span class="p">])</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">y</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span>
+
+<span class="gp">&gt;&gt;&gt; </span><span class="n">tree</span> <span class="o">=</span> <span class="n">DecisionTreeClassifier</span><span class="p">(</span><span class="n">random_state</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">tree</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">X</span><span class="p">)</span>
+<span class="go">array([0, 0, 1, 1])</span>
+</pre></div>
+</div>
+</li>
+<li><p>If the the criterion evaluation is the same for both nodes,
+then the tie for missing value at predict time is broken by going to the
+right node. The splitter also checks the split where all the missing
+values go to one child and non-missing values go to the other:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">sklearn.tree</span> <span class="kn">import</span> <span class="n">DecisionTreeClassifier</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+
+<span class="gp">&gt;&gt;&gt; </span><span class="n">X</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">np</span><span class="o">.</span><span class="n">nan</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span><span class="p">,</span> <span class="mi">1</span><span class="p">])</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">y</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span>
+
+<span class="gp">&gt;&gt;&gt; </span><span class="n">tree</span> <span class="o">=</span> <span class="n">DecisionTreeClassifier</span><span class="p">(</span><span class="n">random_state</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
+
+<span class="gp">&gt;&gt;&gt; </span><span class="n">X_test</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">np</span><span class="o">.</span><span class="n">nan</span><span class="p">])</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">tree</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">X_test</span><span class="p">)</span>
+<span class="go">array([1])</span>
+</pre></div>
+</div>
+</li>
+<li><p>If no missing values are seen during training for a given feature, then during
+prediction missing values are mapped to the child with the most samples:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">sklearn.tree</span> <span class="kn">import</span> <span class="n">DecisionTreeClassifier</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+
+<span class="gp">&gt;&gt;&gt; </span><span class="n">X</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">])</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">y</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span>
+
+<span class="gp">&gt;&gt;&gt; </span><span class="n">tree</span> <span class="o">=</span> <span class="n">DecisionTreeClassifier</span><span class="p">(</span><span class="n">random_state</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
+
+<span class="gp">&gt;&gt;&gt; </span><span class="n">X_test</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">np</span><span class="o">.</span><span class="n">nan</span><span class="p">])</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">tree</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">X_test</span><span class="p">)</span>
+<span class="go">array([1])</span>
+</pre></div>
+</div>
+</li>
+</ul>
+</div></blockquote>
+</section>
 <section id="minimal-cost-complexity-pruning">
-<span id="id1"></span><h2><span class="section-number">1.10.8. </span>Minimal Cost-Complexity Pruning<a class="headerlink" href="#minimal-cost-complexity-pruning" title="Permalink to this heading">¶</a></h2>
+<span id="id1"></span><h2><span class="section-number">1.10.9. </span>Minimal Cost-Complexity Pruning<a class="headerlink" href="#minimal-cost-complexity-pruning" title="Permalink to this heading">¶</a></h2>
 <p>Minimal cost-complexity pruning is an algorithm used to prune a tree to avoid
 over-fitting, described in Chapter 3 of <a class="reference internal" href="#bre" id="id2"><span>[BRE]</span></a>. This algorithm is parameterized
 by <span class="math notranslate nohighlight">\(\alpha\ge0\)</span> known as the complexity parameter. The complexity
