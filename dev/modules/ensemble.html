@@ -218,14 +218,14 @@
 </li>
 <li><a class="reference internal" href="#voting-classifier">1.11.6. Voting Classifier</a><ul>
 <li><a class="reference internal" href="#majority-class-labels-majority-hard-voting">1.11.6.1. Majority Class Labels (Majority/Hard Voting)</a></li>
-<li><a class="reference internal" href="#id31">1.11.6.2. Usage</a></li>
+<li><a class="reference internal" href="#id32">1.11.6.2. Usage</a></li>
 <li><a class="reference internal" href="#weighted-average-probabilities-soft-voting">1.11.6.3. Weighted Average Probabilities (Soft Voting)</a></li>
 <li><a class="reference internal" href="#using-the-votingclassifier-with-gridsearchcv">1.11.6.4. Using the <code class="docutils literal notranslate"><span class="pre">VotingClassifier</span></code> with <code class="docutils literal notranslate"><span class="pre">GridSearchCV</span></code></a></li>
-<li><a class="reference internal" href="#id32">1.11.6.5. Usage</a></li>
+<li><a class="reference internal" href="#id33">1.11.6.5. Usage</a></li>
 </ul>
 </li>
 <li><a class="reference internal" href="#voting-regressor">1.11.7. Voting Regressor</a><ul>
-<li><a class="reference internal" href="#id34">1.11.7.1. Usage</a></li>
+<li><a class="reference internal" href="#id35">1.11.7.1. Usage</a></li>
 </ul>
 </li>
 <li><a class="reference internal" href="#stacked-generalization">1.11.8. Stacked generalization</a></li>
@@ -380,6 +380,31 @@ an overall better model.</p>
 <p>In contrast to the original publication <a class="reference internal" href="#b2001" id="id6"><span>[B2001]</span></a>, the scikit-learn
 implementation combines classifiers by averaging their probabilistic
 prediction, instead of letting each classifier vote for a single class.</p>
+<p>A competitive alternative to random forests are
+<a class="reference internal" href="#histogram-based-gradient-boosting"><span class="std std-ref">Histogram-Based Gradient Boosting</span></a> (HGBT) models:</p>
+<ul class="simple">
+<li><p>Building trees: Random forests typically rely on deep trees (that overfit
+individually) which uses much computational resources, as they require
+several splittings and evaluations of candidate splits. Boosting models
+build shallow trees (that underfit individually) which are faster to fit
+and predict.</p></li>
+<li><p>Sequential boosting: In HGBT, the decision trees are built sequentially,
+where each tree is trained to correct the errors made by the previous ones.
+This allows them to iteratively improve the model’s performance using
+relatively few trees. In contrast, random forests use a majority vote to
+predict the outcome, which can require a larger number of trees to achieve
+the same level of accuracy.</p></li>
+<li><p>Efficient binning: HGBT uses an efficient binning algorithm that can handle
+large datasets with a high number of features. The binning algorithm can
+pre-process the data to speed up the subsequent tree construction (see
+<a class="reference internal" href="#why-it-s-faster"><span class="std std-ref">Why it’s faster</span></a>). In contrast, the scikit-learn
+implementation of random forests does not use binning and relies on exact
+splitting, which can be computationally expensive.</p></li>
+</ul>
+<p>Overall, the computational cost of HGBT versus RF depends on the specific
+characteristics of the dataset and the modeling task. It’s always a good idea
+to try both models and compare their performance and computational efficiency
+on your specific problem to determine which model is the best fit.</p>
 </section>
 <section id="extremely-randomized-trees">
 <h3><span class="section-number">1.11.2.2. </span>Extremely Randomized Trees<a class="headerlink" href="#extremely-randomized-trees" title="Permalink to this heading">¶</a></h3>
@@ -683,7 +708,7 @@ On-Line Learning and an Application to Boosting”, 1997.</p>
 </div>
 <div class="citation" id="htf" role="doc-biblioentry">
 <span class="label"><span class="fn-bracket">[</span>HTF<span class="fn-bracket">]</span></span>
-<span class="backrefs">(<a role="doc-backlink" href="#id10">1</a>,<a role="doc-backlink" href="#id21">2</a>,<a role="doc-backlink" href="#id36">3</a>)</span>
+<span class="backrefs">(<a role="doc-backlink" href="#id10">1</a>,<a role="doc-backlink" href="#id21">2</a>,<a role="doc-backlink" href="#id37">3</a>)</span>
 <p>T. Hastie, R. Tibshirani and J. Friedman, “Elements of
 Statistical Learning Ed. 2”, Springer, 2009.</p>
 </div>
@@ -1411,7 +1436,7 @@ parallelized over samples</p></li>
 </ul>
 </section>
 <section id="why-it-s-faster">
-<h3><span class="section-number">1.11.5.8. </span>Why it’s faster<a class="headerlink" href="#why-it-s-faster" title="Permalink to this heading">¶</a></h3>
+<span id="id30"></span><h3><span class="section-number">1.11.5.8. </span>Why it’s faster<a class="headerlink" href="#why-it-s-faster" title="Permalink to this heading">¶</a></h3>
 <p>The bottleneck of a gradient boosting procedure is building the decision
 trees. Building a traditional decision tree (as in the other GBDTs
 <a class="reference internal" href="generated/sklearn.ensemble.GradientBoostingClassifier.html#sklearn.ensemble.GradientBoostingClassifier" title="sklearn.ensemble.GradientBoostingClassifier"><code class="xref py py-class docutils literal notranslate"><span class="pre">GradientBoostingClassifier</span></code></a> and <a class="reference internal" href="generated/sklearn.ensemble.GradientBoostingRegressor.html#sklearn.ensemble.GradientBoostingRegressor" title="sklearn.ensemble.GradientBoostingRegressor"><code class="xref py py-class docutils literal notranslate"><span class="pre">GradientBoostingRegressor</span></code></a>)
@@ -1461,7 +1486,7 @@ Journal of the American Statistical Association, 53, 789-798.</p>
 </section>
 </section>
 <section id="voting-classifier">
-<span id="id30"></span><h2><span class="section-number">1.11.6. </span>Voting Classifier<a class="headerlink" href="#voting-classifier" title="Permalink to this heading">¶</a></h2>
+<span id="id31"></span><h2><span class="section-number">1.11.6. </span>Voting Classifier<a class="headerlink" href="#voting-classifier" title="Permalink to this heading">¶</a></h2>
 <p>The idea behind the <a class="reference internal" href="generated/sklearn.ensemble.VotingClassifier.html#sklearn.ensemble.VotingClassifier" title="sklearn.ensemble.VotingClassifier"><code class="xref py py-class docutils literal notranslate"><span class="pre">VotingClassifier</span></code></a> is to combine
 conceptually different machine learning classifiers and use a majority vote
 or the average predicted probabilities (soft vote) to predict the class labels.
@@ -1488,8 +1513,8 @@ based on the ascending sort order. E.g., in the following scenario</p>
 </ul>
 <p>the class label 1 will be assigned to the sample.</p>
 </section>
-<section id="id31">
-<h3><span class="section-number">1.11.6.2. </span>Usage<a class="headerlink" href="#id31" title="Permalink to this heading">¶</a></h3>
+<section id="id32">
+<h3><span class="section-number">1.11.6.2. </span>Usage<a class="headerlink" href="#id32" title="Permalink to this heading">¶</a></h3>
 <p>The following example shows how to fit the majority rule classifier:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">sklearn</span> <span class="kn">import</span> <span class="n">datasets</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">sklearn.model_selection</span> <span class="kn">import</span> <span class="n">cross_val_score</span>
@@ -1619,8 +1644,8 @@ hyperparameters of the individual estimators:</p>
 </pre></div>
 </div>
 </section>
-<section id="id32">
-<h3><span class="section-number">1.11.6.5. </span>Usage<a class="headerlink" href="#id32" title="Permalink to this heading">¶</a></h3>
+<section id="id33">
+<h3><span class="section-number">1.11.6.5. </span>Usage<a class="headerlink" href="#id33" title="Permalink to this heading">¶</a></h3>
 <p>In order to predict the class labels based on the predicted
 class-probabilities (scikit-learn estimators in the VotingClassifier
 must support <code class="docutils literal notranslate"><span class="pre">predict_proba</span></code> method):</p>
@@ -1640,13 +1665,13 @@ must support <code class="docutils literal notranslate"><span class="pre">predic
 </section>
 </section>
 <section id="voting-regressor">
-<span id="id33"></span><h2><span class="section-number">1.11.7. </span>Voting Regressor<a class="headerlink" href="#voting-regressor" title="Permalink to this heading">¶</a></h2>
+<span id="id34"></span><h2><span class="section-number">1.11.7. </span>Voting Regressor<a class="headerlink" href="#voting-regressor" title="Permalink to this heading">¶</a></h2>
 <p>The idea behind the <a class="reference internal" href="generated/sklearn.ensemble.VotingRegressor.html#sklearn.ensemble.VotingRegressor" title="sklearn.ensemble.VotingRegressor"><code class="xref py py-class docutils literal notranslate"><span class="pre">VotingRegressor</span></code></a> is to combine conceptually
 different machine learning regressors and return the average predicted values.
 Such a regressor can be useful for a set of equally well performing models
 in order to balance out their individual weaknesses.</p>
-<section id="id34">
-<h3><span class="section-number">1.11.7.1. </span>Usage<a class="headerlink" href="#id34" title="Permalink to this heading">¶</a></h3>
+<section id="id35">
+<h3><span class="section-number">1.11.7.1. </span>Usage<a class="headerlink" href="#id35" title="Permalink to this heading">¶</a></h3>
 <p>The following example shows how to fit the VotingRegressor:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">sklearn.datasets</span> <span class="kn">import</span> <span class="n">load_diabetes</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">sklearn.ensemble</span> <span class="kn">import</span> <span class="n">GradientBoostingRegressor</span>
@@ -1679,7 +1704,7 @@ in order to balance out their individual weaknesses.</p>
 <section id="stacked-generalization">
 <span id="stacking"></span><h2><span class="section-number">1.11.8. </span>Stacked generalization<a class="headerlink" href="#stacked-generalization" title="Permalink to this heading">¶</a></h2>
 <p>Stacked generalization is a method for combining estimators to reduce their
-biases <a class="reference internal" href="#w1992" id="id35"><span>[W1992]</span></a> <a class="reference internal" href="#htf" id="id36"><span>[HTF]</span></a>. More precisely, the predictions of each individual
+biases <a class="reference internal" href="#w1992" id="id36"><span>[W1992]</span></a> <a class="reference internal" href="#htf" id="id37"><span>[HTF]</span></a>. More precisely, the predictions of each individual
 estimator are stacked together and used as input to a final estimator to
 compute the prediction. This final estimator is trained through
 cross-validation.</p>
@@ -1792,7 +1817,7 @@ a <a class="reference internal" href="generated/sklearn.ensemble.StackingClassif
 <p class="topic-title">References</p>
 <div role="list" class="citation-list">
 <div class="citation" id="w1992" role="doc-biblioentry">
-<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id35">W1992</a><span class="fn-bracket">]</span></span>
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id36">W1992</a><span class="fn-bracket">]</span></span>
 <p>Wolpert, David H. “Stacked generalization.” Neural networks 5.2
 (1992): 241-259.</p>
 </div>
