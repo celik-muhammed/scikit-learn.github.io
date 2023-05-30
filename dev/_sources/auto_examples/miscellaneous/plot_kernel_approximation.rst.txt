@@ -107,18 +107,18 @@ turn the data in a (samples, feature) matrix:
 
     # Create a classifier: a support vector classifier
     kernel_svm = svm.SVC(gamma=0.2)
-    linear_svm = svm.LinearSVC()
+    linear_svm = svm.LinearSVC(dual="auto")
 
     # create pipeline from kernel approximation
     # and linear svm
     feature_map_fourier = RBFSampler(gamma=0.2, random_state=1)
     feature_map_nystroem = Nystroem(gamma=0.2, random_state=1)
     fourier_approx_svm = pipeline.Pipeline(
-        [("feature_map", feature_map_fourier), ("svm", svm.LinearSVC())]
+        [("feature_map", feature_map_fourier), ("svm", svm.LinearSVC(dual="auto"))]
     )
 
     nystroem_approx_svm = pipeline.Pipeline(
-        [("feature_map", feature_map_nystroem), ("svm", svm.LinearSVC())]
+        [("feature_map", feature_map_nystroem), ("svm", svm.LinearSVC(dual="auto"))]
     )
 
     # fit and predict using linear and kernel svm:
@@ -320,7 +320,7 @@ in :ref:`kernel_approximation`.
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** ( 0 minutes  1.337 seconds)
+   **Total running time of the script:** ( 0 minutes  1.604 seconds)
 
 
 .. _sphx_glr_download_auto_examples_miscellaneous_plot_kernel_approximation.py:
