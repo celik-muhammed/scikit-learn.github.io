@@ -206,7 +206,7 @@ data structure.</p>
 <p>While these examples give some intuition about the
 algorithms, this intuition might not apply to very high
 dimensional data.</p>
-<img src="../../_images/sphx_glr_plot_cluster_comparison_001.png" srcset="../../_images/sphx_glr_plot_cluster_comparison_001.png" alt="MiniBatch KMeans, Affinity Propagation, MeanShift, Spectral Clustering, Ward, Agglomerative Clustering, DBSCAN, OPTICS, BIRCH, Gaussian Mixture" class = "sphx-glr-single-img"/><div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">time</span>
+<img src="../../_images/sphx_glr_plot_cluster_comparison_001.png" srcset="../../_images/sphx_glr_plot_cluster_comparison_001.png" alt="MiniBatch KMeans, Affinity Propagation, MeanShift, Spectral Clustering, Ward, Agglomerative Clustering, DBSCAN, HDBSCAN, OPTICS, BIRCH, Gaussian Mixture" class = "sphx-glr-single-img"/><div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">time</span>
 <span class="kn">import</span> <span class="nn">warnings</span>
 
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
@@ -261,6 +261,9 @@ dimensional data.</p>
     <span class="s2">&quot;min_samples&quot;</span><span class="p">:</span> <span class="mi">7</span><span class="p">,</span>
     <span class="s2">&quot;xi&quot;</span><span class="p">:</span> <span class="mf">0.05</span><span class="p">,</span>
     <span class="s2">&quot;min_cluster_size&quot;</span><span class="p">:</span> <span class="mf">0.1</span><span class="p">,</span>
+    <span class="s2">&quot;allow_single_cluster&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
+    <span class="s2">&quot;hdbscan_min_cluster_size&quot;</span><span class="p">:</span> <span class="mi">15</span><span class="p">,</span>
+    <span class="s2">&quot;hdbscan_min_samples&quot;</span><span class="p">:</span> <span class="mi">3</span><span class="p">,</span>
 <span class="p">}</span>
 
 <a href="../../modules/classes.html#module-sklearn.datasets" title="sklearn.datasets" class="sphx-glr-backref-module-sklearn sphx-glr-backref-type-py-module"><span class="n">datasets</span></a> <span class="o">=</span> <span class="p">[</span>
@@ -343,6 +346,11 @@ dimensional data.</p>
         <span class="n">affinity</span><span class="o">=</span><span class="s2">&quot;nearest_neighbors&quot;</span><span class="p">,</span>
     <span class="p">)</span>
     <span class="n">dbscan</span> <span class="o">=</span> <a href="../../modules/generated/sklearn.cluster.DBSCAN.html#sklearn.cluster.DBSCAN" title="sklearn.cluster.DBSCAN" class="sphx-glr-backref-module-sklearn-cluster sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">cluster</span><span class="o">.</span><span class="n">DBSCAN</span></a><span class="p">(</span><span class="n">eps</span><span class="o">=</span><span class="n">params</span><span class="p">[</span><span class="s2">&quot;eps&quot;</span><span class="p">])</span>
+    <span class="n">hdbscan</span> <span class="o">=</span> <a href="../../modules/generated/sklearn.cluster.HDBSCAN.html#sklearn.cluster.HDBSCAN" title="sklearn.cluster.HDBSCAN" class="sphx-glr-backref-module-sklearn-cluster sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">cluster</span><span class="o">.</span><span class="n">HDBSCAN</span></a><span class="p">(</span>
+        <span class="n">min_samples</span><span class="o">=</span><span class="n">params</span><span class="p">[</span><span class="s2">&quot;hdbscan_min_samples&quot;</span><span class="p">],</span>
+        <span class="n">min_cluster_size</span><span class="o">=</span><span class="n">params</span><span class="p">[</span><span class="s2">&quot;hdbscan_min_cluster_size&quot;</span><span class="p">],</span>
+        <span class="n">allow_single_cluster</span><span class="o">=</span><span class="n">params</span><span class="p">[</span><span class="s2">&quot;allow_single_cluster&quot;</span><span class="p">],</span>
+    <span class="p">)</span>
     <span class="n">optics</span> <span class="o">=</span> <a href="../../modules/generated/sklearn.cluster.OPTICS.html#sklearn.cluster.OPTICS" title="sklearn.cluster.OPTICS" class="sphx-glr-backref-module-sklearn-cluster sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">cluster</span><span class="o">.</span><span class="n">OPTICS</span></a><span class="p">(</span>
         <span class="n">min_samples</span><span class="o">=</span><span class="n">params</span><span class="p">[</span><span class="s2">&quot;min_samples&quot;</span><span class="p">],</span>
         <span class="n">xi</span><span class="o">=</span><span class="n">params</span><span class="p">[</span><span class="s2">&quot;xi&quot;</span><span class="p">],</span>
@@ -370,6 +378,7 @@ dimensional data.</p>
         <span class="p">(</span><span class="s2">&quot;Ward&quot;</span><span class="p">,</span> <span class="n">ward</span><span class="p">),</span>
         <span class="p">(</span><span class="s2">&quot;Agglomerative</span><span class="se">\n</span><span class="s2">Clustering&quot;</span><span class="p">,</span> <span class="n">average_linkage</span><span class="p">),</span>
         <span class="p">(</span><span class="s2">&quot;DBSCAN&quot;</span><span class="p">,</span> <span class="n">dbscan</span><span class="p">),</span>
+        <span class="p">(</span><span class="s2">&quot;HDBSCAN&quot;</span><span class="p">,</span> <span class="n">hdbscan</span><span class="p">),</span>
         <span class="p">(</span><span class="s2">&quot;OPTICS&quot;</span><span class="p">,</span> <span class="n">optics</span><span class="p">),</span>
         <span class="p">(</span><span class="s2">&quot;BIRCH&quot;</span><span class="p">,</span> <span class="n">birch</span><span class="p">),</span>
         <span class="p">(</span><span class="s2">&quot;Gaussian</span><span class="se">\n</span><span class="s2">Mixture&quot;</span><span class="p">,</span> <span class="n">gmm</span><span class="p">),</span>
@@ -446,7 +455,7 @@ dimensional data.</p>
 <a href="https://matplotlib.org/stable/api/_as_gen/matplotlib.pyplot.show.html#matplotlib.pyplot.show" title="matplotlib.pyplot.show" class="sphx-glr-backref-module-matplotlib-pyplot sphx-glr-backref-type-py-function"><span class="n">plt</span><span class="o">.</span><span class="n">show</span></a><span class="p">()</span>
 </pre></div>
 </div>
-<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> ( 0 minutes  5.971 seconds)</p>
+<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> ( 0 minutes  5.954 seconds)</p>
 <div class="sphx-glr-footer sphx-glr-footer-example docutils container" id="sphx-glr-download-auto-examples-cluster-plot-cluster-comparison-py">
 <div class="binder-badge docutils container">
 <a class="reference external image-reference" href="https://mybinder.org/v2/gh/scikit-learn/scikit-learn/main?urlpath=lab/tree/notebooks/auto_examples/cluster/plot_cluster_comparison.ipynb"><img alt="Launch binder" src="../../_images/binder_badge_logo4.svg" width="150px" /></a>
