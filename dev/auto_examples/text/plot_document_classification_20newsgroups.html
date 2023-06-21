@@ -225,9 +225,10 @@ to other posts. The <code class="docutils literal notranslate"><span class="pre"
 parameter named <code class="docutils literal notranslate"><span class="pre">remove</span></code> to attempt stripping such information that can make
 the classification problem “too easy”. This is achieved using simple
 heuristics that are neither perfect nor standard, hence disabled by default.</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">sklearn.datasets</span> <span class="kn">import</span> <a href="../../modules/generated/sklearn.datasets.fetch_20newsgroups.html#sklearn.datasets.fetch_20newsgroups" title="sklearn.datasets.fetch_20newsgroups" class="sphx-glr-backref-module-sklearn-datasets sphx-glr-backref-type-py-function"><span class="n">fetch_20newsgroups</span></a>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">time</span> <span class="kn">import</span> <a href="https://docs.python.org/3/library/time.html#time.time" title="time.time" class="sphx-glr-backref-module-time sphx-glr-backref-type-py-function"><span class="n">time</span></a>
+
+<span class="kn">from</span> <span class="nn">sklearn.datasets</span> <span class="kn">import</span> <a href="../../modules/generated/sklearn.datasets.fetch_20newsgroups.html#sklearn.datasets.fetch_20newsgroups" title="sklearn.datasets.fetch_20newsgroups" class="sphx-glr-backref-module-sklearn-datasets sphx-glr-backref-type-py-function"><span class="n">fetch_20newsgroups</span></a>
 <span class="kn">from</span> <span class="nn">sklearn.feature_extraction.text</span> <span class="kn">import</span> <a href="../../modules/generated/sklearn.feature_extraction.text.TfidfVectorizer.html#sklearn.feature_extraction.text.TfidfVectorizer" title="sklearn.feature_extraction.text.TfidfVectorizer" class="sphx-glr-backref-module-sklearn-feature_extraction-text sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">TfidfVectorizer</span></a>
-<span class="kn">from</span> <span class="nn">time</span> <span class="kn">import</span> <a href="https://docs.python.org/3/library/time.html#time.time" title="time.time" class="sphx-glr-backref-module-time sphx-glr-backref-type-py-function"><span class="n">time</span></a>
 
 <span class="n">categories</span> <span class="o">=</span> <span class="p">[</span>
     <span class="s2">&quot;alt.atheism&quot;</span><span class="p">,</span>
@@ -326,9 +327,9 @@ metadata stripping.</p>
 <div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>2034 documents - 3.98MB (training set)
 1353 documents - 2.87MB (test set)
 4 categories
-vectorize training done in 0.394s at 10.100MB/s
+vectorize training done in 0.352s at 11.294MB/s
 n_samples: 2034, n_features: 7831
-vectorize testing done in 0.245s at 11.711MB/s
+vectorize testing done in 0.223s at 12.836MB/s
 n_samples: 1353, n_features: 7831
 </pre></div>
 </div>
@@ -350,6 +351,7 @@ but it is often faster to train.</p>
 <p>We plot the confusion matrix of this classifier to find if there is a pattern
 in the classification errors.</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+
 <span class="kn">from</span> <span class="nn">sklearn.metrics</span> <span class="kn">import</span> <span class="n">ConfusionMatrixDisplay</span>
 
 <span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <a href="https://matplotlib.org/stable/api/_as_gen/matplotlib.pyplot.subplots.html#matplotlib.pyplot.subplots" title="matplotlib.pyplot.subplots" class="sphx-glr-backref-module-matplotlib-pyplot sphx-glr-backref-type-py-function"><span class="n">plt</span><span class="o">.</span><span class="n">subplots</span></a><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">5</span><span class="p">))</span>
@@ -371,8 +373,8 @@ asymmetry. It could be the case that the vocabulary of the space topic could
 be more specific than the vocabulary for computer graphics.</p>
 <p>We can gain a deeper understanding of how this classifier makes its decisions
 by looking at the words with the highest average feature effects:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
-<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
 
 
 <span class="k">def</span> <span class="nf">plot_feature_effects</span><span class="p">():</span>
@@ -618,8 +620,8 @@ classification problem and measure both their generalization performance
 (accuracy on the test set) and their computation performance (speed), both at
 training time and testing time. For such purpose we define the following
 benchmarking utilities:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">sklearn.utils.extmath</span> <span class="kn">import</span> <a href="../../modules/generated/sklearn.utils.extmath.density.html#sklearn.utils.extmath.density" title="sklearn.utils.extmath.density" class="sphx-glr-backref-module-sklearn-utils-extmath sphx-glr-backref-type-py-function"><span class="n">density</span></a>
-<span class="kn">from</span> <span class="nn">sklearn</span> <span class="kn">import</span> <span class="n">metrics</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">sklearn</span> <span class="kn">import</span> <span class="n">metrics</span>
+<span class="kn">from</span> <span class="nn">sklearn.utils.extmath</span> <span class="kn">import</span> <a href="../../modules/generated/sklearn.utils.extmath.density.html#sklearn.utils.extmath.density" title="sklearn.utils.extmath.density" class="sphx-glr-backref-module-sklearn-utils-extmath sphx-glr-backref-type-py-function"><span class="n">density</span></a>
 
 
 <span class="k">def</span> <span class="nf">benchmark</span><span class="p">(</span><span class="n">clf</span><span class="p">,</span> <span class="n">custom_name</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
@@ -661,14 +663,11 @@ search procedure not shown in this notebook for the sake of simplicity. See
 the example script
 <a class="reference internal" href="../model_selection/plot_grid_search_text_feature_extraction.html#sphx-glr-auto-examples-model-selection-plot-grid-search-text-feature-extraction-py"><span class="std std-ref">Sample pipeline for text feature extraction and evaluation</span></a>  # noqa: E501
 for a demo on how such tuning can be done.</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">sklearn.linear_model</span> <span class="kn">import</span> <a href="../../modules/generated/sklearn.linear_model.LogisticRegression.html#sklearn.linear_model.LogisticRegression" title="sklearn.linear_model.LogisticRegression" class="sphx-glr-backref-module-sklearn-linear_model sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">LogisticRegression</span></a>
-<span class="kn">from</span> <span class="nn">sklearn.svm</span> <span class="kn">import</span> <a href="../../modules/generated/sklearn.svm.LinearSVC.html#sklearn.svm.LinearSVC" title="sklearn.svm.LinearSVC" class="sphx-glr-backref-module-sklearn-svm sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">LinearSVC</span></a>
-<span class="kn">from</span> <span class="nn">sklearn.linear_model</span> <span class="kn">import</span> <a href="../../modules/generated/sklearn.linear_model.SGDClassifier.html#sklearn.linear_model.SGDClassifier" title="sklearn.linear_model.SGDClassifier" class="sphx-glr-backref-module-sklearn-linear_model sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">SGDClassifier</span></a>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">sklearn.ensemble</span> <span class="kn">import</span> <a href="../../modules/generated/sklearn.ensemble.RandomForestClassifier.html#sklearn.ensemble.RandomForestClassifier" title="sklearn.ensemble.RandomForestClassifier" class="sphx-glr-backref-module-sklearn-ensemble sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">RandomForestClassifier</span></a>
+<span class="kn">from</span> <span class="nn">sklearn.linear_model</span> <span class="kn">import</span> <a href="../../modules/generated/sklearn.linear_model.LogisticRegression.html#sklearn.linear_model.LogisticRegression" title="sklearn.linear_model.LogisticRegression" class="sphx-glr-backref-module-sklearn-linear_model sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">LogisticRegression</span></a><span class="p">,</span> <a href="../../modules/generated/sklearn.linear_model.SGDClassifier.html#sklearn.linear_model.SGDClassifier" title="sklearn.linear_model.SGDClassifier" class="sphx-glr-backref-module-sklearn-linear_model sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">SGDClassifier</span></a>
 <span class="kn">from</span> <span class="nn">sklearn.naive_bayes</span> <span class="kn">import</span> <a href="../../modules/generated/sklearn.naive_bayes.ComplementNB.html#sklearn.naive_bayes.ComplementNB" title="sklearn.naive_bayes.ComplementNB" class="sphx-glr-backref-module-sklearn-naive_bayes sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">ComplementNB</span></a>
-<span class="kn">from</span> <span class="nn">sklearn.neighbors</span> <span class="kn">import</span> <a href="../../modules/generated/sklearn.neighbors.KNeighborsClassifier.html#sklearn.neighbors.KNeighborsClassifier" title="sklearn.neighbors.KNeighborsClassifier" class="sphx-glr-backref-module-sklearn-neighbors sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">KNeighborsClassifier</span></a>
-<span class="kn">from</span> <span class="nn">sklearn.neighbors</span> <span class="kn">import</span> <a href="../../modules/generated/sklearn.neighbors.NearestCentroid.html#sklearn.neighbors.NearestCentroid" title="sklearn.neighbors.NearestCentroid" class="sphx-glr-backref-module-sklearn-neighbors sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">NearestCentroid</span></a>
-<span class="kn">from</span> <span class="nn">sklearn.ensemble</span> <span class="kn">import</span> <a href="../../modules/generated/sklearn.ensemble.RandomForestClassifier.html#sklearn.ensemble.RandomForestClassifier" title="sklearn.ensemble.RandomForestClassifier" class="sphx-glr-backref-module-sklearn-ensemble sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">RandomForestClassifier</span></a>
-
+<span class="kn">from</span> <span class="nn">sklearn.neighbors</span> <span class="kn">import</span> <a href="../../modules/generated/sklearn.neighbors.KNeighborsClassifier.html#sklearn.neighbors.KNeighborsClassifier" title="sklearn.neighbors.KNeighborsClassifier" class="sphx-glr-backref-module-sklearn-neighbors sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">KNeighborsClassifier</span></a><span class="p">,</span> <a href="../../modules/generated/sklearn.neighbors.NearestCentroid.html#sklearn.neighbors.NearestCentroid" title="sklearn.neighbors.NearestCentroid" class="sphx-glr-backref-module-sklearn-neighbors sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">NearestCentroid</span></a>
+<span class="kn">from</span> <span class="nn">sklearn.svm</span> <span class="kn">import</span> <a href="../../modules/generated/sklearn.svm.LinearSVC.html#sklearn.svm.LinearSVC" title="sklearn.svm.LinearSVC" class="sphx-glr-backref-module-sklearn-svm sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">LinearSVC</span></a>
 
 <span class="n">results</span> <span class="o">=</span> <span class="p">[]</span>
 <span class="k">for</span> <span class="n">clf</span><span class="p">,</span> <span class="n">name</span> <span class="ow">in</span> <span class="p">(</span>
@@ -700,8 +699,8 @@ Logistic Regression
 ________________________________________________________________________________
 Training:
 LogisticRegression(C=5, max_iter=1000)
-train time: 0.347s
-test time:  0.000646s
+train time: 0.304s
+test time:  0.000554s
 accuracy:   0.773
 dimensionality: 5316
 density: 1.0
@@ -712,8 +711,8 @@ Ridge Classifier
 ________________________________________________________________________________
 Training:
 RidgeClassifier(solver=&#39;sparse_cg&#39;)
-train time: 0.041s
-test time:  0.000676s
+train time: 0.0356s
+test time:  0.00052s
 accuracy:   0.76
 dimensionality: 5316
 density: 1.0
@@ -724,8 +723,8 @@ kNN
 ________________________________________________________________________________
 Training:
 KNeighborsClassifier(n_neighbors=100)
-train time: 0.00102s
-test time:  5.88s
+train time: 0.000733s
+test time:  5.74s
 accuracy:   0.753
 
 ================================================================================
@@ -733,8 +732,8 @@ Random Forest
 ________________________________________________________________________________
 Training:
 RandomForestClassifier()
-train time: 1.6s
-test time:  0.0745s
+train time: 1.4s
+test time:  0.0621s
 accuracy:   0.704
 
 ================================================================================
@@ -742,8 +741,8 @@ Linear SVC
 ________________________________________________________________________________
 Training:
 LinearSVC(C=0.1, dual=False)
-train time: 0.0329s
-test time:  0.000695s
+train time: 0.0289s
+test time:  0.000489s
 accuracy:   0.752
 dimensionality: 5316
 density: 1.0
@@ -754,8 +753,8 @@ log-loss SGD
 ________________________________________________________________________________
 Training:
 SGDClassifier(early_stopping=True, loss=&#39;log_loss&#39;, n_iter_no_change=3)
-train time: 0.0278s
-test time:  0.000644s
+train time: 0.0242s
+test time:  0.000536s
 accuracy:   0.762
 dimensionality: 5316
 density: 1.0
@@ -766,8 +765,8 @@ NearestCentroid
 ________________________________________________________________________________
 Training:
 NearestCentroid()
-train time: 0.00319s
-test time:  0.00149s
+train time: 0.00261s
+test time:  0.00125s
 accuracy:   0.748
 
 ================================================================================
@@ -775,8 +774,8 @@ Complement naive Bayes
 ________________________________________________________________________________
 Training:
 ComplementNB(alpha=0.1)
-train time: 0.00216s
-test time:  0.000536s
+train time: 0.00182s
+test time:  0.000484s
 accuracy:   0.779
 </pre></div>
 </div>
@@ -839,7 +838,7 @@ document in the training set, which is computationally expensive. Furthermore,
 the “curse of dimensionality” harms the ability of this model to yield
 competitive accuracy in the high dimensional feature space of text
 classification problems.</p>
-<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> ( 0 minutes  12.771 seconds)</p>
+<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> ( 0 minutes  12.048 seconds)</p>
 <div class="sphx-glr-footer sphx-glr-footer-example docutils container" id="sphx-glr-download-auto-examples-text-plot-document-classification-20newsgroups-py">
 <div class="binder-badge docutils container">
 <a class="reference external image-reference" href="https://mybinder.org/v2/gh/scikit-learn/scikit-learn/main?urlpath=lab/tree/notebooks/auto_examples/text/plot_document_classification_20newsgroups.ipynb"><img alt="Launch binder" src="../../_images/binder_badge_logo29.svg" width="150px" /></a>

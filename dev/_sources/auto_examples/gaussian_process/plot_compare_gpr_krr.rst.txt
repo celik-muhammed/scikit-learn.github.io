@@ -218,11 +218,12 @@ between samples in the higher dimensional feature space is computed using the
 
 Thus, let's use such a :class:`~sklearn.kernel_ridge.KernelRidge`.
 
-.. GENERATED FROM PYTHON SOURCE LINES 127-139
+.. GENERATED FROM PYTHON SOURCE LINES 127-140
 
 .. code-block:: default
 
     import time
+
     from sklearn.gaussian_process.kernels import ExpSineSquared
     from sklearn.kernel_ridge import KernelRidge
 
@@ -247,7 +248,7 @@ Thus, let's use such a :class:`~sklearn.kernel_ridge.KernelRidge`.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 140-162
+.. GENERATED FROM PYTHON SOURCE LINES 141-163
 
 .. code-block:: default
 
@@ -285,12 +286,12 @@ Thus, let's use such a :class:`~sklearn.kernel_ridge.KernelRidge`.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 163-165
+.. GENERATED FROM PYTHON SOURCE LINES 164-166
 
 This fitted model is not accurate. Indeed, we did not set the parameters of
 the kernel and instead used the default ones. We can inspect them.
 
-.. GENERATED FROM PYTHON SOURCE LINES 165-167
+.. GENERATED FROM PYTHON SOURCE LINES 166-168
 
 .. code-block:: default
 
@@ -309,7 +310,7 @@ the kernel and instead used the default ones. We can inspect them.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 168-177
+.. GENERATED FROM PYTHON SOURCE LINES 169-178
 
 Our kernel has two parameters: the length-scale and the periodicity. For our
 dataset, we use `sin` as the generative process, implying a
@@ -321,12 +322,13 @@ tell us that the kernel parameters need to be tuned. We will use a randomized
 search to tune the different parameters the kernel ridge model: the `alpha`
 parameter and the kernel parameters.
 
-.. GENERATED FROM PYTHON SOURCE LINES 179-197
+.. GENERATED FROM PYTHON SOURCE LINES 180-199
 
 .. code-block:: default
 
-    from sklearn.model_selection import RandomizedSearchCV
     from scipy.stats import loguniform
+
+    from sklearn.model_selection import RandomizedSearchCV
 
     param_distributions = {
         "alpha": loguniform(1e0, 1e3),
@@ -351,18 +353,18 @@ parameter and the kernel parameters.
 
  .. code-block:: none
 
-    Time for KernelRidge fitting: 3.670 seconds
+    Time for KernelRidge fitting: 3.512 seconds
 
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 198-201
+.. GENERATED FROM PYTHON SOURCE LINES 200-203
 
 Fitting the model is now more computationally expensive since we have to try
 several combinations of hyperparameters. We can have a look at the
 hyperparameters found to get some intuitions.
 
-.. GENERATED FROM PYTHON SOURCE LINES 201-203
+.. GENERATED FROM PYTHON SOURCE LINES 203-205
 
 .. code-block:: default
 
@@ -381,13 +383,13 @@ hyperparameters found to get some intuitions.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 204-207
+.. GENERATED FROM PYTHON SOURCE LINES 206-209
 
 Looking at the best parameters, we see that they are different from the
 defaults. We also see that the periodicity is closer to the expected value:
 :math:`2 \pi`. We can now inspect the predictions of our tuned kernel ridge.
 
-.. GENERATED FROM PYTHON SOURCE LINES 207-211
+.. GENERATED FROM PYTHON SOURCE LINES 209-213
 
 .. code-block:: default
 
@@ -408,7 +410,7 @@ defaults. We also see that the periodicity is closer to the expected value:
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 212-234
+.. GENERATED FROM PYTHON SOURCE LINES 214-236
 
 .. code-block:: default
 
@@ -446,7 +448,7 @@ defaults. We also see that the periodicity is closer to the expected value:
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 235-249
+.. GENERATED FROM PYTHON SOURCE LINES 237-251
 
 We get a much more accurate model. We still observe some errors mainly due to
 the noise added to the dataset.
@@ -463,7 +465,7 @@ for the kernel ridge regressor: we add a
 :class:`~sklearn.gaussian_process.kernels.WhiteKernel` that is used to
 estimate the noise in the dataset.
 
-.. GENERATED FROM PYTHON SOURCE LINES 249-262
+.. GENERATED FROM PYTHON SOURCE LINES 251-264
 
 .. code-block:: default
 
@@ -488,18 +490,18 @@ estimate the noise in the dataset.
 
  .. code-block:: none
 
-    Time for GaussianProcessRegressor fitting: 0.030 seconds
+    Time for GaussianProcessRegressor fitting: 0.029 seconds
 
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 263-266
+.. GENERATED FROM PYTHON SOURCE LINES 265-268
 
 The computation cost of training a Gaussian process is much less than the
 kernel ridge that uses a randomized search. We can check the parameters of
 the kernels that we computed.
 
-.. GENERATED FROM PYTHON SOURCE LINES 266-268
+.. GENERATED FROM PYTHON SOURCE LINES 268-270
 
 .. code-block:: default
 
@@ -518,14 +520,14 @@ the kernels that we computed.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 269-273
+.. GENERATED FROM PYTHON SOURCE LINES 271-275
 
 Indeed, we see that the parameters have been optimized. Looking at the
 `periodicity` parameter, we see that we found a period close to the
 theoretical value :math:`2 \pi`. We can have a look now at the predictions of
 our model.
 
-.. GENERATED FROM PYTHON SOURCE LINES 273-282
+.. GENERATED FROM PYTHON SOURCE LINES 275-284
 
 .. code-block:: default
 
@@ -551,7 +553,7 @@ our model.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 283-318
+.. GENERATED FROM PYTHON SOURCE LINES 285-320
 
 .. code-block:: default
 
@@ -602,7 +604,7 @@ our model.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 319-342
+.. GENERATED FROM PYTHON SOURCE LINES 321-344
 
 We observe that the results of the kernel ridge and the Gaussian process
 regressor are close. However, the Gaussian process regressor also provide
@@ -628,7 +630,7 @@ Gaussian process allows to combine kernels together. Thus, we could associate
 the exponential sine squared kernel together with a radial basis function
 kernel.
 
-.. GENERATED FROM PYTHON SOURCE LINES 342-354
+.. GENERATED FROM PYTHON SOURCE LINES 344-356
 
 .. code-block:: default
 
@@ -651,7 +653,7 @@ kernel.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 355-390
+.. GENERATED FROM PYTHON SOURCE LINES 357-392
 
 .. code-block:: default
 
@@ -702,7 +704,7 @@ kernel.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 391-396
+.. GENERATED FROM PYTHON SOURCE LINES 393-398
 
 The effect of using a radial basis function kernel will attenuate the
 periodicity effect once that no sample are available in the training.
@@ -713,7 +715,7 @@ also increases.
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** ( 0 minutes  4.383 seconds)
+   **Total running time of the script:** ( 0 minutes  4.208 seconds)
 
 
 .. _sphx_glr_download_auto_examples_gaussian_process_plot_compare_gpr_krr.py:

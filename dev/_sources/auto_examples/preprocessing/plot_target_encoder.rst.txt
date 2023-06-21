@@ -209,14 +209,12 @@ In this section, we will evaluate pipelines with
 strategies. First, we list out the encoders we will be using to preprocess
 the categorical features:
 
-.. GENERATED FROM PYTHON SOURCE LINES 57-72
+.. GENERATED FROM PYTHON SOURCE LINES 57-70
 
 .. code-block:: default
 
     from sklearn.compose import ColumnTransformer
-    from sklearn.preprocessing import OrdinalEncoder
-    from sklearn.preprocessing import OneHotEncoder
-    from sklearn.preprocessing import TargetEncoder
+    from sklearn.preprocessing import OneHotEncoder, OrdinalEncoder, TargetEncoder
 
     categorical_preprocessors = [
         ("drop", "drop"),
@@ -235,17 +233,17 @@ the categorical features:
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 73-74
+.. GENERATED FROM PYTHON SOURCE LINES 71-72
 
 Next, we evaluate the models using cross validation and record the results:
 
-.. GENERATED FROM PYTHON SOURCE LINES 74-118
+.. GENERATED FROM PYTHON SOURCE LINES 72-116
 
 .. code-block:: default
 
-    from sklearn.pipeline import make_pipeline
-    from sklearn.model_selection import cross_validate
     from sklearn.ensemble import HistGradientBoostingRegressor
+    from sklearn.model_selection import cross_validate
+    from sklearn.pipeline import make_pipeline
 
     n_cv_folds = 3
     max_iter = 20
@@ -294,7 +292,7 @@ Next, we evaluate the models using cross validation and record the results:
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 119-125
+.. GENERATED FROM PYTHON SOURCE LINES 117-123
 
 Native Categorical Feature Support
 ==================================
@@ -303,7 +301,7 @@ feature support in :class:`~sklearn.ensemble.HistGradientBoostingRegressor`,
 which only supports up to 255 unique categories. In our dataset, the most of
 the categorical features have more than 255 unique categories:
 
-.. GENERATED FROM PYTHON SOURCE LINES 125-128
+.. GENERATED FROM PYTHON SOURCE LINES 123-126
 
 .. code-block:: default
 
@@ -329,14 +327,14 @@ the categorical features have more than 255 unique categories:
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 129-133
+.. GENERATED FROM PYTHON SOURCE LINES 127-131
 
 To workaround the limitation above, we group the categorical features into
 low cardinality and high cardinality features. The high cardinality features
 will be target encoded and the low cardinality features will use the native
 categorical feature in gradient boosting.
 
-.. GENERATED FROM PYTHON SOURCE LINES 133-163
+.. GENERATED FROM PYTHON SOURCE LINES 131-161
 
 .. code-block:: default
 
@@ -418,11 +416,11 @@ categorical feature in gradient boosting.
     <br />
     <br />
 
-.. GENERATED FROM PYTHON SOURCE LINES 164-165
+.. GENERATED FROM PYTHON SOURCE LINES 162-163
 
 Finally, we evaluate the pipeline using cross validation and record the results:
 
-.. GENERATED FROM PYTHON SOURCE LINES 165-167
+.. GENERATED FROM PYTHON SOURCE LINES 163-165
 
 .. code-block:: default
 
@@ -435,13 +433,13 @@ Finally, we evaluate the pipeline using cross validation and record the results:
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 168-171
+.. GENERATED FROM PYTHON SOURCE LINES 166-169
 
 Plotting the Results
 ====================
 In this section, we display the results by plotting the test and train scores:
 
-.. GENERATED FROM PYTHON SOURCE LINES 171-203
+.. GENERATED FROM PYTHON SOURCE LINES 169-201
 
 .. code-block:: default
 
@@ -489,7 +487,7 @@ In this section, we display the results by plotting the test and train scores:
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 204-228
+.. GENERATED FROM PYTHON SOURCE LINES 202-226
 
 When evaluating the predictive performance on the test set, dropping the
 categories perform the worst and the target encoders performs the best. This
@@ -519,7 +517,7 @@ can be explained as follows:
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** ( 0 minutes  25.420 seconds)
+   **Total running time of the script:** ( 0 minutes  23.594 seconds)
 
 
 .. _sphx_glr_download_auto_examples_preprocessing_plot_target_encoder.py:

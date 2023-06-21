@@ -62,12 +62,13 @@ the other 2; the latter are **not** linearly separable from each other.
 
 Here we binarize the output and add noisy features to make the problem harder.
 
-.. GENERATED FROM PYTHON SOURCE LINES 45-66
+.. GENERATED FROM PYTHON SOURCE LINES 45-67
 
 .. code-block:: default
 
 
     import numpy as np
+
     from sklearn.datasets import load_iris
     from sklearn.model_selection import train_test_split
 
@@ -94,13 +95,13 @@ Here we binarize the output and add noisy features to make the problem harder.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 67-70
+.. GENERATED FROM PYTHON SOURCE LINES 68-71
 
 We train a :class:`~sklearn.linear_model.LogisticRegression` model which can
 naturally handle multiclass problems, thanks to the use of the multinomial
 formulation.
 
-.. GENERATED FROM PYTHON SOURCE LINES 70-76
+.. GENERATED FROM PYTHON SOURCE LINES 71-77
 
 .. code-block:: default
 
@@ -117,7 +118,7 @@ formulation.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 77-96
+.. GENERATED FROM PYTHON SOURCE LINES 78-97
 
 One-vs-Rest multiclass ROC
 ==========================
@@ -139,7 +140,7 @@ binarize the target by one-hot-encoding in a OvR fashion. This means that the
 target of shape (`n_samples`,) is mapped to a target of shape (`n_samples`,
 `n_classes`).
 
-.. GENERATED FROM PYTHON SOURCE LINES 96-103
+.. GENERATED FROM PYTHON SOURCE LINES 97-104
 
 .. code-block:: default
 
@@ -163,11 +164,11 @@ target of shape (`n_samples`,) is mapped to a target of shape (`n_samples`,
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 104-105
+.. GENERATED FROM PYTHON SOURCE LINES 105-106
 
 We can as well easily check the encoding of a specific class:
 
-.. GENERATED FROM PYTHON SOURCE LINES 105-108
+.. GENERATED FROM PYTHON SOURCE LINES 106-109
 
 .. code-block:: default
 
@@ -187,7 +188,7 @@ We can as well easily check the encoding of a specific class:
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 109-114
+.. GENERATED FROM PYTHON SOURCE LINES 110-115
 
 ROC curve showing a specific class
 ----------------------------------
@@ -195,7 +196,7 @@ ROC curve showing a specific class
 In the following plot we show the resulting ROC curve when regarding the iris
 flowers as either "virginica" (`class_id=2`) or "non-virginica" (the rest).
 
-.. GENERATED FROM PYTHON SOURCE LINES 114-119
+.. GENERATED FROM PYTHON SOURCE LINES 115-120
 
 .. code-block:: default
 
@@ -217,11 +218,12 @@ flowers as either "virginica" (`class_id=2`) or "non-virginica" (the rest).
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 120-137
+.. GENERATED FROM PYTHON SOURCE LINES 121-139
 
 .. code-block:: default
 
     import matplotlib.pyplot as plt
+
     from sklearn.metrics import RocCurveDisplay
 
     RocCurveDisplay.from_predictions(
@@ -250,7 +252,7 @@ flowers as either "virginica" (`class_id=2`) or "non-virginica" (the rest).
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 138-149
+.. GENERATED FROM PYTHON SOURCE LINES 140-151
 
 ROC curve using micro-averaged OvR
 ----------------------------------
@@ -264,7 +266,7 @@ Micro-averaging aggregates the contributions from all the classes (using
 
 We can briefly demo the effect of :func:`np.ravel`:
 
-.. GENERATED FROM PYTHON SOURCE LINES 149-154
+.. GENERATED FROM PYTHON SOURCE LINES 151-156
 
 .. code-block:: default
 
@@ -291,13 +293,13 @@ We can briefly demo the effect of :func:`np.ravel`:
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 155-158
+.. GENERATED FROM PYTHON SOURCE LINES 157-160
 
 In a multi-class classification setup with highly imbalanced classes,
 micro-averaging is preferable over macro-averaging. In such cases, one can
 alternatively use a weighted macro-averaging, not demoed here.
 
-.. GENERATED FROM PYTHON SOURCE LINES 158-173
+.. GENERATED FROM PYTHON SOURCE LINES 160-175
 
 .. code-block:: default
 
@@ -328,13 +330,13 @@ alternatively use a weighted macro-averaging, not demoed here.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 174-177
+.. GENERATED FROM PYTHON SOURCE LINES 176-179
 
 In the case where the main interest is not the plot but the ROC-AUC score
 itself, we can reproduce the value shown in the plot using
 :class:`~sklearn.metrics.roc_auc_score`.
 
-.. GENERATED FROM PYTHON SOURCE LINES 177-189
+.. GENERATED FROM PYTHON SOURCE LINES 179-191
 
 .. code-block:: default
 
@@ -364,18 +366,18 @@ itself, we can reproduce the value shown in the plot using
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 190-193
+.. GENERATED FROM PYTHON SOURCE LINES 192-195
 
 This is equivalent to computing the ROC curve with
 :class:`~sklearn.metrics.roc_curve` and then the area under the curve with
 :class:`~sklearn.metrics.auc` for the raveled true and predicted classes.
 
-.. GENERATED FROM PYTHON SOURCE LINES 193-204
+.. GENERATED FROM PYTHON SOURCE LINES 195-206
 
 .. code-block:: default
 
 
-    from sklearn.metrics import roc_curve, auc
+    from sklearn.metrics import auc, roc_curve
 
     # store the fpr, tpr, and roc_auc for all averaging strategies
     fpr, tpr, roc_auc = dict(), dict(), dict()
@@ -399,7 +401,7 @@ This is equivalent to computing the ROC curve with
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 205-216
+.. GENERATED FROM PYTHON SOURCE LINES 207-218
 
 .. note:: By default, the computation of the ROC curve adds a single point at
     the maximal false positive rate by using linear interpolation and the
@@ -413,7 +415,7 @@ Obtaining the macro-average requires computing the metric independently for
 each class and then taking the average over them, hence treating all classes
 equally a priori. We first aggregate the true/false positive rates per class:
 
-.. GENERATED FROM PYTHON SOURCE LINES 216-238
+.. GENERATED FROM PYTHON SOURCE LINES 218-240
 
 .. code-block:: default
 
@@ -453,11 +455,11 @@ equally a priori. We first aggregate the true/false positive rates per class:
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 239-240
+.. GENERATED FROM PYTHON SOURCE LINES 241-242
 
 This computation is equivalent to simply calling
 
-.. GENERATED FROM PYTHON SOURCE LINES 240-250
+.. GENERATED FROM PYTHON SOURCE LINES 242-252
 
 .. code-block:: default
 
@@ -485,12 +487,12 @@ This computation is equivalent to simply calling
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 251-253
+.. GENERATED FROM PYTHON SOURCE LINES 253-255
 
 Plot all OvR ROC curves together
 --------------------------------
 
-.. GENERATED FROM PYTHON SOURCE LINES 253-294
+.. GENERATED FROM PYTHON SOURCE LINES 255-296
 
 .. code-block:: default
 
@@ -547,7 +549,7 @@ Plot all OvR ROC curves together
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 295-316
+.. GENERATED FROM PYTHON SOURCE LINES 297-318
 
 One-vs-One multiclass ROC
 =========================
@@ -571,7 +573,7 @@ the elements in a given pair as the positive class and the other element as
 the negative class, then re-computing the score by inversing the roles and
 taking the mean of both scores.
 
-.. GENERATED FROM PYTHON SOURCE LINES 316-322
+.. GENERATED FROM PYTHON SOURCE LINES 318-324
 
 .. code-block:: default
 
@@ -594,7 +596,7 @@ taking the mean of both scores.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 323-377
+.. GENERATED FROM PYTHON SOURCE LINES 325-379
 
 .. code-block:: default
 
@@ -690,13 +692,13 @@ taking the mean of both scores.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 378-381
+.. GENERATED FROM PYTHON SOURCE LINES 380-383
 
 One can also assert that the macro-average we computed "by hand" is equivalent
 to the implemented `average="macro"` option of the
 :class:`~sklearn.metrics.roc_auc_score` function.
 
-.. GENERATED FROM PYTHON SOURCE LINES 381-391
+.. GENERATED FROM PYTHON SOURCE LINES 383-393
 
 .. code-block:: default
 
@@ -724,12 +726,12 @@ to the implemented `average="macro"` option of the
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 392-394
+.. GENERATED FROM PYTHON SOURCE LINES 394-396
 
 Plot all OvO ROC curves together
 --------------------------------
 
-.. GENERATED FROM PYTHON SOURCE LINES 394-423
+.. GENERATED FROM PYTHON SOURCE LINES 396-425
 
 .. code-block:: default
 
@@ -774,7 +776,7 @@ Plot all OvO ROC curves together
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 424-441
+.. GENERATED FROM PYTHON SOURCE LINES 426-443
 
 We confirm that the classes "versicolor" and "virginica" are not well
 identified by a linear classifier. Notice that the "virginica"-vs-the-rest
@@ -797,7 +799,7 @@ performance on all the classes is deemed equally important.
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** ( 0 minutes  0.773 seconds)
+   **Total running time of the script:** ( 0 minutes  0.768 seconds)
 
 
 .. _sphx_glr_download_auto_examples_model_selection_plot_roc.py:

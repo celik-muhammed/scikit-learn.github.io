@@ -75,12 +75,13 @@ as `"headers"`, `"footers"` (signatures) and `"quotes"` to other posts. We use
 the `remove` parameter from :func:`~sklearn.datasets.fetch_20newsgroups` to
 strip those features and have a more sensible clustering problem.
 
-.. GENERATED FROM PYTHON SOURCE LINES 47-72
+.. GENERATED FROM PYTHON SOURCE LINES 47-73
 
 .. code-block:: default
 
 
     import numpy as np
+
     from sklearn.datasets import fetch_20newsgroups
 
     categories = [
@@ -117,7 +118,7 @@ strip those features and have a more sensible clustering problem.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 73-105
+.. GENERATED FROM PYTHON SOURCE LINES 74-106
 
 Quantifying the quality of clustering results
 =============================================
@@ -152,14 +153,15 @@ in handy.
 
 For more reference, see :ref:`clustering_evaluation`.
 
-.. GENERATED FROM PYTHON SOURCE LINES 105-153
+.. GENERATED FROM PYTHON SOURCE LINES 106-155
 
 .. code-block:: default
 
 
     from collections import defaultdict
-    from sklearn import metrics
     from time import time
+
+    from sklearn import metrics
 
     evaluations = []
     evaluations_std = []
@@ -211,7 +213,7 @@ For more reference, see :ref:`clustering_evaluation`.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 154-181
+.. GENERATED FROM PYTHON SOURCE LINES 156-183
 
 K-means clustering on text features
 ===================================
@@ -241,7 +243,7 @@ We first benchmark the estimators using a dictionary vectorizer along with an
 IDF normalization as provided by
 :class:`~sklearn.feature_extraction.text.TfidfVectorizer`.
 
-.. GENERATED FROM PYTHON SOURCE LINES 181-195
+.. GENERATED FROM PYTHON SOURCE LINES 183-197
 
 .. code-block:: default
 
@@ -267,13 +269,13 @@ IDF normalization as provided by
 
  .. code-block:: none
 
-    vectorization done in 0.431 s
+    vectorization done in 0.370 s
     n_samples: 3387, n_features: 7929
 
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 196-201
+.. GENERATED FROM PYTHON SOURCE LINES 198-203
 
 After ignoring terms that appear in more than 50% of the documents (as set by
 `max_df=0.5`) and terms that are not present in at least 5 documents (set by
@@ -281,7 +283,7 @@ After ignoring terms that appear in more than 50% of the documents (as set by
 8,000. We can additionally quantify the sparsity of the `X_tfidf` matrix as
 the fraction of non-zero entries divided by the total number of elements.
 
-.. GENERATED FROM PYTHON SOURCE LINES 201-204
+.. GENERATED FROM PYTHON SOURCE LINES 203-206
 
 .. code-block:: default
 
@@ -301,7 +303,7 @@ the fraction of non-zero entries divided by the total number of elements.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 205-222
+.. GENERATED FROM PYTHON SOURCE LINES 207-224
 
 We find that around 0.7% of the entries of the `X_tfidf` matrix are non-zero.
 
@@ -321,7 +323,7 @@ along.
 The following code illustrates how the previous phenomenon can sometimes lead
 to highly imbalanced clusters, depending on the random initialization:
 
-.. GENERATED FROM PYTHON SOURCE LINES 222-240
+.. GENERATED FROM PYTHON SOURCE LINES 224-242
 
 .. code-block:: default
 
@@ -362,13 +364,13 @@ to highly imbalanced clusters, depending on the random initialization:
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 241-244
+.. GENERATED FROM PYTHON SOURCE LINES 243-246
 
 To avoid this problem, one possibility is to increase the number of runs with
 independent random initiations `n_init`. In such case the clustering with the
 best inertia (objective function of k-means) is chosen.
 
-.. GENERATED FROM PYTHON SOURCE LINES 244-253
+.. GENERATED FROM PYTHON SOURCE LINES 246-255
 
 .. code-block:: default
 
@@ -389,7 +391,7 @@ best inertia (objective function of k-means) is chosen.
 
  .. code-block:: none
 
-    clustering done in 0.21 ± 0.06 s 
+    clustering done in 0.17 ± 0.03 s 
     Homogeneity: 0.358 ± 0.007
     Completeness: 0.405 ± 0.005
     V-measure: 0.380 ± 0.005
@@ -399,7 +401,7 @@ best inertia (objective function of k-means) is chosen.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 254-275
+.. GENERATED FROM PYTHON SOURCE LINES 256-277
 
 All those clustering evaluation metrics have a maximum value of 1.0 (for a
 perfect clustering result). Higher values are better. Values of the Adjusted
@@ -423,7 +425,7 @@ dimensionality of TF-IDF document vectors is often known as `latent semantic
 analysis <https://en.wikipedia.org/wiki/Latent_semantic_analysis>`_ (LSA) in
 the information retrieval and text mining literature.
 
-.. GENERATED FROM PYTHON SOURCE LINES 275-289
+.. GENERATED FROM PYTHON SOURCE LINES 277-290
 
 .. code-block:: default
 
@@ -431,7 +433,6 @@ the information retrieval and text mining literature.
     from sklearn.decomposition import TruncatedSVD
     from sklearn.pipeline import make_pipeline
     from sklearn.preprocessing import Normalizer
-
 
     lsa = make_pipeline(TruncatedSVD(n_components=100), Normalizer(copy=False))
     t0 = time()
@@ -449,19 +450,19 @@ the information retrieval and text mining literature.
 
  .. code-block:: none
 
-    LSA done in 0.375 s
+    LSA done in 0.321 s
     Explained variance of the SVD step: 18.4%
 
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 290-293
+.. GENERATED FROM PYTHON SOURCE LINES 291-294
 
 Using a single initialization means the processing time will be reduced for
 both :class:`~sklearn.cluster.KMeans` and
 :class:`~sklearn.cluster.MiniBatchKMeans`.
 
-.. GENERATED FROM PYTHON SOURCE LINES 293-302
+.. GENERATED FROM PYTHON SOURCE LINES 294-303
 
 .. code-block:: default
 
@@ -482,7 +483,7 @@ both :class:`~sklearn.cluster.KMeans` and
 
  .. code-block:: none
 
-    clustering done in 0.02 ± 0.01 s 
+    clustering done in 0.02 ± 0.00 s 
     Homogeneity: 0.398 ± 0.010
     Completeness: 0.435 ± 0.015
     V-measure: 0.416 ± 0.010
@@ -492,7 +493,7 @@ both :class:`~sklearn.cluster.KMeans` and
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 303-308
+.. GENERATED FROM PYTHON SOURCE LINES 304-309
 
 We can observe that clustering on the LSA representation of the document is
 significantly faster (both because of `n_init=1` and because the
@@ -500,7 +501,7 @@ dimensionality of the LSA feature space is much smaller). Furthermore, all the
 clustering evaluation metrics have improved. We repeat the experiment with
 :class:`~sklearn.cluster.MiniBatchKMeans`.
 
-.. GENERATED FROM PYTHON SOURCE LINES 308-324
+.. GENERATED FROM PYTHON SOURCE LINES 309-325
 
 .. code-block:: default
 
@@ -538,7 +539,7 @@ clustering evaluation metrics have improved. We repeat the experiment with
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 325-333
+.. GENERATED FROM PYTHON SOURCE LINES 326-334
 
 Top terms per cluster
 ---------------------
@@ -549,7 +550,7 @@ the most influential words **for each cluster**. See the example script
 :ref:`sphx_glr_auto_examples_text_plot_document_classification_20newsgroups.py`
 for a comparison with the most predictive words **for each target class**.
 
-.. GENERATED FROM PYTHON SOURCE LINES 333-344
+.. GENERATED FROM PYTHON SOURCE LINES 334-345
 
 .. code-block:: default
 
@@ -580,7 +581,7 @@ for a comparison with the most predictive words **for each target class**.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 345-355
+.. GENERATED FROM PYTHON SOURCE LINES 346-356
 
 HashingVectorizer
 -----------------
@@ -593,13 +594,12 @@ does nothing). When IDF weighting is needed it can be added by pipelining the
 case we also add LSA to the pipeline to reduce the dimension and sparcity of
 the hashed vector space.
 
-.. GENERATED FROM PYTHON SOURCE LINES 355-370
+.. GENERATED FROM PYTHON SOURCE LINES 356-370
 
 .. code-block:: default
 
 
-    from sklearn.feature_extraction.text import HashingVectorizer
-    from sklearn.feature_extraction.text import TfidfTransformer
+    from sklearn.feature_extraction.text import HashingVectorizer, TfidfTransformer
 
     lsa_vectorizer = make_pipeline(
         HashingVectorizer(stop_words="english", n_features=50_000),
@@ -620,7 +620,7 @@ the hashed vector space.
 
  .. code-block:: none
 
-    vectorization done in 1.840 s
+    vectorization done in 1.508 s
 
 
 
@@ -703,8 +703,8 @@ Clustering evaluation summary
 .. code-block:: default
 
 
-    import pandas as pd
     import matplotlib.pyplot as plt
+    import pandas as pd
 
     fig, (ax0, ax1) = plt.subplots(ncols=2, figsize=(16, 6), sharey=True)
 
@@ -774,7 +774,7 @@ quality compared to the traditional k-means algorithm.
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** ( 0 minutes  8.116 seconds)
+   **Total running time of the script:** ( 0 minutes  7.011 seconds)
 
 
 .. _sphx_glr_download_auto_examples_text_plot_document_clustering.py:

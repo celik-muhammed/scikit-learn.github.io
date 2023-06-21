@@ -206,12 +206,13 @@ First we benchmark the :func:`~sklearn.feature_extraction.DictVectorizer`,
 then we compare it to :func:`~sklearn.feature_extraction.FeatureHasher` as
 both of them receive dictionaries as input.
 
-.. GENERATED FROM PYTHON SOURCE LINES 119-136
+.. GENERATED FROM PYTHON SOURCE LINES 119-137
 
 .. code-block:: default
 
 
     from time import time
+
     from sklearn.feature_extraction import DictVectorizer
 
     dict_count_vectorizers = defaultdict(list)
@@ -235,19 +236,19 @@ both of them receive dictionaries as input.
 
  .. code-block:: none
 
-    done in 1.135 s at 5.5 MB/s
+    done in 0.987 s at 6.3 MB/s
     Found 47928 unique terms
 
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 137-140
+.. GENERATED FROM PYTHON SOURCE LINES 138-141
 
 The actual mapping from text token to column index is explicitly stored in
 the `.vocabulary_` attribute which is a potentially very large Python
 dictionary:
 
-.. GENERATED FROM PYTHON SOURCE LINES 140-142
+.. GENERATED FROM PYTHON SOURCE LINES 141-143
 
 .. code-block:: default
 
@@ -260,7 +261,7 @@ dictionary:
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 143-145
+.. GENERATED FROM PYTHON SOURCE LINES 144-146
 
 .. code-block:: default
 
@@ -279,7 +280,7 @@ dictionary:
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 146-148
+.. GENERATED FROM PYTHON SOURCE LINES 147-149
 
 .. code-block:: default
 
@@ -298,7 +299,7 @@ dictionary:
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 149-165
+.. GENERATED FROM PYTHON SOURCE LINES 150-166
 
 FeatureHasher
 -------------
@@ -317,7 +318,7 @@ feature matrix and the best approach to estimate the number of unique terms in
 the original dictionary is to count the number of active columns in the
 encoded feature matrix. For such a purpose we define the following function:
 
-.. GENERATED FROM PYTHON SOURCE LINES 165-178
+.. GENERATED FROM PYTHON SOURCE LINES 166-179
 
 .. code-block:: default
 
@@ -341,7 +342,7 @@ encoded feature matrix. For such a purpose we define the following function:
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 179-184
+.. GENERATED FROM PYTHON SOURCE LINES 180-185
 
 The default number of features for the
 :func:`~sklearn.feature_extraction.FeatureHasher` is 2**20. Here we set
@@ -349,7 +350,7 @@ The default number of features for the
 
 **FeatureHasher on frequency dictionaries**
 
-.. GENERATED FROM PYTHON SOURCE LINES 184-198
+.. GENERATED FROM PYTHON SOURCE LINES 185-199
 
 .. code-block:: default
 
@@ -375,13 +376,13 @@ The default number of features for the
 
  .. code-block:: none
 
-    done in 0.601 s at 10.4 MB/s
+    done in 0.551 s at 11.3 MB/s
     Found 43873 unique tokens
 
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 199-209
+.. GENERATED FROM PYTHON SOURCE LINES 200-210
 
 The number of unique tokens when using the
 :func:`~sklearn.feature_extraction.FeatureHasher` is lower than those obtained
@@ -394,7 +395,7 @@ setting a large number of features, though it causes larger coefficient
 dimensions and then requires more memory usage to store them, even if a
 majority of them is inactive.
 
-.. GENERATED FROM PYTHON SOURCE LINES 209-218
+.. GENERATED FROM PYTHON SOURCE LINES 210-219
 
 .. code-block:: default
 
@@ -415,13 +416,13 @@ majority of them is inactive.
 
  .. code-block:: none
 
-    done in 0.576 s at 10.8 MB/s
+    done in 0.550 s at 11.4 MB/s
     Found 47668 unique tokens
 
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 219-228
+.. GENERATED FROM PYTHON SOURCE LINES 220-229
 
 We confirm that the number of unique tokens gets closer to the number of
 unique terms found by the :func:`~sklearn.feature_extraction.DictVectorizer`.
@@ -433,7 +434,7 @@ Alternatively, one can set `input_type="string"` in the
 output directly from the customized `tokenize` function. This is equivalent to
 passing a dictionary with an implied frequency of 1 for each feature name.
 
-.. GENERATED FROM PYTHON SOURCE LINES 228-240
+.. GENERATED FROM PYTHON SOURCE LINES 229-241
 
 .. code-block:: default
 
@@ -457,17 +458,17 @@ passing a dictionary with an implied frequency of 1 for each feature name.
 
  .. code-block:: none
 
-    done in 0.522 s at 12.0 MB/s
+    done in 0.495 s at 12.6 MB/s
     Found 43873 unique tokens
 
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 241-242
+.. GENERATED FROM PYTHON SOURCE LINES 242-243
 
 We now plot the speed of the above methods for vectorizing.
 
-.. GENERATED FROM PYTHON SOURCE LINES 242-254
+.. GENERATED FROM PYTHON SOURCE LINES 243-255
 
 .. code-block:: default
 
@@ -495,7 +496,7 @@ We now plot the speed of the above methods for vectorizing.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 255-278
+.. GENERATED FROM PYTHON SOURCE LINES 256-279
 
 In both cases :func:`~sklearn.feature_extraction.FeatureHasher` is
 approximately twice as fast as
@@ -521,7 +522,7 @@ difference being that :func:`~sklearn.feature_extraction.text.CountVectorizer`
 is more flexible. In particular it accepts various regex patterns through the
 `token_pattern` parameter.
 
-.. GENERATED FROM PYTHON SOURCE LINES 278-290
+.. GENERATED FROM PYTHON SOURCE LINES 279-291
 
 .. code-block:: default
 
@@ -545,13 +546,13 @@ is more flexible. In particular it accepts various regex patterns through the
 
  .. code-block:: none
 
-    done in 0.759 s at 8.2 MB/s
+    done in 0.622 s at 10.0 MB/s
     Found 47885 unique terms
 
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 291-305
+.. GENERATED FROM PYTHON SOURCE LINES 292-306
 
 We see that using the :func:`~sklearn.feature_extraction.text.CountVectorizer`
 implementation is approximately twice as fast as using the
@@ -568,7 +569,7 @@ equivalent to combining the “hashing trick” implemented by the
 preprocessing and tokenization of the
 :func:`~sklearn.feature_extraction.text.CountVectorizer`.
 
-.. GENERATED FROM PYTHON SOURCE LINES 305-316
+.. GENERATED FROM PYTHON SOURCE LINES 306-317
 
 .. code-block:: default
 
@@ -591,12 +592,12 @@ preprocessing and tokenization of the
 
  .. code-block:: none
 
-    done in 0.488 s at 12.8 MB/s
+    done in 0.463 s at 13.5 MB/s
 
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 317-340
+.. GENERATED FROM PYTHON SOURCE LINES 318-341
 
 We can observe that this is the fastest text tokenization strategy so far,
 assuming that the downstream machine learning task can tolerate a few
@@ -622,7 +623,7 @@ the :func:`~sklearn.feature_extraction.text.CountVectorizer` along with the
 normalizing and weighting from a
 :func:`~sklearn.feature_extraction.text.TfidfTransformer`.
 
-.. GENERATED FROM PYTHON SOURCE LINES 340-352
+.. GENERATED FROM PYTHON SOURCE LINES 341-353
 
 .. code-block:: default
 
@@ -646,20 +647,20 @@ normalizing and weighting from a
 
  .. code-block:: none
 
-    done in 0.760 s at 8.2 MB/s
+    done in 0.634 s at 9.9 MB/s
     Found 47885 unique terms
 
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 353-357
+.. GENERATED FROM PYTHON SOURCE LINES 354-358
 
 Summary
 -------
 Let's conclude this notebook by summarizing all the recorded processing speeds
 in a single plot:
 
-.. GENERATED FROM PYTHON SOURCE LINES 357-367
+.. GENERATED FROM PYTHON SOURCE LINES 358-368
 
 .. code-block:: default
 
@@ -685,7 +686,7 @@ in a single plot:
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 368-385
+.. GENERATED FROM PYTHON SOURCE LINES 369-386
 
 Notice from the plot that
 :func:`~sklearn.feature_extraction.text.TfidfVectorizer` is slightly slower
@@ -708,7 +709,7 @@ compiles a regular expression once and then reuses it for all the documents.
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** ( 0 minutes  5.376 seconds)
+   **Total running time of the script:** ( 0 minutes  4.780 seconds)
 
 
 .. _sphx_glr_download_auto_examples_text_plot_hashing_vs_dict_vectorizer.py:
