@@ -18,9 +18,9 @@
 .. _sphx_glr_auto_examples_preprocessing_plot_target_encoder_cross_val.py:
 
 
-==========================================
-Target Encoder's Internal Cross Validation
-==========================================
+=======================================
+Target Encoder's Internal Cross fitting
+=======================================
 
 .. currentmodule:: sklearn.preprocessing
 
@@ -28,8 +28,8 @@ The :class:`TargetEnocoder` replaces each category of a categorical feature with
 the mean of the target variable for that category. This method is useful
 in cases where there is a strong relationship between the categorical feature
 and the target. To prevent overfitting, :meth:`TargetEncoder.fit_transform` uses
-interval cross validation to encode the training data to be used by a downstream
-model. In this example, we demonstrate the importance of the cross validation
+an internal cross fitting scheme to encode the training data to be used by a
+downstream model. In this example, we demonstrate the importance of the cross fitting
 procedure to prevent overfitting.
 
 .. GENERATED FROM PYTHON SOURCE LINES 18-24
@@ -103,11 +103,11 @@ informative feature and removing the relationship with the target:
 .. GENERATED FROM PYTHON SOURCE LINES 51-58
 
 The uninformative feature with high cardinality is generated so that is independent of
-the target variable. We will show that target encoding without cross validation will
+the target variable. We will show that target encoding without cross fitting will
 cause catastrophic overfitting for the downstream regressor. These high cardinality
 features are basically unique identifiers for samples which should generally be
 removed from machine learning dataset. In this example, we generate them to show how
-:class:`TargetEncoder`'s default cross validation behavior mitigates the overfitting
+:class:`TargetEncoder`'s default cross fitting behavior mitigates the overfitting
 issue automatically.
 
 .. GENERATED FROM PYTHON SOURCE LINES 58-62
@@ -159,7 +159,7 @@ Training a Ridge Regressor
 ==========================
 In this section, we train a ridge regressor on the dataset with and without
 encoding and explore the influence of target encoder with and without the
-interval cross validation. First, we see the Ridge model trained on the
+internal cross fitting. First, we see the Ridge model trained on the
 raw features will have low performance, because the order of the informative
 feature is not informative:
 
@@ -196,7 +196,7 @@ feature is not informative:
 .. GENERATED FROM PYTHON SOURCE LINES 98-101
 
 Next, we create a pipeline with the target encoder and ridge model. The pipeline
-uses :meth:`TargetEncoder.fit_transform` which uses cross validation. We see that
+uses :meth:`TargetEncoder.fit_transform` which uses cross fitting. We see that
 the model fits the data well and generalizes to the test set:
 
 .. GENERATED FROM PYTHON SOURCE LINES 101-109
@@ -258,11 +258,11 @@ feature at column index 0, which is the informative feature
 
 .. GENERATED FROM PYTHON SOURCE LINES 123-129
 
-While :meth:`TargetEncoder.fit_transform` uses an interval cross validation,
-:meth:`TargetEncoder.transform` itself does not perform any cross validation.
+While :meth:`TargetEncoder.fit_transform` uses an internal cross fitting scheme,
+:meth:`TargetEncoder.transform` itself does not perform any cross fitting.
 It uses the aggregation of the complete training set to transform the categorical
 features. Thus, we can use :meth:`TargetEncoder.fit` followed by
-:meth:`TargetEncoder.transform` to disable the cross validation. This encoding
+:meth:`TargetEncoder.transform` to disable the cross fitting. This encoding
 is then passed to the ridge model.
 
 .. GENERATED FROM PYTHON SOURCE LINES 129-136
@@ -343,8 +343,8 @@ cardinality feature relative to the informative feature.
 
 Conclusion
 ==========
-This example demonstrates the importance of :class:`TargetEncoder`'s interval cross
-validation. It is important to use :meth:`TargetEncoder.fit_transform` to encode
+This example demonstrates the importance of :class:`TargetEncoder`'s internal cross
+fitting. It is important to use :meth:`TargetEncoder.fit_transform` to encode
 training data before passing it to a machine learning model. When a
 :class:`TargetEncoder` is a part of a :class:`~sklearn.pipeline.Pipeline` and the
 pipeline is fitted, the pipeline will correctly call
@@ -353,7 +353,7 @@ pipeline is fitted, the pipeline will correctly call
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** ( 0 minutes  0.313 seconds)
+   **Total running time of the script:** ( 0 minutes  0.306 seconds)
 
 
 .. _sphx_glr_download_auto_examples_preprocessing_plot_target_encoder_cross_val.py:

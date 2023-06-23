@@ -6,7 +6,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
-<meta property="og:title" content="Target Encoder’s Internal Cross Validation" />
+<meta property="og:title" content="Target Encoder’s Internal Cross fitting" />
 <meta property="og:type" content="website" />
 <meta property="og:url" content="https://scikit-learn/stable/auto_examples/preprocessing/plot_target_encoder_cross_val.html" />
 <meta property="og:site_name" content="scikit-learn" />
@@ -18,7 +18,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
   
-  <title>Target Encoder’s Internal Cross Validation &mdash; scikit-learn 1.4.dev0 documentation</title>
+  <title>Target Encoder’s Internal Cross fitting &mdash; scikit-learn 1.4.dev0 documentation</title>
   
   <link rel="canonical" href="http://scikit-learn.org/stable/auto_examples/preprocessing/plot_target_encoder_cross_val.html" />
 
@@ -174,7 +174,7 @@
         </div>
             <div class="sk-sidebar-toc">
               <ul>
-<li><a class="reference internal" href="#">Target Encoder’s Internal Cross Validation</a><ul>
+<li><a class="reference internal" href="#">Target Encoder’s Internal Cross fitting</a><ul>
 <li><a class="reference internal" href="#create-synthetic-dataset">Create Synthetic Dataset</a></li>
 <li><a class="reference internal" href="#training-a-ridge-regressor">Training a Ridge Regressor</a></li>
 <li><a class="reference internal" href="#conclusion">Conclusion</a></li>
@@ -193,14 +193,14 @@
 <p><a class="reference internal" href="#sphx-glr-download-auto-examples-preprocessing-plot-target-encoder-cross-val-py"><span class="std std-ref">Go to the end</span></a>
 to download the full example code or to run this example in your browser via JupyterLite or Binder</p>
 </div>
-<section class="sphx-glr-example-title" id="target-encoder-s-internal-cross-validation">
-<span id="sphx-glr-auto-examples-preprocessing-plot-target-encoder-cross-val-py"></span><h1>Target Encoder’s Internal Cross Validation<a class="headerlink" href="#target-encoder-s-internal-cross-validation" title="Permalink to this heading">¶</a></h1>
+<section class="sphx-glr-example-title" id="target-encoder-s-internal-cross-fitting">
+<span id="sphx-glr-auto-examples-preprocessing-plot-target-encoder-cross-val-py"></span><h1>Target Encoder’s Internal Cross fitting<a class="headerlink" href="#target-encoder-s-internal-cross-fitting" title="Permalink to this heading">¶</a></h1>
 <p>The <code class="xref py py-class docutils literal notranslate"><span class="pre">TargetEnocoder</span></code> replaces each category of a categorical feature with
 the mean of the target variable for that category. This method is useful
 in cases where there is a strong relationship between the categorical feature
 and the target. To prevent overfitting, <a class="reference internal" href="../../modules/generated/sklearn.preprocessing.TargetEncoder.html#sklearn.preprocessing.TargetEncoder.fit_transform" title="sklearn.preprocessing.TargetEncoder.fit_transform"><code class="xref py py-meth docutils literal notranslate"><span class="pre">TargetEncoder.fit_transform</span></code></a> uses
-interval cross validation to encode the training data to be used by a downstream
-model. In this example, we demonstrate the importance of the cross validation
+an internal cross fitting scheme to encode the training data to be used by a
+downstream model. In this example, we demonstrate the importance of the cross fitting
 procedure to prevent overfitting.</p>
 <section id="create-synthetic-dataset">
 <h2>Create Synthetic Dataset<a class="headerlink" href="#create-synthetic-dataset" title="Permalink to this heading">¶</a></h2>
@@ -241,11 +241,11 @@ informative feature and removing the relationship with the target:</p>
 </pre></div>
 </div>
 <p>The uninformative feature with high cardinality is generated so that is independent of
-the target variable. We will show that target encoding without cross validation will
+the target variable. We will show that target encoding without cross fitting will
 cause catastrophic overfitting for the downstream regressor. These high cardinality
 features are basically unique identifiers for samples which should generally be
 removed from machine learning dataset. In this example, we generate them to show how
-<a class="reference internal" href="../../modules/generated/sklearn.preprocessing.TargetEncoder.html#sklearn.preprocessing.TargetEncoder" title="sklearn.preprocessing.TargetEncoder"><code class="xref py py-class docutils literal notranslate"><span class="pre">TargetEncoder</span></code></a>’s default cross validation behavior mitigates the overfitting
+<a class="reference internal" href="../../modules/generated/sklearn.preprocessing.TargetEncoder.html#sklearn.preprocessing.TargetEncoder" title="sklearn.preprocessing.TargetEncoder"><code class="xref py py-class docutils literal notranslate"><span class="pre">TargetEncoder</span></code></a>’s default cross fitting behavior mitigates the overfitting
 issue automatically.</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">X_near_unique_categories</span> <span class="o">=</span> <span class="n">rng</span><span class="o">.</span><span class="n">choice</span><span class="p">(</span>
     <span class="nb">int</span><span class="p">(</span><span class="mf">0.9</span> <span class="o">*</span> <span class="n">n_samples</span><span class="p">),</span> <span class="n">size</span><span class="o">=</span><span class="n">n_samples</span><span class="p">,</span> <span class="n">replace</span><span class="o">=</span><span class="kc">True</span>
@@ -272,7 +272,7 @@ issue automatically.</p>
 <h2>Training a Ridge Regressor<a class="headerlink" href="#training-a-ridge-regressor" title="Permalink to this heading">¶</a></h2>
 <p>In this section, we train a ridge regressor on the dataset with and without
 encoding and explore the influence of target encoder with and without the
-interval cross validation. First, we see the Ridge model trained on the
+internal cross fitting. First, we see the Ridge model trained on the
 raw features will have low performance, because the order of the informative
 feature is not informative:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">sklearn</span>
@@ -293,7 +293,7 @@ Raw Model score on test set:  0.00457762158159003
 </pre></div>
 </div>
 <p>Next, we create a pipeline with the target encoder and ridge model. The pipeline
-uses <a class="reference internal" href="../../modules/generated/sklearn.preprocessing.TargetEncoder.html#sklearn.preprocessing.TargetEncoder.fit_transform" title="sklearn.preprocessing.TargetEncoder.fit_transform"><code class="xref py py-meth docutils literal notranslate"><span class="pre">TargetEncoder.fit_transform</span></code></a> which uses cross validation. We see that
+uses <a class="reference internal" href="../../modules/generated/sklearn.preprocessing.TargetEncoder.html#sklearn.preprocessing.TargetEncoder.fit_transform" title="sklearn.preprocessing.TargetEncoder.fit_transform"><code class="xref py py-meth docutils literal notranslate"><span class="pre">TargetEncoder.fit_transform</span></code></a> which uses cross fitting. We see that
 the model fits the data well and generalizes to the test set:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">sklearn.pipeline</span> <span class="kn">import</span> <a href="../../modules/generated/sklearn.pipeline.make_pipeline.html#sklearn.pipeline.make_pipeline" title="sklearn.pipeline.make_pipeline" class="sphx-glr-backref-module-sklearn-pipeline sphx-glr-backref-type-py-function"><span class="n">make_pipeline</span></a>
 <span class="kn">from</span> <span class="nn">sklearn.preprocessing</span> <span class="kn">import</span> <a href="../../modules/generated/sklearn.preprocessing.TargetEncoder.html#sklearn.preprocessing.TargetEncoder" title="sklearn.preprocessing.TargetEncoder" class="sphx-glr-backref-module-sklearn-preprocessing sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">TargetEncoder</span></a>
@@ -321,11 +321,11 @@ feature at column index 0, which is the informative feature</p>
 <span class="n">_</span> <span class="o">=</span> <span class="n">coefs_cv</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">kind</span><span class="o">=</span><span class="s2">&quot;barh&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
-<img src="../../_images/sphx_glr_plot_target_encoder_cross_val_001.png" srcset="../../_images/sphx_glr_plot_target_encoder_cross_val_001.png" alt="plot target encoder cross val" class = "sphx-glr-single-img"/><p>While <a class="reference internal" href="../../modules/generated/sklearn.preprocessing.TargetEncoder.html#sklearn.preprocessing.TargetEncoder.fit_transform" title="sklearn.preprocessing.TargetEncoder.fit_transform"><code class="xref py py-meth docutils literal notranslate"><span class="pre">TargetEncoder.fit_transform</span></code></a> uses an interval cross validation,
-<a class="reference internal" href="../../modules/generated/sklearn.preprocessing.TargetEncoder.html#sklearn.preprocessing.TargetEncoder.transform" title="sklearn.preprocessing.TargetEncoder.transform"><code class="xref py py-meth docutils literal notranslate"><span class="pre">TargetEncoder.transform</span></code></a> itself does not perform any cross validation.
+<img src="../../_images/sphx_glr_plot_target_encoder_cross_val_001.png" srcset="../../_images/sphx_glr_plot_target_encoder_cross_val_001.png" alt="plot target encoder cross val" class = "sphx-glr-single-img"/><p>While <a class="reference internal" href="../../modules/generated/sklearn.preprocessing.TargetEncoder.html#sklearn.preprocessing.TargetEncoder.fit_transform" title="sklearn.preprocessing.TargetEncoder.fit_transform"><code class="xref py py-meth docutils literal notranslate"><span class="pre">TargetEncoder.fit_transform</span></code></a> uses an internal cross fitting scheme,
+<a class="reference internal" href="../../modules/generated/sklearn.preprocessing.TargetEncoder.html#sklearn.preprocessing.TargetEncoder.transform" title="sklearn.preprocessing.TargetEncoder.transform"><code class="xref py py-meth docutils literal notranslate"><span class="pre">TargetEncoder.transform</span></code></a> itself does not perform any cross fitting.
 It uses the aggregation of the complete training set to transform the categorical
 features. Thus, we can use <a class="reference internal" href="../../modules/generated/sklearn.preprocessing.TargetEncoder.html#sklearn.preprocessing.TargetEncoder.fit" title="sklearn.preprocessing.TargetEncoder.fit"><code class="xref py py-meth docutils literal notranslate"><span class="pre">TargetEncoder.fit</span></code></a> followed by
-<a class="reference internal" href="../../modules/generated/sklearn.preprocessing.TargetEncoder.html#sklearn.preprocessing.TargetEncoder.transform" title="sklearn.preprocessing.TargetEncoder.transform"><code class="xref py py-meth docutils literal notranslate"><span class="pre">TargetEncoder.transform</span></code></a> to disable the cross validation. This encoding
+<a class="reference internal" href="../../modules/generated/sklearn.preprocessing.TargetEncoder.html#sklearn.preprocessing.TargetEncoder.transform" title="sklearn.preprocessing.TargetEncoder.transform"><code class="xref py py-meth docutils literal notranslate"><span class="pre">TargetEncoder.transform</span></code></a> to disable the cross fitting. This encoding
 is then passed to the ridge model.</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">target_encoder</span> <span class="o">=</span> <a href="../../modules/generated/sklearn.preprocessing.TargetEncoder.html#sklearn.preprocessing.TargetEncoder" title="sklearn.preprocessing.TargetEncoder" class="sphx-glr-backref-module-sklearn-preprocessing sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">TargetEncoder</span></a><span class="p">(</span><span class="n">random_state</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
 <span class="n">target_encoder</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X_train</span><span class="p">,</span> <span class="n">y_train</span><span class="p">)</span>
@@ -360,13 +360,13 @@ cardinality feature relative to the informative feature.</p>
 <img src="../../_images/sphx_glr_plot_target_encoder_cross_val_002.png" srcset="../../_images/sphx_glr_plot_target_encoder_cross_val_002.png" alt="plot target encoder cross val" class = "sphx-glr-single-img"/></section>
 <section id="conclusion">
 <h2>Conclusion<a class="headerlink" href="#conclusion" title="Permalink to this heading">¶</a></h2>
-<p>This example demonstrates the importance of <a class="reference internal" href="../../modules/generated/sklearn.preprocessing.TargetEncoder.html#sklearn.preprocessing.TargetEncoder" title="sklearn.preprocessing.TargetEncoder"><code class="xref py py-class docutils literal notranslate"><span class="pre">TargetEncoder</span></code></a>’s interval cross
-validation. It is important to use <a class="reference internal" href="../../modules/generated/sklearn.preprocessing.TargetEncoder.html#sklearn.preprocessing.TargetEncoder.fit_transform" title="sklearn.preprocessing.TargetEncoder.fit_transform"><code class="xref py py-meth docutils literal notranslate"><span class="pre">TargetEncoder.fit_transform</span></code></a> to encode
+<p>This example demonstrates the importance of <a class="reference internal" href="../../modules/generated/sklearn.preprocessing.TargetEncoder.html#sklearn.preprocessing.TargetEncoder" title="sklearn.preprocessing.TargetEncoder"><code class="xref py py-class docutils literal notranslate"><span class="pre">TargetEncoder</span></code></a>’s internal cross
+fitting. It is important to use <a class="reference internal" href="../../modules/generated/sklearn.preprocessing.TargetEncoder.html#sklearn.preprocessing.TargetEncoder.fit_transform" title="sklearn.preprocessing.TargetEncoder.fit_transform"><code class="xref py py-meth docutils literal notranslate"><span class="pre">TargetEncoder.fit_transform</span></code></a> to encode
 training data before passing it to a machine learning model. When a
 <a class="reference internal" href="../../modules/generated/sklearn.preprocessing.TargetEncoder.html#sklearn.preprocessing.TargetEncoder" title="sklearn.preprocessing.TargetEncoder"><code class="xref py py-class docutils literal notranslate"><span class="pre">TargetEncoder</span></code></a> is a part of a <a class="reference internal" href="../../modules/generated/sklearn.pipeline.Pipeline.html#sklearn.pipeline.Pipeline" title="sklearn.pipeline.Pipeline"><code class="xref py py-class docutils literal notranslate"><span class="pre">Pipeline</span></code></a> and the
 pipeline is fitted, the pipeline will correctly call
 <a class="reference internal" href="../../modules/generated/sklearn.preprocessing.TargetEncoder.html#sklearn.preprocessing.TargetEncoder.fit_transform" title="sklearn.preprocessing.TargetEncoder.fit_transform"><code class="xref py py-meth docutils literal notranslate"><span class="pre">TargetEncoder.fit_transform</span></code></a> and pass the encoding along.</p>
-<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> ( 0 minutes  0.313 seconds)</p>
+<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> ( 0 minutes  0.306 seconds)</p>
 <div class="sphx-glr-footer sphx-glr-footer-example docutils container" id="sphx-glr-download-auto-examples-preprocessing-plot-target-encoder-cross-val-py">
 <div class="binder-badge docutils container">
 <a class="reference external image-reference" href="https://mybinder.org/v2/gh/scikit-learn/scikit-learn/main?urlpath=lab/tree/notebooks/auto_examples/preprocessing/plot_target_encoder_cross_val.ipynb"><img alt="Launch binder" src="../../_images/binder_badge_logo25.svg" width="150px" /></a>
