@@ -29,6 +29,7 @@
   <link rel="stylesheet" href="../../_static/css/vendor/bootstrap.min.css" type="text/css" />
   <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
   <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/copybutton.css" type="text/css" />
   <link rel="stylesheet" href="../../_static/plot_directive.css" type="text/css" />
   <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Vibur" type="text/css" />
   <link rel="stylesheet" href="../../_static/jupyterlite_sphinx.css" type="text/css" />
@@ -327,9 +328,9 @@ metadata stripping.</p>
 <div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>2034 documents - 3.98MB (training set)
 1353 documents - 2.87MB (test set)
 4 categories
-vectorize training done in 0.346s at 11.501MB/s
+vectorize training done in 0.388s at 10.248MB/s
 n_samples: 2034, n_features: 7831
-vectorize testing done in 0.222s at 12.891MB/s
+vectorize testing done in 0.247s at 11.614MB/s
 n_samples: 1353, n_features: 7831
 </pre></div>
 </div>
@@ -699,8 +700,8 @@ Logistic Regression
 ________________________________________________________________________________
 Training:
 LogisticRegression(C=5, max_iter=1000)
-train time: 0.305s
-test time:  0.000596s
+train time: 0.31s
+test time:  0.000587s
 accuracy:   0.773
 dimensionality: 5316
 density: 1.0
@@ -711,8 +712,8 @@ Ridge Classifier
 ________________________________________________________________________________
 Training:
 RidgeClassifier(solver=&#39;sparse_cg&#39;)
-train time: 0.0369s
-test time:  0.000522s
+train time: 0.0374s
+test time:  0.000609s
 accuracy:   0.76
 dimensionality: 5316
 density: 1.0
@@ -723,7 +724,7 @@ kNN
 ________________________________________________________________________________
 Training:
 KNeighborsClassifier(n_neighbors=100)
-train time: 0.000707s
+train time: 0.000908s
 test time:  5.79s
 accuracy:   0.753
 
@@ -732,8 +733,8 @@ Random Forest
 ________________________________________________________________________________
 Training:
 RandomForestClassifier()
-train time: 1.4s
-test time:  0.0639s
+train time: 1.45s
+test time:  0.0627s
 accuracy:   0.704
 
 ================================================================================
@@ -741,8 +742,8 @@ Linear SVC
 ________________________________________________________________________________
 Training:
 LinearSVC(C=0.1, dual=False)
-train time: 0.0285s
-test time:  0.000509s
+train time: 0.0302s
+test time:  0.000593s
 accuracy:   0.752
 dimensionality: 5316
 density: 1.0
@@ -753,8 +754,8 @@ log-loss SGD
 ________________________________________________________________________________
 Training:
 SGDClassifier(early_stopping=True, loss=&#39;log_loss&#39;, n_iter_no_change=3)
-train time: 0.0252s
-test time:  0.000551s
+train time: 0.0265s
+test time:  0.000655s
 accuracy:   0.762
 dimensionality: 5316
 density: 1.0
@@ -765,8 +766,8 @@ NearestCentroid
 ________________________________________________________________________________
 Training:
 NearestCentroid()
-train time: 0.00277s
-test time:  0.00127s
+train time: 0.00273s
+test time:  0.00149s
 accuracy:   0.748
 
 ================================================================================
@@ -774,8 +775,8 @@ Complement naive Bayes
 ________________________________________________________________________________
 Training:
 ComplementNB(alpha=0.1)
-train time: 0.00187s
-test time:  0.000494s
+train time: 0.00178s
+test time:  0.000521s
 accuracy:   0.779
 </pre></div>
 </div>
@@ -838,7 +839,7 @@ document in the training set, which is computationally expensive. Furthermore,
 the “curse of dimensionality” harms the ability of this model to yield
 competitive accuracy in the high dimensional feature space of text
 classification problems.</p>
-<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> ( 0 minutes  12.112 seconds)</p>
+<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> ( 0 minutes  12.410 seconds)</p>
 <div class="sphx-glr-footer sphx-glr-footer-example docutils container" id="sphx-glr-download-auto-examples-text-plot-document-classification-20newsgroups-py">
 <div class="binder-badge docutils container">
 <a class="reference external image-reference" href="https://mybinder.org/v2/gh/scikit-learn/scikit-learn/main?urlpath=lab/tree/notebooks/auto_examples/text/plot_document_classification_20newsgroups.ipynb"><img alt="Launch binder" src="../../_images/binder_badge_logo29.svg" width="150px" /></a>
@@ -883,6 +884,9 @@ classification problems.</p>
 </script>
 
 
+<script src="../../_static/clipboard.min.js"></script>
+<script src="../../_static/copybutton.js"></script>
+
 <script>
 $(document).ready(function() {
     /* Add a [>>>] button on the top-right corner of code samples to hide
@@ -896,44 +900,15 @@ $(document).ready(function() {
 
     // get the styles from the current theme
     pre.parent().parent().css('position', 'relative');
-    var hide_text = 'Hide prompts and outputs';
-    var show_text = 'Show prompts and outputs';
 
     // create and add the button to all the code blocks that contain >>>
     div.each(function(index) {
         var jthis = $(this);
-        if (jthis.find('.gp').length > 0) {
-            var button = $('<span class="copybutton">&gt;&gt;&gt;</span>');
-            button.attr('title', hide_text);
-            button.data('hidden', 'false');
-            jthis.prepend(button);
-        }
         // tracebacks (.gt) contain bare text elements that need to be
         // wrapped in a span to work with .nextUntil() (see later)
         jthis.find('pre:has(.gt)').contents().filter(function() {
             return ((this.nodeType == 3) && (this.data.trim().length > 0));
         }).wrap('<span>');
-    });
-
-    // define the behavior of the button when it's clicked
-    $('.copybutton').click(function(e){
-        e.preventDefault();
-        var button = $(this);
-        if (button.data('hidden') === 'false') {
-            // hide the code output
-            button.parent().find('.go, .gp, .gt').hide();
-            button.next('pre').find('.gt').nextUntil('.gp, .go').css('visibility', 'hidden');
-            button.css('text-decoration', 'line-through');
-            button.attr('title', show_text);
-            button.data('hidden', 'true');
-        } else {
-            // show the code output
-            button.parent().find('.go, .gp, .gt').show();
-            button.next('pre').find('.gt').nextUntil('.gp, .go').css('visibility', 'visible');
-            button.css('text-decoration', 'none');
-            button.attr('title', hide_text);
-            button.data('hidden', 'false');
-        }
     });
 
 	/*** Add permalink buttons next to glossary terms ***/
