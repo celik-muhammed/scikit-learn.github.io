@@ -18,7 +18,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
   
-  <title>Metadata Routing &mdash; scikit-learn 1.3.0rc1 documentation</title>
+  <title>Metadata Routing &mdash; scikit-learn 1.3.0 documentation</title>
   
   <link rel="canonical" href="http://scikit-learn.org/stable/auto_examples/miscellaneous/plot_metadata_routing.html" />
 
@@ -29,6 +29,7 @@
   <link rel="stylesheet" href="../../_static/css/vendor/bootstrap.min.css" type="text/css" />
   <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
   <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/copybutton.css" type="text/css" />
   <link rel="stylesheet" href="../../_static/plot_directive.css" type="text/css" />
   <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Vibur" type="text/css" />
   <link rel="stylesheet" href="../../_static/jupyterlite_sphinx.css" type="text/css" />
@@ -165,7 +166,7 @@
         </div>
         <div class="alert alert-danger p-1 mb-2" role="alert">
           <p class="text-center mb-0">
-          <strong>scikit-learn 1.3.0rc1</strong><br/>
+          <strong>scikit-learn 1.3.0</strong><br/>
           <a href="http://scikit-learn.org/dev/versions.html">Other versions</a>
           </p>
         </div>
@@ -211,23 +212,29 @@ and a consumer. For instance, a meta-estimator may take into account
 <code class="docutils literal notranslate"><span class="pre">sample_weight</span></code> in certain calculations, but it may also route it to the
 underlying estimator.</p>
 <p>First a few imports and some random data for the rest of the script.</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
-<span class="kn">import</span> <span class="nn">warnings</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">warnings</span>
 <span class="kn">from</span> <span class="nn">pprint</span> <span class="kn">import</span> <a href="https://docs.python.org/3/library/pprint.html#pprint.pprint" title="pprint.pprint" class="sphx-glr-backref-module-pprint sphx-glr-backref-type-py-function"><span class="n">pprint</span></a>
+
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+
 <span class="kn">from</span> <span class="nn">sklearn</span> <span class="kn">import</span> <a href="../../modules/generated/sklearn.set_config.html#sklearn.set_config" title="sklearn.set_config" class="sphx-glr-backref-module-sklearn sphx-glr-backref-type-py-function"><span class="n">set_config</span></a>
-<span class="kn">from</span> <span class="nn">sklearn.base</span> <span class="kn">import</span> <a href="../../modules/generated/sklearn.base.BaseEstimator.html#sklearn.base.BaseEstimator" title="sklearn.base.BaseEstimator" class="sphx-glr-backref-module-sklearn-base sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">BaseEstimator</span></a>
-<span class="kn">from</span> <span class="nn">sklearn.base</span> <span class="kn">import</span> <a href="../../modules/generated/sklearn.base.ClassifierMixin.html#sklearn.base.ClassifierMixin" title="sklearn.base.ClassifierMixin" class="sphx-glr-backref-module-sklearn-base sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">ClassifierMixin</span></a>
-<span class="kn">from</span> <span class="nn">sklearn.base</span> <span class="kn">import</span> <a href="../../modules/generated/sklearn.base.RegressorMixin.html#sklearn.base.RegressorMixin" title="sklearn.base.RegressorMixin" class="sphx-glr-backref-module-sklearn-base sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">RegressorMixin</span></a>
-<span class="kn">from</span> <span class="nn">sklearn.base</span> <span class="kn">import</span> <a href="../../modules/generated/sklearn.base.MetaEstimatorMixin.html#sklearn.base.MetaEstimatorMixin" title="sklearn.base.MetaEstimatorMixin" class="sphx-glr-backref-module-sklearn-base sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">MetaEstimatorMixin</span></a>
-<span class="kn">from</span> <span class="nn">sklearn.base</span> <span class="kn">import</span> <a href="../../modules/generated/sklearn.base.TransformerMixin.html#sklearn.base.TransformerMixin" title="sklearn.base.TransformerMixin" class="sphx-glr-backref-module-sklearn-base sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">TransformerMixin</span></a>
-<span class="kn">from</span> <span class="nn">sklearn.base</span> <span class="kn">import</span> <span class="n">clone</span>
-<span class="kn">from</span> <span class="nn">sklearn.utils</span> <span class="kn">import</span> <span class="n">metadata_routing</span>
-<span class="kn">from</span> <span class="nn">sklearn.utils.metadata_routing</span> <span class="kn">import</span> <a href="../../modules/generated/sklearn.utils.metadata_routing.get_routing_for_object.html#sklearn.utils.metadata_routing.get_routing_for_object" title="sklearn.utils.metadata_routing.get_routing_for_object" class="sphx-glr-backref-module-sklearn-utils-metadata_routing sphx-glr-backref-type-py-function"><span class="n">get_routing_for_object</span></a>
-<span class="kn">from</span> <span class="nn">sklearn.utils.metadata_routing</span> <span class="kn">import</span> <a href="../../modules/generated/sklearn.utils.metadata_routing.MetadataRouter.html#sklearn.utils.metadata_routing.MetadataRouter" title="sklearn.utils.metadata_routing.MetadataRouter" class="sphx-glr-backref-module-sklearn-utils-metadata_routing sphx-glr-backref-type-py-function"><span class="n">MetadataRouter</span></a>
-<span class="kn">from</span> <span class="nn">sklearn.utils.metadata_routing</span> <span class="kn">import</span> <a href="../../modules/generated/sklearn.utils.metadata_routing.MethodMapping.html#sklearn.utils.metadata_routing.MethodMapping" title="sklearn.utils.metadata_routing.MethodMapping" class="sphx-glr-backref-module-sklearn-utils-metadata_routing sphx-glr-backref-type-py-function"><span class="n">MethodMapping</span></a>
-<span class="kn">from</span> <span class="nn">sklearn.utils.metadata_routing</span> <span class="kn">import</span> <a href="../../modules/generated/sklearn.utils.metadata_routing.process_routing.html#sklearn.utils.metadata_routing.process_routing" title="sklearn.utils.metadata_routing.process_routing" class="sphx-glr-backref-module-sklearn-utils-metadata_routing sphx-glr-backref-type-py-function"><span class="n">process_routing</span></a>
-<span class="kn">from</span> <span class="nn">sklearn.utils.validation</span> <span class="kn">import</span> <a href="../../modules/generated/sklearn.utils.validation.check_is_fitted.html#sklearn.utils.validation.check_is_fitted" title="sklearn.utils.validation.check_is_fitted" class="sphx-glr-backref-module-sklearn-utils-validation sphx-glr-backref-type-py-function"><span class="n">check_is_fitted</span></a>
+<span class="kn">from</span> <span class="nn">sklearn.base</span> <span class="kn">import</span> <span class="p">(</span>
+    <a href="../../modules/generated/sklearn.base.BaseEstimator.html#sklearn.base.BaseEstimator" title="sklearn.base.BaseEstimator" class="sphx-glr-backref-module-sklearn-base sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">BaseEstimator</span></a><span class="p">,</span>
+    <a href="../../modules/generated/sklearn.base.ClassifierMixin.html#sklearn.base.ClassifierMixin" title="sklearn.base.ClassifierMixin" class="sphx-glr-backref-module-sklearn-base sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">ClassifierMixin</span></a><span class="p">,</span>
+    <a href="../../modules/generated/sklearn.base.MetaEstimatorMixin.html#sklearn.base.MetaEstimatorMixin" title="sklearn.base.MetaEstimatorMixin" class="sphx-glr-backref-module-sklearn-base sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">MetaEstimatorMixin</span></a><span class="p">,</span>
+    <a href="../../modules/generated/sklearn.base.RegressorMixin.html#sklearn.base.RegressorMixin" title="sklearn.base.RegressorMixin" class="sphx-glr-backref-module-sklearn-base sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">RegressorMixin</span></a><span class="p">,</span>
+    <a href="../../modules/generated/sklearn.base.TransformerMixin.html#sklearn.base.TransformerMixin" title="sklearn.base.TransformerMixin" class="sphx-glr-backref-module-sklearn-base sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">TransformerMixin</span></a><span class="p">,</span>
+    <span class="n">clone</span><span class="p">,</span>
+<span class="p">)</span>
 <span class="kn">from</span> <span class="nn">sklearn.linear_model</span> <span class="kn">import</span> <a href="../../modules/generated/sklearn.linear_model.LinearRegression.html#sklearn.linear_model.LinearRegression" title="sklearn.linear_model.LinearRegression" class="sphx-glr-backref-module-sklearn-linear_model sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">LinearRegression</span></a>
+<span class="kn">from</span> <span class="nn">sklearn.utils</span> <span class="kn">import</span> <span class="n">metadata_routing</span>
+<span class="kn">from</span> <span class="nn">sklearn.utils.metadata_routing</span> <span class="kn">import</span> <span class="p">(</span>
+    <a href="../../modules/generated/sklearn.utils.metadata_routing.MetadataRouter.html#sklearn.utils.metadata_routing.MetadataRouter" title="sklearn.utils.metadata_routing.MetadataRouter" class="sphx-glr-backref-module-sklearn-utils-metadata_routing sphx-glr-backref-type-py-function"><span class="n">MetadataRouter</span></a><span class="p">,</span>
+    <a href="../../modules/generated/sklearn.utils.metadata_routing.MethodMapping.html#sklearn.utils.metadata_routing.MethodMapping" title="sklearn.utils.metadata_routing.MethodMapping" class="sphx-glr-backref-module-sklearn-utils-metadata_routing sphx-glr-backref-type-py-function"><span class="n">MethodMapping</span></a><span class="p">,</span>
+    <a href="../../modules/generated/sklearn.utils.metadata_routing.get_routing_for_object.html#sklearn.utils.metadata_routing.get_routing_for_object" title="sklearn.utils.metadata_routing.get_routing_for_object" class="sphx-glr-backref-module-sklearn-utils-metadata_routing sphx-glr-backref-type-py-function"><span class="n">get_routing_for_object</span></a><span class="p">,</span>
+    <a href="../../modules/generated/sklearn.utils.metadata_routing.process_routing.html#sklearn.utils.metadata_routing.process_routing" title="sklearn.utils.metadata_routing.process_routing" class="sphx-glr-backref-module-sklearn-utils-metadata_routing sphx-glr-backref-type-py-function"><span class="n">process_routing</span></a><span class="p">,</span>
+<span class="p">)</span>
+<span class="kn">from</span> <span class="nn">sklearn.utils.validation</span> <span class="kn">import</span> <a href="../../modules/generated/sklearn.utils.validation.check_is_fitted.html#sklearn.utils.validation.check_is_fitted" title="sklearn.utils.validation.check_is_fitted" class="sphx-glr-backref-module-sklearn-utils-validation sphx-glr-backref-type-py-function"><span class="n">check_is_fitted</span></a>
 
 <span class="n">n_samples</span><span class="p">,</span> <span class="n">n_features</span> <span class="o">=</span> <span class="mi">100</span><span class="p">,</span> <span class="mi">4</span>
 <span class="n">rng</span> <span class="o">=</span> <a href="https://numpy.org/doc/stable/reference/random/legacy.html#numpy.random.RandomState" title="numpy.random.RandomState" class="sphx-glr-backref-module-numpy-random sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">RandomState</span></a><span class="p">(</span><span class="mi">42</span><span class="p">)</span>
@@ -737,10 +744,10 @@ Received sample_weight of length = 100 in ExampleClassifier.
 </div>
 <br />
 <br /><ul class="simple">
-<li><p>Alias only on the sub-estimator. This is useful if we don’t want the</p></li>
+<li><p>Alias only on the sub-estimator. This is useful if we don’t want the
+meta-estimator to use the metadata, and we only want the metadata to be used
+by the sub-estimator.</p></li>
 </ul>
-<p>meta-estimator to use the metadata, and we only want the metadata to be used
-by the sub-estimator.</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">est</span> <span class="o">=</span> <span class="n">RouterConsumerClassifier</span><span class="p">(</span>
     <span class="n">estimator</span><span class="o">=</span><span class="n">ExampleClassifier</span><span class="p">()</span><span class="o">.</span><span class="n">set_fit_request</span><span class="p">(</span><span class="n">sample_weight</span><span class="o">=</span><span class="s2">&quot;aliased_sample_weight&quot;</span><span class="p">)</span>
 <span class="p">)</span><span class="o">.</span><span class="n">set_fit_request</span><span class="p">(</span><span class="n">sample_weight</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
@@ -971,8 +978,7 @@ but possible to vendor the tools related to metadata-routing if you strictly
 want to have a scikit-learn compatible estimator, without depending on the
 scikit-learn package. If the following conditions are met, you do NOT need to
 modify your code at all:</p>
-<blockquote>
-<div><ul class="simple">
+<ul class="simple">
 <li><p>your estimator inherits from <a class="reference internal" href="../../modules/generated/sklearn.base.BaseEstimator.html#sklearn.base.BaseEstimator" title="sklearn.base.BaseEstimator"><code class="xref py py-class docutils literal notranslate"><span class="pre">BaseEstimator</span></code></a></p></li>
 <li><p>the parameters consumed by your estimator’s methods, e.g. <code class="docutils literal notranslate"><span class="pre">fit</span></code>, are
 explicitly defined in the method’s signature, as opposed to being
@@ -980,8 +986,7 @@ explicitly defined in the method’s signature, as opposed to being
 <li><p>you do not route any metadata to the underlying objects, i.e. you’re not a
 <em>router</em>.</p></li>
 </ul>
-</div></blockquote>
-<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> ( 0 minutes  0.043 seconds)</p>
+<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> ( 0 minutes  0.042 seconds)</p>
 <div class="sphx-glr-footer sphx-glr-footer-example docutils container" id="sphx-glr-download-auto-examples-miscellaneous-plot-metadata-routing-py">
 <div class="binder-badge docutils container">
 <a class="reference external image-reference" href="https://mybinder.org/v2/gh/scikit-learn/scikit-learn/1.3.X?urlpath=lab/tree/notebooks/auto_examples/miscellaneous/plot_metadata_routing.ipynb"><img alt="Launch binder" src="../../_images/binder_badge_logo19.svg" width="150px" /></a>
@@ -1026,6 +1031,9 @@ explicitly defined in the method’s signature, as opposed to being
 </script>
 
 
+<script src="../../_static/clipboard.min.js"></script>
+<script src="../../_static/copybutton.js"></script>
+
 <script>
 $(document).ready(function() {
     /* Add a [>>>] button on the top-right corner of code samples to hide
@@ -1039,44 +1047,15 @@ $(document).ready(function() {
 
     // get the styles from the current theme
     pre.parent().parent().css('position', 'relative');
-    var hide_text = 'Hide prompts and outputs';
-    var show_text = 'Show prompts and outputs';
 
     // create and add the button to all the code blocks that contain >>>
     div.each(function(index) {
         var jthis = $(this);
-        if (jthis.find('.gp').length > 0) {
-            var button = $('<span class="copybutton">&gt;&gt;&gt;</span>');
-            button.attr('title', hide_text);
-            button.data('hidden', 'false');
-            jthis.prepend(button);
-        }
         // tracebacks (.gt) contain bare text elements that need to be
         // wrapped in a span to work with .nextUntil() (see later)
         jthis.find('pre:has(.gt)').contents().filter(function() {
             return ((this.nodeType == 3) && (this.data.trim().length > 0));
         }).wrap('<span>');
-    });
-
-    // define the behavior of the button when it's clicked
-    $('.copybutton').click(function(e){
-        e.preventDefault();
-        var button = $(this);
-        if (button.data('hidden') === 'false') {
-            // hide the code output
-            button.parent().find('.go, .gp, .gt').hide();
-            button.next('pre').find('.gt').nextUntil('.gp, .go').css('visibility', 'hidden');
-            button.css('text-decoration', 'line-through');
-            button.attr('title', show_text);
-            button.data('hidden', 'true');
-        } else {
-            // show the code output
-            button.parent().find('.go, .gp, .gt').show();
-            button.next('pre').find('.gt').nextUntil('.gp, .go').css('visibility', 'visible');
-            button.css('text-decoration', 'none');
-            button.attr('title', hide_text);
-            button.data('hidden', 'false');
-        }
     });
 
 	/*** Add permalink buttons next to glossary terms ***/

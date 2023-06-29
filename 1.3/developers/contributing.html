@@ -18,7 +18,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
   
-  <title>Contributing &mdash; scikit-learn 1.3.0rc1 documentation</title>
+  <title>Contributing &mdash; scikit-learn 1.3.0 documentation</title>
   
   <link rel="canonical" href="http://scikit-learn.org/stable/developers/contributing.html" />
 
@@ -29,6 +29,7 @@
   <link rel="stylesheet" href="../_static/css/vendor/bootstrap.min.css" type="text/css" />
   <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
   <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/copybutton.css" type="text/css" />
   <link rel="stylesheet" href="../_static/plot_directive.css" type="text/css" />
   <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Vibur" type="text/css" />
   <link rel="stylesheet" href="../_static/jupyterlite_sphinx.css" type="text/css" />
@@ -165,7 +166,7 @@
         </div>
         <div class="alert alert-danger p-1 mb-2" role="alert">
           <p class="text-center mb-0">
-          <strong>scikit-learn 1.3.0rc1</strong><br/>
+          <strong>scikit-learn 1.3.0</strong><br/>
           <a href="http://scikit-learn.org/dev/versions.html">Other versions</a>
           </p>
         </div>
@@ -196,8 +197,6 @@
 </li>
 <li><a class="reference internal" href="#documentation">Documentation</a><ul>
 <li><a class="reference internal" href="#building-the-documentation">Building the documentation</a></li>
-<li><a class="reference internal" href="#guidelines-for-writing-documentation">Guidelines for writing documentation</a></li>
-<li><a class="reference internal" href="#cross-referencing">Cross-referencing</a></li>
 <li><a class="reference internal" href="#generated-documentation-on-github-actions">Generated documentation on GitHub Actions</a></li>
 </ul>
 </li>
@@ -427,7 +426,7 @@ span.prompt1:before {
 <li><p>Follow steps 2-7 in <a class="reference internal" href="advanced_installation.html#install-bleeding-edge"><span class="std std-ref">Building from source</span></a> to build scikit-learn in
 development mode and return to this document.</p></li>
 <li><p>Install the development dependencies:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span class="prompt1">pip<span class="w"> </span>install<span class="w"> </span>pytest<span class="w"> </span>pytest-cov<span class="w"> </span>flake8<span class="w"> </span>mypy<span class="w"> </span>numpydoc<span class="w"> </span><span class="nv">black</span><span class="o">==</span><span class="m">23</span>.3.0</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span class="prompt1">pip<span class="w"> </span>install<span class="w"> </span>pytest<span class="w"> </span>pytest-cov<span class="w"> </span>ruff<span class="w"> </span>mypy<span class="w"> </span>numpydoc<span class="w"> </span><span class="nv">black</span><span class="o">==</span><span class="m">23</span>.3.0</span>
 </pre></div></div></li>
 </ol>
 <ol class="arabic" id="upstream" start="6">
@@ -562,15 +561,6 @@ modifications on the code base are granted to be consistent with the
 desired behavior. In the case of bug fixes, at the time of the PR, the
 non-regression tests should fail for the code base in the <code class="docutils literal notranslate"><span class="pre">main</span></code> branch
 and pass for the PR code.</p></li>
-<li><p>Run <code class="docutils literal notranslate"><span class="pre">black</span></code> to auto-format your code.</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span class="prompt1">black<span class="w"> </span>.</span>
-</pre></div></div><p>See black’s
-<a class="reference external" href="https://black.readthedocs.io/en/stable/integrations/editors.html">editor integration documentation</a>
-to configure your editor to run <code class="docutils literal notranslate"><span class="pre">black</span></code>.</p>
-</li>
-<li><p>Run <code class="docutils literal notranslate"><span class="pre">flake8</span></code> to make sure you followed the project coding conventions.</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span class="prompt1">flake8<span class="w"> </span>.</span>
-</pre></div></div></li>
 <li><p>Follow the <a class="reference internal" href="develop.html#coding-guidelines"><span class="std std-ref">Coding guidelines</span></a>.</p></li>
 <li><p>When applicable, use the validation tools and scripts in the
 <code class="docutils literal notranslate"><span class="pre">sklearn.utils</span></code> submodule.  A list of utility routines available
@@ -583,19 +573,25 @@ one is preceded by a keyword). Upon merging, those issues/PRs will
 automatically be closed by GitHub. If your pull request is simply
 related to some other issues/PRs, create a link to them without using
 the keywords (e.g., <code class="docutils literal notranslate"><span class="pre">See</span> <span class="pre">also</span> <span class="pre">#1234</span></code>).</p></li>
-<li><p>PRs should often substantiate the change, through benchmarks of
-performance and efficiency (see <a class="reference internal" href="#monitoring-performances"><span class="std std-ref">Monitoring performance</span></a>) or through
+<li><dl class="simple">
+<dt>PRs should often substantiate the change, through benchmarks of</dt><dd><p>performance and efficiency (see <a class="reference internal" href="#monitoring-performances"><span class="std std-ref">Monitoring performance</span></a>) or through
 examples of usage. Examples also illustrate the features and intricacies of
 the library to users. Have a look at other examples in the <a class="reference external" href="https://github.com/scikit-learn/scikit-learn/tree/main/examples">examples/</a>
 directory for reference. Examples should demonstrate why the new
 functionality is useful in practice and, if possible, compare it to other
-methods available in scikit-learn.</p></li>
-<li><p>New features have some maintenance overhead. We expect PR authors
-to take part in the maintenance for the code they submit, at least
+methods available in scikit-learn.</p>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>New features have some maintenance overhead. We expect PR authors</dt><dd><p>to take part in the maintenance for the code they submit, at least
 initially. New features need to be illustrated with narrative
 documentation in the user guide, with small code snippets.
 If relevant, please also add references in the literature, with PDF links
-when possible.</p></li>
+when possible.</p>
+</dd>
+</dl>
+</li>
 <li><p>The user guide should also include expected time and space complexity
 of the algorithm and scalability, e.g. “this algorithm can scale to a
 large number of samples &gt; 100000, but does not scale in dimensionality:
@@ -644,8 +640,10 @@ sections.</p>
 <ul class="simple">
 <li><p>Azure pipelines are used for testing scikit-learn on Linux, Mac and Windows,
 with different dependencies and settings.</p></li>
-<li><p>CircleCI is used to build the docs for viewing, for linting with flake8, and
-for testing with ARM64 / aarch64 on Linux</p></li>
+<li><p>CircleCI is used to build the docs for viewing.</p></li>
+<li><p>Github Actions are used for various tasks, including building wheels and
+source distributions.</p></li>
+<li><p>Cirrus CI is used to build on ARM.</p></li>
 </ul>
 <p>Please note that if one of the following markers appear in the latest commit
 message, the following actions are taken.</p>
@@ -819,82 +817,17 @@ concepts and are located in
 of scikit-learn modules, compare different algorithms or discuss their
 interpretation etc. Examples live in
 <a class="reference external" href="https://github.com/scikit-learn/scikit-learn/tree/main/examples">examples/</a></p></li>
-<li><p><strong>other reStructuredText documents</strong> (like this one) - provide various other
-useful information (e.g., our guide to contributing) and live in
+<li><p><strong>other reStructuredText documents</strong> - provide various other
+useful information (e.g., the <a class="reference internal" href="#contributing"><span class="std std-ref">Contributing</span></a> guide) and live in
 <a class="reference external" href="https://github.com/scikit-learn/scikit-learn/tree/main/doc">doc/</a>.</p></li>
 </ul>
-<p>You can edit the documentation using any text editor, and then generate the
-HTML output by following <a class="reference internal" href="#building-documentation"><span class="std std-ref">Building the documentation</span></a>. The resulting HTML files
-will be placed in <code class="docutils literal notranslate"><span class="pre">_build/html/stable</span></code> and are viewable in a web browser, for
-instance by opening the local <code class="docutils literal notranslate"><span class="pre">_build/html/stable/index.html</span></code> file.</p>
-<section id="building-the-documentation">
-<span id="building-documentation"></span><h3>Building the documentation<a class="headerlink" href="#building-the-documentation" title="Permalink to this heading">¶</a></h3>
-<p>First, make sure you have <a class="reference internal" href="advanced_installation.html#install-bleeding-edge"><span class="std std-ref">properly installed</span></a>
-the development version.</p>
-<p>Building the documentation requires installing some additional packages:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span class="prompt1">pip<span class="w"> </span>install<span class="w"> </span>sphinx<span class="w"> </span>sphinx-gallery<span class="w"> </span>numpydoc<span class="w"> </span>matplotlib<span class="w"> </span>Pillow<span class="w"> </span>pandas<span class="w"> </span><span class="se">\</span>
-<span class="w">            </span>scikit-image<span class="w"> </span>packaging<span class="w"> </span>seaborn<span class="w"> </span>sphinx-prompt<span class="w"> </span><span class="se">\</span>
-<span class="w">            </span>sphinxext-opengraph<span class="w"> </span>plotly<span class="w"> </span>pooch</span>
-</pre></div></div><p>To build the documentation, you need to be in the <code class="docutils literal notranslate"><span class="pre">doc</span></code> folder:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span class="prompt1"><span class="nb">cd</span><span class="w"> </span>doc</span>
-</pre></div></div><p>In the vast majority of cases, you only need to generate the full web site,
-without the example gallery:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span class="prompt1">make</span>
-</pre></div></div><p>The documentation will be generated in the <code class="docutils literal notranslate"><span class="pre">_build/html/stable</span></code> directory
-and are viewable in a web browser, for instance by opening the local
-<code class="docutils literal notranslate"><span class="pre">_build/html/stable/index.html</span></code> file.
-To also generate the example gallery you can use:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span class="prompt1">make<span class="w"> </span>html</span>
-</pre></div></div><p>This will run all the examples, which takes a while. If you only want to
-generate a few examples, you can use:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span class="prompt1"><span class="nv">EXAMPLES_PATTERN</span><span class="o">=</span>your_regex_goes_here<span class="w"> </span>make<span class="w"> </span>html</span>
-</pre></div></div><p>This is particularly useful if you are modifying a few examples.</p>
-<p>Set the environment variable <code class="docutils literal notranslate"><span class="pre">NO_MATHJAX=1</span></code> if you intend to view
-the documentation in an offline setting.</p>
-<p>To build the PDF manual, run:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span class="prompt1">make<span class="w"> </span>latexpdf</span>
-</pre></div></div><div class="admonition warning">
-<p class="admonition-title">Warning</p>
-<p><strong>Sphinx version</strong></p>
-<p>While we do our best to have the documentation build under as many
-versions of Sphinx as possible, the different versions tend to
-behave slightly differently. To get the best results, you should
-use the same version as the one we used on CircleCI. Look at this
-<a class="reference external" href="https://github.com/search?utf8=%E2%9C%93&amp;q=sphinx+repo%3Ascikit-learn%2Fscikit-learn+extension%3Ash+path%3Abuild_tools%2Fcircle&amp;type=Code">github search</a>
-to know the exact version.</p>
-</div>
-</section>
-<section id="guidelines-for-writing-documentation">
-<h3>Guidelines for writing documentation<a class="headerlink" href="#guidelines-for-writing-documentation" title="Permalink to this heading">¶</a></h3>
-<p>It is important to keep a good compromise between mathematical and algorithmic
-details, and give intuition to the reader on what the algorithm does.</p>
-<p>Basically, to elaborate on the above, it is best to always
-start with a small paragraph with a hand-waving explanation of what the
-method does to the data. Then, it is very helpful to point out why the feature is
-useful and when it should be used - the latter also including “big O”
-(<span class="math notranslate nohighlight">\(O\left(g\left(n\right)\right)\)</span>) complexities of the algorithm, as opposed
-to just <em>rules of thumb</em>, as the latter can be very machine-dependent. If those
-complexities are not available, then rules of thumb may be provided instead.</p>
-<p>Secondly, a generated figure from an example (as mentioned in the previous
-paragraph) should then be included to further provide some intuition.</p>
-<p>Next, one or two small code examples to show its use can be added.</p>
-<p>Next, any math and equations, followed by references,
-can be added to further the documentation. Not starting the
-documentation with the maths makes it more friendly towards
-users that are just interested in what the feature will do, as
-opposed to how it works “under the hood”.</p>
-<p>Finally, follow the formatting rules below to make it consistently good:</p>
+<p><details>
+<summary class="btn btn-light">
+<strong>Guidelines for writing docstrings</strong>
+<span class="tooltiptext">Click for more details</span>
+</summary>
+<div class="card"></p>
 <ul>
-<li><p>Add “See Also” in docstrings for related classes/functions.</p></li>
-<li><p>“See Also” in docstrings should be one line per reference,
-with a colon and an explanation, for example:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">See</span> <span class="n">Also</span>
-<span class="o">--------</span>
-<span class="n">SelectKBest</span> <span class="p">:</span> <span class="n">Select</span> <span class="n">features</span> <span class="n">based</span> <span class="n">on</span> <span class="n">the</span> <span class="n">k</span> <span class="n">highest</span> <span class="n">scores</span><span class="o">.</span>
-<span class="n">SelectFpr</span> <span class="p">:</span> <span class="n">Select</span> <span class="n">features</span> <span class="n">based</span> <span class="n">on</span> <span class="n">a</span> <span class="n">false</span> <span class="n">positive</span> <span class="n">rate</span> <span class="n">test</span><span class="o">.</span>
-</pre></div>
-</div>
-</li>
 <li><p>When documenting the parameters and attributes, here is a list of some
 well-formatted examples:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span>n_clusters : int, default=3
@@ -921,67 +854,137 @@ multioutput_array : ndarray of shape (n_samples, n_classes) or list of such arra
 </div>
 <p>In general have the following in mind:</p>
 <blockquote>
-<div><ol class="arabic simple">
+<div><ul class="simple">
 <li><p>Use Python basic types. (<code class="docutils literal notranslate"><span class="pre">bool</span></code> instead of <code class="docutils literal notranslate"><span class="pre">boolean</span></code>)</p></li>
 <li><p>Use parenthesis for defining shapes: <code class="docutils literal notranslate"><span class="pre">array-like</span> <span class="pre">of</span> <span class="pre">shape</span> <span class="pre">(n_samples,)</span></code>
 or <code class="docutils literal notranslate"><span class="pre">array-like</span> <span class="pre">of</span> <span class="pre">shape</span> <span class="pre">(n_samples,</span> <span class="pre">n_features)</span></code></p></li>
-<li><p>For strings with multiple options, use brackets:
-<code class="docutils literal notranslate"><span class="pre">input:</span> <span class="pre">{'log',</span> <span class="pre">'squared',</span> <span class="pre">'multinomial'}</span></code></p></li>
-<li><p>1D or 2D data can be a subset of
-<code class="docutils literal notranslate"><span class="pre">{array-like,</span> <span class="pre">ndarray,</span> <span class="pre">sparse</span> <span class="pre">matrix,</span> <span class="pre">dataframe}</span></code>. Note that <code class="docutils literal notranslate"><span class="pre">array-like</span></code>
-can also be a <code class="docutils literal notranslate"><span class="pre">list</span></code>, while <code class="docutils literal notranslate"><span class="pre">ndarray</span></code> is explicitly only a <code class="docutils literal notranslate"><span class="pre">numpy.ndarray</span></code>.</p></li>
-<li><p>Specify <code class="docutils literal notranslate"><span class="pre">dataframe</span></code> when “frame-like” features are being used, such
-as the column names.</p></li>
-<li><p>When specifying the data type of a list, use <code class="docutils literal notranslate"><span class="pre">of</span></code> as a delimiter:
-<code class="docutils literal notranslate"><span class="pre">list</span> <span class="pre">of</span> <span class="pre">int</span></code>. When the parameter supports arrays giving details
-about the shape and/or data type and a list of such arrays, you can
-use one of <code class="docutils literal notranslate"><span class="pre">array-like</span> <span class="pre">of</span> <span class="pre">shape</span> <span class="pre">(n_samples,)</span> <span class="pre">or</span> <span class="pre">list</span> <span class="pre">of</span> <span class="pre">such</span> <span class="pre">arrays</span></code>.</p></li>
-<li><p>When specifying the dtype of an ndarray, use e.g. <code class="docutils literal notranslate"><span class="pre">dtype=np.int32</span></code>
-after defining the shape:
-<code class="docutils literal notranslate"><span class="pre">ndarray</span> <span class="pre">of</span> <span class="pre">shape</span> <span class="pre">(n_samples,),</span> <span class="pre">dtype=np.int32</span></code>. You can specify
-multiple dtype as a set:
-<code class="docutils literal notranslate"><span class="pre">array-like</span> <span class="pre">of</span> <span class="pre">shape</span> <span class="pre">(n_samples,),</span> <span class="pre">dtype={np.float64,</span> <span class="pre">np.float32}</span></code>.
-If one wants to mention arbitrary precision, use <code class="docutils literal notranslate"><span class="pre">integral</span></code> and
-<code class="docutils literal notranslate"><span class="pre">floating</span></code> rather than the Python dtype <code class="docutils literal notranslate"><span class="pre">int</span></code> and <code class="docutils literal notranslate"><span class="pre">float</span></code>. When both
-<code class="docutils literal notranslate"><span class="pre">int</span></code> and <code class="docutils literal notranslate"><span class="pre">floating</span></code> are supported, there is no need to specify the
-dtype.</p></li>
+<li><p>For strings with multiple options, use brackets: <code class="docutils literal notranslate"><span class="pre">input:</span> <span class="pre">{'log',</span>
+<span class="pre">'squared',</span> <span class="pre">'multinomial'}</span></code></p></li>
+<li><p>1D or 2D data can be a subset of <code class="docutils literal notranslate"><span class="pre">{array-like,</span> <span class="pre">ndarray,</span> <span class="pre">sparse</span> <span class="pre">matrix,</span>
+<span class="pre">dataframe}</span></code>. Note that <code class="docutils literal notranslate"><span class="pre">array-like</span></code> can also be a <code class="docutils literal notranslate"><span class="pre">list</span></code>, while
+<code class="docutils literal notranslate"><span class="pre">ndarray</span></code> is explicitly only a <code class="docutils literal notranslate"><span class="pre">numpy.ndarray</span></code>.</p></li>
+<li><p>Specify <code class="docutils literal notranslate"><span class="pre">dataframe</span></code> when “frame-like” features are being used, such as
+the column names.</p></li>
+<li><p>When specifying the data type of a list, use <code class="docutils literal notranslate"><span class="pre">of</span></code> as a delimiter: <code class="docutils literal notranslate"><span class="pre">list</span>
+<span class="pre">of</span> <span class="pre">int</span></code>. When the parameter supports arrays giving details about the
+shape and/or data type and a list of such arrays, you can use one of
+<code class="docutils literal notranslate"><span class="pre">array-like</span> <span class="pre">of</span> <span class="pre">shape</span> <span class="pre">(n_samples,)</span> <span class="pre">or</span> <span class="pre">list</span> <span class="pre">of</span> <span class="pre">such</span> <span class="pre">arrays</span></code>.</p></li>
+<li><p>When specifying the dtype of an ndarray, use e.g. <code class="docutils literal notranslate"><span class="pre">dtype=np.int32</span></code> after
+defining the shape: <code class="docutils literal notranslate"><span class="pre">ndarray</span> <span class="pre">of</span> <span class="pre">shape</span> <span class="pre">(n_samples,),</span> <span class="pre">dtype=np.int32</span></code>. You
+can specify multiple dtype as a set: <code class="docutils literal notranslate"><span class="pre">array-like</span> <span class="pre">of</span> <span class="pre">shape</span> <span class="pre">(n_samples,),</span>
+<span class="pre">dtype={np.float64,</span> <span class="pre">np.float32}</span></code>. If one wants to mention arbitrary
+precision, use <code class="docutils literal notranslate"><span class="pre">integral</span></code> and <code class="docutils literal notranslate"><span class="pre">floating</span></code> rather than the Python dtype
+<code class="docutils literal notranslate"><span class="pre">int</span></code> and <code class="docutils literal notranslate"><span class="pre">float</span></code>. When both <code class="docutils literal notranslate"><span class="pre">int</span></code> and <code class="docutils literal notranslate"><span class="pre">floating</span></code> are supported, there is
+no need to specify the dtype.</p></li>
 <li><p>When the default is <code class="docutils literal notranslate"><span class="pre">None</span></code>, <code class="docutils literal notranslate"><span class="pre">None</span></code> only needs to be specified at the
 end with <code class="docutils literal notranslate"><span class="pre">default=None</span></code>. Be sure to include in the docstring, what it
 means for the parameter or attribute to be <code class="docutils literal notranslate"><span class="pre">None</span></code>.</p></li>
-</ol>
+</ul>
 </div></blockquote>
 </li>
-<li><p>For unwritten formatting rules, try to follow existing good works:</p>
+<li><p>Add “See Also” in docstrings for related classes/functions.</p></li>
+<li><p>“See Also” in docstrings should be one line per reference, with a colon and an
+explanation, for example:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">See</span> <span class="n">Also</span>
+<span class="o">--------</span>
+<span class="n">SelectKBest</span> <span class="p">:</span> <span class="n">Select</span> <span class="n">features</span> <span class="n">based</span> <span class="n">on</span> <span class="n">the</span> <span class="n">k</span> <span class="n">highest</span> <span class="n">scores</span><span class="o">.</span>
+<span class="n">SelectFpr</span> <span class="p">:</span> <span class="n">Select</span> <span class="n">features</span> <span class="n">based</span> <span class="n">on</span> <span class="n">a</span> <span class="n">false</span> <span class="n">positive</span> <span class="n">rate</span> <span class="n">test</span><span class="o">.</span>
+</pre></div>
+</div>
+</li>
+<li><p>Add one or two snippets of code in “Example” section to show how it can be used.</p></li>
+</ul>
+<p></div>
+</details></p>
+<p><details>
+<summary class="btn btn-light">
+<strong>Guidelines for writing the user guide and other reStructuredText documents</strong>
+<span class="tooltiptext">Click for more details</span>
+</summary>
+<div class="card"></p>
+<p>It is important to keep a good compromise between mathematical and algorithmic
+details, and give intuition to the reader on what the algorithm does.</p>
+<ul>
+<li><p>Begin with a concise, hand-waving explanation of what the algorithm/code does on
+the data.</p></li>
+<li><p>Highlight the usefulness of the feature and its recommended application.
+Consider including the algorithm’s complexity
+(<span class="math notranslate nohighlight">\(O\left(g\left(n\right)\right)\)</span>) if available, as “rules of thumb” can
+be very machine-dependent. Only if those complexities are not available, then
+rules of thumb may be provided instead.</p></li>
+<li><p>Incorporate a relevant figure (generated from an example) to provide intuitions.</p></li>
+<li><p>Include one or two short code examples to demonstrate the feature’s usage.</p></li>
+<li><p>Introduce any necessary mathematical equations, followed by references. By
+deferring the mathematical aspects, the documentation becomes more accessible
+to users primarily interested in understanding the feature’s practical
+implications rather than its underlying mechanics.</p></li>
+<li><p>When editing reStructuredText (<code class="docutils literal notranslate"><span class="pre">.rst</span></code>) files, try to keep line length under
+88 characters when possible (exceptions include links and tables).</p></li>
+<li><p>In scikit-learn reStructuredText files both single and double backticks
+surrounding text will render as inline literal (often used for code, e.g.,
+<code class="docutils literal notranslate"><span class="pre">list</span></code>). This is due to specific configurations we have set. Single
+backticks should be used nowadays.</p></li>
+<li><p>Too much information makes it difficult for users to access the content they
+are interested in. Use dropdowns to factorize it by using the following
+syntax:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">|</span><span class="n">details</span><span class="o">-</span><span class="n">start</span><span class="o">|</span>
+<span class="o">**</span><span class="n">Dropdown</span> <span class="n">title</span><span class="o">**</span>
+<span class="o">|</span><span class="n">details</span><span class="o">-</span><span class="n">split</span><span class="o">|</span>
+
+<span class="n">Dropdown</span> <span class="n">content</span><span class="o">.</span>
+
+<span class="o">|</span><span class="n">details</span><span class="o">-</span><span class="n">end</span><span class="o">|</span>
+</pre></div>
+</div>
+<p>The snippet above will result in the following dropdown:</p>
+<p><details>
+<summary class="btn btn-light">
+<strong>Dropdown title</strong>
+<span class="tooltiptext">Click for more details</span>
+</summary>
+<div class="card"></p>
+<p>Dropdown content.</p>
+<p></div>
+</details></p>
+</li>
+<li><p>Information that can be hidden by default using dropdowns is:</p>
 <blockquote>
 <div><ul class="simple">
+<li><p>low hierarchy sections such as <code class="docutils literal notranslate"><span class="pre">References</span></code>, <code class="docutils literal notranslate"><span class="pre">Properties</span></code>, etc. (see for
+instance the subsections in <a class="reference internal" href="../modules/model_evaluation.html#det-curve"><span class="std std-ref">Detection error tradeoff (DET)</span></a>);</p></li>
+<li><p>in-depth mathematical details;</p></li>
+<li><p>narrative that is use-case specific;</p></li>
+<li><p>in general, narrative that may only interest users that want to go beyond
+the pragmatics of a given tool.</p></li>
+</ul>
+</div></blockquote>
+</li>
+<li><p>Do not use dropdowns for the low level section <code class="docutils literal notranslate"><span class="pre">Examples</span></code>, as it should stay
+visible to all users. Make sure that the <code class="docutils literal notranslate"><span class="pre">Examples</span></code> section comes right after
+the main discussion with the least possible folded section in-between.</p></li>
+<li><p>Be aware that dropdowns break cross-references. If that makes sense, hide the
+reference along with the text mentioning it. Else, do not use dropdown.</p></li>
+</ul>
+<p></div>
+</details></p>
+<p><details>
+<summary class="btn btn-light">
+<strong>Guidelines for writing references</strong>
+<span class="tooltiptext">Click for more details</span>
+</summary>
+<div class="card"></p>
+<ul>
 <li><p>When bibliographic references are available with <a class="reference external" href="https://arxiv.org/">arxiv</a>
 or <a class="reference external" href="https://www.doi.org/">Digital Object Identifier</a> identification numbers,
 use the sphinx directives <code class="docutils literal notranslate"><span class="pre">:arxiv:</span></code> or <code class="docutils literal notranslate"><span class="pre">:doi:</span></code>. For example, see references in
 <a class="reference internal" href="../modules/clustering.html#spectral-clustering-graph"><span class="std std-ref">Spectral Clustering Graphs</span></a>.</p></li>
 <li><p>For “References” in docstrings, see the Silhouette Coefficient
 (<a class="reference internal" href="../modules/generated/sklearn.metrics.silhouette_score.html#sklearn.metrics.silhouette_score" title="sklearn.metrics.silhouette_score"><code class="xref py py-func docutils literal notranslate"><span class="pre">sklearn.metrics.silhouette_score</span></code></a>).</p></li>
-</ul>
-</div></blockquote>
-</li>
-<li><p>When editing reStructuredText (<code class="docutils literal notranslate"><span class="pre">.rst</span></code>) files, try to keep line length under
-80 characters when possible (exceptions include links and tables).</p></li>
-<li><p>In scikit-learn reStructuredText files both single and double backticks
-surrounding text will render as inline literal (often used for code, e.g.,
-<code class="docutils literal notranslate"><span class="pre">list</span></code>). This is due to specific configurations we have set. Single
-backticks should be used nowadays.</p></li>
-<li><p>Before submitting your pull request check if your modifications have
-introduced new sphinx warnings and try to fix them.</p></li>
-</ul>
-</section>
-<section id="cross-referencing">
-<h3>Cross-referencing<a class="headerlink" href="#cross-referencing" title="Permalink to this heading">¶</a></h3>
-<p>It is often useful to cross-reference to other pages in the scikit-learn
-documentation. This should be done with reStructuredText cross-referencing
-syntax:</p>
+<li><p>To cross-reference to other pages in the scikit-learn documentation use the
+reStructuredText cross-referencing syntax:</p>
 <ul>
-<li><p>Section - to link to an arbitrary section in the documentation, use reference
-labels (see
-<a class="reference external" href="https://www.sphinx-doc.org/en/master/usage/restructuredtext/roles.html#ref-role">Sphinx docs</a>).
+<li><p>Section - to link to an arbitrary section in the documentation, use
+reference labels (see <a class="reference external" href="https://www.sphinx-doc.org/en/master/usage/restructuredtext/roles.html#ref-role">Sphinx docs</a>).
 For example:</p>
 <div class="highlight-rst notranslate"><div class="highlight"><pre><span></span><span class="p">..</span> <span class="nt">_my-section:</span>
 
@@ -994,20 +997,20 @@ To refer to itself use <span class="na">:ref:</span><span class="nv">`my-section
 </pre></div>
 </div>
 <p>You should not modify existing sphinx reference labels as this would break
-existing cross references and external links pointing to specific sections in
-the scikit-learn documentation.</p>
+existing cross references and external links pointing to specific sections
+in the scikit-learn documentation.</p>
 </li>
 <li><p>Glossary - linking to a term in the <a class="reference internal" href="../glossary.html#glossary"><span class="std std-ref">Glossary of Common Terms and API Elements</span></a>:</p>
 <div class="highlight-rst notranslate"><div class="highlight"><pre><span></span><span class="na">:term:</span><span class="nv">`cross_validation`</span>
 </pre></div>
 </div>
 </li>
-<li><p>Function - to link to the documentation of a function, use the full
-import path to the function:</p>
+<li><p>Function - to link to the documentation of a function, use the full import
+path to the function:</p>
 <div class="highlight-rst notranslate"><div class="highlight"><pre><span></span><span class="na">:func:</span><span class="nv">`~sklearn.model_selection.cross_val_score`</span>
 </pre></div>
 </div>
-<p>However, if there is a ‘currentmodule’ directive above you in the document,
+<p>However, if there is a <code class="docutils literal notranslate"><span class="pre">..</span> <span class="pre">currentmodule::</span></code> directive above you in the document,
 you will only need to use the path to the function succeeding the current
 module specified. For example:</p>
 <div class="highlight-rst notranslate"><div class="highlight"><pre><span></span><span class="p">..</span> <span class="ow">currentmodule</span><span class="p">::</span> sklearn.model_selection
@@ -1024,6 +1027,52 @@ class, unless there is a ‘currentmodule’ directive in the document above
 </div>
 </li>
 </ul>
+</li>
+</ul>
+<p></div>
+</details></p>
+<p>You can edit the documentation using any text editor, and then generate the
+HTML output by following <a class="reference internal" href="#building-documentation"><span class="std std-ref">Building the documentation</span></a>. The resulting HTML files
+will be placed in <code class="docutils literal notranslate"><span class="pre">_build/html/stable</span></code> and are viewable in a web browser, for
+instance by opening the local <code class="docutils literal notranslate"><span class="pre">_build/html/stable/index.html</span></code> file.</p>
+<section id="building-the-documentation">
+<span id="building-documentation"></span><h3>Building the documentation<a class="headerlink" href="#building-the-documentation" title="Permalink to this heading">¶</a></h3>
+<p><strong>Before submitting a pull request check if your modifications have introduced
+new sphinx warnings by building the documentation locally and try to fix them.</strong></p>
+<p>First, make sure you have <a class="reference internal" href="advanced_installation.html#install-bleeding-edge"><span class="std std-ref">properly installed</span></a>
+the development version.</p>
+<p>Building the documentation requires installing some additional packages:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span class="prompt1">pip<span class="w"> </span>install<span class="w"> </span>sphinx<span class="w"> </span>sphinx-gallery<span class="w"> </span>numpydoc<span class="w"> </span>matplotlib<span class="w"> </span>Pillow<span class="w"> </span>pandas<span class="w"> </span><span class="se">\</span>
+<span class="w">            </span>scikit-image<span class="w"> </span>packaging<span class="w"> </span>seaborn<span class="w"> </span>sphinx-prompt<span class="w"> </span><span class="se">\</span>
+<span class="w">            </span>sphinxext-opengraph<span class="w"> </span>sphinx-copybutton<span class="w"> </span>plotly<span class="w"> </span>pooch</span>
+</pre></div></div><p>To build the documentation, you need to be in the <code class="docutils literal notranslate"><span class="pre">doc</span></code> folder:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span class="prompt1"><span class="nb">cd</span><span class="w"> </span>doc</span>
+</pre></div></div><p>In the vast majority of cases, you only need to generate the full web site,
+without the example gallery:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span class="prompt1">make</span>
+</pre></div></div><p>The documentation will be generated in the <code class="docutils literal notranslate"><span class="pre">_build/html/stable</span></code> directory
+and are viewable in a web browser, for instance by opening the local
+<code class="docutils literal notranslate"><span class="pre">_build/html/stable/index.html</span></code> file.
+To also generate the example gallery you can use:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span class="prompt1">make<span class="w"> </span>html</span>
+</pre></div></div><p>This will run all the examples, which takes a while. If you only want to
+generate a few examples, you can use:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span class="prompt1"><span class="nv">EXAMPLES_PATTERN</span><span class="o">=</span>your_regex_goes_here<span class="w"> </span>make<span class="w"> </span>html</span>
+</pre></div></div><p>This is particularly useful if you are modifying a few examples.</p>
+<p>Set the environment variable <code class="docutils literal notranslate"><span class="pre">NO_MATHJAX=1</span></code> if you intend to view
+the documentation in an offline setting.</p>
+<p>To build the PDF manual, run:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span class="prompt1">make<span class="w"> </span>latexpdf</span>
+</pre></div></div><div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p><strong>Sphinx version</strong></p>
+<p>While we do our best to have the documentation build under as many
+versions of Sphinx as possible, the different versions tend to
+behave slightly differently. To get the best results, you should
+use the same version as the one we used on CircleCI. Look at this
+<a class="reference external" href="https://github.com/search?q=repo%3Ascikit-learn%2Fscikit-learn+sphinx+path%3Abuild_tools%2Fcircle%2Fdoc_environment.yml&amp;type=code">GitHub search</a>
+to know the exact version.</p>
+</div>
 </section>
 <section id="generated-documentation-on-github-actions">
 <span id="generated-doc-ci"></span><h3>Generated documentation on GitHub Actions<a class="headerlink" href="#generated-documentation-on-github-actions" title="Permalink to this heading">¶</a></h3>
@@ -1501,6 +1550,9 @@ variable) in the code base.</p></li>
 </script>
 
 
+<script src="../_static/clipboard.min.js"></script>
+<script src="../_static/copybutton.js"></script>
+
 <script>
 $(document).ready(function() {
     /* Add a [>>>] button on the top-right corner of code samples to hide
@@ -1514,44 +1566,15 @@ $(document).ready(function() {
 
     // get the styles from the current theme
     pre.parent().parent().css('position', 'relative');
-    var hide_text = 'Hide prompts and outputs';
-    var show_text = 'Show prompts and outputs';
 
     // create and add the button to all the code blocks that contain >>>
     div.each(function(index) {
         var jthis = $(this);
-        if (jthis.find('.gp').length > 0) {
-            var button = $('<span class="copybutton">&gt;&gt;&gt;</span>');
-            button.attr('title', hide_text);
-            button.data('hidden', 'false');
-            jthis.prepend(button);
-        }
         // tracebacks (.gt) contain bare text elements that need to be
         // wrapped in a span to work with .nextUntil() (see later)
         jthis.find('pre:has(.gt)').contents().filter(function() {
             return ((this.nodeType == 3) && (this.data.trim().length > 0));
         }).wrap('<span>');
-    });
-
-    // define the behavior of the button when it's clicked
-    $('.copybutton').click(function(e){
-        e.preventDefault();
-        var button = $(this);
-        if (button.data('hidden') === 'false') {
-            // hide the code output
-            button.parent().find('.go, .gp, .gt').hide();
-            button.next('pre').find('.gt').nextUntil('.gp, .go').css('visibility', 'hidden');
-            button.css('text-decoration', 'line-through');
-            button.attr('title', show_text);
-            button.data('hidden', 'true');
-        } else {
-            // show the code output
-            button.parent().find('.go, .gp, .gt').show();
-            button.next('pre').find('.gt').nextUntil('.gp, .go').css('visibility', 'visible');
-            button.css('text-decoration', 'none');
-            button.attr('title', hide_text);
-            button.data('hidden', 'false');
-        }
     });
 
 	/*** Add permalink buttons next to glossary terms ***/

@@ -18,7 +18,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
   
-  <title>SVM-Anova: SVM with univariate feature selection &mdash; scikit-learn 1.3.0rc1 documentation</title>
+  <title>SVM-Anova: SVM with univariate feature selection &mdash; scikit-learn 1.3.0 documentation</title>
   
   <link rel="canonical" href="http://scikit-learn.org/stable/auto_examples/svm/plot_svm_anova.html" />
 
@@ -29,6 +29,7 @@
   <link rel="stylesheet" href="../../_static/css/vendor/bootstrap.min.css" type="text/css" />
   <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
   <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/copybutton.css" type="text/css" />
   <link rel="stylesheet" href="../../_static/plot_directive.css" type="text/css" />
   <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Vibur" type="text/css" />
   <link rel="stylesheet" href="../../_static/jupyterlite_sphinx.css" type="text/css" />
@@ -165,7 +166,7 @@
         </div>
         <div class="alert alert-danger p-1 mb-2" role="alert">
           <p class="text-center mb-0">
-          <strong>scikit-learn 1.3.0rc1</strong><br/>
+          <strong>scikit-learn 1.3.0</strong><br/>
           <a href="http://scikit-learn.org/dev/versions.html">Other versions</a>
           </p>
         </div>
@@ -204,6 +205,7 @@ that our model achieves best performance when we select around 10% of features.<
 <section id="load-some-data-to-play-with">
 <h2>Load some data to play with<a class="headerlink" href="#load-some-data-to-play-with" title="Permalink to this heading">¶</a></h2>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+
 <span class="kn">from</span> <span class="nn">sklearn.datasets</span> <span class="kn">import</span> <a href="../../modules/generated/sklearn.datasets.load_iris.html#sklearn.datasets.load_iris" title="sklearn.datasets.load_iris" class="sphx-glr-backref-module-sklearn-datasets sphx-glr-backref-type-py-function"><span class="n">load_iris</span></a>
 
 <span class="n">X</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <a href="../../modules/generated/sklearn.datasets.load_iris.html#sklearn.datasets.load_iris" title="sklearn.datasets.load_iris" class="sphx-glr-backref-module-sklearn-datasets sphx-glr-backref-type-py-function"><span class="n">load_iris</span></a><span class="p">(</span><span class="n">return_X_y</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
@@ -216,8 +218,8 @@ that our model achieves best performance when we select around 10% of features.<
 </section>
 <section id="create-the-pipeline">
 <h2>Create the pipeline<a class="headerlink" href="#create-the-pipeline" title="Permalink to this heading">¶</a></h2>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">sklearn.pipeline</span> <span class="kn">import</span> <a href="../../modules/generated/sklearn.pipeline.Pipeline.html#sklearn.pipeline.Pipeline" title="sklearn.pipeline.Pipeline" class="sphx-glr-backref-module-sklearn-pipeline sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">Pipeline</span></a>
-<span class="kn">from</span> <span class="nn">sklearn.feature_selection</span> <span class="kn">import</span> <a href="../../modules/generated/sklearn.feature_selection.SelectPercentile.html#sklearn.feature_selection.SelectPercentile" title="sklearn.feature_selection.SelectPercentile" class="sphx-glr-backref-module-sklearn-feature_selection sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">SelectPercentile</span></a><span class="p">,</span> <a href="../../modules/generated/sklearn.feature_selection.f_classif.html#sklearn.feature_selection.f_classif" title="sklearn.feature_selection.f_classif" class="sphx-glr-backref-module-sklearn-feature_selection sphx-glr-backref-type-py-function"><span class="n">f_classif</span></a>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">sklearn.feature_selection</span> <span class="kn">import</span> <a href="../../modules/generated/sklearn.feature_selection.SelectPercentile.html#sklearn.feature_selection.SelectPercentile" title="sklearn.feature_selection.SelectPercentile" class="sphx-glr-backref-module-sklearn-feature_selection sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">SelectPercentile</span></a><span class="p">,</span> <a href="../../modules/generated/sklearn.feature_selection.f_classif.html#sklearn.feature_selection.f_classif" title="sklearn.feature_selection.f_classif" class="sphx-glr-backref-module-sklearn-feature_selection sphx-glr-backref-type-py-function"><span class="n">f_classif</span></a>
+<span class="kn">from</span> <span class="nn">sklearn.pipeline</span> <span class="kn">import</span> <a href="../../modules/generated/sklearn.pipeline.Pipeline.html#sklearn.pipeline.Pipeline" title="sklearn.pipeline.Pipeline" class="sphx-glr-backref-module-sklearn-pipeline sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">Pipeline</span></a>
 <span class="kn">from</span> <span class="nn">sklearn.preprocessing</span> <span class="kn">import</span> <a href="../../modules/generated/sklearn.preprocessing.StandardScaler.html#sklearn.preprocessing.StandardScaler" title="sklearn.preprocessing.StandardScaler" class="sphx-glr-backref-module-sklearn-preprocessing sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">StandardScaler</span></a>
 <span class="kn">from</span> <span class="nn">sklearn.svm</span> <span class="kn">import</span> <a href="../../modules/generated/sklearn.svm.SVC.html#sklearn.svm.SVC" title="sklearn.svm.SVC" class="sphx-glr-backref-module-sklearn-svm sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">SVC</span></a>
 
@@ -237,6 +239,7 @@ that our model achieves best performance when we select around 10% of features.<
 <section id="plot-the-cross-validation-score-as-a-function-of-percentile-of-features">
 <h2>Plot the cross-validation score as a function of percentile of features<a class="headerlink" href="#plot-the-cross-validation-score-as-a-function-of-percentile-of-features" title="Permalink to this heading">¶</a></h2>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+
 <span class="kn">from</span> <span class="nn">sklearn.model_selection</span> <span class="kn">import</span> <a href="../../modules/generated/sklearn.model_selection.cross_val_score.html#sklearn.model_selection.cross_val_score" title="sklearn.model_selection.cross_val_score" class="sphx-glr-backref-module-sklearn-model_selection sphx-glr-backref-type-py-function"><span class="n">cross_val_score</span></a>
 
 <span class="n">score_means</span> <span class="o">=</span> <span class="nb">list</span><span class="p">()</span>
@@ -258,7 +261,7 @@ that our model achieves best performance when we select around 10% of features.<
 <a href="https://matplotlib.org/stable/api/_as_gen/matplotlib.pyplot.show.html#matplotlib.pyplot.show" title="matplotlib.pyplot.show" class="sphx-glr-backref-module-matplotlib-pyplot sphx-glr-backref-type-py-function"><span class="n">plt</span><span class="o">.</span><span class="n">show</span></a><span class="p">()</span>
 </pre></div>
 </div>
-<img src="../../_images/sphx_glr_plot_svm_anova_001.png" srcset="../../_images/sphx_glr_plot_svm_anova_001.png" alt="Performance of the SVM-Anova varying the percentile of features selected" class = "sphx-glr-single-img"/><p class="sphx-glr-timing"><strong>Total running time of the script:</strong> ( 0 minutes  0.319 seconds)</p>
+<img src="../../_images/sphx_glr_plot_svm_anova_001.png" srcset="../../_images/sphx_glr_plot_svm_anova_001.png" alt="Performance of the SVM-Anova varying the percentile of features selected" class = "sphx-glr-single-img"/><p class="sphx-glr-timing"><strong>Total running time of the script:</strong> ( 0 minutes  0.339 seconds)</p>
 <div class="sphx-glr-footer sphx-glr-footer-example docutils container" id="sphx-glr-download-auto-examples-svm-plot-svm-anova-py">
 <div class="binder-badge docutils container">
 <a class="reference external image-reference" href="https://mybinder.org/v2/gh/scikit-learn/scikit-learn/1.3.X?urlpath=lab/tree/notebooks/auto_examples/svm/plot_svm_anova.ipynb"><img alt="Launch binder" src="../../_images/binder_badge_logo28.svg" width="150px" /></a>
@@ -303,6 +306,9 @@ that our model achieves best performance when we select around 10% of features.<
 </script>
 
 
+<script src="../../_static/clipboard.min.js"></script>
+<script src="../../_static/copybutton.js"></script>
+
 <script>
 $(document).ready(function() {
     /* Add a [>>>] button on the top-right corner of code samples to hide
@@ -316,44 +322,15 @@ $(document).ready(function() {
 
     // get the styles from the current theme
     pre.parent().parent().css('position', 'relative');
-    var hide_text = 'Hide prompts and outputs';
-    var show_text = 'Show prompts and outputs';
 
     // create and add the button to all the code blocks that contain >>>
     div.each(function(index) {
         var jthis = $(this);
-        if (jthis.find('.gp').length > 0) {
-            var button = $('<span class="copybutton">&gt;&gt;&gt;</span>');
-            button.attr('title', hide_text);
-            button.data('hidden', 'false');
-            jthis.prepend(button);
-        }
         // tracebacks (.gt) contain bare text elements that need to be
         // wrapped in a span to work with .nextUntil() (see later)
         jthis.find('pre:has(.gt)').contents().filter(function() {
             return ((this.nodeType == 3) && (this.data.trim().length > 0));
         }).wrap('<span>');
-    });
-
-    // define the behavior of the button when it's clicked
-    $('.copybutton').click(function(e){
-        e.preventDefault();
-        var button = $(this);
-        if (button.data('hidden') === 'false') {
-            // hide the code output
-            button.parent().find('.go, .gp, .gt').hide();
-            button.next('pre').find('.gt').nextUntil('.gp, .go').css('visibility', 'hidden');
-            button.css('text-decoration', 'line-through');
-            button.attr('title', show_text);
-            button.data('hidden', 'true');
-        } else {
-            // show the code output
-            button.parent().find('.go, .gp, .gt').show();
-            button.next('pre').find('.gt').nextUntil('.gp, .go').css('visibility', 'visible');
-            button.css('text-decoration', 'none');
-            button.attr('title', hide_text);
-            button.data('hidden', 'false');
-        }
     });
 
 	/*** Add permalink buttons next to glossary terms ***/

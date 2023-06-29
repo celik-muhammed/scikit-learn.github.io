@@ -18,7 +18,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
   
-  <title>Poisson regression and non-normal loss &mdash; scikit-learn 1.3.0rc1 documentation</title>
+  <title>Poisson regression and non-normal loss &mdash; scikit-learn 1.3.0 documentation</title>
   
   <link rel="canonical" href="http://scikit-learn.org/stable/auto_examples/linear_model/plot_poisson_regression_non_normal_loss.html" />
 
@@ -29,6 +29,7 @@
   <link rel="stylesheet" href="../../_static/css/vendor/bootstrap.min.css" type="text/css" />
   <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
   <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/copybutton.css" type="text/css" />
   <link rel="stylesheet" href="../../_static/plot_directive.css" type="text/css" />
   <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Vibur" type="text/css" />
   <link rel="stylesheet" href="../../_static/jupyterlite_sphinx.css" type="text/css" />
@@ -165,7 +166,7 @@
         </div>
         <div class="alert alert-danger p-1 mb-2" role="alert">
           <p class="text-center mb-0">
-          <strong>scikit-learn 1.3.0rc1</strong><br/>
+          <strong>scikit-learn 1.3.0</strong><br/>
           <a href="http://scikit-learn.org/dev/versions.html">Other versions</a>
           </p>
         </div>
@@ -233,8 +234,8 @@ Third-Party Liability Claims (November 8, 2018). <a class="reference external" h
 <span class="c1">#          Olivier Grisel &lt;olivier.grisel@ensta.org&gt;</span>
 <span class="c1"># License: BSD 3 clause</span>
 
-<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 <span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 <span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
 </pre></div>
 </div>
@@ -243,7 +244,6 @@ Third-Party Liability Claims (November 8, 2018). <a class="reference external" h
 <p>Let’s load the motor claim dataset from OpenML:
 <a class="reference external" href="https://www.openml.org/d/41214">https://www.openml.org/d/41214</a></p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">sklearn.datasets</span> <span class="kn">import</span> <a href="../../modules/generated/sklearn.datasets.fetch_openml.html#sklearn.datasets.fetch_openml" title="sklearn.datasets.fetch_openml" class="sphx-glr-backref-module-sklearn-datasets sphx-glr-backref-type-py-function"><span class="n">fetch_openml</span></a>
-
 
 <span class="n">df</span> <span class="o">=</span> <a href="../../modules/generated/sklearn.datasets.fetch_openml.html#sklearn.datasets.fetch_openml" title="sklearn.datasets.fetch_openml" class="sphx-glr-backref-module-sklearn-datasets sphx-glr-backref-type-py-function"><span class="n">fetch_openml</span></a><span class="p">(</span><span class="n">data_id</span><span class="o">=</span><span class="mi">41214</span><span class="p">,</span> <span class="n">as_frame</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">parser</span><span class="o">=</span><span class="s2">&quot;pandas&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">frame</span>
 <span class="n">df</span>
@@ -491,11 +491,14 @@ Those columns are very heterogeneous with a mix of categorical and numeric
 variables with different scales, possibly very unevenly distributed.</p>
 <p>In order to fit linear models with those predictors it is therefore
 necessary to perform standard feature transformations as follows:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">sklearn.pipeline</span> <span class="kn">import</span> <a href="../../modules/generated/sklearn.pipeline.make_pipeline.html#sklearn.pipeline.make_pipeline" title="sklearn.pipeline.make_pipeline" class="sphx-glr-backref-module-sklearn-pipeline sphx-glr-backref-type-py-function"><span class="n">make_pipeline</span></a>
-<span class="kn">from</span> <span class="nn">sklearn.preprocessing</span> <span class="kn">import</span> <a href="../../modules/generated/sklearn.preprocessing.FunctionTransformer.html#sklearn.preprocessing.FunctionTransformer" title="sklearn.preprocessing.FunctionTransformer" class="sphx-glr-backref-module-sklearn-preprocessing sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">FunctionTransformer</span></a><span class="p">,</span> <a href="../../modules/generated/sklearn.preprocessing.OneHotEncoder.html#sklearn.preprocessing.OneHotEncoder" title="sklearn.preprocessing.OneHotEncoder" class="sphx-glr-backref-module-sklearn-preprocessing sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">OneHotEncoder</span></a>
-<span class="kn">from</span> <span class="nn">sklearn.preprocessing</span> <span class="kn">import</span> <a href="../../modules/generated/sklearn.preprocessing.StandardScaler.html#sklearn.preprocessing.StandardScaler" title="sklearn.preprocessing.StandardScaler" class="sphx-glr-backref-module-sklearn-preprocessing sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">StandardScaler</span></a><span class="p">,</span> <a href="../../modules/generated/sklearn.preprocessing.KBinsDiscretizer.html#sklearn.preprocessing.KBinsDiscretizer" title="sklearn.preprocessing.KBinsDiscretizer" class="sphx-glr-backref-module-sklearn-preprocessing sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">KBinsDiscretizer</span></a>
-<span class="kn">from</span> <span class="nn">sklearn.compose</span> <span class="kn">import</span> <a href="../../modules/generated/sklearn.compose.ColumnTransformer.html#sklearn.compose.ColumnTransformer" title="sklearn.compose.ColumnTransformer" class="sphx-glr-backref-module-sklearn-compose sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">ColumnTransformer</span></a>
-
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">sklearn.compose</span> <span class="kn">import</span> <a href="../../modules/generated/sklearn.compose.ColumnTransformer.html#sklearn.compose.ColumnTransformer" title="sklearn.compose.ColumnTransformer" class="sphx-glr-backref-module-sklearn-compose sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">ColumnTransformer</span></a>
+<span class="kn">from</span> <span class="nn">sklearn.pipeline</span> <span class="kn">import</span> <a href="../../modules/generated/sklearn.pipeline.make_pipeline.html#sklearn.pipeline.make_pipeline" title="sklearn.pipeline.make_pipeline" class="sphx-glr-backref-module-sklearn-pipeline sphx-glr-backref-type-py-function"><span class="n">make_pipeline</span></a>
+<span class="kn">from</span> <span class="nn">sklearn.preprocessing</span> <span class="kn">import</span> <span class="p">(</span>
+    <a href="../../modules/generated/sklearn.preprocessing.FunctionTransformer.html#sklearn.preprocessing.FunctionTransformer" title="sklearn.preprocessing.FunctionTransformer" class="sphx-glr-backref-module-sklearn-preprocessing sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">FunctionTransformer</span></a><span class="p">,</span>
+    <a href="../../modules/generated/sklearn.preprocessing.KBinsDiscretizer.html#sklearn.preprocessing.KBinsDiscretizer" title="sklearn.preprocessing.KBinsDiscretizer" class="sphx-glr-backref-module-sklearn-preprocessing sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">KBinsDiscretizer</span></a><span class="p">,</span>
+    <a href="../../modules/generated/sklearn.preprocessing.OneHotEncoder.html#sklearn.preprocessing.OneHotEncoder" title="sklearn.preprocessing.OneHotEncoder" class="sphx-glr-backref-module-sklearn-preprocessing sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">OneHotEncoder</span></a><span class="p">,</span>
+    <a href="../../modules/generated/sklearn.preprocessing.StandardScaler.html#sklearn.preprocessing.StandardScaler" title="sklearn.preprocessing.StandardScaler" class="sphx-glr-backref-module-sklearn-preprocessing sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">StandardScaler</span></a><span class="p">,</span>
+<span class="p">)</span>
 
 <span class="n">log_scale_transformer</span> <span class="o">=</span> <a href="../../modules/generated/sklearn.pipeline.make_pipeline.html#sklearn.pipeline.make_pipeline" title="sklearn.pipeline.make_pipeline" class="sphx-glr-backref-module-sklearn-pipeline sphx-glr-backref-type-py-function"><span class="n">make_pipeline</span></a><span class="p">(</span>
     <a href="../../modules/generated/sklearn.preprocessing.FunctionTransformer.html#sklearn.preprocessing.FunctionTransformer" title="sklearn.preprocessing.FunctionTransformer" class="sphx-glr-backref-module-sklearn-preprocessing sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">FunctionTransformer</span></a><span class="p">(</span><a href="https://numpy.org/doc/stable/reference/generated/numpy.log.html#numpy.log" title="numpy.log" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-data"><span class="n">np</span><span class="o">.</span><span class="n">log</span></a><span class="p">,</span> <span class="n">validate</span><span class="o">=</span><span class="kc">False</span><span class="p">),</span> <a href="../../modules/generated/sklearn.preprocessing.StandardScaler.html#sklearn.preprocessing.StandardScaler" title="sklearn.preprocessing.StandardScaler" class="sphx-glr-backref-module-sklearn-preprocessing sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">StandardScaler</span></a><span class="p">()</span>
@@ -531,8 +534,8 @@ predict mean can achieve an accuracy of 93%.</p>
 baseline a “dummy” estimator that constantly predicts the mean frequency of
 the training sample.</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">sklearn.dummy</span> <span class="kn">import</span> <a href="../../modules/generated/sklearn.dummy.DummyRegressor.html#sklearn.dummy.DummyRegressor" title="sklearn.dummy.DummyRegressor" class="sphx-glr-backref-module-sklearn-dummy sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">DummyRegressor</span></a>
-<span class="kn">from</span> <span class="nn">sklearn.pipeline</span> <span class="kn">import</span> <a href="../../modules/generated/sklearn.pipeline.Pipeline.html#sklearn.pipeline.Pipeline" title="sklearn.pipeline.Pipeline" class="sphx-glr-backref-module-sklearn-pipeline sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">Pipeline</span></a>
 <span class="kn">from</span> <span class="nn">sklearn.model_selection</span> <span class="kn">import</span> <a href="../../modules/generated/sklearn.model_selection.train_test_split.html#sklearn.model_selection.train_test_split" title="sklearn.model_selection.train_test_split" class="sphx-glr-backref-module-sklearn-model_selection sphx-glr-backref-type-py-function"><span class="n">train_test_split</span></a>
+<span class="kn">from</span> <span class="nn">sklearn.pipeline</span> <span class="kn">import</span> <a href="../../modules/generated/sklearn.pipeline.Pipeline.html#sklearn.pipeline.Pipeline" title="sklearn.pipeline.Pipeline" class="sphx-glr-backref-module-sklearn-pipeline sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">Pipeline</span></a>
 
 <span class="n">df_train</span><span class="p">,</span> <span class="n">df_test</span> <span class="o">=</span> <a href="../../modules/generated/sklearn.model_selection.train_test_split.html#sklearn.model_selection.train_test_split" title="sklearn.model_selection.train_test_split" class="sphx-glr-backref-module-sklearn-model_selection sphx-glr-backref-type-py-function"><span class="n">train_test_split</span></a><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">test_size</span><span class="o">=</span><span class="mf">0.33</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
 
@@ -546,9 +549,11 @@ the training sample.</p>
 </div>
 <p>Let’s compute the performance of this constant prediction baseline with 3
 different regression metrics:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">sklearn.metrics</span> <span class="kn">import</span> <a href="../../modules/generated/sklearn.metrics.mean_squared_error.html#sklearn.metrics.mean_squared_error" title="sklearn.metrics.mean_squared_error" class="sphx-glr-backref-module-sklearn-metrics sphx-glr-backref-type-py-function"><span class="n">mean_squared_error</span></a>
-<span class="kn">from</span> <span class="nn">sklearn.metrics</span> <span class="kn">import</span> <a href="../../modules/generated/sklearn.metrics.mean_absolute_error.html#sklearn.metrics.mean_absolute_error" title="sklearn.metrics.mean_absolute_error" class="sphx-glr-backref-module-sklearn-metrics sphx-glr-backref-type-py-function"><span class="n">mean_absolute_error</span></a>
-<span class="kn">from</span> <span class="nn">sklearn.metrics</span> <span class="kn">import</span> <a href="../../modules/generated/sklearn.metrics.mean_poisson_deviance.html#sklearn.metrics.mean_poisson_deviance" title="sklearn.metrics.mean_poisson_deviance" class="sphx-glr-backref-module-sklearn-metrics sphx-glr-backref-type-py-function"><span class="n">mean_poisson_deviance</span></a>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">sklearn.metrics</span> <span class="kn">import</span> <span class="p">(</span>
+    <a href="../../modules/generated/sklearn.metrics.mean_absolute_error.html#sklearn.metrics.mean_absolute_error" title="sklearn.metrics.mean_absolute_error" class="sphx-glr-backref-module-sklearn-metrics sphx-glr-backref-type-py-function"><span class="n">mean_absolute_error</span></a><span class="p">,</span>
+    <a href="../../modules/generated/sklearn.metrics.mean_poisson_deviance.html#sklearn.metrics.mean_poisson_deviance" title="sklearn.metrics.mean_poisson_deviance" class="sphx-glr-backref-module-sklearn-metrics sphx-glr-backref-type-py-function"><span class="n">mean_poisson_deviance</span></a><span class="p">,</span>
+    <a href="../../modules/generated/sklearn.metrics.mean_squared_error.html#sklearn.metrics.mean_squared_error" title="sklearn.metrics.mean_squared_error" class="sphx-glr-backref-module-sklearn-metrics sphx-glr-backref-type-py-function"><span class="n">mean_squared_error</span></a><span class="p">,</span>
+<span class="p">)</span>
 
 
 <span class="k">def</span> <span class="nf">score_estimator</span><span class="p">(</span><span class="n">estimator</span><span class="p">,</span> <span class="n">df_test</span><span class="p">):</span>
@@ -607,7 +612,6 @@ squares linear regression model, more comonly known as Ridge regression. We
 use a low penalization <code class="docutils literal notranslate"><span class="pre">alpha</span></code>, as we expect such a linear model to under-fit
 on such a large dataset.</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">sklearn.linear_model</span> <span class="kn">import</span> <a href="../../modules/generated/sklearn.linear_model.Ridge.html#sklearn.linear_model.Ridge" title="sklearn.linear_model.Ridge" class="sphx-glr-backref-module-sklearn-linear_model sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">Ridge</span></a>
-
 
 <span class="n">ridge_glm</span> <span class="o">=</span> <a href="../../modules/generated/sklearn.pipeline.Pipeline.html#sklearn.pipeline.Pipeline" title="sklearn.pipeline.Pipeline" class="sphx-glr-backref-module-sklearn-pipeline sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">Pipeline</span></a><span class="p">(</span>
     <span class="p">[</span>
@@ -687,7 +691,6 @@ least-squares loss. Here we only fit trees with the Poisson loss to keep this
 example concise.</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">sklearn.ensemble</span> <span class="kn">import</span> <a href="../../modules/generated/sklearn.ensemble.HistGradientBoostingRegressor.html#sklearn.ensemble.HistGradientBoostingRegressor" title="sklearn.ensemble.HistGradientBoostingRegressor" class="sphx-glr-backref-module-sklearn-ensemble sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">HistGradientBoostingRegressor</span></a>
 <span class="kn">from</span> <span class="nn">sklearn.preprocessing</span> <span class="kn">import</span> <a href="../../modules/generated/sklearn.preprocessing.OrdinalEncoder.html#sklearn.preprocessing.OrdinalEncoder" title="sklearn.preprocessing.OrdinalEncoder" class="sphx-glr-backref-module-sklearn-preprocessing sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">OrdinalEncoder</span></a>
-
 
 <span class="n">tree_preprocessor</span> <span class="o">=</span> <a href="../../modules/generated/sklearn.compose.ColumnTransformer.html#sklearn.compose.ColumnTransformer" title="sklearn.compose.ColumnTransformer" class="sphx-glr-backref-module-sklearn-compose sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">ColumnTransformer</span></a><span class="p">(</span>
     <span class="p">[</span>
@@ -937,7 +940,7 @@ each model.</p>
 <span class="n">ax</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="n">loc</span><span class="o">=</span><span class="s2">&quot;upper left&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
-<img src="../../_images/sphx_glr_plot_poisson_regression_non_normal_loss_004.png" srcset="../../_images/sphx_glr_plot_poisson_regression_non_normal_loss_004.png" alt="Lorenz curves by model" class = "sphx-glr-single-img"/><div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>&lt;matplotlib.legend.Legend object at 0x7f6bfab07f40&gt;
+<img src="../../_images/sphx_glr_plot_poisson_regression_non_normal_loss_004.png" srcset="../../_images/sphx_glr_plot_poisson_regression_non_normal_loss_004.png" alt="Lorenz curves by model" class = "sphx-glr-single-img"/><div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>&lt;matplotlib.legend.Legend object at 0x7f674ae4a610&gt;
 </pre></div>
 </div>
 <p>As expected, the dummy regressor is unable to correctly rank the samples and
@@ -987,7 +990,7 @@ Error are hard to meaningfully interpret on count values with many zeros.</p></l
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><a href="https://matplotlib.org/stable/api/_as_gen/matplotlib.pyplot.show.html#matplotlib.pyplot.show" title="matplotlib.pyplot.show" class="sphx-glr-backref-module-matplotlib-pyplot sphx-glr-backref-type-py-function"><span class="n">plt</span><span class="o">.</span><span class="n">show</span></a><span class="p">()</span>
 </pre></div>
 </div>
-<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> ( 0 minutes  20.240 seconds)</p>
+<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> ( 0 minutes  22.177 seconds)</p>
 <div class="sphx-glr-footer sphx-glr-footer-example docutils container" id="sphx-glr-download-auto-examples-linear-model-plot-poisson-regression-non-normal-loss-py">
 <div class="binder-badge docutils container">
 <a class="reference external image-reference" href="https://mybinder.org/v2/gh/scikit-learn/scikit-learn/1.3.X?urlpath=lab/tree/notebooks/auto_examples/linear_model/plot_poisson_regression_non_normal_loss.ipynb"><img alt="Launch binder" src="../../_images/binder_badge_logo17.svg" width="150px" /></a>
@@ -1032,6 +1035,9 @@ Error are hard to meaningfully interpret on count values with many zeros.</p></l
 </script>
 
 
+<script src="../../_static/clipboard.min.js"></script>
+<script src="../../_static/copybutton.js"></script>
+
 <script>
 $(document).ready(function() {
     /* Add a [>>>] button on the top-right corner of code samples to hide
@@ -1045,44 +1051,15 @@ $(document).ready(function() {
 
     // get the styles from the current theme
     pre.parent().parent().css('position', 'relative');
-    var hide_text = 'Hide prompts and outputs';
-    var show_text = 'Show prompts and outputs';
 
     // create and add the button to all the code blocks that contain >>>
     div.each(function(index) {
         var jthis = $(this);
-        if (jthis.find('.gp').length > 0) {
-            var button = $('<span class="copybutton">&gt;&gt;&gt;</span>');
-            button.attr('title', hide_text);
-            button.data('hidden', 'false');
-            jthis.prepend(button);
-        }
         // tracebacks (.gt) contain bare text elements that need to be
         // wrapped in a span to work with .nextUntil() (see later)
         jthis.find('pre:has(.gt)').contents().filter(function() {
             return ((this.nodeType == 3) && (this.data.trim().length > 0));
         }).wrap('<span>');
-    });
-
-    // define the behavior of the button when it's clicked
-    $('.copybutton').click(function(e){
-        e.preventDefault();
-        var button = $(this);
-        if (button.data('hidden') === 'false') {
-            // hide the code output
-            button.parent().find('.go, .gp, .gt').hide();
-            button.next('pre').find('.gt').nextUntil('.gp, .go').css('visibility', 'hidden');
-            button.css('text-decoration', 'line-through');
-            button.attr('title', show_text);
-            button.data('hidden', 'true');
-        } else {
-            // show the code output
-            button.parent().find('.go, .gp, .gt').show();
-            button.next('pre').find('.gt').nextUntil('.gp, .go').css('visibility', 'visible');
-            button.css('text-decoration', 'none');
-            button.attr('title', hide_text);
-            button.data('hidden', 'false');
-        }
     });
 
 	/*** Add permalink buttons next to glossary terms ***/

@@ -18,7 +18,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
   
-  <title>6.3. Preprocessing data &mdash; scikit-learn 1.3.0rc1 documentation</title>
+  <title>6.3. Preprocessing data &mdash; scikit-learn 1.3.0 documentation</title>
   
   <link rel="canonical" href="http://scikit-learn.org/stable/modules/preprocessing.html" />
 
@@ -29,6 +29,7 @@
   <link rel="stylesheet" href="../_static/css/vendor/bootstrap.min.css" type="text/css" />
   <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
   <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/copybutton.css" type="text/css" />
   <link rel="stylesheet" href="../_static/plot_directive.css" type="text/css" />
   <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Vibur" type="text/css" />
   <link rel="stylesheet" href="../_static/jupyterlite_sphinx.css" type="text/css" />
@@ -165,7 +166,7 @@
         </div>
         <div class="alert alert-danger p-1 mb-2" role="alert">
           <p class="text-center mb-0">
-          <strong>scikit-learn 1.3.0rc1</strong><br/>
+          <strong>scikit-learn 1.3.0</strong><br/>
           <a href="http://scikit-learn.org/dev/versions.html">Other versions</a>
           </p>
         </div>
@@ -1009,43 +1010,48 @@ more expensive for a downstream model to process. A classical example of high
 cardinality categories are location based such as zip code or region. For the
 binary classification target, the target encoding is given by:</p>
 <div class="math notranslate nohighlight">
-\[S_i = \lambda_i\frac{n_{iY}}{n_i} + (1 - \lambda_i)\frac{n_y}{n}\]</div>
+\[S_i = \lambda_i\frac{n_{iY}}{n_i} + (1 - \lambda_i)\frac{n_Y}{n}\]</div>
 <p>where <span class="math notranslate nohighlight">\(S_i\)</span> is the encoding for category <span class="math notranslate nohighlight">\(i\)</span>, <span class="math notranslate nohighlight">\(n_{iY}\)</span> is the
-number of observations with <span class="math notranslate nohighlight">\(Y=1\)</span> with category <span class="math notranslate nohighlight">\(i\)</span>, <span class="math notranslate nohighlight">\(n_i\)</span> is
-the number of observations with category <span class="math notranslate nohighlight">\(i\)</span>, <span class="math notranslate nohighlight">\(n_y\)</span> is the number of
+number of observations with <span class="math notranslate nohighlight">\(Y=1\)</span> and category <span class="math notranslate nohighlight">\(i\)</span>, <span class="math notranslate nohighlight">\(n_i\)</span> is
+the number of observations with category <span class="math notranslate nohighlight">\(i\)</span>, <span class="math notranslate nohighlight">\(n_Y\)</span> is the number of
 observations with <span class="math notranslate nohighlight">\(Y=1\)</span>, <span class="math notranslate nohighlight">\(n\)</span> is the number of observations, and
-<span class="math notranslate nohighlight">\(\lambda_i\)</span> is a shrinkage factor. The shrinkage factor is given by:</p>
+<span class="math notranslate nohighlight">\(\lambda_i\)</span> is a shrinkage factor for category <span class="math notranslate nohighlight">\(i\)</span>. The shrinkage
+factor is given by:</p>
 <div class="math notranslate nohighlight">
 \[\lambda_i = \frac{n_i}{m + n_i}\]</div>
 <p>where <span class="math notranslate nohighlight">\(m\)</span> is a smoothing factor, which is controlled with the <code class="docutils literal notranslate"><span class="pre">smooth</span></code>
 parameter in <a class="reference internal" href="generated/sklearn.preprocessing.TargetEncoder.html#sklearn.preprocessing.TargetEncoder" title="sklearn.preprocessing.TargetEncoder"><code class="xref py py-class docutils literal notranslate"><span class="pre">TargetEncoder</span></code></a>. Large smoothing factors will put more
 weight on the global mean. When <code class="docutils literal notranslate"><span class="pre">smooth=&quot;auto&quot;</span></code>, the smoothing factor is
-computed as an empirical Bayes estimate: <span class="math notranslate nohighlight">\(m=\sigma_c^2/\tau^2\)</span>, where
+computed as an empirical Bayes estimate: <span class="math notranslate nohighlight">\(m=\sigma_i^2/\tau^2\)</span>, where
 <span class="math notranslate nohighlight">\(\sigma_i^2\)</span> is the variance of <code class="docutils literal notranslate"><span class="pre">y</span></code> with category <span class="math notranslate nohighlight">\(i\)</span> and
 <span class="math notranslate nohighlight">\(\tau^2\)</span> is the global variance of <code class="docutils literal notranslate"><span class="pre">y</span></code>.</p>
 <p>For continuous targets, the formulation is similar to binary classification:</p>
 <div class="math notranslate nohighlight">
-\[S_i = \lambda_i\frac{\sum_{k\in L_i}y_k}{n_i} + (1 - \lambda_i)\frac{\sum_{k=1}^{n}y_k}{n}\]</div>
-<p>where <span class="math notranslate nohighlight">\(L_i\)</span> is the set of observations for which <span class="math notranslate nohighlight">\(X=X_i\)</span> and
-<span class="math notranslate nohighlight">\(n_i\)</span> is the cardinality of <span class="math notranslate nohighlight">\(L_i\)</span>.</p>
-<p><a class="reference internal" href="generated/sklearn.preprocessing.TargetEncoder.html#sklearn.preprocessing.TargetEncoder.fit_transform" title="sklearn.preprocessing.TargetEncoder.fit_transform"><code class="xref py py-meth docutils literal notranslate"><span class="pre">fit_transform</span></code></a> internally relies on a cross validation
-scheme to prevent information from the target from leaking into the train-time
-representation for non-informative high-cardinality categorical variables and
-help prevent the downstream model to overfit spurious correlations. Note that
-as a result, <code class="docutils literal notranslate"><span class="pre">fit(X,</span> <span class="pre">y).transform(X)</span></code> does not equal <code class="docutils literal notranslate"><span class="pre">fit_transform(X,</span> <span class="pre">y)</span></code>. In
-<a class="reference internal" href="generated/sklearn.preprocessing.TargetEncoder.html#sklearn.preprocessing.TargetEncoder.fit_transform" title="sklearn.preprocessing.TargetEncoder.fit_transform"><code class="xref py py-meth docutils literal notranslate"><span class="pre">fit_transform</span></code></a>, the training data is split into multiple
-folds and encodes each fold by using the encodings trained on the other folds.
-After cross validation is complete in <a class="reference internal" href="generated/sklearn.preprocessing.TargetEncoder.html#sklearn.preprocessing.TargetEncoder.fit_transform" title="sklearn.preprocessing.TargetEncoder.fit_transform"><code class="xref py py-meth docutils literal notranslate"><span class="pre">fit_transform</span></code></a>, the
-target encoder learns one final encoding on the whole training set. This final
-encoding is used to encode categories in <a class="reference internal" href="generated/sklearn.preprocessing.TargetEncoder.html#sklearn.preprocessing.TargetEncoder.transform" title="sklearn.preprocessing.TargetEncoder.transform"><code class="xref py py-meth docutils literal notranslate"><span class="pre">transform</span></code></a>. The
-following diagram shows the cross validation scheme in
-<a class="reference internal" href="generated/sklearn.preprocessing.TargetEncoder.html#sklearn.preprocessing.TargetEncoder.fit_transform" title="sklearn.preprocessing.TargetEncoder.fit_transform"><code class="xref py py-meth docutils literal notranslate"><span class="pre">fit_transform</span></code></a> with the default <code class="docutils literal notranslate"><span class="pre">cv=5</span></code>:</p>
+\[S_i = \lambda_i\frac{\sum_{k\in L_i}Y_k}{n_i} + (1 - \lambda_i)\frac{\sum_{k=1}^{n}Y_k}{n}\]</div>
+<p>where <span class="math notranslate nohighlight">\(L_i\)</span> is the set of observations with category <span class="math notranslate nohighlight">\(i\)</span> and
+<span class="math notranslate nohighlight">\(n_i\)</span> is the number of observations with category <span class="math notranslate nohighlight">\(i\)</span>.</p>
+<p><a class="reference internal" href="generated/sklearn.preprocessing.TargetEncoder.html#sklearn.preprocessing.TargetEncoder.fit_transform" title="sklearn.preprocessing.TargetEncoder.fit_transform"><code class="xref py py-meth docutils literal notranslate"><span class="pre">fit_transform</span></code></a> internally relies on a cross fitting
+scheme to prevent target information from leaking into the train-time
+representation, especially for non-informative high-cardinality categorical
+variables, and help prevent the downstream model from overfitting spurious
+correlations. Note that as a result, <code class="docutils literal notranslate"><span class="pre">fit(X,</span> <span class="pre">y).transform(X)</span></code> does not equal
+<code class="docutils literal notranslate"><span class="pre">fit_transform(X,</span> <span class="pre">y)</span></code>. In <a class="reference internal" href="generated/sklearn.preprocessing.TargetEncoder.html#sklearn.preprocessing.TargetEncoder.fit_transform" title="sklearn.preprocessing.TargetEncoder.fit_transform"><code class="xref py py-meth docutils literal notranslate"><span class="pre">fit_transform</span></code></a>, the training
+data is split into <em>k</em> folds (determined by the <code class="docutils literal notranslate"><span class="pre">cv</span></code> parameter) and encodes each
+fold using the encodings trained on the other <em>k-1</em> folds. The following diagram
+shows the cross fitting scheme in <a class="reference internal" href="generated/sklearn.preprocessing.TargetEncoder.html#sklearn.preprocessing.TargetEncoder.fit_transform" title="sklearn.preprocessing.TargetEncoder.fit_transform"><code class="xref py py-meth docutils literal notranslate"><span class="pre">fit_transform</span></code></a> with
+the default <code class="docutils literal notranslate"><span class="pre">cv=5</span></code>:</p>
 <a class="reference internal image-reference" href="../_images/target_encoder_cross_validation.svg"><img alt="../_images/target_encoder_cross_validation.svg" class="align-center" src="../_images/target_encoder_cross_validation.svg" width="600" /></a>
-<p>The <a class="reference internal" href="generated/sklearn.preprocessing.TargetEncoder.html#sklearn.preprocessing.TargetEncoder.fit" title="sklearn.preprocessing.TargetEncoder.fit"><code class="xref py py-meth docutils literal notranslate"><span class="pre">fit</span></code></a> method does <strong>not</strong> use any cross validation
+<p><a class="reference internal" href="generated/sklearn.preprocessing.TargetEncoder.html#sklearn.preprocessing.TargetEncoder.fit_transform" title="sklearn.preprocessing.TargetEncoder.fit_transform"><code class="xref py py-meth docutils literal notranslate"><span class="pre">fit_transform</span></code></a> also learns a ‘full data’ encoding using
+the whole training set. This is never used in
+<a class="reference internal" href="generated/sklearn.preprocessing.TargetEncoder.html#sklearn.preprocessing.TargetEncoder.fit_transform" title="sklearn.preprocessing.TargetEncoder.fit_transform"><code class="xref py py-meth docutils literal notranslate"><span class="pre">fit_transform</span></code></a> but is saved to the attribute <code class="docutils literal notranslate"><span class="pre">encodings_</span></code>,
+for use when <a class="reference internal" href="generated/sklearn.preprocessing.TargetEncoder.html#sklearn.preprocessing.TargetEncoder.transform" title="sklearn.preprocessing.TargetEncoder.transform"><code class="xref py py-meth docutils literal notranslate"><span class="pre">transform</span></code></a> is called. Note that the encodings
+learned for each fold during the cross fitting scheme are not saved to an
+attribute.</p>
+<p>The <a class="reference internal" href="generated/sklearn.preprocessing.TargetEncoder.html#sklearn.preprocessing.TargetEncoder.fit" title="sklearn.preprocessing.TargetEncoder.fit"><code class="xref py py-meth docutils literal notranslate"><span class="pre">fit</span></code></a> method does <strong>not</strong> use any cross fitting
 schemes and learns one encoding on the entire training set, which is used to
 encode categories in <a class="reference internal" href="generated/sklearn.preprocessing.TargetEncoder.html#sklearn.preprocessing.TargetEncoder.transform" title="sklearn.preprocessing.TargetEncoder.transform"><code class="xref py py-meth docutils literal notranslate"><span class="pre">transform</span></code></a>.
-<a class="reference internal" href="generated/sklearn.preprocessing.TargetEncoder.html#sklearn.preprocessing.TargetEncoder.fit" title="sklearn.preprocessing.TargetEncoder.fit"><code class="xref py py-meth docutils literal notranslate"><span class="pre">fit</span></code></a>’s one encoding is the same as the final encoding
-learned in <a class="reference internal" href="generated/sklearn.preprocessing.TargetEncoder.html#sklearn.preprocessing.TargetEncoder.fit_transform" title="sklearn.preprocessing.TargetEncoder.fit_transform"><code class="xref py py-meth docutils literal notranslate"><span class="pre">fit_transform</span></code></a>.</p>
+This encoding is the same as the ‘full data’
+encoding learned in <a class="reference internal" href="generated/sklearn.preprocessing.TargetEncoder.html#sklearn.preprocessing.TargetEncoder.fit_transform" title="sklearn.preprocessing.TargetEncoder.fit_transform"><code class="xref py py-meth docutils literal notranslate"><span class="pre">fit_transform</span></code></a>.</p>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
 <p><a class="reference internal" href="generated/sklearn.preprocessing.TargetEncoder.html#sklearn.preprocessing.TargetEncoder" title="sklearn.preprocessing.TargetEncoder"><code class="xref py py-class docutils literal notranslate"><span class="pre">TargetEncoder</span></code></a> considers missing values, such as <code class="docutils literal notranslate"><span class="pre">np.nan</span></code> or <code class="docutils literal notranslate"><span class="pre">None</span></code>,
@@ -1057,7 +1063,7 @@ that are not seen during <code class="docutils literal notranslate"><span class=
 <p class="topic-title">Examples:</p>
 <ul class="simple">
 <li><p><a class="reference internal" href="../auto_examples/preprocessing/plot_target_encoder.html#sphx-glr-auto-examples-preprocessing-plot-target-encoder-py"><span class="std std-ref">Comparing Target Encoder with Other Encoders</span></a></p></li>
-<li><p><a class="reference internal" href="../auto_examples/preprocessing/plot_target_encoder_cross_val.html#sphx-glr-auto-examples-preprocessing-plot-target-encoder-cross-val-py"><span class="std std-ref">Target Encoder’s Internal Cross Validation</span></a></p></li>
+<li><p><a class="reference internal" href="../auto_examples/preprocessing/plot_target_encoder_cross_val.html#sphx-glr-auto-examples-preprocessing-plot-target-encoder-cross-val-py"><span class="std std-ref">Target Encoder’s Internal Cross fitting</span></a></p></li>
 </ul>
 </aside>
 <aside class="topic">
@@ -1132,7 +1138,7 @@ equally populated bins in each feature. The ‘kmeans’ strategy defines bins b
 on a k-means clustering procedure performed on each feature independently.</p>
 <p>Be aware that one can specify custom bins by passing a callable defining the
 discretization strategy to <a class="reference internal" href="generated/sklearn.preprocessing.FunctionTransformer.html#sklearn.preprocessing.FunctionTransformer" title="sklearn.preprocessing.FunctionTransformer"><code class="xref py py-class docutils literal notranslate"><span class="pre">FunctionTransformer</span></code></a>.
-For instance, we can use the Pandas function <a class="reference external" href="https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.cut.html#pandas.cut" title="(in pandas v2.0.2)"><code class="xref py py-func docutils literal notranslate"><span class="pre">pandas.cut</span></code></a>:</p>
+For instance, we can use the Pandas function <a class="reference external" href="https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.cut.html#pandas.cut" title="(in pandas v2.0.3)"><code class="xref py py-func docutils literal notranslate"><span class="pre">pandas.cut</span></code></a>:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">bins</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">13</span><span class="p">,</span> <span class="mi">20</span><span class="p">,</span> <span class="mi">60</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">inf</span><span class="p">]</span>
@@ -1398,6 +1404,9 @@ to extract features from text data see
 </script>
 
 
+<script src="../_static/clipboard.min.js"></script>
+<script src="../_static/copybutton.js"></script>
+
 <script>
 $(document).ready(function() {
     /* Add a [>>>] button on the top-right corner of code samples to hide
@@ -1411,44 +1420,15 @@ $(document).ready(function() {
 
     // get the styles from the current theme
     pre.parent().parent().css('position', 'relative');
-    var hide_text = 'Hide prompts and outputs';
-    var show_text = 'Show prompts and outputs';
 
     // create and add the button to all the code blocks that contain >>>
     div.each(function(index) {
         var jthis = $(this);
-        if (jthis.find('.gp').length > 0) {
-            var button = $('<span class="copybutton">&gt;&gt;&gt;</span>');
-            button.attr('title', hide_text);
-            button.data('hidden', 'false');
-            jthis.prepend(button);
-        }
         // tracebacks (.gt) contain bare text elements that need to be
         // wrapped in a span to work with .nextUntil() (see later)
         jthis.find('pre:has(.gt)').contents().filter(function() {
             return ((this.nodeType == 3) && (this.data.trim().length > 0));
         }).wrap('<span>');
-    });
-
-    // define the behavior of the button when it's clicked
-    $('.copybutton').click(function(e){
-        e.preventDefault();
-        var button = $(this);
-        if (button.data('hidden') === 'false') {
-            // hide the code output
-            button.parent().find('.go, .gp, .gt').hide();
-            button.next('pre').find('.gt').nextUntil('.gp, .go').css('visibility', 'hidden');
-            button.css('text-decoration', 'line-through');
-            button.attr('title', show_text);
-            button.data('hidden', 'true');
-        } else {
-            // show the code output
-            button.parent().find('.go, .gp, .gt').show();
-            button.next('pre').find('.gt').nextUntil('.gp, .go').css('visibility', 'visible');
-            button.css('text-decoration', 'none');
-            button.attr('title', hide_text);
-            button.data('hidden', 'false');
-        }
     });
 
 	/*** Add permalink buttons next to glossary terms ***/

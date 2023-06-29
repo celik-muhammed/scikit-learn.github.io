@@ -18,7 +18,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
   
-  <title>3.3. Metrics and scoring: quantifying the quality of predictions &mdash; scikit-learn 1.3.0rc1 documentation</title>
+  <title>3.3. Metrics and scoring: quantifying the quality of predictions &mdash; scikit-learn 1.3.0 documentation</title>
   
   <link rel="canonical" href="http://scikit-learn.org/stable/modules/model_evaluation.html" />
 
@@ -29,6 +29,7 @@
   <link rel="stylesheet" href="../_static/css/vendor/bootstrap.min.css" type="text/css" />
   <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
   <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/copybutton.css" type="text/css" />
   <link rel="stylesheet" href="../_static/plot_directive.css" type="text/css" />
   <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Vibur" type="text/css" />
   <link rel="stylesheet" href="../_static/jupyterlite_sphinx.css" type="text/css" />
@@ -165,7 +166,7 @@
         </div>
         <div class="alert alert-danger p-1 mb-2" role="alert">
           <p class="text-center mb-0">
-          <strong>scikit-learn 1.3.0rc1</strong><br/>
+          <strong>scikit-learn 1.3.0</strong><br/>
           <a href="http://scikit-learn.org/dev/versions.html">Other versions</a>
           </p>
         </div>
@@ -533,6 +534,12 @@ the <a class="reference internal" href="generated/sklearn.metrics.fbeta_score.ht
 <span class="gp">... </span>                    <span class="n">scoring</span><span class="o">=</span><span class="n">ftwo_scorer</span><span class="p">,</span> <span class="n">cv</span><span class="o">=</span><span class="mi">5</span><span class="p">)</span>
 </pre></div>
 </div>
+<p><details>
+<summary class="btn btn-light">
+<strong>Custom scorer objects</strong>
+<span class="tooltiptext">Click for more details</span>
+</summary>
+<div class="card"></p>
 <p>The second use case is to build a completely custom scorer object
 from a simple python function using <a class="reference internal" href="generated/sklearn.metrics.make_scorer.html#sklearn.metrics.make_scorer" title="sklearn.metrics.make_scorer"><code class="xref py py-func docutils literal notranslate"><span class="pre">make_scorer</span></code></a>, which can
 take several parameters:</p>
@@ -570,12 +577,20 @@ False.</p></li>
 <span class="go">-0.69...</span>
 </pre></div>
 </div>
+<p></div>
+</details></p>
 </section>
 <section id="implementing-your-own-scoring-object">
 <span id="diy-scoring"></span><h3><span class="section-number">3.3.1.3. </span>Implementing your own scoring object<a class="headerlink" href="#implementing-your-own-scoring-object" title="Permalink to this heading">¶</a></h3>
 <p>You can generate even more flexible model scorers by constructing your own
-scoring object from scratch, without using the <a class="reference internal" href="generated/sklearn.metrics.make_scorer.html#sklearn.metrics.make_scorer" title="sklearn.metrics.make_scorer"><code class="xref py py-func docutils literal notranslate"><span class="pre">make_scorer</span></code></a> factory.
-For a callable to be a scorer, it needs to meet the protocol specified by
+scoring object from scratch, without using the <a class="reference internal" href="generated/sklearn.metrics.make_scorer.html#sklearn.metrics.make_scorer" title="sklearn.metrics.make_scorer"><code class="xref py py-func docutils literal notranslate"><span class="pre">make_scorer</span></code></a> factory.</p>
+<p><details>
+<summary class="btn btn-light">
+<strong>How to build a scorer from scratch</strong>
+<span class="tooltiptext">Click for more details</span>
+</summary>
+<div class="card"></p>
+<p>For a callable to be a scorer, it needs to meet the protocol specified by
 the following two rules:</p>
 <ul class="simple">
 <li><p>It can be called with parameters <code class="docutils literal notranslate"><span class="pre">(estimator,</span> <span class="pre">X,</span> <span class="pre">y)</span></code>, where <code class="docutils literal notranslate"><span class="pre">estimator</span></code>
@@ -613,6 +628,8 @@ independently of the joblib backend.</p>
 </pre></div>
 </div>
 </div>
+<p></div>
+</details></p>
 </section>
 <section id="using-multiple-metric-evaluation">
 <span id="multimetric-scoring"></span><h3><span class="section-number">3.3.1.4. </span>Using multiple metric evaluation<a class="headerlink" href="#using-multiple-metric-evaluation" title="Permalink to this heading">¶</a></h3>
@@ -3022,6 +3039,9 @@ the input data.</p>
 </script>
 
 
+<script src="../_static/clipboard.min.js"></script>
+<script src="../_static/copybutton.js"></script>
+
 <script>
 $(document).ready(function() {
     /* Add a [>>>] button on the top-right corner of code samples to hide
@@ -3035,44 +3055,15 @@ $(document).ready(function() {
 
     // get the styles from the current theme
     pre.parent().parent().css('position', 'relative');
-    var hide_text = 'Hide prompts and outputs';
-    var show_text = 'Show prompts and outputs';
 
     // create and add the button to all the code blocks that contain >>>
     div.each(function(index) {
         var jthis = $(this);
-        if (jthis.find('.gp').length > 0) {
-            var button = $('<span class="copybutton">&gt;&gt;&gt;</span>');
-            button.attr('title', hide_text);
-            button.data('hidden', 'false');
-            jthis.prepend(button);
-        }
         // tracebacks (.gt) contain bare text elements that need to be
         // wrapped in a span to work with .nextUntil() (see later)
         jthis.find('pre:has(.gt)').contents().filter(function() {
             return ((this.nodeType == 3) && (this.data.trim().length > 0));
         }).wrap('<span>');
-    });
-
-    // define the behavior of the button when it's clicked
-    $('.copybutton').click(function(e){
-        e.preventDefault();
-        var button = $(this);
-        if (button.data('hidden') === 'false') {
-            // hide the code output
-            button.parent().find('.go, .gp, .gt').hide();
-            button.next('pre').find('.gt').nextUntil('.gp, .go').css('visibility', 'hidden');
-            button.css('text-decoration', 'line-through');
-            button.attr('title', show_text);
-            button.data('hidden', 'true');
-        } else {
-            // show the code output
-            button.parent().find('.go, .gp, .gt').show();
-            button.next('pre').find('.gt').nextUntil('.gp, .go').css('visibility', 'visible');
-            button.css('text-decoration', 'none');
-            button.attr('title', hide_text);
-            button.data('hidden', 'false');
-        }
     });
 
 	/*** Add permalink buttons next to glossary terms ***/

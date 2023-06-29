@@ -253,13 +253,14 @@ the partial dependence analysis.
 We plot the average number of bike rentals by grouping the data by season and
 by year.
 
-.. GENERATED FROM PYTHON SOURCE LINES 102-136
+.. GENERATED FROM PYTHON SOURCE LINES 102-137
 
 .. code-block:: default
 
     from itertools import product
-    import numpy as np
+
     import matplotlib.pyplot as plt
+    import numpy as np
 
     days = ("Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat")
     hours = tuple(range(24))
@@ -303,7 +304,7 @@ by year.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 137-159
+.. GENERATED FROM PYTHON SOURCE LINES 138-160
 
 The first striking difference between the train and test set is that the number of
 bike rentals is higher in the test set. For this reason, it will not be surprising to
@@ -328,13 +329,12 @@ We will use a :class:`~sklearn.preprocessing.QuantileTransformer` to scale the
 numerical features and encode the categorical features with a
 :class:`~sklearn.preprocessing.OneHotEncoder`.
 
-.. GENERATED FROM PYTHON SOURCE LINES 159-171
+.. GENERATED FROM PYTHON SOURCE LINES 160-171
 
 .. code-block:: default
 
     from sklearn.compose import ColumnTransformer
-    from sklearn.preprocessing import QuantileTransformer
-    from sklearn.preprocessing import OneHotEncoder
+    from sklearn.preprocessing import OneHotEncoder, QuantileTransformer
 
     mlp_preprocessor = ColumnTransformer(
         transformers=[
@@ -444,11 +444,12 @@ Multi-layer perceptron
 Let's fit a :class:`~sklearn.neural_network.MLPRegressor` and compute
 single-variable partial dependence plots.
 
-.. GENERATED FROM PYTHON SOURCE LINES 205-224
+.. GENERATED FROM PYTHON SOURCE LINES 205-225
 
 .. code-block:: default
 
     from time import time
+
     from sklearn.neural_network import MLPRegressor
     from sklearn.pipeline import make_pipeline
 
@@ -476,13 +477,13 @@ single-variable partial dependence plots.
  .. code-block:: none
 
     Training MLPRegressor...
-    done in 0.584s
+    done in 0.658s
     Test R2 score: 0.61
 
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 225-244
+.. GENERATED FROM PYTHON SOURCE LINES 226-245
 
 We configured a pipeline using the preprocessor that we created specifically for the
 neural network and tuned the neural network size and learning rate to get a reasonable
@@ -504,11 +505,12 @@ reasonably well.
 
 We will plot the averaged partial dependence.
 
-.. GENERATED FROM PYTHON SOURCE LINES 244-281
+.. GENERATED FROM PYTHON SOURCE LINES 245-283
 
 .. code-block:: default
 
     import matplotlib.pyplot as plt
+
     from sklearn.inspection import PartialDependenceDisplay
 
     common_params = {
@@ -559,12 +561,12 @@ We will plot the averaged partial dependence.
  .. code-block:: none
 
     Computing partial dependence plots...
-    done in 0.837s
+    done in 1.275s
 
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 282-288
+.. GENERATED FROM PYTHON SOURCE LINES 284-290
 
 Gradient boosting
 ~~~~~~~~~~~~~~~~~
@@ -573,7 +575,7 @@ Let's now fit a :class:`~sklearn.ensemble.HistGradientBoostingRegressor` and
 compute the partial dependence on the same features. We also use the
 specific preprocessor we created for this model.
 
-.. GENERATED FROM PYTHON SOURCE LINES 288-304
+.. GENERATED FROM PYTHON SOURCE LINES 290-306
 
 .. code-block:: default
 
@@ -602,13 +604,13 @@ specific preprocessor we created for this model.
  .. code-block:: none
 
     Training HistGradientBoostingRegressor...
-    done in 0.122s
+    done in 0.126s
     Test R2 score: 0.62
 
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 305-316
+.. GENERATED FROM PYTHON SOURCE LINES 307-318
 
 Here, we used the default hyperparameters for the gradient boosting model
 without any preprocessing as tree-based models are naturally robust to
@@ -622,7 +624,7 @@ to work well while this is not often the case for neural networks).
 We will plot the partial dependence for some of the numerical and categorical
 features.
 
-.. GENERATED FROM PYTHON SOURCE LINES 316-335
+.. GENERATED FROM PYTHON SOURCE LINES 318-337
 
 .. code-block:: default
 
@@ -659,12 +661,12 @@ features.
  .. code-block:: none
 
     Computing partial dependence plots...
-    done in 0.970s
+    done in 1.070s
 
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 336-365
+.. GENERATED FROM PYTHON SOURCE LINES 338-367
 
 Analysis of the plots
 ~~~~~~~~~~~~~~~~~~~~~
@@ -696,7 +698,7 @@ this regard, it is possible to plot each individual response. This representatio
 called the Individual Effect Plot (ICE). In the plot below, we plot 50 randomly
 selected ICEs for the temperature and humidity features.
 
-.. GENERATED FROM PYTHON SOURCE LINES 365-385
+.. GENERATED FROM PYTHON SOURCE LINES 367-387
 
 .. code-block:: default
 
@@ -734,12 +736,12 @@ selected ICEs for the temperature and humidity features.
  .. code-block:: none
 
     Computing partial dependence plots and individual conditional expectation...
-    done in 0.412s
+    done in 0.486s
 
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 386-396
+.. GENERATED FROM PYTHON SOURCE LINES 388-398
 
 We see that the ICE for the temperature feature gives us some additional information:
 Some of the ICE lines are flat while some others show a decrease of the dependence
@@ -752,7 +754,7 @@ interactions between features. We can repeat the experiment by constraining the
 gradient boosting model to not use any interactions between features using the
 parameter `interaction_cst`:
 
-.. GENERATED FROM PYTHON SOURCE LINES 396-406
+.. GENERATED FROM PYTHON SOURCE LINES 398-408
 
 .. code-block:: default
 
@@ -779,7 +781,7 @@ parameter `interaction_cst`:
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 407-419
+.. GENERATED FROM PYTHON SOURCE LINES 409-421
 
 .. code-block:: default
 
@@ -807,7 +809,7 @@ parameter `interaction_cst`:
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 420-428
+.. GENERATED FROM PYTHON SOURCE LINES 422-430
 
 2D interaction plots
 --------------------
@@ -818,7 +820,7 @@ the representation of available in
 :meth:`~sklearn.inspection.PartialDependenceDisplay.from_estimator` that is a 2D
 heatmap.
 
-.. GENERATED FROM PYTHON SOURCE LINES 428-447
+.. GENERATED FROM PYTHON SOURCE LINES 430-449
 
 .. code-block:: default
 
@@ -855,12 +857,12 @@ heatmap.
  .. code-block:: none
 
     Computing partial dependence plots...
-    done in 6.773s
+    done in 7.247s
 
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 448-464
+.. GENERATED FROM PYTHON SOURCE LINES 450-466
 
 The two-way partial dependence plot shows the dependence of the number of bike rentals
 on joint values of temperature and humidity.
@@ -879,7 +881,7 @@ We now contrast those results with the same plots computed for the model
 constrained to learn a prediction function that does not depend on such
 non-linear feature interactions.
 
-.. GENERATED FROM PYTHON SOURCE LINES 464-483
+.. GENERATED FROM PYTHON SOURCE LINES 466-485
 
 .. code-block:: default
 
@@ -916,12 +918,12 @@ non-linear feature interactions.
  .. code-block:: none
 
     Computing partial dependence plots...
-    done in 6.115s
+    done in 6.362s
 
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 484-505
+.. GENERATED FROM PYTHON SOURCE LINES 486-507
 
 The 1D partial dependence plots for the model constrained to not model feature
 interactions show local spikes for each features individually, in particular for
@@ -945,7 +947,7 @@ The partial dependence between categorical features will provide a discrete
 representation that can be shown as a heatmap. For instance the interaction between
 the season, the weather, and the target would be as follow:
 
-.. GENERATED FROM PYTHON SOURCE LINES 505-526
+.. GENERATED FROM PYTHON SOURCE LINES 507-528
 
 .. code-block:: default
 
@@ -984,27 +986,26 @@ the season, the weather, and the target would be as follow:
  .. code-block:: none
 
     Computing partial dependence plots...
-    done in 0.303s
+    done in 0.351s
 
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 527-532
+.. GENERATED FROM PYTHON SOURCE LINES 529-535
 
 3D representation
 ~~~~~~~~~~~~~~~~~
 
 Let's make the same partial dependence plot for the 2 features interaction,
 this time in 3 dimensions.
+unused but required import for doing 3d projections with matplotlib < 3.2
 
-.. GENERATED FROM PYTHON SOURCE LINES 532-563
+.. GENERATED FROM PYTHON SOURCE LINES 535-564
 
 .. code-block:: default
 
-    import numpy as np
-
-    # unused but required import for doing 3d projections with matplotlib < 3.2
     import mpl_toolkits.mplot3d  # noqa: F401
+    import numpy as np
 
     from sklearn.inspection import partial_dependence
 
@@ -1047,7 +1048,7 @@ this time in 3 dimensions.
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** ( 0 minutes  20.923 seconds)
+   **Total running time of the script:** ( 0 minutes  22.892 seconds)
 
 
 .. _sphx_glr_download_auto_examples_inspection_plot_partial_dependence.py:
