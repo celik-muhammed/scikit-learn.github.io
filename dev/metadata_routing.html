@@ -223,9 +223,9 @@ you can check our related developer guide:
 <div class="admonition note">
 <p class="admonition-title">Note</p>
 <p>Note that the methods and requirements introduced in this document are only
-relevant if you want to pass metadata (e.g. <code class="docutils literal notranslate"><span class="pre">sample_weight</span></code>) to a method.
+relevant if you want to pass <a class="reference internal" href="glossary.html#term-metadata"><span class="xref std std-term">metadata</span></a> (e.g. <code class="docutils literal notranslate"><span class="pre">sample_weight</span></code>) to a method.
 If you’re only passing <code class="docutils literal notranslate"><span class="pre">X</span></code> and <code class="docutils literal notranslate"><span class="pre">y</span></code> and no other parameter / metadata to
-methods such as <code class="docutils literal notranslate"><span class="pre">fit</span></code>, <code class="docutils literal notranslate"><span class="pre">transform</span></code>, etc, then you don’t need to set
+methods such as <a class="reference internal" href="glossary.html#term-fit"><span class="xref std std-term">fit</span></a>, <a class="reference internal" href="glossary.html#term-transform"><span class="xref std std-term">transform</span></a>, etc, then you don’t need to set
 anything.</p>
 </div>
 <section id="usage-examples">
@@ -277,13 +277,13 @@ since <code class="docutils literal notranslate"><span class="pre">sample_weigh<
 </section>
 <section id="weighted-scoring-and-unweighted-fitting">
 <h3><span class="section-number">1.1.2. </span>Weighted scoring and unweighted fitting<a class="headerlink" href="#weighted-scoring-and-unweighted-fitting" title="Permalink to this heading">¶</a></h3>
-<p>When passing metadata such as <code class="docutils literal notranslate"><span class="pre">sample_weight</span></code> around, all scikit-learn
-estimators require weights to be either explicitly requested or not requested
-(i.e. <code class="docutils literal notranslate"><span class="pre">True</span></code> or <code class="docutils literal notranslate"><span class="pre">False</span></code>) when used in another router such as a
-<a class="reference internal" href="modules/generated/sklearn.pipeline.Pipeline.html#sklearn.pipeline.Pipeline" title="sklearn.pipeline.Pipeline"><code class="xref py py-class docutils literal notranslate"><span class="pre">Pipeline</span></code></a> or a <code class="docutils literal notranslate"><span class="pre">*GridSearchCV</span></code>. To perform an unweighted
-fit, we need to configure <a class="reference internal" href="modules/generated/sklearn.linear_model.LogisticRegressionCV.html#sklearn.linear_model.LogisticRegressionCV" title="sklearn.linear_model.LogisticRegressionCV"><code class="xref py py-class docutils literal notranslate"><span class="pre">LogisticRegressionCV</span></code></a> to not
-request sample weights, so that <a class="reference internal" href="modules/generated/sklearn.model_selection.cross_validate.html#sklearn.model_selection.cross_validate" title="sklearn.model_selection.cross_validate"><code class="xref py py-func docutils literal notranslate"><span class="pre">cross_validate</span></code></a> does
-not pass the weights along:</p>
+<p>When passing metadata such as <code class="docutils literal notranslate"><span class="pre">sample_weight</span></code> around, all <code class="docutils literal notranslate"><span class="pre">sample_weight</span></code>
+<a class="reference internal" href="glossary.html#term-consumer"><span class="xref std std-term">consumers</span></a> require weights to be either explicitly requested
+or not requested (i.e. <code class="docutils literal notranslate"><span class="pre">True</span></code> or <code class="docutils literal notranslate"><span class="pre">False</span></code>) when used in another
+<a class="reference internal" href="glossary.html#term-router"><span class="xref std std-term">router</span></a> such as a <a class="reference internal" href="modules/generated/sklearn.pipeline.Pipeline.html#sklearn.pipeline.Pipeline" title="sklearn.pipeline.Pipeline"><code class="xref py py-class docutils literal notranslate"><span class="pre">Pipeline</span></code></a> or a <code class="docutils literal notranslate"><span class="pre">*GridSearchCV</span></code>. To
+perform an unweighted fit, we need to configure
+<a class="reference internal" href="modules/generated/sklearn.linear_model.LogisticRegressionCV.html#sklearn.linear_model.LogisticRegressionCV" title="sklearn.linear_model.LogisticRegressionCV"><code class="xref py py-class docutils literal notranslate"><span class="pre">LogisticRegressionCV</span></code></a> to not request sample weights, so
+that <a class="reference internal" href="modules/generated/sklearn.model_selection.cross_validate.html#sklearn.model_selection.cross_validate" title="sklearn.model_selection.cross_validate"><code class="xref py py-func docutils literal notranslate"><span class="pre">cross_validate</span></code></a> does not pass the weights along:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">weighted_acc</span> <span class="o">=</span> <span class="n">make_scorer</span><span class="p">(</span><span class="n">accuracy_score</span><span class="p">)</span><span class="o">.</span><span class="n">set_score_request</span><span class="p">(</span>
 <span class="gp">... </span>    <span class="n">sample_weight</span><span class="o">=</span><span class="kc">True</span>
 <span class="gp">... </span><span class="p">)</span>
@@ -363,16 +363,17 @@ consumers. In this example, we pass <code class="docutils literal notranslate"><
 </section>
 <section id="api-interface">
 <h2><span class="section-number">1.2. </span>API Interface<a class="headerlink" href="#api-interface" title="Permalink to this heading">¶</a></h2>
-<p>A <em>consumer</em> is an object (estimator, meta-estimator, scorer, splitter) which
-accepts and uses some metadata in at least one of its methods (<code class="docutils literal notranslate"><span class="pre">fit</span></code>,
-<code class="docutils literal notranslate"><span class="pre">predict</span></code>, <code class="docutils literal notranslate"><span class="pre">inverse_transform</span></code>, <code class="docutils literal notranslate"><span class="pre">transform</span></code>, <code class="docutils literal notranslate"><span class="pre">score</span></code>, <code class="docutils literal notranslate"><span class="pre">split</span></code>).
-Meta-estimators which only forward the metadata to other objects (the child
-estimator, scorers, or splitters) and don’t use the metadata themselves are not
-consumers. (Meta-)Estimators which route metadata to other objects are
-<em>routers</em>. A(n) (meta-)estimator can be a consumer and a router at the same time.
-(Meta-)Estimators and splitters expose a <code class="docutils literal notranslate"><span class="pre">set_*_request</span></code> method for each
-method which accepts at least one metadata. For instance, if an estimator
-supports <code class="docutils literal notranslate"><span class="pre">sample_weight</span></code> in <code class="docutils literal notranslate"><span class="pre">fit</span></code> and <code class="docutils literal notranslate"><span class="pre">score</span></code>, it exposes
+<p>A <a class="reference internal" href="glossary.html#term-consumer"><span class="xref std std-term">consumer</span></a> is an object (estimator, meta-estimator, scorer, splitter)
+which accepts and uses some <a class="reference internal" href="glossary.html#term-metadata"><span class="xref std std-term">metadata</span></a> in at least one of its methods
+(<code class="docutils literal notranslate"><span class="pre">fit</span></code>, <code class="docutils literal notranslate"><span class="pre">predict</span></code>, <code class="docutils literal notranslate"><span class="pre">inverse_transform</span></code>, <code class="docutils literal notranslate"><span class="pre">transform</span></code>, <code class="docutils literal notranslate"><span class="pre">score</span></code>,
+<code class="docutils literal notranslate"><span class="pre">split</span></code>). Meta-estimators which only forward the metadata to other objects
+(the child estimator, scorers, or splitters) and don’t use the metadata
+themselves are not consumers. (Meta-)Estimators which route metadata to other
+objects are <a class="reference internal" href="glossary.html#term-router"><span class="xref std std-term">routers</span></a>. A(n) (meta-)estimator can be a
+<a class="reference internal" href="glossary.html#term-consumer"><span class="xref std std-term">consumer</span></a> and a <a class="reference internal" href="glossary.html#term-router"><span class="xref std std-term">router</span></a> at the same time. (Meta-)Estimators and
+splitters expose a <code class="docutils literal notranslate"><span class="pre">set_*_request</span></code> method for each method which accepts at
+least one metadata. For instance, if an estimator supports <code class="docutils literal notranslate"><span class="pre">sample_weight</span></code> in
+<code class="docutils literal notranslate"><span class="pre">fit</span></code> and <code class="docutils literal notranslate"><span class="pre">score</span></code>, it exposes
 <code class="docutils literal notranslate"><span class="pre">estimator.set_fit_request(sample_weight=value)</span></code> and
 <code class="docutils literal notranslate"><span class="pre">estimator.set_score_request(sample_weight=value)</span></code>. Here <code class="docutils literal notranslate"><span class="pre">value</span></code> can be:</p>
 <ul class="simple">
