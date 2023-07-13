@@ -1104,7 +1104,7 @@ against it.
 
 In order to test the above pipeline, let's add an example transformer.
 
-.. GENERATED FROM PYTHON SOURCE LINES 484-496
+.. GENERATED FROM PYTHON SOURCE LINES 484-499
 
 .. code-block:: default
 
@@ -1119,6 +1119,8 @@ In order to test the above pipeline, let's add an example transformer.
             check_metadata(self, groups=groups)
             return X
 
+        def fit_transform(self, X, y, sample_weight=None, groups=None):
+            return self.fit(X, y, sample_weight).transform(X, groups)
 
 
 
@@ -1127,13 +1129,20 @@ In order to test the above pipeline, let's add an example transformer.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 497-500
+
+.. GENERATED FROM PYTHON SOURCE LINES 500-509
+
+Note that in the above example, we have implemented ``fit_transform`` which
+calls ``fit`` and ``transform`` with the appropriate metadata. This is only
+required if ``transform`` accepts metadata, since the default ``fit_transform``
+implementation in :class:`~base.TransformerMixin` doesn't pass metadata to
+``transform``.
 
 Now we can test our pipeline, and see if metadata is correctly passed around.
 This example uses our simple pipeline, and our transformer, and our
 consumer+router estimator which uses our simple classifier.
 
-.. GENERATED FROM PYTHON SOURCE LINES 500-522
+.. GENERATED FROM PYTHON SOURCE LINES 509-531
 
 .. code-block:: default
 
@@ -1178,7 +1187,7 @@ consumer+router estimator which uses our simple classifier.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 523-530
+.. GENERATED FROM PYTHON SOURCE LINES 532-539
 
 Deprecation / Default Value Change
 ----------------------------------
@@ -1188,7 +1197,7 @@ sub-estimator, or a consumer starts consuming a metadata which it wasn't in
 an older release. In this case, a warning should be raised for a while, to
 let users know the behavior is changed from previous versions.
 
-.. GENERATED FROM PYTHON SOURCE LINES 530-547
+.. GENERATED FROM PYTHON SOURCE LINES 539-556
 
 .. code-block:: default
 
@@ -1216,11 +1225,11 @@ let users know the behavior is changed from previous versions.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 548-549
+.. GENERATED FROM PYTHON SOURCE LINES 557-558
 
 As explained above, this is now a valid usage:
 
-.. GENERATED FROM PYTHON SOURCE LINES 549-554
+.. GENERATED FROM PYTHON SOURCE LINES 558-563
 
 .. code-block:: default
 
@@ -1236,12 +1245,12 @@ As explained above, this is now a valid usage:
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 555-557
+.. GENERATED FROM PYTHON SOURCE LINES 564-566
 
 Now imagine we further develop ``MetaRegressor`` and it now also *consumes*
 ``sample_weight``:
 
-.. GENERATED FROM PYTHON SOURCE LINES 557-579
+.. GENERATED FROM PYTHON SOURCE LINES 566-588
 
 .. code-block:: default
 
@@ -1274,13 +1283,13 @@ Now imagine we further develop ``MetaRegressor`` and it now also *consumes*
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 580-583
+.. GENERATED FROM PYTHON SOURCE LINES 589-592
 
 The above implementation is almost no different than ``MetaRegressor``, and
 because of the default request value defined in ``__metadata_request__fit``
 there is a warning raised.
 
-.. GENERATED FROM PYTHON SOURCE LINES 583-592
+.. GENERATED FROM PYTHON SOURCE LINES 592-601
 
 .. code-block:: default
 
@@ -1307,12 +1316,12 @@ there is a warning raised.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 593-595
+.. GENERATED FROM PYTHON SOURCE LINES 602-604
 
 When an estimator supports a metadata which wasn't supported before, the
 following pattern can be used to warn the users about it.
 
-.. GENERATED FROM PYTHON SOURCE LINES 595-613
+.. GENERATED FROM PYTHON SOURCE LINES 604-622
 
 .. code-block:: default
 
@@ -1348,7 +1357,7 @@ following pattern can be used to warn the users about it.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 614-631
+.. GENERATED FROM PYTHON SOURCE LINES 623-640
 
 Third Party Development and scikit-learn Dependency
 ---------------------------------------------------
@@ -1371,7 +1380,7 @@ modify your code at all:
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** ( 0 minutes  0.044 seconds)
+   **Total running time of the script:** ( 0 minutes  0.047 seconds)
 
 
 .. _sphx_glr_download_auto_examples_miscellaneous_plot_metadata_routing.py:
