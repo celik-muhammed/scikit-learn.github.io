@@ -10,10 +10,10 @@
 <meta property="og:type" content="website" />
 <meta property="og:url" content="https://scikit-learn/stable/auto_examples/preprocessing/plot_target_encoder_cross_val.html" />
 <meta property="og:site_name" content="scikit-learn" />
-<meta property="og:description" content="The TargetEncoder replaces each category of a categorical feature with the mean of the target variable for that category. This method is useful in cases where there is a strong relationship between..." />
+<meta property="og:description" content="The TargetEncoder replaces each category of a categorical feature with the shrunk mean of the target variable for that category. This method is useful in cases where there is a strong relationship ..." />
 <meta property="og:image" content="https://scikit-learn.org/stable/_static/scikit-learn-logo-small.png" />
 <meta property="og:image:alt" content="scikit-learn" />
-<meta name="description" content="The TargetEncoder replaces each category of a categorical feature with the mean of the target variable for that category. This method is useful in cases where there is a strong relationship between..." />
+<meta name="description" content="The TargetEncoder replaces each category of a categorical feature with the shrunk mean of the target variable for that category. This method is useful in cases where there is a strong relationship ..." />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
@@ -197,18 +197,23 @@ to download the full example code or to run this example in your browser via Jup
 <section class="sphx-glr-example-title" id="target-encoder-s-internal-cross-fitting">
 <span id="sphx-glr-auto-examples-preprocessing-plot-target-encoder-cross-val-py"></span><h1>Target Encoder’s Internal Cross fitting<a class="headerlink" href="#target-encoder-s-internal-cross-fitting" title="Permalink to this heading">¶</a></h1>
 <p>The <a class="reference internal" href="../../modules/generated/sklearn.preprocessing.TargetEncoder.html#sklearn.preprocessing.TargetEncoder" title="sklearn.preprocessing.TargetEncoder"><code class="xref py py-class docutils literal notranslate"><span class="pre">TargetEncoder</span></code></a> replaces each category of a categorical feature with
-the mean of the target variable for that category. This method is useful
+the shrunk mean of the target variable for that category. This method is useful
 in cases where there is a strong relationship between the categorical feature
 and the target. To prevent overfitting, <a class="reference internal" href="../../modules/generated/sklearn.preprocessing.TargetEncoder.html#sklearn.preprocessing.TargetEncoder.fit_transform" title="sklearn.preprocessing.TargetEncoder.fit_transform"><code class="xref py py-meth docutils literal notranslate"><span class="pre">TargetEncoder.fit_transform</span></code></a> uses
-an internal cross fitting scheme to encode the training data to be used by a
-downstream model. In this example, we demonstrate the importance of the cross fitting
-procedure to prevent overfitting.</p>
+an internal <a class="reference internal" href="../../glossary.html#term-0"><span class="xref std std-term">cross fitting</span></a> scheme to encode the training data to be used
+by a downstream model. This scheme involves splitting the data into <em>k</em> folds
+and encoding each fold using the encodings learnt using the other <em>k-1</em> folds.
+In this example, we demonstrate the importance of the cross
+fitting procedure to prevent overfitting.</p>
 <section id="create-synthetic-dataset">
 <h2>Create Synthetic Dataset<a class="headerlink" href="#create-synthetic-dataset" title="Permalink to this heading">¶</a></h2>
-<p>For this example, we build a dataset with three categorical features: an informative
-feature with medium cardinality, an uninformative feature with medium cardinality,
-and an uninformative feature with high cardinality. First, we generate the informative
-feature:</p>
+<p>For this example, we build a dataset with three categorical features:</p>
+<ul class="simple">
+<li><p>an informative feature with medium cardinality (“informative”)</p></li>
+<li><p>an uninformative feature with medium cardinality (“shuffled”)</p></li>
+<li><p>an uninformative feature with high cardinality (“near_unique”)</p></li>
+</ul>
+<p>First, we generate the informative feature:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 
 <span class="kn">from</span> <span class="nn">sklearn.preprocessing</span> <span class="kn">import</span> <a href="../../modules/generated/sklearn.preprocessing.KBinsDiscretizer.html#sklearn.preprocessing.KBinsDiscretizer" title="sklearn.preprocessing.KBinsDiscretizer" class="sphx-glr-backref-module-sklearn-preprocessing sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">KBinsDiscretizer</span></a>
@@ -221,19 +226,18 @@ feature:</p>
 <span class="n">n_categories</span> <span class="o">=</span> <span class="mi">100</span>
 
 <span class="n">kbins</span> <span class="o">=</span> <a href="../../modules/generated/sklearn.preprocessing.KBinsDiscretizer.html#sklearn.preprocessing.KBinsDiscretizer" title="sklearn.preprocessing.KBinsDiscretizer" class="sphx-glr-backref-module-sklearn-preprocessing sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">KBinsDiscretizer</span></a><span class="p">(</span>
-    <span class="n">n_bins</span><span class="o">=</span><span class="n">n_categories</span><span class="p">,</span> <span class="n">encode</span><span class="o">=</span><span class="s2">&quot;ordinal&quot;</span><span class="p">,</span> <span class="n">strategy</span><span class="o">=</span><span class="s2">&quot;uniform&quot;</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="n">rng</span>
+    <span class="n">n_bins</span><span class="o">=</span><span class="n">n_categories</span><span class="p">,</span>
+    <span class="n">encode</span><span class="o">=</span><span class="s2">&quot;ordinal&quot;</span><span class="p">,</span>
+    <span class="n">strategy</span><span class="o">=</span><span class="s2">&quot;uniform&quot;</span><span class="p">,</span>
+    <span class="n">random_state</span><span class="o">=</span><span class="n">rng</span><span class="p">,</span>
+    <span class="n">subsample</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
 <span class="p">)</span>
 <span class="n">X_informative</span> <span class="o">=</span> <span class="n">kbins</span><span class="o">.</span><span class="n">fit_transform</span><span class="p">((</span><span class="n">y</span> <span class="o">+</span> <span class="n">noise</span><span class="p">)</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">))</span>
 
-<span class="c1"># Remove the linear relationship between y and the bin index by permuting the values of</span>
-<span class="c1"># X_informative</span>
+<span class="c1"># Remove the linear relationship between y and the bin index by permuting the</span>
+<span class="c1"># values of X_informative:</span>
 <span class="n">permuted_categories</span> <span class="o">=</span> <span class="n">rng</span><span class="o">.</span><span class="n">permutation</span><span class="p">(</span><span class="n">n_categories</span><span class="p">)</span>
 <span class="n">X_informative</span> <span class="o">=</span> <span class="n">permuted_categories</span><span class="p">[</span><span class="n">X_informative</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><a href="https://numpy.org/doc/stable/reference/arrays.scalars.html#numpy.int32" title="numpy.int32" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-attribute"><span class="n">np</span><span class="o">.</span><span class="n">int32</span></a><span class="p">)]</span>
-</pre></div>
-</div>
-<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>/home/circleci/project/sklearn/preprocessing/_discretization.py:239: FutureWarning:
-
-In version 1.5 onwards, subsample=200_000 will be used by default. Set subsample explicitly to silence this warning in the mean time. Set subsample=None to disable subsampling explicitly.
 </pre></div>
 </div>
 <p>The uninformative feature with medium cardinality is generated by permuting the
@@ -241,13 +245,13 @@ informative feature and removing the relationship with the target:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">X_shuffled</span> <span class="o">=</span> <span class="n">rng</span><span class="o">.</span><span class="n">permutation</span><span class="p">(</span><span class="n">X_informative</span><span class="p">)</span>
 </pre></div>
 </div>
-<p>The uninformative feature with high cardinality is generated so that is independent of
-the target variable. We will show that target encoding without cross fitting will
-cause catastrophic overfitting for the downstream regressor. These high cardinality
-features are basically unique identifiers for samples which should generally be
-removed from machine learning dataset. In this example, we generate them to show how
-<a class="reference internal" href="../../modules/generated/sklearn.preprocessing.TargetEncoder.html#sklearn.preprocessing.TargetEncoder" title="sklearn.preprocessing.TargetEncoder"><code class="xref py py-class docutils literal notranslate"><span class="pre">TargetEncoder</span></code></a>’s default cross fitting behavior mitigates the overfitting
-issue automatically.</p>
+<p>The uninformative feature with high cardinality is generated so that it is
+independent of the target variable. We will show that target encoding without
+<a class="reference internal" href="../../glossary.html#term-0"><span class="xref std std-term">cross fitting</span></a> will cause catastrophic overfitting for the downstream
+regressor. These high cardinality features are basically unique identifiers
+for samples which should generally be removed from machine learning datasets.
+In this example, we generate them to show how <a class="reference internal" href="../../modules/generated/sklearn.preprocessing.TargetEncoder.html#sklearn.preprocessing.TargetEncoder" title="sklearn.preprocessing.TargetEncoder"><code class="xref py py-class docutils literal notranslate"><span class="pre">TargetEncoder</span></code></a>’s default
+<a class="reference internal" href="../../glossary.html#term-0"><span class="xref std std-term">cross fitting</span></a> behavior mitigates the overfitting issue automatically.</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">X_near_unique_categories</span> <span class="o">=</span> <span class="n">rng</span><span class="o">.</span><span class="n">choice</span><span class="p">(</span>
     <span class="nb">int</span><span class="p">(</span><span class="mf">0.9</span> <span class="o">*</span> <span class="n">n_samples</span><span class="p">),</span> <span class="n">size</span><span class="o">=</span><span class="n">n_samples</span><span class="p">,</span> <span class="n">replace</span><span class="o">=</span><span class="kc">True</span>
 <span class="p">)</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
@@ -273,9 +277,10 @@ issue automatically.</p>
 <h2>Training a Ridge Regressor<a class="headerlink" href="#training-a-ridge-regressor" title="Permalink to this heading">¶</a></h2>
 <p>In this section, we train a ridge regressor on the dataset with and without
 encoding and explore the influence of target encoder with and without the
-internal cross fitting. First, we see the Ridge model trained on the
-raw features will have low performance, because the order of the informative
-feature is not informative:</p>
+internal <a class="reference internal" href="../../glossary.html#term-0"><span class="xref std std-term">cross fitting</span></a>. First, we see the Ridge model trained on the
+raw features will have low performance. This is because we permuted the order
+of the informative feature meaning <code class="docutils literal notranslate"><span class="pre">X_informative</span></code> is not informative when
+raw:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">sklearn</span>
 <span class="kn">from</span> <span class="nn">sklearn.linear_model</span> <span class="kn">import</span> <a href="../../modules/generated/sklearn.linear_model.Ridge.html#sklearn.linear_model.Ridge" title="sklearn.linear_model.Ridge" class="sphx-glr-backref-module-sklearn-linear_model sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">Ridge</span></a>
 
@@ -294,19 +299,19 @@ Raw Model score on test set:  0.00457762158159003
 </pre></div>
 </div>
 <p>Next, we create a pipeline with the target encoder and ridge model. The pipeline
-uses <a class="reference internal" href="../../modules/generated/sklearn.preprocessing.TargetEncoder.html#sklearn.preprocessing.TargetEncoder.fit_transform" title="sklearn.preprocessing.TargetEncoder.fit_transform"><code class="xref py py-meth docutils literal notranslate"><span class="pre">TargetEncoder.fit_transform</span></code></a> which uses cross fitting. We see that
-the model fits the data well and generalizes to the test set:</p>
+uses <a class="reference internal" href="../../modules/generated/sklearn.preprocessing.TargetEncoder.html#sklearn.preprocessing.TargetEncoder.fit_transform" title="sklearn.preprocessing.TargetEncoder.fit_transform"><code class="xref py py-meth docutils literal notranslate"><span class="pre">TargetEncoder.fit_transform</span></code></a> which uses <a class="reference internal" href="../../glossary.html#term-0"><span class="xref std std-term">cross fitting</span></a>. We
+see that the model fits the data well and generalizes to the test set:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">sklearn.pipeline</span> <span class="kn">import</span> <a href="../../modules/generated/sklearn.pipeline.make_pipeline.html#sklearn.pipeline.make_pipeline" title="sklearn.pipeline.make_pipeline" class="sphx-glr-backref-module-sklearn-pipeline sphx-glr-backref-type-py-function"><span class="n">make_pipeline</span></a>
 <span class="kn">from</span> <span class="nn">sklearn.preprocessing</span> <span class="kn">import</span> <a href="../../modules/generated/sklearn.preprocessing.TargetEncoder.html#sklearn.preprocessing.TargetEncoder" title="sklearn.preprocessing.TargetEncoder" class="sphx-glr-backref-module-sklearn-preprocessing sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">TargetEncoder</span></a>
 
-<span class="n">model_with_cv</span> <span class="o">=</span> <a href="../../modules/generated/sklearn.pipeline.make_pipeline.html#sklearn.pipeline.make_pipeline" title="sklearn.pipeline.make_pipeline" class="sphx-glr-backref-module-sklearn-pipeline sphx-glr-backref-type-py-function"><span class="n">make_pipeline</span></a><span class="p">(</span><a href="../../modules/generated/sklearn.preprocessing.TargetEncoder.html#sklearn.preprocessing.TargetEncoder" title="sklearn.preprocessing.TargetEncoder" class="sphx-glr-backref-module-sklearn-preprocessing sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">TargetEncoder</span></a><span class="p">(</span><span class="n">random_state</span><span class="o">=</span><span class="mi">0</span><span class="p">),</span> <span class="n">ridge</span><span class="p">)</span>
-<span class="n">model_with_cv</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X_train</span><span class="p">,</span> <span class="n">y_train</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Model with CV on training set: &quot;</span><span class="p">,</span> <span class="n">model_with_cv</span><span class="o">.</span><span class="n">score</span><span class="p">(</span><span class="n">X_train</span><span class="p">,</span> <span class="n">y_train</span><span class="p">))</span>
-<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Model with CV on test set: &quot;</span><span class="p">,</span> <span class="n">model_with_cv</span><span class="o">.</span><span class="n">score</span><span class="p">(</span><span class="n">X_test</span><span class="p">,</span> <span class="n">y_test</span><span class="p">))</span>
+<span class="n">model_with_cf</span> <span class="o">=</span> <a href="../../modules/generated/sklearn.pipeline.make_pipeline.html#sklearn.pipeline.make_pipeline" title="sklearn.pipeline.make_pipeline" class="sphx-glr-backref-module-sklearn-pipeline sphx-glr-backref-type-py-function"><span class="n">make_pipeline</span></a><span class="p">(</span><a href="../../modules/generated/sklearn.preprocessing.TargetEncoder.html#sklearn.preprocessing.TargetEncoder" title="sklearn.preprocessing.TargetEncoder" class="sphx-glr-backref-module-sklearn-preprocessing sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">TargetEncoder</span></a><span class="p">(</span><span class="n">random_state</span><span class="o">=</span><span class="mi">0</span><span class="p">),</span> <span class="n">ridge</span><span class="p">)</span>
+<span class="n">model_with_cf</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X_train</span><span class="p">,</span> <span class="n">y_train</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Model with CF on train set: &quot;</span><span class="p">,</span> <span class="n">model_with_cf</span><span class="o">.</span><span class="n">score</span><span class="p">(</span><span class="n">X_train</span><span class="p">,</span> <span class="n">y_train</span><span class="p">))</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Model with CF on test set: &quot;</span><span class="p">,</span> <span class="n">model_with_cf</span><span class="o">.</span><span class="n">score</span><span class="p">(</span><span class="n">X_test</span><span class="p">,</span> <span class="n">y_test</span><span class="p">))</span>
 </pre></div>
 </div>
-<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>Model with CV on training set:  0.8000184677460285
-Model with CV on test set:  0.7927845601690948
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>Model with CF on train set:  0.8000184677460285
+Model with CF on test set:  0.7927845601690948
 </pre></div>
 </div>
 <p>The coefficients of the linear model shows that most of the weight is on the
@@ -316,58 +321,77 @@ feature at column index 0, which is the informative feature</p>
 
 <a href="https://matplotlib.org/stable/api/matplotlib_configuration_api.html#matplotlib.rcParams" title="matplotlib.rcParams" class="sphx-glr-backref-module-matplotlib sphx-glr-backref-type-py-data"><span class="n">plt</span><span class="o">.</span><span class="n">rcParams</span></a><span class="p">[</span><span class="s2">&quot;figure.constrained_layout.use&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">True</span>
 
-<span class="n">coefs_cv</span> <span class="o">=</span> <a href="https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.Series.html#pandas.Series" title="pandas.Series" class="sphx-glr-backref-module-pandas sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">pd</span><span class="o">.</span><span class="n">Series</span></a><span class="p">(</span>
-    <span class="n">model_with_cv</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">coef_</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="n">model_with_cv</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">feature_names_in_</span>
+<span class="n">coefs_cf</span> <span class="o">=</span> <a href="https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.Series.html#pandas.Series" title="pandas.Series" class="sphx-glr-backref-module-pandas sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">pd</span><span class="o">.</span><span class="n">Series</span></a><span class="p">(</span>
+    <span class="n">model_with_cf</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">coef_</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="n">model_with_cf</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">feature_names_in_</span>
 <span class="p">)</span><span class="o">.</span><span class="n">sort_values</span><span class="p">()</span>
-<span class="n">_</span> <span class="o">=</span> <span class="n">coefs_cv</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">kind</span><span class="o">=</span><span class="s2">&quot;barh&quot;</span><span class="p">)</span>
+<span class="n">ax</span> <span class="o">=</span> <span class="n">coefs_cf</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">kind</span><span class="o">=</span><span class="s2">&quot;barh&quot;</span><span class="p">)</span>
+<span class="n">_</span> <span class="o">=</span> <span class="n">ax</span><span class="o">.</span><span class="n">set</span><span class="p">(</span>
+    <span class="n">title</span><span class="o">=</span><span class="s2">&quot;Target encoded with cross fitting&quot;</span><span class="p">,</span>
+    <span class="n">xlabel</span><span class="o">=</span><span class="s2">&quot;Ridge coefficient&quot;</span><span class="p">,</span>
+    <span class="n">ylabel</span><span class="o">=</span><span class="s2">&quot;Feature&quot;</span><span class="p">,</span>
+<span class="p">)</span>
 </pre></div>
 </div>
-<img src="../../_images/sphx_glr_plot_target_encoder_cross_val_001.png" srcset="../../_images/sphx_glr_plot_target_encoder_cross_val_001.png" alt="plot target encoder cross val" class = "sphx-glr-single-img"/><p>While <a class="reference internal" href="../../modules/generated/sklearn.preprocessing.TargetEncoder.html#sklearn.preprocessing.TargetEncoder.fit_transform" title="sklearn.preprocessing.TargetEncoder.fit_transform"><code class="xref py py-meth docutils literal notranslate"><span class="pre">TargetEncoder.fit_transform</span></code></a> uses an internal cross fitting scheme,
-<a class="reference internal" href="../../modules/generated/sklearn.preprocessing.TargetEncoder.html#sklearn.preprocessing.TargetEncoder.transform" title="sklearn.preprocessing.TargetEncoder.transform"><code class="xref py py-meth docutils literal notranslate"><span class="pre">TargetEncoder.transform</span></code></a> itself does not perform any cross fitting.
-It uses the aggregation of the complete training set to transform the categorical
-features. Thus, we can use <a class="reference internal" href="../../modules/generated/sklearn.preprocessing.TargetEncoder.html#sklearn.preprocessing.TargetEncoder.fit" title="sklearn.preprocessing.TargetEncoder.fit"><code class="xref py py-meth docutils literal notranslate"><span class="pre">TargetEncoder.fit</span></code></a> followed by
-<a class="reference internal" href="../../modules/generated/sklearn.preprocessing.TargetEncoder.html#sklearn.preprocessing.TargetEncoder.transform" title="sklearn.preprocessing.TargetEncoder.transform"><code class="xref py py-meth docutils literal notranslate"><span class="pre">TargetEncoder.transform</span></code></a> to disable the cross fitting. This encoding
-is then passed to the ridge model.</p>
+<img src="../../_images/sphx_glr_plot_target_encoder_cross_val_001.png" srcset="../../_images/sphx_glr_plot_target_encoder_cross_val_001.png" alt="Target encoded with cross fitting" class = "sphx-glr-single-img"/><p>While <a class="reference internal" href="../../modules/generated/sklearn.preprocessing.TargetEncoder.html#sklearn.preprocessing.TargetEncoder.fit_transform" title="sklearn.preprocessing.TargetEncoder.fit_transform"><code class="xref py py-meth docutils literal notranslate"><span class="pre">TargetEncoder.fit_transform</span></code></a> uses an internal
+<a class="reference internal" href="../../glossary.html#term-0"><span class="xref std std-term">cross fitting</span></a> scheme to learn encodings for the training set,
+<a class="reference internal" href="../../modules/generated/sklearn.preprocessing.TargetEncoder.html#sklearn.preprocessing.TargetEncoder.transform" title="sklearn.preprocessing.TargetEncoder.transform"><code class="xref py py-meth docutils literal notranslate"><span class="pre">TargetEncoder.transform</span></code></a> itself does not.
+It uses the complete training set to learn encodings and to transform the
+categorical features. Thus, we can use <a class="reference internal" href="../../modules/generated/sklearn.preprocessing.TargetEncoder.html#sklearn.preprocessing.TargetEncoder.fit" title="sklearn.preprocessing.TargetEncoder.fit"><code class="xref py py-meth docutils literal notranslate"><span class="pre">TargetEncoder.fit</span></code></a> followed by
+<a class="reference internal" href="../../modules/generated/sklearn.preprocessing.TargetEncoder.html#sklearn.preprocessing.TargetEncoder.transform" title="sklearn.preprocessing.TargetEncoder.transform"><code class="xref py py-meth docutils literal notranslate"><span class="pre">TargetEncoder.transform</span></code></a> to disable the <a class="reference internal" href="../../glossary.html#term-0"><span class="xref std std-term">cross fitting</span></a>. This
+encoding is then passed to the ridge model.</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">target_encoder</span> <span class="o">=</span> <a href="../../modules/generated/sklearn.preprocessing.TargetEncoder.html#sklearn.preprocessing.TargetEncoder" title="sklearn.preprocessing.TargetEncoder" class="sphx-glr-backref-module-sklearn-preprocessing sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">TargetEncoder</span></a><span class="p">(</span><span class="n">random_state</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
 <span class="n">target_encoder</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X_train</span><span class="p">,</span> <span class="n">y_train</span><span class="p">)</span>
-<span class="n">X_train_no_cv_encoding</span> <span class="o">=</span> <span class="n">target_encoder</span><span class="o">.</span><span class="n">transform</span><span class="p">(</span><span class="n">X_train</span><span class="p">)</span>
-<span class="n">X_test_no_cv_encoding</span> <span class="o">=</span> <span class="n">target_encoder</span><span class="o">.</span><span class="n">transform</span><span class="p">(</span><span class="n">X_test</span><span class="p">)</span>
+<span class="n">X_train_no_cf_encoding</span> <span class="o">=</span> <span class="n">target_encoder</span><span class="o">.</span><span class="n">transform</span><span class="p">(</span><span class="n">X_train</span><span class="p">)</span>
+<span class="n">X_test_no_cf_encoding</span> <span class="o">=</span> <span class="n">target_encoder</span><span class="o">.</span><span class="n">transform</span><span class="p">(</span><span class="n">X_test</span><span class="p">)</span>
 
-<span class="n">model_no_cv</span> <span class="o">=</span> <span class="n">ridge</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X_train_no_cv_encoding</span><span class="p">,</span> <span class="n">y_train</span><span class="p">)</span>
+<span class="n">model_no_cf</span> <span class="o">=</span> <span class="n">ridge</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X_train_no_cf_encoding</span><span class="p">,</span> <span class="n">y_train</span><span class="p">)</span>
 </pre></div>
 </div>
-<p>We evaluate the model on the non-cross validated encoding and see that it overfits:</p>
+<p>We evaluate the model that did not use <a class="reference internal" href="../../glossary.html#term-0"><span class="xref std std-term">cross fitting</span></a> when encoding and
+see that it overfits:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="nb">print</span><span class="p">(</span>
-    <span class="s2">&quot;Model without CV on training set: &quot;</span><span class="p">,</span>
-    <span class="n">model_no_cv</span><span class="o">.</span><span class="n">score</span><span class="p">(</span><span class="n">X_train_no_cv_encoding</span><span class="p">,</span> <span class="n">y_train</span><span class="p">),</span>
+    <span class="s2">&quot;Model without CF on training set: &quot;</span><span class="p">,</span>
+    <span class="n">model_no_cf</span><span class="o">.</span><span class="n">score</span><span class="p">(</span><span class="n">X_train_no_cf_encoding</span><span class="p">,</span> <span class="n">y_train</span><span class="p">),</span>
 <span class="p">)</span>
 <span class="nb">print</span><span class="p">(</span>
-    <span class="s2">&quot;Model without CV on test set: &quot;</span><span class="p">,</span> <span class="n">model_no_cv</span><span class="o">.</span><span class="n">score</span><span class="p">(</span><span class="n">X_test_no_cv_encoding</span><span class="p">,</span> <span class="n">y_test</span><span class="p">)</span>
+    <span class="s2">&quot;Model without CF on test set: &quot;</span><span class="p">,</span>
+    <span class="n">model_no_cf</span><span class="o">.</span><span class="n">score</span><span class="p">(</span>
+        <span class="n">X_test_no_cf_encoding</span><span class="p">,</span>
+        <span class="n">y_test</span><span class="p">,</span>
+    <span class="p">),</span>
 <span class="p">)</span>
 </pre></div>
 </div>
-<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>Model without CV on training set:  0.858486250088675
-Model without CV on test set:  0.6338211367110066
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>Model without CF on training set:  0.858486250088675
+Model without CF on test set:  0.6338211367110066
 </pre></div>
 </div>
-<p>The ridge model overfits, because it assigns more weight to the extremely high
-cardinality feature relative to the informative feature.</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">coefs_no_cv</span> <span class="o">=</span> <a href="https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.Series.html#pandas.Series" title="pandas.Series" class="sphx-glr-backref-module-pandas sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">pd</span><span class="o">.</span><span class="n">Series</span></a><span class="p">(</span>
-    <span class="n">model_no_cv</span><span class="o">.</span><span class="n">coef_</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="n">model_no_cv</span><span class="o">.</span><span class="n">feature_names_in_</span>
+<p>The ridge model overfits because it assigns much more weight to the
+uninformative extremely high cardinality (“near_unique”) and medium
+cardinality (“shuffled”) features than when the model used
+<a class="reference internal" href="../../glossary.html#term-0"><span class="xref std std-term">cross fitting</span></a> to encode the features.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">coefs_no_cf</span> <span class="o">=</span> <a href="https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.Series.html#pandas.Series" title="pandas.Series" class="sphx-glr-backref-module-pandas sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">pd</span><span class="o">.</span><span class="n">Series</span></a><span class="p">(</span>
+    <span class="n">model_no_cf</span><span class="o">.</span><span class="n">coef_</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="n">model_no_cf</span><span class="o">.</span><span class="n">feature_names_in_</span>
 <span class="p">)</span><span class="o">.</span><span class="n">sort_values</span><span class="p">()</span>
-<span class="n">_</span> <span class="o">=</span> <span class="n">coefs_no_cv</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">kind</span><span class="o">=</span><span class="s2">&quot;barh&quot;</span><span class="p">)</span>
+<span class="n">ax</span> <span class="o">=</span> <span class="n">coefs_no_cf</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">kind</span><span class="o">=</span><span class="s2">&quot;barh&quot;</span><span class="p">)</span>
+<span class="n">_</span> <span class="o">=</span> <span class="n">ax</span><span class="o">.</span><span class="n">set</span><span class="p">(</span>
+    <span class="n">title</span><span class="o">=</span><span class="s2">&quot;Target encoded without cross fitting&quot;</span><span class="p">,</span>
+    <span class="n">xlabel</span><span class="o">=</span><span class="s2">&quot;Ridge coefficient&quot;</span><span class="p">,</span>
+    <span class="n">ylabel</span><span class="o">=</span><span class="s2">&quot;Feature&quot;</span><span class="p">,</span>
+<span class="p">)</span>
 </pre></div>
 </div>
-<img src="../../_images/sphx_glr_plot_target_encoder_cross_val_002.png" srcset="../../_images/sphx_glr_plot_target_encoder_cross_val_002.png" alt="plot target encoder cross val" class = "sphx-glr-single-img"/></section>
+<img src="../../_images/sphx_glr_plot_target_encoder_cross_val_002.png" srcset="../../_images/sphx_glr_plot_target_encoder_cross_val_002.png" alt="Target encoded without cross fitting" class = "sphx-glr-single-img"/></section>
 <section id="conclusion">
 <h2>Conclusion<a class="headerlink" href="#conclusion" title="Permalink to this heading">¶</a></h2>
-<p>This example demonstrates the importance of <a class="reference internal" href="../../modules/generated/sklearn.preprocessing.TargetEncoder.html#sklearn.preprocessing.TargetEncoder" title="sklearn.preprocessing.TargetEncoder"><code class="xref py py-class docutils literal notranslate"><span class="pre">TargetEncoder</span></code></a>’s internal cross
-fitting. It is important to use <a class="reference internal" href="../../modules/generated/sklearn.preprocessing.TargetEncoder.html#sklearn.preprocessing.TargetEncoder.fit_transform" title="sklearn.preprocessing.TargetEncoder.fit_transform"><code class="xref py py-meth docutils literal notranslate"><span class="pre">TargetEncoder.fit_transform</span></code></a> to encode
-training data before passing it to a machine learning model. When a
-<a class="reference internal" href="../../modules/generated/sklearn.preprocessing.TargetEncoder.html#sklearn.preprocessing.TargetEncoder" title="sklearn.preprocessing.TargetEncoder"><code class="xref py py-class docutils literal notranslate"><span class="pre">TargetEncoder</span></code></a> is a part of a <a class="reference internal" href="../../modules/generated/sklearn.pipeline.Pipeline.html#sklearn.pipeline.Pipeline" title="sklearn.pipeline.Pipeline"><code class="xref py py-class docutils literal notranslate"><span class="pre">Pipeline</span></code></a> and the
-pipeline is fitted, the pipeline will correctly call
-<a class="reference internal" href="../../modules/generated/sklearn.preprocessing.TargetEncoder.html#sklearn.preprocessing.TargetEncoder.fit_transform" title="sklearn.preprocessing.TargetEncoder.fit_transform"><code class="xref py py-meth docutils literal notranslate"><span class="pre">TargetEncoder.fit_transform</span></code></a> and pass the encoding along.</p>
-<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> ( 0 minutes  0.271 seconds)</p>
+<p>This example demonstrates the importance of <a class="reference internal" href="../../modules/generated/sklearn.preprocessing.TargetEncoder.html#sklearn.preprocessing.TargetEncoder" title="sklearn.preprocessing.TargetEncoder"><code class="xref py py-class docutils literal notranslate"><span class="pre">TargetEncoder</span></code></a>’s internal
+<a class="reference internal" href="../../glossary.html#term-0"><span class="xref std std-term">cross fitting</span></a>. It is important to use
+<a class="reference internal" href="../../modules/generated/sklearn.preprocessing.TargetEncoder.html#sklearn.preprocessing.TargetEncoder.fit_transform" title="sklearn.preprocessing.TargetEncoder.fit_transform"><code class="xref py py-meth docutils literal notranslate"><span class="pre">TargetEncoder.fit_transform</span></code></a> to encode training data before passing it
+to a machine learning model. When a <a class="reference internal" href="../../modules/generated/sklearn.preprocessing.TargetEncoder.html#sklearn.preprocessing.TargetEncoder" title="sklearn.preprocessing.TargetEncoder"><code class="xref py py-class docutils literal notranslate"><span class="pre">TargetEncoder</span></code></a> is a part of a
+<a class="reference internal" href="../../modules/generated/sklearn.pipeline.Pipeline.html#sklearn.pipeline.Pipeline" title="sklearn.pipeline.Pipeline"><code class="xref py py-class docutils literal notranslate"><span class="pre">Pipeline</span></code></a> and the pipeline is fitted, the pipeline
+will correctly call <a class="reference internal" href="../../modules/generated/sklearn.preprocessing.TargetEncoder.html#sklearn.preprocessing.TargetEncoder.fit_transform" title="sklearn.preprocessing.TargetEncoder.fit_transform"><code class="xref py py-meth docutils literal notranslate"><span class="pre">TargetEncoder.fit_transform</span></code></a> and use
+<a class="reference internal" href="../../glossary.html#term-0"><span class="xref std std-term">cross fitting</span></a> when encoding the training data.</p>
+<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> ( 0 minutes  0.326 seconds)</p>
 <div class="sphx-glr-footer sphx-glr-footer-example docutils container" id="sphx-glr-download-auto-examples-preprocessing-plot-target-encoder-cross-val-py">
 <div class="binder-badge docutils container">
 <a class="reference external image-reference" href="https://mybinder.org/v2/gh/scikit-learn/scikit-learn/main?urlpath=lab/tree/notebooks/auto_examples/preprocessing/plot_target_encoder_cross_val.ipynb"><img alt="Launch binder" src="../../_images/binder_badge_logo26.svg" width="150px" /></a>
