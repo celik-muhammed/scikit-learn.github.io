@@ -1061,7 +1061,7 @@ running the classifier.
             return router
 
         def fit(self, X, y, **fit_params):
-            params = process_routing(self, "fit", fit_params)
+            params = process_routing(self, "fit", **fit_params)
 
             self.transformer_ = clone(self.transformer).fit(X, y, **params.transformer.fit)
             X_transformed = self.transformer_.transform(X, **params.transformer.transform)
@@ -1072,7 +1072,7 @@ running the classifier.
             return self
 
         def predict(self, X, **predict_params):
-            params = process_routing(self, "predict", predict_params)
+            params = process_routing(self, "predict", **predict_params)
 
             X_transformed = self.transformer_.transform(X, **params.transformer.transform)
             return self.classifier_.predict(X_transformed, **params.classifier.predict)
@@ -1208,7 +1208,7 @@ let users know the behavior is changed from previous versions.
             self.estimator = estimator
 
         def fit(self, X, y, **fit_params):
-            params = process_routing(self, "fit", fit_params)
+            params = process_routing(self, "fit", **fit_params)
             self.estimator_ = clone(self.estimator).fit(X, y, **params.estimator.fit)
 
         def get_metadata_routing(self):
@@ -1263,7 +1263,7 @@ Now imagine we further develop ``MetaRegressor`` and it now also *consumes*
             self.estimator = estimator
 
         def fit(self, X, y, sample_weight=None, **fit_params):
-            params = process_routing(self, "fit", fit_params, sample_weight=sample_weight)
+            params = process_routing(self, "fit", sample_weight=sample_weight, **fit_params)
             check_metadata(self, sample_weight=sample_weight)
             self.estimator_ = clone(self.estimator).fit(X, y, **params.estimator.fit)
 
@@ -1380,7 +1380,7 @@ modify your code at all:
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** ( 0 minutes  0.044 seconds)
+   **Total running time of the script:** ( 0 minutes  0.046 seconds)
 
 
 .. _sphx_glr_download_auto_examples_miscellaneous_plot_metadata_routing.py:
