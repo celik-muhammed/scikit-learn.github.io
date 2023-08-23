@@ -176,6 +176,7 @@
             <div class="sk-sidebar-toc">
               <ul>
 <li><a class="reference internal" href="#">Scaling the regularization parameter for SVCs</a><ul>
+<li><a class="reference internal" href="#data-generation">Data generation</a></li>
 <li><a class="reference internal" href="#l1-penalty-case">L1-penalty case</a></li>
 <li><a class="reference internal" href="#l2-penalty-case">L2-penalty case</a></li>
 </ul>
@@ -195,9 +196,8 @@ to download the full example code or to run this example in your browser via Jup
 </div>
 <section class="sphx-glr-example-title" id="scaling-the-regularization-parameter-for-svcs">
 <span id="sphx-glr-auto-examples-svm-plot-svm-scale-c-py"></span><h1>Scaling the regularization parameter for SVCs<a class="headerlink" href="#scaling-the-regularization-parameter-for-svcs" title="Permalink to this heading">¶</a></h1>
-<p>The following example illustrates the effect of scaling the
-regularization parameter when using <a class="reference internal" href="../../modules/svm.html#svm"><span class="std std-ref">Support Vector Machines</span></a> for
-<a class="reference internal" href="../../modules/svm.html#svm-classification"><span class="std std-ref">classification</span></a>.
+<p>The following example illustrates the effect of scaling the regularization
+parameter when using <a class="reference internal" href="../../modules/svm.html#svm"><span class="std std-ref">Support Vector Machines</span></a> for <a class="reference internal" href="../../modules/svm.html#svm-classification"><span class="std std-ref">classification</span></a>.
 For SVC classification, we are interested in a risk minimization for the
 equation:</p>
 <div class="math notranslate nohighlight">
@@ -211,38 +211,29 @@ and our model parameters.</p></li>
 <li><p><span class="math notranslate nohighlight">\(\Omega\)</span> is a <code class="docutils literal notranslate"><span class="pre">penalty</span></code> function of our model parameters</p></li>
 </ul>
 </div></blockquote>
-<p>If we consider the loss function to be the individual error per
-sample, then the data-fit term, or the sum of the error for each sample, will
-increase as we add more samples. The penalization term, however, will not
-increase.</p>
-<p>When using, for example, <a class="reference internal" href="../../modules/cross_validation.html#cross-validation"><span class="std std-ref">cross validation</span></a>, to
-set the amount of regularization with <code class="docutils literal notranslate"><span class="pre">C</span></code>, there will be a
-different amount of samples between the main problem and the smaller problems
-within the folds of the cross validation.</p>
-<p>Since our loss function is dependent on the amount of samples, the latter
-will influence the selected value of <code class="docutils literal notranslate"><span class="pre">C</span></code>.
-The question that arises is “How do we optimally adjust C to
-account for the different amount of training samples?”</p>
-<p>In the remainder of this example, we will investigate the effect of scaling
-the value of the regularization parameter <code class="docutils literal notranslate"><span class="pre">C</span></code> in regards to the number of
-samples for both L1 and L2 penalty. We will generate some synthetic datasets
-that are appropriate for each type of regularization.</p>
+<p>If we consider the loss function to be the individual error per sample, then the
+data-fit term, or the sum of the error for each sample, increases as we add more
+samples. The penalization term, however, does not increase.</p>
+<p>When using, for example, <a class="reference internal" href="../../modules/cross_validation.html#cross-validation"><span class="std std-ref">cross validation</span></a>, to set the
+amount of regularization with <code class="docutils literal notranslate"><span class="pre">C</span></code>, there would be a different amount of samples
+between the main problem and the smaller problems within the folds of the cross
+validation.</p>
+<p>Since the loss function dependens on the amount of samples, the latter
+influences the selected value of <code class="docutils literal notranslate"><span class="pre">C</span></code>. The question that arises is “How do we
+optimally adjust C to account for the different amount of training samples?”</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># Author: Andreas Mueller &lt;amueller@ais.uni-bonn.de&gt;</span>
 <span class="c1">#         Jaques Grobler &lt;jaques.grobler@inria.fr&gt;</span>
 <span class="c1"># License: BSD 3 clause</span>
 </pre></div>
 </div>
-<section id="l1-penalty-case">
-<h2>L1-penalty case<a class="headerlink" href="#l1-penalty-case" title="Permalink to this heading">¶</a></h2>
-<p>In the L1 case, theory says that prediction consistency (i.e. that under
-given hypothesis, the estimator learned predicts as well as a model knowing
-the true distribution) is not possible because of the bias of the L1. It
-does say, however, that model consistency, in terms of finding the right set
-of non-zero parameters as well as their signs, can be achieved by scaling
-<code class="docutils literal notranslate"><span class="pre">C</span></code>.</p>
-<p>We will demonstrate this effect by using a synthetic dataset. This
-dataset will be sparse, meaning that only a few features will be informative
-and useful for the model.</p>
+<section id="data-generation">
+<h2>Data generation<a class="headerlink" href="#data-generation" title="Permalink to this heading">¶</a></h2>
+<p>In this example we investigate the effect of reparametrizing the regularization
+parameter <code class="docutils literal notranslate"><span class="pre">C</span></code> to account for the number of samples when using either L1 or L2
+penalty. For such purpose we create a synthetic dataset with a large number of
+features, out of which only a few are informative. We therefore expect the
+regularization to shrink the coefficients towards zero (L2 penalty) or exactly
+zero (L1 penalty).</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">sklearn.datasets</span> <span class="kn">import</span> <a href="../../modules/generated/sklearn.datasets.make_classification.html#sklearn.datasets.make_classification" title="sklearn.datasets.make_classification" class="sphx-glr-backref-module-sklearn-datasets sphx-glr-backref-type-py-function"><span class="n">make_classification</span></a>
 
 <span class="n">n_samples</span><span class="p">,</span> <span class="n">n_features</span> <span class="o">=</span> <span class="mi">100</span><span class="p">,</span> <span class="mi">300</span>
@@ -251,13 +242,23 @@ and useful for the model.</p>
 <span class="p">)</span>
 </pre></div>
 </div>
-<p>Now, we can define a linear SVC with the <code class="docutils literal notranslate"><span class="pre">l1</span></code> penalty.</p>
+</section>
+<section id="l1-penalty-case">
+<h2>L1-penalty case<a class="headerlink" href="#l1-penalty-case" title="Permalink to this heading">¶</a></h2>
+<p>In the L1 case, theory says that provided a strong regularization, the
+estimator cannot predict as well as a model knowing the true distribution
+(even in the limit where the sample size grows to infinity) as it may set some
+weights of otherwise predictive features to zero, which induces a bias. It does
+say, however, that it is possible to find the right set of non-zero parameters
+as well as their signs by tuning <code class="docutils literal notranslate"><span class="pre">C</span></code>.</p>
+<p>We define a linear SVC with the L1 penalty.</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">sklearn.svm</span> <span class="kn">import</span> <a href="../../modules/generated/sklearn.svm.LinearSVC.html#sklearn.svm.LinearSVC" title="sklearn.svm.LinearSVC" class="sphx-glr-backref-module-sklearn-svm sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">LinearSVC</span></a>
 
 <span class="n">model_l1</span> <span class="o">=</span> <a href="../../modules/generated/sklearn.svm.LinearSVC.html#sklearn.svm.LinearSVC" title="sklearn.svm.LinearSVC" class="sphx-glr-backref-module-sklearn-svm sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">LinearSVC</span></a><span class="p">(</span><span class="n">penalty</span><span class="o">=</span><span class="s2">&quot;l1&quot;</span><span class="p">,</span> <span class="n">loss</span><span class="o">=</span><span class="s2">&quot;squared_hinge&quot;</span><span class="p">,</span> <span class="n">dual</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">tol</span><span class="o">=</span><span class="mf">1e-3</span><span class="p">)</span>
 </pre></div>
 </div>
-<p>We will compute the mean test score for different values of <code class="docutils literal notranslate"><span class="pre">C</span></code>.</p>
+<p>We compute the mean test score for different values of <code class="docutils literal notranslate"><span class="pre">C</span></code> via
+cross-validation.</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 <span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
 
@@ -266,12 +267,23 @@ and useful for the model.</p>
 <span class="n">Cs</span> <span class="o">=</span> <a href="https://numpy.org/doc/stable/reference/generated/numpy.logspace.html#numpy.logspace" title="numpy.logspace" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-function"><span class="n">np</span><span class="o">.</span><span class="n">logspace</span></a><span class="p">(</span><span class="o">-</span><span class="mf">2.3</span><span class="p">,</span> <span class="o">-</span><span class="mf">1.3</span><span class="p">,</span> <span class="mi">10</span><span class="p">)</span>
 <span class="n">train_sizes</span> <span class="o">=</span> <a href="https://numpy.org/doc/stable/reference/generated/numpy.linspace.html#numpy.linspace" title="numpy.linspace" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-function"><span class="n">np</span><span class="o">.</span><span class="n">linspace</span></a><span class="p">(</span><span class="mf">0.3</span><span class="p">,</span> <span class="mf">0.7</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span>
 <span class="n">labels</span> <span class="o">=</span> <span class="p">[</span><span class="sa">f</span><span class="s2">&quot;fraction: </span><span class="si">{</span><span class="n">train_size</span><span class="si">}</span><span class="s2">&quot;</span> <span class="k">for</span> <span class="n">train_size</span> <span class="ow">in</span> <span class="n">train_sizes</span><span class="p">]</span>
+<span class="n">shuffle_params</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s2">&quot;test_size&quot;</span><span class="p">:</span> <span class="mf">0.3</span><span class="p">,</span>
+    <span class="s2">&quot;n_splits&quot;</span><span class="p">:</span> <span class="mi">150</span><span class="p">,</span>
+    <span class="s2">&quot;random_state&quot;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
+<span class="p">}</span>
 
 <span class="n">results</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;C&quot;</span><span class="p">:</span> <span class="n">Cs</span><span class="p">}</span>
 <span class="k">for</span> <span class="n">label</span><span class="p">,</span> <span class="n">train_size</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">labels</span><span class="p">,</span> <span class="n">train_sizes</span><span class="p">):</span>
-    <span class="n">cv</span> <span class="o">=</span> <a href="../../modules/generated/sklearn.model_selection.ShuffleSplit.html#sklearn.model_selection.ShuffleSplit" title="sklearn.model_selection.ShuffleSplit" class="sphx-glr-backref-module-sklearn-model_selection sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">ShuffleSplit</span></a><span class="p">(</span><span class="n">train_size</span><span class="o">=</span><span class="n">train_size</span><span class="p">,</span> <span class="n">test_size</span><span class="o">=</span><span class="mf">0.3</span><span class="p">,</span> <span class="n">n_splits</span><span class="o">=</span><span class="mi">50</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+    <span class="n">cv</span> <span class="o">=</span> <a href="../../modules/generated/sklearn.model_selection.ShuffleSplit.html#sklearn.model_selection.ShuffleSplit" title="sklearn.model_selection.ShuffleSplit" class="sphx-glr-backref-module-sklearn-model_selection sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">ShuffleSplit</span></a><span class="p">(</span><span class="n">train_size</span><span class="o">=</span><span class="n">train_size</span><span class="p">,</span> <span class="o">**</span><span class="n">shuffle_params</span><span class="p">)</span>
     <span class="n">train_scores</span><span class="p">,</span> <span class="n">test_scores</span> <span class="o">=</span> <a href="../../modules/generated/sklearn.model_selection.validation_curve.html#sklearn.model_selection.validation_curve" title="sklearn.model_selection.validation_curve" class="sphx-glr-backref-module-sklearn-model_selection sphx-glr-backref-type-py-function"><span class="n">validation_curve</span></a><span class="p">(</span>
-        <span class="n">model_l1</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">param_name</span><span class="o">=</span><span class="s2">&quot;C&quot;</span><span class="p">,</span> <span class="n">param_range</span><span class="o">=</span><span class="n">Cs</span><span class="p">,</span> <span class="n">cv</span><span class="o">=</span><span class="n">cv</span>
+        <span class="n">model_l1</span><span class="p">,</span>
+        <span class="n">X</span><span class="p">,</span>
+        <span class="n">y</span><span class="p">,</span>
+        <span class="n">param_name</span><span class="o">=</span><span class="s2">&quot;C&quot;</span><span class="p">,</span>
+        <span class="n">param_range</span><span class="o">=</span><span class="n">Cs</span><span class="p">,</span>
+        <span class="n">cv</span><span class="o">=</span><span class="n">cv</span><span class="p">,</span>
+        <span class="n">n_jobs</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span>
     <span class="p">)</span>
     <span class="n">results</span><span class="p">[</span><span class="n">label</span><span class="p">]</span> <span class="o">=</span> <span class="n">test_scores</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
 <span class="n">results</span> <span class="o">=</span> <a href="https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.DataFrame.html#pandas.DataFrame" title="pandas.DataFrame" class="sphx-glr-backref-module-pandas sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span></a><span class="p">(</span><span class="n">results</span><span class="p">)</span>
@@ -286,45 +298,54 @@ and useful for the model.</p>
 <span class="n">axes</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s2">&quot;CV score&quot;</span><span class="p">)</span>
 <span class="n">axes</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s2">&quot;No scaling&quot;</span><span class="p">)</span>
 
+<span class="k">for</span> <span class="n">label</span> <span class="ow">in</span> <span class="n">labels</span><span class="p">:</span>
+    <span class="n">best_C</span> <span class="o">=</span> <span class="n">results</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">results</span><span class="p">[</span><span class="n">label</span><span class="p">]</span><span class="o">.</span><span class="n">idxmax</span><span class="p">(),</span> <span class="s2">&quot;C&quot;</span><span class="p">]</span>
+    <span class="n">axes</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">axvline</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="n">best_C</span><span class="p">,</span> <span class="n">linestyle</span><span class="o">=</span><span class="s2">&quot;--&quot;</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;grey&quot;</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.7</span><span class="p">)</span>
+
 <span class="c1"># plot results by scaling C</span>
 <span class="k">for</span> <span class="n">train_size_idx</span><span class="p">,</span> <span class="n">label</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">labels</span><span class="p">):</span>
+    <span class="n">train_size</span> <span class="o">=</span> <span class="n">train_sizes</span><span class="p">[</span><span class="n">train_size_idx</span><span class="p">]</span>
     <span class="n">results_scaled</span> <span class="o">=</span> <span class="n">results</span><span class="p">[[</span><span class="n">label</span><span class="p">]]</span><span class="o">.</span><span class="n">assign</span><span class="p">(</span>
-        <span class="n">C_scaled</span><span class="o">=</span><span class="n">Cs</span> <span class="o">*</span> <span class="nb">float</span><span class="p">(</span><span class="n">n_samples</span> <span class="o">*</span> <span class="n">train_sizes</span><span class="p">[</span><span class="n">train_size_idx</span><span class="p">])</span>
+        <span class="n">C_scaled</span><span class="o">=</span><span class="n">Cs</span> <span class="o">*</span> <span class="nb">float</span><span class="p">(</span><span class="n">n_samples</span> <span class="o">*</span> <a href="https://numpy.org/doc/stable/reference/generated/numpy.sqrt.html#numpy.sqrt" title="numpy.sqrt" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-data"><span class="n">np</span><span class="o">.</span><span class="n">sqrt</span></a><span class="p">(</span><span class="n">train_size</span><span class="p">))</span>
     <span class="p">)</span>
     <span class="n">results_scaled</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="s2">&quot;C_scaled&quot;</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="n">axes</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">logx</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="n">label</span><span class="p">)</span>
-<span class="n">axes</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s2">&quot;Scaling C by 1 / n_samples&quot;</span><span class="p">)</span>
+    <span class="n">best_C_scaled</span> <span class="o">=</span> <span class="n">results_scaled</span><span class="p">[</span><span class="s2">&quot;C_scaled&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">results</span><span class="p">[</span><span class="n">label</span><span class="p">]</span><span class="o">.</span><span class="n">idxmax</span><span class="p">()]</span>
+    <span class="n">axes</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">axvline</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="n">best_C_scaled</span><span class="p">,</span> <span class="n">linestyle</span><span class="o">=</span><span class="s2">&quot;--&quot;</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;grey&quot;</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.7</span><span class="p">)</span>
+
+<span class="n">axes</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s2">&quot;Scaling C by sqrt(1 / n_samples)&quot;</span><span class="p">)</span>
 
 <span class="n">_</span> <span class="o">=</span> <span class="n">fig</span><span class="o">.</span><span class="n">suptitle</span><span class="p">(</span><span class="s2">&quot;Effect of scaling C with L1 penalty&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
-<img src="../../_images/sphx_glr_plot_svm_scale_c_001.png" srcset="../../_images/sphx_glr_plot_svm_scale_c_001.png" alt="Effect of scaling C with L1 penalty, No scaling, Scaling C by 1 / n_samples" class = "sphx-glr-single-img"/><p>Here, we observe that the cross-validation-error correlates best with the
-test-error, when scaling our <code class="docutils literal notranslate"><span class="pre">C</span></code> with the number of samples, <code class="docutils literal notranslate"><span class="pre">n</span></code>.</p>
+<img src="../../_images/sphx_glr_plot_svm_scale_c_001.png" srcset="../../_images/sphx_glr_plot_svm_scale_c_001.png" alt="Effect of scaling C with L1 penalty, No scaling, Scaling C by sqrt(1 / n_samples)" class = "sphx-glr-single-img"/><p>In the region of small <code class="docutils literal notranslate"><span class="pre">C</span></code> (strong regularization) all the coefficients
+learned by the models are zero, leading to severe underfitting. Indeed, the
+accuracy in this region is at the chance level.</p>
+<p>Using the default scale results in a somewhat stable optimal value of <code class="docutils literal notranslate"><span class="pre">C</span></code>,
+whereas the transition out of the underfitting region depends on the number of
+training samples. The reparametrization leads to even more stable results.</p>
+<p>See e.g. theorem 3 of <a class="reference external" href="https://arxiv.org/abs/1402.1700">On the prediction performance of the Lasso</a> or <a class="reference external" href="https://arxiv.org/abs/0801.1095">Simultaneous analysis of Lasso and Dantzig selector</a> where the regularization parameter is always assumed to be
+proportional to 1 / sqrt(n_samples).</p>
 </section>
 <section id="l2-penalty-case">
 <h2>L2-penalty case<a class="headerlink" href="#l2-penalty-case" title="Permalink to this heading">¶</a></h2>
-<p>We can repeat a similar experiment with the <code class="docutils literal notranslate"><span class="pre">l2</span></code> penalty. In this case, we
-don’t need to use a sparse dataset.</p>
-<p>In this case, the theory says that in order to achieve prediction
-consistency, the penalty parameter should be kept constant as the number of
-samples grow.</p>
-<p>So we will repeat the same experiment by creating a linear SVC classifier
-with the <code class="docutils literal notranslate"><span class="pre">l2</span></code> penalty and check the test score via cross-validation and
-plot the results with and without scaling the parameter <code class="docutils literal notranslate"><span class="pre">C</span></code>.</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">rng</span> <span class="o">=</span> <a href="https://numpy.org/doc/stable/reference/random/legacy.html#numpy.random.RandomState" title="numpy.random.RandomState" class="sphx-glr-backref-module-numpy-random sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">RandomState</span></a><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
-<span class="n">y</span> <span class="o">=</span> <a href="https://numpy.org/doc/stable/reference/generated/numpy.sign.html#numpy.sign" title="numpy.sign" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-data"><span class="n">np</span><span class="o">.</span><span class="n">sign</span></a><span class="p">(</span><span class="mf">0.5</span> <span class="o">-</span> <span class="n">rng</span><span class="o">.</span><span class="n">rand</span><span class="p">(</span><span class="n">n_samples</span><span class="p">))</span>
-<span class="n">X</span> <span class="o">=</span> <span class="n">rng</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="n">n_samples</span><span class="p">,</span> <span class="n">n_features</span> <span class="o">//</span> <span class="mi">5</span><span class="p">)</span> <span class="o">+</span> <span class="n">y</span><span class="p">[:,</span> <a href="https://numpy.org/doc/stable/reference/constants.html#numpy.newaxis" title="numpy.newaxis" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-data"><span class="n">np</span><span class="o">.</span><span class="n">newaxis</span></a><span class="p">]</span>
-<span class="n">X</span> <span class="o">+=</span> <span class="mi">5</span> <span class="o">*</span> <span class="n">rng</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="n">n_samples</span><span class="p">,</span> <span class="n">n_features</span> <span class="o">//</span> <span class="mi">5</span><span class="p">)</span>
-</pre></div>
-</div>
+<p>We can do a similar experiment with the L2 penalty. In this case, the
+theory says that in order to achieve prediction consistency, the penalty
+parameter should be kept constant as the number of samples grow.</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">model_l2</span> <span class="o">=</span> <a href="../../modules/generated/sklearn.svm.LinearSVC.html#sklearn.svm.LinearSVC" title="sklearn.svm.LinearSVC" class="sphx-glr-backref-module-sklearn-svm sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">LinearSVC</span></a><span class="p">(</span><span class="n">penalty</span><span class="o">=</span><span class="s2">&quot;l2&quot;</span><span class="p">,</span> <span class="n">loss</span><span class="o">=</span><span class="s2">&quot;squared_hinge&quot;</span><span class="p">,</span> <span class="n">dual</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-<span class="n">Cs</span> <span class="o">=</span> <a href="https://numpy.org/doc/stable/reference/generated/numpy.logspace.html#numpy.logspace" title="numpy.logspace" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-function"><span class="n">np</span><span class="o">.</span><span class="n">logspace</span></a><span class="p">(</span><span class="o">-</span><span class="mf">4.5</span><span class="p">,</span> <span class="o">-</span><span class="mi">2</span><span class="p">,</span> <span class="mi">10</span><span class="p">)</span>
+<span class="n">Cs</span> <span class="o">=</span> <a href="https://numpy.org/doc/stable/reference/generated/numpy.logspace.html#numpy.logspace" title="numpy.logspace" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-function"><span class="n">np</span><span class="o">.</span><span class="n">logspace</span></a><span class="p">(</span><span class="o">-</span><span class="mi">8</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">11</span><span class="p">)</span>
 
 <span class="n">labels</span> <span class="o">=</span> <span class="p">[</span><span class="sa">f</span><span class="s2">&quot;fraction: </span><span class="si">{</span><span class="n">train_size</span><span class="si">}</span><span class="s2">&quot;</span> <span class="k">for</span> <span class="n">train_size</span> <span class="ow">in</span> <span class="n">train_sizes</span><span class="p">]</span>
 <span class="n">results</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;C&quot;</span><span class="p">:</span> <span class="n">Cs</span><span class="p">}</span>
 <span class="k">for</span> <span class="n">label</span><span class="p">,</span> <span class="n">train_size</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">labels</span><span class="p">,</span> <span class="n">train_sizes</span><span class="p">):</span>
-    <span class="n">cv</span> <span class="o">=</span> <a href="../../modules/generated/sklearn.model_selection.ShuffleSplit.html#sklearn.model_selection.ShuffleSplit" title="sklearn.model_selection.ShuffleSplit" class="sphx-glr-backref-module-sklearn-model_selection sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">ShuffleSplit</span></a><span class="p">(</span><span class="n">train_size</span><span class="o">=</span><span class="n">train_size</span><span class="p">,</span> <span class="n">test_size</span><span class="o">=</span><span class="mf">0.3</span><span class="p">,</span> <span class="n">n_splits</span><span class="o">=</span><span class="mi">50</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+    <span class="n">cv</span> <span class="o">=</span> <a href="../../modules/generated/sklearn.model_selection.ShuffleSplit.html#sklearn.model_selection.ShuffleSplit" title="sklearn.model_selection.ShuffleSplit" class="sphx-glr-backref-module-sklearn-model_selection sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">ShuffleSplit</span></a><span class="p">(</span><span class="n">train_size</span><span class="o">=</span><span class="n">train_size</span><span class="p">,</span> <span class="o">**</span><span class="n">shuffle_params</span><span class="p">)</span>
     <span class="n">train_scores</span><span class="p">,</span> <span class="n">test_scores</span> <span class="o">=</span> <a href="../../modules/generated/sklearn.model_selection.validation_curve.html#sklearn.model_selection.validation_curve" title="sklearn.model_selection.validation_curve" class="sphx-glr-backref-module-sklearn-model_selection sphx-glr-backref-type-py-function"><span class="n">validation_curve</span></a><span class="p">(</span>
-        <span class="n">model_l2</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">param_name</span><span class="o">=</span><span class="s2">&quot;C&quot;</span><span class="p">,</span> <span class="n">param_range</span><span class="o">=</span><span class="n">Cs</span><span class="p">,</span> <span class="n">cv</span><span class="o">=</span><span class="n">cv</span>
+        <span class="n">model_l2</span><span class="p">,</span>
+        <span class="n">X</span><span class="p">,</span>
+        <span class="n">y</span><span class="p">,</span>
+        <span class="n">param_name</span><span class="o">=</span><span class="s2">&quot;C&quot;</span><span class="p">,</span>
+        <span class="n">param_range</span><span class="o">=</span><span class="n">Cs</span><span class="p">,</span>
+        <span class="n">cv</span><span class="o">=</span><span class="n">cv</span><span class="p">,</span>
+        <span class="n">n_jobs</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span>
     <span class="p">)</span>
     <span class="n">results</span><span class="p">[</span><span class="n">label</span><span class="p">]</span> <span class="o">=</span> <span class="n">test_scores</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
 <span class="n">results</span> <span class="o">=</span> <a href="https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.DataFrame.html#pandas.DataFrame" title="pandas.DataFrame" class="sphx-glr-backref-module-pandas sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span></a><span class="p">(</span><span class="n">results</span><span class="p">)</span>
@@ -339,23 +360,32 @@ plot the results with and without scaling the parameter <code class="docutils li
 <span class="n">axes</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s2">&quot;CV score&quot;</span><span class="p">)</span>
 <span class="n">axes</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s2">&quot;No scaling&quot;</span><span class="p">)</span>
 
+<span class="k">for</span> <span class="n">label</span> <span class="ow">in</span> <span class="n">labels</span><span class="p">:</span>
+    <span class="n">best_C</span> <span class="o">=</span> <span class="n">results</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">results</span><span class="p">[</span><span class="n">label</span><span class="p">]</span><span class="o">.</span><span class="n">idxmax</span><span class="p">(),</span> <span class="s2">&quot;C&quot;</span><span class="p">]</span>
+    <span class="n">axes</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">axvline</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="n">best_C</span><span class="p">,</span> <span class="n">linestyle</span><span class="o">=</span><span class="s2">&quot;--&quot;</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;grey&quot;</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.8</span><span class="p">)</span>
+
 <span class="c1"># plot results by scaling C</span>
 <span class="k">for</span> <span class="n">train_size_idx</span><span class="p">,</span> <span class="n">label</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">labels</span><span class="p">):</span>
     <span class="n">results_scaled</span> <span class="o">=</span> <span class="n">results</span><span class="p">[[</span><span class="n">label</span><span class="p">]]</span><span class="o">.</span><span class="n">assign</span><span class="p">(</span>
-        <span class="n">C_scaled</span><span class="o">=</span><span class="n">Cs</span> <span class="o">*</span> <span class="nb">float</span><span class="p">(</span><span class="n">n_samples</span> <span class="o">*</span> <span class="n">train_sizes</span><span class="p">[</span><span class="n">train_size_idx</span><span class="p">])</span>
+        <span class="n">C_scaled</span><span class="o">=</span><span class="n">Cs</span> <span class="o">*</span> <span class="nb">float</span><span class="p">(</span><span class="n">n_samples</span> <span class="o">*</span> <a href="https://numpy.org/doc/stable/reference/generated/numpy.sqrt.html#numpy.sqrt" title="numpy.sqrt" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-data"><span class="n">np</span><span class="o">.</span><span class="n">sqrt</span></a><span class="p">(</span><span class="n">train_sizes</span><span class="p">[</span><span class="n">train_size_idx</span><span class="p">]))</span>
     <span class="p">)</span>
     <span class="n">results_scaled</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="s2">&quot;C_scaled&quot;</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="n">axes</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">logx</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="n">label</span><span class="p">)</span>
-<span class="n">axes</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s2">&quot;Scaling C by 1 / n_samples&quot;</span><span class="p">)</span>
+    <span class="n">best_C_scaled</span> <span class="o">=</span> <span class="n">results_scaled</span><span class="p">[</span><span class="s2">&quot;C_scaled&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">results</span><span class="p">[</span><span class="n">label</span><span class="p">]</span><span class="o">.</span><span class="n">idxmax</span><span class="p">()]</span>
+    <span class="n">axes</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">axvline</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="n">best_C_scaled</span><span class="p">,</span> <span class="n">linestyle</span><span class="o">=</span><span class="s2">&quot;--&quot;</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;grey&quot;</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.8</span><span class="p">)</span>
+<span class="n">axes</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s2">&quot;Scaling C by sqrt(1 / n_samples)&quot;</span><span class="p">)</span>
 
-<span class="n">_</span> <span class="o">=</span> <span class="n">fig</span><span class="o">.</span><span class="n">suptitle</span><span class="p">(</span><span class="s2">&quot;Effect of scaling C with L2 penalty&quot;</span><span class="p">)</span>
+<span class="n">fig</span><span class="o">.</span><span class="n">suptitle</span><span class="p">(</span><span class="s2">&quot;Effect of scaling C with L2 penalty&quot;</span><span class="p">)</span>
+<a href="https://matplotlib.org/stable/api/_as_gen/matplotlib.pyplot.show.html#matplotlib.pyplot.show" title="matplotlib.pyplot.show" class="sphx-glr-backref-module-matplotlib-pyplot sphx-glr-backref-type-py-function"><span class="n">plt</span><span class="o">.</span><span class="n">show</span></a><span class="p">()</span>
 </pre></div>
 </div>
-<img src="../../_images/sphx_glr_plot_svm_scale_c_002.png" srcset="../../_images/sphx_glr_plot_svm_scale_c_002.png" alt="Effect of scaling C with L2 penalty, No scaling, Scaling C by 1 / n_samples" class = "sphx-glr-single-img"/><p>So or the L2 penalty case, the best result comes from the case where <code class="docutils literal notranslate"><span class="pre">C</span></code> is
-not scaled.</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><a href="https://matplotlib.org/stable/api/_as_gen/matplotlib.pyplot.show.html#matplotlib.pyplot.show" title="matplotlib.pyplot.show" class="sphx-glr-backref-module-matplotlib-pyplot sphx-glr-backref-type-py-function"><span class="n">plt</span><span class="o">.</span><span class="n">show</span></a><span class="p">()</span>
-</pre></div>
-</div>
-<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> ( 0 minutes  6.632 seconds)</p>
+<img src="../../_images/sphx_glr_plot_svm_scale_c_002.png" srcset="../../_images/sphx_glr_plot_svm_scale_c_002.png" alt="Effect of scaling C with L2 penalty, No scaling, Scaling C by sqrt(1 / n_samples)" class = "sphx-glr-single-img"/><p>For the L2 penalty case, the reparametrization seems to have a smaller impact
+on the stability of the optimal value for the regularization. The transition
+out of the overfitting region occurs in a more spread range and the accuracy
+does not seem to be degraded up to chance level.</p>
+<p>Try increasing the value to <code class="docutils literal notranslate"><span class="pre">n_splits=1_000</span></code> for better results in the L2
+case, which is not shown here due to the limitations on the documentation
+builder.</p>
+<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> ( 0 minutes  24.108 seconds)</p>
 <div class="sphx-glr-footer sphx-glr-footer-example docutils container" id="sphx-glr-download-auto-examples-svm-plot-svm-scale-c-py">
 <div class="binder-badge docutils container">
 <a class="reference external image-reference" href="https://mybinder.org/v2/gh/scikit-learn/scikit-learn/main?urlpath=lab/tree/notebooks/auto_examples/svm/plot_svm_scale_c.ipynb"><img alt="Launch binder" src="../../_images/binder_badge_logo29.svg" width="150px" /></a>
