@@ -178,6 +178,7 @@
 <li><a class="reference internal" href="#">Understanding the decision tree structure</a><ul>
 <li><a class="reference internal" href="#train-tree-classifier">Train tree classifier</a></li>
 <li><a class="reference internal" href="#tree-structure">Tree structure</a></li>
+<li><a class="reference internal" href="#what-is-the-values-array-used-here">What is the values array used here?</a></li>
 <li><a class="reference internal" href="#decision-path">Decision path</a></li>
 </ul>
 </li>
@@ -238,7 +239,8 @@ show how to retrieve:</p>
 <h2>Tree structure<a class="headerlink" href="#tree-structure" title="Permalink to this heading">¶</a></h2>
 <p>The decision classifier has an attribute called <code class="docutils literal notranslate"><span class="pre">tree_</span></code> which allows access
 to low level attributes such as <code class="docutils literal notranslate"><span class="pre">node_count</span></code>, the total number of nodes,
-and <code class="docutils literal notranslate"><span class="pre">max_depth</span></code>, the maximal depth of the tree. It also stores the
+and <code class="docutils literal notranslate"><span class="pre">max_depth</span></code>, the maximal depth of the tree. The <a href="#id1"><span class="problematic" id="id2">tree_</span></a>.compute_node_depths()
+method computes the depth of each node in the tree. <code class="docutils literal notranslate"><span class="pre">tree_</span></code> also stores the
 entire binary tree structure, represented as a number of parallel arrays. The
 i-th element of each array holds information about the node <code class="docutils literal notranslate"><span class="pre">i</span></code>. Node 0 is
 the tree’s root. Some of the arrays only apply to either leaves or split
@@ -257,6 +259,10 @@ node</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">n_node_samples[i]</span></code>: the number of training samples reaching node
 <code class="docutils literal notranslate"><span class="pre">i</span></code></p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">impurity[i]</span></code>: the impurity at node <code class="docutils literal notranslate"><span class="pre">i</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">weighted_n_node_samples[i]</span></code>: the weighted number of training samples
+reaching node <code class="docutils literal notranslate"><span class="pre">i</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">value[i,</span> <span class="pre">j,</span> <span class="pre">k]</span></code>: the summary of the training samples that reached node i for
+class j and output k.</p></li>
 </ul>
 </div></blockquote>
 <p>Using the arrays, we can traverse the tree structure to compute various
@@ -267,6 +273,7 @@ it is a leaf.</p>
 <span class="n">children_right</span> <span class="o">=</span> <span class="n">clf</span><span class="o">.</span><span class="n">tree_</span><span class="o">.</span><span class="n">children_right</span>
 <span class="n">feature</span> <span class="o">=</span> <span class="n">clf</span><span class="o">.</span><span class="n">tree_</span><span class="o">.</span><span class="n">feature</span>
 <span class="n">threshold</span> <span class="o">=</span> <span class="n">clf</span><span class="o">.</span><span class="n">tree_</span><span class="o">.</span><span class="n">threshold</span>
+<span class="n">values</span> <span class="o">=</span> <span class="n">clf</span><span class="o">.</span><span class="n">tree_</span><span class="o">.</span><span class="n">value</span>
 
 <span class="n">node_depth</span> <span class="o">=</span> <a href="https://numpy.org/doc/stable/reference/generated/numpy.zeros.html#numpy.zeros" title="numpy.zeros" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-function"><span class="n">np</span><span class="o">.</span><span class="n">zeros</span></a><span class="p">(</span><span class="n">shape</span><span class="o">=</span><span class="n">n_nodes</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><a href="https://numpy.org/doc/stable/reference/arrays.scalars.html#numpy.int64" title="numpy.int64" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-attribute"><span class="n">np</span><span class="o">.</span><span class="n">int64</span></a><span class="p">)</span>
 <span class="n">is_leaves</span> <span class="o">=</span> <a href="https://numpy.org/doc/stable/reference/generated/numpy.zeros.html#numpy.zeros" title="numpy.zeros" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-function"><span class="n">np</span><span class="o">.</span><span class="n">zeros</span></a><span class="p">(</span><span class="n">shape</span><span class="o">=</span><span class="n">n_nodes</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">bool</span><span class="p">)</span>
@@ -294,13 +301,13 @@ it is a leaf.</p>
 <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n_nodes</span><span class="p">):</span>
     <span class="k">if</span> <span class="n">is_leaves</span><span class="p">[</span><span class="n">i</span><span class="p">]:</span>
         <span class="nb">print</span><span class="p">(</span>
-            <span class="s2">&quot;</span><span class="si">{space}</span><span class="s2">node=</span><span class="si">{node}</span><span class="s2"> is a leaf node.&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
-                <span class="n">space</span><span class="o">=</span><span class="n">node_depth</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">*</span> <span class="s2">&quot;</span><span class="se">\t</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">node</span><span class="o">=</span><span class="n">i</span>
+            <span class="s2">&quot;</span><span class="si">{space}</span><span class="s2">node=</span><span class="si">{node}</span><span class="s2"> is a leaf node with value=</span><span class="si">{value}</span><span class="s2">.&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+                <span class="n">space</span><span class="o">=</span><span class="n">node_depth</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">*</span> <span class="s2">&quot;</span><span class="se">\t</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">node</span><span class="o">=</span><span class="n">i</span><span class="p">,</span> <span class="n">value</span><span class="o">=</span><span class="n">values</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
             <span class="p">)</span>
         <span class="p">)</span>
     <span class="k">else</span><span class="p">:</span>
         <span class="nb">print</span><span class="p">(</span>
-            <span class="s2">&quot;</span><span class="si">{space}</span><span class="s2">node=</span><span class="si">{node}</span><span class="s2"> is a split node: &quot;</span>
+            <span class="s2">&quot;</span><span class="si">{space}</span><span class="s2">node=</span><span class="si">{node}</span><span class="s2"> is a split node with value=</span><span class="si">{value}</span><span class="s2">: &quot;</span>
             <span class="s2">&quot;go to node </span><span class="si">{left}</span><span class="s2"> if X[:, </span><span class="si">{feature}</span><span class="s2">] &lt;= </span><span class="si">{threshold}</span><span class="s2"> &quot;</span>
             <span class="s2">&quot;else to node </span><span class="si">{right}</span><span class="s2">.&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
                 <span class="n">space</span><span class="o">=</span><span class="n">node_depth</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">*</span> <span class="s2">&quot;</span><span class="se">\t</span><span class="s2">&quot;</span><span class="p">,</span>
@@ -309,19 +316,37 @@ it is a leaf.</p>
                 <span class="n">feature</span><span class="o">=</span><span class="n">feature</span><span class="p">[</span><span class="n">i</span><span class="p">],</span>
                 <span class="n">threshold</span><span class="o">=</span><span class="n">threshold</span><span class="p">[</span><span class="n">i</span><span class="p">],</span>
                 <span class="n">right</span><span class="o">=</span><span class="n">children_right</span><span class="p">[</span><span class="n">i</span><span class="p">],</span>
+                <span class="n">value</span><span class="o">=</span><span class="n">values</span><span class="p">[</span><span class="n">i</span><span class="p">],</span>
             <span class="p">)</span>
         <span class="p">)</span>
 </pre></div>
 </div>
 <div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>The binary tree structure has 5 nodes and has the following tree structure:
 
-node=0 is a split node: go to node 1 if X[:, 3] &lt;= 0.800000011920929 else to node 2.
-        node=1 is a leaf node.
-        node=2 is a split node: go to node 3 if X[:, 2] &lt;= 4.950000047683716 else to node 4.
-                node=3 is a leaf node.
-                node=4 is a leaf node.
+node=0 is a split node with value=[[37. 34. 41.]]: go to node 1 if X[:, 3] &lt;= 0.800000011920929 else to node 2.
+        node=1 is a leaf node with value=[[37.  0.  0.]].
+        node=2 is a split node with value=[[ 0. 34. 41.]]: go to node 3 if X[:, 2] &lt;= 4.950000047683716 else to node 4.
+                node=3 is a leaf node with value=[[ 0. 33.  3.]].
+                node=4 is a leaf node with value=[[ 0.  1. 38.]].
 </pre></div>
 </div>
+</section>
+<section id="what-is-the-values-array-used-here">
+<h2>What is the values array used here?<a class="headerlink" href="#what-is-the-values-array-used-here" title="Permalink to this heading">¶</a></h2>
+<p>The <code class="docutils literal notranslate"><span class="pre">tree_.value</span></code> array is a 3D array of shape
+[<code class="docutils literal notranslate"><span class="pre">n_nodes</span></code>, <code class="docutils literal notranslate"><span class="pre">n_classes</span></code>, <code class="docutils literal notranslate"><span class="pre">n_outputs</span></code>] which provides the count of samples
+reaching a node for each class and for each output. Each node has a <code class="docutils literal notranslate"><span class="pre">value</span></code>
+array which is the number of weighted samples reaching this
+node for each output and class.</p>
+<p>For example, in the above tree built on the iris dataset, the root node has
+<code class="docutils literal notranslate"><span class="pre">value</span> <span class="pre">=</span> <span class="pre">[37,</span> <span class="pre">34,</span> <span class="pre">41]</span></code>, indicating there are 37 samples
+of class 0, 34 samples of class 1, and 41 samples of class 2 at the root node.
+Traversing the tree, the samples are split and as a result, the <code class="docutils literal notranslate"><span class="pre">value</span></code> array
+reaching each node changes. The left child of the root node has <code class="docutils literal notranslate"><span class="pre">value</span> <span class="pre">=</span> <span class="pre">[37,</span> <span class="pre">0,</span> <span class="pre">0]</span></code>
+because all 37 samples in the left child node are from class 0.</p>
+<p>Note: In this example, <code class="docutils literal notranslate"><span class="pre">n_outputs=1</span></code>, but the tree classifier can also handle
+multi-output problems. The <code class="docutils literal notranslate"><span class="pre">value</span></code> array at each node would just be a 2D
+array instead.</p>
 <p>We can compare the above output to the plot of the decision tree.</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><a href="../../modules/generated/sklearn.tree.plot_tree.html#sklearn.tree.plot_tree" title="sklearn.tree.plot_tree" class="sphx-glr-backref-module-sklearn-tree sphx-glr-backref-type-py-function"><span class="n">tree</span><span class="o">.</span><span class="n">plot_tree</span></a><span class="p">(</span><span class="n">clf</span><span class="p">)</span>
 <a href="https://matplotlib.org/stable/api/_as_gen/matplotlib.pyplot.show.html#matplotlib.pyplot.show" title="matplotlib.pyplot.show" class="sphx-glr-backref-module-matplotlib-pyplot sphx-glr-backref-type-py-function"><span class="n">plt</span><span class="o">.</span><span class="n">show</span></a><span class="p">()</span>
@@ -403,7 +428,7 @@ through.</p>
 This is 40.0% of all nodes.
 </pre></div>
 </div>
-<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> ( 0 minutes  0.087 seconds)</p>
+<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> ( 0 minutes  0.096 seconds)</p>
 <div class="sphx-glr-footer sphx-glr-footer-example docutils container" id="sphx-glr-download-auto-examples-tree-plot-unveil-tree-structure-py">
 <div class="binder-badge docutils container">
 <a class="reference external image-reference" href="https://mybinder.org/v2/gh/scikit-learn/scikit-learn/main?urlpath=lab/tree/notebooks/auto_examples/tree/plot_unveil_tree_structure.ipynb"><img alt="Launch binder" src="../../_images/binder_badge_logo31.svg" width="150px" /></a>
