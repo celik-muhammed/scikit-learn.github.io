@@ -203,12 +203,18 @@
 <h1><a class="reference internal" href="../classes.html#module-sklearn.preprocessing" title="sklearn.preprocessing"><code class="xref py py-mod docutils literal notranslate"><span class="pre">sklearn.preprocessing</span></code></a>.TargetEncoder<a class="headerlink" href="#sklearn-preprocessing-targetencoder" title="Permalink to this heading">¶</a></h1>
 <dl class="py class">
 <dt class="sig sig-object py" id="sklearn.preprocessing.TargetEncoder">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">sklearn.preprocessing.</span></span><span class="sig-name descname"><span class="pre">TargetEncoder</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">categories</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'auto'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">target_type</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'auto'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">smooth</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'auto'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cv</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">5</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">shuffle</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">random_state</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/scikit-learn/scikit-learn/blob/5763e5adf/sklearn/preprocessing/_target_encoder.py#L13"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#sklearn.preprocessing.TargetEncoder" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">sklearn.preprocessing.</span></span><span class="sig-name descname"><span class="pre">TargetEncoder</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">categories</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'auto'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">target_type</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'auto'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">smooth</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'auto'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cv</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">5</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">shuffle</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">random_state</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/scikit-learn/scikit-learn/blob/872c19eff/sklearn/preprocessing/_target_encoder.py#L18"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#sklearn.preprocessing.TargetEncoder" title="Permalink to this definition">¶</a></dt>
 <dd><p>Target Encoder for regression and classification targets.</p>
 <p>Each category is encoded based on a shrunk estimate of the average target
 values for observations belonging to the category. The encoding scheme mixes
 the global target mean with the target mean conditioned on the value of the
-category. <a class="reference internal" href="#rf862141e5a0c-mic" id="id1">[MIC]</a></p>
+category (see <a class="reference internal" href="#rf862141e5a0c-mic" id="id1">[MIC]</a>).</p>
+<p>When the target type is “multiclass”, encodings are based
+on the conditional probability estimate for each class. The target is first
+binarized using the “one-vs-all” scheme via
+<a class="reference internal" href="sklearn.preprocessing.LabelBinarizer.html#sklearn.preprocessing.LabelBinarizer" title="sklearn.preprocessing.LabelBinarizer"><code class="xref py py-class docutils literal notranslate"><span class="pre">LabelBinarizer</span></code></a>, then the average target
+value for each class and each category is used for encoding, resulting in
+<code class="docutils literal notranslate"><span class="pre">n_features</span></code> * <code class="docutils literal notranslate"><span class="pre">n_classes</span></code> encoded output features.</p>
 <p><a class="reference internal" href="#sklearn.preprocessing.TargetEncoder" title="sklearn.preprocessing.TargetEncoder"><code class="xref py py-class docutils literal notranslate"><span class="pre">TargetEncoder</span></code></a> considers missing values, such as <code class="docutils literal notranslate"><span class="pre">np.nan</span></code> or <code class="docutils literal notranslate"><span class="pre">None</span></code>,
 as another category and encodes them like any other category. Categories
 that are not seen during <a class="reference internal" href="#sklearn.preprocessing.TargetEncoder.fit" title="sklearn.preprocessing.TargetEncoder.fit"><code class="xref py py-meth docutils literal notranslate"><span class="pre">fit</span></code></a> are encoded with the target mean, i.e.
@@ -240,12 +246,13 @@ feature, and should be sorted in case of numeric values.</p></li>
 </ul>
 <p>The used categories are stored in the <code class="docutils literal notranslate"><span class="pre">categories_</span></code> fitted attribute.</p>
 </dd>
-<dt><strong>target_type</strong><span class="classifier">{“auto”, “continuous”, “binary”}, default=”auto”</span></dt><dd><p>Type of target.</p>
+<dt><strong>target_type</strong><span class="classifier">{“auto”, “continuous”, “binary”, “multiclass”}, default=”auto”</span></dt><dd><p>Type of target.</p>
 <ul class="simple">
 <li><p><code class="docutils literal notranslate"><span class="pre">&quot;auto&quot;</span></code> : Type of target is inferred with
 <a class="reference internal" href="sklearn.utils.multiclass.type_of_target.html#sklearn.utils.multiclass.type_of_target" title="sklearn.utils.multiclass.type_of_target"><code class="xref py py-func docutils literal notranslate"><span class="pre">type_of_target</span></code></a>.</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">&quot;continuous&quot;</span></code> : Continuous target</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">&quot;binary&quot;</span></code> : Binary target</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">&quot;multiclass&quot;</span></code> : Multiclass target</p></li>
 </ul>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
@@ -256,6 +263,9 @@ will infer the target as <code class="docutils literal notranslate"><span class=
 <code class="docutils literal notranslate"><span class="pre">target_type=&quot;continuous&quot;</span></code> will specify the target as a regression
 problem. The <code class="docutils literal notranslate"><span class="pre">target_type_</span></code> attribute gives the target type used by the
 encoder.</p>
+</div>
+<div class="versionchanged">
+<p><span class="versionmodified changed">Changed in version 1.4: </span>Added the option ‘multiclass’.</p>
 </div>
 </dd>
 <dt><strong>smooth</strong><span class="classifier">“auto” or float, default=”auto”</span></dt><dd><p>The amount of mixing of the target mean conditioned on the value of the
@@ -280,12 +290,16 @@ See <a class="reference internal" href="../../glossary.html#term-random_state"><
 </dd>
 <dt class="field-even">Attributes<span class="colon">:</span></dt>
 <dd class="field-even"><dl>
-<dt><strong>encodings_</strong><span class="classifier">list of shape (n_features,) of ndarray</span></dt><dd><p>Encodings learnt on all of <code class="docutils literal notranslate"><span class="pre">X</span></code>.
+<dt><strong>encodings_</strong><span class="classifier">list of shape (n_features,) or (n_features * n_classes) of                     ndarray</span></dt><dd><p>Encodings learnt on all of <code class="docutils literal notranslate"><span class="pre">X</span></code>.
 For feature <code class="docutils literal notranslate"><span class="pre">i</span></code>, <code class="docutils literal notranslate"><span class="pre">encodings_[i]</span></code> are the encodings matching the
-categories listed in <code class="docutils literal notranslate"><span class="pre">categories_[i]</span></code>.</p>
+categories listed in <code class="docutils literal notranslate"><span class="pre">categories_[i]</span></code>. When <code class="docutils literal notranslate"><span class="pre">target_type_</span></code> is
+“multiclass”, the encoding for feature <code class="docutils literal notranslate"><span class="pre">i</span></code> and class <code class="docutils literal notranslate"><span class="pre">j</span></code> is stored in
+<code class="docutils literal notranslate"><span class="pre">encodings_[j</span> <span class="pre">+</span> <span class="pre">(i</span> <span class="pre">*</span> <span class="pre">len(classes_))]</span></code>. E.g., for 2 features (f) and
+3 classes (c), encodings are ordered:
+f0_c0, f0_c1, f0_c2, f1_c0, f1_c1, f1_c2,</p>
 </dd>
-<dt><strong>categories_</strong><span class="classifier">list of shape (n_features,) of ndarray</span></dt><dd><p>The categories of each feature determined during fitting or specified
-in <code class="docutils literal notranslate"><span class="pre">categories</span></code>
+<dt><strong>categories_</strong><span class="classifier">list of shape (n_features,) of ndarray</span></dt><dd><p>The categories of each input feature determined during fitting or
+specified in <code class="docutils literal notranslate"><span class="pre">categories</span></code>
 (in order of the features in <code class="docutils literal notranslate"><span class="pre">X</span></code> and corresponding with the output
 of <a class="reference internal" href="#sklearn.preprocessing.TargetEncoder.transform" title="sklearn.preprocessing.TargetEncoder.transform"><code class="xref py py-meth docutils literal notranslate"><span class="pre">transform</span></code></a>).</p>
 </dd>
@@ -298,6 +312,9 @@ to encode categories.</p>
 </dd>
 <dt><strong>feature_names_in_</strong><span class="classifier">ndarray of shape (<code class="docutils literal notranslate"><span class="pre">n_features_in_</span></code>,)</span></dt><dd><p>Names of features seen during <a class="reference internal" href="../../glossary.html#term-fit"><span class="xref std std-term">fit</span></a>. Defined only when <code class="docutils literal notranslate"><span class="pre">X</span></code>
 has feature names that are all strings.</p>
+</dd>
+<dt><strong>classes_</strong><span class="classifier">ndarray or None</span></dt><dd><p>If <code class="docutils literal notranslate"><span class="pre">target_type_</span></code> is ‘binary’ or ‘multiclass’, holds the label for each class,
+otherwise <code class="docutils literal notranslate"><span class="pre">None</span></code>.</p>
 </dd>
 </dl>
 </dd>
@@ -377,7 +394,7 @@ SIGKDD Explor. Newsl. 3, 1 (July 2001), 27–32.</a></p>
 </table>
 <dl class="py method">
 <dt class="sig sig-object py" id="sklearn.preprocessing.TargetEncoder.fit">
-<span class="sig-name descname"><span class="pre">fit</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/scikit-learn/scikit-learn/blob/5763e5adf/sklearn/preprocessing/_target_encoder.py#L186"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#sklearn.preprocessing.TargetEncoder.fit" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">fit</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/scikit-learn/scikit-learn/blob/872c19eff/sklearn/preprocessing/_target_encoder.py#L211"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#sklearn.preprocessing.TargetEncoder.fit" title="Permalink to this definition">¶</a></dt>
 <dd><p>Fit the <a class="reference internal" href="#sklearn.preprocessing.TargetEncoder" title="sklearn.preprocessing.TargetEncoder"><code class="xref py py-class docutils literal notranslate"><span class="pre">TargetEncoder</span></code></a> to X and y.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -399,7 +416,7 @@ SIGKDD Explor. Newsl. 3, 1 (July 2001), 27–32.</a></p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="sklearn.preprocessing.TargetEncoder.fit_transform">
-<span class="sig-name descname"><span class="pre">fit_transform</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/scikit-learn/scikit-learn/blob/5763e5adf/sklearn/preprocessing/_target_encoder.py#L206"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#sklearn.preprocessing.TargetEncoder.fit_transform" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">fit_transform</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/scikit-learn/scikit-learn/blob/872c19eff/sklearn/preprocessing/_target_encoder.py#L231"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#sklearn.preprocessing.TargetEncoder.fit_transform" title="Permalink to this definition">¶</a></dt>
 <dd><p>Fit <a class="reference internal" href="#sklearn.preprocessing.TargetEncoder" title="sklearn.preprocessing.TargetEncoder"><code class="xref py py-class docutils literal notranslate"><span class="pre">TargetEncoder</span></code></a> and transform X with the target encoding.</p>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
@@ -418,7 +435,7 @@ See the <a class="reference internal" href="../preprocessing.html#target-encoder
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><dl class="simple">
-<dt><strong>X_trans</strong><span class="classifier">ndarray of shape (n_samples, n_features)</span></dt><dd><p>Transformed input.</p>
+<dt><strong>X_trans</strong><span class="classifier">ndarray of shape (n_samples, n_features) or                     (n_samples, (n_features * n_classes))</span></dt><dd><p>Transformed input.</p>
 </dd>
 </dl>
 </dd>
@@ -427,26 +444,22 @@ See the <a class="reference internal" href="../preprocessing.html#target-encoder
 
 <dl class="py method">
 <dt class="sig sig-object py" id="sklearn.preprocessing.TargetEncoder.get_feature_names_out">
-<span class="sig-name descname"><span class="pre">get_feature_names_out</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input_features</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/scikit-learn/scikit-learn/blob/5763e5adf/sklearn/base.py#L961"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#sklearn.preprocessing.TargetEncoder.get_feature_names_out" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">get_feature_names_out</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input_features</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/scikit-learn/scikit-learn/blob/872c19eff/sklearn/preprocessing/_target_encoder.py#L499"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#sklearn.preprocessing.TargetEncoder.get_feature_names_out" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get output feature names for transformation.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><dl class="simple">
-<dt><strong>input_features</strong><span class="classifier">array-like of str or None, default=None</span></dt><dd><p>Input features.</p>
-<ul class="simple">
-<li><p>If <code class="docutils literal notranslate"><span class="pre">input_features</span></code> is <code class="docutils literal notranslate"><span class="pre">None</span></code>, then <code class="docutils literal notranslate"><span class="pre">feature_names_in_</span></code> is
-used as feature names in. If <code class="docutils literal notranslate"><span class="pre">feature_names_in_</span></code> is not defined,
-then the following input feature names are generated:
-<code class="docutils literal notranslate"><span class="pre">[&quot;x0&quot;,</span> <span class="pre">&quot;x1&quot;,</span> <span class="pre">...,</span> <span class="pre">&quot;x(n_features_in_</span> <span class="pre">-</span> <span class="pre">1)&quot;]</span></code>.</p></li>
-<li><p>If <code class="docutils literal notranslate"><span class="pre">input_features</span></code> is an array-like, then <code class="docutils literal notranslate"><span class="pre">input_features</span></code> must
-match <code class="docutils literal notranslate"><span class="pre">feature_names_in_</span></code> if <code class="docutils literal notranslate"><span class="pre">feature_names_in_</span></code> is defined.</p></li>
-</ul>
+<dt><strong>input_features</strong><span class="classifier">array-like of str or None, default=None</span></dt><dd><p>Not used, present here for API consistency by convention.</p>
 </dd>
 </dl>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><dl class="simple">
-<dt><strong>feature_names_out</strong><span class="classifier">ndarray of str objects</span></dt><dd><p>Same as input features.</p>
+<dt><strong>feature_names_out</strong><span class="classifier">ndarray of str objects</span></dt><dd><p>Transformed feature names. <code class="docutils literal notranslate"><span class="pre">feature_names_in_</span></code> is used unless it is
+not defined, in which case the following input feature names are
+generated: <code class="docutils literal notranslate"><span class="pre">[&quot;x0&quot;,</span> <span class="pre">&quot;x1&quot;,</span> <span class="pre">...,</span> <span class="pre">&quot;x(n_features_in_</span> <span class="pre">-</span> <span class="pre">1)&quot;]</span></code>.
+When <code class="docutils literal notranslate"><span class="pre">type_of_target_</span></code> is “multiclass” the names are of the format
+‘&lt;feature_name&gt;_&lt;class_name&gt;’.</p>
 </dd>
 </dl>
 </dd>
@@ -455,7 +468,7 @@ match <code class="docutils literal notranslate"><span class="pre">feature_names
 
 <dl class="py method">
 <dt class="sig sig-object py" id="sklearn.preprocessing.TargetEncoder.get_metadata_routing">
-<span class="sig-name descname"><span class="pre">get_metadata_routing</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference external" href="https://github.com/scikit-learn/scikit-learn/blob/5763e5adf/sklearn/utils/_metadata_requests.py#L1418"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#sklearn.preprocessing.TargetEncoder.get_metadata_routing" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">get_metadata_routing</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference external" href="https://github.com/scikit-learn/scikit-learn/blob/872c19eff/sklearn/utils/_metadata_requests.py#L1418"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#sklearn.preprocessing.TargetEncoder.get_metadata_routing" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get metadata routing of this object.</p>
 <p>Please check <a class="reference internal" href="../../metadata_routing.html#metadata-routing"><span class="std std-ref">User Guide</span></a> on how the routing
 mechanism works.</p>
@@ -472,7 +485,7 @@ routing information.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="sklearn.preprocessing.TargetEncoder.get_params">
-<span class="sig-name descname"><span class="pre">get_params</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">deep</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/scikit-learn/scikit-learn/blob/5763e5adf/sklearn/base.py#L178"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#sklearn.preprocessing.TargetEncoder.get_params" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">get_params</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">deep</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/scikit-learn/scikit-learn/blob/872c19eff/sklearn/base.py#L178"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#sklearn.preprocessing.TargetEncoder.get_params" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get parameters for this estimator.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -499,7 +512,7 @@ contained subobjects that are estimators.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="sklearn.preprocessing.TargetEncoder.set_output">
-<span class="sig-name descname"><span class="pre">set_output</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">transform</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/scikit-learn/scikit-learn/blob/5763e5adf/sklearn/utils/_set_output.py#L215"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#sklearn.preprocessing.TargetEncoder.set_output" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">set_output</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">transform</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/scikit-learn/scikit-learn/blob/872c19eff/sklearn/utils/_set_output.py#L215"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#sklearn.preprocessing.TargetEncoder.set_output" title="Permalink to this definition">¶</a></dt>
 <dd><p>Set output container.</p>
 <p>See <a class="reference internal" href="../../auto_examples/miscellaneous/plot_set_output.html#sphx-glr-auto-examples-miscellaneous-plot-set-output-py"><span class="std std-ref">Introducing the set_output API</span></a>
 for an example on how to use the API.</p>
@@ -526,7 +539,7 @@ for an example on how to use the API.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="sklearn.preprocessing.TargetEncoder.set_params">
-<span class="sig-name descname"><span class="pre">set_params</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">params</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/scikit-learn/scikit-learn/blob/5763e5adf/sklearn/base.py#L202"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#sklearn.preprocessing.TargetEncoder.set_params" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">set_params</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">params</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/scikit-learn/scikit-learn/blob/872c19eff/sklearn/base.py#L202"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#sklearn.preprocessing.TargetEncoder.set_params" title="Permalink to this definition">¶</a></dt>
 <dd><p>Set the parameters of this estimator.</p>
 <p>The method works on simple estimators as well as on nested objects
 (such as <a class="reference internal" href="sklearn.pipeline.Pipeline.html#sklearn.pipeline.Pipeline" title="sklearn.pipeline.Pipeline"><code class="xref py py-class docutils literal notranslate"><span class="pre">Pipeline</span></code></a>). The latter have
@@ -550,7 +563,7 @@ possible to update each component of a nested object.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="sklearn.preprocessing.TargetEncoder.transform">
-<span class="sig-name descname"><span class="pre">transform</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/scikit-learn/scikit-learn/blob/5763e5adf/sklearn/preprocessing/_target_encoder.py#L263"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#sklearn.preprocessing.TargetEncoder.transform" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">transform</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/scikit-learn/scikit-learn/blob/872c19eff/sklearn/preprocessing/_target_encoder.py#L305"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#sklearn.preprocessing.TargetEncoder.transform" title="Permalink to this definition">¶</a></dt>
 <dd><p>Transform X with the target encoding.</p>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
@@ -567,7 +580,7 @@ See the <a class="reference internal" href="../preprocessing.html#target-encoder
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><dl class="simple">
-<dt><strong>X_trans</strong><span class="classifier">ndarray of shape (n_samples, n_features)</span></dt><dd><p>Transformed input.</p>
+<dt><strong>X_trans</strong><span class="classifier">ndarray of shape (n_samples, n_features) or                     (n_samples, (n_features * n_classes))</span></dt><dd><p>Transformed input.</p>
 </dd>
 </dl>
 </dd>
