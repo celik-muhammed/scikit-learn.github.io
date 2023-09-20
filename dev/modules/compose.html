@@ -321,6 +321,7 @@ completion in interactive environments:</p>
 <code class="docutils literal notranslate"><span class="pre">get_feature_names_out()</span></code> method, just like all transformers. You can use
 pipeline slicing to get the feature names going into each step:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">sklearn.datasets</span> <span class="kn">import</span> <span class="n">load_iris</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">sklearn.linear_model</span> <span class="kn">import</span> <span class="n">LogisticRegression</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">sklearn.feature_selection</span> <span class="kn">import</span> <span class="n">SelectKBest</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">iris</span> <span class="o">=</span> <span class="n">load_iris</span><span class="p">()</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">pipe</span> <span class="o">=</span> <span class="n">Pipeline</span><span class="p">(</span><span class="n">steps</span><span class="o">=</span><span class="p">[</span>
@@ -353,7 +354,8 @@ pipeline slicing to get the feature names going into each step:</p>
 is therefore nested because it belongs to a particular sub-step. Parameters of the
 estimators in the pipeline are accessible using the <code class="docutils literal notranslate"><span class="pre">&lt;estimator&gt;__&lt;parameter&gt;</span></code>
 syntax:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">pipe</span><span class="o">.</span><span class="n">set_params</span><span class="p">(</span><span class="n">clf__C</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">pipe</span> <span class="o">=</span> <span class="n">Pipeline</span><span class="p">(</span><span class="n">steps</span><span class="o">=</span><span class="p">[(</span><span class="s2">&quot;reduce_dim&quot;</span><span class="p">,</span> <span class="n">PCA</span><span class="p">()),</span> <span class="p">(</span><span class="s2">&quot;clf&quot;</span><span class="p">,</span> <span class="n">SVC</span><span class="p">())])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">pipe</span><span class="o">.</span><span class="n">set_params</span><span class="p">(</span><span class="n">clf__C</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
 <span class="go">Pipeline(steps=[(&#39;reduce_dim&#39;, PCA()), (&#39;clf&#39;, SVC(C=10))])</span>
 </pre></div>
 </div>
@@ -372,8 +374,7 @@ syntax:</p>
 </div>
 <p>Individual steps may also be replaced as parameters, and non-final steps may be
 ignored by setting them to <code class="docutils literal notranslate"><span class="pre">'passthrough'</span></code>:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">sklearn.linear_model</span> <span class="kn">import</span> <span class="n">LogisticRegression</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">param_grid</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="n">reduce_dim</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;passthrough&#39;</span><span class="p">,</span> <span class="n">PCA</span><span class="p">(</span><span class="mi">5</span><span class="p">),</span> <span class="n">PCA</span><span class="p">(</span><span class="mi">10</span><span class="p">)],</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">param_grid</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="n">reduce_dim</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;passthrough&#39;</span><span class="p">,</span> <span class="n">PCA</span><span class="p">(</span><span class="mi">5</span><span class="p">),</span> <span class="n">PCA</span><span class="p">(</span><span class="mi">10</span><span class="p">)],</span>
 <span class="gp">... </span>                  <span class="n">clf</span><span class="o">=</span><span class="p">[</span><span class="n">SVC</span><span class="p">(),</span> <span class="n">LogisticRegression</span><span class="p">()],</span>
 <span class="gp">... </span>                  <span class="n">clf__C</span><span class="o">=</span><span class="p">[</span><span class="mf">0.1</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">100</span><span class="p">])</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">grid_search</span> <span class="o">=</span> <span class="n">GridSearchCV</span><span class="p">(</span><span class="n">pipe</span><span class="p">,</span> <span class="n">param_grid</span><span class="o">=</span><span class="n">param_grid</span><span class="p">)</span>
