@@ -18,7 +18,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
   
-  <title>Developing scikit-learn estimators &mdash; scikit-learn 1.3.0 documentation</title>
+  <title>Developing scikit-learn estimators &mdash; scikit-learn 1.3.1 documentation</title>
   
   <link rel="canonical" href="http://scikit-learn.org/stable/developers/develop.html" />
 
@@ -166,7 +166,7 @@
         </div>
         <div class="alert alert-danger p-1 mb-2" role="alert">
           <p class="text-center mb-0">
-          <strong>scikit-learn 1.3.0</strong><br/>
+          <strong>scikit-learn 1.3.1</strong><br/>
           <a href="http://scikit-learn.org/dev/versions.html">Other versions</a>
           </p>
         </div>
@@ -201,6 +201,7 @@
 </ul>
 </li>
 <li><a class="reference internal" href="#developer-api-for-set-output">Developer API for <code class="docutils literal notranslate"><span class="pre">set_output</span></code></a></li>
+<li><a class="reference internal" href="#developer-api-for-check-is-fitted">Developer API for <code class="docutils literal notranslate"><span class="pre">check_is_fitted</span></code></a></li>
 <li><a class="reference internal" href="#coding-guidelines">Coding guidelines</a><ul>
 <li><a class="reference internal" href="#input-validation">Input validation</a></li>
 <li><a class="reference internal" href="#random-numbers">Random Numbers</a></li>
@@ -602,7 +603,7 @@ trailing <code class="docutils literal notranslate"><span class="pre">_</span></
 </section>
 <section id="cloning">
 <span id="id2"></span><h3>Cloning<a class="headerlink" href="#cloning" title="Permalink to this heading">¶</a></h3>
-<p>For use with the <code class="xref py py-mod docutils literal notranslate"><span class="pre">model_selection</span></code> module,
+<p>For use with the <a class="reference internal" href="../modules/classes.html#module-sklearn.model_selection" title="sklearn.model_selection"><code class="xref py py-mod docutils literal notranslate"><span class="pre">model_selection</span></code></a> module,
 an estimator must support the <code class="docutils literal notranslate"><span class="pre">base.clone</span></code> function to replicate an estimator.
 This can be done by providing a <code class="docutils literal notranslate"><span class="pre">get_params</span></code> method.
 If <code class="docutils literal notranslate"><span class="pre">get_params</span></code> is present, then <code class="docutils literal notranslate"><span class="pre">clone(estimator)</span></code> will be an instance of
@@ -692,7 +693,7 @@ this can be achieved with:</p>
 independent term is stored in <code class="docutils literal notranslate"><span class="pre">intercept_</span></code>.  <code class="docutils literal notranslate"><span class="pre">sklearn.linear_model._base</span></code>
 contains a few base classes and mixins that implement common linear model
 patterns.</p>
-<p>The <code class="xref py py-mod docutils literal notranslate"><span class="pre">sklearn.utils.multiclass</span></code> module contains useful functions
+<p>The <code class="xref py py-mod docutils literal notranslate"><span class="pre">multiclass</span></code> module contains useful functions
 for working with multiclass and multilabel problems.</p>
 </section>
 <section id="estimator-tags">
@@ -740,7 +741,7 @@ estimator has a <code class="docutils literal notranslate"><span class="pre">met
 or a cross validation procedure that extracts a sub-sample of data intended
 for a pairwise estimator, where the data needs to be indexed on both axes.
 Specifically, this tag is used by
-<code class="xref py py-func docutils literal notranslate"><span class="pre">_safe_split</span></code> to slice rows and
+<code class="docutils literal notranslate"><span class="pre">sklearn.utils.metaestimators._safe_split</span></code> to slice rows and
 columns.</p>
 </dd>
 <dt>preserves_dtype (default=``[np.float64]``)</dt><dd><p>applies only on transformers. It corresponds to the data types which will
@@ -864,6 +865,16 @@ only wrap the first array and not alter the other arrays.</p>
 <p>See <a class="reference internal" href="../auto_examples/miscellaneous/plot_set_output.html#sphx-glr-auto-examples-miscellaneous-plot-set-output-py"><span class="std std-ref">Introducing the set_output API</span></a>
 for an example on how to use the API.</p>
 </section>
+<section id="developer-api-for-check-is-fitted">
+<span id="developer-api-check-is-fitted"></span><h2>Developer API for <code class="docutils literal notranslate"><span class="pre">check_is_fitted</span></code><a class="headerlink" href="#developer-api-for-check-is-fitted" title="Permalink to this heading">¶</a></h2>
+<p>By default <a class="reference internal" href="../modules/generated/sklearn.utils.validation.check_is_fitted.html#sklearn.utils.validation.check_is_fitted" title="sklearn.utils.validation.check_is_fitted"><code class="xref py py-func docutils literal notranslate"><span class="pre">check_is_fitted</span></code></a> checks if there
+are any attributes in the instance with a trailing underscore, e.g. <code class="docutils literal notranslate"><span class="pre">coef_</span></code>.
+An estimator can change the behavior by implementing a <code class="docutils literal notranslate"><span class="pre">__sklearn_is_fitted__</span></code>
+method taking no input and returning a boolean. If this method exists,
+<a class="reference internal" href="../modules/generated/sklearn.utils.validation.check_is_fitted.html#sklearn.utils.validation.check_is_fitted" title="sklearn.utils.validation.check_is_fitted"><code class="xref py py-func docutils literal notranslate"><span class="pre">check_is_fitted</span></code></a> simply returns its output.</p>
+<p>See <a class="reference internal" href="../auto_examples/developing_estimators/sklearn_is_fitted.html#sphx-glr-auto-examples-developing-estimators-sklearn-is-fitted-py"><span class="std std-ref">__sklearn_is_fitted__ as Developer API</span></a>
+for an example on how to use the API.</p>
+</section>
 <section id="coding-guidelines">
 <span id="id4"></span><h2>Coding guidelines<a class="headerlink" href="#coding-guidelines" title="Permalink to this heading">¶</a></h2>
 <p>The following are some guidelines on how new code should be written for
@@ -985,14 +996,14 @@ hence the validation in <code class="docutils literal notranslate"><span class="
 <section id="numerical-assertions-in-tests">
 <h3>Numerical assertions in tests<a class="headerlink" href="#numerical-assertions-in-tests" title="Permalink to this heading">¶</a></h3>
 <p>When asserting the quasi-equality of arrays of continuous values,
-do use <code class="xref py py-func docutils literal notranslate"><span class="pre">sklearn.utils._testing.assert_allclose</span></code>.</p>
+do use <code class="docutils literal notranslate"><span class="pre">sklearn.utils._testing.assert_allclose</span></code>.</p>
 <p>The relative tolerance is automatically inferred from the provided arrays
 dtypes (for float32 and float64 dtypes in particular) but you can override
 via <code class="docutils literal notranslate"><span class="pre">rtol</span></code>.</p>
 <p>When comparing arrays of zero-elements, please do provide a non-zero value for
 the absolute tolerance via <code class="docutils literal notranslate"><span class="pre">atol</span></code>.</p>
 <p>For more information, please refer to the docstring of
-<code class="xref py py-func docutils literal notranslate"><span class="pre">sklearn.utils._testing.assert_allclose</span></code>.</p>
+<code class="docutils literal notranslate"><span class="pre">sklearn.utils._testing.assert_allclose</span></code>.</p>
 </section>
 </section>
 </section>

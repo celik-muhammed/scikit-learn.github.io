@@ -10,15 +10,15 @@
 <meta property="og:type" content="website" />
 <meta property="og:url" content="https://scikit-learn/stable/auto_examples/feature_selection/plot_select_from_model_diabetes.html" />
 <meta property="og:site_name" content="scikit-learn" />
-<meta property="og:description" content="This example illustrates and compares two approaches for feature selection: SelectFromModel which is based on feature importance, and SequentialFeatureSelection which relies on a greedy approach. W..." />
+<meta property="og:description" content="This example illustrates and compares two approaches for feature selection: SelectFromModel which is based on feature importance, and SequentialFeatureSelector which relies on a greedy approach. We..." />
 <meta property="og:image" content="https://scikit-learn.org/stable/_static/scikit-learn-logo-small.png" />
 <meta property="og:image:alt" content="scikit-learn" />
-<meta name="description" content="This example illustrates and compares two approaches for feature selection: SelectFromModel which is based on feature importance, and SequentialFeatureSelection which relies on a greedy approach. W..." />
+<meta name="description" content="This example illustrates and compares two approaches for feature selection: SelectFromModel which is based on feature importance, and SequentialFeatureSelector which relies on a greedy approach. We..." />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
   
-  <title>Model-based and sequential feature selection &mdash; scikit-learn 1.3.0 documentation</title>
+  <title>Model-based and sequential feature selection &mdash; scikit-learn 1.3.1 documentation</title>
   
   <link rel="canonical" href="http://scikit-learn.org/stable/auto_examples/feature_selection/plot_select_from_model_diabetes.html" />
 
@@ -166,7 +166,7 @@
         </div>
         <div class="alert alert-danger p-1 mb-2" role="alert">
           <p class="text-center mb-0">
-          <strong>scikit-learn 1.3.0</strong><br/>
+          <strong>scikit-learn 1.3.1</strong><br/>
           <a href="http://scikit-learn.org/dev/versions.html">Other versions</a>
           </p>
         </div>
@@ -182,7 +182,7 @@
 <li><a class="reference internal" href="#feature-importance-from-coefficients">Feature importance from coefficients</a></li>
 <li><a class="reference internal" href="#selecting-features-based-on-importance">Selecting features based on importance</a></li>
 <li><a class="reference internal" href="#selecting-features-with-sequential-feature-selection">Selecting features with Sequential Feature Selection</a></li>
-<li><a class="reference internal" href="#discussion">Discussion</a></li>
+<li><a class="reference internal" href="#using-negative-tolerance-values">Using negative tolerance values</a></li>
 </ul>
 </li>
 </ul>
@@ -203,7 +203,7 @@ to download the full example code or to run this example in your browser via Jup
 <p>This example illustrates and compares two approaches for feature selection:
 <a class="reference internal" href="../../modules/generated/sklearn.feature_selection.SelectFromModel.html#sklearn.feature_selection.SelectFromModel" title="sklearn.feature_selection.SelectFromModel"><code class="xref py py-class docutils literal notranslate"><span class="pre">SelectFromModel</span></code></a> which is based on feature
 importance, and
-<code class="xref py py-class docutils literal notranslate"><span class="pre">SequentialFeatureSelection</span></code> which relies
+<a class="reference internal" href="../../modules/generated/sklearn.feature_selection.SequentialFeatureSelector.html#sklearn.feature_selection.SequentialFeatureSelector" title="sklearn.feature_selection.SequentialFeatureSelector"><code class="xref py py-class docutils literal notranslate"><span class="pre">SequentialFeatureSelector</span></code></a> which relies
 on a greedy approach.</p>
 <p>We use the Diabetes dataset, which consists of 10 features collected from 442
 diabetes patients.</p>
@@ -353,14 +353,11 @@ both approaches here.</p>
 </pre></div>
 </div>
 <div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>Features selected by forward sequential selection: [&#39;bmi&#39; &#39;s5&#39;]
-Done in 0.178s
+Done in 0.152s
 Features selected by backward sequential selection: [&#39;bmi&#39; &#39;s5&#39;]
-Done in 0.500s
+Done in 0.443s
 </pre></div>
 </div>
-</section>
-<section id="discussion">
-<h2>Discussion<a class="headerlink" href="#discussion" title="Permalink to this heading">¶</a></h2>
 <p>Interestingly, forward and backward selection have selected the same set of
 features. In general, this isn’t the case and the two methods would lead to
 different results.</p>
@@ -379,13 +376,208 @@ estimator to expose a <code class="docutils literal notranslate"><span class="pr
 attribute. The forward SFS is faster than the backward SFS because it only
 needs to perform <code class="docutils literal notranslate"><span class="pre">n_features_to_select</span> <span class="pre">=</span> <span class="pre">2</span></code> iterations, while the backward
 SFS needs to perform <code class="docutils literal notranslate"><span class="pre">n_features</span> <span class="pre">-</span> <span class="pre">n_features_to_select</span> <span class="pre">=</span> <span class="pre">8</span></code> iterations.</p>
-<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> ( 0 minutes  0.768 seconds)</p>
+</section>
+<section id="using-negative-tolerance-values">
+<h2>Using negative tolerance values<a class="headerlink" href="#using-negative-tolerance-values" title="Permalink to this heading">¶</a></h2>
+<p><a class="reference internal" href="../../modules/generated/sklearn.feature_selection.SequentialFeatureSelector.html#sklearn.feature_selection.SequentialFeatureSelector" title="sklearn.feature_selection.SequentialFeatureSelector"><code class="xref py py-class docutils literal notranslate"><span class="pre">SequentialFeatureSelector</span></code></a> can be used
+to remove features present in the dataset and return a
+smaller subset of the original features with <code class="docutils literal notranslate"><span class="pre">direction=&quot;backward&quot;</span></code>
+and a negative value of <code class="docutils literal notranslate"><span class="pre">tol</span></code>.</p>
+<p>We begin by loading the Breast Cancer dataset, consisting of 30 different
+features and 569 samples.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+
+<span class="kn">from</span> <span class="nn">sklearn.datasets</span> <span class="kn">import</span> <a href="../../modules/generated/sklearn.datasets.load_breast_cancer.html#sklearn.datasets.load_breast_cancer" title="sklearn.datasets.load_breast_cancer" class="sphx-glr-backref-module-sklearn-datasets sphx-glr-backref-type-py-function"><span class="n">load_breast_cancer</span></a>
+
+<span class="n">breast_cancer_data</span> <span class="o">=</span> <a href="../../modules/generated/sklearn.datasets.load_breast_cancer.html#sklearn.datasets.load_breast_cancer" title="sklearn.datasets.load_breast_cancer" class="sphx-glr-backref-module-sklearn-datasets sphx-glr-backref-type-py-function"><span class="n">load_breast_cancer</span></a><span class="p">()</span>
+<span class="n">X</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="n">breast_cancer_data</span><span class="o">.</span><span class="n">data</span><span class="p">,</span> <span class="n">breast_cancer_data</span><span class="o">.</span><span class="n">target</span>
+<span class="n">feature_names</span> <span class="o">=</span> <a href="https://numpy.org/doc/stable/reference/generated/numpy.array.html#numpy.array" title="numpy.array" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-function"><span class="n">np</span><span class="o">.</span><span class="n">array</span></a><span class="p">(</span><span class="n">breast_cancer_data</span><span class="o">.</span><span class="n">feature_names</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">breast_cancer_data</span><span class="o">.</span><span class="n">DESCR</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>.. _breast_cancer_dataset:
+
+Breast cancer wisconsin (diagnostic) dataset
+--------------------------------------------
+
+**Data Set Characteristics:**
+
+    :Number of Instances: 569
+
+    :Number of Attributes: 30 numeric, predictive attributes and the class
+
+    :Attribute Information:
+        - radius (mean of distances from center to points on the perimeter)
+        - texture (standard deviation of gray-scale values)
+        - perimeter
+        - area
+        - smoothness (local variation in radius lengths)
+        - compactness (perimeter^2 / area - 1.0)
+        - concavity (severity of concave portions of the contour)
+        - concave points (number of concave portions of the contour)
+        - symmetry
+        - fractal dimension (&quot;coastline approximation&quot; - 1)
+
+        The mean, standard error, and &quot;worst&quot; or largest (mean of the three
+        worst/largest values) of these features were computed for each image,
+        resulting in 30 features.  For instance, field 0 is Mean Radius, field
+        10 is Radius SE, field 20 is Worst Radius.
+
+        - class:
+                - WDBC-Malignant
+                - WDBC-Benign
+
+    :Summary Statistics:
+
+    ===================================== ====== ======
+                                           Min    Max
+    ===================================== ====== ======
+    radius (mean):                        6.981  28.11
+    texture (mean):                       9.71   39.28
+    perimeter (mean):                     43.79  188.5
+    area (mean):                          143.5  2501.0
+    smoothness (mean):                    0.053  0.163
+    compactness (mean):                   0.019  0.345
+    concavity (mean):                     0.0    0.427
+    concave points (mean):                0.0    0.201
+    symmetry (mean):                      0.106  0.304
+    fractal dimension (mean):             0.05   0.097
+    radius (standard error):              0.112  2.873
+    texture (standard error):             0.36   4.885
+    perimeter (standard error):           0.757  21.98
+    area (standard error):                6.802  542.2
+    smoothness (standard error):          0.002  0.031
+    compactness (standard error):         0.002  0.135
+    concavity (standard error):           0.0    0.396
+    concave points (standard error):      0.0    0.053
+    symmetry (standard error):            0.008  0.079
+    fractal dimension (standard error):   0.001  0.03
+    radius (worst):                       7.93   36.04
+    texture (worst):                      12.02  49.54
+    perimeter (worst):                    50.41  251.2
+    area (worst):                         185.2  4254.0
+    smoothness (worst):                   0.071  0.223
+    compactness (worst):                  0.027  1.058
+    concavity (worst):                    0.0    1.252
+    concave points (worst):               0.0    0.291
+    symmetry (worst):                     0.156  0.664
+    fractal dimension (worst):            0.055  0.208
+    ===================================== ====== ======
+
+    :Missing Attribute Values: None
+
+    :Class Distribution: 212 - Malignant, 357 - Benign
+
+    :Creator:  Dr. William H. Wolberg, W. Nick Street, Olvi L. Mangasarian
+
+    :Donor: Nick Street
+
+    :Date: November, 1995
+
+This is a copy of UCI ML Breast Cancer Wisconsin (Diagnostic) datasets.
+https://goo.gl/U2Uwz2
+
+Features are computed from a digitized image of a fine needle
+aspirate (FNA) of a breast mass.  They describe
+characteristics of the cell nuclei present in the image.
+
+Separating plane described above was obtained using
+Multisurface Method-Tree (MSM-T) [K. P. Bennett, &quot;Decision Tree
+Construction Via Linear Programming.&quot; Proceedings of the 4th
+Midwest Artificial Intelligence and Cognitive Science Society,
+pp. 97-101, 1992], a classification method which uses linear
+programming to construct a decision tree.  Relevant features
+were selected using an exhaustive search in the space of 1-4
+features and 1-3 separating planes.
+
+The actual linear program used to obtain the separating plane
+in the 3-dimensional space is that described in:
+[K. P. Bennett and O. L. Mangasarian: &quot;Robust Linear
+Programming Discrimination of Two Linearly Inseparable Sets&quot;,
+Optimization Methods and Software 1, 1992, 23-34].
+
+This database is also available through the UW CS ftp server:
+
+ftp ftp.cs.wisc.edu
+cd math-prog/cpo-dataset/machine-learn/WDBC/
+
+|details-start|
+**References**
+|details-split|
+
+- W.N. Street, W.H. Wolberg and O.L. Mangasarian. Nuclear feature extraction
+  for breast tumor diagnosis. IS&amp;T/SPIE 1993 International Symposium on
+  Electronic Imaging: Science and Technology, volume 1905, pages 861-870,
+  San Jose, CA, 1993.
+- O.L. Mangasarian, W.N. Street and W.H. Wolberg. Breast cancer diagnosis and
+  prognosis via linear programming. Operations Research, 43(4), pages 570-577,
+  July-August 1995.
+- W.H. Wolberg, W.N. Street, and O.L. Mangasarian. Machine learning techniques
+  to diagnose breast cancer from fine-needle aspirates. Cancer Letters 77 (1994)
+  163-171.
+
+|details-end|
+</pre></div>
+</div>
+<p>We will make use of the <a class="reference internal" href="../../modules/generated/sklearn.linear_model.LogisticRegression.html#sklearn.linear_model.LogisticRegression" title="sklearn.linear_model.LogisticRegression"><code class="xref py py-class docutils literal notranslate"><span class="pre">LogisticRegression</span></code></a>
+estimator with <a class="reference internal" href="../../modules/generated/sklearn.feature_selection.SequentialFeatureSelector.html#sklearn.feature_selection.SequentialFeatureSelector" title="sklearn.feature_selection.SequentialFeatureSelector"><code class="xref py py-class docutils literal notranslate"><span class="pre">SequentialFeatureSelector</span></code></a>
+to perform the feature selection.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">sklearn.linear_model</span> <span class="kn">import</span> <a href="../../modules/generated/sklearn.linear_model.LogisticRegression.html#sklearn.linear_model.LogisticRegression" title="sklearn.linear_model.LogisticRegression" class="sphx-glr-backref-module-sklearn-linear_model sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">LogisticRegression</span></a>
+<span class="kn">from</span> <span class="nn">sklearn.metrics</span> <span class="kn">import</span> <a href="../../modules/generated/sklearn.metrics.roc_auc_score.html#sklearn.metrics.roc_auc_score" title="sklearn.metrics.roc_auc_score" class="sphx-glr-backref-module-sklearn-metrics sphx-glr-backref-type-py-function"><span class="n">roc_auc_score</span></a>
+<span class="kn">from</span> <span class="nn">sklearn.pipeline</span> <span class="kn">import</span> <a href="../../modules/generated/sklearn.pipeline.make_pipeline.html#sklearn.pipeline.make_pipeline" title="sklearn.pipeline.make_pipeline" class="sphx-glr-backref-module-sklearn-pipeline sphx-glr-backref-type-py-function"><span class="n">make_pipeline</span></a>
+<span class="kn">from</span> <span class="nn">sklearn.preprocessing</span> <span class="kn">import</span> <a href="../../modules/generated/sklearn.preprocessing.StandardScaler.html#sklearn.preprocessing.StandardScaler" title="sklearn.preprocessing.StandardScaler" class="sphx-glr-backref-module-sklearn-preprocessing sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">StandardScaler</span></a>
+
+<span class="k">for</span> <span class="n">tol</span> <span class="ow">in</span> <span class="p">[</span><span class="o">-</span><span class="mf">1e-2</span><span class="p">,</span> <span class="o">-</span><span class="mf">1e-3</span><span class="p">,</span> <span class="o">-</span><span class="mf">1e-4</span><span class="p">]:</span>
+    <span class="n">start</span> <span class="o">=</span> <a href="https://docs.python.org/3/library/time.html#time.time" title="time.time" class="sphx-glr-backref-module-time sphx-glr-backref-type-py-function"><span class="n">time</span></a><span class="p">()</span>
+    <span class="n">feature_selector</span> <span class="o">=</span> <a href="../../modules/generated/sklearn.feature_selection.SequentialFeatureSelector.html#sklearn.feature_selection.SequentialFeatureSelector" title="sklearn.feature_selection.SequentialFeatureSelector" class="sphx-glr-backref-module-sklearn-feature_selection sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">SequentialFeatureSelector</span></a><span class="p">(</span>
+        <a href="../../modules/generated/sklearn.linear_model.LogisticRegression.html#sklearn.linear_model.LogisticRegression" title="sklearn.linear_model.LogisticRegression" class="sphx-glr-backref-module-sklearn-linear_model sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">LogisticRegression</span></a><span class="p">(),</span>
+        <span class="n">n_features_to_select</span><span class="o">=</span><span class="s2">&quot;auto&quot;</span><span class="p">,</span>
+        <span class="n">direction</span><span class="o">=</span><span class="s2">&quot;backward&quot;</span><span class="p">,</span>
+        <span class="n">scoring</span><span class="o">=</span><span class="s2">&quot;roc_auc&quot;</span><span class="p">,</span>
+        <span class="n">tol</span><span class="o">=</span><span class="n">tol</span><span class="p">,</span>
+        <span class="n">n_jobs</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span>
+    <span class="p">)</span>
+    <span class="n">model</span> <span class="o">=</span> <a href="../../modules/generated/sklearn.pipeline.make_pipeline.html#sklearn.pipeline.make_pipeline" title="sklearn.pipeline.make_pipeline" class="sphx-glr-backref-module-sklearn-pipeline sphx-glr-backref-type-py-function"><span class="n">make_pipeline</span></a><span class="p">(</span><a href="../../modules/generated/sklearn.preprocessing.StandardScaler.html#sklearn.preprocessing.StandardScaler" title="sklearn.preprocessing.StandardScaler" class="sphx-glr-backref-module-sklearn-preprocessing sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">StandardScaler</span></a><span class="p">(),</span> <span class="n">feature_selector</span><span class="p">,</span> <a href="../../modules/generated/sklearn.linear_model.LogisticRegression.html#sklearn.linear_model.LogisticRegression" title="sklearn.linear_model.LogisticRegression" class="sphx-glr-backref-module-sklearn-linear_model sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">LogisticRegression</span></a><span class="p">())</span>
+    <span class="n">model</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
+    <span class="n">end</span> <span class="o">=</span> <a href="https://docs.python.org/3/library/time.html#time.time" title="time.time" class="sphx-glr-backref-module-time sphx-glr-backref-type-py-function"><span class="n">time</span></a><span class="p">()</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">tol: </span><span class="si">{</span><span class="n">tol</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Features selected: </span><span class="si">{</span><span class="n">feature_names</span><span class="p">[</span><span class="n">model</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">get_support</span><span class="p">()]</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;ROC AUC score: </span><span class="si">{</span><a href="../../modules/generated/sklearn.metrics.roc_auc_score.html#sklearn.metrics.roc_auc_score" title="sklearn.metrics.roc_auc_score" class="sphx-glr-backref-module-sklearn-metrics sphx-glr-backref-type-py-function"><span class="n">roc_auc_score</span></a><span class="p">(</span><span class="n">y</span><span class="p">,</span><span class="w"> </span><span class="n">model</span><span class="o">.</span><span class="n">predict_proba</span><span class="p">(</span><span class="n">X</span><span class="p">)[:,</span><span class="w"> </span><span class="mi">1</span><span class="p">])</span><span class="si">:</span><span class="s2">.3f</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Done in </span><span class="si">{</span><span class="n">end</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">start</span><span class="si">:</span><span class="s2">.3f</span><span class="si">}</span><span class="s2">s&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>tol: -0.01
+Features selected: [&#39;worst perimeter&#39;]
+ROC AUC score: 0.975
+Done in 15.935s
+
+tol: -0.001
+Features selected: [&#39;radius error&#39; &#39;fractal dimension error&#39; &#39;worst texture&#39;
+ &#39;worst perimeter&#39; &#39;worst concave points&#39;]
+ROC AUC score: 0.997
+Done in 15.667s
+
+tol: -0.0001
+Features selected: [&#39;mean area&#39; &#39;mean smoothness&#39; &#39;mean compactness&#39; &#39;mean concavity&#39;
+ &#39;mean concave points&#39; &#39;mean symmetry&#39; &#39;radius error&#39; &#39;perimeter error&#39;
+ &#39;area error&#39; &#39;smoothness error&#39; &#39;symmetry error&#39;
+ &#39;fractal dimension error&#39; &#39;worst radius&#39; &#39;worst texture&#39;
+ &#39;worst perimeter&#39; &#39;worst area&#39; &#39;worst concave points&#39; &#39;worst symmetry&#39;
+ &#39;worst fractal dimension&#39;]
+ROC AUC score: 0.998
+Done in 11.072s
+</pre></div>
+</div>
+<p>We can see that the number of features selected tend to increase as negative
+values of <code class="docutils literal notranslate"><span class="pre">tol</span></code> approach to zero. The time taken for feature selection also
+decreases as the values of <code class="docutils literal notranslate"><span class="pre">tol</span></code> come closer to zero.</p>
+<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> (0 minutes 43.362 seconds)</p>
 <div class="sphx-glr-footer sphx-glr-footer-example docutils container" id="sphx-glr-download-auto-examples-feature-selection-plot-select-from-model-diabetes-py">
 <div class="binder-badge docutils container">
-<a class="reference external image-reference" href="https://mybinder.org/v2/gh/scikit-learn/scikit-learn/1.3.X?urlpath=lab/tree/notebooks/auto_examples/feature_selection/plot_select_from_model_diabetes.ipynb"><img alt="Launch binder" src="../../_images/binder_badge_logo12.svg" width="150px" /></a>
+<a class="reference external image-reference" href="https://mybinder.org/v2/gh/scikit-learn/scikit-learn/1.3.X?urlpath=lab/tree/notebooks/auto_examples/feature_selection/plot_select_from_model_diabetes.ipynb"><img alt="Launch binder" src="../../_images/binder_badge_logo13.svg" width="150px" /></a>
 </div>
 <div class="lite-badge docutils container">
-<a class="reference external image-reference" href="../../lite/lab/?path=auto_examples/feature_selection/plot_select_from_model_diabetes.ipynb"><img alt="Launch JupyterLite" src="../../_images/jupyterlite_badge_logo12.svg" width="150px" /></a>
+<a class="reference external image-reference" href="../../lite/lab/?path=auto_examples/feature_selection/plot_select_from_model_diabetes.ipynb"><img alt="Launch JupyterLite" src="../../_images/jupyterlite_badge_logo13.svg" width="150px" /></a>
 </div>
 <div class="sphx-glr-download sphx-glr-download-python docutils container">
 <p><a class="reference download internal" download="" href="../../_downloads/53e76f761ef04e8d06fa5757554513b0/plot_select_from_model_diabetes.py"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Python</span> <span class="pre">source</span> <span class="pre">code:</span> <span class="pre">plot_select_from_model_diabetes.py</span></code></a></p>

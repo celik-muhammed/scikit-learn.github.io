@@ -18,7 +18,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
   
-  <title>1.4. Support Vector Machines &mdash; scikit-learn 1.3.0 documentation</title>
+  <title>1.4. Support Vector Machines &mdash; scikit-learn 1.3.1 documentation</title>
   
   <link rel="canonical" href="http://scikit-learn.org/stable/modules/svm.html" />
 
@@ -166,7 +166,7 @@
         </div>
         <div class="alert alert-danger p-1 mb-2" role="alert">
           <p class="text-center mb-0">
-          <strong>scikit-learn 1.3.0</strong><br/>
+          <strong>scikit-learn 1.3.1</strong><br/>
           <a href="http://scikit-learn.org/dev/versions.html">Other versions</a>
           </p>
         </div>
@@ -189,11 +189,8 @@
 <li><a class="reference internal" href="#complexity">1.4.4. Complexity</a></li>
 <li><a class="reference internal" href="#tips-on-practical-use">1.4.5. Tips on Practical Use</a></li>
 <li><a class="reference internal" href="#kernel-functions">1.4.6. Kernel functions</a><ul>
-<li><a class="reference internal" href="#parameters-of-the-rbf-kernel">1.4.6.1. Parameters of the RBF Kernel</a><ul>
-<li><a class="reference internal" href="#using-python-functions-as-kernels">1.4.6.1.1. Using Python functions as kernels</a></li>
-<li><a class="reference internal" href="#using-the-gram-matrix">1.4.6.1.2. Using the Gram matrix</a></li>
-</ul>
-</li>
+<li><a class="reference internal" href="#parameters-of-the-rbf-kernel">1.4.6.1. Parameters of the RBF Kernel</a></li>
+<li><a class="reference internal" href="#custom-kernels">1.4.6.2. Custom Kernels</a></li>
 </ul>
 </li>
 <li><a class="reference internal" href="#mathematical-formulation">1.4.7. Mathematical formulation</a><ul>
@@ -254,14 +251,19 @@ capable of performing binary and multi-class classification on a dataset.</p>
 <figure class="align-center">
 <a class="reference external image-reference" href="../auto_examples/svm/plot_iris_svc.html"><img alt="../_images/sphx_glr_plot_iris_svc_001.png" src="../_images/sphx_glr_plot_iris_svc_001.png" /></a>
 </figure>
-<p><a class="reference internal" href="generated/sklearn.svm.SVC.html#sklearn.svm.SVC" title="sklearn.svm.SVC"><code class="xref py py-class docutils literal notranslate"><span class="pre">SVC</span></code></a> and <a class="reference internal" href="generated/sklearn.svm.NuSVC.html#sklearn.svm.NuSVC" title="sklearn.svm.NuSVC"><code class="xref py py-class docutils literal notranslate"><span class="pre">NuSVC</span></code></a> are similar methods, but accept
-slightly different sets of parameters and have different mathematical
-formulations (see section <a class="reference internal" href="#svm-mathematical-formulation"><span class="std std-ref">Mathematical formulation</span></a>). On the
-other hand, <a class="reference internal" href="generated/sklearn.svm.LinearSVC.html#sklearn.svm.LinearSVC" title="sklearn.svm.LinearSVC"><code class="xref py py-class docutils literal notranslate"><span class="pre">LinearSVC</span></code></a> is another (faster) implementation of Support
-Vector Classification for the case of a linear kernel. Note that
-<a class="reference internal" href="generated/sklearn.svm.LinearSVC.html#sklearn.svm.LinearSVC" title="sklearn.svm.LinearSVC"><code class="xref py py-class docutils literal notranslate"><span class="pre">LinearSVC</span></code></a> does not accept parameter <code class="docutils literal notranslate"><span class="pre">kernel</span></code>, as this is
-assumed to be linear. It also lacks some of the attributes of
-<a class="reference internal" href="generated/sklearn.svm.SVC.html#sklearn.svm.SVC" title="sklearn.svm.SVC"><code class="xref py py-class docutils literal notranslate"><span class="pre">SVC</span></code></a> and <a class="reference internal" href="generated/sklearn.svm.NuSVC.html#sklearn.svm.NuSVC" title="sklearn.svm.NuSVC"><code class="xref py py-class docutils literal notranslate"><span class="pre">NuSVC</span></code></a>, like <code class="docutils literal notranslate"><span class="pre">support_</span></code>.</p>
+<p><a class="reference internal" href="generated/sklearn.svm.SVC.html#sklearn.svm.SVC" title="sklearn.svm.SVC"><code class="xref py py-class docutils literal notranslate"><span class="pre">SVC</span></code></a> and <a class="reference internal" href="generated/sklearn.svm.NuSVC.html#sklearn.svm.NuSVC" title="sklearn.svm.NuSVC"><code class="xref py py-class docutils literal notranslate"><span class="pre">NuSVC</span></code></a> are similar methods, but accept slightly
+different sets of parameters and have different mathematical formulations (see
+section <a class="reference internal" href="#svm-mathematical-formulation"><span class="std std-ref">Mathematical formulation</span></a>). On the other hand,
+<a class="reference internal" href="generated/sklearn.svm.LinearSVC.html#sklearn.svm.LinearSVC" title="sklearn.svm.LinearSVC"><code class="xref py py-class docutils literal notranslate"><span class="pre">LinearSVC</span></code></a> is another (faster) implementation of Support Vector
+Classification for the case of a linear kernel. It also
+lacks some of the attributes of <a class="reference internal" href="generated/sklearn.svm.SVC.html#sklearn.svm.SVC" title="sklearn.svm.SVC"><code class="xref py py-class docutils literal notranslate"><span class="pre">SVC</span></code></a> and <a class="reference internal" href="generated/sklearn.svm.NuSVC.html#sklearn.svm.NuSVC" title="sklearn.svm.NuSVC"><code class="xref py py-class docutils literal notranslate"><span class="pre">NuSVC</span></code></a>, like
+<code class="docutils literal notranslate"><span class="pre">support_</span></code>. <a class="reference internal" href="generated/sklearn.svm.LinearSVC.html#sklearn.svm.LinearSVC" title="sklearn.svm.LinearSVC"><code class="xref py py-class docutils literal notranslate"><span class="pre">LinearSVC</span></code></a> uses <code class="docutils literal notranslate"><span class="pre">squared_hinge</span></code> loss and due to its
+implementation in <code class="docutils literal notranslate"><span class="pre">liblinear</span></code> it also regularizes the intercept, if considered.
+This effect can however be reduced by carefully fine tuning its
+<code class="docutils literal notranslate"><span class="pre">intercept_scaling</span></code> parameter, which allows the intercept term to have a
+different regularization behavior compared to the other features. The
+classification results and score can therefore differ from the other two
+classifiers.</p>
 <p>As other classifiers, <a class="reference internal" href="generated/sklearn.svm.SVC.html#sklearn.svm.SVC" title="sklearn.svm.SVC"><code class="xref py py-class docutils literal notranslate"><span class="pre">SVC</span></code></a>, <a class="reference internal" href="generated/sklearn.svm.NuSVC.html#sklearn.svm.NuSVC" title="sklearn.svm.NuSVC"><code class="xref py py-class docutils literal notranslate"><span class="pre">NuSVC</span></code></a> and
 <a class="reference internal" href="generated/sklearn.svm.LinearSVC.html#sklearn.svm.LinearSVC" title="sklearn.svm.LinearSVC"><code class="xref py py-class docutils literal notranslate"><span class="pre">LinearSVC</span></code></a> take as input two arrays: an array <code class="docutils literal notranslate"><span class="pre">X</span></code> of shape
 <code class="docutils literal notranslate"><span class="pre">(n_samples,</span> <span class="pre">n_features)</span></code> holding the training samples, and an array <code class="docutils literal notranslate"><span class="pre">y</span></code> of
@@ -506,10 +508,15 @@ because the cost function ignores samples whose prediction is close to their
 target.</p>
 <p>There are three different implementations of Support Vector Regression:
 <a class="reference internal" href="generated/sklearn.svm.SVR.html#sklearn.svm.SVR" title="sklearn.svm.SVR"><code class="xref py py-class docutils literal notranslate"><span class="pre">SVR</span></code></a>, <a class="reference internal" href="generated/sklearn.svm.NuSVR.html#sklearn.svm.NuSVR" title="sklearn.svm.NuSVR"><code class="xref py py-class docutils literal notranslate"><span class="pre">NuSVR</span></code></a> and <a class="reference internal" href="generated/sklearn.svm.LinearSVR.html#sklearn.svm.LinearSVR" title="sklearn.svm.LinearSVR"><code class="xref py py-class docutils literal notranslate"><span class="pre">LinearSVR</span></code></a>. <a class="reference internal" href="generated/sklearn.svm.LinearSVR.html#sklearn.svm.LinearSVR" title="sklearn.svm.LinearSVR"><code class="xref py py-class docutils literal notranslate"><span class="pre">LinearSVR</span></code></a>
-provides a faster implementation than <a class="reference internal" href="generated/sklearn.svm.SVR.html#sklearn.svm.SVR" title="sklearn.svm.SVR"><code class="xref py py-class docutils literal notranslate"><span class="pre">SVR</span></code></a> but only considers
-the linear kernel, while <a class="reference internal" href="generated/sklearn.svm.NuSVR.html#sklearn.svm.NuSVR" title="sklearn.svm.NuSVR"><code class="xref py py-class docutils literal notranslate"><span class="pre">NuSVR</span></code></a> implements a slightly different
-formulation than <a class="reference internal" href="generated/sklearn.svm.SVR.html#sklearn.svm.SVR" title="sklearn.svm.SVR"><code class="xref py py-class docutils literal notranslate"><span class="pre">SVR</span></code></a> and <a class="reference internal" href="generated/sklearn.svm.LinearSVR.html#sklearn.svm.LinearSVR" title="sklearn.svm.LinearSVR"><code class="xref py py-class docutils literal notranslate"><span class="pre">LinearSVR</span></code></a>. See
-<a class="reference internal" href="#svm-implementation-details"><span class="std std-ref">Implementation details</span></a> for further details.</p>
+provides a faster implementation than <a class="reference internal" href="generated/sklearn.svm.SVR.html#sklearn.svm.SVR" title="sklearn.svm.SVR"><code class="xref py py-class docutils literal notranslate"><span class="pre">SVR</span></code></a> but only considers the
+linear kernel, while <a class="reference internal" href="generated/sklearn.svm.NuSVR.html#sklearn.svm.NuSVR" title="sklearn.svm.NuSVR"><code class="xref py py-class docutils literal notranslate"><span class="pre">NuSVR</span></code></a> implements a slightly different formulation
+than <a class="reference internal" href="generated/sklearn.svm.SVR.html#sklearn.svm.SVR" title="sklearn.svm.SVR"><code class="xref py py-class docutils literal notranslate"><span class="pre">SVR</span></code></a> and <a class="reference internal" href="generated/sklearn.svm.LinearSVR.html#sklearn.svm.LinearSVR" title="sklearn.svm.LinearSVR"><code class="xref py py-class docutils literal notranslate"><span class="pre">LinearSVR</span></code></a>. Due to its implementation in
+<code class="docutils literal notranslate"><span class="pre">liblinear</span></code> <a class="reference internal" href="generated/sklearn.svm.LinearSVR.html#sklearn.svm.LinearSVR" title="sklearn.svm.LinearSVR"><code class="xref py py-class docutils literal notranslate"><span class="pre">LinearSVR</span></code></a> also regularizes the intercept, if considered.
+This effect can however be reduced by carefully fine tuning its
+<code class="docutils literal notranslate"><span class="pre">intercept_scaling</span></code> parameter, which allows the intercept term to have a
+different regularization behavior compared to the other features. The
+classification results and score can therefore differ from the other two
+classifiers. See <a class="reference internal" href="#svm-implementation-details"><span class="std std-ref">Implementation details</span></a> for further details.</p>
 <p>As with classification classes, the fit method will take as
 argument vectors X, y, only that in this case y is expected to have
 floating point values instead of integer values:</p>
@@ -682,12 +689,9 @@ is advised to use <a class="reference internal" href="generated/sklearn.model_se
 <li><p><a class="reference internal" href="../auto_examples/svm/plot_svm_nonlinear.html#sphx-glr-auto-examples-svm-plot-svm-nonlinear-py"><span class="std std-ref">Non-linear SVM</span></a></p></li>
 </ul>
 </aside>
-<p><details>
-<summary class="btn btn-light">
-<strong>Custom Kernels</strong>
-<span class="tooltiptext">Click for more details</span>
-</summary>
-<div class="card"></p>
+</section>
+<section id="custom-kernels">
+<h3><span class="section-number">1.4.6.2. </span>Custom Kernels<a class="headerlink" href="#custom-kernels" title="Permalink to this heading">¶</a></h3>
 <p>You can define your own kernels by either giving the kernel as a
 python function or by precomputing the Gram matrix.</p>
 <p>Classifiers with custom kernels behave the same way as any other
@@ -701,8 +705,12 @@ method is stored for future reference. If that array changes between the
 use of <code class="docutils literal notranslate"><span class="pre">fit()</span></code> and <code class="docutils literal notranslate"><span class="pre">predict()</span></code> you will have unexpected results.</p></li>
 </ul>
 </div></blockquote>
-<section id="using-python-functions-as-kernels">
-<h4><span class="section-number">1.4.6.1.1. </span>Using Python functions as kernels<a class="headerlink" href="#using-python-functions-as-kernels" title="Permalink to this heading">¶</a></h4>
+<p><details>
+<summary class="btn btn-light">
+<strong>Using Python functions as kernels</strong>
+<span class="tooltiptext">Click for more details</span>
+</summary>
+<div class="card"></p>
 <p>You can use your own defined kernels by passing a function to the
 <code class="docutils literal notranslate"><span class="pre">kernel</span></code> parameter.</p>
 <p>Your kernel must take as arguments two matrices of shape
@@ -718,15 +726,14 @@ instance that will use that kernel:</p>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">clf</span> <span class="o">=</span> <span class="n">svm</span><span class="o">.</span><span class="n">SVC</span><span class="p">(</span><span class="n">kernel</span><span class="o">=</span><span class="n">my_kernel</span><span class="p">)</span>
 </pre></div>
 </div>
-<aside class="topic">
-<p class="topic-title">Examples:</p>
-<ul class="simple">
-<li><p><a class="reference internal" href="../auto_examples/svm/plot_custom_kernel.html#sphx-glr-auto-examples-svm-plot-custom-kernel-py"><span class="std std-ref">SVM with custom kernel</span></a>.</p></li>
-</ul>
-</aside>
-</section>
-<section id="using-the-gram-matrix">
-<h4><span class="section-number">1.4.6.1.2. </span>Using the Gram matrix<a class="headerlink" href="#using-the-gram-matrix" title="Permalink to this heading">¶</a></h4>
+<p></div>
+</details></p>
+<p><details>
+<summary class="btn btn-light">
+<strong>Using the Gram matrix</strong>
+<span class="tooltiptext">Click for more details</span>
+</summary>
+<div class="card"></p>
 <p>You can pass pre-computed kernels by using the <code class="docutils literal notranslate"><span class="pre">kernel='precomputed'</span></code>
 option. You should then pass Gram matrix instead of X to the <code class="docutils literal notranslate"><span class="pre">fit</span></code> and
 <code class="docutils literal notranslate"><span class="pre">predict</span></code> methods. The kernel values between <em>all</em> training vectors and the
@@ -750,7 +757,12 @@ test vectors must be provided:</p>
 </div>
 <p></div>
 </details></p>
-</section>
+<aside class="topic">
+<p class="topic-title">Examples:</p>
+<ul class="simple">
+<li><p><a class="reference internal" href="../auto_examples/svm/plot_custom_kernel.html#sphx-glr-auto-examples-svm-plot-custom-kernel-py"><span class="std std-ref">SVM with custom kernel</span></a>.</p></li>
+</ul>
+</aside>
 </section>
 </section>
 <section id="mathematical-formulation">

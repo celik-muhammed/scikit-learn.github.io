@@ -18,7 +18,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
   
-  <title>6.3. Preprocessing data &mdash; scikit-learn 1.3.0 documentation</title>
+  <title>6.3. Preprocessing data &mdash; scikit-learn 1.3.1 documentation</title>
   
   <link rel="canonical" href="http://scikit-learn.org/stable/modules/preprocessing.html" />
 
@@ -166,7 +166,7 @@
         </div>
         <div class="alert alert-danger p-1 mb-2" role="alert">
           <p class="text-center mb-0">
-          <strong>scikit-learn 1.3.0</strong><br/>
+          <strong>scikit-learn 1.3.1</strong><br/>
           <a href="http://scikit-learn.org/dev/versions.html">Other versions</a>
           </p>
         </div>
@@ -223,9 +223,10 @@
 <p>The <code class="docutils literal notranslate"><span class="pre">sklearn.preprocessing</span></code> package provides several common
 utility functions and transformer classes to change raw feature vectors
 into a representation that is more suitable for the downstream estimators.</p>
-<p>In general, learning algorithms benefit from standardization of the data set. If
-some outliers are present in the set, robust scalers or transformers are more
-appropriate. The behaviors of the different scalers, transformers, and
+<p>In general, many learning algorithms such as linear models benefit from standardization of the data set
+(see <a class="reference internal" href="../auto_examples/preprocessing/plot_scaling_importance.html#sphx-glr-auto-examples-preprocessing-plot-scaling-importance-py"><span class="std std-ref">Importance of Feature Scaling</span></a>).
+If some outliers are present in the set, robust scalers or other transformers can
+be more appropriate. The behaviors of the different scalers, transformers, and
 normalizers on a dataset containing marginal outliers is highlighted in
 <a class="reference internal" href="../auto_examples/preprocessing/plot_all_scaling.html#sphx-glr-auto-examples-preprocessing-plot-all-scaling-py"><span class="std std-ref">Compare the effect of different scalers on data with outliers</span></a>.</p>
 <section id="standardization-or-mean-removal-and-variance-scaling">
@@ -1030,24 +1031,24 @@ computed as an empirical Bayes estimate: <span class="math notranslate nohighlig
 \[S_i = \lambda_i\frac{\sum_{k\in L_i}Y_k}{n_i} + (1 - \lambda_i)\frac{\sum_{k=1}^{n}Y_k}{n}\]</div>
 <p>where <span class="math notranslate nohighlight">\(L_i\)</span> is the set of observations with category <span class="math notranslate nohighlight">\(i\)</span> and
 <span class="math notranslate nohighlight">\(n_i\)</span> is the number of observations with category <span class="math notranslate nohighlight">\(i\)</span>.</p>
-<p><a class="reference internal" href="generated/sklearn.preprocessing.TargetEncoder.html#sklearn.preprocessing.TargetEncoder.fit_transform" title="sklearn.preprocessing.TargetEncoder.fit_transform"><code class="xref py py-meth docutils literal notranslate"><span class="pre">fit_transform</span></code></a> internally relies on a cross fitting
+<p><a class="reference internal" href="generated/sklearn.preprocessing.TargetEncoder.html#sklearn.preprocessing.TargetEncoder.fit_transform" title="sklearn.preprocessing.TargetEncoder.fit_transform"><code class="xref py py-meth docutils literal notranslate"><span class="pre">fit_transform</span></code></a> internally relies on a <a class="reference internal" href="../glossary.html#term-0"><span class="xref std std-term">cross fitting</span></a>
 scheme to prevent target information from leaking into the train-time
 representation, especially for non-informative high-cardinality categorical
 variables, and help prevent the downstream model from overfitting spurious
 correlations. Note that as a result, <code class="docutils literal notranslate"><span class="pre">fit(X,</span> <span class="pre">y).transform(X)</span></code> does not equal
 <code class="docutils literal notranslate"><span class="pre">fit_transform(X,</span> <span class="pre">y)</span></code>. In <a class="reference internal" href="generated/sklearn.preprocessing.TargetEncoder.html#sklearn.preprocessing.TargetEncoder.fit_transform" title="sklearn.preprocessing.TargetEncoder.fit_transform"><code class="xref py py-meth docutils literal notranslate"><span class="pre">fit_transform</span></code></a>, the training
-data is split into <em>k</em> folds (determined by the <code class="docutils literal notranslate"><span class="pre">cv</span></code> parameter) and encodes each
-fold using the encodings trained on the other <em>k-1</em> folds. The following diagram
-shows the cross fitting scheme in <a class="reference internal" href="generated/sklearn.preprocessing.TargetEncoder.html#sklearn.preprocessing.TargetEncoder.fit_transform" title="sklearn.preprocessing.TargetEncoder.fit_transform"><code class="xref py py-meth docutils literal notranslate"><span class="pre">fit_transform</span></code></a> with
-the default <code class="docutils literal notranslate"><span class="pre">cv=5</span></code>:</p>
+data is split into <em>k</em> folds (determined by the <code class="docutils literal notranslate"><span class="pre">cv</span></code> parameter) and each fold is
+encoded using the encodings learnt using the other <em>k-1</em> folds. The following
+diagram shows the <a class="reference internal" href="../glossary.html#term-0"><span class="xref std std-term">cross fitting</span></a> scheme in
+<a class="reference internal" href="generated/sklearn.preprocessing.TargetEncoder.html#sklearn.preprocessing.TargetEncoder.fit_transform" title="sklearn.preprocessing.TargetEncoder.fit_transform"><code class="xref py py-meth docutils literal notranslate"><span class="pre">fit_transform</span></code></a> with the default <code class="docutils literal notranslate"><span class="pre">cv=5</span></code>:</p>
 <a class="reference internal image-reference" href="../_images/target_encoder_cross_validation.svg"><img alt="../_images/target_encoder_cross_validation.svg" class="align-center" src="../_images/target_encoder_cross_validation.svg" width="600" /></a>
 <p><a class="reference internal" href="generated/sklearn.preprocessing.TargetEncoder.html#sklearn.preprocessing.TargetEncoder.fit_transform" title="sklearn.preprocessing.TargetEncoder.fit_transform"><code class="xref py py-meth docutils literal notranslate"><span class="pre">fit_transform</span></code></a> also learns a ‘full data’ encoding using
 the whole training set. This is never used in
 <a class="reference internal" href="generated/sklearn.preprocessing.TargetEncoder.html#sklearn.preprocessing.TargetEncoder.fit_transform" title="sklearn.preprocessing.TargetEncoder.fit_transform"><code class="xref py py-meth docutils literal notranslate"><span class="pre">fit_transform</span></code></a> but is saved to the attribute <code class="docutils literal notranslate"><span class="pre">encodings_</span></code>,
 for use when <a class="reference internal" href="generated/sklearn.preprocessing.TargetEncoder.html#sklearn.preprocessing.TargetEncoder.transform" title="sklearn.preprocessing.TargetEncoder.transform"><code class="xref py py-meth docutils literal notranslate"><span class="pre">transform</span></code></a> is called. Note that the encodings
-learned for each fold during the cross fitting scheme are not saved to an
-attribute.</p>
-<p>The <a class="reference internal" href="generated/sklearn.preprocessing.TargetEncoder.html#sklearn.preprocessing.TargetEncoder.fit" title="sklearn.preprocessing.TargetEncoder.fit"><code class="xref py py-meth docutils literal notranslate"><span class="pre">fit</span></code></a> method does <strong>not</strong> use any cross fitting
+learned for each fold during the <a class="reference internal" href="../glossary.html#term-0"><span class="xref std std-term">cross fitting</span></a> scheme are not saved to
+an attribute.</p>
+<p>The <a class="reference internal" href="generated/sklearn.preprocessing.TargetEncoder.html#sklearn.preprocessing.TargetEncoder.fit" title="sklearn.preprocessing.TargetEncoder.fit"><code class="xref py py-meth docutils literal notranslate"><span class="pre">fit</span></code></a> method does <strong>not</strong> use any <a class="reference internal" href="../glossary.html#term-0"><span class="xref std std-term">cross fitting</span></a>
 schemes and learns one encoding on the entire training set, which is used to
 encode categories in <a class="reference internal" href="generated/sklearn.preprocessing.TargetEncoder.html#sklearn.preprocessing.TargetEncoder.transform" title="sklearn.preprocessing.TargetEncoder.transform"><code class="xref py py-meth docutils literal notranslate"><span class="pre">transform</span></code></a>.
 This encoding is the same as the ‘full data’
@@ -1138,7 +1139,7 @@ equally populated bins in each feature. The ‘kmeans’ strategy defines bins b
 on a k-means clustering procedure performed on each feature independently.</p>
 <p>Be aware that one can specify custom bins by passing a callable defining the
 discretization strategy to <a class="reference internal" href="generated/sklearn.preprocessing.FunctionTransformer.html#sklearn.preprocessing.FunctionTransformer" title="sklearn.preprocessing.FunctionTransformer"><code class="xref py py-class docutils literal notranslate"><span class="pre">FunctionTransformer</span></code></a>.
-For instance, we can use the Pandas function <a class="reference external" href="https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.cut.html#pandas.cut" title="(in pandas v2.0.3)"><code class="xref py py-func docutils literal notranslate"><span class="pre">pandas.cut</span></code></a>:</p>
+For instance, we can use the Pandas function <a class="reference external" href="https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.cut.html#pandas.cut" title="(in pandas v2.1.0)"><code class="xref py py-func docutils literal notranslate"><span class="pre">pandas.cut</span></code></a>:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">bins</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">13</span><span class="p">,</span> <span class="mi">20</span><span class="p">,</span> <span class="mi">60</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">inf</span><span class="p">]</span>
