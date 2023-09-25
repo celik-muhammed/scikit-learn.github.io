@@ -143,7 +143,7 @@ to define the 8 gray values to sub-sample. The simplest strategy is to define
 them equally spaced, which correspond to setting `strategy="uniform"`. From
 the previous histogram, we know that this strategy is certainly not optimal.
 
-.. GENERATED FROM PYTHON SOURCE LINES 75-96
+.. GENERATED FROM PYTHON SOURCE LINES 75-100
 
 .. code-block:: default
 
@@ -152,7 +152,11 @@ the previous histogram, we know that this strategy is certainly not optimal.
 
     n_bins = 8
     encoder = KBinsDiscretizer(
-        n_bins=n_bins, encode="ordinal", strategy="uniform", random_state=0
+        n_bins=n_bins,
+        encode="ordinal",
+        strategy="uniform",
+        random_state=0,
+        subsample=200_000,
     )
     compressed_raccoon_uniform = encoder.fit_transform(raccoon_face.reshape(-1, 1)).reshape(
         raccoon_face.shape
@@ -177,19 +181,10 @@ the previous histogram, we know that this strategy is certainly not optimal.
    :class: sphx-glr-single-img
 
 
-.. rst-class:: sphx-glr-script-out
-
- .. code-block:: none
-
-    /home/circleci/project/sklearn/preprocessing/_discretization.py:248: FutureWarning:
-
-    In version 1.5 onwards, subsample=200_000 will be used by default. Set subsample explicitly to silence this warning in the mean time. Set subsample=None to disable subsampling explicitly.
 
 
 
-
-
-.. GENERATED FROM PYTHON SOURCE LINES 97-104
+.. GENERATED FROM PYTHON SOURCE LINES 101-108
 
 Qualitatively, we can spot some small regions where we see the effect of the
 compression (e.g. leaves on the bottom right corner). But after all, the resulting
@@ -199,7 +194,7 @@ We observe that the distribution of pixels values have been mapped to 8
 different values. We can check the correspondence between such values and the
 original pixel values.
 
-.. GENERATED FROM PYTHON SOURCE LINES 104-109
+.. GENERATED FROM PYTHON SOURCE LINES 108-113
 
 .. code-block:: default
 
@@ -222,7 +217,7 @@ original pixel values.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 110-117
+.. GENERATED FROM PYTHON SOURCE LINES 114-121
 
 .. code-block:: default
 
@@ -245,7 +240,7 @@ original pixel values.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 118-123
+.. GENERATED FROM PYTHON SOURCE LINES 122-127
 
 As previously stated, the uniform sampling strategy is not optimal. Notice for
 instance that the pixels mapped to the value 7 will encode a rather small
@@ -253,13 +248,17 @@ amount of information, whereas the mapped value 3 will represent a large
 amount of counts. We can instead use a clustering strategy such as k-means to
 find a more optimal mapping.
 
-.. GENERATED FROM PYTHON SOURCE LINES 123-141
+.. GENERATED FROM PYTHON SOURCE LINES 127-149
 
 .. code-block:: default
 
 
     encoder = KBinsDiscretizer(
-        n_bins=n_bins, encode="ordinal", strategy="kmeans", random_state=0
+        n_bins=n_bins,
+        encode="ordinal",
+        strategy="kmeans",
+        random_state=0,
+        subsample=200_000,
     )
     compressed_raccoon_kmeans = encoder.fit_transform(raccoon_face.reshape(-1, 1)).reshape(
         raccoon_face.shape
@@ -284,19 +283,10 @@ find a more optimal mapping.
    :class: sphx-glr-single-img
 
 
-.. rst-class:: sphx-glr-script-out
-
- .. code-block:: none
-
-    /home/circleci/project/sklearn/preprocessing/_discretization.py:248: FutureWarning:
-
-    In version 1.5 onwards, subsample=200_000 will be used by default. Set subsample explicitly to silence this warning in the mean time. Set subsample=None to disable subsampling explicitly.
 
 
 
-
-
-.. GENERATED FROM PYTHON SOURCE LINES 142-146
+.. GENERATED FROM PYTHON SOURCE LINES 150-154
 
 .. code-block:: default
 
@@ -313,12 +303,12 @@ find a more optimal mapping.
  .. code-block:: none
 
 
-    array([ 18.9141241 ,  53.3627656 ,  82.65000752, 109.26055499,
-           134.68738405, 159.79431128, 185.18557327, 224.01945707])
+    array([ 18.90885631,  53.34346583,  82.64447187, 109.28225276,
+           134.70763101, 159.78681467, 185.17226834, 224.02069427])
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 147-154
+.. GENERATED FROM PYTHON SOURCE LINES 155-162
 
 .. code-block:: default
 
@@ -341,7 +331,7 @@ find a more optimal mapping.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 155-163
+.. GENERATED FROM PYTHON SOURCE LINES 163-171
 
 The counts in the bins are now more balanced and their centers are no longer
 equally spaced. Note that we could enforce the same number of pixels per bin
@@ -352,7 +342,7 @@ Memory footprint
 
 We previously stated that we should save 8 times less memory. Let's verify it.
 
-.. GENERATED FROM PYTHON SOURCE LINES 163-167
+.. GENERATED FROM PYTHON SOURCE LINES 171-175
 
 .. code-block:: default
 
@@ -374,14 +364,14 @@ We previously stated that we should save 8 times less memory. Let's verify it.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 168-172
+.. GENERATED FROM PYTHON SOURCE LINES 176-180
 
 It is quite surprising to see that our compressed image is taking x8 more
 memory than the original image. This is indeed the opposite of what we
 expected. The reason is mainly due to the type of data used to encode the
 image.
 
-.. GENERATED FROM PYTHON SOURCE LINES 172-175
+.. GENERATED FROM PYTHON SOURCE LINES 180-183
 
 .. code-block:: default
 
@@ -401,7 +391,7 @@ image.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 176-186
+.. GENERATED FROM PYTHON SOURCE LINES 184-194
 
 Indeed, the output of the :class:`~sklearn.preprocessing.KBinsDiscretizer` is
 an array of 64-bit float. It means that it takes x8 more memory. However, we
@@ -417,7 +407,7 @@ a 64-bit float representation.
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** (0 minutes 2.413 seconds)
+   **Total running time of the script:** (0 minutes 2.357 seconds)
 
 
 .. _sphx_glr_download_auto_examples_cluster_plot_face_compress.py:
