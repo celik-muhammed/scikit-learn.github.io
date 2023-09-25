@@ -268,11 +268,11 @@ by year.
     xtick_start, xtick_period = 6, 12
 
     fig, axs = plt.subplots(nrows=2, figsize=(8, 6), sharey=True, sharex=True)
-    average_bike_rentals = bikes.frame.groupby(["year", "season", "weekday", "hour"]).mean(
-        numeric_only=True
-    )["count"]
+    average_bike_rentals = bikes.frame.groupby(
+        ["year", "season", "weekday", "hour"], observed=True
+    ).mean(numeric_only=True)["count"]
     for ax, (idx, df) in zip(axs, average_bike_rentals.groupby("year")):
-        df.groupby("season").plot(ax=ax, legend=True)
+        df.groupby("season", observed=True).plot(ax=ax, legend=True)
 
         # decorate the plot
         ax.set_xticks(
@@ -299,23 +299,6 @@ by year.
    :alt: Bike rental for 2010 (train set), Bike rental for 2011 (test set)
    :srcset: /auto_examples/inspection/images/sphx_glr_plot_partial_dependence_001.png
    :class: sphx-glr-single-img
-
-
-.. rst-class:: sphx-glr-script-out
-
- .. code-block:: none
-
-    /home/circleci/project/examples/inspection/plot_partial_dependence.py:113: FutureWarning:
-
-    The default of observed=False is deprecated and will be changed to True in a future version of pandas. Pass observed=False to retain current behavior or observed=True to adopt the future default and silence this warning.
-
-    /home/circleci/project/examples/inspection/plot_partial_dependence.py:117: FutureWarning:
-
-    The default of observed=False is deprecated and will be changed to True in a future version of pandas. Pass observed=False to retain current behavior or observed=True to adopt the future default and silence this warning.
-
-    /home/circleci/project/examples/inspection/plot_partial_dependence.py:117: FutureWarning:
-
-    The default of observed=False is deprecated and will be changed to True in a future version of pandas. Pass observed=False to retain current behavior or observed=True to adopt the future default and silence this warning.
 
 
 
@@ -494,7 +477,7 @@ single-variable partial dependence plots.
  .. code-block:: none
 
     Training MLPRegressor...
-    done in 0.807s
+    done in 0.648s
     Test R2 score: 0.61
 
 
@@ -578,7 +561,7 @@ We will plot the averaged partial dependence.
  .. code-block:: none
 
     Computing partial dependence plots...
-    done in 1.195s
+    done in 0.788s
 
 
 
@@ -621,7 +604,7 @@ specific preprocessor we created for this model.
  .. code-block:: none
 
     Training HistGradientBoostingRegressor...
-    done in 0.139s
+    done in 0.121s
     Test R2 score: 0.62
 
 
@@ -678,7 +661,7 @@ features.
  .. code-block:: none
 
     Computing partial dependence plots...
-    done in 1.084s
+    done in 0.792s
 
 
 
@@ -753,7 +736,7 @@ selected ICEs for the temperature and humidity features.
  .. code-block:: none
 
     Computing partial dependence plots and individual conditional expectation...
-    done in 0.436s
+    done in 0.359s
 
 
 
@@ -874,7 +857,7 @@ heatmap.
  .. code-block:: none
 
     Computing partial dependence plots...
-    done in 7.030s
+    done in 5.442s
 
 
 
@@ -935,7 +918,7 @@ non-linear feature interactions.
  .. code-block:: none
 
     Computing partial dependence plots...
-    done in 5.888s
+    done in 5.200s
 
 
 
@@ -1003,7 +986,7 @@ the season, the weather, and the target would be as follow:
  .. code-block:: none
 
     Computing partial dependence plots...
-    done in 0.619s
+    done in 0.537s
 
 
 
@@ -1065,7 +1048,7 @@ unused but required import for doing 3d projections with matplotlib < 3.2
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** (0 minutes 22.194 seconds)
+   **Total running time of the script:** (0 minutes 18.040 seconds)
 
 
 .. _sphx_glr_download_auto_examples_inspection_plot_partial_dependence.py:
