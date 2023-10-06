@@ -232,6 +232,23 @@ future; or a feature will be removed in the future.</p></li>
 parameters, may produce different models from the previous version. This often
 occurs due to changes in the modelling logic (bug fixes or enhancements), or in
 random sampling procedures.</p>
+<ul>
+<li><p><span class="raw-html"><span class="badge badge-info">Efficiency</span></span>  <a class="reference internal" href="../modules/generated/sklearn.linear_model.LogisticRegression.html#sklearn.linear_model.LogisticRegression" title="sklearn.linear_model.LogisticRegression"><code class="xref py py-class docutils literal notranslate"><span class="pre">linear_model.LogisticRegression</span></code></a> and
+<a class="reference internal" href="../modules/generated/sklearn.linear_model.LogisticRegressionCV.html#sklearn.linear_model.LogisticRegressionCV" title="sklearn.linear_model.LogisticRegressionCV"><code class="xref py py-class docutils literal notranslate"><span class="pre">linear_model.LogisticRegressionCV</span></code></a> now have much better convergence for
+solvers <code class="docutils literal notranslate"><span class="pre">&quot;lbfgs&quot;</span></code> and <code class="docutils literal notranslate"><span class="pre">&quot;newton-cg&quot;</span></code>. Both solvers can now reach much higher precision
+for the coefficients depending on the specified <code class="docutils literal notranslate"><span class="pre">tol</span></code>. Additionally, lbfgs can
+make better use of <code class="docutils literal notranslate"><span class="pre">tol</span></code>, i.e., stop sooner or reach higher precision.
+<a class="reference external" href="https://github.com/scikit-learn/scikit-learn/pull/26721">#26721</a> by <a class="reference external" href="https://github.com/lorentzenchr">Christian Lorentzen</a>.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>The lbfgs is the default solver, so this change might effect many models.</p>
+<p>This change also means that with this new version of scikit-learn, the resulting
+coefficients <code class="docutils literal notranslate"><span class="pre">coef_</span></code> and <code class="docutils literal notranslate"><span class="pre">intercept_</span></code> of your models will change for these two
+solvers (when fit on the same data again). The amount of change depends on the
+specified <code class="docutils literal notranslate"><span class="pre">tol</span></code>, for small values you will get more precise results.</p>
+</div>
+</li>
+</ul>
 </section>
 <section id="changes-impacting-all-modules">
 <h2>Changes impacting all modules<a class="headerlink" href="#changes-impacting-all-modules" title="Permalink to this heading">¶</a></h2>
@@ -447,8 +464,30 @@ deprecated and will be removed in 1.6. <a class="reference external" href="https
 </section>
 <section id="sklearn-linear-model">
 <h3><a class="reference internal" href="../modules/classes.html#module-sklearn.linear_model" title="sklearn.linear_model"><code class="xref py py-mod docutils literal notranslate"><span class="pre">sklearn.linear_model</span></code></a><a class="headerlink" href="#sklearn-linear-model" title="Permalink to this heading">¶</a></h3>
-<ul class="simple">
-<li><p><span class="raw-html"><span class="badge badge-info">Enhancement</span></span>  Solver <code class="docutils literal notranslate"><span class="pre">&quot;newton-cg&quot;</span></code> in <a class="reference internal" href="../modules/generated/sklearn.linear_model.LogisticRegression.html#sklearn.linear_model.LogisticRegression" title="sklearn.linear_model.LogisticRegression"><code class="xref py py-class docutils literal notranslate"><span class="pre">linear_model.LogisticRegression</span></code></a> and
+<ul>
+<li><p><span class="raw-html"><span class="badge badge-info">Efficiency</span></span>  <a class="reference internal" href="../modules/generated/sklearn.linear_model.LogisticRegression.html#sklearn.linear_model.LogisticRegression" title="sklearn.linear_model.LogisticRegression"><code class="xref py py-class docutils literal notranslate"><span class="pre">linear_model.LogisticRegression</span></code></a> and
+<a class="reference internal" href="../modules/generated/sklearn.linear_model.LogisticRegressionCV.html#sklearn.linear_model.LogisticRegressionCV" title="sklearn.linear_model.LogisticRegressionCV"><code class="xref py py-class docutils literal notranslate"><span class="pre">linear_model.LogisticRegressionCV</span></code></a> now have much better convergence for
+solvers <code class="docutils literal notranslate"><span class="pre">&quot;lbfgs&quot;</span></code> and <code class="docutils literal notranslate"><span class="pre">&quot;newton-cg&quot;</span></code>. Both solvers can now reach much higher precision
+for the coefficients depending on the specified <code class="docutils literal notranslate"><span class="pre">tol</span></code>. Additionally, lbfgs can
+make better use of <code class="docutils literal notranslate"><span class="pre">tol</span></code>, i.e., stop sooner or reach higher precision. This is
+accomplished by better scaling of the objective function, i.e., using average per
+sample losses instead of sum of per sample losses.
+<a class="reference external" href="https://github.com/scikit-learn/scikit-learn/pull/26721">#26721</a> by <a class="reference external" href="https://github.com/lorentzenchr">Christian Lorentzen</a>.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>This change also means that with this new version of scikit-learn, the resulting
+coefficients <code class="docutils literal notranslate"><span class="pre">coef_</span></code> and <code class="docutils literal notranslate"><span class="pre">intercept_</span></code> of your models will change for these two
+solvers (when fit on the same data again). The amount of change depends on the
+specified <code class="docutils literal notranslate"><span class="pre">tol</span></code>, for small values you will get more precise results.</p>
+</div>
+</li>
+<li><p><span class="raw-html"><span class="badge badge-info">Efficiency</span></span>  <a class="reference internal" href="../modules/generated/sklearn.linear_model.LogisticRegression.html#sklearn.linear_model.LogisticRegression" title="sklearn.linear_model.LogisticRegression"><code class="xref py py-class docutils literal notranslate"><span class="pre">linear_model.LogisticRegression</span></code></a> and
+<a class="reference internal" href="../modules/generated/sklearn.linear_model.LogisticRegressionCV.html#sklearn.linear_model.LogisticRegressionCV" title="sklearn.linear_model.LogisticRegressionCV"><code class="xref py py-class docutils literal notranslate"><span class="pre">linear_model.LogisticRegressionCV</span></code></a> with solver <code class="docutils literal notranslate"><span class="pre">&quot;newton-cg&quot;</span></code> can now be
+considerably faster for some data and parameter settings. This is accomplished by a
+better line search convergence check for negligible loss improvements that takes into
+account gradient information.
+<a class="reference external" href="https://github.com/scikit-learn/scikit-learn/pull/26721">#26721</a> by <a class="reference external" href="https://github.com/lorentzenchr">Christian Lorentzen</a>.</p></li>
+<li><p><span class="raw-html"><span class="badge badge-info">Efficiency</span></span>  Solver <code class="docutils literal notranslate"><span class="pre">&quot;newton-cg&quot;</span></code> in <a class="reference internal" href="../modules/generated/sklearn.linear_model.LogisticRegression.html#sklearn.linear_model.LogisticRegression" title="sklearn.linear_model.LogisticRegression"><code class="xref py py-class docutils literal notranslate"><span class="pre">linear_model.LogisticRegression</span></code></a> and
 <a class="reference internal" href="../modules/generated/sklearn.linear_model.LogisticRegressionCV.html#sklearn.linear_model.LogisticRegressionCV" title="sklearn.linear_model.LogisticRegressionCV"><code class="xref py py-class docutils literal notranslate"><span class="pre">linear_model.LogisticRegressionCV</span></code></a> uses a little less memory. The effect is
 proportional to the number of coefficients (<code class="docutils literal notranslate"><span class="pre">n_features</span> <span class="pre">*</span> <span class="pre">n_classes</span></code>).
 <a class="reference external" href="https://github.com/scikit-learn/scikit-learn/pull/27417">#27417</a> by <a class="reference external" href="https://github.com/lorentzenchr">Christian Lorentzen</a>.</p></li>
