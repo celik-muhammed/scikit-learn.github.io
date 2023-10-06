@@ -1015,7 +1015,10 @@ the probability of the positive class <span class="math notranslate nohighlight"
 class logistic regression with regularization term <span class="math notranslate nohighlight">\(r(w)\)</span> minimizes the
 following cost function:</p>
 <div class="math notranslate nohighlight" id="regularized-logistic-loss">
-<span id="equation-regularized-logistic-loss"></span><span class="eqno">(1)<a class="headerlink" href="#regularized-logistic-loss" title="Permalink to this equation">¶</a></span>\[\min_{w} C \sum_{i=1}^n \left(-y_i \log(\hat{p}(X_i)) - (1 - y_i) \log(1 - \hat{p}(X_i))\right) + r(w).\]</div>
+<span id="equation-regularized-logistic-loss"></span><span class="eqno">(1)<a class="headerlink" href="#regularized-logistic-loss" title="Permalink to this equation">¶</a></span>\[\min_{w} C \sum_{i=1}^n s_i \left(-y_i \log(\hat{p}(X_i)) - (1 - y_i) \log(1 - \hat{p}(X_i))\right) + r(w),\]</div>
+<p>where <span class="math notranslate nohighlight">\({s_i}\)</span> corresponds to the weights assigned by the user to a
+specific training sample (the vector <span class="math notranslate nohighlight">\(s\)</span> is formed by element-wise
+multiplication of the class weights and sample weights).</p>
 <p>We currently provide four choices for the regularization term  <span class="math notranslate nohighlight">\(r(w)\)</span>  via
 the <code class="docutils literal notranslate"><span class="pre">penalty</span></code> argument:</p>
 <table class="docutils align-default">
@@ -1043,6 +1046,10 @@ the <code class="docutils literal notranslate"><span class="pre">penalty</span><
 controls the strength of <span class="math notranslate nohighlight">\(\ell_1\)</span> regularization vs. <span class="math notranslate nohighlight">\(\ell_2\)</span>
 regularization. Elastic-Net is equivalent to <span class="math notranslate nohighlight">\(\ell_1\)</span> when
 <span class="math notranslate nohighlight">\(\rho = 1\)</span> and equivalent to <span class="math notranslate nohighlight">\(\ell_2\)</span> when <span class="math notranslate nohighlight">\(\rho=0\)</span>.</p>
+<p>Note that the scale of the class weights and the sample weights will influence
+the optimization problem. For instance, multiplying the sample weights by a
+constant <span class="math notranslate nohighlight">\(b&gt;0\)</span> is equivalent to multiplying the (inverse) regularization
+strength <code class="docutils literal notranslate"><span class="pre">C</span></code> by <span class="math notranslate nohighlight">\(b\)</span>.</p>
 </section>
 <section id="multinomial-case">
 <h3><span class="section-number">1.1.11.2. </span>Multinomial Case<a class="headerlink" href="#multinomial-case" title="Permalink to this heading">¶</a></h3>
