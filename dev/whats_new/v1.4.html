@@ -189,6 +189,7 @@
 <li><a class="reference internal" href="#sklearn-datasets"><code class="xref py py-mod docutils literal notranslate"><span class="pre">sklearn.datasets</span></code></a></li>
 <li><a class="reference internal" href="#sklearn-decomposition"><code class="xref py py-mod docutils literal notranslate"><span class="pre">sklearn.decomposition</span></code></a></li>
 <li><a class="reference internal" href="#sklearn-ensemble"><code class="xref py py-mod docutils literal notranslate"><span class="pre">sklearn.ensemble</span></code></a></li>
+<li><a class="reference internal" href="#sklearn-inspection"><code class="xref py py-mod docutils literal notranslate"><span class="pre">sklearn.inspection</span></code></a></li>
 <li><a class="reference internal" href="#sklearn-linear-model"><code class="xref py py-mod docutils literal notranslate"><span class="pre">sklearn.linear_model</span></code></a></li>
 <li><a class="reference internal" href="#sklearn-metrics"><code class="xref py py-mod docutils literal notranslate"><span class="pre">sklearn.metrics</span></code></a></li>
 <li><a class="reference internal" href="#sklearn-model-selection"><code class="xref py py-mod docutils literal notranslate"><span class="pre">sklearn.model_selection</span></code></a></li>
@@ -472,6 +473,20 @@ function module.
 deprecated and will be removed in 1.6. <a class="reference external" href="https://github.com/scikit-learn/scikit-learn/pull/26830">#26830</a> by <a class="reference external" href="https://github.com/StefanieSenger">Stefanie Senger</a>.</p></li>
 </ul>
 </section>
+<section id="sklearn-inspection">
+<h3><a class="reference internal" href="../modules/classes.html#module-sklearn.inspection" title="sklearn.inspection"><code class="xref py py-mod docutils literal notranslate"><span class="pre">sklearn.inspection</span></code></a><a class="headerlink" href="#sklearn-inspection" title="Permalink to this heading">¶</a></h3>
+<ul class="simple">
+<li><p><span class="raw-html"><span class="badge badge-info">Enhancement</span></span>  <a class="reference internal" href="../modules/generated/sklearn.inspection.DecisionBoundaryDisplay.html#sklearn.inspection.DecisionBoundaryDisplay" title="sklearn.inspection.DecisionBoundaryDisplay"><code class="xref py py-class docutils literal notranslate"><span class="pre">inspection.DecisionBoundaryDisplay</span></code></a> now accepts a parameter
+<code class="docutils literal notranslate"><span class="pre">class_of_interest</span></code> to select the class of interest when plotting the response
+provided by <code class="docutils literal notranslate"><span class="pre">response_method=&quot;predict_proba&quot;</span></code> or
+<code class="docutils literal notranslate"><span class="pre">response_method=&quot;decision_function&quot;</span></code>. It allows to plot the decision boundary for
+both binary and multiclass classifiers.
+<a class="reference external" href="https://github.com/scikit-learn/scikit-learn/pull/27291">#27291</a> by <a class="reference external" href="https://github.com/glemaitre">Guillaume Lemaitre</a>.</p></li>
+<li><p><span class="raw-html"><span class="badge badge-warning">API Change</span></span>  <a class="reference internal" href="../modules/generated/sklearn.inspection.DecisionBoundaryDisplay.html#sklearn.inspection.DecisionBoundaryDisplay" title="sklearn.inspection.DecisionBoundaryDisplay"><code class="xref py py-class docutils literal notranslate"><span class="pre">inspection.DecisionBoundaryDisplay</span></code></a> raise an <code class="docutils literal notranslate"><span class="pre">AttributeError</span></code> instead
+of a <code class="docutils literal notranslate"><span class="pre">ValueError</span></code> when an estimator does not implement the requested response method.
+<a class="reference external" href="https://github.com/scikit-learn/scikit-learn/pull/27291">#27291</a> by <a class="reference external" href="https://github.com/glemaitre">Guillaume Lemaitre</a>.</p></li>
+</ul>
+</section>
 <section id="sklearn-linear-model">
 <h3><a class="reference internal" href="../modules/classes.html#module-sklearn.linear_model" title="sklearn.linear_model"><code class="xref py py-mod docutils literal notranslate"><span class="pre">sklearn.linear_model</span></code></a><a class="headerlink" href="#sklearn-linear-model" title="Permalink to this heading">¶</a></h3>
 <ul>
@@ -523,6 +538,11 @@ both axis is set to be 1 to get a square plot.
 <li><p><span class="raw-html"><span class="badge badge-info">Enhancement</span></span>  <a class="reference internal" href="../modules/generated/sklearn.metrics.accuracy_score.html#sklearn.metrics.accuracy_score" title="sklearn.metrics.accuracy_score"><code class="xref py py-func docutils literal notranslate"><span class="pre">sklearn.metrics.accuracy_score</span></code></a> and
 <a class="reference internal" href="../modules/generated/sklearn.metrics.zero_one_loss.html#sklearn.metrics.zero_one_loss" title="sklearn.metrics.zero_one_loss"><code class="xref py py-func docutils literal notranslate"><span class="pre">sklearn.metrics.zero_one_loss</span></code></a> now support Array API compatible inputs.
 <a class="reference external" href="https://github.com/scikit-learn/scikit-learn/pull/27137">#27137</a> by <a class="reference external" href="https://github.com/EdAbati">Edoardo Abati</a>.</p></li>
+<li><p><span class="raw-html"><span class="badge badge-danger">Fix</span></span>  Fixes a bug for metrics using <code class="docutils literal notranslate"><span class="pre">zero_division=np.nan</span></code>
+(e.g. <a class="reference internal" href="../modules/generated/sklearn.metrics.precision_score.html#sklearn.metrics.precision_score" title="sklearn.metrics.precision_score"><code class="xref py py-func docutils literal notranslate"><span class="pre">precision_score</span></code></a>) within a paralell loop
+(e.g. <a class="reference internal" href="../modules/generated/sklearn.model_selection.cross_val_score.html#sklearn.model_selection.cross_val_score" title="sklearn.model_selection.cross_val_score"><code class="xref py py-func docutils literal notranslate"><span class="pre">cross_val_score</span></code></a>) where the singleton for <code class="docutils literal notranslate"><span class="pre">np.nan</span></code>
+will be different in the sub-processes.
+<a class="reference external" href="https://github.com/scikit-learn/scikit-learn/pull/27573">#27573</a> by <a class="reference external" href="https://github.com/glemaitre">Guillaume Lemaitre</a>.</p></li>
 <li><p><span class="raw-html"><span class="badge badge-warning">API Change</span></span>  The <code class="docutils literal notranslate"><span class="pre">squared</span></code> parameter of <a class="reference internal" href="../modules/generated/sklearn.metrics.mean_squared_error.html#sklearn.metrics.mean_squared_error" title="sklearn.metrics.mean_squared_error"><code class="xref py py-func docutils literal notranslate"><span class="pre">metrics.mean_squared_error</span></code></a> and
 <a class="reference internal" href="../modules/generated/sklearn.metrics.mean_squared_log_error.html#sklearn.metrics.mean_squared_log_error" title="sklearn.metrics.mean_squared_log_error"><code class="xref py py-func docutils literal notranslate"><span class="pre">metrics.mean_squared_log_error</span></code></a> is deprecated and will be removed in 1.6.
 Use the new functions <a class="reference internal" href="../modules/generated/sklearn.metrics.root_mean_squared_error.html#sklearn.metrics.root_mean_squared_error" title="sklearn.metrics.root_mean_squared_error"><code class="xref py py-func docutils literal notranslate"><span class="pre">metrics.root_mean_squared_error</span></code></a> and

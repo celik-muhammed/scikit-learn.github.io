@@ -284,6 +284,20 @@ Changelog
   deprecated and will be removed in 1.6. :pr:`26830` by :user:`Stefanie Senger
   <StefanieSenger>`.
 
+:mod:`sklearn.inspection`
+.........................
+
+- |Enhancement| :class:`inspection.DecisionBoundaryDisplay` now accepts a parameter
+  `class_of_interest` to select the class of interest when plotting the response
+  provided by `response_method="predict_proba"` or
+  `response_method="decision_function"`. It allows to plot the decision boundary for
+  both binary and multiclass classifiers.
+  :pr:`27291` by :user:`Guillaume Lemaitre <glemaitre>`.
+
+- |API| :class:`inspection.DecisionBoundaryDisplay` raise an `AttributeError` instead
+  of a `ValueError` when an estimator does not implement the requested response method.
+  :pr:`27291` by :user:`Guillaume Lemaitre <glemaitre>`.
+
 :mod:`sklearn.linear_model`
 ...........................
 
@@ -339,6 +353,12 @@ Changelog
 - |Enhancement| :func:`sklearn.metrics.accuracy_score` and
   :func:`sklearn.metrics.zero_one_loss` now support Array API compatible inputs.
   :pr:`27137` by :user:`Edoardo Abati <EdAbati>`.
+
+- |Fix| Fixes a bug for metrics using `zero_division=np.nan`
+  (e.g. :func:`~metrics.precision_score`) within a paralell loop
+  (e.g. :func:`~model_selection.cross_val_score`) where the singleton for `np.nan`
+  will be different in the sub-processes.
+  :pr:`27573` by :user:`Guillaume Lemaitre <glemaitre>`.
 
 - |API| The `squared` parameter of :func:`metrics.mean_squared_error` and
   :func:`metrics.mean_squared_log_error` is deprecated and will be removed in 1.6.
