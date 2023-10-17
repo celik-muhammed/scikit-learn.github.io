@@ -192,25 +192,34 @@
 <h1><a class="reference internal" href="../classes.html#module-sklearn.metrics" title="sklearn.metrics"><code class="xref py py-mod docutils literal notranslate"><span class="pre">sklearn.metrics</span></code></a>.make_scorer<a class="headerlink" href="#sklearn-metrics-make-scorer" title="Permalink to this heading">¶</a></h1>
 <dl class="py function">
 <dt class="sig sig-object py" id="sklearn.metrics.make_scorer">
-<span class="sig-prename descclassname"><span class="pre">sklearn.metrics.</span></span><span class="sig-name descname"><span class="pre">make_scorer</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">score_func</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">greater_is_better</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">needs_proba</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">needs_threshold</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/scikit-learn/scikit-learn/blob/d91e1a5c4/sklearn/metrics/_scorer.py#L642"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#sklearn.metrics.make_scorer" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">sklearn.metrics.</span></span><span class="sig-name descname"><span class="pre">make_scorer</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">score_func</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">response_method</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">greater_is_better</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">needs_proba</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'deprecated'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">needs_threshold</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'deprecated'</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/scikit-learn/scikit-learn/blob/e3d67d5e5/sklearn/metrics/_scorer.py#L566"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#sklearn.metrics.make_scorer" title="Permalink to this definition">¶</a></dt>
 <dd><p>Make a scorer from a performance metric or loss function.</p>
-<p>This factory function wraps scoring functions for use in
-<a class="reference internal" href="sklearn.model_selection.GridSearchCV.html#sklearn.model_selection.GridSearchCV" title="sklearn.model_selection.GridSearchCV"><code class="xref py py-class docutils literal notranslate"><span class="pre">GridSearchCV</span></code></a> and
-<a class="reference internal" href="sklearn.model_selection.cross_val_score.html#sklearn.model_selection.cross_val_score" title="sklearn.model_selection.cross_val_score"><code class="xref py py-func docutils literal notranslate"><span class="pre">cross_val_score</span></code></a>.
-It takes a score function, such as <a class="reference internal" href="sklearn.metrics.accuracy_score.html#sklearn.metrics.accuracy_score" title="sklearn.metrics.accuracy_score"><code class="xref py py-func docutils literal notranslate"><span class="pre">accuracy_score</span></code></a>,
-<a class="reference internal" href="sklearn.metrics.mean_squared_error.html#sklearn.metrics.mean_squared_error" title="sklearn.metrics.mean_squared_error"><code class="xref py py-func docutils literal notranslate"><span class="pre">mean_squared_error</span></code></a>,
-<a class="reference internal" href="sklearn.metrics.adjusted_rand_score.html#sklearn.metrics.adjusted_rand_score" title="sklearn.metrics.adjusted_rand_score"><code class="xref py py-func docutils literal notranslate"><span class="pre">adjusted_rand_score</span></code></a> or
-<a class="reference internal" href="sklearn.metrics.average_precision_score.html#sklearn.metrics.average_precision_score" title="sklearn.metrics.average_precision_score"><code class="xref py py-func docutils literal notranslate"><span class="pre">average_precision_score</span></code></a>
-and returns a callable that scores an estimator’s output.
-The signature of the call is <code class="docutils literal notranslate"><span class="pre">(estimator,</span> <span class="pre">X,</span> <span class="pre">y)</span></code> where <code class="docutils literal notranslate"><span class="pre">estimator</span></code>
-is the model to be evaluated, <code class="docutils literal notranslate"><span class="pre">X</span></code> is the data and <code class="docutils literal notranslate"><span class="pre">y</span></code> is the
-ground truth labeling (or <code class="docutils literal notranslate"><span class="pre">None</span></code> in the case of unsupervised models).</p>
+<p>A scorer is a wrapper around an arbitrary metric or loss function that is called
+with the signature <code class="docutils literal notranslate"><span class="pre">scorer(estimator,</span> <span class="pre">X,</span> <span class="pre">y_true,</span> <span class="pre">**kwargs)</span></code>.</p>
+<p>It is accepted in all scikit-learn estimators or functions allowing a <code class="docutils literal notranslate"><span class="pre">scoring</span></code>
+parameter.</p>
+<p>The parameter <code class="docutils literal notranslate"><span class="pre">response_method</span></code> allows to specify which method of the estimator
+should be used to feed the scoring/loss function.</p>
 <p>Read more in the <a class="reference internal" href="../model_evaluation.html#scoring"><span class="std std-ref">User Guide</span></a>.</p>
 <dl class="field-list">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><dl>
 <dt><strong>score_func</strong><span class="classifier">callable</span></dt><dd><p>Score function (or loss function) with signature
 <code class="docutils literal notranslate"><span class="pre">score_func(y,</span> <span class="pre">y_pred,</span> <span class="pre">**kwargs)</span></code>.</p>
+</dd>
+<dt><strong>response_method</strong><span class="classifier">{“predict_proba”, “decision_function”, “predict”} or             list/tuple of such str, default=None</span></dt><dd><p>Specifies the response method to use get prediction from an estimator
+(i.e. <a class="reference internal" href="../../glossary.html#term-predict_proba"><span class="xref std std-term">predict_proba</span></a>, <a class="reference internal" href="../../glossary.html#term-decision_function"><span class="xref std std-term">decision_function</span></a> or
+<a class="reference internal" href="../../glossary.html#term-predict"><span class="xref std std-term">predict</span></a>). Possible choices are:</p>
+<ul class="simple">
+<li><p>if <code class="docutils literal notranslate"><span class="pre">str</span></code>, it corresponds to the name to the method to return;</p></li>
+<li><p>if a list or tuple of <code class="docutils literal notranslate"><span class="pre">str</span></code>, it provides the method names in order of
+preference. The method returned corresponds to the first method in
+the list and which is implemented by <code class="docutils literal notranslate"><span class="pre">estimator</span></code>.</p></li>
+<li><p>if <code class="docutils literal notranslate"><span class="pre">None</span></code>, it is equivalent to <code class="docutils literal notranslate"><span class="pre">&quot;predict&quot;</span></code>.</p></li>
+</ul>
+<div class="versionadded">
+<p><span class="versionmodified added">New in version 1.4.</span></p>
+</div>
 </dd>
 <dt><strong>greater_is_better</strong><span class="classifier">bool, default=True</span></dt><dd><p>Whether <code class="docutils literal notranslate"><span class="pre">score_func</span></code> is a score function (default), meaning high is
 good, or a loss function, meaning low is good. In the latter case, the
@@ -221,6 +230,10 @@ estimates out of a classifier.</p>
 <p>If True, for binary <code class="docutils literal notranslate"><span class="pre">y_true</span></code>, the score function is supposed to accept
 a 1D <code class="docutils literal notranslate"><span class="pre">y_pred</span></code> (i.e., probability of the positive class, shape
 <code class="docutils literal notranslate"><span class="pre">(n_samples,)</span></code>).</p>
+<div class="deprecated">
+<p><span class="versionmodified deprecated">Deprecated since version 1.4: </span><code class="docutils literal notranslate"><span class="pre">needs_proba</span></code> is deprecated in version 1.4 and will be removed in
+1.6. Use <code class="docutils literal notranslate"><span class="pre">response_method=&quot;predict_proba&quot;</span></code> instead.</p>
+</div>
 </dd>
 <dt><strong>needs_threshold</strong><span class="classifier">bool, default=False</span></dt><dd><p>Whether <code class="docutils literal notranslate"><span class="pre">score_func</span></code> takes a continuous decision certainty.
 This only works for binary classification using estimators that
@@ -230,6 +243,11 @@ a 1D <code class="docutils literal notranslate"><span class="pre">y_pred</span><
 function, shape <code class="docutils literal notranslate"><span class="pre">(n_samples,)</span></code>).</p>
 <p>For example <code class="docutils literal notranslate"><span class="pre">average_precision</span></code> or the area under the roc curve
 can not be computed using discrete predictions alone.</p>
+<div class="deprecated">
+<p><span class="versionmodified deprecated">Deprecated since version 1.4: </span><code class="docutils literal notranslate"><span class="pre">needs_threshold</span></code> is deprecated in version 1.4 and will be removed
+in 1.6. Use <code class="docutils literal notranslate"><span class="pre">response_method=(&quot;decision_function&quot;,</span> <span class="pre">&quot;predict_proba&quot;)</span></code>
+instead to preserve the same behaviour.</p>
+</div>
 </dd>
 <dt><strong>**kwargs</strong><span class="classifier">additional arguments</span></dt><dd><p>Additional parameters to be passed to <code class="docutils literal notranslate"><span class="pre">score_func</span></code>.</p>
 </dd>
@@ -242,20 +260,11 @@ can not be computed using discrete predictions alone.</p>
 </dl>
 </dd>
 </dl>
-<p class="rubric">Notes</p>
-<p>If <code class="docutils literal notranslate"><span class="pre">needs_proba=False</span></code> and <code class="docutils literal notranslate"><span class="pre">needs_threshold=False</span></code>, the score
-function is supposed to accept the output of <a class="reference internal" href="../../glossary.html#term-predict"><span class="xref std std-term">predict</span></a>. If
-<code class="docutils literal notranslate"><span class="pre">needs_proba=True</span></code>, the score function is supposed to accept the
-output of <a class="reference internal" href="../../glossary.html#term-predict_proba"><span class="xref std std-term">predict_proba</span></a> (For binary <code class="docutils literal notranslate"><span class="pre">y_true</span></code>, the score function is
-supposed to accept probability of the positive class). If
-<code class="docutils literal notranslate"><span class="pre">needs_threshold=True</span></code>, the score function is supposed to accept the
-output of <a class="reference internal" href="../../glossary.html#term-decision_function"><span class="xref std std-term">decision_function</span></a> or <a class="reference internal" href="../../glossary.html#term-predict_proba"><span class="xref std std-term">predict_proba</span></a> when
-<a class="reference internal" href="../../glossary.html#term-decision_function"><span class="xref std std-term">decision_function</span></a> is not present.</p>
 <p class="rubric">Examples</p>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">sklearn.metrics</span> <span class="kn">import</span> <span class="n">fbeta_score</span><span class="p">,</span> <span class="n">make_scorer</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">ftwo_scorer</span> <span class="o">=</span> <span class="n">make_scorer</span><span class="p">(</span><span class="n">fbeta_score</span><span class="p">,</span> <span class="n">beta</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">ftwo_scorer</span>
-<span class="go">make_scorer(fbeta_score, beta=2)</span>
+<span class="go">make_scorer(fbeta_score, response_method=&#39;predict&#39;, beta=2)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">sklearn.model_selection</span> <span class="kn">import</span> <span class="n">GridSearchCV</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">sklearn.svm</span> <span class="kn">import</span> <span class="n">LinearSVC</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">grid</span> <span class="o">=</span> <span class="n">GridSearchCV</span><span class="p">(</span><span class="n">LinearSVC</span><span class="p">(),</span> <span class="n">param_grid</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;C&#39;</span><span class="p">:</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">10</span><span class="p">]},</span>

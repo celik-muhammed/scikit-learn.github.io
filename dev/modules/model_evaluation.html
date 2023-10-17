@@ -552,9 +552,15 @@ in the example below)</p></li>
 the default) or a loss (<code class="docutils literal notranslate"><span class="pre">greater_is_better=False</span></code>).  If a loss, the output
 of the python function is negated by the scorer object, conforming to
 the cross validation convention that scorers return higher values for better models.</p></li>
-<li><p>for classification metrics only: whether the python function you provided requires continuous decision
-certainties (<code class="docutils literal notranslate"><span class="pre">needs_threshold=True</span></code>).  The default value is
-False.</p></li>
+<li><p>for classification metrics only: whether the python function you provided requires
+continuous decision certainties. If the scoring function only accepts probability
+estimates (e.g. <code class="xref py py-func docutils literal notranslate"><span class="pre">metrics.log_loss</span></code>) then one needs to set the parameter
+<code class="docutils literal notranslate"><span class="pre">response_method</span></code>, thus in this case <code class="docutils literal notranslate"><span class="pre">response_method=&quot;predict_proba&quot;</span></code>. Some scoring
+function do not necessarily require probability estimates but rather non-thresholded
+decision values (e.g. <code class="xref py py-func docutils literal notranslate"><span class="pre">metrics.roc_auc_score</span></code>). In this case, one provides a
+list such as <code class="docutils literal notranslate"><span class="pre">response_method=[&quot;decision_function&quot;,</span> <span class="pre">&quot;predict_proba&quot;]</span></code>. In this case,
+the scorer will use the first available method, in the order given in the list,
+to compute the scores.</p></li>
 <li><p>any additional parameters, such as <code class="docutils literal notranslate"><span class="pre">beta</span></code> or <code class="docutils literal notranslate"><span class="pre">labels</span></code> in <a class="reference internal" href="generated/sklearn.metrics.f1_score.html#sklearn.metrics.f1_score" title="sklearn.metrics.f1_score"><code class="xref py py-func docutils literal notranslate"><span class="pre">f1_score</span></code></a>.</p></li>
 </ul>
 <p>Here is an example of building custom scorers, and of using the
