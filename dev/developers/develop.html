@@ -201,6 +201,7 @@
 </li>
 <li><a class="reference internal" href="#developer-api-for-set-output">Developer API for <code class="docutils literal notranslate"><span class="pre">set_output</span></code></a></li>
 <li><a class="reference internal" href="#developer-api-for-check-is-fitted">Developer API for <code class="docutils literal notranslate"><span class="pre">check_is_fitted</span></code></a></li>
+<li><a class="reference internal" href="#developer-api-for-html-representation">Developer API for HTML representation</a></li>
 <li><a class="reference internal" href="#coding-guidelines">Coding guidelines</a><ul>
 <li><a class="reference internal" href="#input-validation">Input validation</a></li>
 <li><a class="reference internal" href="#random-numbers">Random Numbers</a></li>
@@ -873,6 +874,37 @@ method taking no input and returning a boolean. If this method exists,
 <a class="reference internal" href="../modules/generated/sklearn.utils.validation.check_is_fitted.html#sklearn.utils.validation.check_is_fitted" title="sklearn.utils.validation.check_is_fitted"><code class="xref py py-func docutils literal notranslate"><span class="pre">check_is_fitted</span></code></a> simply returns its output.</p>
 <p>See <a class="reference internal" href="../auto_examples/developing_estimators/sklearn_is_fitted.html#sphx-glr-auto-examples-developing-estimators-sklearn-is-fitted-py"><span class="std std-ref">__sklearn_is_fitted__ as Developer API</span></a>
 for an example on how to use the API.</p>
+</section>
+<section id="developer-api-for-html-representation">
+<h2>Developer API for HTML representation<a class="headerlink" href="#developer-api-for-html-representation" title="Link to this heading">¶</a></h2>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>The HTML representation API is experimental and the API is subject to change.</p>
+</div>
+<p>Estimators inheriting from <a class="reference internal" href="../modules/generated/sklearn.base.BaseEstimator.html#sklearn.base.BaseEstimator" title="sklearn.base.BaseEstimator"><code class="xref py py-class docutils literal notranslate"><span class="pre">BaseEstimator</span></code></a> display
+a HTML representation of themselves in interactive programming
+environments such as Jupyter notebooks. For instance, we can display this HTML
+diagram:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">sklearn.base</span> <span class="kn">import</span> <span class="n">BaseEstimator</span>
+
+<span class="n">BaseEstimator</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>The raw HTML representation is obtained by invoking the function
+<a class="reference internal" href="../modules/generated/sklearn.utils.estimator_html_repr.html#sklearn.utils.estimator_html_repr" title="sklearn.utils.estimator_html_repr"><code class="xref py py-func docutils literal notranslate"><span class="pre">estimator_html_repr</span></code></a> on an estimator instance.</p>
+<p>To customize the URL linking to an estimator’s documentation (i.e. when clicking on the
+“?” icon), override the <code class="docutils literal notranslate"><span class="pre">_doc_link_module</span></code> and <code class="docutils literal notranslate"><span class="pre">_doc_link_template</span></code> attributes. In
+addition, you can provide a <code class="docutils literal notranslate"><span class="pre">_doc_link_url_param_generator</span></code> method. Set
+<code class="docutils literal notranslate"><span class="pre">_doc_link_module</span></code> to the name of the (top level) module that contains your estimator.
+If the value does not match the top level module name, the HTML representation will not
+contain a link to the documentation. For scikit-learn estimators this is set to
+<code class="docutils literal notranslate"><span class="pre">&quot;sklearn&quot;</span></code>.</p>
+<p>The <code class="docutils literal notranslate"><span class="pre">_doc_link_template</span></code> is used to construct the final URL. By default, it can contain
+two variables: <code class="docutils literal notranslate"><span class="pre">estimator_module</span></code> (the full name of the module containing the estimator)
+and <code class="docutils literal notranslate"><span class="pre">estimator_name</span></code> (the class name of the estimator). If you need more variables you
+should implement the <code class="docutils literal notranslate"><span class="pre">_doc_link_url_param_generator</span></code> method which should return a
+dictionary of the variables and their values. This dictionary will be used to render the
+<code class="docutils literal notranslate"><span class="pre">_doc_link_template</span></code>.</p>
 </section>
 <section id="coding-guidelines">
 <span id="id4"></span><h2>Coding guidelines<a class="headerlink" href="#coding-guidelines" title="Link to this heading">¶</a></h2>
