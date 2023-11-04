@@ -191,7 +191,7 @@
 <h1><a class="reference internal" href="../classes.html#module-sklearn.metrics" title="sklearn.metrics"><code class="xref py py-mod docutils literal notranslate"><span class="pre">sklearn.metrics</span></code></a>.fbeta_score<a class="headerlink" href="#sklearn-metrics-fbeta-score" title="Link to this heading">¶</a></h1>
 <dl class="py function">
 <dt class="sig sig-object py" id="sklearn.metrics.fbeta_score">
-<span class="sig-prename descclassname"><span class="pre">sklearn.metrics.</span></span><span class="sig-name descname"><span class="pre">fbeta_score</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">y_true</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y_pred</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">beta</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">labels</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pos_label</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">average</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'binary'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sample_weight</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">zero_division</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'warn'</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/scikit-learn/scikit-learn/blob/3737909f1/sklearn/metrics/_classification.py#L1255"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#sklearn.metrics.fbeta_score" title="Link to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">sklearn.metrics.</span></span><span class="sig-name descname"><span class="pre">fbeta_score</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">y_true</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y_pred</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">beta</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">labels</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pos_label</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">average</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'binary'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sample_weight</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">zero_division</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'warn'</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/scikit-learn/scikit-learn/blob/f284ef2df/sklearn/metrics/_classification.py#L1269"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#sklearn.metrics.fbeta_score" title="Link to this definition">¶</a></dt>
 <dd><p>Compute the F-beta score.</p>
 <p>The F-beta score is the weighted harmonic mean of precision and recall,
 reaching its optimal value at 1 and its worst value at 0.</p>
@@ -201,6 +201,15 @@ precision importance. <code class="docutils literal notranslate"><span class="pr
 as important as precision, while <code class="docutils literal notranslate"><span class="pre">beta</span> <span class="pre">=</span> <span class="pre">0.5</span></code> does the opposite.
 Asymptotically, <code class="docutils literal notranslate"><span class="pre">beta</span> <span class="pre">-&gt;</span> <span class="pre">+inf</span></code> considers only recall, and <code class="docutils literal notranslate"><span class="pre">beta</span> <span class="pre">-&gt;</span> <span class="pre">0</span></code>
 only precision.</p>
+<p>Support beyond term:<code class="docutils literal notranslate"><span class="pre">binary</span></code> targets is achieved by treating <a class="reference internal" href="../../glossary.html#term-multiclass"><span class="xref std std-term">multiclass</span></a>
+and <a class="reference internal" href="../../glossary.html#term-multilabel"><span class="xref std std-term">multilabel</span></a> data as a collection of binary problems, one for each
+label. For the <a class="reference internal" href="../../glossary.html#term-binary"><span class="xref std std-term">binary</span></a> case, setting <code class="docutils literal notranslate"><span class="pre">average='binary'</span></code> will return
+F-beta score for <code class="docutils literal notranslate"><span class="pre">pos_label</span></code>. If <code class="docutils literal notranslate"><span class="pre">average</span></code> is not <code class="docutils literal notranslate"><span class="pre">'binary'</span></code>, <code class="docutils literal notranslate"><span class="pre">pos_label</span></code> is
+ignored and F-beta score for both classes are computed, then averaged or both
+returned (when <code class="docutils literal notranslate"><span class="pre">average=None</span></code>). Similarly, for <a class="reference internal" href="../../glossary.html#term-multiclass"><span class="xref std std-term">multiclass</span></a> and
+<a class="reference internal" href="../../glossary.html#term-multilabel"><span class="xref std std-term">multilabel</span></a> targets, F-beta score for all <code class="docutils literal notranslate"><span class="pre">labels</span></code> are either returned or
+averaged depending on the <code class="docutils literal notranslate"><span class="pre">average</span></code> parameter. Use <code class="docutils literal notranslate"><span class="pre">labels</span></code> specify the set of
+labels to calculate F-beta score for.</p>
 <p>Read more in the <a class="reference internal" href="../model_evaluation.html#precision-recall-f-measure-metrics"><span class="std std-ref">User Guide</span></a>.</p>
 <dl class="field-list">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -213,19 +222,18 @@ only precision.</p>
 </dd>
 <dt><strong>labels</strong><span class="classifier">array-like, default=None</span></dt><dd><p>The set of labels to include when <code class="docutils literal notranslate"><span class="pre">average</span> <span class="pre">!=</span> <span class="pre">'binary'</span></code>, and their
 order if <code class="docutils literal notranslate"><span class="pre">average</span> <span class="pre">is</span> <span class="pre">None</span></code>. Labels present in the data can be
-excluded, for example to calculate a multiclass average ignoring a
-majority negative class, while labels not present in the data will
-result in 0 components in a macro average. For multilabel targets,
-labels are column indices. By default, all labels in <code class="docutils literal notranslate"><span class="pre">y_true</span></code> and
-<code class="docutils literal notranslate"><span class="pre">y_pred</span></code> are used in sorted order.</p>
+excluded, for example in multiclass classification to exclude a “negative
+class”. Labels not present in the data can be included and will be
+“assigned” 0 samples. For multilabel targets, labels are column indices.
+By default, all labels in <code class="docutils literal notranslate"><span class="pre">y_true</span></code> and <code class="docutils literal notranslate"><span class="pre">y_pred</span></code> are used in sorted order.</p>
 <div class="versionchanged">
 <p><span class="versionmodified changed">Changed in version 0.17: </span>Parameter <code class="docutils literal notranslate"><span class="pre">labels</span></code> improved for multiclass problem.</p>
 </div>
 </dd>
-<dt><strong>pos_label</strong><span class="classifier">int, float, bool or str, default=1</span></dt><dd><p>The class to report if <code class="docutils literal notranslate"><span class="pre">average='binary'</span></code> and the data is binary.
-If the data are multiclass or multilabel, this will be ignored;
-setting <code class="docutils literal notranslate"><span class="pre">labels=[pos_label]</span></code> and <code class="docutils literal notranslate"><span class="pre">average</span> <span class="pre">!=</span> <span class="pre">'binary'</span></code> will report
-scores for that label only.</p>
+<dt><strong>pos_label</strong><span class="classifier">int, float, bool or str, default=1</span></dt><dd><p>The class to report if <code class="docutils literal notranslate"><span class="pre">average='binary'</span></code> and the data is binary,
+otherwise this parameter is ignored.
+For multiclass or multilabel targets, set <code class="docutils literal notranslate"><span class="pre">labels=[pos_label]</span></code> and
+<code class="docutils literal notranslate"><span class="pre">average</span> <span class="pre">!=</span> <span class="pre">'binary'</span></code> to report metrics for one label only.</p>
 </dd>
 <dt><strong>average</strong><span class="classifier">{‘micro’, ‘macro’, ‘samples’, ‘weighted’, ‘binary’} or None,             default=’binary’</span></dt><dd><p>This parameter is required for multiclass/multilabel targets.
 If <code class="docutils literal notranslate"><span class="pre">None</span></code>, the scores for each class are returned. Otherwise, this
