@@ -236,8 +236,8 @@ The SA dataset contains 41 features out of which 3 are categorical:
 
  .. code-block:: none
 
-    Duration for LOF: 1.76 s
-    Duration for IForest: 0.26 s
+    Duration for LOF: 1.88 s
+    Duration for IForest: 0.28 s
 
 
 
@@ -305,8 +305,8 @@ samples encoded with label 2 and outliers as those with label 4.
 
  .. code-block:: none
 
-    Duration for LOF: 1.74 s
-    Duration for IForest: 0.20 s
+    Duration for LOF: 1.90 s
+    Duration for IForest: 0.21 s
 
 
 
@@ -322,7 +322,7 @@ Here we convert it into an outlier detection problem by regarding houses with
 price over 70 USD/sqft. To make the problem easier, we drop intermediate
 prices between 40 and 70 USD/sqft.
 
-.. GENERATED FROM PYTHON SOURCE LINES 200-221
+.. GENERATED FROM PYTHON SOURCE LINES 200-219
 
 .. code-block:: default
 
@@ -330,9 +330,7 @@ prices between 40 and 70 USD/sqft.
 
     from sklearn.datasets import fetch_openml
 
-    X, y = fetch_openml(
-        name="ames_housing", version=1, return_X_y=True, as_frame=True, parser="pandas"
-    )
+    X, y = fetch_openml(name="ames_housing", version=1, return_X_y=True, as_frame=True)
     y = y.div(X["Lot_Area"])
 
     # None values in pandas 1.5.1 were mapped to np.nan in pandas 2.0.1
@@ -359,7 +357,7 @@ prices between 40 and 70 USD/sqft.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 222-227
+.. GENERATED FROM PYTHON SOURCE LINES 220-225
 
 .. code-block:: default
 
@@ -381,13 +379,13 @@ prices between 40 and 70 USD/sqft.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 228-231
+.. GENERATED FROM PYTHON SOURCE LINES 226-229
 
 The dataset contains 46 categorical features. In this case it is easier use a
 :class:`~sklearn.compose.make_column_selector` to find them instead of passing
 a list made by hand.
 
-.. GENERATED FROM PYTHON SOURCE LINES 233-248
+.. GENERATED FROM PYTHON SOURCE LINES 231-246
 
 .. code-block:: default
 
@@ -414,13 +412,13 @@ a list made by hand.
 
  .. code-block:: none
 
-    Duration for LOF: 32.42 s
+    Duration for LOF: 33.50 s
     Duration for IForest: 0.21 s
 
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 249-257
+.. GENERATED FROM PYTHON SOURCE LINES 247-255
 
 Cardiotocography dataset
 ------------------------
@@ -431,13 +429,11 @@ pattern encoded with labels from 1 to 10. Here we set class 3 (the minority
 class) to represent the outliers. It contains 30 numerical features, some of
 which are binary encoded and some are continuous.
 
-.. GENERATED FROM PYTHON SOURCE LINES 259-269
+.. GENERATED FROM PYTHON SOURCE LINES 257-265
 
 .. code-block:: default
 
-    X, y = fetch_openml(
-        name="cardiotocography", version=1, return_X_y=True, as_frame=False, parser="pandas"
-    )
+    X, y = fetch_openml(name="cardiotocography", version=1, return_X_y=True, as_frame=False)
     X_cardiotocography = X  # save X for later use
     s = y == "3"
     y = s.astype(np.int32)
@@ -458,7 +454,7 @@ which are binary encoded and some are continuous.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 270-279
+.. GENERATED FROM PYTHON SOURCE LINES 266-275
 
 .. code-block:: default
 
@@ -485,7 +481,7 @@ which are binary encoded and some are continuous.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 280-288
+.. GENERATED FROM PYTHON SOURCE LINES 276-284
 
 Plot and interpret results
 ==========================
@@ -496,7 +492,7 @@ curve on the top-left of the plot and the area under curve (AUC) close to 1.
 The diagonal dashed line represents a random classification of outliers and
 inliers.
 
-.. GENERATED FROM PYTHON SOURCE LINES 290-315
+.. GENERATED FROM PYTHON SOURCE LINES 286-311
 
 .. code-block:: default
 
@@ -537,7 +533,7 @@ inliers.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 316-331
+.. GENERATED FROM PYTHON SOURCE LINES 312-327
 
 We observe that once the number of neighbors is tuned, LOF and IForest perform
 similarly in terms of ROC AUC for the forestcover and cardiotocography
@@ -555,7 +551,7 @@ method to avoid granting a privilege to non-binary features and that is robust
 enough to outliers so that the task of finding them does not become too
 difficult.
 
-.. GENERATED FROM PYTHON SOURCE LINES 333-360
+.. GENERATED FROM PYTHON SOURCE LINES 329-356
 
 .. code-block:: default
 
@@ -598,7 +594,7 @@ difficult.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 361-366
+.. GENERATED FROM PYTHON SOURCE LINES 357-362
 
 We observe that the number of neighbors has a big impact on the performance of
 the model. If one has access to (at least some) ground truth labels, it is
@@ -606,7 +602,7 @@ then important to tune `n_neighbors` accordingly. A convenient way to do so is
 to explore values for `n_neighbors` of the order of magnitud of the expected
 contamination.
 
-.. GENERATED FROM PYTHON SOURCE LINES 368-400
+.. GENERATED FROM PYTHON SOURCE LINES 364-396
 
 .. code-block:: default
 
@@ -654,7 +650,7 @@ contamination.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 401-424
+.. GENERATED FROM PYTHON SOURCE LINES 397-420
 
 On the one hand, :class:`~sklearn.preprocessing.RobustScaler` scales each
 feature independently by using the interquartile range (IQR) by default, which
@@ -680,7 +676,7 @@ respective documentation for more details.
 
 Note that the optimal preprocessing depends on the dataset, as shown below:
 
-.. GENERATED FROM PYTHON SOURCE LINES 426-454
+.. GENERATED FROM PYTHON SOURCE LINES 422-450
 
 .. code-block:: default
 
@@ -727,7 +723,7 @@ Note that the optimal preprocessing depends on the dataset, as shown below:
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** (1 minutes 15.058 seconds)
+   **Total running time of the script:** (1 minutes 19.612 seconds)
 
 
 .. _sphx_glr_download_auto_examples_miscellaneous_plot_outlier_detection_bench.py:

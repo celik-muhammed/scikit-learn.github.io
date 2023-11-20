@@ -70,16 +70,14 @@ with the target variable (``survived``):
 - ``random_cat`` is a low cardinality categorical variable (3 possible
   values).
 
-.. GENERATED FROM PYTHON SOURCE LINES 43-59
+.. GENERATED FROM PYTHON SOURCE LINES 43-57
 
 .. code-block:: default
 
     from sklearn.datasets import fetch_openml
     from sklearn.model_selection import train_test_split
 
-    X, y = fetch_openml(
-        "titanic", version=1, as_frame=True, return_X_y=True, parser="pandas"
-    )
+    X, y = fetch_openml("titanic", version=1, as_frame=True, return_X_y=True)
     rng = np.random.RandomState(seed=42)
     X["random_cat"] = rng.randint(3, size=X.shape[0])
     X["random_num"] = rng.randn(X.shape[0])
@@ -97,7 +95,7 @@ with the target variable (``survived``):
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 60-67
+.. GENERATED FROM PYTHON SOURCE LINES 58-65
 
 We define a predictive model based on a random forest. Therefore, we will make
 the following preprocessing steps:
@@ -107,7 +105,7 @@ the following preprocessing steps:
 - use :class:`~sklearn.impute.SimpleImputer` to fill missing values for
   numerical features using a mean strategy.
 
-.. GENERATED FROM PYTHON SOURCE LINES 67-94
+.. GENERATED FROM PYTHON SOURCE LINES 65-92
 
 .. code-block:: default
 
@@ -586,7 +584,7 @@ the following preprocessing steps:
     <br />
     <br />
 
-.. GENERATED FROM PYTHON SOURCE LINES 95-115
+.. GENERATED FROM PYTHON SOURCE LINES 93-113
 
 Accuracy of the Model
 ---------------------
@@ -609,7 +607,7 @@ However let's keep our high capacity random forest model for now so as to
 illustrate some pitfalls with feature importance on variables with many
 unique values.
 
-.. GENERATED FROM PYTHON SOURCE LINES 115-119
+.. GENERATED FROM PYTHON SOURCE LINES 113-117
 
 .. code-block:: default
 
@@ -631,7 +629,7 @@ unique values.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 120-141
+.. GENERATED FROM PYTHON SOURCE LINES 118-139
 
 Tree's Feature Importance from Mean Decrease in Impurity (MDI)
 --------------------------------------------------------------
@@ -655,7 +653,7 @@ expect both random features to have a null importance.
 The fact that we use training set statistics explains why both the
 `random_num` and `random_cat` features have a non-null importance.
 
-.. GENERATED FROM PYTHON SOURCE LINES 141-149
+.. GENERATED FROM PYTHON SOURCE LINES 139-147
 
 .. code-block:: default
 
@@ -674,7 +672,7 @@ The fact that we use training set statistics explains why both the
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 150-154
+.. GENERATED FROM PYTHON SOURCE LINES 148-152
 
 .. code-block:: default
 
@@ -694,7 +692,7 @@ The fact that we use training set statistics explains why both the
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 155-163
+.. GENERATED FROM PYTHON SOURCE LINES 153-161
 
 As an alternative, the permutation importances of ``rf`` are computed on a
 held out test set. This shows that the low cardinality categorical feature,
@@ -705,7 +703,7 @@ model on the test set.
 Also note that both random features have very low importances (close to 0) as
 expected.
 
-.. GENERATED FROM PYTHON SOURCE LINES 163-180
+.. GENERATED FROM PYTHON SOURCE LINES 161-178
 
 .. code-block:: default
 
@@ -738,7 +736,7 @@ expected.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 181-186
+.. GENERATED FROM PYTHON SOURCE LINES 179-184
 
 It is also possible to compute the permutation importances on the training
 set. This reveals that `random_num` and `random_cat` get a significantly
@@ -746,7 +744,7 @@ higher importance ranking than when computed on the test set. The difference
 between those two plots is a confirmation that the RF model has enough
 capacity to use that random numerical and categorical features to overfit.
 
-.. GENERATED FROM PYTHON SOURCE LINES 186-201
+.. GENERATED FROM PYTHON SOURCE LINES 184-199
 
 .. code-block:: default
 
@@ -777,12 +775,12 @@ capacity to use that random numerical and categorical features to overfit.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 202-204
+.. GENERATED FROM PYTHON SOURCE LINES 200-202
 
 We can further retry the experiment by limiting the capacity of the trees
 to overfit by setting `min_samples_leaf` at 20 data points.
 
-.. GENERATED FROM PYTHON SOURCE LINES 204-206
+.. GENERATED FROM PYTHON SOURCE LINES 202-204
 
 .. code-block:: default
 
@@ -1238,13 +1236,13 @@ to overfit by setting `min_samples_leaf` at 20 data points.
     <br />
     <br />
 
-.. GENERATED FROM PYTHON SOURCE LINES 207-210
+.. GENERATED FROM PYTHON SOURCE LINES 205-208
 
 Observing the accuracy score on the training and testing set, we observe that
 the two metrics are very similar now. Therefore, our model is not overfitting
 anymore. We can then check the permutation importances with this new model.
 
-.. GENERATED FROM PYTHON SOURCE LINES 210-213
+.. GENERATED FROM PYTHON SOURCE LINES 208-211
 
 .. code-block:: default
 
@@ -1265,7 +1263,7 @@ anymore. We can then check the permutation importances with this new model.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 214-222
+.. GENERATED FROM PYTHON SOURCE LINES 212-220
 
 .. code-block:: default
 
@@ -1284,7 +1282,7 @@ anymore. We can then check the permutation importances with this new model.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 223-232
+.. GENERATED FROM PYTHON SOURCE LINES 221-230
 
 .. code-block:: default
 
@@ -1304,7 +1302,7 @@ anymore. We can then check the permutation importances with this new model.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 233-240
+.. GENERATED FROM PYTHON SOURCE LINES 231-238
 
 .. code-block:: default
 
@@ -1339,7 +1337,7 @@ anymore. We can then check the permutation importances with this new model.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 241-245
+.. GENERATED FROM PYTHON SOURCE LINES 239-243
 
 Now, we can observe that on both sets, the `random_num` and `random_cat`
 features have a lower importance compared to the overfitting random forest.
@@ -1349,7 +1347,7 @@ still valid.
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** (0 minutes 4.793 seconds)
+   **Total running time of the script:** (0 minutes 5.313 seconds)
 
 
 .. _sphx_glr_download_auto_examples_inspection_plot_permutation_importance.py:
