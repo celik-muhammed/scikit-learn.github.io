@@ -226,7 +226,7 @@ of
 <a class="reference internal" href="../../modules/generated/sklearn.ensemble.RandomForestRegressor.html#sklearn.ensemble.RandomForestRegressor" title="sklearn.ensemble.RandomForestRegressor"><code class="xref py py-class docutils literal notranslate"><span class="pre">RandomForestRegressor</span></code></a> on the full original dataset
 is then compared the performance on the altered datasets with the artificially
 missing values imputed using different techniques.</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># Authors: Maria Telenczuk  &lt;https://github.com/maikia&gt;</span>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Authors: Maria Telenczuk  &lt;https://github.com/maikia&gt;</span>
 <span class="c1"># License: BSD 3 clause</span>
 </pre></div>
 </div>
@@ -239,7 +239,7 @@ dataset is much larger with 20640 entries and 8 features. It needs to be
 downloaded. We will only use the first 400 entries for the sake of speeding
 up the calculations but feel free to use the whole dataset.</p>
 </div></blockquote>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 
 <span class="kn">from</span> <span class="nn">sklearn.datasets</span> <span class="kn">import</span> <a href="../../modules/generated/sklearn.datasets.fetch_california_housing.html#sklearn.datasets.fetch_california_housing" title="sklearn.datasets.fetch_california_housing" class="sphx-glr-backref-module-sklearn-datasets sphx-glr-backref-type-py-function"><span class="n">fetch_california_housing</span></a><span class="p">,</span> <a href="../../modules/generated/sklearn.datasets.load_diabetes.html#sklearn.datasets.load_diabetes" title="sklearn.datasets.load_diabetes" class="sphx-glr-backref-module-sklearn-datasets sphx-glr-backref-type-py-function"><span class="n">load_diabetes</span></a>
 
@@ -282,7 +282,7 @@ up the calculations but feel free to use the whole dataset.</p>
 <h2>Impute the missing data and score<a class="headerlink" href="#impute-the-missing-data-and-score" title="Link to this heading">¶</a></h2>
 <p>Now we will write a function which will score the results on the differently
 imputed data. Let’s look at each imputer separately:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">rng</span> <span class="o">=</span> <a href="https://numpy.org/doc/stable/reference/random/legacy.html#numpy.random.RandomState" title="numpy.random.RandomState" class="sphx-glr-backref-module-numpy-random sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">RandomState</span></a><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">rng</span> <span class="o">=</span> <a href="https://numpy.org/doc/stable/reference/random/legacy.html#numpy.random.RandomState" title="numpy.random.RandomState" class="sphx-glr-backref-module-numpy-random sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">RandomState</span></a><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
 
 <span class="kn">from</span> <span class="nn">sklearn.ensemble</span> <span class="kn">import</span> <a href="../../modules/generated/sklearn.ensemble.RandomForestRegressor.html#sklearn.ensemble.RandomForestRegressor" title="sklearn.ensemble.RandomForestRegressor" class="sphx-glr-backref-module-sklearn-ensemble sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">RandomForestRegressor</span></a>
 
@@ -301,7 +301,7 @@ imputed data. Let’s look at each imputer separately:</p>
 <p>In addition to imputing the missing values, the imputers have an
 <code class="docutils literal notranslate"><span class="pre">add_indicator</span></code> parameter that marks the values that were missing, which
 might carry some information.</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">get_scores_for_imputer</span><span class="p">(</span><span class="n">imputer</span><span class="p">,</span> <span class="n">X_missing</span><span class="p">,</span> <span class="n">y_missing</span><span class="p">):</span>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">get_scores_for_imputer</span><span class="p">(</span><span class="n">imputer</span><span class="p">,</span> <span class="n">X_missing</span><span class="p">,</span> <span class="n">y_missing</span><span class="p">):</span>
     <span class="n">estimator</span> <span class="o">=</span> <a href="../../modules/generated/sklearn.pipeline.make_pipeline.html#sklearn.pipeline.make_pipeline" title="sklearn.pipeline.make_pipeline" class="sphx-glr-backref-module-sklearn-pipeline sphx-glr-backref-type-py-function"><span class="n">make_pipeline</span></a><span class="p">(</span><span class="n">imputer</span><span class="p">,</span> <span class="n">regressor</span><span class="p">)</span>
     <span class="n">impute_scores</span> <span class="o">=</span> <a href="../../modules/generated/sklearn.model_selection.cross_val_score.html#sklearn.model_selection.cross_val_score" title="sklearn.model_selection.cross_val_score" class="sphx-glr-backref-module-sklearn-model_selection sphx-glr-backref-type-py-function"><span class="n">cross_val_score</span></a><span class="p">(</span>
         <span class="n">estimator</span><span class="p">,</span> <span class="n">X_missing</span><span class="p">,</span> <span class="n">y_missing</span><span class="p">,</span> <span class="n">scoring</span><span class="o">=</span><span class="s2">&quot;neg_mean_squared_error&quot;</span><span class="p">,</span> <span class="n">cv</span><span class="o">=</span><span class="n">N_SPLITS</span>
@@ -321,7 +321,7 @@ might carry some information.</p>
 <section id="estimate-the-score">
 <h3>Estimate the score<a class="headerlink" href="#estimate-the-score" title="Link to this heading">¶</a></h3>
 <p>First, we want to estimate the score on the original data:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">get_full_score</span><span class="p">(</span><span class="n">X_full</span><span class="p">,</span> <span class="n">y_full</span><span class="p">):</span>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">get_full_score</span><span class="p">(</span><span class="n">X_full</span><span class="p">,</span> <span class="n">y_full</span><span class="p">):</span>
     <span class="n">full_scores</span> <span class="o">=</span> <a href="../../modules/generated/sklearn.model_selection.cross_val_score.html#sklearn.model_selection.cross_val_score" title="sklearn.model_selection.cross_val_score" class="sphx-glr-backref-module-sklearn-model_selection sphx-glr-backref-type-py-function"><span class="n">cross_val_score</span></a><span class="p">(</span>
         <span class="n">regressor</span><span class="p">,</span> <span class="n">X_full</span><span class="p">,</span> <span class="n">y_full</span><span class="p">,</span> <span class="n">scoring</span><span class="o">=</span><span class="s2">&quot;neg_mean_squared_error&quot;</span><span class="p">,</span> <span class="n">cv</span><span class="o">=</span><span class="n">N_SPLITS</span>
     <span class="p">)</span>
@@ -338,7 +338,7 @@ might carry some information.</p>
 <h3>Replace missing values by 0<a class="headerlink" href="#replace-missing-values-by-0" title="Link to this heading">¶</a></h3>
 <p>Now we will estimate the score on the data where the missing values are
 replaced by 0:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">get_impute_zero_score</span><span class="p">(</span><span class="n">X_missing</span><span class="p">,</span> <span class="n">y_missing</span><span class="p">):</span>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">get_impute_zero_score</span><span class="p">(</span><span class="n">X_missing</span><span class="p">,</span> <span class="n">y_missing</span><span class="p">):</span>
     <span class="n">imputer</span> <span class="o">=</span> <a href="../../modules/generated/sklearn.impute.SimpleImputer.html#sklearn.impute.SimpleImputer" title="sklearn.impute.SimpleImputer" class="sphx-glr-backref-module-sklearn-impute sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">SimpleImputer</span></a><span class="p">(</span>
         <span class="n">missing_values</span><span class="o">=</span><a href="https://numpy.org/doc/stable/reference/constants.html#numpy.nan" title="numpy.nan" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-data"><span class="n">np</span><span class="o">.</span><span class="n">nan</span></a><span class="p">,</span> <span class="n">add_indicator</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">strategy</span><span class="o">=</span><span class="s2">&quot;constant&quot;</span><span class="p">,</span> <span class="n">fill_value</span><span class="o">=</span><span class="mi">0</span>
     <span class="p">)</span>
@@ -360,7 +360,7 @@ replaced by 0:</p>
 <h3>kNN-imputation of the missing values<a class="headerlink" href="#knn-imputation-of-the-missing-values" title="Link to this heading">¶</a></h3>
 <p><a class="reference internal" href="../../modules/generated/sklearn.impute.KNNImputer.html#sklearn.impute.KNNImputer" title="sklearn.impute.KNNImputer"><code class="xref py py-class docutils literal notranslate"><span class="pre">KNNImputer</span></code></a> imputes missing values using the weighted
 or unweighted mean of the desired number of nearest neighbors.</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">get_impute_knn_score</span><span class="p">(</span><span class="n">X_missing</span><span class="p">,</span> <span class="n">y_missing</span><span class="p">):</span>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">get_impute_knn_score</span><span class="p">(</span><span class="n">X_missing</span><span class="p">,</span> <span class="n">y_missing</span><span class="p">):</span>
     <span class="n">imputer</span> <span class="o">=</span> <a href="../../modules/generated/sklearn.impute.KNNImputer.html#sklearn.impute.KNNImputer" title="sklearn.impute.KNNImputer" class="sphx-glr-backref-module-sklearn-impute sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">KNNImputer</span></a><span class="p">(</span><span class="n">missing_values</span><span class="o">=</span><a href="https://numpy.org/doc/stable/reference/constants.html#numpy.nan" title="numpy.nan" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-data"><span class="n">np</span><span class="o">.</span><span class="n">nan</span></a><span class="p">,</span> <span class="n">add_indicator</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
     <span class="n">knn_impute_scores</span> <span class="o">=</span> <span class="n">get_scores_for_imputer</span><span class="p">(</span><span class="n">imputer</span><span class="p">,</span> <span class="n">X_missing</span><span class="p">,</span> <span class="n">y_missing</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">knn_impute_scores</span><span class="o">.</span><span class="n">mean</span><span class="p">(),</span> <span class="n">knn_impute_scores</span><span class="o">.</span><span class="n">std</span><span class="p">()</span>
@@ -378,7 +378,7 @@ or unweighted mean of the desired number of nearest neighbors.</p>
 </section>
 <section id="impute-missing-values-with-mean">
 <h3>Impute missing values with mean<a class="headerlink" href="#impute-missing-values-with-mean" title="Link to this heading">¶</a></h3>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">get_impute_mean</span><span class="p">(</span><span class="n">X_missing</span><span class="p">,</span> <span class="n">y_missing</span><span class="p">):</span>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">get_impute_mean</span><span class="p">(</span><span class="n">X_missing</span><span class="p">,</span> <span class="n">y_missing</span><span class="p">):</span>
     <span class="n">imputer</span> <span class="o">=</span> <a href="../../modules/generated/sklearn.impute.SimpleImputer.html#sklearn.impute.SimpleImputer" title="sklearn.impute.SimpleImputer" class="sphx-glr-backref-module-sklearn-impute sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">SimpleImputer</span></a><span class="p">(</span><span class="n">missing_values</span><span class="o">=</span><a href="https://numpy.org/doc/stable/reference/constants.html#numpy.nan" title="numpy.nan" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-data"><span class="n">np</span><span class="o">.</span><span class="n">nan</span></a><span class="p">,</span> <span class="n">strategy</span><span class="o">=</span><span class="s2">&quot;mean&quot;</span><span class="p">,</span> <span class="n">add_indicator</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
     <span class="n">mean_impute_scores</span> <span class="o">=</span> <span class="n">get_scores_for_imputer</span><span class="p">(</span><span class="n">imputer</span><span class="p">,</span> <span class="n">X_missing</span><span class="p">,</span> <span class="n">y_missing</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">mean_impute_scores</span><span class="o">.</span><span class="n">mean</span><span class="p">(),</span> <span class="n">mean_impute_scores</span><span class="o">.</span><span class="n">std</span><span class="p">()</span>
@@ -400,7 +400,7 @@ function of other features, in turn.
 The version implemented assumes Gaussian (output) variables. If your features
 are obviously non-normal, consider transforming them to look more normal
 to potentially improve performance.</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">get_impute_iterative</span><span class="p">(</span><span class="n">X_missing</span><span class="p">,</span> <span class="n">y_missing</span><span class="p">):</span>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">get_impute_iterative</span><span class="p">(</span><span class="n">X_missing</span><span class="p">,</span> <span class="n">y_missing</span><span class="p">):</span>
     <span class="n">imputer</span> <span class="o">=</span> <a href="../../modules/generated/sklearn.impute.IterativeImputer.html#sklearn.impute.IterativeImputer" title="sklearn.impute.IterativeImputer" class="sphx-glr-backref-module-sklearn-impute sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">IterativeImputer</span></a><span class="p">(</span>
         <span class="n">missing_values</span><span class="o">=</span><a href="https://numpy.org/doc/stable/reference/constants.html#numpy.nan" title="numpy.nan" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-data"><span class="n">np</span><span class="o">.</span><span class="n">nan</span></a><span class="p">,</span>
         <span class="n">add_indicator</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
@@ -430,7 +430,7 @@ to potentially improve performance.</p>
 <section id="plot-the-results">
 <h2>Plot the results<a class="headerlink" href="#plot-the-results" title="Link to this heading">¶</a></h2>
 <p>Finally we are going to visualize the score:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
 
 <span class="n">n_bars</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">mses_diabetes</span><span class="p">)</span>
 <span class="n">xval</span> <span class="o">=</span> <a href="https://numpy.org/doc/stable/reference/generated/numpy.arange.html#numpy.arange" title="numpy.arange" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-function"><span class="n">np</span><span class="o">.</span><span class="n">arange</span></a><span class="p">(</span><span class="n">n_bars</span><span class="p">)</span>
@@ -481,7 +481,7 @@ to potentially improve performance.</p>
 <img src="../../_images/sphx_glr_plot_missing_values_001.png" srcset="../../_images/sphx_glr_plot_missing_values_001.png" alt="Imputation Techniques with Diabetes Data, Imputation Techniques with California Data" class = "sphx-glr-single-img"/><p>You can also try different techniques. For instance, the median is a more
 robust estimator for data with high magnitude variables which could dominate
 results (otherwise known as a ‘long tail’).</p>
-<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> (0 minutes 8.122 seconds)</p>
+<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> (0 minutes 8.318 seconds)</p>
 <div class="sphx-glr-footer sphx-glr-footer-example docutils container" id="sphx-glr-download-auto-examples-impute-plot-missing-values-py">
 <div class="binder-badge docutils container">
 <a class="reference external image-reference" href="https://mybinder.org/v2/gh/scikit-learn/scikit-learn/main?urlpath=lab/tree/notebooks/auto_examples/impute/plot_missing_values.ipynb"><img alt="Launch binder" src="../../_images/binder_badge_logo15.svg" width="150px" /></a>
@@ -489,14 +489,30 @@ results (otherwise known as a ‘long tail’).</p>
 <div class="lite-badge docutils container">
 <a class="reference external image-reference" href="../../lite/lab/?path=auto_examples/impute/plot_missing_values.ipynb"><img alt="Launch JupyterLite" src="../../_images/jupyterlite_badge_logo15.svg" width="150px" /></a>
 </div>
-<div class="sphx-glr-download sphx-glr-download-python docutils container">
-<p><a class="reference download internal" download="" href="../../_downloads/98345ee267d0372eda8faf906905730e/plot_missing_values.py"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Python</span> <span class="pre">source</span> <span class="pre">code:</span> <span class="pre">plot_missing_values.py</span></code></a></p>
-</div>
 <div class="sphx-glr-download sphx-glr-download-jupyter docutils container">
 <p><a class="reference download internal" download="" href="../../_downloads/a440a8b10138c855100ed5820fdb36b6/plot_missing_values.ipynb"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Jupyter</span> <span class="pre">notebook:</span> <span class="pre">plot_missing_values.ipynb</span></code></a></p>
 </div>
+<div class="sphx-glr-download sphx-glr-download-python docutils container">
+<p><a class="reference download internal" download="" href="../../_downloads/98345ee267d0372eda8faf906905730e/plot_missing_values.py"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Python</span> <span class="pre">source</span> <span class="pre">code:</span> <span class="pre">plot_missing_values.py</span></code></a></p>
 </div>
-<p class="sphx-glr-signature"><a class="reference external" href="https://sphinx-gallery.github.io">Gallery generated by Sphinx-Gallery</a></p>
+</div>
+<p class="rubric">Related examples</p>
+<div class="sphx-glr-thumbnails"><div class="sphx-glr-thumbcontainer" tooltip="The IterativeImputer class is very flexible - it can be used with a variety of estimators to do..."><img alt="" src="../../_images/sphx_glr_plot_iterative_imputer_variants_comparison_thumb.png" />
+<p><a class="reference internal" href="plot_iterative_imputer_variants_comparison.html#sphx-glr-auto-examples-impute-plot-iterative-imputer-variants-comparison-py"><span class="std std-ref">Imputing missing values with variants of IterativeImputer</span></a></p>
+  <div class="sphx-glr-thumbnail-title">Imputing missing values with variants of IterativeImputer</div>
+</div><div class="sphx-glr-thumbcontainer" tooltip="We are pleased to announce the release of scikit-learn 0.22, which comes with many bug fixes an..."><img alt="" src="../../_images/sphx_glr_plot_release_highlights_0_22_0_thumb.png" />
+<p><a class="reference internal" href="../release_highlights/plot_release_highlights_0_22_0.html#sphx-glr-auto-examples-release-highlights-plot-release-highlights-0-22-0-py"><span class="std std-ref">Release Highlights for scikit-learn 0.22</span></a></p>
+  <div class="sphx-glr-thumbnail-title">Release Highlights for scikit-learn 0.22</div>
+</div><div class="sphx-glr-thumbcontainer" tooltip="This example plots the ellipsoids obtained from a toy dataset (mixture of three Gaussians) fitt..."><img alt="" src="../../_images/sphx_glr_plot_concentration_prior_thumb.png" />
+<p><a class="reference internal" href="../mixture/plot_concentration_prior.html#sphx-glr-auto-examples-mixture-plot-concentration-prior-py"><span class="std std-ref">Concentration Prior Type Analysis of Variation Bayesian Gaussian Mixture</span></a></p>
+  <div class="sphx-glr-thumbnail-title">Concentration Prior Type Analysis of Variation Bayesian Gaussian Mixture</div>
+</div><div class="sphx-glr-thumbcontainer" tooltip="This example illustrates a learned distance metric that maximizes the nearest neighbors classif..."><img alt="" src="../../_images/sphx_glr_plot_nca_illustration_thumb.png" />
+<p><a class="reference internal" href="../neighbors/plot_nca_illustration.html#sphx-glr-auto-examples-neighbors-plot-nca-illustration-py"><span class="std std-ref">Neighborhood Components Analysis Illustration</span></a></p>
+  <div class="sphx-glr-thumbnail-title">Neighborhood Components Analysis Illustration</div>
+</div><div class="sphx-glr-thumbcontainer" tooltip="Stacking refers to a method to blend estimators. In this strategy, some estimators are individu..."><img alt="" src="../../_images/sphx_glr_plot_stack_predictors_thumb.png" />
+<p><a class="reference internal" href="../ensemble/plot_stack_predictors.html#sphx-glr-auto-examples-ensemble-plot-stack-predictors-py"><span class="std std-ref">Combine predictors using stacking</span></a></p>
+  <div class="sphx-glr-thumbnail-title">Combine predictors using stacking</div>
+</div></div><p class="sphx-glr-signature"><a class="reference external" href="https://sphinx-gallery.github.io">Gallery generated by Sphinx-Gallery</a></p>
 </section>
 </section>
 

@@ -207,7 +207,7 @@ is computed.</p>
 </dl>
 </div>
 <p>Let’s start by loading the dataset and creating some sample weights.</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 
 <span class="kn">from</span> <span class="nn">sklearn.datasets</span> <span class="kn">import</span> <a href="../../modules/generated/sklearn.datasets.make_regression.html#sklearn.datasets.make_regression" title="sklearn.datasets.make_regression" class="sphx-glr-backref-module-sklearn-datasets sphx-glr-backref-type-py-function"><span class="n">make_regression</span></a>
 
@@ -224,7 +224,7 @@ is computed.</p>
 <p>To fit the elastic net using the <code class="docutils literal notranslate"><span class="pre">precompute</span></code> option together with the sample
 weights, we must first center the design matrix,  and rescale it by the
 normalized weights prior to computing the gram matrix.</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">X_offset</span> <span class="o">=</span> <a href="https://numpy.org/doc/stable/reference/generated/numpy.average.html#numpy.average" title="numpy.average" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-function"><span class="n">np</span><span class="o">.</span><span class="n">average</span></a><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">weights</span><span class="o">=</span><span class="n">normalized_weights</span><span class="p">)</span>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">X_offset</span> <span class="o">=</span> <a href="https://numpy.org/doc/stable/reference/generated/numpy.average.html#numpy.average" title="numpy.average" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-function"><span class="n">np</span><span class="o">.</span><span class="n">average</span></a><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">weights</span><span class="o">=</span><span class="n">normalized_weights</span><span class="p">)</span>
 <span class="n">X_centered</span> <span class="o">=</span> <span class="n">X</span> <span class="o">-</span> <a href="https://numpy.org/doc/stable/reference/generated/numpy.average.html#numpy.average" title="numpy.average" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-function"><span class="n">np</span><span class="o">.</span><span class="n">average</span></a><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">weights</span><span class="o">=</span><span class="n">normalized_weights</span><span class="p">)</span>
 <span class="n">X_scaled</span> <span class="o">=</span> <span class="n">X_centered</span> <span class="o">*</span> <a href="https://numpy.org/doc/stable/reference/generated/numpy.sqrt.html#numpy.sqrt" title="numpy.sqrt" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-data"><span class="n">np</span><span class="o">.</span><span class="n">sqrt</span></a><span class="p">(</span><span class="n">normalized_weights</span><span class="p">)[:,</span> <a href="https://numpy.org/doc/stable/reference/constants.html#numpy.newaxis" title="numpy.newaxis" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-data"><span class="n">np</span><span class="o">.</span><span class="n">newaxis</span></a><span class="p">]</span>
 <span class="n">gram</span> <span class="o">=</span> <a href="https://numpy.org/doc/stable/reference/generated/numpy.dot.html#numpy.dot" title="numpy.dot" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-function"><span class="n">np</span><span class="o">.</span><span class="n">dot</span></a><span class="p">(</span><span class="n">X_scaled</span><span class="o">.</span><span class="n">T</span><span class="p">,</span> <span class="n">X_scaled</span><span class="p">)</span>
@@ -234,7 +234,7 @@ normalized weights prior to computing the gram matrix.</p>
 <code class="docutils literal notranslate"><span class="pre">fit</span></code> otherwise the elastic net estimator will detect that it is uncentered
 and discard the gram matrix we passed. However, if we pass the scaled design
 matrix, the preprocessing code will incorrectly rescale it a second time.</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">sklearn.linear_model</span> <span class="kn">import</span> <a href="../../modules/generated/sklearn.linear_model.ElasticNet.html#sklearn.linear_model.ElasticNet" title="sklearn.linear_model.ElasticNet" class="sphx-glr-backref-module-sklearn-linear_model sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">ElasticNet</span></a>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">sklearn.linear_model</span> <span class="kn">import</span> <a href="../../modules/generated/sklearn.linear_model.ElasticNet.html#sklearn.linear_model.ElasticNet" title="sklearn.linear_model.ElasticNet" class="sphx-glr-backref-module-sklearn-linear_model sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">ElasticNet</span></a>
 
 <span class="n">lm</span> <span class="o">=</span> <a href="../../modules/generated/sklearn.linear_model.ElasticNet.html#sklearn.linear_model.ElasticNet" title="sklearn.linear_model.ElasticNet" class="sphx-glr-backref-module-sklearn-linear_model sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">ElasticNet</span></a><span class="p">(</span><span class="n">alpha</span><span class="o">=</span><span class="mf">0.01</span><span class="p">,</span> <span class="n">precompute</span><span class="o">=</span><span class="n">gram</span><span class="p">)</span>
 <span class="n">lm</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X_centered</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">sample_weight</span><span class="o">=</span><span class="n">normalized_weights</span><span class="p">)</span>
@@ -674,7 +674,7 @@ div.sk-label-container:hover .sk-estimator-doc-link.fitted:hover,
         -1.58667835e+02,  5.60836363e+02,  1.00911944e+05]]))</pre></div> </div></div></div></div>
 </div>
 <br />
-<br /><p class="sphx-glr-timing"><strong>Total running time of the script:</strong> (0 minutes 0.747 seconds)</p>
+<br /><p class="sphx-glr-timing"><strong>Total running time of the script:</strong> (0 minutes 0.830 seconds)</p>
 <div class="sphx-glr-footer sphx-glr-footer-example docutils container" id="sphx-glr-download-auto-examples-linear-model-plot-elastic-net-precomputed-gram-matrix-with-weighted-samples-py">
 <div class="binder-badge docutils container">
 <a class="reference external image-reference" href="https://mybinder.org/v2/gh/scikit-learn/scikit-learn/main?urlpath=lab/tree/notebooks/auto_examples/linear_model/plot_elastic_net_precomputed_gram_matrix_with_weighted_samples.ipynb"><img alt="Launch binder" src="../../_images/binder_badge_logo18.svg" width="150px" /></a>
@@ -682,14 +682,30 @@ div.sk-label-container:hover .sk-estimator-doc-link.fitted:hover,
 <div class="lite-badge docutils container">
 <a class="reference external image-reference" href="../../lite/lab/?path=auto_examples/linear_model/plot_elastic_net_precomputed_gram_matrix_with_weighted_samples.ipynb"><img alt="Launch JupyterLite" src="../../_images/jupyterlite_badge_logo18.svg" width="150px" /></a>
 </div>
-<div class="sphx-glr-download sphx-glr-download-python docutils container">
-<p><a class="reference download internal" download="" href="../../_downloads/c50f4529d4a653ccd8d5117ec9300975/plot_elastic_net_precomputed_gram_matrix_with_weighted_samples.py"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Python</span> <span class="pre">source</span> <span class="pre">code:</span> <span class="pre">plot_elastic_net_precomputed_gram_matrix_with_weighted_samples.py</span></code></a></p>
-</div>
 <div class="sphx-glr-download sphx-glr-download-jupyter docutils container">
 <p><a class="reference download internal" download="" href="../../_downloads/1054d40caffbd65c52b20dac784c7c5c/plot_elastic_net_precomputed_gram_matrix_with_weighted_samples.ipynb"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Jupyter</span> <span class="pre">notebook:</span> <span class="pre">plot_elastic_net_precomputed_gram_matrix_with_weighted_samples.ipynb</span></code></a></p>
 </div>
+<div class="sphx-glr-download sphx-glr-download-python docutils container">
+<p><a class="reference download internal" download="" href="../../_downloads/c50f4529d4a653ccd8d5117ec9300975/plot_elastic_net_precomputed_gram_matrix_with_weighted_samples.py"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Python</span> <span class="pre">source</span> <span class="pre">code:</span> <span class="pre">plot_elastic_net_precomputed_gram_matrix_with_weighted_samples.py</span></code></a></p>
 </div>
-<p class="sphx-glr-signature"><a class="reference external" href="https://sphinx-gallery.github.io">Gallery generated by Sphinx-Gallery</a></p>
+</div>
+<p class="rubric">Related examples</p>
+<div class="sphx-glr-thumbnails"><div class="sphx-glr-thumbcontainer" tooltip="Plot decision function of a weighted dataset, where the size of points is proportional to its w..."><img alt="" src="../../_images/sphx_glr_plot_weighted_samples_thumb.png" />
+<p><a class="reference internal" href="../svm/plot_weighted_samples.html#sphx-glr-auto-examples-svm-plot-weighted-samples-py"><span class="std std-ref">SVM: Weighted samples</span></a></p>
+  <div class="sphx-glr-thumbnail-title">SVM: Weighted samples</div>
+</div><div class="sphx-glr-thumbcontainer" tooltip="Plot decision function of a weighted dataset, where the size of points is proportional to its w..."><img alt="" src="../../_images/sphx_glr_plot_sgd_weighted_samples_thumb.png" />
+<p><a class="reference internal" href="plot_sgd_weighted_samples.html#sphx-glr-auto-examples-linear-model-plot-sgd-weighted-samples-py"><span class="std std-ref">SGD: Weighted samples</span></a></p>
+  <div class="sphx-glr-thumbnail-title">SGD: Weighted samples</div>
+</div><div class="sphx-glr-thumbcontainer" tooltip="This document shows how you can use the metadata routing mechanism &lt;metadata_routing&gt; in scikit..."><img alt="" src="../../_images/sphx_glr_plot_metadata_routing_thumb.png" />
+<p><a class="reference internal" href="../miscellaneous/plot_metadata_routing.html#sphx-glr-auto-examples-miscellaneous-plot-metadata-routing-py"><span class="std std-ref">Metadata Routing</span></a></p>
+  <div class="sphx-glr-thumbnail-title">Metadata Routing</div>
+</div><div class="sphx-glr-thumbcontainer" tooltip="Lasso and elastic net (L1 and L2 penalisation) implemented using a coordinate descent."><img alt="" src="../../_images/sphx_glr_plot_lasso_coordinate_descent_path_thumb.png" />
+<p><a class="reference internal" href="plot_lasso_coordinate_descent_path.html#sphx-glr-auto-examples-linear-model-plot-lasso-coordinate-descent-path-py"><span class="std std-ref">Lasso and Elastic Net</span></a></p>
+  <div class="sphx-glr-thumbnail-title">Lasso and Elastic Net</div>
+</div><div class="sphx-glr-thumbcontainer" tooltip="We are pleased to announce the release of scikit-learn 0.23! Many bug fixes and improvements we..."><img alt="" src="../../_images/sphx_glr_plot_release_highlights_0_23_0_thumb.png" />
+<p><a class="reference internal" href="../release_highlights/plot_release_highlights_0_23_0.html#sphx-glr-auto-examples-release-highlights-plot-release-highlights-0-23-0-py"><span class="std std-ref">Release Highlights for scikit-learn 0.23</span></a></p>
+  <div class="sphx-glr-thumbnail-title">Release Highlights for scikit-learn 0.23</div>
+</div></div><p class="sphx-glr-signature"><a class="reference external" href="https://sphinx-gallery.github.io">Gallery generated by Sphinx-Gallery</a></p>
 </section>
 
 

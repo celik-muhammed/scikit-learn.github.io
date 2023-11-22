@@ -223,7 +223,7 @@ matrix decomposition (dimension reduction) methods from the module
 <section id="dataset-preparation">
 <h2>Dataset preparation<a class="headerlink" href="#dataset-preparation" title="Link to this heading">¶</a></h2>
 <p>Loading and preprocessing the Olivetti faces dataset.</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">logging</span>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">logging</span>
 
 <span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
 <span class="kn">from</span> <span class="nn">numpy.random</span> <span class="kn">import</span> <a href="https://numpy.org/doc/stable/reference/random/legacy.html#numpy.random.RandomState" title="numpy.random.RandomState" class="sphx-glr-backref-module-numpy-random sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">RandomState</span></a>
@@ -252,7 +252,7 @@ matrix decomposition (dimension reduction) methods from the module
 </pre></div>
 </div>
 <p>Define a base function to plot the gallery of faces.</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">n_row</span><span class="p">,</span> <span class="n">n_col</span> <span class="o">=</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">n_row</span><span class="p">,</span> <span class="n">n_col</span> <span class="o">=</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span>
 <span class="n">n_components</span> <span class="o">=</span> <span class="n">n_row</span> <span class="o">*</span> <span class="n">n_col</span>
 <span class="n">image_shape</span> <span class="o">=</span> <span class="p">(</span><span class="mi">64</span><span class="p">,</span> <span class="mi">64</span><span class="p">)</span>
 
@@ -285,7 +285,7 @@ matrix decomposition (dimension reduction) methods from the module
 </div>
 <p>Let’s take a look at our data. Gray color indicates negative values,
 white indicates positive values.</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">plot_gallery</span><span class="p">(</span><span class="s2">&quot;Faces from dataset&quot;</span><span class="p">,</span> <span class="n">faces_centered</span><span class="p">[:</span><span class="n">n_components</span><span class="p">])</span>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">plot_gallery</span><span class="p">(</span><span class="s2">&quot;Faces from dataset&quot;</span><span class="p">,</span> <span class="n">faces_centered</span><span class="p">[:</span><span class="n">n_components</span><span class="p">])</span>
 </pre></div>
 </div>
 <img src="../../_images/sphx_glr_plot_faces_decomposition_001.png" srcset="../../_images/sphx_glr_plot_faces_decomposition_001.png" alt="Faces from dataset" class = "sphx-glr-single-img"/></section>
@@ -306,7 +306,7 @@ to project it to a lower dimensional space.</p>
 also provides a scalar <code class="docutils literal notranslate"><span class="pre">noise_variance_</span></code> (the mean of pixelwise variance)
 that cannot be displayed as an image.</p>
 </div>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">pca_estimator</span> <span class="o">=</span> <a href="../../modules/generated/sklearn.decomposition.PCA.html#sklearn.decomposition.PCA" title="sklearn.decomposition.PCA" class="sphx-glr-backref-module-sklearn-decomposition sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">decomposition</span><span class="o">.</span><span class="n">PCA</span></a><span class="p">(</span>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">pca_estimator</span> <span class="o">=</span> <a href="../../modules/generated/sklearn.decomposition.PCA.html#sklearn.decomposition.PCA" title="sklearn.decomposition.PCA" class="sphx-glr-backref-module-sklearn-decomposition sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">decomposition</span><span class="o">.</span><span class="n">PCA</span></a><span class="p">(</span>
     <span class="n">n_components</span><span class="o">=</span><span class="n">n_components</span><span class="p">,</span> <span class="n">svd_solver</span><span class="o">=</span><span class="s2">&quot;randomized&quot;</span><span class="p">,</span> <span class="n">whiten</span><span class="o">=</span><span class="kc">True</span>
 <span class="p">)</span>
 <span class="n">pca_estimator</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">faces_centered</span><span class="p">)</span>
@@ -319,7 +319,7 @@ that cannot be displayed as an image.</p>
 <section id="non-negative-components-nmf">
 <h3>Non-negative components - NMF<a class="headerlink" href="#non-negative-components-nmf" title="Link to this heading">¶</a></h3>
 <p>Estimate non-negative original data as production of two non-negative matrices.</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">nmf_estimator</span> <span class="o">=</span> <a href="../../modules/generated/sklearn.decomposition.NMF.html#sklearn.decomposition.NMF" title="sklearn.decomposition.NMF" class="sphx-glr-backref-module-sklearn-decomposition sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">decomposition</span><span class="o">.</span><span class="n">NMF</span></a><span class="p">(</span><span class="n">n_components</span><span class="o">=</span><span class="n">n_components</span><span class="p">,</span> <span class="n">tol</span><span class="o">=</span><span class="mf">5e-3</span><span class="p">)</span>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">nmf_estimator</span> <span class="o">=</span> <a href="../../modules/generated/sklearn.decomposition.NMF.html#sklearn.decomposition.NMF" title="sklearn.decomposition.NMF" class="sphx-glr-backref-module-sklearn-decomposition sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">decomposition</span><span class="o">.</span><span class="n">NMF</span></a><span class="p">(</span><span class="n">n_components</span><span class="o">=</span><span class="n">n_components</span><span class="p">,</span> <span class="n">tol</span><span class="o">=</span><span class="mf">5e-3</span><span class="p">)</span>
 <span class="n">nmf_estimator</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">faces</span><span class="p">)</span>  <span class="c1"># original non- negative dataset</span>
 <span class="n">plot_gallery</span><span class="p">(</span><span class="s2">&quot;Non-negative components - NMF&quot;</span><span class="p">,</span> <span class="n">nmf_estimator</span><span class="o">.</span><span class="n">components_</span><span class="p">[:</span><span class="n">n_components</span><span class="p">])</span>
 </pre></div>
@@ -329,7 +329,7 @@ that cannot be displayed as an image.</p>
 <h3>Independent components - FastICA<a class="headerlink" href="#independent-components-fastica" title="Link to this heading">¶</a></h3>
 <p>Independent component analysis separates a multivariate vectors into additive
 subcomponents that are maximally independent.</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">ica_estimator</span> <span class="o">=</span> <a href="../../modules/generated/sklearn.decomposition.FastICA.html#sklearn.decomposition.FastICA" title="sklearn.decomposition.FastICA" class="sphx-glr-backref-module-sklearn-decomposition sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">decomposition</span><span class="o">.</span><span class="n">FastICA</span></a><span class="p">(</span>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">ica_estimator</span> <span class="o">=</span> <a href="../../modules/generated/sklearn.decomposition.FastICA.html#sklearn.decomposition.FastICA" title="sklearn.decomposition.FastICA" class="sphx-glr-backref-module-sklearn-decomposition sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">decomposition</span><span class="o">.</span><span class="n">FastICA</span></a><span class="p">(</span>
     <span class="n">n_components</span><span class="o">=</span><span class="n">n_components</span><span class="p">,</span> <span class="n">max_iter</span><span class="o">=</span><span class="mi">400</span><span class="p">,</span> <span class="n">whiten</span><span class="o">=</span><span class="s2">&quot;arbitrary-variance&quot;</span><span class="p">,</span> <span class="n">tol</span><span class="o">=</span><span class="mf">15e-5</span>
 <span class="p">)</span>
 <span class="n">ica_estimator</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">faces_centered</span><span class="p">)</span>
@@ -345,7 +345,7 @@ subcomponents that are maximally independent.</p>
 extracts the set of sparse components that best reconstruct the data. This
 variant is faster but less accurate than the similar
 <a class="reference internal" href="../../modules/generated/sklearn.decomposition.SparsePCA.html#sklearn.decomposition.SparsePCA" title="sklearn.decomposition.SparsePCA"><code class="xref py py-class docutils literal notranslate"><span class="pre">SparsePCA</span></code></a>.</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">batch_pca_estimator</span> <span class="o">=</span> <a href="../../modules/generated/sklearn.decomposition.MiniBatchSparsePCA.html#sklearn.decomposition.MiniBatchSparsePCA" title="sklearn.decomposition.MiniBatchSparsePCA" class="sphx-glr-backref-module-sklearn-decomposition sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">decomposition</span><span class="o">.</span><span class="n">MiniBatchSparsePCA</span></a><span class="p">(</span>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">batch_pca_estimator</span> <span class="o">=</span> <a href="../../modules/generated/sklearn.decomposition.MiniBatchSparsePCA.html#sklearn.decomposition.MiniBatchSparsePCA" title="sklearn.decomposition.MiniBatchSparsePCA" class="sphx-glr-backref-module-sklearn-decomposition sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">decomposition</span><span class="o">.</span><span class="n">MiniBatchSparsePCA</span></a><span class="p">(</span>
     <span class="n">n_components</span><span class="o">=</span><span class="n">n_components</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.1</span><span class="p">,</span> <span class="n">max_iter</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">batch_size</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="n">rng</span>
 <span class="p">)</span>
 <span class="n">batch_pca_estimator</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">faces_centered</span><span class="p">)</span>
@@ -361,7 +361,7 @@ variant is faster but less accurate than the similar
 <p>By default, <a class="reference internal" href="../../modules/generated/sklearn.decomposition.MiniBatchDictionaryLearning.html#sklearn.decomposition.MiniBatchDictionaryLearning" title="sklearn.decomposition.MiniBatchDictionaryLearning"><code class="xref py py-class docutils literal notranslate"><span class="pre">MiniBatchDictionaryLearning</span></code></a>
 divides the data into mini-batches and optimizes in an online manner by
 cycling over the mini-batches for the specified number of iterations.</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">batch_dict_estimator</span> <span class="o">=</span> <a href="../../modules/generated/sklearn.decomposition.MiniBatchDictionaryLearning.html#sklearn.decomposition.MiniBatchDictionaryLearning" title="sklearn.decomposition.MiniBatchDictionaryLearning" class="sphx-glr-backref-module-sklearn-decomposition sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">decomposition</span><span class="o">.</span><span class="n">MiniBatchDictionaryLearning</span></a><span class="p">(</span>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">batch_dict_estimator</span> <span class="o">=</span> <a href="../../modules/generated/sklearn.decomposition.MiniBatchDictionaryLearning.html#sklearn.decomposition.MiniBatchDictionaryLearning" title="sklearn.decomposition.MiniBatchDictionaryLearning" class="sphx-glr-backref-module-sklearn-decomposition sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">decomposition</span><span class="o">.</span><span class="n">MiniBatchDictionaryLearning</span></a><span class="p">(</span>
     <span class="n">n_components</span><span class="o">=</span><span class="n">n_components</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.1</span><span class="p">,</span> <span class="n">max_iter</span><span class="o">=</span><span class="mi">50</span><span class="p">,</span> <span class="n">batch_size</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="n">rng</span>
 <span class="p">)</span>
 <span class="n">batch_dict_estimator</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">faces_centered</span><span class="p">)</span>
@@ -376,7 +376,7 @@ implements on-line learning with a
 <a class="reference internal" href="../../modules/generated/sklearn.cluster.MiniBatchKMeans.html#sklearn.cluster.MiniBatchKMeans.partial_fit" title="sklearn.cluster.MiniBatchKMeans.partial_fit"><code class="xref py py-meth docutils literal notranslate"><span class="pre">partial_fit</span></code></a> method. That is
 why it could be beneficial to enhance some time-consuming algorithms with
 <a class="reference internal" href="../../modules/generated/sklearn.cluster.MiniBatchKMeans.html#sklearn.cluster.MiniBatchKMeans" title="sklearn.cluster.MiniBatchKMeans"><code class="xref py py-class docutils literal notranslate"><span class="pre">MiniBatchKMeans</span></code></a>.</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">kmeans_estimator</span> <span class="o">=</span> <a href="../../modules/generated/sklearn.cluster.MiniBatchKMeans.html#sklearn.cluster.MiniBatchKMeans" title="sklearn.cluster.MiniBatchKMeans" class="sphx-glr-backref-module-sklearn-cluster sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">cluster</span><span class="o">.</span><span class="n">MiniBatchKMeans</span></a><span class="p">(</span>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">kmeans_estimator</span> <span class="o">=</span> <a href="../../modules/generated/sklearn.cluster.MiniBatchKMeans.html#sklearn.cluster.MiniBatchKMeans" title="sklearn.cluster.MiniBatchKMeans" class="sphx-glr-backref-module-sklearn-cluster sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">cluster</span><span class="o">.</span><span class="n">MiniBatchKMeans</span></a><span class="p">(</span>
     <span class="n">n_clusters</span><span class="o">=</span><span class="n">n_components</span><span class="p">,</span>
     <span class="n">tol</span><span class="o">=</span><span class="mf">1e-3</span><span class="p">,</span>
     <span class="n">batch_size</span><span class="o">=</span><span class="mi">20</span><span class="p">,</span>
@@ -398,7 +398,7 @@ why it could be beneficial to enhance some time-consuming algorithms with
 <a class="reference internal" href="../../modules/generated/sklearn.decomposition.PCA.html#sklearn.decomposition.PCA" title="sklearn.decomposition.PCA"><code class="xref py py-class docutils literal notranslate"><span class="pre">PCA</span></code></a> but has the advantage of modelling the
 variance in every direction of the input space independently (heteroscedastic
 noise). Read more in the <a class="reference internal" href="../../modules/decomposition.html#fa"><span class="std std-ref">User Guide</span></a>.</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">fa_estimator</span> <span class="o">=</span> <a href="../../modules/generated/sklearn.decomposition.FactorAnalysis.html#sklearn.decomposition.FactorAnalysis" title="sklearn.decomposition.FactorAnalysis" class="sphx-glr-backref-module-sklearn-decomposition sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">decomposition</span><span class="o">.</span><span class="n">FactorAnalysis</span></a><span class="p">(</span><span class="n">n_components</span><span class="o">=</span><span class="n">n_components</span><span class="p">,</span> <span class="n">max_iter</span><span class="o">=</span><span class="mi">20</span><span class="p">)</span>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">fa_estimator</span> <span class="o">=</span> <a href="../../modules/generated/sklearn.decomposition.FactorAnalysis.html#sklearn.decomposition.FactorAnalysis" title="sklearn.decomposition.FactorAnalysis" class="sphx-glr-backref-module-sklearn-decomposition sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">decomposition</span><span class="o">.</span><span class="n">FactorAnalysis</span></a><span class="p">(</span><span class="n">n_components</span><span class="o">=</span><span class="n">n_components</span><span class="p">,</span> <span class="n">max_iter</span><span class="o">=</span><span class="mi">20</span><span class="p">)</span>
 <span class="n">fa_estimator</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">faces_centered</span><span class="p">)</span>
 <span class="n">plot_gallery</span><span class="p">(</span><span class="s2">&quot;Factor Analysis (FA)&quot;</span><span class="p">,</span> <span class="n">fa_estimator</span><span class="o">.</span><span class="n">components_</span><span class="p">[:</span><span class="n">n_components</span><span class="p">])</span>
 
@@ -438,7 +438,7 @@ is better suited for large datasets. Read more in the <a class="reference intern
 <p>Plot the same samples from our dataset but with another colormap.
 Red indicates negative values, blue indicates positive values,
 and white represents zeros.</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">plot_gallery</span><span class="p">(</span><span class="s2">&quot;Faces from dataset&quot;</span><span class="p">,</span> <span class="n">faces_centered</span><span class="p">[:</span><span class="n">n_components</span><span class="p">],</span> <span class="n">cmap</span><span class="o">=</span><span class="n">plt</span><span class="o">.</span><span class="n">cm</span><span class="o">.</span><span class="n">RdBu</span><span class="p">)</span>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">plot_gallery</span><span class="p">(</span><span class="s2">&quot;Faces from dataset&quot;</span><span class="p">,</span> <span class="n">faces_centered</span><span class="p">[:</span><span class="n">n_components</span><span class="p">],</span> <span class="n">cmap</span><span class="o">=</span><span class="n">plt</span><span class="o">.</span><span class="n">cm</span><span class="o">.</span><span class="n">RdBu</span><span class="p">)</span>
 </pre></div>
 </div>
 <img src="../../_images/sphx_glr_plot_faces_decomposition_010.png" srcset="../../_images/sphx_glr_plot_faces_decomposition_010.png" alt="Faces from dataset" class = "sphx-glr-single-img"/><p>Similar to the previous examples, we change parameters and train
@@ -453,7 +453,7 @@ coefficients are positively constrained.</p>
 <section id="dictionary-learning-positive-dictionary">
 <h3>Dictionary learning - positive dictionary<a class="headerlink" href="#dictionary-learning-positive-dictionary" title="Link to this heading">¶</a></h3>
 <p>In the following section we enforce positivity when finding the dictionary.</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">dict_pos_dict_estimator</span> <span class="o">=</span> <a href="../../modules/generated/sklearn.decomposition.MiniBatchDictionaryLearning.html#sklearn.decomposition.MiniBatchDictionaryLearning" title="sklearn.decomposition.MiniBatchDictionaryLearning" class="sphx-glr-backref-module-sklearn-decomposition sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">decomposition</span><span class="o">.</span><span class="n">MiniBatchDictionaryLearning</span></a><span class="p">(</span>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">dict_pos_dict_estimator</span> <span class="o">=</span> <a href="../../modules/generated/sklearn.decomposition.MiniBatchDictionaryLearning.html#sklearn.decomposition.MiniBatchDictionaryLearning" title="sklearn.decomposition.MiniBatchDictionaryLearning" class="sphx-glr-backref-module-sklearn-decomposition sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">decomposition</span><span class="o">.</span><span class="n">MiniBatchDictionaryLearning</span></a><span class="p">(</span>
     <span class="n">n_components</span><span class="o">=</span><span class="n">n_components</span><span class="p">,</span>
     <span class="n">alpha</span><span class="o">=</span><span class="mf">0.1</span><span class="p">,</span>
     <span class="n">max_iter</span><span class="o">=</span><span class="mi">50</span><span class="p">,</span>
@@ -473,7 +473,7 @@ coefficients are positively constrained.</p>
 <section id="dictionary-learning-positive-code">
 <h3>Dictionary learning - positive code<a class="headerlink" href="#dictionary-learning-positive-code" title="Link to this heading">¶</a></h3>
 <p>Below we constrain the coding coefficients as a positive matrix.</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">dict_pos_code_estimator</span> <span class="o">=</span> <a href="../../modules/generated/sklearn.decomposition.MiniBatchDictionaryLearning.html#sklearn.decomposition.MiniBatchDictionaryLearning" title="sklearn.decomposition.MiniBatchDictionaryLearning" class="sphx-glr-backref-module-sklearn-decomposition sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">decomposition</span><span class="o">.</span><span class="n">MiniBatchDictionaryLearning</span></a><span class="p">(</span>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">dict_pos_code_estimator</span> <span class="o">=</span> <a href="../../modules/generated/sklearn.decomposition.MiniBatchDictionaryLearning.html#sklearn.decomposition.MiniBatchDictionaryLearning" title="sklearn.decomposition.MiniBatchDictionaryLearning" class="sphx-glr-backref-module-sklearn-decomposition sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">decomposition</span><span class="o">.</span><span class="n">MiniBatchDictionaryLearning</span></a><span class="p">(</span>
     <span class="n">n_components</span><span class="o">=</span><span class="n">n_components</span><span class="p">,</span>
     <span class="n">alpha</span><span class="o">=</span><span class="mf">0.1</span><span class="p">,</span>
     <span class="n">max_iter</span><span class="o">=</span><span class="mi">50</span><span class="p">,</span>
@@ -495,7 +495,7 @@ coefficients are positively constrained.</p>
 <h3>Dictionary learning - positive dictionary &amp; code<a class="headerlink" href="#dictionary-learning-positive-dictionary-code" title="Link to this heading">¶</a></h3>
 <p>Also below are the results if the dictionary values and coding
 coefficients are positively constrained.</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">dict_pos_estimator</span> <span class="o">=</span> <a href="../../modules/generated/sklearn.decomposition.MiniBatchDictionaryLearning.html#sklearn.decomposition.MiniBatchDictionaryLearning" title="sklearn.decomposition.MiniBatchDictionaryLearning" class="sphx-glr-backref-module-sklearn-decomposition sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">decomposition</span><span class="o">.</span><span class="n">MiniBatchDictionaryLearning</span></a><span class="p">(</span>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">dict_pos_estimator</span> <span class="o">=</span> <a href="../../modules/generated/sklearn.decomposition.MiniBatchDictionaryLearning.html#sklearn.decomposition.MiniBatchDictionaryLearning" title="sklearn.decomposition.MiniBatchDictionaryLearning" class="sphx-glr-backref-module-sklearn-decomposition sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">decomposition</span><span class="o">.</span><span class="n">MiniBatchDictionaryLearning</span></a><span class="p">(</span>
     <span class="n">n_components</span><span class="o">=</span><span class="n">n_components</span><span class="p">,</span>
     <span class="n">alpha</span><span class="o">=</span><span class="mf">0.1</span><span class="p">,</span>
     <span class="n">max_iter</span><span class="o">=</span><span class="mi">50</span><span class="p">,</span>
@@ -513,7 +513,7 @@ coefficients are positively constrained.</p>
 <span class="p">)</span>
 </pre></div>
 </div>
-<img src="../../_images/sphx_glr_plot_faces_decomposition_013.png" srcset="../../_images/sphx_glr_plot_faces_decomposition_013.png" alt="Dictionary learning - positive dictionary & code" class = "sphx-glr-single-img"/><p class="sphx-glr-timing"><strong>Total running time of the script:</strong> (0 minutes 9.260 seconds)</p>
+<img src="../../_images/sphx_glr_plot_faces_decomposition_013.png" srcset="../../_images/sphx_glr_plot_faces_decomposition_013.png" alt="Dictionary learning - positive dictionary & code" class = "sphx-glr-single-img"/><p class="sphx-glr-timing"><strong>Total running time of the script:</strong> (0 minutes 10.753 seconds)</p>
 <div class="sphx-glr-footer sphx-glr-footer-example docutils container" id="sphx-glr-download-auto-examples-decomposition-plot-faces-decomposition-py">
 <div class="binder-badge docutils container">
 <a class="reference external image-reference" href="https://mybinder.org/v2/gh/scikit-learn/scikit-learn/main?urlpath=lab/tree/notebooks/auto_examples/decomposition/plot_faces_decomposition.ipynb"><img alt="Launch binder" src="../../_images/binder_badge_logo9.svg" width="150px" /></a>
@@ -521,14 +521,30 @@ coefficients are positively constrained.</p>
 <div class="lite-badge docutils container">
 <a class="reference external image-reference" href="../../lite/lab/?path=auto_examples/decomposition/plot_faces_decomposition.ipynb"><img alt="Launch JupyterLite" src="../../_images/jupyterlite_badge_logo9.svg" width="150px" /></a>
 </div>
-<div class="sphx-glr-download sphx-glr-download-python docutils container">
-<p><a class="reference download internal" download="" href="../../_downloads/4825fc8223d1af0f3b61080c3dea3a62/plot_faces_decomposition.py"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Python</span> <span class="pre">source</span> <span class="pre">code:</span> <span class="pre">plot_faces_decomposition.py</span></code></a></p>
-</div>
 <div class="sphx-glr-download sphx-glr-download-jupyter docutils container">
 <p><a class="reference download internal" download="" href="../../_downloads/fcae36814d8e700024ca855a1eb87ca9/plot_faces_decomposition.ipynb"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Jupyter</span> <span class="pre">notebook:</span> <span class="pre">plot_faces_decomposition.ipynb</span></code></a></p>
 </div>
+<div class="sphx-glr-download sphx-glr-download-python docutils container">
+<p><a class="reference download internal" download="" href="../../_downloads/4825fc8223d1af0f3b61080c3dea3a62/plot_faces_decomposition.py"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Python</span> <span class="pre">source</span> <span class="pre">code:</span> <span class="pre">plot_faces_decomposition.py</span></code></a></p>
 </div>
-<p class="sphx-glr-signature"><a class="reference external" href="https://sphinx-gallery.github.io">Gallery generated by Sphinx-Gallery</a></p>
+</div>
+<p class="rubric">Related examples</p>
+<div class="sphx-glr-thumbnails"><div class="sphx-glr-thumbcontainer" tooltip="This example uses a large dataset of faces to learn a set of 20 x 20 images patches that consti..."><img alt="" src="../../_images/sphx_glr_plot_dict_face_patches_thumb.png" />
+<p><a class="reference internal" href="../cluster/plot_dict_face_patches.html#sphx-glr-auto-examples-cluster-plot-dict-face-patches-py"><span class="std std-ref">Online learning of a dictionary of parts of faces</span></a></p>
+  <div class="sphx-glr-thumbnail-title">Online learning of a dictionary of parts of faces</div>
+</div><div class="sphx-glr-thumbcontainer" tooltip="Transform a signal as a sparse combination of Ricker wavelets. This example visually compares d..."><img alt="" src="../../_images/sphx_glr_plot_sparse_coding_thumb.png" />
+<p><a class="reference internal" href="plot_sparse_coding.html#sphx-glr-auto-examples-decomposition-plot-sparse-coding-py"><span class="std std-ref">Sparse coding with a precomputed dictionary</span></a></p>
+  <div class="sphx-glr-thumbnail-title">Sparse coding with a precomputed dictionary</div>
+</div><div class="sphx-glr-thumbcontainer" tooltip="The dataset used in this example is a preprocessed excerpt of the &quot;Labeled Faces in the Wild&quot;, ..."><img alt="" src="../../_images/sphx_glr_plot_face_recognition_thumb.png" />
+<p><a class="reference internal" href="../applications/plot_face_recognition.html#sphx-glr-auto-examples-applications-plot-face-recognition-py"><span class="std std-ref">Faces recognition example using eigenfaces and SVMs</span></a></p>
+  <div class="sphx-glr-thumbnail-title">Faces recognition example using eigenfaces and SVMs</div>
+</div><div class="sphx-glr-thumbcontainer" tooltip="Probabilistic PCA and Factor Analysis are probabilistic models. The consequence is that the lik..."><img alt="" src="../../_images/sphx_glr_plot_pca_vs_fa_model_selection_thumb.png" />
+<p><a class="reference internal" href="plot_pca_vs_fa_model_selection.html#sphx-glr-auto-examples-decomposition-plot-pca-vs-fa-model-selection-py"><span class="std std-ref">Model selection with Probabilistic PCA and Factor Analysis (FA)</span></a></p>
+  <div class="sphx-glr-thumbnail-title">Model selection with Probabilistic PCA and Factor Analysis (FA)</div>
+</div><div class="sphx-glr-thumbcontainer" tooltip="Investigating the Iris dataset, we see that sepal length, petal length and petal width are high..."><img alt="" src="../../_images/sphx_glr_plot_varimax_fa_thumb.png" />
+<p><a class="reference internal" href="plot_varimax_fa.html#sphx-glr-auto-examples-decomposition-plot-varimax-fa-py"><span class="std std-ref">Factor Analysis (with rotation) to visualize patterns</span></a></p>
+  <div class="sphx-glr-thumbnail-title">Factor Analysis (with rotation) to visualize patterns</div>
+</div></div><p class="sphx-glr-signature"><a class="reference external" href="https://sphinx-gallery.github.io">Gallery generated by Sphinx-Gallery</a></p>
 </section>
 </section>
 </section>

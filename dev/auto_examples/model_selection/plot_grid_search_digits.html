@@ -212,7 +212,7 @@ sections on <a class="reference internal" href="../../modules/cross_validation.h
 digits images.
 We transform the problem into a binary classification for easier
 understanding: the goal is to identify whether a digit is <code class="docutils literal notranslate"><span class="pre">8</span></code> or not.</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">sklearn</span> <span class="kn">import</span> <span class="n">datasets</span>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">sklearn</span> <span class="kn">import</span> <span class="n">datasets</span>
 
 <span class="n">digits</span> <span class="o">=</span> <a href="../../modules/generated/sklearn.datasets.load_digits.html#sklearn.datasets.load_digits" title="sklearn.datasets.load_digits" class="sphx-glr-backref-module-sklearn-datasets sphx-glr-backref-type-py-function"><span class="n">datasets</span><span class="o">.</span><span class="n">load_digits</span></a><span class="p">()</span>
 </pre></div>
@@ -220,7 +220,7 @@ understanding: the goal is to identify whether a digit is <code class="docutils 
 <p>In order to train a classifier on images, we need to flatten them into vectors.
 Each image of 8 by 8 pixels needs to be transformed to a vector of 64 pixels.
 Thus, we will get a final data array of shape <code class="docutils literal notranslate"><span class="pre">(n_images,</span> <span class="pre">n_pixels)</span></code>.</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">n_samples</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">digits</span><span class="o">.</span><span class="n">images</span><span class="p">)</span>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">n_samples</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">digits</span><span class="o">.</span><span class="n">images</span><span class="p">)</span>
 <span class="n">X</span> <span class="o">=</span> <span class="n">digits</span><span class="o">.</span><span class="n">images</span><span class="o">.</span><span class="n">reshape</span><span class="p">((</span><span class="n">n_samples</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">))</span>
 <span class="n">y</span> <span class="o">=</span> <span class="n">digits</span><span class="o">.</span><span class="n">target</span> <span class="o">==</span> <span class="mi">8</span>
 <span class="nb">print</span><span class="p">(</span>
@@ -233,7 +233,7 @@ Thus, we will get a final data array of shape <code class="docutils literal notr
 </div>
 <p>As presented in the introduction, the data will be split into a training
 and a testing set of equal size.</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">sklearn.model_selection</span> <span class="kn">import</span> <a href="../../modules/generated/sklearn.model_selection.train_test_split.html#sklearn.model_selection.train_test_split" title="sklearn.model_selection.train_test_split" class="sphx-glr-backref-module-sklearn-model_selection sphx-glr-backref-type-py-function"><span class="n">train_test_split</span></a>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">sklearn.model_selection</span> <span class="kn">import</span> <a href="../../modules/generated/sklearn.model_selection.train_test_split.html#sklearn.model_selection.train_test_split" title="sklearn.model_selection.train_test_split" class="sphx-glr-backref-module-sklearn-model_selection sphx-glr-backref-type-py-function"><span class="n">train_test_split</span></a>
 
 <span class="n">X_train</span><span class="p">,</span> <span class="n">X_test</span><span class="p">,</span> <span class="n">y_train</span><span class="p">,</span> <span class="n">y_test</span> <span class="o">=</span> <a href="../../modules/generated/sklearn.model_selection.train_test_split.html#sklearn.model_selection.train_test_split" title="sklearn.model_selection.train_test_split" class="sphx-glr-backref-module-sklearn-model_selection sphx-glr-backref-type-py-function"><span class="n">train_test_split</span></a><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">test_size</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
 </pre></div>
@@ -244,7 +244,7 @@ and a testing set of equal size.</p>
 <p>We will select a classifier by searching the best hyper-parameters on folds
 of the training set. To do this, we need to define
 the scores to select the best candidate.</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">scores</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;precision&quot;</span><span class="p">,</span> <span class="s2">&quot;recall&quot;</span><span class="p">]</span>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">scores</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;precision&quot;</span><span class="p">,</span> <span class="s2">&quot;recall&quot;</span><span class="p">]</span>
 </pre></div>
 </div>
 <p>We can also define a function to be passed to the <code class="docutils literal notranslate"><span class="pre">refit</span></code> parameter of the
@@ -257,7 +257,7 @@ selected, it is automatically refitted by the
 precision and recall. From the selected models, we finally select the fastest
 model at predicting. Notice that these custom choices are completely
 arbitrary.</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
 
 
 <span class="k">def</span> <span class="nf">print_dataframe</span><span class="p">(</span><span class="n">filtered_cv_results</span><span class="p">):</span>
@@ -358,7 +358,7 @@ arbitrary.</p>
 <h2>Tuning hyper-parameters<a class="headerlink" href="#tuning-hyper-parameters" title="Link to this heading">¶</a></h2>
 <p>Once we defined our strategy to select the best model, we define the values
 of the hyper-parameters and create the grid-search instance:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">sklearn.model_selection</span> <span class="kn">import</span> <a href="../../modules/generated/sklearn.model_selection.GridSearchCV.html#sklearn.model_selection.GridSearchCV" title="sklearn.model_selection.GridSearchCV" class="sphx-glr-backref-module-sklearn-model_selection sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">GridSearchCV</span></a>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">sklearn.model_selection</span> <span class="kn">import</span> <a href="../../modules/generated/sklearn.model_selection.GridSearchCV.html#sklearn.model_selection.GridSearchCV" title="sklearn.model_selection.GridSearchCV" class="sphx-glr-backref-module-sklearn-model_selection sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">GridSearchCV</span></a>
 <span class="kn">from</span> <span class="nn">sklearn.svm</span> <span class="kn">import</span> <a href="../../modules/generated/sklearn.svm.SVC.html#sklearn.svm.SVC" title="sklearn.svm.SVC" class="sphx-glr-backref-module-sklearn-svm sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">SVC</span></a>
 
 <span class="n">tuned_parameters</span> <span class="o">=</span> <span class="p">[</span>
@@ -405,15 +405,15 @@ The selected final model is the fastest to predict out of the previously
 selected subset of best models based on precision and recall.
 Its scoring time is:
 
-mean_score_time                                          0.004703
-mean_test_recall                                         0.877206
-std_test_recall                                          0.069196
-mean_test_precision                                           1.0
-std_test_precision                                            0.0
-rank_test_recall                                                3
-rank_test_precision                                             1
-params                 {&#39;C&#39;: 10, &#39;gamma&#39;: 0.001, &#39;kernel&#39;: &#39;rbf&#39;}
-Name: 2, dtype: object
+mean_score_time                                         0.004922
+mean_test_recall                                        0.853676
+std_test_recall                                         0.063184
+mean_test_precision                                          1.0
+std_test_precision                                           0.0
+rank_test_recall                                               6
+rank_test_precision                                            1
+params                 {&#39;C&#39;: 1, &#39;gamma&#39;: 0.001, &#39;kernel&#39;: &#39;rbf&#39;}
+Name: 0, dtype: object
 </pre></div>
 </div>
 <div class="output_subarea output_html rendered_html output_result">
@@ -825,20 +825,20 @@ div.sk-label-container:hover .sk-estimator-doc-link.fitted:hover,
              param_grid=[{&#x27;C&#x27;: [1, 10, 100, 1000], &#x27;gamma&#x27;: [0.001, 0.0001],
                           &#x27;kernel&#x27;: [&#x27;rbf&#x27;]},
                          {&#x27;C&#x27;: [1, 10, 100, 1000], &#x27;kernel&#x27;: [&#x27;linear&#x27;]}],
-             refit=&lt;function refit_strategy at 0x7f0486148e50&gt;,
+             refit=&lt;function refit_strategy at 0x7efbe7c3f160&gt;,
              scoring=[&#x27;precision&#x27;, &#x27;recall&#x27;])</pre><b>In a Jupyter environment, please rerun this cell to show the HTML representation or trust the notebook. <br />On GitHub, the HTML representation is unable to render, please try loading this page with nbviewer.org.</b></div><div class="sk-container" hidden><div class="sk-item sk-dashed-wrapped"><div class="sk-label-container"><div class="sk-label fitted sk-toggleable"><input class="sk-toggleable__control sk-hidden--visually" id="sk-estimator-id-226" type="checkbox" ><label for="sk-estimator-id-226" class="sk-toggleable__label fitted sk-toggleable__label-arrow fitted">&nbsp;&nbsp;GridSearchCV<a class="sk-estimator-doc-link fitted" rel="noreferrer" target="_blank" href="https://scikit-learn.org/dev/modules/generated/sklearn.model_selection.GridSearchCV.html">?<span>Documentation for GridSearchCV</span></a><span class="sk-estimator-doc-link fitted">i<span>Fitted</span></span></label><div class="sk-toggleable__content fitted"><pre>GridSearchCV(estimator=SVC(),
              param_grid=[{&#x27;C&#x27;: [1, 10, 100, 1000], &#x27;gamma&#x27;: [0.001, 0.0001],
                           &#x27;kernel&#x27;: [&#x27;rbf&#x27;]},
                          {&#x27;C&#x27;: [1, 10, 100, 1000], &#x27;kernel&#x27;: [&#x27;linear&#x27;]}],
-             refit=&lt;function refit_strategy at 0x7f0486148e50&gt;,
+             refit=&lt;function refit_strategy at 0x7efbe7c3f160&gt;,
              scoring=[&#x27;precision&#x27;, &#x27;recall&#x27;])</pre></div> </div></div><div class="sk-parallel"><div class="sk-parallel-item"><div class="sk-item"><div class="sk-label-container"><div class="sk-label fitted sk-toggleable"><input class="sk-toggleable__control sk-hidden--visually" id="sk-estimator-id-227" type="checkbox" ><label for="sk-estimator-id-227" class="sk-toggleable__label fitted sk-toggleable__label-arrow fitted">estimator: SVC</label><div class="sk-toggleable__content fitted"><pre>SVC()</pre></div> </div></div><div class="sk-serial"><div class="sk-item"><div class="sk-estimator fitted sk-toggleable"><input class="sk-toggleable__control sk-hidden--visually" id="sk-estimator-id-228" type="checkbox" ><label for="sk-estimator-id-228" class="sk-toggleable__label fitted sk-toggleable__label-arrow fitted">&nbsp;SVC<a class="sk-estimator-doc-link fitted" rel="noreferrer" target="_blank" href="https://scikit-learn.org/dev/modules/generated/sklearn.svm.SVC.html">?<span>Documentation for SVC</span></a></label><div class="sk-toggleable__content fitted"><pre>SVC()</pre></div> </div></div></div></div></div></div></div></div></div>
 </div>
 <br />
 <br /><p>The parameters selected by the grid-search with our custom strategy are:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">grid_search</span><span class="o">.</span><span class="n">best_params_</span>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">grid_search</span><span class="o">.</span><span class="n">best_params_</span>
 </pre></div>
 </div>
-<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>{&#39;C&#39;: 10, &#39;gamma&#39;: 0.001, &#39;kernel&#39;: &#39;rbf&#39;}
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>{&#39;C&#39;: 1, &#39;gamma&#39;: 0.001, &#39;kernel&#39;: &#39;rbf&#39;}
 </pre></div>
 </div>
 <p>Finally, we evaluate the fine-tuned model on the left-out evaluation set: the
@@ -846,7 +846,7 @@ div.sk-label-container:hover .sk-estimator-doc-link.fitted:hover,
 set with the parameters selected by our custom refit strategy.</p>
 <p>We can use the classification report to compute standard classification
 metrics on the left-out set:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">sklearn.metrics</span> <span class="kn">import</span> <a href="../../modules/generated/sklearn.metrics.classification_report.html#sklearn.metrics.classification_report" title="sklearn.metrics.classification_report" class="sphx-glr-backref-module-sklearn-metrics sphx-glr-backref-type-py-function"><span class="n">classification_report</span></a>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">sklearn.metrics</span> <span class="kn">import</span> <a href="../../modules/generated/sklearn.metrics.classification_report.html#sklearn.metrics.classification_report" title="sklearn.metrics.classification_report" class="sphx-glr-backref-module-sklearn-metrics sphx-glr-backref-type-py-function"><span class="n">classification_report</span></a>
 
 <span class="n">y_pred</span> <span class="o">=</span> <span class="n">grid_search</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">X_test</span><span class="p">)</span>
 <span class="nb">print</span><span class="p">(</span><a href="../../modules/generated/sklearn.metrics.classification_report.html#sklearn.metrics.classification_report" title="sklearn.metrics.classification_report" class="sphx-glr-backref-module-sklearn-metrics sphx-glr-backref-type-py-function"><span class="n">classification_report</span></a><span class="p">(</span><span class="n">y_test</span><span class="p">,</span> <span class="n">y_pred</span><span class="p">))</span>
@@ -854,12 +854,12 @@ metrics on the left-out set:</p>
 </div>
 <div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>              precision    recall  f1-score   support
 
-       False       0.99      1.00      0.99       807
-        True       1.00      0.87      0.93        92
+       False       0.98      1.00      0.99       807
+        True       1.00      0.85      0.92        92
 
-    accuracy                           0.99       899
-   macro avg       0.99      0.93      0.96       899
-weighted avg       0.99      0.99      0.99       899
+    accuracy                           0.98       899
+   macro avg       0.99      0.92      0.95       899
+weighted avg       0.98      0.98      0.98       899
 </pre></div>
 </div>
 <div class="admonition note">
@@ -867,7 +867,7 @@ weighted avg       0.99      0.99      0.99       899
 <p>The problem is too easy: the hyperparameter plateau is too flat and the
 output model is the same for precision and recall with ties in quality.</p>
 </div>
-<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> (0 minutes 9.410 seconds)</p>
+<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> (0 minutes 9.645 seconds)</p>
 <div class="sphx-glr-footer sphx-glr-footer-example docutils container" id="sphx-glr-download-auto-examples-model-selection-plot-grid-search-digits-py">
 <div class="binder-badge docutils container">
 <a class="reference external image-reference" href="https://mybinder.org/v2/gh/scikit-learn/scikit-learn/main?urlpath=lab/tree/notebooks/auto_examples/model_selection/plot_grid_search_digits.ipynb"><img alt="Launch binder" src="../../_images/binder_badge_logo22.svg" width="150px" /></a>
@@ -875,14 +875,30 @@ output model is the same for precision and recall with ties in quality.</p>
 <div class="lite-badge docutils container">
 <a class="reference external image-reference" href="../../lite/lab/?path=auto_examples/model_selection/plot_grid_search_digits.ipynb"><img alt="Launch JupyterLite" src="../../_images/jupyterlite_badge_logo22.svg" width="150px" /></a>
 </div>
-<div class="sphx-glr-download sphx-glr-download-python docutils container">
-<p><a class="reference download internal" download="" href="../../_downloads/ffc6ef5575b0aa920abd7a8113265839/plot_grid_search_digits.py"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Python</span> <span class="pre">source</span> <span class="pre">code:</span> <span class="pre">plot_grid_search_digits.py</span></code></a></p>
-</div>
 <div class="sphx-glr-download sphx-glr-download-jupyter docutils container">
 <p><a class="reference download internal" download="" href="../../_downloads/f4a89bf823d814fee03a693df158d83a/plot_grid_search_digits.ipynb"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Jupyter</span> <span class="pre">notebook:</span> <span class="pre">plot_grid_search_digits.ipynb</span></code></a></p>
 </div>
+<div class="sphx-glr-download sphx-glr-download-python docutils container">
+<p><a class="reference download internal" download="" href="../../_downloads/ffc6ef5575b0aa920abd7a8113265839/plot_grid_search_digits.py"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Python</span> <span class="pre">source</span> <span class="pre">code:</span> <span class="pre">plot_grid_search_digits.py</span></code></a></p>
 </div>
-<p class="sphx-glr-signature"><a class="reference external" href="https://sphinx-gallery.github.io">Gallery generated by Sphinx-Gallery</a></p>
+</div>
+<p class="rubric">Related examples</p>
+<div class="sphx-glr-thumbnails"><div class="sphx-glr-thumbcontainer" tooltip="Example of Precision-Recall metric to evaluate classifier output quality."><img alt="" src="../../_images/sphx_glr_plot_precision_recall_thumb.png" />
+<p><a class="reference internal" href="plot_precision_recall.html#sphx-glr-auto-examples-model-selection-plot-precision-recall-py"><span class="std std-ref">Precision-Recall</span></a></p>
+  <div class="sphx-glr-thumbnail-title">Precision-Recall</div>
+</div><div class="sphx-glr-thumbcontainer" tooltip="This example balances model complexity and cross-validated score by finding a decent accuracy w..."><img alt="" src="../../_images/sphx_glr_plot_grid_search_refit_callable_thumb.png" />
+<p><a class="reference internal" href="plot_grid_search_refit_callable.html#sphx-glr-auto-examples-model-selection-plot-grid-search-refit-callable-py"><span class="std std-ref">Balance model complexity and cross-validated score</span></a></p>
+  <div class="sphx-glr-thumbnail-title">Balance model complexity and cross-validated score</div>
+</div><div class="sphx-glr-thumbcontainer" tooltip="Compare randomized search and grid search for optimizing hyperparameters of a linear SVM with S..."><img alt="" src="../../_images/sphx_glr_plot_randomized_search_thumb.png" />
+<p><a class="reference internal" href="plot_randomized_search.html#sphx-glr-auto-examples-model-selection-plot-randomized-search-py"><span class="std std-ref">Comparing randomized search and grid search for hyperparameter estimation</span></a></p>
+  <div class="sphx-glr-thumbnail-title">Comparing randomized search and grid search for hyperparameter estimation</div>
+</div><div class="sphx-glr-thumbcontainer" tooltip="This example shows how a feature selection can be easily integrated within a machine learning p..."><img alt="" src="../../_images/sphx_glr_plot_feature_selection_pipeline_thumb.png" />
+<p><a class="reference internal" href="../feature_selection/plot_feature_selection_pipeline.html#sphx-glr-auto-examples-feature-selection-plot-feature-selection-pipeline-py"><span class="std std-ref">Pipeline ANOVA SVM</span></a></p>
+  <div class="sphx-glr-thumbnail-title">Pipeline ANOVA SVM</div>
+</div><div class="sphx-glr-thumbcontainer" tooltip="This example shows how scikit-learn can be used to recognize images of hand-written digits, fro..."><img alt="" src="../../_images/sphx_glr_plot_digits_classification_thumb.png" />
+<p><a class="reference internal" href="../classification/plot_digits_classification.html#sphx-glr-auto-examples-classification-plot-digits-classification-py"><span class="std std-ref">Recognizing hand-written digits</span></a></p>
+  <div class="sphx-glr-thumbnail-title">Recognizing hand-written digits</div>
+</div></div><p class="sphx-glr-signature"><a class="reference external" href="https://sphinx-gallery.github.io">Gallery generated by Sphinx-Gallery</a></p>
 </section>
 </section>
 

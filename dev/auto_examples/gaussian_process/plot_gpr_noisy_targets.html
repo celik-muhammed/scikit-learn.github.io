@@ -210,7 +210,7 @@ as well as its probabilistic nature in the form of a pointwise 95% confidence
 interval.</p>
 <p>Note that <code class="docutils literal notranslate"><span class="pre">alpha</span></code> is a parameter to control the strength of the Tikhonov
 regularization on the assumed training points’ covariance matrix.</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># Author: Vincent Dubourg &lt;vincent.dubourg@gmail.com&gt;</span>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Author: Vincent Dubourg &lt;vincent.dubourg@gmail.com&gt;</span>
 <span class="c1">#         Jake Vanderplas &lt;vanderplas@astro.washington.edu&gt;</span>
 <span class="c1">#         Jan Hendrik Metzen &lt;jhm@informatik.uni-bremen.de&gt;</span>
 <span class="c1">#         Guillaume Lemaitre &lt;g.lemaitre58@gmail.com&gt;</span>
@@ -221,13 +221,13 @@ regularization on the assumed training points’ covariance matrix.</p>
 <h2>Dataset generation<a class="headerlink" href="#dataset-generation" title="Link to this heading">¶</a></h2>
 <p>We will start by generating a synthetic dataset. The true generative process
 is defined as <span class="math notranslate nohighlight">\(f(x) = x \sin(x)\)</span>.</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 
 <span class="n">X</span> <span class="o">=</span> <a href="https://numpy.org/doc/stable/reference/generated/numpy.linspace.html#numpy.linspace" title="numpy.linspace" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-function"><span class="n">np</span><span class="o">.</span><span class="n">linspace</span></a><span class="p">(</span><span class="n">start</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">stop</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">num</span><span class="o">=</span><span class="mi">1_000</span><span class="p">)</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
 <span class="n">y</span> <span class="o">=</span> <a href="https://numpy.org/doc/stable/reference/generated/numpy.squeeze.html#numpy.squeeze" title="numpy.squeeze" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-function"><span class="n">np</span><span class="o">.</span><span class="n">squeeze</span></a><span class="p">(</span><span class="n">X</span> <span class="o">*</span> <a href="https://numpy.org/doc/stable/reference/generated/numpy.sin.html#numpy.sin" title="numpy.sin" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-data"><span class="n">np</span><span class="o">.</span><span class="n">sin</span></a><span class="p">(</span><span class="n">X</span><span class="p">))</span>
 </pre></div>
 </div>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
 
 <a href="https://matplotlib.org/stable/api/_as_gen/matplotlib.pyplot.plot.html#matplotlib.pyplot.plot" title="matplotlib.pyplot.plot" class="sphx-glr-backref-module-matplotlib-pyplot sphx-glr-backref-type-py-function"><span class="n">plt</span><span class="o">.</span><span class="n">plot</span></a><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="sa">r</span><span class="s2">&quot;$f(x) = x \sin(x)$&quot;</span><span class="p">,</span> <span class="n">linestyle</span><span class="o">=</span><span class="s2">&quot;dotted&quot;</span><span class="p">)</span>
 <a href="https://matplotlib.org/stable/api/_as_gen/matplotlib.pyplot.legend.html#matplotlib.pyplot.legend" title="matplotlib.pyplot.legend" class="sphx-glr-backref-module-matplotlib-pyplot sphx-glr-backref-type-py-function"><span class="n">plt</span><span class="o">.</span><span class="n">legend</span></a><span class="p">()</span>
@@ -244,7 +244,7 @@ Process regression is working.</p>
 <p>In this first example, we will use the true generative process without
 adding any noise. For training the Gaussian Process regression, we will only
 select few samples.</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">rng</span> <span class="o">=</span> <a href="https://numpy.org/doc/stable/reference/random/legacy.html#numpy.random.RandomState" title="numpy.random.RandomState" class="sphx-glr-backref-module-numpy-random sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">RandomState</span></a><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">rng</span> <span class="o">=</span> <a href="https://numpy.org/doc/stable/reference/random/legacy.html#numpy.random.RandomState" title="numpy.random.RandomState" class="sphx-glr-backref-module-numpy-random sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">RandomState</span></a><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
 <span class="n">training_indices</span> <span class="o">=</span> <span class="n">rng</span><span class="o">.</span><span class="n">choice</span><span class="p">(</span><a href="https://numpy.org/doc/stable/reference/generated/numpy.arange.html#numpy.arange" title="numpy.arange" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-function"><span class="n">np</span><span class="o">.</span><span class="n">arange</span></a><span class="p">(</span><span class="n">y</span><span class="o">.</span><span class="n">size</span><span class="p">),</span> <span class="n">size</span><span class="o">=</span><span class="mi">6</span><span class="p">,</span> <span class="n">replace</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
 <span class="n">X_train</span><span class="p">,</span> <span class="n">y_train</span> <span class="o">=</span> <span class="n">X</span><span class="p">[</span><span class="n">training_indices</span><span class="p">],</span> <span class="n">y</span><span class="p">[</span><span class="n">training_indices</span><span class="p">]</span>
 </pre></div>
@@ -252,7 +252,7 @@ select few samples.</p>
 <p>Now, we fit a Gaussian process on these few training data samples. We will
 use a radial basis function (RBF) kernel and a constant parameter to fit the
 amplitude.</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">sklearn.gaussian_process</span> <span class="kn">import</span> <a href="../../modules/generated/sklearn.gaussian_process.GaussianProcessRegressor.html#sklearn.gaussian_process.GaussianProcessRegressor" title="sklearn.gaussian_process.GaussianProcessRegressor" class="sphx-glr-backref-module-sklearn-gaussian_process sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">GaussianProcessRegressor</span></a>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">sklearn.gaussian_process</span> <span class="kn">import</span> <a href="../../modules/generated/sklearn.gaussian_process.GaussianProcessRegressor.html#sklearn.gaussian_process.GaussianProcessRegressor" title="sklearn.gaussian_process.GaussianProcessRegressor" class="sphx-glr-backref-module-sklearn-gaussian_process sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">GaussianProcessRegressor</span></a>
 <span class="kn">from</span> <span class="nn">sklearn.gaussian_process.kernels</span> <span class="kn">import</span> <a href="../../modules/generated/sklearn.gaussian_process.kernels.RBF.html#sklearn.gaussian_process.kernels.RBF" title="sklearn.gaussian_process.kernels.RBF" class="sphx-glr-backref-module-sklearn-gaussian_process-kernels sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">RBF</span></a>
 
 <span class="n">kernel</span> <span class="o">=</span> <span class="mi">1</span> <span class="o">*</span> <a href="../../modules/generated/sklearn.gaussian_process.kernels.RBF.html#sklearn.gaussian_process.kernels.RBF" title="sklearn.gaussian_process.kernels.RBF" class="sphx-glr-backref-module-sklearn-gaussian_process-kernels sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">RBF</span></a><span class="p">(</span><span class="n">length_scale</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span> <span class="n">length_scale_bounds</span><span class="o">=</span><span class="p">(</span><span class="mf">1e-2</span><span class="p">,</span> <span class="mf">1e2</span><span class="p">))</span>
@@ -267,7 +267,7 @@ amplitude.</p>
 <p>After fitting our model, we see that the hyperparameters of the kernel have
 been optimized. Now, we will use our kernel to compute the mean prediction
 of the full dataset and plot the 95% confidence interval.</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">mean_prediction</span><span class="p">,</span> <span class="n">std_prediction</span> <span class="o">=</span> <span class="n">gaussian_process</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">return_std</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">mean_prediction</span><span class="p">,</span> <span class="n">std_prediction</span> <span class="o">=</span> <span class="n">gaussian_process</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">return_std</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 
 <a href="https://matplotlib.org/stable/api/_as_gen/matplotlib.pyplot.plot.html#matplotlib.pyplot.plot" title="matplotlib.pyplot.plot" class="sphx-glr-backref-module-matplotlib-pyplot sphx-glr-backref-type-py-function"><span class="n">plt</span><span class="o">.</span><span class="n">plot</span></a><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="sa">r</span><span class="s2">&quot;$f(x) = x \sin(x)$&quot;</span><span class="p">,</span> <span class="n">linestyle</span><span class="o">=</span><span class="s2">&quot;dotted&quot;</span><span class="p">)</span>
 <a href="https://matplotlib.org/stable/api/_as_gen/matplotlib.pyplot.scatter.html#matplotlib.pyplot.scatter" title="matplotlib.pyplot.scatter" class="sphx-glr-backref-module-matplotlib-pyplot sphx-glr-backref-type-py-function"><span class="n">plt</span><span class="o">.</span><span class="n">scatter</span></a><span class="p">(</span><span class="n">X_train</span><span class="p">,</span> <span class="n">y_train</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;Observations&quot;</span><span class="p">)</span>
@@ -296,14 +296,14 @@ model prediction is less precise (higher uncertainty).</p>
 this time. It will allow seeing the effect of the noise on the fitted model.</p>
 <p>We add some random Gaussian noise to the target with an arbitrary
 standard deviation.</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">noise_std</span> <span class="o">=</span> <span class="mf">0.75</span>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">noise_std</span> <span class="o">=</span> <span class="mf">0.75</span>
 <span class="n">y_train_noisy</span> <span class="o">=</span> <span class="n">y_train</span> <span class="o">+</span> <span class="n">rng</span><span class="o">.</span><span class="n">normal</span><span class="p">(</span><span class="n">loc</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">scale</span><span class="o">=</span><span class="n">noise_std</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="n">y_train</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
 </pre></div>
 </div>
 <p>We create a similar Gaussian process model. In addition to the kernel, this
 time, we specify the parameter <code class="docutils literal notranslate"><span class="pre">alpha</span></code> which can be interpreted as the
 variance of a Gaussian noise.</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">gaussian_process</span> <span class="o">=</span> <a href="../../modules/generated/sklearn.gaussian_process.GaussianProcessRegressor.html#sklearn.gaussian_process.GaussianProcessRegressor" title="sklearn.gaussian_process.GaussianProcessRegressor" class="sphx-glr-backref-module-sklearn-gaussian_process sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">GaussianProcessRegressor</span></a><span class="p">(</span>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">gaussian_process</span> <span class="o">=</span> <a href="../../modules/generated/sklearn.gaussian_process.GaussianProcessRegressor.html#sklearn.gaussian_process.GaussianProcessRegressor" title="sklearn.gaussian_process.GaussianProcessRegressor" class="sphx-glr-backref-module-sklearn-gaussian_process sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">GaussianProcessRegressor</span></a><span class="p">(</span>
     <span class="n">kernel</span><span class="o">=</span><span class="n">kernel</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="n">noise_std</span><span class="o">**</span><span class="mi">2</span><span class="p">,</span> <span class="n">n_restarts_optimizer</span><span class="o">=</span><span class="mi">9</span>
 <span class="p">)</span>
 <span class="n">gaussian_process</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X_train</span><span class="p">,</span> <span class="n">y_train_noisy</span><span class="p">)</span>
@@ -311,7 +311,7 @@ variance of a Gaussian noise.</p>
 </pre></div>
 </div>
 <p>Let’s plot the mean prediction and the uncertainty region as before.</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><a href="https://matplotlib.org/stable/api/_as_gen/matplotlib.pyplot.plot.html#matplotlib.pyplot.plot" title="matplotlib.pyplot.plot" class="sphx-glr-backref-module-matplotlib-pyplot sphx-glr-backref-type-py-function"><span class="n">plt</span><span class="o">.</span><span class="n">plot</span></a><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="sa">r</span><span class="s2">&quot;$f(x) = x \sin(x)$&quot;</span><span class="p">,</span> <span class="n">linestyle</span><span class="o">=</span><span class="s2">&quot;dotted&quot;</span><span class="p">)</span>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><a href="https://matplotlib.org/stable/api/_as_gen/matplotlib.pyplot.plot.html#matplotlib.pyplot.plot" title="matplotlib.pyplot.plot" class="sphx-glr-backref-module-matplotlib-pyplot sphx-glr-backref-type-py-function"><span class="n">plt</span><span class="o">.</span><span class="n">plot</span></a><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="sa">r</span><span class="s2">&quot;$f(x) = x \sin(x)$&quot;</span><span class="p">,</span> <span class="n">linestyle</span><span class="o">=</span><span class="s2">&quot;dotted&quot;</span><span class="p">)</span>
 <a href="https://matplotlib.org/stable/api/_as_gen/matplotlib.pyplot.errorbar.html#matplotlib.pyplot.errorbar" title="matplotlib.pyplot.errorbar" class="sphx-glr-backref-module-matplotlib-pyplot sphx-glr-backref-type-py-function"><span class="n">plt</span><span class="o">.</span><span class="n">errorbar</span></a><span class="p">(</span>
     <span class="n">X_train</span><span class="p">,</span>
     <span class="n">y_train_noisy</span><span class="p">,</span>
@@ -341,7 +341,7 @@ variance of a Gaussian noise.</p>
 predictive uncertainty near to the training samples is larger because we
 explicitly model a given level target noise independent of the input
 variable.</p>
-<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> (0 minutes 0.439 seconds)</p>
+<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> (0 minutes 0.469 seconds)</p>
 <div class="sphx-glr-footer sphx-glr-footer-example docutils container" id="sphx-glr-download-auto-examples-gaussian-process-plot-gpr-noisy-targets-py">
 <div class="binder-badge docutils container">
 <a class="reference external image-reference" href="https://mybinder.org/v2/gh/scikit-learn/scikit-learn/main?urlpath=lab/tree/notebooks/auto_examples/gaussian_process/plot_gpr_noisy_targets.ipynb"><img alt="Launch binder" src="../../_images/binder_badge_logo14.svg" width="150px" /></a>
@@ -349,14 +349,30 @@ variable.</p>
 <div class="lite-badge docutils container">
 <a class="reference external image-reference" href="../../lite/lab/?path=auto_examples/gaussian_process/plot_gpr_noisy_targets.ipynb"><img alt="Launch JupyterLite" src="../../_images/jupyterlite_badge_logo14.svg" width="150px" /></a>
 </div>
-<div class="sphx-glr-download sphx-glr-download-python docutils container">
-<p><a class="reference download internal" download="" href="../../_downloads/ba8fe72a3ef4d20bcdd7f2c95e635271/plot_gpr_noisy_targets.py"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Python</span> <span class="pre">source</span> <span class="pre">code:</span> <span class="pre">plot_gpr_noisy_targets.py</span></code></a></p>
-</div>
 <div class="sphx-glr-download sphx-glr-download-jupyter docutils container">
 <p><a class="reference download internal" download="" href="../../_downloads/517bdba67b49ba04ad16cff789c15fba/plot_gpr_noisy_targets.ipynb"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Jupyter</span> <span class="pre">notebook:</span> <span class="pre">plot_gpr_noisy_targets.ipynb</span></code></a></p>
 </div>
+<div class="sphx-glr-download sphx-glr-download-python docutils container">
+<p><a class="reference download internal" download="" href="../../_downloads/ba8fe72a3ef4d20bcdd7f2c95e635271/plot_gpr_noisy_targets.py"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Python</span> <span class="pre">source</span> <span class="pre">code:</span> <span class="pre">plot_gpr_noisy_targets.py</span></code></a></p>
 </div>
-<p class="sphx-glr-signature"><a class="reference external" href="https://sphinx-gallery.github.io">Gallery generated by Sphinx-Gallery</a></p>
+</div>
+<p class="rubric">Related examples</p>
+<div class="sphx-glr-thumbnails"><div class="sphx-glr-thumbcontainer" tooltip="This example illustrates differences between a kernel ridge regression and a Gaussian process r..."><img alt="" src="../../_images/sphx_glr_plot_compare_gpr_krr_thumb.png" />
+<p><a class="reference internal" href="plot_compare_gpr_krr.html#sphx-glr-auto-examples-gaussian-process-plot-compare-gpr-krr-py"><span class="std std-ref">Comparison of kernel ridge and Gaussian process regression</span></a></p>
+  <div class="sphx-glr-thumbnail-title">Comparison of kernel ridge and Gaussian process regression</div>
+</div><div class="sphx-glr-thumbcontainer" tooltip="This example shows the ability of the WhiteKernel to estimate the noise level in the data. More..."><img alt="" src="../../_images/sphx_glr_plot_gpr_noisy_thumb.png" />
+<p><a class="reference internal" href="plot_gpr_noisy.html#sphx-glr-auto-examples-gaussian-process-plot-gpr-noisy-py"><span class="std std-ref">Ability of Gaussian process regression (GPR) to estimate data noise-level</span></a></p>
+  <div class="sphx-glr-thumbnail-title">Ability of Gaussian process regression (GPR) to estimate data noise-level</div>
+</div><div class="sphx-glr-thumbcontainer" tooltip="This example is based on Section 5.4.3 of &quot;Gaussian Processes for Machine Learning&quot; [RW2006]_. ..."><img alt="" src="../../_images/sphx_glr_plot_gpr_co2_thumb.png" />
+<p><a class="reference internal" href="plot_gpr_co2.html#sphx-glr-auto-examples-gaussian-process-plot-gpr-co2-py"><span class="std std-ref">Forecasting of CO2 level on Mona Loa dataset using Gaussian process regression (GPR)</span></a></p>
+  <div class="sphx-glr-thumbnail-title">Forecasting of CO2 level on Mona Loa dataset using Gaussian process regression (GPR)</div>
+</div><div class="sphx-glr-thumbcontainer" tooltip="This example shows how quantile regression can be used to create prediction intervals."><img alt="" src="../../_images/sphx_glr_plot_gradient_boosting_quantile_thumb.png" />
+<p><a class="reference internal" href="../ensemble/plot_gradient_boosting_quantile.html#sphx-glr-auto-examples-ensemble-plot-gradient-boosting-quantile-py"><span class="std std-ref">Prediction Intervals for Gradient Boosting Regression</span></a></p>
+  <div class="sphx-glr-thumbnail-title">Prediction Intervals for Gradient Boosting Regression</div>
+</div><div class="sphx-glr-thumbcontainer" tooltip="This example illustrates GPC on XOR data. Compared are a stationary, isotropic kernel (RBF) and..."><img alt="" src="../../_images/sphx_glr_plot_gpc_xor_thumb.png" />
+<p><a class="reference internal" href="plot_gpc_xor.html#sphx-glr-auto-examples-gaussian-process-plot-gpc-xor-py"><span class="std std-ref">Illustration of Gaussian process classification (GPC) on the XOR dataset</span></a></p>
+  <div class="sphx-glr-thumbnail-title">Illustration of Gaussian process classification (GPC) on the XOR dataset</div>
+</div></div><p class="sphx-glr-signature"><a class="reference external" href="https://sphinx-gallery.github.io">Gallery generated by Sphinx-Gallery</a></p>
 </section>
 </section>
 

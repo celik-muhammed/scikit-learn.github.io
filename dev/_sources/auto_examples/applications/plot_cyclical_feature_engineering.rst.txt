@@ -39,7 +39,7 @@ We start by loading the data from the OpenML repository.
 
 .. GENERATED FROM PYTHON SOURCE LINES 21-26
 
-.. code-block:: default
+.. code-block:: Python
 
     from sklearn.datasets import fetch_openml
 
@@ -65,7 +65,7 @@ demand around the middle of the days:
 
 .. GENERATED FROM PYTHON SOURCE LINES 34-47
 
-.. code-block:: default
+.. code-block:: Python
 
     import matplotlib.pyplot as plt
 
@@ -99,7 +99,7 @@ a hourly basis:
 
 .. GENERATED FROM PYTHON SOURCE LINES 51-53
 
-.. code-block:: default
+.. code-block:: Python
 
     df["count"].max()
 
@@ -136,7 +136,7 @@ as a fraction of the maximum demand.
 
 .. GENERATED FROM PYTHON SOURCE LINES 70-72
 
-.. code-block:: default
+.. code-block:: Python
 
     y = df["count"] / df["count"].max()
 
@@ -149,7 +149,7 @@ as a fraction of the maximum demand.
 
 .. GENERATED FROM PYTHON SOURCE LINES 73-80
 
-.. code-block:: default
+.. code-block:: Python
 
     fig, ax = plt.subplots(figsize=(12, 4))
     y.hist(bins=30, ax=ax)
@@ -180,7 +180,7 @@ several complementary columns.
 
 .. GENERATED FROM PYTHON SOURCE LINES 86-89
 
-.. code-block:: default
+.. code-block:: Python
 
     X = df.drop("count", axis="columns")
     X
@@ -414,7 +414,7 @@ with `"weather"`:
 
 .. GENERATED FROM PYTHON SOURCE LINES 100-102
 
-.. code-block:: default
+.. code-block:: Python
 
     X["weather"].value_counts()
 
@@ -445,7 +445,7 @@ representation by collapsing those into the `"rain"` category.
 
 .. GENERATED FROM PYTHON SOURCE LINES 107-108
 
-.. code-block:: default
+.. code-block:: Python
 
     X["weather"].replace(to_replace="heavy_rain", value="rain", inplace=True)
 
@@ -457,7 +457,7 @@ representation by collapsing those into the `"rain"` category.
 
 .. GENERATED FROM PYTHON SOURCE LINES 109-111
 
-.. code-block:: default
+.. code-block:: Python
 
     X["weather"].value_counts()
 
@@ -485,7 +485,7 @@ As expected, the `"season"` variable is well balanced:
 
 .. GENERATED FROM PYTHON SOURCE LINES 114-116
 
-.. code-block:: default
+.. code-block:: Python
 
     X["season"].value_counts()
 
@@ -524,7 +524,7 @@ data:
 
 .. GENERATED FROM PYTHON SOURCE LINES 129-139
 
-.. code-block:: default
+.. code-block:: Python
 
 
     from sklearn.model_selection import TimeSeriesSplit
@@ -550,7 +550,7 @@ Let us manually inspect the various splits to check that the
 
 .. GENERATED FROM PYTHON SOURCE LINES 142-145
 
-.. code-block:: default
+.. code-block:: Python
 
     all_splits = list(ts_cv.split(X, y))
     train_0, test_0 = all_splits[0]
@@ -564,7 +564,7 @@ Let us manually inspect the various splits to check that the
 
 .. GENERATED FROM PYTHON SOURCE LINES 146-148
 
-.. code-block:: default
+.. code-block:: Python
 
     X.iloc[test_0]
 
@@ -784,7 +784,7 @@ Let us manually inspect the various splits to check that the
 
 .. GENERATED FROM PYTHON SOURCE LINES 149-151
 
-.. code-block:: default
+.. code-block:: Python
 
     X.iloc[train_0]
 
@@ -1008,7 +1008,7 @@ We now inspect the last split:
 
 .. GENERATED FROM PYTHON SOURCE LINES 153-155
 
-.. code-block:: default
+.. code-block:: Python
 
     train_4, test_4 = all_splits[4]
 
@@ -1021,7 +1021,7 @@ We now inspect the last split:
 
 .. GENERATED FROM PYTHON SOURCE LINES 156-158
 
-.. code-block:: default
+.. code-block:: Python
 
     X.iloc[test_4]
 
@@ -1241,7 +1241,7 @@ We now inspect the last split:
 
 .. GENERATED FROM PYTHON SOURCE LINES 159-161
 
-.. code-block:: default
+.. code-block:: Python
 
     X.iloc[train_4]
 
@@ -1483,7 +1483,7 @@ we only try the default hyper-parameters for this model:
 
 .. GENERATED FROM PYTHON SOURCE LINES 181-190
 
-.. code-block:: default
+.. code-block:: Python
 
     from sklearn.compose import ColumnTransformer
     from sklearn.ensemble import HistGradientBoostingRegressor
@@ -1514,7 +1514,7 @@ relative demand averaged across our 5 time-based cross-validation splits:
 
 .. GENERATED FROM PYTHON SOURCE LINES 194-224
 
-.. code-block:: default
+.. code-block:: Python
 
     import numpy as np
 
@@ -1585,7 +1585,7 @@ impact the results much because they are already on comparable scales:
 
 .. GENERATED FROM PYTHON SOURCE LINES 244-265
 
-.. code-block:: default
+.. code-block:: Python
 
     from sklearn.linear_model import RidgeCV
     from sklearn.preprocessing import MinMaxScaler, OneHotEncoder
@@ -1657,7 +1657,7 @@ level.
 
 .. GENERATED FROM PYTHON SOURCE LINES 295-308
 
-.. code-block:: default
+.. code-block:: Python
 
     one_hot_linear_pipeline = make_pipeline(
         ColumnTransformer(
@@ -1720,7 +1720,7 @@ any jump between the first and the last value of the periodic range.
 
 .. GENERATED FROM PYTHON SOURCE LINES 338-349
 
-.. code-block:: default
+.. code-block:: Python
 
     from sklearn.preprocessing import FunctionTransformer
 
@@ -1747,7 +1747,7 @@ data with a bit of extrapolation beyond hour=23:
 
 .. GENERATED FROM PYTHON SOURCE LINES 353-364
 
-.. code-block:: default
+.. code-block:: Python
 
     import pandas as pd
 
@@ -1782,7 +1782,7 @@ sine/cosine representation.
 
 .. GENERATED FROM PYTHON SOURCE LINES 371-379
 
-.. code-block:: default
+.. code-block:: Python
 
     fig, ax = plt.subplots(figsize=(7, 5))
     sp = ax.scatter(hour_df["hour_sin"], hour_df["hour_cos"], c=hour_df["hour"])
@@ -1810,7 +1810,7 @@ We can now build a feature extraction pipeline using this strategy:
 
 .. GENERATED FROM PYTHON SOURCE LINES 382-401
 
-.. code-block:: default
+.. code-block:: Python
 
     cyclic_cossin_transformer = ColumnTransformer(
         transformers=[
@@ -1862,7 +1862,7 @@ transformation:
 
 .. GENERATED FROM PYTHON SOURCE LINES 415-431
 
-.. code-block:: default
+.. code-block:: Python
 
     from sklearn.preprocessing import SplineTransformer
 
@@ -1894,7 +1894,7 @@ synthetic hour data with a bit of extrapolation beyond hour=23:
 
 .. GENERATED FROM PYTHON SOURCE LINES 435-448
 
-.. code-block:: default
+.. code-block:: Python
 
     hour_df = pd.DataFrame(
         np.linspace(0, 26, 1000).reshape(-1, 1),
@@ -1935,7 +1935,7 @@ while preserving most of the expressivity:
 
 .. GENERATED FROM PYTHON SOURCE LINES 458-473
 
-.. code-block:: default
+.. code-block:: Python
 
     cyclic_spline_transformer = ColumnTransformer(
         transformers=[
@@ -1984,7 +1984,7 @@ on a range of held out data points.
 
 .. GENERATED FROM PYTHON SOURCE LINES 487-499
 
-.. code-block:: default
+.. code-block:: Python
 
     naive_linear_pipeline.fit(X.iloc[train_0], y.iloc[train_0])
     naive_linear_predictions = naive_linear_pipeline.predict(X.iloc[test_0])
@@ -2012,7 +2012,7 @@ the test set to get some qualitative insights:
 
 .. GENERATED FROM PYTHON SOURCE LINES 502-530
 
-.. code-block:: default
+.. code-block:: Python
 
     last_hours = slice(-96, None)
     fig, ax = plt.subplots(figsize=(12, 4))
@@ -2090,7 +2090,7 @@ engineering pipeline:
 
 .. GENERATED FROM PYTHON SOURCE LINES 561-563
 
-.. code-block:: default
+.. code-block:: Python
 
     naive_linear_pipeline[:-1].transform(X).shape
 
@@ -2109,7 +2109,7 @@ engineering pipeline:
 
 .. GENERATED FROM PYTHON SOURCE LINES 564-566
 
-.. code-block:: default
+.. code-block:: Python
 
     one_hot_linear_pipeline[:-1].transform(X).shape
 
@@ -2128,7 +2128,7 @@ engineering pipeline:
 
 .. GENERATED FROM PYTHON SOURCE LINES 567-569
 
-.. code-block:: default
+.. code-block:: Python
 
     cyclic_cossin_linear_pipeline[:-1].transform(X).shape
 
@@ -2147,7 +2147,7 @@ engineering pipeline:
 
 .. GENERATED FROM PYTHON SOURCE LINES 570-572
 
-.. code-block:: default
+.. code-block:: Python
 
     cyclic_spline_linear_pipeline[:-1].transform(X).shape
 
@@ -2199,7 +2199,7 @@ explicitly without introducing too many new variables:
 
 .. GENERATED FROM PYTHON SOURCE LINES 602-615
 
-.. code-block:: default
+.. code-block:: Python
 
     from sklearn.pipeline import FeatureUnion
     from sklearn.preprocessing import PolynomialFeatures
@@ -2229,7 +2229,7 @@ by modeling this pairwise interaction explicitly:
 
 .. GENERATED FROM PYTHON SOURCE LINES 619-631
 
-.. code-block:: default
+.. code-block:: Python
 
 
     cyclic_spline_interactions_pipeline = make_pipeline(
@@ -2278,7 +2278,7 @@ polynomial kernel expansion. Let us try the latter:
 
 .. GENERATED FROM PYTHON SOURCE LINES 648-657
 
-.. code-block:: default
+.. code-block:: Python
 
     from sklearn.kernel_approximation import Nystroem
 
@@ -2318,7 +2318,7 @@ encoding and kernel approximation:
 
 .. GENERATED FROM PYTHON SOURCE LINES 669-684
 
-.. code-block:: default
+.. code-block:: Python
 
 
     one_hot_poly_pipeline = make_pipeline(
@@ -2363,7 +2363,7 @@ non-linear interactions between features:
 
 .. GENERATED FROM PYTHON SOURCE LINES 694-703
 
-.. code-block:: default
+.. code-block:: Python
 
     gbrt.fit(X.iloc[train_0], y.iloc[train_0])
     gbrt_predictions = gbrt.predict(X.iloc[test_0])
@@ -2387,7 +2387,7 @@ Again we zoom on the last 4 days of the test set:
 
 .. GENERATED FROM PYTHON SOURCE LINES 705-734
 
-.. code-block:: default
+.. code-block:: Python
 
 
     last_hours = slice(-96, None)
@@ -2456,7 +2456,7 @@ three models using the true vs predicted demand scatter plots:
 
 .. GENERATED FROM PYTHON SOURCE LINES 756-791
 
-.. code-block:: default
+.. code-block:: Python
 
     from sklearn.metrics import PredictionErrorDisplay
 
@@ -2547,7 +2547,7 @@ instead of `RidgeCV`.
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** (0 minutes 11.255 seconds)
+   **Total running time of the script:** (0 minutes 12.540 seconds)
 
 
 .. _sphx_glr_download_auto_examples_applications_plot_cyclical_feature_engineering.py:
@@ -2556,15 +2556,12 @@ instead of `RidgeCV`.
 
   .. container:: sphx-glr-footer sphx-glr-footer-example
 
-
     .. container:: binder-badge
 
       .. image:: images/binder_badge_logo.svg
         :target: https://mybinder.org/v2/gh/scikit-learn/scikit-learn/main?urlpath=lab/tree/notebooks/auto_examples/applications/plot_cyclical_feature_engineering.ipynb
         :alt: Launch binder
         :width: 150 px
-
-
 
     .. container:: lite-badge
 
@@ -2573,13 +2570,16 @@ instead of `RidgeCV`.
         :alt: Launch JupyterLite
         :width: 150 px
 
+    .. container:: sphx-glr-download sphx-glr-download-jupyter
+
+      :download:`Download Jupyter notebook: plot_cyclical_feature_engineering.ipynb <plot_cyclical_feature_engineering.ipynb>`
+
     .. container:: sphx-glr-download sphx-glr-download-python
 
       :download:`Download Python source code: plot_cyclical_feature_engineering.py <plot_cyclical_feature_engineering.py>`
 
-    .. container:: sphx-glr-download sphx-glr-download-jupyter
 
-      :download:`Download Jupyter notebook: plot_cyclical_feature_engineering.ipynb <plot_cyclical_feature_engineering.ipynb>`
+.. include:: plot_cyclical_feature_engineering.recommendations
 
 
 .. only:: html
