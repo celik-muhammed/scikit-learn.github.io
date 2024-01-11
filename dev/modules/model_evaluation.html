@@ -1272,15 +1272,36 @@ Correct absence of result</p></td>
 </tr>
 </tbody>
 </table>
-<p>In this context, we can define the notions of precision, recall and F-measure:</p>
+<p>In this context, we can define the notions of precision and recall:</p>
 <div class="math notranslate nohighlight">
-\[\text{precision} = \frac{tp}{tp + fp},\]</div>
+\[\text{precision} = \frac{\text{tp}}{\text{tp} + \text{fp}},\]</div>
 <div class="math notranslate nohighlight">
-\[\text{recall} = \frac{tp}{tp + fn},\]</div>
-<div class="math notranslate nohighlight">
-\[F_\beta = (1 + \beta^2) \frac{\text{precision} \times \text{recall}}{\beta^2 \text{precision} + \text{recall}}.\]</div>
-<p>Sometimes recall is also called ‘’sensitivity’’.</p>
-<p>Here are some small examples in binary classification:</p>
+\[\text{recall} = \frac{\text{tp}}{\text{tp} + \text{fn}},\]</div>
+<p>(Sometimes recall is also called ‘’sensitivity’’)</p>
+<p>F-measure is the weighted harmonic mean of precision and recall, with precision’s contribution to the mean weighted by
+some parameter <span class="math notranslate nohighlight">\(\beta\)</span>:
+F-measure is the weighted harmonic mean of precision and recall, with precision’s
+contribution to the mean weighted by some parameter <span class="math notranslate nohighlight">\(\beta\)</span>:
+.. math:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">F_</span>\<span class="n">beta</span> <span class="o">=</span> <span class="p">(</span><span class="mi">1</span> <span class="o">+</span> \<span class="n">beta</span><span class="o">^</span><span class="mi">2</span><span class="p">)</span> \<span class="n">frac</span><span class="p">{</span>\<span class="n">text</span><span class="p">{</span><span class="n">precision</span><span class="p">}</span> \<span class="n">times</span> \<span class="n">text</span><span class="p">{</span><span class="n">recall</span><span class="p">}}{</span>\<span class="n">beta</span><span class="o">^</span><span class="mi">2</span> \<span class="n">text</span><span class="p">{</span><span class="n">precision</span><span class="p">}</span> <span class="o">+</span> \<span class="n">text</span><span class="p">{</span><span class="n">recall</span><span class="p">}}</span>
+</pre></div>
+</div>
+<p>To avoid division by zero when precision and recall are zero, Scikit-Learn calculates F-measure with this
+otherwise-equivalent formula:
+To avoid division by zero when precision and recall are zero, we can define the
+F-measure with this otherwise-equivalent formula:
+.. math:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">F_</span>\<span class="n">beta</span> <span class="o">=</span> \<span class="n">frac</span><span class="p">{(</span><span class="mi">1</span> <span class="o">+</span> \<span class="n">beta</span><span class="o">^</span><span class="mi">2</span><span class="p">)</span> \<span class="n">text</span><span class="p">{</span><span class="n">tp</span><span class="p">}}{(</span><span class="mi">1</span> <span class="o">+</span> \<span class="n">beta</span><span class="o">^</span><span class="mi">2</span><span class="p">)</span> \<span class="n">text</span><span class="p">{</span><span class="n">tp</span><span class="p">}</span> <span class="o">+</span> \<span class="n">text</span><span class="p">{</span><span class="n">fp</span><span class="p">}</span> <span class="o">+</span> \<span class="n">beta</span><span class="o">^</span><span class="mi">2</span> \<span class="n">text</span><span class="p">{</span><span class="n">fn</span><span class="p">}}</span><span class="o">.</span>
+</pre></div>
+</div>
+<p>Note that this formula is still undefined when there are no true positives, false positives, nor false negatives. By
+default, F-1 for a set of exclusively true negatives is calculated as 0, however this behavior can be changed using the
+<code class="docutils literal notranslate"><span class="pre">zero_division</span></code> parameter.
+Note that this formula is still undefined when there are no true positives, false
+positives, nor false negatives. By default, F-1 for a set of exclusively true negatives
+is calculated as 0, however this behavior can be changed using the <code class="docutils literal notranslate"><span class="pre">zero_division</span></code>
+parameter.
+Here are some small examples in binary classification:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">sklearn</span> <span class="kn">import</span> <span class="n">metrics</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">y_pred</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">y_true</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span>
