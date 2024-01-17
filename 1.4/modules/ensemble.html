@@ -19,7 +19,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
   
-  <title>1.11. Ensembles: Gradient boosting, random forests, bagging, voting, stacking &mdash; scikit-learn 1.4.0rc1 documentation</title>
+  <title>1.11. Ensembles: Gradient boosting, random forests, bagging, voting, stacking &mdash; scikit-learn 1.4.0 documentation</title>
   
   <link rel="canonical" href="http://scikit-learn.org/stable/modules/ensemble.html" />
 
@@ -168,7 +168,7 @@
         </div>
         <div class="alert alert-danger p-1 mb-2" role="alert">
           <p class="text-center mb-0">
-          <strong>scikit-learn 1.4.0rc1</strong><br/>
+          <strong>scikit-learn 1.4.0</strong><br/>
           <a href="http://scikit-learn.org/dev/versions.html">Other versions</a>
           </p>
         </div>
@@ -497,22 +497,16 @@ score should increase the probability of getting approved for a loan.
 Monotonic constraints allow you to incorporate such prior knowledge into the
 model.</p>
 <p>For a predictor <span class="math notranslate nohighlight">\(F\)</span> with two features:</p>
-<blockquote>
-<div><ul>
-<li><dl>
-<dt>a <strong>monotonic increase constraint</strong> is a constraint of the form:</dt><dd><div class="math notranslate nohighlight">
+<ul>
+<li><p>a <strong>monotonic increase constraint</strong> is a constraint of the form:</p>
+<div class="math notranslate nohighlight">
 \[x_1 \leq x_1' \implies F(x_1, x_2) \leq F(x_1', x_2)\]</div>
-</dd>
-</dl>
 </li>
-<li><dl>
-<dt>a <strong>monotonic decrease constraint</strong> is a constraint of the form:</dt><dd><div class="math notranslate nohighlight">
+<li><p>a <strong>monotonic decrease constraint</strong> is a constraint of the form:</p>
+<div class="math notranslate nohighlight">
 \[x_1 \leq x_1' \implies F(x_1, x_2) \geq F(x_1', x_2)\]</div>
-</dd>
-</dl>
 </li>
 </ul>
-</div></blockquote>
 <p>You can specify a monotonic constraint on each feature using the
 <code class="docutils literal notranslate"><span class="pre">monotonic_cst</span></code> parameter. For each feature, a value of 0 indicates no
 constraint, while 1 and -1 indicate a monotonic increase and
@@ -529,10 +523,8 @@ to belong to the positive class.</p>
 <p>Nevertheless, monotonic constraints only marginally constrain feature effects on the output.
 For instance, monotonic increase and decrease constraints cannot be used to enforce the
 following modelling constraint:</p>
-<blockquote>
-<div><div class="math notranslate nohighlight">
+<div class="math notranslate nohighlight">
 \[x_1 \leq x_1' \implies F(x_1, x_2) \leq F(x_1', x_2')\]</div>
-</div></blockquote>
 <p>Also, monotonic constraints are not supported for multiclass classification.</p>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
@@ -782,25 +774,19 @@ case.</p>
 <h5><span class="section-number">1.11.1.2.5.1. </span>Regression<a class="headerlink" href="#id9" title="Link to this heading">¶</a></h5>
 <p>GBRT regressors are additive models whose prediction <span class="math notranslate nohighlight">\(\hat{y}_i\)</span> for a
 given input <span class="math notranslate nohighlight">\(x_i\)</span> is of the following form:</p>
-<blockquote>
-<div><div class="math notranslate nohighlight">
+<div class="math notranslate nohighlight">
 \[\hat{y}_i = F_M(x_i) = \sum_{m=1}^{M} h_m(x_i)\]</div>
-</div></blockquote>
 <p>where the <span class="math notranslate nohighlight">\(h_m\)</span> are estimators called <em>weak learners</em> in the context
 of boosting. Gradient Tree Boosting uses <a class="reference internal" href="tree.html#tree"><span class="std std-ref">decision tree regressors</span></a> of fixed size as weak learners. The constant M corresponds to the
 <code class="docutils literal notranslate"><span class="pre">n_estimators</span></code> parameter.</p>
 <p>Similar to other boosting algorithms, a GBRT is built in a greedy fashion:</p>
-<blockquote>
-<div><div class="math notranslate nohighlight">
+<div class="math notranslate nohighlight">
 \[F_m(x) = F_{m-1}(x) + h_m(x),\]</div>
-</div></blockquote>
 <p>where the newly added tree <span class="math notranslate nohighlight">\(h_m\)</span> is fitted in order to minimize a sum
 of losses <span class="math notranslate nohighlight">\(L_m\)</span>, given the previous ensemble <span class="math notranslate nohighlight">\(F_{m-1}\)</span>:</p>
-<blockquote>
-<div><div class="math notranslate nohighlight">
+<div class="math notranslate nohighlight">
 \[h_m =  \arg\min_{h} L_m = \arg\min_{h} \sum_{i=1}^{n}
 l(y_i, F_{m-1}(x_i) + h(x_i)),\]</div>
-</div></blockquote>
 <p>where <span class="math notranslate nohighlight">\(l(y_i, F(x_i))\)</span> is defined by the <code class="docutils literal notranslate"><span class="pre">loss</span></code> parameter, detailed
 in the next section.</p>
 <p>By default, the initial model <span class="math notranslate nohighlight">\(F_{0}\)</span> is chosen as the constant that
@@ -809,13 +795,11 @@ the target values. The initial model can also be specified via the <code class="
 argument.</p>
 <p>Using a first-order Taylor approximation, the value of <span class="math notranslate nohighlight">\(l\)</span> can be
 approximated as follows:</p>
-<blockquote>
-<div><div class="math notranslate nohighlight">
+<div class="math notranslate nohighlight">
 \[l(y_i, F_{m-1}(x_i) + h_m(x_i)) \approx
 l(y_i, F_{m-1}(x_i))
 + h_m(x_i)
 \left[ \frac{\partial l(y_i, F(x_i))}{\partial F(x_i)} \right]_{F=F_{m - 1}}.\]</div>
-</div></blockquote>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
 <p>Briefly, a first-order Taylor approximation says that
@@ -829,10 +813,8 @@ second parameter, evaluated at <span class="math notranslate nohighlight">\(F_{m
 any given <span class="math notranslate nohighlight">\(F_{m - 1}(x_i)\)</span> in a closed form since the loss is
 differentiable. We will denote it by <span class="math notranslate nohighlight">\(g_i\)</span>.</p>
 <p>Removing the constant terms, we have:</p>
-<blockquote>
-<div><div class="math notranslate nohighlight">
+<div class="math notranslate nohighlight">
 \[h_m \approx \arg\min_{h} \sum_{i=1}^{n} h(x_i) g_i\]</div>
-</div></blockquote>
 <p>This is minimized if <span class="math notranslate nohighlight">\(h(x_i)\)</span> is fitted to predict a value that is
 proportional to the negative gradient <span class="math notranslate nohighlight">\(-g_i\)</span>. Therefore, at each
 iteration, <strong>the estimator</strong> <span class="math notranslate nohighlight">\(h_m\)</span> <strong>is fitted to predict the negative
@@ -873,8 +855,7 @@ quantities.</p>
 <span id="gradient-boosting-loss"></span><h4><span class="section-number">1.11.1.2.6. </span>Loss Functions<a class="headerlink" href="#loss-functions" title="Link to this heading">¶</a></h4>
 <p>The following loss functions are supported and can be specified using
 the parameter <code class="docutils literal notranslate"><span class="pre">loss</span></code>:</p>
-<blockquote>
-<div><ul class="simple">
+<ul class="simple">
 <li><p>Regression</p>
 <ul>
 <li><p>Squared error (<code class="docutils literal notranslate"><span class="pre">'squared_error'</span></code>): The natural choice for regression
@@ -913,7 +894,6 @@ classification.</p></li>
 </ul>
 </li>
 </ul>
-</div></blockquote>
 </section>
 <section id="shrinkage-via-learning-rate">
 <span id="gradient-boosting-shrinkage"></span><h4><span class="section-number">1.11.1.2.7. </span>Shrinkage via learning rate<a class="headerlink" href="#shrinkage-via-learning-rate" title="Link to this heading">¶</a></h4>
@@ -1349,8 +1329,7 @@ contrast with boosting methods which usually work best with weak models (e.g.,
 shallow decision trees).</p>
 <p>Bagging methods come in many flavours but mostly differ from each other by the
 way they draw random subsets of the training set:</p>
-<blockquote>
-<div><ul class="simple">
+<ul class="simple">
 <li><p>When random subsets of the dataset are drawn as random subsets of the
 samples, then this algorithm is known as Pasting <a class="reference internal" href="#b1999" id="id19"><span>[B1999]</span></a>.</p></li>
 <li><p>When samples are drawn with replacement, then the method is known as
@@ -1360,7 +1339,6 @@ the features, then the method is known as Random Subspaces <a class="reference i
 <li><p>Finally, when base estimators are built on subsets of both samples and
 features, then the method is known as Random Patches <a class="reference internal" href="#lg2012" id="id22"><span>[LG2012]</span></a>.</p></li>
 </ul>
-</div></blockquote>
 <p>In scikit-learn, bagging methods are offered as a unified
 <a class="reference internal" href="generated/sklearn.ensemble.BaggingClassifier.html#sklearn.ensemble.BaggingClassifier" title="sklearn.ensemble.BaggingClassifier"><code class="xref py py-class docutils literal notranslate"><span class="pre">BaggingClassifier</span></code></a> meta-estimator  (resp. <a class="reference internal" href="generated/sklearn.ensemble.BaggingRegressor.html#sklearn.ensemble.BaggingRegressor" title="sklearn.ensemble.BaggingRegressor"><code class="xref py py-class docutils literal notranslate"><span class="pre">BaggingRegressor</span></code></a>),
 taking as input a user-specified estimator along with parameters
@@ -1776,13 +1754,11 @@ concentrate on the examples that are missed by the previous ones in the sequence
 <a class="reference external image-reference" href="../auto_examples/ensemble/plot_adaboost_multiclass.html"><img alt="../_images/sphx_glr_plot_adaboost_multiclass_001.png" src="../_images/sphx_glr_plot_adaboost_multiclass_001.png" style="width: 480.0px; height: 360.0px;" /></a>
 </figure>
 <p>AdaBoost can be used both for classification and regression problems:</p>
-<blockquote>
-<div><ul class="simple">
+<ul class="simple">
 <li><p>For multi-class classification, <a class="reference internal" href="generated/sklearn.ensemble.AdaBoostClassifier.html#sklearn.ensemble.AdaBoostClassifier" title="sklearn.ensemble.AdaBoostClassifier"><code class="xref py py-class docutils literal notranslate"><span class="pre">AdaBoostClassifier</span></code></a> implements
 AdaBoost.SAMME <a class="reference internal" href="#zzrh2009" id="id33"><span>[ZZRH2009]</span></a>.</p></li>
 <li><p>For regression, <a class="reference internal" href="generated/sklearn.ensemble.AdaBoostRegressor.html#sklearn.ensemble.AdaBoostRegressor" title="sklearn.ensemble.AdaBoostRegressor"><code class="xref py py-class docutils literal notranslate"><span class="pre">AdaBoostRegressor</span></code></a> implements AdaBoost.R2 <a class="reference internal" href="#d1997" id="id34"><span>[D1997]</span></a>.</p></li>
 </ul>
-</div></blockquote>
 <section id="id35">
 <h3><span class="section-number">1.11.7.1. </span>Usage<a class="headerlink" href="#id35" title="Link to this heading">¶</a></h3>
 <p>The following example shows how to fit an AdaBoost classifier with 100 weak
@@ -1852,7 +1828,7 @@ Statistical Learning Ed. 2”, Springer, 2009.</p>
       </div>
     <div class="container">
       <footer class="sk-content-footer">
-            &copy; 2007 - 2023, scikit-learn developers (BSD License).
+            &copy; 2007 - 2024, scikit-learn developers (BSD License).
           <a href="../_sources/modules/ensemble.rst.txt" rel="nofollow">Show this page source</a>
       </footer>
     </div>

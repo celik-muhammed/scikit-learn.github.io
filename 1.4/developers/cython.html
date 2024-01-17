@@ -19,7 +19,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
   
-  <title>Cython Best Practices, Conventions and Knowledge &mdash; scikit-learn 1.4.0rc1 documentation</title>
+  <title>Cython Best Practices, Conventions and Knowledge &mdash; scikit-learn 1.4.0 documentation</title>
   
   <link rel="canonical" href="http://scikit-learn.org/stable/developers/cython.html" />
 
@@ -168,7 +168,7 @@
         </div>
         <div class="alert alert-danger p-1 mb-2" role="alert">
           <p class="text-center mb-0">
-          <strong>scikit-learn 1.4.0rc1</strong><br/>
+          <strong>scikit-learn 1.4.0</strong><br/>
           <a href="http://scikit-learn.org/dev/versions.html">Other versions</a>
           </p>
         </div>
@@ -241,27 +241,23 @@ If you plan to use OpenMP for your implementations in your Jupyter Notebook, do 
 There currently is <a class="reference external" href="https://github.com/scikit-learn/scikit-learn/issues/25572">ongoing work to simplify and unify that across the codebase</a>.
 For now, make sure you understand which concrete types are used ultimately.</p></li>
 <li><p>You might find this alias to compile individual Cython extension handy:</p>
-<blockquote>
-<div><div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># You might want to add this alias to your shell script config.</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># You might want to add this alias to your shell script config.</span>
 <span class="n">alias</span> <span class="n">cythonX</span><span class="o">=</span><span class="s2">&quot;cython -X language_level=3 -X boundscheck=False -X wraparound=False -X initializedcheck=False -X nonecheck=False -X cdivision=True&quot;</span>
 
 <span class="c1"># This generates `source.c` as if you had recompiled scikit-learn entirely.</span>
 <span class="n">cythonX</span> <span class="o">--</span><span class="n">annotate</span> <span class="n">source</span><span class="o">.</span><span class="n">pyx</span>
 </pre></div>
 </div>
-</div></blockquote>
 </li>
 <li><p>Using the <code class="docutils literal notranslate"><span class="pre">--annotate</span></code> option with this flag allows generating a HTML report of code annotation.
 This report indicates interactions with the CPython interpreter on a line-by-line basis.
 Interactions with the CPython interpreter must be avoided as much as possible in
 the computationally intensive sections of the algorithms.
 For more information, please refer to <a class="reference external" href="https://cython.readthedocs.io/en/latest/src/tutorial/cython_tutorial.html#primes">this section of Cython’s tutorial</a></p>
-<blockquote>
-<div><div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># This generates a HTML report (`source.html`) for `source.c`.</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># This generates a HTML report (`source.html`) for `source.c`.</span>
 <span class="n">cythonX</span> <span class="o">--</span><span class="n">annotate</span> <span class="n">source</span><span class="o">.</span><span class="n">pyx</span>
 </pre></div>
 </div>
-</div></blockquote>
 </li>
 </ul>
 </section>
@@ -286,18 +282,16 @@ for a line of Cython code, the better” is a good rule of thumb.</p></li>
 as nogil, it means that they can be called without holding the GIL, but it does not release
 the GIL when entering them. You have to do that yourself either by passing <code class="docutils literal notranslate"><span class="pre">nogil=True</span></code> to
 <code class="docutils literal notranslate"><span class="pre">cython.parallel.prange</span></code> explicitly, or by using an explicit context manager:</p>
-<blockquote>
-<div><div class="highlight-cython notranslate"><div class="highlight"><pre><span></span><span class="k">cdef</span> <span class="kr">inline</span> <span class="kt">void</span> <span class="nf">my_func</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="k">nogil</span><span class="p">:</span>
+<div class="highlight-cython notranslate"><div class="highlight"><pre><span></span><span class="k">cdef</span> <span class="kr">inline</span> <span class="kt">void</span> <span class="nf">my_func</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="k">nogil</span><span class="p">:</span>
 
-     <span class="c"># Some logic interacting with CPython, e.g. allocating arrays via NumPy.</span>
+    <span class="c"># Some logic interacting with CPython, e.g. allocating arrays via NumPy.</span>
 
-     <span class="k">with</span> <span class="k">nogil</span><span class="p">:</span>
-         <span class="c"># The code here is run as is it were written in C.</span>
+    <span class="k">with</span> <span class="k">nogil</span><span class="p">:</span>
+        <span class="c"># The code here is run as is it were written in C.</span>
 
-     <span class="k">return</span> <span class="mf">0</span>
+    <span class="k">return</span> <span class="mf">0</span>
 </pre></div>
 </div>
-</div></blockquote>
 <p>This item is based on <a class="reference external" href="https://github.com/cython/cython/issues/2798#issuecomment-459971828">this comment from Stéfan’s Benhel</a></p>
 </li>
 <li><p>Direct calls to BLAS routines are possible via interfaces defined in <code class="docutils literal notranslate"><span class="pre">sklearn.utils._cython_blas</span></code>.</p></li>
@@ -325,7 +319,7 @@ from <code class="docutils literal notranslate"><span class="pre">cython.paralle
       </div>
     <div class="container">
       <footer class="sk-content-footer">
-            &copy; 2007 - 2023, scikit-learn developers (BSD License).
+            &copy; 2007 - 2024, scikit-learn developers (BSD License).
           <a href="../_sources/developers/cython.rst.txt" rel="nofollow">Show this page source</a>
       </footer>
     </div>

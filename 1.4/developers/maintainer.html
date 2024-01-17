@@ -19,7 +19,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
   
-  <title>Maintainer / core-developer information &mdash; scikit-learn 1.4.0rc1 documentation</title>
+  <title>Maintainer / core-developer information &mdash; scikit-learn 1.4.0 documentation</title>
   
   <link rel="canonical" href="http://scikit-learn.org/stable/developers/maintainer.html" />
 
@@ -168,7 +168,7 @@
         </div>
         <div class="alert alert-danger p-1 mb-2" role="alert">
           <p class="text-center mb-0">
-          <strong>scikit-learn 1.4.0rc1</strong><br/>
+          <strong>scikit-learn 1.4.0</strong><br/>
           <a href="http://scikit-learn.org/dev/versions.html">Other versions</a>
           </p>
         </div>
@@ -269,15 +269,13 @@ should <strong>also</strong> happen under <code class="docutils literal notransl
 tag under that branch.</p>
 <p>This is done only once, as the major and minor releases happen on the same
 branch:</p>
-<blockquote>
-<div><div class="highlight-default notranslate"><div class="highlight"><pre><span class="prompt1"><span class="c1"># Assuming upstream is an alias for the main scikit-learn repo:</span></span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span class="prompt1"><span class="c1"># Assuming upstream is an alias for the main scikit-learn repo:</span></span>
 <span class="prompt1">git<span class="w"> </span>fetch<span class="w"> </span>upstream<span class="w"> </span>main</span>
 <span class="prompt1">git<span class="w"> </span>checkout<span class="w"> </span>upstream/main</span>
 <span class="prompt1">git<span class="w"> </span>checkout<span class="w"> </span>-b<span class="w"> </span><span class="m">0</span>.99.X</span>
 <span class="prompt1">git<span class="w"> </span>push<span class="w"> </span>--set-upstream<span class="w"> </span>upstream<span class="w"> </span><span class="m">0</span>.99.X</span>
 </pre></div></div><p>Again, <code class="docutils literal notranslate"><span class="pre">X</span></code> is literal here, and <code class="docutils literal notranslate"><span class="pre">99</span></code> is replaced by the release number.
 The branches are called <code class="docutils literal notranslate"><span class="pre">0.19.X</span></code>, <code class="docutils literal notranslate"><span class="pre">0.20.X</span></code>, etc.</p>
-</div></blockquote>
 <p>In terms of including changes, the first RC ideally counts as a <em>feature
 freeze</em>. Each coming release candidate and the final release afterwards will
 include only minor documentation changes and bug fixes. Any major enhancement
@@ -302,29 +300,23 @@ process.</p>
 <p>The minor releases should include bug fixes and some relevant documentation
 changes only. Any PR resulting in a behavior change which is not a bug fix
 should be excluded. As an example, instructions are given for the <code class="docutils literal notranslate"><span class="pre">1.2.2</span></code> release.</p>
-<blockquote>
-<div><ul>
+<ul>
 <li><p>Create a branch, <strong>on your own fork</strong> (here referred to as <code class="docutils literal notranslate"><span class="pre">fork</span></code>) for the release
 from <code class="docutils literal notranslate"><span class="pre">upstream/main</span></code>.</p>
-<blockquote>
-<div><div class="highlight-default notranslate"><div class="highlight"><pre><span class="prompt1">git<span class="w"> </span>fetch<span class="w"> </span>upstream/main</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span class="prompt1">git<span class="w"> </span>fetch<span class="w"> </span>upstream/main</span>
 <span class="prompt1">git<span class="w"> </span>checkout<span class="w"> </span>-b<span class="w"> </span>release-1.2.2<span class="w"> </span>upstream/main</span>
 <span class="prompt1">git<span class="w"> </span>push<span class="w"> </span>-u<span class="w"> </span>fork<span class="w"> </span>release-1.2.2:release-1.2.2</span>
-</pre></div></div></div></blockquote>
-</li>
+</pre></div></div></li>
 <li><p>Create a <strong>draft</strong> PR to the <code class="docutils literal notranslate"><span class="pre">upstream/1.2.X</span></code> branch (not to <code class="docutils literal notranslate"><span class="pre">upstream/main</span></code>)
 with all the desired changes.</p></li>
 <li><p>Do not push anything on that branch yet.</p></li>
 <li><p>Locally rebase <code class="docutils literal notranslate"><span class="pre">release-1.2.2</span></code> from the <code class="docutils literal notranslate"><span class="pre">upstream/1.2.X</span></code> branch using:</p>
-<blockquote>
-<div><div class="highlight-default notranslate"><div class="highlight"><pre><span class="prompt1">git<span class="w"> </span>rebase<span class="w"> </span>-i<span class="w"> </span>upstream/1.2.X</span>
-</pre></div></div></div></blockquote>
-<p>This will open an interactive rebase with the <code class="docutils literal notranslate"><span class="pre">git-rebase-todo</span></code> containing all
+<div class="highlight-default notranslate"><div class="highlight"><pre><span class="prompt1">git<span class="w"> </span>rebase<span class="w"> </span>-i<span class="w"> </span>upstream/1.2.X</span>
+</pre></div></div><p>This will open an interactive rebase with the <code class="docutils literal notranslate"><span class="pre">git-rebase-todo</span></code> containing all
 the latest commit on <code class="docutils literal notranslate"><span class="pre">main</span></code>. At this stage, you have to perform
 this interactive rebase with at least someone else (being three people rebasing
 is better not to forget something and to avoid any doubt).</p>
-<blockquote>
-<div><ul class="simple">
+<ul class="simple">
 <li><p><strong>Do not remove lines but drop commit by replace</strong> <code class="docutils literal notranslate"><span class="pre">pick</span></code> <strong>with</strong> <code class="docutils literal notranslate"><span class="pre">drop</span></code></p></li>
 <li><p>Commits to pick for bug-fix release <em>generally</em> are prefixed with: <code class="docutils literal notranslate"><span class="pre">FIX</span></code>, <code class="docutils literal notranslate"><span class="pre">CI</span></code>,
 <code class="docutils literal notranslate"><span class="pre">DOC</span></code>. They should at least include all the commits of the merged PRs
@@ -342,7 +334,6 @@ This file is located at <code class="docutils literal notranslate"><span class="
 <li><p>Save and exit, starting the interactive rebase.</p></li>
 <li><p>Resolve merge conflicts when they happen.</p></li>
 </ul>
-</div></blockquote>
 </li>
 <li><p>Force push the result of the rebase and the extra release commits to the release PR:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span class="prompt1">git<span class="w"> </span>push<span class="w"> </span>-f<span class="w"> </span>fork<span class="w"> </span>release-1.2.2:release-1.2.2</span>
@@ -354,7 +345,6 @@ introduce any new feature. We should not blindly trust the commit message prefix
 <li><p>Remove the draft status of the release PR and invite other maintainers to review the
 list of included commits.</p></li>
 </ul>
-</div></blockquote>
 </section>
 </section>
 <section id="making-a-release">
@@ -380,7 +370,7 @@ You can retrieve the list of contributor names with:</p>
 <li><p>Edit the <code class="docutils literal notranslate"><span class="pre">doc/templates/index.html</span></code> to change the ‘News’ entry of the
 front page (with the release month as well). Do not forget to remove
 the old entries (two years or three releases are typically good
-enough)</p></li>
+enough) and to update the on-going development entry.</p></li>
 </ul>
 </li>
 <li><p>On the branch for releasing, update the version number in
@@ -584,7 +574,7 @@ we just incentivize them to remove that import with the warning.</p>
       </div>
     <div class="container">
       <footer class="sk-content-footer">
-            &copy; 2007 - 2023, scikit-learn developers (BSD License).
+            &copy; 2007 - 2024, scikit-learn developers (BSD License).
           <a href="../_sources/developers/maintainer.rst.txt" rel="nofollow">Show this page source</a>
       </footer>
     </div>
