@@ -112,7 +112,7 @@ algorithm:
 
  .. code-block:: none
 
-    ROC AUC score is 0.9277825151994521
+    ROC AUC score is 0.9281911912293294
 
 
 
@@ -1153,7 +1153,7 @@ routing, which are listed in the :ref:`user guide
 <metadata_routing_models>`. For instance, this is how you can do a nested
 cross-validation with sample weights and :class:`~model_selection.GroupKFold`:
 
-.. GENERATED FROM PYTHON SOURCE LINES 163-210
+.. GENERATED FROM PYTHON SOURCE LINES 163-211
 
 .. code-block:: Python
 
@@ -1208,11 +1208,55 @@ cross-validation with sample weights and :class:`~model_selection.GroupKFold`:
 
 
 
+
 .. rst-class:: sphx-glr-script-out
 
  .. code-block:: none
 
-    cv error on test sets: [-0.29903951 -0.2569641  -0.49500585 -0.38929698 -0.28117037]
+    cv error on test sets: [-0.28927206 -0.37780643 -0.25416286 -0.36633028 -0.38361428]
+
+
+
+
+.. GENERATED FROM PYTHON SOURCE LINES 212-219
+
+Improved memory and runtime efficiency for PCA on sparse data
+-------------------------------------------------------------
+PCA is now able to handle sparse matrices natively for the `arpack`
+solver by levaraging `scipy.sparse.linalg.LinearOperator` to avoid
+materializing large sparse matrices when performing the
+eigenvalue decomposition of the data set covariance matrix.
+
+
+.. GENERATED FROM PYTHON SOURCE LINES 219-235
+
+.. code-block:: Python
+
+    from sklearn.decomposition import PCA
+    import scipy.sparse as sp
+    from time import time
+
+    X_sparse = sp.random(m=1000, n=1000, random_state=0)
+    X_dense = X_sparse.toarray()
+
+    t0 = time()
+    PCA(n_components=10, svd_solver="arpack").fit(X_sparse)
+    time_sparse = time() - t0
+
+    t0 = time()
+    PCA(n_components=10, svd_solver="arpack").fit(X_dense)
+    time_dense = time() - t0
+
+    print(f"Speedup: {time_dense / time_sparse:.1f}x")
+
+
+
+
+.. rst-class:: sphx-glr-script-out
+
+ .. code-block:: none
+
+    Speedup: 2.6x
 
 
 
@@ -1220,7 +1264,7 @@ cross-validation with sample weights and :class:`~model_selection.GroupKFold`:
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** (0 minutes 1.990 seconds)
+   **Total running time of the script:** (0 minutes 2.819 seconds)
 
 
 .. _sphx_glr_download_auto_examples_release_highlights_plot_release_highlights_1_4_0.py:
