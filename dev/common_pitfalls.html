@@ -377,9 +377,29 @@ normalization step where you divide by the average value, the average should
 be the average of the train subset, <strong>not</strong> the average of all the data. If the
 test subset is included in the average calculation, information from the test
 subset is influencing the model.</p>
+<section id="how-to-avoid-data-leakage">
+<h3><span class="section-number">10.2.1. </span>How to avoid data leakage<a class="headerlink" href="#how-to-avoid-data-leakage" title="Link to this heading">¶</a></h3>
+<p>Below are some tips on avoiding data leakage:</p>
+<ul>
+<li><p>Always split the data into train and test subsets first, particularly
+before any preprocessing steps.</p></li>
+<li><p>Never include test data when using the <code class="docutils literal notranslate"><span class="pre">fit</span></code> and <code class="docutils literal notranslate"><span class="pre">fit_transform</span></code>
+methods. Using all the data, e.g., <code class="docutils literal notranslate"><span class="pre">fit(X)</span></code>, can result in overly optimistic
+scores.</p>
+<p>Conversely, the <code class="docutils literal notranslate"><span class="pre">transform</span></code> method should be used on both train and test
+subsets as the same preprocessing should be applied to all the data.
+This can be achieved by using <code class="docutils literal notranslate"><span class="pre">fit_transform</span></code> on the train subset and
+<code class="docutils literal notranslate"><span class="pre">transform</span></code> on the test subset.</p>
+</li>
+<li><p>The scikit-learn <a class="reference internal" href="modules/compose.html#pipeline"><span class="std std-ref">pipeline</span></a> is a great way to prevent data
+leakage as it ensures that the appropriate method is performed on the
+correct data subset. The pipeline is ideal for use in cross-validation
+and hyper-parameter tuning functions.</p></li>
+</ul>
 <p>An example of data leakage during preprocessing is detailed below.</p>
+</section>
 <section id="data-leakage-during-pre-processing">
-<h3><span class="section-number">10.2.1. </span>Data leakage during pre-processing<a class="headerlink" href="#data-leakage-during-pre-processing" title="Link to this heading">¶</a></h3>
+<h3><span class="section-number">10.2.2. </span>Data leakage during pre-processing<a class="headerlink" href="#data-leakage-during-pre-processing" title="Link to this heading">¶</a></h3>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
 <p>We here choose to illustrate data leakage with a feature selection step.
@@ -482,26 +502,6 @@ method is used during fitting and predicting:</p>
 <span class="go">Mean accuracy: 0.46+/-0.07</span>
 </pre></div>
 </div>
-</section>
-<section id="how-to-avoid-data-leakage">
-<h3><span class="section-number">10.2.2. </span>How to avoid data leakage<a class="headerlink" href="#how-to-avoid-data-leakage" title="Link to this heading">¶</a></h3>
-<p>Below are some tips on avoiding data leakage:</p>
-<ul>
-<li><p>Always split the data into train and test subsets first, particularly
-before any preprocessing steps.</p></li>
-<li><p>Never include test data when using the <code class="docutils literal notranslate"><span class="pre">fit</span></code> and <code class="docutils literal notranslate"><span class="pre">fit_transform</span></code>
-methods. Using all the data, e.g., <code class="docutils literal notranslate"><span class="pre">fit(X)</span></code>, can result in overly optimistic
-scores.</p>
-<p>Conversely, the <code class="docutils literal notranslate"><span class="pre">transform</span></code> method should be used on both train and test
-subsets as the same preprocessing should be applied to all the data.
-This can be achieved by using <code class="docutils literal notranslate"><span class="pre">fit_transform</span></code> on the train subset and
-<code class="docutils literal notranslate"><span class="pre">transform</span></code> on the test subset.</p>
-</li>
-<li><p>The scikit-learn <a class="reference internal" href="modules/compose.html#pipeline"><span class="std std-ref">pipeline</span></a> is a great way to prevent data
-leakage as it ensures that the appropriate method is performed on the
-correct data subset. The pipeline is ideal for use in cross-validation
-and hyper-parameter tuning functions.</p></li>
-</ul>
 </section>
 </section>
 <section id="controlling-randomness">
@@ -673,7 +673,13 @@ the splits. Also, whether we pass an integer or an instance to
 illustration purpose: what matters is what we pass to the
 <a class="reference internal" href="modules/generated/sklearn.ensemble.RandomForestClassifier.html#sklearn.ensemble.RandomForestClassifier" title="sklearn.ensemble.RandomForestClassifier"><code class="xref py py-class docutils literal notranslate"><span class="pre">RandomForestClassifier</span></code></a> estimator.</p>
 </div>
-<p><strong>Cloning</strong></p>
+<p><details id="summary-anchor">
+<summary class="btn btn-light">
+<strong>Cloning</strong>
+<span class="tooltiptext">Click for more details</span>
+<a class="headerlink" href="#summary-anchor" title="Permalink to this heading">¶</a>
+</summary>
+<div class="card"></p>
 <p>Another subtle side effect of passing <code class="docutils literal notranslate"><span class="pre">RandomState</span></code> instances is how
 <a class="reference internal" href="modules/generated/sklearn.base.clone.html#sklearn.base.clone" title="sklearn.base.clone"><code class="xref py py-func docutils literal notranslate"><span class="pre">clone</span></code></a> will work:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">sklearn</span> <span class="kn">import</span> <span class="n">clone</span>
@@ -705,6 +711,8 @@ meta-estimators that accept non-fitted estimators call
 <a class="reference internal" href="modules/generated/sklearn.ensemble.StackingClassifier.html#sklearn.ensemble.StackingClassifier" title="sklearn.ensemble.StackingClassifier"><code class="xref py py-class docutils literal notranslate"><span class="pre">StackingClassifier</span></code></a>,
 <a class="reference internal" href="modules/generated/sklearn.calibration.CalibratedClassifierCV.html#sklearn.calibration.CalibratedClassifierCV" title="sklearn.calibration.CalibratedClassifierCV"><code class="xref py py-class docutils literal notranslate"><span class="pre">CalibratedClassifierCV</span></code></a>, etc.).</p>
 </div>
+<p></div>
+</details></p>
 </section>
 <section id="id3">
 <h4><span class="section-number">10.3.2.2. </span>CV splitters<a class="headerlink" href="#id3" title="Link to this heading">¶</a></h4>
