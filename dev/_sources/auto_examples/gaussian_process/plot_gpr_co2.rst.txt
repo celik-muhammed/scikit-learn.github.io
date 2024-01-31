@@ -298,11 +298,19 @@ We will preprocess the dataset by taking a monthly average and drop month
 for which no measurements were collected. Such a processing will have an
 smoothing effect on the data.
 
-.. GENERATED FROM PYTHON SOURCE LINES 69-76
+.. GENERATED FROM PYTHON SOURCE LINES 69-84
 
 .. code-block:: Python
 
-    co2_data = co2_data.resample("M").mean().dropna(axis="index", how="any")
+
+    try:
+        co2_data_resampled_monthly = co2_data.resample("ME")
+    except ValueError:
+        # pandas < 2.2 uses M instead of ME
+        co2_data_resampled_monthly = co2_data.resample("M")
+
+
+    co2_data = co2_data_resampled_monthly.mean().dropna(axis="index", how="any")
     co2_data.plot()
     plt.ylabel("Monthly average of CO$_2$ concentration (ppm)")
     _ = plt.title(
@@ -321,7 +329,7 @@ smoothing effect on the data.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 77-83
+.. GENERATED FROM PYTHON SOURCE LINES 85-91
 
 The idea in this example will be to predict the CO2 concentration in function
 of the date. We are as well interested in extrapolating for upcoming year
@@ -330,7 +338,7 @@ after 2001.
 As a first step, we will divide the data and the target to estimate. The data
 being a date, we will convert it into a numeric.
 
-.. GENERATED FROM PYTHON SOURCE LINES 83-86
+.. GENERATED FROM PYTHON SOURCE LINES 91-94
 
 .. code-block:: Python
 
@@ -344,7 +352,7 @@ being a date, we will convert it into a numeric.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 87-101
+.. GENERATED FROM PYTHON SOURCE LINES 95-109
 
 Design the proper kernel
 ------------------------
@@ -361,7 +369,7 @@ with a large length-scale enforces this component to be smooth. An trending
 increase is not enforced as to give a degree of freedom to our model. The
 specific length-scale and the amplitude are free hyperparameters.
 
-.. GENERATED FROM PYTHON SOURCE LINES 101-105
+.. GENERATED FROM PYTHON SOURCE LINES 109-113
 
 .. code-block:: Python
 
@@ -376,7 +384,7 @@ specific length-scale and the amplitude are free hyperparameters.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 106-113
+.. GENERATED FROM PYTHON SOURCE LINES 114-121
 
 The seasonal variation is explained by the periodic exponential sine squared
 kernel with a fixed periodicity of 1 year. The length-scale of this periodic
@@ -386,7 +394,7 @@ taken. The length-scale of this RBF component controls the decay time and is
 a further free parameter. This type of kernel is also known as locally
 periodic kernel.
 
-.. GENERATED FROM PYTHON SOURCE LINES 113-121
+.. GENERATED FROM PYTHON SOURCE LINES 121-129
 
 .. code-block:: Python
 
@@ -405,7 +413,7 @@ periodic kernel.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 122-127
+.. GENERATED FROM PYTHON SOURCE LINES 130-135
 
 The small irregularities are to be explained by a rational quadratic kernel
 component, whose length-scale and alpha parameter, which quantifies the
@@ -413,7 +421,7 @@ diffuseness of the length-scales, are to be determined. A rational quadratic
 kernel is equivalent to an RBF kernel with several length-scale and will
 better accommodate the different irregularities.
 
-.. GENERATED FROM PYTHON SOURCE LINES 127-131
+.. GENERATED FROM PYTHON SOURCE LINES 135-139
 
 .. code-block:: Python
 
@@ -428,7 +436,7 @@ better accommodate the different irregularities.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 132-137
+.. GENERATED FROM PYTHON SOURCE LINES 140-145
 
 Finally, the noise in the dataset can be accounted with a kernel consisting
 of an RBF kernel contribution, which shall explain the correlated noise
@@ -436,7 +444,7 @@ components such as local weather phenomena, and a white kernel contribution
 for the white noise. The relative amplitudes and the RBF's length scale are
 further free parameters.
 
-.. GENERATED FROM PYTHON SOURCE LINES 137-143
+.. GENERATED FROM PYTHON SOURCE LINES 145-151
 
 .. code-block:: Python
 
@@ -453,11 +461,11 @@ further free parameters.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 144-145
+.. GENERATED FROM PYTHON SOURCE LINES 152-153
 
 Thus, our final kernel is an addition of all previous kernel.
 
-.. GENERATED FROM PYTHON SOURCE LINES 145-150
+.. GENERATED FROM PYTHON SOURCE LINES 153-158
 
 .. code-block:: Python
 
@@ -479,7 +487,7 @@ Thus, our final kernel is an addition of all previous kernel.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 151-160
+.. GENERATED FROM PYTHON SOURCE LINES 159-168
 
 Model fitting and extrapolation
 -------------------------------
@@ -491,7 +499,7 @@ would have also scaled the target (dividing `y` by its standard deviation).
 Thus, the hyperparameters of the different kernel would have had different
 meaning since they would not have been expressed in ppm.
 
-.. GENERATED FROM PYTHON SOURCE LINES 160-166
+.. GENERATED FROM PYTHON SOURCE LINES 168-174
 
 .. code-block:: Python
 
@@ -918,7 +926,7 @@ meaning since they would not have been expressed in ppm.
     <br />
     <br />
 
-.. GENERATED FROM PYTHON SOURCE LINES 167-174
+.. GENERATED FROM PYTHON SOURCE LINES 175-182
 
 Now, we will use the Gaussian process to predict on:
 
@@ -928,7 +936,7 @@ Now, we will use the Gaussian process to predict on:
 Thus, we create synthetic data from 1958 to the current month. In addition,
 we need to add the subtracted mean computed during training.
 
-.. GENERATED FROM PYTHON SOURCE LINES 174-184
+.. GENERATED FROM PYTHON SOURCE LINES 182-192
 
 .. code-block:: Python
 
@@ -949,7 +957,7 @@ we need to add the subtracted mean computed during training.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 185-201
+.. GENERATED FROM PYTHON SOURCE LINES 193-209
 
 .. code-block:: Python
 
@@ -981,7 +989,7 @@ we need to add the subtracted mean computed during training.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 202-209
+.. GENERATED FROM PYTHON SOURCE LINES 210-217
 
 Our fitted model is capable to fit previous data properly and extrapolate to
 future year with confidence.
@@ -991,7 +999,7 @@ Interpretation of kernel hyperparameters
 
 Now, we can have a look at the hyperparameters of the kernel.
 
-.. GENERATED FROM PYTHON SOURCE LINES 209-211
+.. GENERATED FROM PYTHON SOURCE LINES 217-219
 
 .. code-block:: Python
 
@@ -1010,7 +1018,7 @@ Now, we can have a look at the hyperparameters of the kernel.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 212-220
+.. GENERATED FROM PYTHON SOURCE LINES 220-228
 
 Thus, most of the target signal, with the mean subtracted, is explained by a
 long-term rising trend for ~45 ppm and a length-scale of ~52 years. The
@@ -1024,7 +1032,7 @@ indicating that the data can be very well explained by the model.
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** (0 minutes 4.370 seconds)
+   **Total running time of the script:** (0 minutes 4.820 seconds)
 
 
 .. _sphx_glr_download_auto_examples_gaussian_process_plot_gpr_co2.py:
