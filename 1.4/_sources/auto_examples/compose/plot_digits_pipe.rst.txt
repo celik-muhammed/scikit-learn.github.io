@@ -27,7 +27,7 @@ regression does the prediction.
 
 We use a GridSearchCV to set the dimensionality of the PCA
 
-.. GENERATED FROM PYTHON SOURCE LINES 12-82
+.. GENERATED FROM PYTHON SOURCE LINES 12-83
 
 
 
@@ -109,12 +109,13 @@ We use a GridSearchCV to set the dimensionality of the PCA
     # For each number of components, find the best classifier results
     results = pd.DataFrame(search.cv_results_)
     components_col = "param_pca__n_components"
-    best_clfs = results.groupby(components_col).apply(
-        lambda g: g.nlargest(1, "mean_test_score")
-    )
-
-    best_clfs.plot(
-        x=components_col, y="mean_test_score", yerr="std_test_score", legend=False, ax=ax1
+    best_clfs = results.groupby(components_col)[
+        [components_col, "mean_test_score", "std_test_score"]
+    ].apply(lambda g: g.nlargest(1, "mean_test_score"))
+    ax1.errorbar(
+        best_clfs[components_col],
+        best_clfs["mean_test_score"],
+        yerr=best_clfs["std_test_score"],
     )
     ax1.set_ylabel("Classification accuracy (val)")
     ax1.set_xlabel("n_components")
@@ -127,7 +128,7 @@ We use a GridSearchCV to set the dimensionality of the PCA
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** (0 minutes 1.774 seconds)
+   **Total running time of the script:** (0 minutes 2.081 seconds)
 
 
 .. _sphx_glr_download_auto_examples_compose_plot_digits_pipe.py:

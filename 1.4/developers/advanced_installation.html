@@ -19,7 +19,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
   
-  <title>Installing the development version of scikit-learn &mdash; scikit-learn 1.4.0 documentation</title>
+  <title>Installing the development version of scikit-learn &mdash; scikit-learn 1.4.1 documentation</title>
   
   <link rel="canonical" href="http://scikit-learn.org/stable/developers/advanced_installation.html" />
 
@@ -168,7 +168,7 @@
         </div>
         <div class="alert alert-danger p-1 mb-2" role="alert">
           <p class="text-center mb-0">
-          <strong>scikit-learn 1.4.0</strong><br/>
+          <strong>scikit-learn 1.4.1</strong><br/>
           <a href="http://scikit-learn.org/dev/versions.html">Other versions</a>
           </p>
         </div>
@@ -190,6 +190,11 @@
 </li>
 <li><a class="reference internal" href="#building-a-specific-version-from-a-tag">Building a specific version from a tag</a></li>
 <li><a class="reference internal" href="#editable-mode">Editable mode</a></li>
+<li><a class="reference internal" href="#building-with-meson">Building with Meson</a><ul>
+<li><a class="reference internal" href="#simplest-way-to-build-with-meson">Simplest way to build with Meson</a></li>
+<li><a class="reference internal" href="#more-advanced-way-to-build-with-meson">More advanced way to build with Meson</a></li>
+</ul>
+</li>
 </ul>
 </li>
 <li><a class="reference internal" href="#platform-specific-instructions">Platform-specific instructions</a><ul>
@@ -318,7 +323,7 @@ runtime:</p>
 <h4>Build dependencies<a class="headerlink" href="#build-dependencies" title="Link to this heading">¶</a></h4>
 <p>Building Scikit-learn also requires:</p>
 <ul class="simple">
-<li><p>Cython &gt;= 0.29.33</p></li>
+<li><p>Cython &gt;= 3.0.8</p></li>
 <li><p>A C/C++ compiler and a matching <a class="reference external" href="https://en.wikipedia.org/wiki/OpenMP">OpenMP</a> runtime library. See the
 <a class="reference internal" href="#platform-specific-instructions"><span class="std std-ref">platform system specific instructions</span></a> for more details.</p></li>
 </ul>
@@ -364,9 +369,70 @@ It is however preferred to use pip.</p>
 <p>On Unix-like systems, you can equivalently type <code class="docutils literal notranslate"><span class="pre">make</span> <span class="pre">in</span></code> from the top-level
 folder. Have a look at the <code class="docutils literal notranslate"><span class="pre">Makefile</span></code> for additional utilities.</p>
 </section>
+<section id="building-with-meson">
+<span id="id2"></span><h3>Building with Meson<a class="headerlink" href="#building-with-meson" title="Link to this heading">¶</a></h3>
+<p>Support for Meson is experimental, in scikit-learn 1.5.0.dev0.
+<a class="reference external" href="https://github.com/scikit-learn/scikit-learn/issues/new">Open an issue</a> if
+you encounter any problems!</p>
+<p>Make sure you have <code class="docutils literal notranslate"><span class="pre">meson-python</span></code> and <code class="docutils literal notranslate"><span class="pre">ninja</span></code> installed, either with <code class="docutils literal notranslate"><span class="pre">conda</span></code>:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>conda<span class="w"> </span>install<span class="w"> </span>-c<span class="w"> </span>conda-forge<span class="w"> </span>meson-python<span class="w"> </span>ninja<span class="w"> </span>-y
+</pre></div>
+</div>
+<p>or with pip:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pip<span class="w"> </span>install<span class="w"> </span>meson-python<span class="w"> </span>ninja
+</pre></div>
+</div>
+<section id="simplest-way-to-build-with-meson">
+<h4>Simplest way to build with Meson<a class="headerlink" href="#simplest-way-to-build-with-meson" title="Link to this heading">¶</a></h4>
+<p>To build scikit-learn, the simplest way is to run:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>make<span class="w"> </span>dev-meson
+</pre></div>
+</div>
+<p>You need to do it once after this you can run your code that imports <code class="docutils literal notranslate"><span class="pre">sklearn</span></code>
+and it will recompile as needed.</p>
+<p>In case you want to go back to using setuptools:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>make<span class="w"> </span>clean-meson
+</pre></div>
+</div>
+</section>
+<section id="more-advanced-way-to-build-with-meson">
+<h4>More advanced way to build with Meson<a class="headerlink" href="#more-advanced-way-to-build-with-meson" title="Link to this heading">¶</a></h4>
+<p>If you can not use <code class="docutils literal notranslate"><span class="pre">make</span></code>, want to do it yourself or understand what goes in
+behind the scenes, you can edit <code class="docutils literal notranslate"><span class="pre">pyproject.toml</span></code> and make sure <code class="docutils literal notranslate"><span class="pre">build-backend</span></code>
+is set to <code class="docutils literal notranslate"><span class="pre">&quot;mesonpy&quot;</span></code></p>
+<div class="highlight-toml notranslate"><div class="highlight"><pre><span></span><span class="k">[build-system]</span>
+<span class="n">build-backend</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;mesonpy&quot;</span>
+</pre></div>
+</div>
+<p>Build with the following <code class="docutils literal notranslate"><span class="pre">pip</span></code> command:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pip<span class="w"> </span>install<span class="w"> </span>--editable<span class="w"> </span>.<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--verbose<span class="w"> </span>--no-build-isolation<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--config-settings<span class="w"> </span>editable-verbose<span class="o">=</span><span class="nb">true</span>
+</pre></div>
+</div>
+<p>If you want to go back to using <code class="docutils literal notranslate"><span class="pre">setuptools</span></code>:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pip<span class="w"> </span>uninstall<span class="w"> </span>-y<span class="w"> </span>scikit-learn
+</pre></div>
+</div>
+<p>Note <code class="docutils literal notranslate"><span class="pre">--config-settings</span> <span class="pre">editable-verbose=true</span></code> is advised to avoid surprises.
+meson-python implements editable install by recompiling when doing <code class="docutils literal notranslate"><span class="pre">import</span>
+<span class="pre">sklearn</span></code>. Even changing python files involves copying files to the Meson build
+directory. You will see the meson output when that happens, rather than
+potentially waiting a while and wondering what is taking so long. Bonus: that
+means you only have to do the <code class="docutils literal notranslate"><span class="pre">pip</span> <span class="pre">install</span></code> once, after that your code will
+recompile when doing <code class="docutils literal notranslate"><span class="pre">import</span> <span class="pre">sklearn</span></code>.</p>
+<p>Other places that may be worth looking at:</p>
+<ul class="simple">
+<li><p><a class="reference external" href="https://pandas.pydata.org/docs/development/contributing_environment.html#step-3-build-and-install-pandas">pandas setup doc</a>:
+pandas has a similar setup as ours (no spin or dev.py)</p></li>
+<li><p><a class="reference external" href="https://scipy.github.io/devdocs/building/understanding_meson.html">scipy Meson doc</a> gives
+more background about how Meson works behind the scenes</p></li>
+</ul>
+</section>
+</section>
 </section>
 <section id="platform-specific-instructions">
-<span id="id2"></span><h2>Platform-specific instructions<a class="headerlink" href="#platform-specific-instructions" title="Link to this heading">¶</a></h2>
+<span id="id3"></span><h2>Platform-specific instructions<a class="headerlink" href="#platform-specific-instructions" title="Link to this heading">¶</a></h2>
 <p>Here are instructions to install a working C/C++ compiler with OpenMP support
 to build scikit-learn Cython extensions for each supported platform.</p>
 <section id="windows">
