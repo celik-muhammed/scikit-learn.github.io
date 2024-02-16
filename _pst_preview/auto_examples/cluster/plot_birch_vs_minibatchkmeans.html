@@ -1,309 +1,205 @@
 
 <!DOCTYPE html>
 
-
-<html lang="en" data-content_root="../../" >
-
-  <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
-<meta property="og:title" content="Compare BIRCH and MiniBatchKMeans" />
-<meta property="og:type" content="website" />
-<meta property="og:url" content="https://scikit-learn/stable/auto_examples/cluster/plot_birch_vs_minibatchkmeans.html" />
-<meta property="og:site_name" content="scikit-learn" />
-<meta property="og:description" content="This example compares the timing of BIRCH (with and without the global clustering step) and MiniBatchKMeans on a synthetic dataset having 25,000 samples and 2 features generated using make_blobs. B..." />
-<meta property="og:image" content="https://scikit-learn.org/stable/_static/scikit-learn-logo-small.png" />
-<meta property="og:image:alt" content="scikit-learn" />
-<meta name="description" content="This example compares the timing of BIRCH (with and without the global clustering step) and MiniBatchKMeans on a synthetic dataset having 25,000 samples and 2 features generated using make_blobs. B..." />
-
-    <title>Compare BIRCH and MiniBatchKMeans &#8212; scikit-learn 1.5.dev0 documentation</title>
-  
-  
-  
-  <script data-cfasync="false">
+<html data-content_root="../../" lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/><meta content="width=device-width, initial-scale=1" name="viewport"/>
+<meta content="Compare BIRCH and MiniBatchKMeans" property="og:title"/>
+<meta content="website" property="og:type"/>
+<meta content="https://scikit-learn/stable/auto_examples/cluster/plot_birch_vs_minibatchkmeans.html" property="og:url"/>
+<meta content="scikit-learn" property="og:site_name"/>
+<meta content="This example compares the timing of BIRCH (with and without the global clustering step) and MiniBatchKMeans on a synthetic dataset having 25,000 samples and 2 features generated using make_blobs. B..." property="og:description"/>
+<meta content="https://scikit-learn.org/stable/_static/scikit-learn-logo-small.png" property="og:image"/>
+<meta content="scikit-learn" property="og:image:alt"/>
+<meta content="This example compares the timing of BIRCH (with and without the global clustering step) and MiniBatchKMeans on a synthetic dataset having 25,000 samples and 2 features generated using make_blobs. B..." name="description"/>
+<title>Compare BIRCH and MiniBatchKMeans — scikit-learn 1.5.dev0 documentation</title>
+<script data-cfasync="false">
     document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
     document.documentElement.dataset.theme = localStorage.getItem("theme") || "light";
   </script>
-  
-  <!-- Loaded before other Sphinx assets -->
-  <link href="../../_static/styles/theme.css?digest=8d27b9dea8ad943066ae" rel="stylesheet" />
-<link href="../../_static/styles/bootstrap.css?digest=8d27b9dea8ad943066ae" rel="stylesheet" />
-<link href="../../_static/styles/pydata-sphinx-theme.css?digest=8d27b9dea8ad943066ae" rel="stylesheet" />
-
-  
-  <link href="../../_static/vendor/fontawesome/6.5.1/css/all.min.css?digest=8d27b9dea8ad943066ae" rel="stylesheet" />
-  <link rel="preload" as="font" type="font/woff2" crossorigin href="../../_static/vendor/fontawesome/6.5.1/webfonts/fa-solid-900.woff2" />
-<link rel="preload" as="font" type="font/woff2" crossorigin href="../../_static/vendor/fontawesome/6.5.1/webfonts/fa-brands-400.woff2" />
-<link rel="preload" as="font" type="font/woff2" crossorigin href="../../_static/vendor/fontawesome/6.5.1/webfonts/fa-regular-400.woff2" />
-
-    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=a746c00c" />
-    <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
-    <link rel="stylesheet" type="text/css" href="../../_static/plot_directive.css" />
-    <link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Vibur" />
-    <link rel="stylesheet" type="text/css" href="../../_static/jupyterlite_sphinx.css?v=f996933d" />
-    <link rel="stylesheet" type="text/css" href="../../_static/sg_gallery.css?v=61a4c737" />
-    <link rel="stylesheet" type="text/css" href="../../_static/sg_gallery-binder.css?v=f4aeca0c" />
-    <link rel="stylesheet" type="text/css" href="../../_static/sg_gallery-dataframe.css?v=2082cf3c" />
-    <link rel="stylesheet" type="text/css" href="../../_static/sg_gallery-rendered-html.css?v=1277b6f3" />
-    <link rel="stylesheet" type="text/css" href="../../_static/design-style.1e8bd061cd6da7fc9cf755528e8ffc24.min.css?v=0a3b3ea7" />
-    <link rel="stylesheet" type="text/css" href="../../_static/styles/colors.css?v=d5680186" />
-    <link rel="stylesheet" type="text/css" href="../../_static/styles/custom.css?v=3e2fb91a" />
-  
-  <!-- Pre-loaded scripts that we'll load fully later -->
-  <link rel="preload" as="script" href="../../_static/scripts/bootstrap.js?digest=8d27b9dea8ad943066ae" />
-<link rel="preload" as="script" href="../../_static/scripts/pydata-sphinx-theme.js?digest=8d27b9dea8ad943066ae" />
-  <script src="../../_static/vendor/fontawesome/6.5.1/js/all.min.js?digest=8d27b9dea8ad943066ae"></script>
-
-    <script src="../../_static/documentation_options.js?v=a2c36881"></script>
-    <script src="../../_static/doctools.js?v=888ff710"></script>
-    <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
-    <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
-    <script src="../../_static/copybutton.js?v=97f0b27d"></script>
-    <script src="../../_static/jupyterlite_sphinx.js?v=f25406b8"></script>
-    <script src="../../_static/design-tabs.js?v=36754332"></script>
-    <script data-domain="scikit-learn.org" defer="defer" src="https://views.scientific-python.org/js/script.js"></script>
-    <script>DOCUMENTATION_OPTIONS.pagename = 'auto_examples/cluster/plot_birch_vs_minibatchkmeans';</script>
-    <script>
+<!-- Loaded before other Sphinx assets -->
+<link href="../../_static/styles/theme.css?digest=8d27b9dea8ad943066ae" rel="stylesheet"/>
+<link href="../../_static/styles/bootstrap.css?digest=8d27b9dea8ad943066ae" rel="stylesheet"/>
+<link href="../../_static/styles/pydata-sphinx-theme.css?digest=8d27b9dea8ad943066ae" rel="stylesheet"/>
+<link href="../../_static/vendor/fontawesome/6.5.1/css/all.min.css?digest=8d27b9dea8ad943066ae" rel="stylesheet"/>
+<link as="font" crossorigin="" href="../../_static/vendor/fontawesome/6.5.1/webfonts/fa-solid-900.woff2" rel="preload" type="font/woff2"/>
+<link as="font" crossorigin="" href="../../_static/vendor/fontawesome/6.5.1/webfonts/fa-brands-400.woff2" rel="preload" type="font/woff2"/>
+<link as="font" crossorigin="" href="../../_static/vendor/fontawesome/6.5.1/webfonts/fa-regular-400.woff2" rel="preload" type="font/woff2"/>
+<link href="../../_static/pygments.css?v=a746c00c" rel="stylesheet" type="text/css"/>
+<link href="../../_static/copybutton.css?v=76b2166b" rel="stylesheet" type="text/css"/>
+<link href="../../_static/plot_directive.css" rel="stylesheet" type="text/css"/>
+<link href="https://fonts.googleapis.com/css?family=Vibur" rel="stylesheet" type="text/css"/>
+<link href="../../_static/jupyterlite_sphinx.css?v=f996933d" rel="stylesheet" type="text/css"/>
+<link href="../../_static/sg_gallery.css?v=61a4c737" rel="stylesheet" type="text/css"/>
+<link href="../../_static/sg_gallery-binder.css?v=f4aeca0c" rel="stylesheet" type="text/css"/>
+<link href="../../_static/sg_gallery-dataframe.css?v=2082cf3c" rel="stylesheet" type="text/css"/>
+<link href="../../_static/sg_gallery-rendered-html.css?v=1277b6f3" rel="stylesheet" type="text/css"/>
+<link href="../../_static/design-style.1e8bd061cd6da7fc9cf755528e8ffc24.min.css?v=0a3b3ea7" rel="stylesheet" type="text/css"/>
+<link href="../../_static/styles/colors.css?v=d5680186" rel="stylesheet" type="text/css"/>
+<link href="../../_static/styles/custom.css?v=3e2fb91a" rel="stylesheet" type="text/css"/>
+<!-- Pre-loaded scripts that we'll load fully later -->
+<link as="script" href="../../_static/scripts/bootstrap.js?digest=8d27b9dea8ad943066ae" rel="preload"/>
+<link as="script" href="../../_static/scripts/pydata-sphinx-theme.js?digest=8d27b9dea8ad943066ae" rel="preload"/>
+<script src="../../_static/vendor/fontawesome/6.5.1/js/all.min.js?digest=8d27b9dea8ad943066ae"></script>
+<script src="../../_static/documentation_options.js?v=a2c36881"></script>
+<script src="../../_static/doctools.js?v=888ff710"></script>
+<script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+<script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
+<script src="../../_static/copybutton.js?v=97f0b27d"></script>
+<script src="../../_static/jupyterlite_sphinx.js?v=f25406b8"></script>
+<script src="../../_static/design-tabs.js?v=36754332"></script>
+<script data-domain="scikit-learn.org" defer="defer" src="https://views.scientific-python.org/js/script.js"></script>
+<script>DOCUMENTATION_OPTIONS.pagename = 'auto_examples/cluster/plot_birch_vs_minibatchkmeans';</script>
+<script>
         DOCUMENTATION_OPTIONS.theme_version = '0.15.2';
         DOCUMENTATION_OPTIONS.theme_switcher_json_url = 'https://charlie-xiao.github.io/assets/json/sklearn-versions-test.json';
         DOCUMENTATION_OPTIONS.theme_switcher_version_match = '1.5.dev0';
         DOCUMENTATION_OPTIONS.show_version_warning_banner = true;
         </script>
-    <script src="../../_static/scripts/details-permalink.js?v=b0ed9290"></script>
-    <link rel="icon" href="../../_static/favicon.ico"/>
-    <link rel="author" title="About these documents" href="../../about.html" />
-    <link rel="search" title="Search" href="../../search.html" />
-    <link rel="next" title="Comparing different clustering algorithms on toy datasets" href="plot_cluster_comparison.html" />
-    <link rel="prev" title="Color Quantization using K-Means" href="plot_color_quantization.html" />
-  <meta name="viewport" content="width=device-width, initial-scale=1"/>
-  <meta name="docsearch:language" content="en"/>
-  </head>
-  
-  
-  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
-
-  
-  
-  <a id="pst-skip-link" class="skip-link" href="#main-content">Skip to main content</a>
-  
-  <div id="pst-scroll-pixel-helper"></div>
-  
-  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
-    <i class="fa-solid fa-arrow-up"></i>
+<script src="../../_static/scripts/details-permalink.js?v=b0ed9290"></script>
+<link href="../../_static/favicon.ico" rel="icon"/>
+<link href="../../about.html" rel="author" title="About these documents"/>
+<link href="../../search.html" rel="search" title="Search"/>
+<link href="plot_cluster_comparison.html" rel="next" title="Comparing different clustering algorithms on toy datasets"/>
+<link href="plot_color_quantization.html" rel="prev" title="Color Quantization using K-Means"/>
+<meta content="width=device-width, initial-scale=1" name="viewport"/>
+<meta content="en" name="docsearch:language"/>
+</head>
+<body data-bs-root-margin="0px 0px -60%" data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-default-mode="" data-offset="180">
+<a class="skip-link" href="#main-content" id="pst-skip-link">Skip to main content</a>
+<div id="pst-scroll-pixel-helper"></div>
+<button class="btn rounded-pill" id="pst-back-to-top" type="button">
+<i class="fa-solid fa-arrow-up"></i>
     Back to top
   </button>
-
-  
-  <input type="checkbox"
-          class="sidebar-toggle"
-          name="__primary"
-          id="__primary"/>
-  <label class="overlay overlay-primary" for="__primary"></label>
-  
-  <input type="checkbox"
-          class="sidebar-toggle"
-          name="__secondary"
-          id="__secondary"/>
-  <label class="overlay overlay-secondary" for="__secondary"></label>
-  
-  <div class="search-button__wrapper">
-    <div class="search-button__overlay"></div>
-    <div class="search-button__search-container">
-<form class="bd-search d-flex align-items-center"
-      action="../../search.html"
-      method="get">
-  <i class="fa-solid fa-magnifying-glass"></i>
-  <input type="search"
-         class="form-control"
-         name="q"
-         id="search-input"
-         placeholder="Search the docs ..."
-         aria-label="Search the docs ..."
-         autocomplete="off"
-         autocorrect="off"
-         autocapitalize="off"
-         spellcheck="false"/>
-  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+<input class="sidebar-toggle" id="__primary" name="__primary" type="checkbox"/>
+<label class="overlay overlay-primary" for="__primary"></label>
+<input class="sidebar-toggle" id="__secondary" name="__secondary" type="checkbox"/>
+<label class="overlay overlay-secondary" for="__secondary"></label>
+<div class="search-button__wrapper">
+<div class="search-button__overlay"></div>
+<div class="search-button__search-container">
+<form action="../../search.html" class="bd-search d-flex align-items-center" method="get">
+<i class="fa-solid fa-magnifying-glass"></i>
+<input aria-label="Search the docs ..." autocapitalize="off" autocomplete="off" autocorrect="off" class="form-control" id="search-input" name="q" placeholder="Search the docs ..." spellcheck="false" type="search"/>
+<span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
 </form></div>
-  </div>
-  
-    <header class="bd-header navbar navbar-expand-lg bd-navbar">
+</div>
+<header class="bd-header navbar navbar-expand-lg bd-navbar">
 <div class="bd-header__inner bd-page-width">
-  <label class="sidebar-toggle primary-toggle" for="__primary">
-    <span class="fa-solid fa-bars"></span>
-  </label>
-  
-  
-  <div class=" navbar-header-items__start">
-    
-      <div class="navbar-item">
-
-  
-
+<label class="sidebar-toggle primary-toggle" for="__primary">
+<span class="fa-solid fa-bars"></span>
+</label>
+<div class="navbar-header-items__start">
+<div class="navbar-item">
 <a class="navbar-brand logo" href="../../index.html">
-  
-  
-  
-  
-  
-    
-    
-      
-    
-    
-    <img src="../../_static/scikit-learn-logo-small.png" class="logo__image only-light" alt="scikit-learn homepage"/>
-    <script>document.write(`<img src="../../_static/scikit-learn-logo-small.png" class="logo__image only-dark" alt="scikit-learn homepage"/>`);</script>
-  
-  
+<img alt="scikit-learn homepage" class="logo__image only-light" src="../../_static/scikit-learn-logo-small.png"/>
+<script>document.write(`<img src="../../_static/scikit-learn-logo-small.png" class="logo__image only-dark" alt="scikit-learn homepage"/>`);</script>
 </a></div>
-    
-  </div>
-  
-  <div class=" navbar-header-items">
-    
-    <div class="me-auto navbar-header-items__center">
-      
-        <div class="navbar-item">
+</div>
+<div class="navbar-header-items">
+<div class="me-auto navbar-header-items__center">
+<div class="navbar-item">
 <nav class="navbar-nav">
-  <ul class="bd-navbar-elements navbar-nav">
-    
-                    <li class="nav-item">
-                      <a class="nav-link nav-internal" href="../../install.html">
+<ul class="bd-navbar-elements navbar-nav">
+<li class="nav-item">
+<a class="nav-link nav-internal" href="../../install.html">
                         Install
                       </a>
-                    </li>
-                
-
-                    <li class="nav-item">
-                      <a class="nav-link nav-internal" href="../../user_guide.html">
+</li>
+<li class="nav-item">
+<a class="nav-link nav-internal" href="../../user_guide.html">
                         User Guide
                       </a>
-                    </li>
-                
-
-                    <li class="nav-item">
-                      <a class="nav-link nav-internal" href="../../modules/classes.html">
+</li>
+<li class="nav-item">
+<a class="nav-link nav-internal" href="../../modules/classes.html">
                         API
                       </a>
-                    </li>
-                
-
-                    <li class="nav-item current active">
-                      <a class="nav-link nav-internal" href="../index.html">
+</li>
+<li class="nav-item current active">
+<a class="nav-link nav-internal" href="../index.html">
                         Examples
                       </a>
-                    </li>
-                
-
-                    <li class="nav-item">
-                      <a class="nav-link nav-external" href="https://blog.scikit-learn.org/">
+</li>
+<li class="nav-item">
+<a class="nav-link nav-external" href="https://blog.scikit-learn.org/">
                         Community
                       </a>
-                    </li>
-                
-            <li class="nav-item dropdown">
-                <button class="btn dropdown-toggle nav-item" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-controls="pst-nav-more-links">
+</li>
+<li class="nav-item dropdown">
+<button aria-controls="pst-nav-more-links" aria-expanded="false" class="btn dropdown-toggle nav-item" data-bs-toggle="dropdown" type="button">
                     More
                 </button>
-                <ul id="pst-nav-more-links" class="dropdown-menu">
-                    
-                    <li class="nav-item">
-                      <a class="nav-link dropdown-item nav-internal" href="../../getting_started.html">
+<ul class="dropdown-menu" id="pst-nav-more-links">
+<li class="nav-item">
+<a class="nav-link dropdown-item nav-internal" href="../../getting_started.html">
                         Getting Started
                       </a>
-                    </li>
-                
-
-                    <li class="nav-item">
-                      <a class="nav-link dropdown-item nav-internal" href="../../tutorial/index.html">
+</li>
+<li class="nav-item">
+<a class="nav-link dropdown-item nav-internal" href="../../tutorial/index.html">
                         Tutorials
                       </a>
-                    </li>
-                
-
-                    <li class="nav-item">
-                      <a class="nav-link dropdown-item nav-internal" href="../../whats_new.html">
+</li>
+<li class="nav-item">
+<a class="nav-link dropdown-item nav-internal" href="../../whats_new.html">
                         Release History
                       </a>
-                    </li>
-                
-
-                    <li class="nav-item">
-                      <a class="nav-link dropdown-item nav-internal" href="../../glossary.html">
+</li>
+<li class="nav-item">
+<a class="nav-link dropdown-item nav-internal" href="../../glossary.html">
                         Glossary
                       </a>
-                    </li>
-                
-
-                    <li class="nav-item">
-                      <a class="nav-link dropdown-item nav-internal" href="../../developers/index.html">
+</li>
+<li class="nav-item">
+<a class="nav-link dropdown-item nav-internal" href="../../developers/index.html">
                         Development
                       </a>
-                    </li>
-                
-
-                    <li class="nav-item">
-                      <a class="nav-link dropdown-item nav-internal" href="../../faq.html">
+</li>
+<li class="nav-item">
+<a class="nav-link dropdown-item nav-internal" href="../../faq.html">
                         FAQ
                       </a>
-                    </li>
-                
-
-                    <li class="nav-item">
-                      <a class="nav-link dropdown-item nav-internal" href="../../support.html">
+</li>
+<li class="nav-item">
+<a class="nav-link dropdown-item nav-internal" href="../../support.html">
                         Support
                       </a>
-                    </li>
-                
-
-                    <li class="nav-item">
-                      <a class="nav-link dropdown-item nav-internal" href="../../related_projects.html">
+</li>
+<li class="nav-item">
+<a class="nav-link dropdown-item nav-internal" href="../../related_projects.html">
                         Related Projects
                       </a>
-                    </li>
-                
-
-                    <li class="nav-item">
-                      <a class="nav-link dropdown-item nav-internal" href="../../roadmap.html">
+</li>
+<li class="nav-item">
+<a class="nav-link dropdown-item nav-internal" href="../../roadmap.html">
                         Roadmap
                       </a>
-                    </li>
-                
-
-                    <li class="nav-item">
-                      <a class="nav-link dropdown-item nav-internal" href="../../governance.html">
+</li>
+<li class="nav-item">
+<a class="nav-link dropdown-item nav-internal" href="../../governance.html">
                         Governance
                       </a>
-                    </li>
-                
-
-                    <li class="nav-item">
-                      <a class="nav-link dropdown-item nav-internal" href="../../about.html">
+</li>
+<li class="nav-item">
+<a class="nav-link dropdown-item nav-internal" href="../../about.html">
                         About us
                       </a>
-                    </li>
-                
-
-                    <li class="nav-item">
-                      <a class="nav-link dropdown-item nav-external" href="https://scikit-learn.org/dev/versions.html">
+</li>
+<li class="nav-item">
+<a class="nav-link dropdown-item nav-external" href="https://scikit-learn.org/dev/versions.html">
                         Other Versions and Download
                       </a>
-                    </li>
-                
-                </ul>
-            </li>
-            
-  </ul>
+</li>
+</ul>
+</li>
+</ul>
 </nav></div>
-      
-    </div>
-    
-    
-    <div class="navbar-header-items__end">
-      
-        <div class="navbar-item navbar-persistent--container">
-          
-
+</div>
+<div class="navbar-header-items__end">
+<div class="navbar-item navbar-persistent--container">
 <script>
 document.write(`
   <button class="btn btn-sm navbar-btn search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
@@ -311,11 +207,8 @@ document.write(`
   </button>
 `);
 </script>
-        </div>
-      
-      
-        <div class="navbar-item">
-
+</div>
+<div class="navbar-item">
 <script>
 document.write(`
   <button class="btn btn-sm navbar-btn theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
@@ -325,24 +218,13 @@ document.write(`
   </button>
 `);
 </script></div>
-      
-        <div class="navbar-item"><ul class="navbar-icon-links navbar-nav"
-    aria-label="Icon Links">
-        <li class="nav-item">
-          
-          
-          
-          
-          
-          
-          
-          
-          <a href="https://github.com/scikit-learn/scikit-learn" title="GitHub" class="nav-link" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><span><i class="fa-brands fa-square-github fa-lg" aria-hidden="true"></i></span>
-            <span class="sr-only">GitHub</span></a>
-        </li>
+<div class="navbar-item"><ul aria-label="Icon Links" class="navbar-icon-links navbar-nav">
+<li class="nav-item">
+<a class="nav-link" data-bs-placement="bottom" data-bs-toggle="tooltip" href="https://github.com/scikit-learn/scikit-learn" rel="noopener" target="_blank" title="GitHub"><span><i aria-hidden="true" class="fa-brands fa-square-github fa-lg"></i></span>
+<span class="sr-only">GitHub</span></a>
+</li>
 </ul></div>
-      
-        <div class="navbar-item">
+<div class="navbar-item">
 <script>
 document.write(`
   <div class="version-switcher__container dropdown">
@@ -365,14 +247,9 @@ document.write(`
   </div>
 `);
 </script></div>
-      
-    </div>
-    
-  </div>
-  
-  
-    <div class="navbar-persistent--mobile">
-
+</div>
+</div>
+<div class="navbar-persistent--mobile">
 <script>
 document.write(`
   <button class="btn btn-sm navbar-btn search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
@@ -380,174 +257,117 @@ document.write(`
   </button>
 `);
 </script>
-    </div>
-  
-
-  
-    <label class="sidebar-toggle secondary-toggle" for="__secondary" tabindex="0">
-      <span class="fa-solid fa-outdent"></span>
-    </label>
-  
 </div>
-
-    </header>
-  
-
-  <div class="bd-container">
-    <div class="bd-container__inner bd-page-width">
-      
-      
-      
-      <div class="bd-sidebar-primary bd-sidebar">
-        
-
-  
-  <div class="sidebar-header-items sidebar-primary__section">
-    
-    
-      <div class="sidebar-header-items__center">
-        
-          <div class="navbar-item">
+<label class="sidebar-toggle secondary-toggle" for="__secondary" tabindex="0">
+<span class="fa-solid fa-outdent"></span>
+</label>
+</div>
+</header>
+<div class="bd-container">
+<div class="bd-container__inner bd-page-width">
+<div class="bd-sidebar-primary bd-sidebar">
+<div class="sidebar-header-items sidebar-primary__section">
+<div class="sidebar-header-items__center">
+<div class="navbar-item">
 <nav class="navbar-nav">
-  <ul class="bd-navbar-elements navbar-nav">
-    
-                    <li class="nav-item">
-                      <a class="nav-link nav-internal" href="../../install.html">
+<ul class="bd-navbar-elements navbar-nav">
+<li class="nav-item">
+<a class="nav-link nav-internal" href="../../install.html">
                         Install
                       </a>
-                    </li>
-                
-
-                    <li class="nav-item">
-                      <a class="nav-link nav-internal" href="../../user_guide.html">
+</li>
+<li class="nav-item">
+<a class="nav-link nav-internal" href="../../user_guide.html">
                         User Guide
                       </a>
-                    </li>
-                
-
-                    <li class="nav-item">
-                      <a class="nav-link nav-internal" href="../../modules/classes.html">
+</li>
+<li class="nav-item">
+<a class="nav-link nav-internal" href="../../modules/classes.html">
                         API
                       </a>
-                    </li>
-                
-
-                    <li class="nav-item current active">
-                      <a class="nav-link nav-internal" href="../index.html">
+</li>
+<li class="nav-item current active">
+<a class="nav-link nav-internal" href="../index.html">
                         Examples
                       </a>
-                    </li>
-                
-
-                    <li class="nav-item">
-                      <a class="nav-link nav-external" href="https://blog.scikit-learn.org/">
+</li>
+<li class="nav-item">
+<a class="nav-link nav-external" href="https://blog.scikit-learn.org/">
                         Community
                       </a>
-                    </li>
-                
-            <li class="nav-item dropdown">
-                <button class="btn dropdown-toggle nav-item" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-controls="pst-nav-more-links-2">
+</li>
+<li class="nav-item dropdown">
+<button aria-controls="pst-nav-more-links-2" aria-expanded="false" class="btn dropdown-toggle nav-item" data-bs-toggle="dropdown" type="button">
                     More
                 </button>
-                <ul id="pst-nav-more-links-2" class="dropdown-menu">
-                    
-                    <li class="nav-item">
-                      <a class="nav-link dropdown-item nav-internal" href="../../getting_started.html">
+<ul class="dropdown-menu" id="pst-nav-more-links-2">
+<li class="nav-item">
+<a class="nav-link dropdown-item nav-internal" href="../../getting_started.html">
                         Getting Started
                       </a>
-                    </li>
-                
-
-                    <li class="nav-item">
-                      <a class="nav-link dropdown-item nav-internal" href="../../tutorial/index.html">
+</li>
+<li class="nav-item">
+<a class="nav-link dropdown-item nav-internal" href="../../tutorial/index.html">
                         Tutorials
                       </a>
-                    </li>
-                
-
-                    <li class="nav-item">
-                      <a class="nav-link dropdown-item nav-internal" href="../../whats_new.html">
+</li>
+<li class="nav-item">
+<a class="nav-link dropdown-item nav-internal" href="../../whats_new.html">
                         Release History
                       </a>
-                    </li>
-                
-
-                    <li class="nav-item">
-                      <a class="nav-link dropdown-item nav-internal" href="../../glossary.html">
+</li>
+<li class="nav-item">
+<a class="nav-link dropdown-item nav-internal" href="../../glossary.html">
                         Glossary
                       </a>
-                    </li>
-                
-
-                    <li class="nav-item">
-                      <a class="nav-link dropdown-item nav-internal" href="../../developers/index.html">
+</li>
+<li class="nav-item">
+<a class="nav-link dropdown-item nav-internal" href="../../developers/index.html">
                         Development
                       </a>
-                    </li>
-                
-
-                    <li class="nav-item">
-                      <a class="nav-link dropdown-item nav-internal" href="../../faq.html">
+</li>
+<li class="nav-item">
+<a class="nav-link dropdown-item nav-internal" href="../../faq.html">
                         FAQ
                       </a>
-                    </li>
-                
-
-                    <li class="nav-item">
-                      <a class="nav-link dropdown-item nav-internal" href="../../support.html">
+</li>
+<li class="nav-item">
+<a class="nav-link dropdown-item nav-internal" href="../../support.html">
                         Support
                       </a>
-                    </li>
-                
-
-                    <li class="nav-item">
-                      <a class="nav-link dropdown-item nav-internal" href="../../related_projects.html">
+</li>
+<li class="nav-item">
+<a class="nav-link dropdown-item nav-internal" href="../../related_projects.html">
                         Related Projects
                       </a>
-                    </li>
-                
-
-                    <li class="nav-item">
-                      <a class="nav-link dropdown-item nav-internal" href="../../roadmap.html">
+</li>
+<li class="nav-item">
+<a class="nav-link dropdown-item nav-internal" href="../../roadmap.html">
                         Roadmap
                       </a>
-                    </li>
-                
-
-                    <li class="nav-item">
-                      <a class="nav-link dropdown-item nav-internal" href="../../governance.html">
+</li>
+<li class="nav-item">
+<a class="nav-link dropdown-item nav-internal" href="../../governance.html">
                         Governance
                       </a>
-                    </li>
-                
-
-                    <li class="nav-item">
-                      <a class="nav-link dropdown-item nav-internal" href="../../about.html">
+</li>
+<li class="nav-item">
+<a class="nav-link dropdown-item nav-internal" href="../../about.html">
                         About us
                       </a>
-                    </li>
-                
-
-                    <li class="nav-item">
-                      <a class="nav-link dropdown-item nav-external" href="https://scikit-learn.org/dev/versions.html">
+</li>
+<li class="nav-item">
+<a class="nav-link dropdown-item nav-external" href="https://scikit-learn.org/dev/versions.html">
                         Other Versions and Download
                       </a>
-                    </li>
-                
-                </ul>
-            </li>
-            
-  </ul>
+</li>
+</ul>
+</li>
+</ul>
 </nav></div>
-        
-      </div>
-    
-    
-    
-      <div class="sidebar-header-items__end">
-        
-          <div class="navbar-item">
-
+</div>
+<div class="sidebar-header-items__end">
+<div class="navbar-item">
 <script>
 document.write(`
   <button class="btn btn-sm navbar-btn theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
@@ -557,24 +377,13 @@ document.write(`
   </button>
 `);
 </script></div>
-        
-          <div class="navbar-item"><ul class="navbar-icon-links navbar-nav"
-    aria-label="Icon Links">
-        <li class="nav-item">
-          
-          
-          
-          
-          
-          
-          
-          
-          <a href="https://github.com/scikit-learn/scikit-learn" title="GitHub" class="nav-link" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><span><i class="fa-brands fa-square-github fa-lg" aria-hidden="true"></i></span>
-            <span class="sr-only">GitHub</span></a>
-        </li>
+<div class="navbar-item"><ul aria-label="Icon Links" class="navbar-icon-links navbar-nav">
+<li class="nav-item">
+<a class="nav-link" data-bs-placement="bottom" data-bs-toggle="tooltip" href="https://github.com/scikit-learn/scikit-learn" rel="noopener" target="_blank" title="GitHub"><span><i aria-hidden="true" class="fa-brands fa-square-github fa-lg"></i></span>
+<span class="sr-only">GitHub</span></a>
+</li>
 </ul></div>
-        
-          <div class="navbar-item">
+<div class="navbar-item">
 <script>
 document.write(`
   <div class="version-switcher__container dropdown">
@@ -597,17 +406,13 @@ document.write(`
   </div>
 `);
 </script></div>
-        
-      </div>
-    
-  </div>
-  
-    <div class="sidebar-primary-items__start sidebar-primary__section">
-        <div class="sidebar-primary-item">
-<nav class="bd-docs-nav bd-links"
-     aria-label="Section Navigation">
-  <p class="bd-links__title" role="heading" aria-level="1">Section Navigation</p>
-  <div class="bd-toc-item navbar-nav"><ul class="current nav bd-sidenav">
+</div>
+</div>
+<div class="sidebar-primary-items__start sidebar-primary__section">
+<div class="sidebar-primary-item">
+<nav aria-label="Section Navigation" class="bd-docs-nav bd-links">
+<p aria-level="1" class="bd-links__title" role="heading">Section Navigation</p>
+<div class="bd-toc-item navbar-nav"><ul class="current nav bd-sidenav">
 <li class="toctree-l1 has-children"><a class="reference internal" href="../release_highlights/index.html">Release Highlights</a><input class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-1"><i class="fa-solid fa-chevron-down"></i></label><ul>
 <li class="toctree-l2"><a class="reference internal" href="../release_highlights/plot_release_highlights_1_4_0.html">Release Highlights for scikit-learn 1.4</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../release_highlights/plot_release_highlights_1_3_0.html">Release Highlights for scikit-learn 1.3</a></li>
@@ -1001,68 +806,37 @@ document.write(`
 </ul>
 </div>
 </nav></div>
-    </div>
-  
-  
-  <div class="sidebar-primary-items__end sidebar-primary__section">
-  </div>
-  
-  <div id="rtd-footer-container"></div>
-
-
-      </div>
-      
-      <main id="main-content" class="bd-main">
-        
-        
-          <div class="bd-content">
-            <div class="bd-article-container">
-              
-              <div class="bd-header-article">
+</div>
+<div class="sidebar-primary-items__end sidebar-primary__section">
+</div>
+<div id="rtd-footer-container"></div>
+</div>
+<main class="bd-main" id="main-content">
+<div class="bd-content">
+<div class="bd-article-container">
+<div class="bd-header-article">
 <div class="header-article-items header-article__inner">
-  
-    <div class="header-article-items__start">
-      
-        <div class="header-article-item">
-
-
-
+<div class="header-article-items__start">
+<div class="header-article-item">
 <nav aria-label="Breadcrumb">
-  <ul class="bd-breadcrumbs">
-    
-    <li class="breadcrumb-item breadcrumb-home">
-      <a href="../../index.html" class="nav-link" aria-label="Home">
-        <i class="fa-solid fa-home"></i>
-      </a>
-    </li>
-    
-    <li class="breadcrumb-item"><a href="../index.html" class="nav-link">Examples</a></li>
-    
-    
-    <li class="breadcrumb-item"><a href="index.html" class="nav-link">Clustering</a></li>
-    
-    <li class="breadcrumb-item active" aria-current="page">Compare...</li>
-  </ul>
+<ul class="bd-breadcrumbs">
+<li class="breadcrumb-item breadcrumb-home">
+<a aria-label="Home" class="nav-link" href="../../index.html">
+<i class="fa-solid fa-home"></i>
+</a>
+</li>
+<li class="breadcrumb-item"><a class="nav-link" href="../index.html">Examples</a></li>
+<li class="breadcrumb-item"><a class="nav-link" href="index.html">Clustering</a></li>
+<li aria-current="page" class="breadcrumb-item active">Compare...</li>
+</ul>
 </nav>
 </div>
-      
-    </div>
-  
-  
 </div>
 </div>
-              
-              
-              
-                
+</div>
 <div id="searchbox"></div>
-                <article class="bd-article">
-                  
-  <div class="sphx-glr-download-link-note admonition note">
-<p class="admonition-title">Note</p>
-<p><a class="reference internal" href="#sphx-glr-download-auto-examples-cluster-plot-birch-vs-minibatchkmeans-py"><span class="std std-ref">Go to the end</span></a>
-to download the full example code or to run this example in your browser via JupyterLite or Binder</p>
-</div>
+<article class="bd-article">
+
 <section class="sphx-glr-example-title" id="compare-birch-and-minibatchkmeans">
 <span id="sphx-glr-auto-examples-cluster-plot-birch-vs-minibatchkmeans-py"></span><h1>Compare BIRCH and MiniBatchKMeans<a class="headerlink" href="#compare-birch-and-minibatchkmeans" title="Link to this heading">#</a></h1>
 <p>This example compares the timing of BIRCH (with and without the global
@@ -1078,79 +852,79 @@ reader might enjoy editing this script to rerun it with a larger value for
 samples to a set of 158 clusters. This can be viewed as a preprocessing
 step before the final (global) clustering step that further reduces these
 158 clusters to 100 clusters.</p>
-<img src="../../_images/sphx_glr_plot_birch_vs_minibatchkmeans_001.png" srcset="../../_images/sphx_glr_plot_birch_vs_minibatchkmeans_001.png" alt="BIRCH without global clustering, BIRCH with global clustering, MiniBatchKMeans" class = "sphx-glr-single-img"/><div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>BIRCH without global clustering as the final step took 0.51 seconds
+<img alt="BIRCH without global clustering, BIRCH with global clustering, MiniBatchKMeans" class="sphx-glr-single-img" src="../../_images/sphx_glr_plot_birch_vs_minibatchkmeans_001.png" srcset="../../_images/sphx_glr_plot_birch_vs_minibatchkmeans_001.png"/><div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>BIRCH without global clustering as the final step took 0.59 seconds
 n_clusters : 158
-BIRCH with global clustering as the final step took 0.52 seconds
+BIRCH with global clustering as the final step took 0.58 seconds
 n_clusters : 100
-Time taken to run MiniBatchKMeans 0.20 seconds
+Time taken to run MiniBatchKMeans 0.22 seconds
 </pre></div>
 </div>
 <div class="line-block">
-<div class="line"><br /></div>
+<div class="line"><br/></div>
 </div>
 <div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Authors: Manoj Kumar &lt;manojkumarsivaraj334@gmail.com</span>
 <span class="c1">#          Alexandre Gramfort &lt;alexandre.gramfort@telecom-paristech.fr&gt;</span>
 <span class="c1"># License: BSD 3 clause</span>
 
-<span class="kn">from</span> <span class="nn">itertools</span> <span class="kn">import</span> <a href="https://docs.python.org/3/library/itertools.html#itertools.cycle" title="itertools.cycle" class="sphx-glr-backref-module-itertools sphx-glr-backref-type-py-function"><span class="n">cycle</span></a>
-<span class="kn">from</span> <span class="nn">time</span> <span class="kn">import</span> <a href="https://docs.python.org/3/library/time.html#time.time" title="time.time" class="sphx-glr-backref-module-time sphx-glr-backref-type-py-function"><span class="n">time</span></a>
+<span class="kn">from</span> <span class="nn">itertools</span> <span class="kn">import</span> <a class="sphx-glr-backref-module-itertools sphx-glr-backref-type-py-function" href="https://docs.python.org/3/library/itertools.html#itertools.cycle" title="itertools.cycle"><span class="n">cycle</span></a>
+<span class="kn">from</span> <span class="nn">time</span> <span class="kn">import</span> <a class="sphx-glr-backref-module-time sphx-glr-backref-type-py-function" href="https://docs.python.org/3/library/time.html#time.time" title="time.time"><span class="n">time</span></a>
 
 <span class="kn">import</span> <span class="nn">matplotlib.colors</span> <span class="k">as</span> <span class="nn">colors</span>
 <span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 <span class="kn">from</span> <span class="nn">joblib</span> <span class="kn">import</span> <span class="n">cpu_count</span>
 
-<span class="kn">from</span> <span class="nn">sklearn.cluster</span> <span class="kn">import</span> <a href="../../modules/generated/sklearn.cluster.Birch.html#sklearn.cluster.Birch" title="sklearn.cluster.Birch" class="sphx-glr-backref-module-sklearn-cluster sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">Birch</span></a><span class="p">,</span> <a href="../../modules/generated/sklearn.cluster.MiniBatchKMeans.html#sklearn.cluster.MiniBatchKMeans" title="sklearn.cluster.MiniBatchKMeans" class="sphx-glr-backref-module-sklearn-cluster sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">MiniBatchKMeans</span></a>
-<span class="kn">from</span> <span class="nn">sklearn.datasets</span> <span class="kn">import</span> <a href="../../modules/generated/sklearn.datasets.make_blobs.html#sklearn.datasets.make_blobs" title="sklearn.datasets.make_blobs" class="sphx-glr-backref-module-sklearn-datasets sphx-glr-backref-type-py-function"><span class="n">make_blobs</span></a>
+<span class="kn">from</span> <span class="nn">sklearn.cluster</span> <span class="kn">import</span> <a class="sphx-glr-backref-module-sklearn-cluster sphx-glr-backref-type-py-class sphx-glr-backref-instance" href="../../modules/generated/sklearn.cluster.Birch.html#sklearn.cluster.Birch" title="sklearn.cluster.Birch"><span class="n">Birch</span></a><span class="p">,</span> <a class="sphx-glr-backref-module-sklearn-cluster sphx-glr-backref-type-py-class sphx-glr-backref-instance" href="../../modules/generated/sklearn.cluster.MiniBatchKMeans.html#sklearn.cluster.MiniBatchKMeans" title="sklearn.cluster.MiniBatchKMeans"><span class="n">MiniBatchKMeans</span></a>
+<span class="kn">from</span> <span class="nn">sklearn.datasets</span> <span class="kn">import</span> <a class="sphx-glr-backref-module-sklearn-datasets sphx-glr-backref-type-py-function" href="../../modules/generated/sklearn.datasets.make_blobs.html#sklearn.datasets.make_blobs" title="sklearn.datasets.make_blobs"><span class="n">make_blobs</span></a>
 
 <span class="c1"># Generate centers for the blobs so that it forms a 10 X 10 grid.</span>
-<span class="n">xx</span> <span class="o">=</span> <a href="https://numpy.org/doc/stable/reference/generated/numpy.linspace.html#numpy.linspace" title="numpy.linspace" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-function"><span class="n">np</span><span class="o">.</span><span class="n">linspace</span></a><span class="p">(</span><span class="o">-</span><span class="mi">22</span><span class="p">,</span> <span class="mi">22</span><span class="p">,</span> <span class="mi">10</span><span class="p">)</span>
-<span class="n">yy</span> <span class="o">=</span> <a href="https://numpy.org/doc/stable/reference/generated/numpy.linspace.html#numpy.linspace" title="numpy.linspace" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-function"><span class="n">np</span><span class="o">.</span><span class="n">linspace</span></a><span class="p">(</span><span class="o">-</span><span class="mi">22</span><span class="p">,</span> <span class="mi">22</span><span class="p">,</span> <span class="mi">10</span><span class="p">)</span>
-<span class="n">xx</span><span class="p">,</span> <span class="n">yy</span> <span class="o">=</span> <a href="https://numpy.org/doc/stable/reference/generated/numpy.meshgrid.html#numpy.meshgrid" title="numpy.meshgrid" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-function"><span class="n">np</span><span class="o">.</span><span class="n">meshgrid</span></a><span class="p">(</span><span class="n">xx</span><span class="p">,</span> <span class="n">yy</span><span class="p">)</span>
-<span class="n">n_centers</span> <span class="o">=</span> <a href="https://numpy.org/doc/stable/reference/generated/numpy.hstack.html#numpy.hstack" title="numpy.hstack" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-function"><span class="n">np</span><span class="o">.</span><span class="n">hstack</span></a><span class="p">((</span><a href="https://numpy.org/doc/stable/reference/generated/numpy.ravel.html#numpy.ravel" title="numpy.ravel" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-function"><span class="n">np</span><span class="o">.</span><span class="n">ravel</span></a><span class="p">(</span><span class="n">xx</span><span class="p">)[:,</span> <a href="https://numpy.org/doc/stable/reference/constants.html#numpy.newaxis" title="numpy.newaxis" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-data"><span class="n">np</span><span class="o">.</span><span class="n">newaxis</span></a><span class="p">],</span> <a href="https://numpy.org/doc/stable/reference/generated/numpy.ravel.html#numpy.ravel" title="numpy.ravel" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-function"><span class="n">np</span><span class="o">.</span><span class="n">ravel</span></a><span class="p">(</span><span class="n">yy</span><span class="p">)[:,</span> <a href="https://numpy.org/doc/stable/reference/constants.html#numpy.newaxis" title="numpy.newaxis" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-data"><span class="n">np</span><span class="o">.</span><span class="n">newaxis</span></a><span class="p">]))</span>
+<span class="n">xx</span> <span class="o">=</span> <a class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-function" href="https://numpy.org/doc/stable/reference/generated/numpy.linspace.html#numpy.linspace" title="numpy.linspace"><span class="n">np</span><span class="o">.</span><span class="n">linspace</span></a><span class="p">(</span><span class="o">-</span><span class="mi">22</span><span class="p">,</span> <span class="mi">22</span><span class="p">,</span> <span class="mi">10</span><span class="p">)</span>
+<span class="n">yy</span> <span class="o">=</span> <a class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-function" href="https://numpy.org/doc/stable/reference/generated/numpy.linspace.html#numpy.linspace" title="numpy.linspace"><span class="n">np</span><span class="o">.</span><span class="n">linspace</span></a><span class="p">(</span><span class="o">-</span><span class="mi">22</span><span class="p">,</span> <span class="mi">22</span><span class="p">,</span> <span class="mi">10</span><span class="p">)</span>
+<span class="n">xx</span><span class="p">,</span> <span class="n">yy</span> <span class="o">=</span> <a class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-function" href="https://numpy.org/doc/stable/reference/generated/numpy.meshgrid.html#numpy.meshgrid" title="numpy.meshgrid"><span class="n">np</span><span class="o">.</span><span class="n">meshgrid</span></a><span class="p">(</span><span class="n">xx</span><span class="p">,</span> <span class="n">yy</span><span class="p">)</span>
+<span class="n">n_centers</span> <span class="o">=</span> <a class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-function" href="https://numpy.org/doc/stable/reference/generated/numpy.hstack.html#numpy.hstack" title="numpy.hstack"><span class="n">np</span><span class="o">.</span><span class="n">hstack</span></a><span class="p">((</span><a class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-function" href="https://numpy.org/doc/stable/reference/generated/numpy.ravel.html#numpy.ravel" title="numpy.ravel"><span class="n">np</span><span class="o">.</span><span class="n">ravel</span></a><span class="p">(</span><span class="n">xx</span><span class="p">)[:,</span> <a class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-data" href="https://numpy.org/doc/stable/reference/constants.html#numpy.newaxis" title="numpy.newaxis"><span class="n">np</span><span class="o">.</span><span class="n">newaxis</span></a><span class="p">],</span> <a class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-function" href="https://numpy.org/doc/stable/reference/generated/numpy.ravel.html#numpy.ravel" title="numpy.ravel"><span class="n">np</span><span class="o">.</span><span class="n">ravel</span></a><span class="p">(</span><span class="n">yy</span><span class="p">)[:,</span> <a class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-data" href="https://numpy.org/doc/stable/reference/constants.html#numpy.newaxis" title="numpy.newaxis"><span class="n">np</span><span class="o">.</span><span class="n">newaxis</span></a><span class="p">]))</span>
 
 <span class="c1"># Generate blobs to do a comparison between MiniBatchKMeans and BIRCH.</span>
-<span class="n">X</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <a href="../../modules/generated/sklearn.datasets.make_blobs.html#sklearn.datasets.make_blobs" title="sklearn.datasets.make_blobs" class="sphx-glr-backref-module-sklearn-datasets sphx-glr-backref-type-py-function"><span class="n">make_blobs</span></a><span class="p">(</span><span class="n">n_samples</span><span class="o">=</span><span class="mi">25000</span><span class="p">,</span> <span class="n">centers</span><span class="o">=</span><span class="n">n_centers</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+<span class="n">X</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <a class="sphx-glr-backref-module-sklearn-datasets sphx-glr-backref-type-py-function" href="../../modules/generated/sklearn.datasets.make_blobs.html#sklearn.datasets.make_blobs" title="sklearn.datasets.make_blobs"><span class="n">make_blobs</span></a><span class="p">(</span><span class="n">n_samples</span><span class="o">=</span><span class="mi">25000</span><span class="p">,</span> <span class="n">centers</span><span class="o">=</span><span class="n">n_centers</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
 
 <span class="c1"># Use all colors that matplotlib provides by default.</span>
-<span class="n">colors_</span> <span class="o">=</span> <a href="https://docs.python.org/3/library/itertools.html#itertools.cycle" title="itertools.cycle" class="sphx-glr-backref-module-itertools sphx-glr-backref-type-py-function"><span class="n">cycle</span></a><span class="p">(</span><span class="n">colors</span><span class="o">.</span><span class="n">cnames</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span>
+<span class="n">colors_</span> <span class="o">=</span> <a class="sphx-glr-backref-module-itertools sphx-glr-backref-type-py-function" href="https://docs.python.org/3/library/itertools.html#itertools.cycle" title="itertools.cycle"><span class="n">cycle</span></a><span class="p">(</span><span class="n">colors</span><span class="o">.</span><span class="n">cnames</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span>
 
-<span class="n">fig</span> <span class="o">=</span> <a href="https://matplotlib.org/stable/api/_as_gen/matplotlib.pyplot.figure.html#matplotlib.pyplot.figure" title="matplotlib.pyplot.figure" class="sphx-glr-backref-module-matplotlib-pyplot sphx-glr-backref-type-py-function"><span class="n">plt</span><span class="o">.</span><span class="n">figure</span></a><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">12</span><span class="p">,</span> <span class="mi">4</span><span class="p">))</span>
+<span class="n">fig</span> <span class="o">=</span> <a class="sphx-glr-backref-module-matplotlib-pyplot sphx-glr-backref-type-py-function" href="https://matplotlib.org/stable/api/_as_gen/matplotlib.pyplot.figure.html#matplotlib.pyplot.figure" title="matplotlib.pyplot.figure"><span class="n">plt</span><span class="o">.</span><span class="n">figure</span></a><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">12</span><span class="p">,</span> <span class="mi">4</span><span class="p">))</span>
 <span class="n">fig</span><span class="o">.</span><span class="n">subplots_adjust</span><span class="p">(</span><span class="n">left</span><span class="o">=</span><span class="mf">0.04</span><span class="p">,</span> <span class="n">right</span><span class="o">=</span><span class="mf">0.98</span><span class="p">,</span> <span class="n">bottom</span><span class="o">=</span><span class="mf">0.1</span><span class="p">,</span> <span class="n">top</span><span class="o">=</span><span class="mf">0.9</span><span class="p">)</span>
 
 <span class="c1"># Compute clustering with BIRCH with and without the final clustering step</span>
 <span class="c1"># and plot.</span>
 <span class="n">birch_models</span> <span class="o">=</span> <span class="p">[</span>
-    <a href="../../modules/generated/sklearn.cluster.Birch.html#sklearn.cluster.Birch" title="sklearn.cluster.Birch" class="sphx-glr-backref-module-sklearn-cluster sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">Birch</span></a><span class="p">(</span><span class="n">threshold</span><span class="o">=</span><span class="mf">1.7</span><span class="p">,</span> <span class="n">n_clusters</span><span class="o">=</span><span class="kc">None</span><span class="p">),</span>
-    <a href="../../modules/generated/sklearn.cluster.Birch.html#sklearn.cluster.Birch" title="sklearn.cluster.Birch" class="sphx-glr-backref-module-sklearn-cluster sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">Birch</span></a><span class="p">(</span><span class="n">threshold</span><span class="o">=</span><span class="mf">1.7</span><span class="p">,</span> <span class="n">n_clusters</span><span class="o">=</span><span class="mi">100</span><span class="p">),</span>
+    <a class="sphx-glr-backref-module-sklearn-cluster sphx-glr-backref-type-py-class sphx-glr-backref-instance" href="../../modules/generated/sklearn.cluster.Birch.html#sklearn.cluster.Birch" title="sklearn.cluster.Birch"><span class="n">Birch</span></a><span class="p">(</span><span class="n">threshold</span><span class="o">=</span><span class="mf">1.7</span><span class="p">,</span> <span class="n">n_clusters</span><span class="o">=</span><span class="kc">None</span><span class="p">),</span>
+    <a class="sphx-glr-backref-module-sklearn-cluster sphx-glr-backref-type-py-class sphx-glr-backref-instance" href="../../modules/generated/sklearn.cluster.Birch.html#sklearn.cluster.Birch" title="sklearn.cluster.Birch"><span class="n">Birch</span></a><span class="p">(</span><span class="n">threshold</span><span class="o">=</span><span class="mf">1.7</span><span class="p">,</span> <span class="n">n_clusters</span><span class="o">=</span><span class="mi">100</span><span class="p">),</span>
 <span class="p">]</span>
-<span class="n">final_step</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;without global clustering&quot;</span><span class="p">,</span> <span class="s2">&quot;with global clustering&quot;</span><span class="p">]</span>
+<span class="n">final_step</span> <span class="o">=</span> <span class="p">[</span><span class="s2">"without global clustering"</span><span class="p">,</span> <span class="s2">"with global clustering"</span><span class="p">]</span>
 
 <span class="k">for</span> <span class="n">ind</span><span class="p">,</span> <span class="p">(</span><span class="n">birch_model</span><span class="p">,</span> <span class="n">info</span><span class="p">)</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="nb">zip</span><span class="p">(</span><span class="n">birch_models</span><span class="p">,</span> <span class="n">final_step</span><span class="p">)):</span>
-    <span class="n">t</span> <span class="o">=</span> <a href="https://docs.python.org/3/library/time.html#time.time" title="time.time" class="sphx-glr-backref-module-time sphx-glr-backref-type-py-function"><span class="n">time</span></a><span class="p">()</span>
+    <span class="n">t</span> <span class="o">=</span> <a class="sphx-glr-backref-module-time sphx-glr-backref-type-py-function" href="https://docs.python.org/3/library/time.html#time.time" title="time.time"><span class="n">time</span></a><span class="p">()</span>
     <span class="n">birch_model</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X</span><span class="p">)</span>
-    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;BIRCH </span><span class="si">%s</span><span class="s2"> as the final step took </span><span class="si">%0.2f</span><span class="s2"> seconds&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">info</span><span class="p">,</span> <span class="p">(</span><a href="https://docs.python.org/3/library/time.html#time.time" title="time.time" class="sphx-glr-backref-module-time sphx-glr-backref-type-py-function"><span class="n">time</span></a><span class="p">()</span> <span class="o">-</span> <span class="n">t</span><span class="p">)))</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">"BIRCH </span><span class="si">%s</span><span class="s2"> as the final step took </span><span class="si">%0.2f</span><span class="s2"> seconds"</span> <span class="o">%</span> <span class="p">(</span><span class="n">info</span><span class="p">,</span> <span class="p">(</span><a class="sphx-glr-backref-module-time sphx-glr-backref-type-py-function" href="https://docs.python.org/3/library/time.html#time.time" title="time.time"><span class="n">time</span></a><span class="p">()</span> <span class="o">-</span> <span class="n">t</span><span class="p">)))</span>
 
     <span class="c1"># Plot result</span>
     <span class="n">labels</span> <span class="o">=</span> <span class="n">birch_model</span><span class="o">.</span><span class="n">labels_</span>
     <span class="n">centroids</span> <span class="o">=</span> <span class="n">birch_model</span><span class="o">.</span><span class="n">subcluster_centers_</span>
-    <span class="n">n_clusters</span> <span class="o">=</span> <a href="https://numpy.org/doc/stable/reference/generated/numpy.unique.html#numpy.unique" title="numpy.unique" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-function"><span class="n">np</span><span class="o">.</span><span class="n">unique</span></a><span class="p">(</span><span class="n">labels</span><span class="p">)</span><span class="o">.</span><span class="n">size</span>
-    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;n_clusters : </span><span class="si">%d</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="n">n_clusters</span><span class="p">)</span>
+    <span class="n">n_clusters</span> <span class="o">=</span> <a class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-function" href="https://numpy.org/doc/stable/reference/generated/numpy.unique.html#numpy.unique" title="numpy.unique"><span class="n">np</span><span class="o">.</span><span class="n">unique</span></a><span class="p">(</span><span class="n">labels</span><span class="p">)</span><span class="o">.</span><span class="n">size</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">"n_clusters : </span><span class="si">%d</span><span class="s2">"</span> <span class="o">%</span> <span class="n">n_clusters</span><span class="p">)</span>
 
     <span class="n">ax</span> <span class="o">=</span> <span class="n">fig</span><span class="o">.</span><span class="n">add_subplot</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="n">ind</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span>
     <span class="k">for</span> <span class="n">this_centroid</span><span class="p">,</span> <span class="n">k</span><span class="p">,</span> <span class="n">col</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">centroids</span><span class="p">,</span> <span class="nb">range</span><span class="p">(</span><span class="n">n_clusters</span><span class="p">),</span> <span class="n">colors_</span><span class="p">):</span>
         <span class="n">mask</span> <span class="o">=</span> <span class="n">labels</span> <span class="o">==</span> <span class="n">k</span>
-        <span class="n">ax</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">X</span><span class="p">[</span><span class="n">mask</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="n">X</span><span class="p">[</span><span class="n">mask</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span> <span class="n">c</span><span class="o">=</span><span class="s2">&quot;w&quot;</span><span class="p">,</span> <span class="n">edgecolor</span><span class="o">=</span><span class="n">col</span><span class="p">,</span> <span class="n">marker</span><span class="o">=</span><span class="s2">&quot;.&quot;</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.5</span><span class="p">)</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">X</span><span class="p">[</span><span class="n">mask</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="n">X</span><span class="p">[</span><span class="n">mask</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span> <span class="n">c</span><span class="o">=</span><span class="s2">"w"</span><span class="p">,</span> <span class="n">edgecolor</span><span class="o">=</span><span class="n">col</span><span class="p">,</span> <span class="n">marker</span><span class="o">=</span><span class="s2">"."</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.5</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">birch_model</span><span class="o">.</span><span class="n">n_clusters</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="n">ax</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">this_centroid</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">this_centroid</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">marker</span><span class="o">=</span><span class="s2">&quot;+&quot;</span><span class="p">,</span> <span class="n">c</span><span class="o">=</span><span class="s2">&quot;k&quot;</span><span class="p">,</span> <span class="n">s</span><span class="o">=</span><span class="mi">25</span><span class="p">)</span>
+            <span class="n">ax</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">this_centroid</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">this_centroid</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">marker</span><span class="o">=</span><span class="s2">"+"</span><span class="p">,</span> <span class="n">c</span><span class="o">=</span><span class="s2">"k"</span><span class="p">,</span> <span class="n">s</span><span class="o">=</span><span class="mi">25</span><span class="p">)</span>
     <span class="n">ax</span><span class="o">.</span><span class="n">set_ylim</span><span class="p">([</span><span class="o">-</span><span class="mi">25</span><span class="p">,</span> <span class="mi">25</span><span class="p">])</span>
     <span class="n">ax</span><span class="o">.</span><span class="n">set_xlim</span><span class="p">([</span><span class="o">-</span><span class="mi">25</span><span class="p">,</span> <span class="mi">25</span><span class="p">])</span>
     <span class="n">ax</span><span class="o">.</span><span class="n">set_autoscaley_on</span><span class="p">(</span><span class="kc">False</span><span class="p">)</span>
-    <span class="n">ax</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s2">&quot;BIRCH </span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="n">info</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s2">"BIRCH </span><span class="si">%s</span><span class="s2">"</span> <span class="o">%</span> <span class="n">info</span><span class="p">)</span>
 
 <span class="c1"># Compute clustering with MiniBatchKMeans.</span>
-<span class="n">mbk</span> <span class="o">=</span> <a href="../../modules/generated/sklearn.cluster.MiniBatchKMeans.html#sklearn.cluster.MiniBatchKMeans" title="sklearn.cluster.MiniBatchKMeans" class="sphx-glr-backref-module-sklearn-cluster sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">MiniBatchKMeans</span></a><span class="p">(</span>
-    <span class="n">init</span><span class="o">=</span><span class="s2">&quot;k-means++&quot;</span><span class="p">,</span>
+<span class="n">mbk</span> <span class="o">=</span> <a class="sphx-glr-backref-module-sklearn-cluster sphx-glr-backref-type-py-class sphx-glr-backref-instance" href="../../modules/generated/sklearn.cluster.MiniBatchKMeans.html#sklearn.cluster.MiniBatchKMeans" title="sklearn.cluster.MiniBatchKMeans"><span class="n">MiniBatchKMeans</span></a><span class="p">(</span>
+    <span class="n">init</span><span class="o">=</span><span class="s2">"k-means++"</span><span class="p">,</span>
     <span class="n">n_clusters</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span>
     <span class="n">batch_size</span><span class="o">=</span><span class="mi">256</span> <span class="o">*</span> <span class="n">cpu_count</span><span class="p">(),</span>
     <span class="n">n_init</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span>
@@ -1158,147 +932,89 @@ Time taken to run MiniBatchKMeans 0.20 seconds
     <span class="n">verbose</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
     <span class="n">random_state</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
 <span class="p">)</span>
-<span class="n">t0</span> <span class="o">=</span> <a href="https://docs.python.org/3/library/time.html#time.time" title="time.time" class="sphx-glr-backref-module-time sphx-glr-backref-type-py-function"><span class="n">time</span></a><span class="p">()</span>
+<span class="n">t0</span> <span class="o">=</span> <a class="sphx-glr-backref-module-time sphx-glr-backref-type-py-function" href="https://docs.python.org/3/library/time.html#time.time" title="time.time"><span class="n">time</span></a><span class="p">()</span>
 <span class="n">mbk</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X</span><span class="p">)</span>
-<span class="n">t_mini_batch</span> <span class="o">=</span> <a href="https://docs.python.org/3/library/time.html#time.time" title="time.time" class="sphx-glr-backref-module-time sphx-glr-backref-type-py-function"><span class="n">time</span></a><span class="p">()</span> <span class="o">-</span> <span class="n">t0</span>
-<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Time taken to run MiniBatchKMeans </span><span class="si">%0.2f</span><span class="s2"> seconds&quot;</span> <span class="o">%</span> <span class="n">t_mini_batch</span><span class="p">)</span>
-<span class="n">mbk_means_labels_unique</span> <span class="o">=</span> <a href="https://numpy.org/doc/stable/reference/generated/numpy.unique.html#numpy.unique" title="numpy.unique" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-function"><span class="n">np</span><span class="o">.</span><span class="n">unique</span></a><span class="p">(</span><span class="n">mbk</span><span class="o">.</span><span class="n">labels_</span><span class="p">)</span>
+<span class="n">t_mini_batch</span> <span class="o">=</span> <a class="sphx-glr-backref-module-time sphx-glr-backref-type-py-function" href="https://docs.python.org/3/library/time.html#time.time" title="time.time"><span class="n">time</span></a><span class="p">()</span> <span class="o">-</span> <span class="n">t0</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">"Time taken to run MiniBatchKMeans </span><span class="si">%0.2f</span><span class="s2"> seconds"</span> <span class="o">%</span> <span class="n">t_mini_batch</span><span class="p">)</span>
+<span class="n">mbk_means_labels_unique</span> <span class="o">=</span> <a class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-function" href="https://numpy.org/doc/stable/reference/generated/numpy.unique.html#numpy.unique" title="numpy.unique"><span class="n">np</span><span class="o">.</span><span class="n">unique</span></a><span class="p">(</span><span class="n">mbk</span><span class="o">.</span><span class="n">labels_</span><span class="p">)</span>
 
 <span class="n">ax</span> <span class="o">=</span> <span class="n">fig</span><span class="o">.</span><span class="n">add_subplot</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span>
 <span class="k">for</span> <span class="n">this_centroid</span><span class="p">,</span> <span class="n">k</span><span class="p">,</span> <span class="n">col</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">mbk</span><span class="o">.</span><span class="n">cluster_centers_</span><span class="p">,</span> <span class="nb">range</span><span class="p">(</span><span class="n">n_clusters</span><span class="p">),</span> <span class="n">colors_</span><span class="p">):</span>
     <span class="n">mask</span> <span class="o">=</span> <span class="n">mbk</span><span class="o">.</span><span class="n">labels_</span> <span class="o">==</span> <span class="n">k</span>
-    <span class="n">ax</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">X</span><span class="p">[</span><span class="n">mask</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="n">X</span><span class="p">[</span><span class="n">mask</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span> <span class="n">marker</span><span class="o">=</span><span class="s2">&quot;.&quot;</span><span class="p">,</span> <span class="n">c</span><span class="o">=</span><span class="s2">&quot;w&quot;</span><span class="p">,</span> <span class="n">edgecolor</span><span class="o">=</span><span class="n">col</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.5</span><span class="p">)</span>
-    <span class="n">ax</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">this_centroid</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">this_centroid</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">marker</span><span class="o">=</span><span class="s2">&quot;+&quot;</span><span class="p">,</span> <span class="n">c</span><span class="o">=</span><span class="s2">&quot;k&quot;</span><span class="p">,</span> <span class="n">s</span><span class="o">=</span><span class="mi">25</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">X</span><span class="p">[</span><span class="n">mask</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="n">X</span><span class="p">[</span><span class="n">mask</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span> <span class="n">marker</span><span class="o">=</span><span class="s2">"."</span><span class="p">,</span> <span class="n">c</span><span class="o">=</span><span class="s2">"w"</span><span class="p">,</span> <span class="n">edgecolor</span><span class="o">=</span><span class="n">col</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.5</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">this_centroid</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">this_centroid</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">marker</span><span class="o">=</span><span class="s2">"+"</span><span class="p">,</span> <span class="n">c</span><span class="o">=</span><span class="s2">"k"</span><span class="p">,</span> <span class="n">s</span><span class="o">=</span><span class="mi">25</span><span class="p">)</span>
 <span class="n">ax</span><span class="o">.</span><span class="n">set_xlim</span><span class="p">([</span><span class="o">-</span><span class="mi">25</span><span class="p">,</span> <span class="mi">25</span><span class="p">])</span>
 <span class="n">ax</span><span class="o">.</span><span class="n">set_ylim</span><span class="p">([</span><span class="o">-</span><span class="mi">25</span><span class="p">,</span> <span class="mi">25</span><span class="p">])</span>
-<span class="n">ax</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s2">&quot;MiniBatchKMeans&quot;</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s2">"MiniBatchKMeans"</span><span class="p">)</span>
 <span class="n">ax</span><span class="o">.</span><span class="n">set_autoscaley_on</span><span class="p">(</span><span class="kc">False</span><span class="p">)</span>
-<a href="https://matplotlib.org/stable/api/_as_gen/matplotlib.pyplot.show.html#matplotlib.pyplot.show" title="matplotlib.pyplot.show" class="sphx-glr-backref-module-matplotlib-pyplot sphx-glr-backref-type-py-function"><span class="n">plt</span><span class="o">.</span><span class="n">show</span></a><span class="p">()</span>
+<a class="sphx-glr-backref-module-matplotlib-pyplot sphx-glr-backref-type-py-function" href="https://matplotlib.org/stable/api/_as_gen/matplotlib.pyplot.show.html#matplotlib.pyplot.show" title="matplotlib.pyplot.show"><span class="n">plt</span><span class="o">.</span><span class="n">show</span></a><span class="p">()</span>
 </pre></div>
 </div>
-<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> (0 minutes 3.468 seconds)</p>
-<div class="sphx-glr-footer sphx-glr-footer-example docutils container" id="sphx-glr-download-auto-examples-cluster-plot-birch-vs-minibatchkmeans-py">
-<div class="binder-badge docutils container">
-<a class="reference external image-reference" href="https://mybinder.org/v2/gh/scikit-learn/scikit-learn/main?urlpath=lab/tree/notebooks/auto_examples/cluster/plot_birch_vs_minibatchkmeans.ipynb"><img alt="Launch binder" src="../../_images/binder_badge_logo4.svg" width="150px" /></a>
-</div>
-<div class="lite-badge docutils container">
-<a class="reference external image-reference" href="../../lite/lab/?path=auto_examples/cluster/plot_birch_vs_minibatchkmeans.ipynb"><img alt="Launch JupyterLite" src="../../_images/jupyterlite_badge_logo4.svg" width="150px" /></a>
-</div>
-<div class="sphx-glr-download sphx-glr-download-jupyter docutils container">
-<p><a class="reference download internal" download="" href="../../_downloads/a373b9fdc21005d9a66ecf3df90eb49a/plot_birch_vs_minibatchkmeans.ipynb"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Jupyter</span> <span class="pre">notebook:</span> <span class="pre">plot_birch_vs_minibatchkmeans.ipynb</span></code></a></p>
-</div>
-<div class="sphx-glr-download sphx-glr-download-python docutils container">
-<p><a class="reference download internal" download="" href="../../_downloads/e3c29fcee17ffb4a67e11b147b8a86bb/plot_birch_vs_minibatchkmeans.py"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Python</span> <span class="pre">source</span> <span class="pre">code:</span> <span class="pre">plot_birch_vs_minibatchkmeans.py</span></code></a></p>
-</div>
-</div>
+<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> (0 minutes 3.882 seconds)</p>
+
 <p class="rubric">Related examples</p>
-<div class="sphx-glr-thumbnails"><div class="sphx-glr-thumbcontainer" tooltip="We want to compare the performance of the MiniBatchKMeans and KMeans: the MiniBatchKMeans is fa..."><img alt="" src="../../_images/sphx_glr_plot_mini_batch_kmeans_thumb.png" />
+<div class="sphx-glr-thumbnails"><div class="sphx-glr-thumbcontainer" tooltip="We want to compare the performance of the MiniBatchKMeans and KMeans: the MiniBatchKMeans is fa..."><img alt="" src="../../_images/sphx_glr_plot_mini_batch_kmeans_thumb.png"/>
 <p><a class="reference internal" href="plot_mini_batch_kmeans.html#sphx-glr-auto-examples-cluster-plot-mini-batch-kmeans-py"><span class="std std-ref">Comparison of the K-Means and MiniBatchKMeans clustering algorithms</span></a></p>
-  <div class="sphx-glr-thumbnail-title">Comparison of the K-Means and MiniBatchKMeans clustering algorithms</div>
-</div><div class="sphx-glr-thumbcontainer" tooltip="Evaluate the ability of k-means initializations strategies to make the algorithm convergence ro..."><img alt="" src="../../_images/sphx_glr_plot_kmeans_stability_low_dim_dense_thumb.png" />
+<div class="sphx-glr-thumbnail-title">Comparison of the K-Means and MiniBatchKMeans clustering algorithms</div>
+</div><div class="sphx-glr-thumbcontainer" tooltip="Evaluate the ability of k-means initializations strategies to make the algorithm convergence ro..."><img alt="" src="../../_images/sphx_glr_plot_kmeans_stability_low_dim_dense_thumb.png"/>
 <p><a class="reference internal" href="plot_kmeans_stability_low_dim_dense.html#sphx-glr-auto-examples-cluster-plot-kmeans-stability-low-dim-dense-py"><span class="std std-ref">Empirical evaluation of the impact of k-means initialization</span></a></p>
-  <div class="sphx-glr-thumbnail-title">Empirical evaluation of the impact of k-means initialization</div>
-</div><div class="sphx-glr-thumbcontainer" tooltip="This example shows characteristics of different clustering algorithms on datasets that are &quot;int..."><img alt="" src="../../_images/sphx_glr_plot_cluster_comparison_thumb.png" />
+<div class="sphx-glr-thumbnail-title">Empirical evaluation of the impact of k-means initialization</div>
+</div><div class="sphx-glr-thumbcontainer" tooltip='This example shows characteristics of different clustering algorithms on datasets that are "int...'><img alt="" src="../../_images/sphx_glr_plot_cluster_comparison_thumb.png"/>
 <p><a class="reference internal" href="plot_cluster_comparison.html#sphx-glr-auto-examples-cluster-plot-cluster-comparison-py"><span class="std std-ref">Comparing different clustering algorithms on toy datasets</span></a></p>
-  <div class="sphx-glr-thumbnail-title">Comparing different clustering algorithms on toy datasets</div>
-</div><div class="sphx-glr-thumbcontainer" tooltip="Demonstrates the effect of different metrics on the hierarchical clustering."><img alt="" src="../../_images/sphx_glr_plot_agglomerative_clustering_metrics_thumb.png" />
+<div class="sphx-glr-thumbnail-title">Comparing different clustering algorithms on toy datasets</div>
+</div><div class="sphx-glr-thumbcontainer" tooltip="Demonstrates the effect of different metrics on the hierarchical clustering."><img alt="" src="../../_images/sphx_glr_plot_agglomerative_clustering_metrics_thumb.png"/>
 <p><a class="reference internal" href="plot_agglomerative_clustering_metrics.html#sphx-glr-auto-examples-cluster-plot-agglomerative-clustering-metrics-py"><span class="std std-ref">Agglomerative clustering with different metrics</span></a></p>
-  <div class="sphx-glr-thumbnail-title">Agglomerative clustering with different metrics</div>
-</div><div class="sphx-glr-thumbcontainer" tooltip="Compute the segmentation of a 2D image with Ward hierarchical clustering. The clustering is spa..."><img alt="" src="../../_images/sphx_glr_plot_coin_ward_segmentation_thumb.png" />
-<p><a class="reference internal" href="plot_coin_ward_segmentation.html#sphx-glr-auto-examples-cluster-plot-coin-ward-segmentation-py"><span class="std std-ref">A demo of structured Ward hierarchical clustering on an image of coins</span></a></p>
-  <div class="sphx-glr-thumbnail-title">A demo of structured Ward hierarchical clustering on an image of coins</div>
+<div class="sphx-glr-thumbnail-title">Agglomerative clustering with different metrics</div>
 </div></div><p class="sphx-glr-signature"><a class="reference external" href="https://sphinx-gallery.github.io">Gallery generated by Sphinx-Gallery</a></p>
 </section>
-
-
-                </article>
-              
-              
-              
-                <footer class="bd-footer-article">
-                  <div class="footer-article-items footer-article__inner">
-  
-    <div class="footer-article-item">
+</article>
+<footer class="bd-footer-article">
+<div class="footer-article-items footer-article__inner">
+<div class="footer-article-item">
 <div class="prev-next-area">
-    <a class="left-prev"
-       href="plot_color_quantization.html"
-       title="previous page">
-      <i class="fa-solid fa-angle-left"></i>
-      <div class="prev-next-info">
-        <p class="prev-next-subtitle">previous</p>
-        <p class="prev-next-title">Color Quantization using K-Means</p>
-      </div>
-    </a>
-    <a class="right-next"
-       href="plot_cluster_comparison.html"
-       title="next page">
-      <div class="prev-next-info">
-        <p class="prev-next-subtitle">next</p>
-        <p class="prev-next-title">Comparing different clustering algorithms on toy datasets</p>
-      </div>
-      <i class="fa-solid fa-angle-right"></i>
-    </a>
-</div></div>
-  
+<a class="left-prev" href="plot_color_quantization.html" title="previous page">
+<i class="fa-solid fa-angle-left"></i>
+<div class="prev-next-info">
+<p class="prev-next-subtitle">previous</p>
+<p class="prev-next-title">Color Quantization using K-Means</p>
 </div>
-                </footer>
-              
-              
-              
-            </div>
-            
-            
-              
-                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
-
-
-  <div class="sidebar-secondary-item">
-
-  <div class="tocsection sourcelink">
-    <a href="../../_sources/auto_examples/cluster/plot_birch_vs_minibatchkmeans.rst.txt">
-      <i class="fa-solid fa-file-lines"></i> Show Source
-    </a>
-  </div>
+</a>
+<a class="right-next" href="plot_cluster_comparison.html" title="next page">
+<div class="prev-next-info">
+<p class="prev-next-subtitle">next</p>
+<p class="prev-next-title">Comparing different clustering algorithms on toy datasets</p>
 </div>
-
+<i class="fa-solid fa-angle-right"></i>
+</a>
 </div></div>
-              
-            
-          </div>
-          <footer class="bd-footer-content">
-            
-          </footer>
-        
-      </main>
-    </div>
-  </div>
-  
-  <!-- Scripts loaded after <body> so the DOM is not blocked -->
-  <script src="../../_static/scripts/bootstrap.js?digest=8d27b9dea8ad943066ae"></script>
+</div>
+</footer>
+</div>
+<div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+<div class="sidebar-secondary-item"><div title="plot_birch_vs_minibatchkmeans.py"><a download="" href="../../_downloads/e3c29fcee17ffb4a67e11b147b8a86bb/plot_birch_vs_minibatchkmeans.py"><i class="fa-solid fa-download"></i> Download source code</a></div><div title="plot_birch_vs_minibatchkmeans.ipynb"><a download="" href="../../_downloads/a373b9fdc21005d9a66ecf3df90eb49a/plot_birch_vs_minibatchkmeans.ipynb"><i class="fa-solid fa-download"></i> Download Jupyter notebook</a></div></div><div class="sidebar-secondary-item"><div><a href="../../lite/lab/?path=auto_examples/cluster/plot_birch_vs_minibatchkmeans.ipynb"><img alt="Launch JupyterLite" height="20" src="../../_images/jupyterlite_badge_logo4.svg"/></a></div><div><a href="https://mybinder.org/v2/gh/scikit-learn/scikit-learn/main?urlpath=lab/tree/notebooks/auto_examples/cluster/plot_birch_vs_minibatchkmeans.ipynb"><img alt="Launch binder" height="20" src="../../_images/binder_badge_logo4.svg"/></a></div></div></div></div>
+</div>
+<footer class="bd-footer-content">
+</footer>
+</main>
+</div>
+</div>
+<!-- Scripts loaded after <body> so the DOM is not blocked -->
+<script src="../../_static/scripts/bootstrap.js?digest=8d27b9dea8ad943066ae"></script>
 <script src="../../_static/scripts/pydata-sphinx-theme.js?digest=8d27b9dea8ad943066ae"></script>
-
-  <footer class="bd-footer">
+<footer class="bd-footer">
 <div class="bd-footer__inner bd-page-width">
-  
-    <div class="footer-items__start">
-      
-        <div class="footer-item">
-
-  <p class="copyright">
+<div class="footer-items__start">
+<div class="footer-item">
+<p class="copyright">
     
       © Copyright 2007 - 2024, scikit-learn developers (BSD License).
       <br/>
-    
-  </p>
+</p>
 </div>
-      
-    </div>
-  
-  
-  
 </div>
-
-  </footer>
+</div>
+</footer>
     <script src="https://scikit-learn.org/versionwarning.js"></script>
-  </body>
+</body>
 </html>

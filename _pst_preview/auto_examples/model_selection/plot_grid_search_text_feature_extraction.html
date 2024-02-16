@@ -1,310 +1,206 @@
 
 <!DOCTYPE html>
 
-
-<html lang="en" data-content_root="../../" >
-
-  <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
-<meta property="og:title" content="Sample pipeline for text feature extraction and evaluation" />
-<meta property="og:type" content="website" />
-<meta property="og:url" content="https://scikit-learn/stable/auto_examples/model_selection/plot_grid_search_text_feature_extraction.html" />
-<meta property="og:site_name" content="scikit-learn" />
-<meta property="og:description" content="The dataset used in this example is The 20 newsgroups text dataset which will be automatically downloaded, cached and reused for the document classification example. In this example, we tune the hy..." />
-<meta property="og:image" content="https://scikit-learn.org/stable/_static/scikit-learn-logo-small.png" />
-<meta property="og:image:alt" content="scikit-learn" />
-<meta name="description" content="The dataset used in this example is The 20 newsgroups text dataset which will be automatically downloaded, cached and reused for the document classification example. In this example, we tune the hy..." />
-
-    <title>Sample pipeline for text feature extraction and evaluation &#8212; scikit-learn 1.5.dev0 documentation</title>
-  
-  
-  
-  <script data-cfasync="false">
+<html data-content_root="../../" lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/><meta content="width=device-width, initial-scale=1" name="viewport"/>
+<meta content="Sample pipeline for text feature extraction and evaluation" property="og:title"/>
+<meta content="website" property="og:type"/>
+<meta content="https://scikit-learn/stable/auto_examples/model_selection/plot_grid_search_text_feature_extraction.html" property="og:url"/>
+<meta content="scikit-learn" property="og:site_name"/>
+<meta content="The dataset used in this example is The 20 newsgroups text dataset which will be automatically downloaded, cached and reused for the document classification example. In this example, we tune the hy..." property="og:description"/>
+<meta content="https://scikit-learn.org/stable/_static/scikit-learn-logo-small.png" property="og:image"/>
+<meta content="scikit-learn" property="og:image:alt"/>
+<meta content="The dataset used in this example is The 20 newsgroups text dataset which will be automatically downloaded, cached and reused for the document classification example. In this example, we tune the hy..." name="description"/>
+<title>Sample pipeline for text feature extraction and evaluation — scikit-learn 1.5.dev0 documentation</title>
+<script data-cfasync="false">
     document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
     document.documentElement.dataset.theme = localStorage.getItem("theme") || "light";
   </script>
-  
-  <!-- Loaded before other Sphinx assets -->
-  <link href="../../_static/styles/theme.css?digest=8d27b9dea8ad943066ae" rel="stylesheet" />
-<link href="../../_static/styles/bootstrap.css?digest=8d27b9dea8ad943066ae" rel="stylesheet" />
-<link href="../../_static/styles/pydata-sphinx-theme.css?digest=8d27b9dea8ad943066ae" rel="stylesheet" />
-
-  
-  <link href="../../_static/vendor/fontawesome/6.5.1/css/all.min.css?digest=8d27b9dea8ad943066ae" rel="stylesheet" />
-  <link rel="preload" as="font" type="font/woff2" crossorigin href="../../_static/vendor/fontawesome/6.5.1/webfonts/fa-solid-900.woff2" />
-<link rel="preload" as="font" type="font/woff2" crossorigin href="../../_static/vendor/fontawesome/6.5.1/webfonts/fa-brands-400.woff2" />
-<link rel="preload" as="font" type="font/woff2" crossorigin href="../../_static/vendor/fontawesome/6.5.1/webfonts/fa-regular-400.woff2" />
-
-    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=a746c00c" />
-    <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
-    <link rel="stylesheet" type="text/css" href="../../_static/plot_directive.css" />
-    <link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Vibur" />
-    <link rel="stylesheet" type="text/css" href="../../_static/jupyterlite_sphinx.css?v=f996933d" />
-    <link rel="stylesheet" type="text/css" href="../../_static/sg_gallery.css?v=61a4c737" />
-    <link rel="stylesheet" type="text/css" href="../../_static/sg_gallery-binder.css?v=f4aeca0c" />
-    <link rel="stylesheet" type="text/css" href="../../_static/sg_gallery-dataframe.css?v=2082cf3c" />
-    <link rel="stylesheet" type="text/css" href="../../_static/sg_gallery-rendered-html.css?v=1277b6f3" />
-    <link rel="stylesheet" type="text/css" href="../../_static/design-style.1e8bd061cd6da7fc9cf755528e8ffc24.min.css?v=0a3b3ea7" />
-    <link rel="stylesheet" type="text/css" href="../../_static/styles/colors.css?v=d5680186" />
-    <link rel="stylesheet" type="text/css" href="../../_static/styles/custom.css?v=3e2fb91a" />
-  
-  <!-- Pre-loaded scripts that we'll load fully later -->
-  <link rel="preload" as="script" href="../../_static/scripts/bootstrap.js?digest=8d27b9dea8ad943066ae" />
-<link rel="preload" as="script" href="../../_static/scripts/pydata-sphinx-theme.js?digest=8d27b9dea8ad943066ae" />
-  <script src="../../_static/vendor/fontawesome/6.5.1/js/all.min.js?digest=8d27b9dea8ad943066ae"></script>
-
-    <script src="../../_static/documentation_options.js?v=a2c36881"></script>
-    <script src="../../_static/doctools.js?v=888ff710"></script>
-    <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
-    <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
-    <script src="../../_static/copybutton.js?v=97f0b27d"></script>
-    <script src="../../_static/jupyterlite_sphinx.js?v=f25406b8"></script>
-    <script src="../../_static/design-tabs.js?v=36754332"></script>
-    <script data-domain="scikit-learn.org" defer="defer" src="https://views.scientific-python.org/js/script.js"></script>
-    <script async="async" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js"></script>
-    <script>DOCUMENTATION_OPTIONS.pagename = 'auto_examples/model_selection/plot_grid_search_text_feature_extraction';</script>
-    <script>
+<!-- Loaded before other Sphinx assets -->
+<link href="../../_static/styles/theme.css?digest=8d27b9dea8ad943066ae" rel="stylesheet"/>
+<link href="../../_static/styles/bootstrap.css?digest=8d27b9dea8ad943066ae" rel="stylesheet"/>
+<link href="../../_static/styles/pydata-sphinx-theme.css?digest=8d27b9dea8ad943066ae" rel="stylesheet"/>
+<link href="../../_static/vendor/fontawesome/6.5.1/css/all.min.css?digest=8d27b9dea8ad943066ae" rel="stylesheet"/>
+<link as="font" crossorigin="" href="../../_static/vendor/fontawesome/6.5.1/webfonts/fa-solid-900.woff2" rel="preload" type="font/woff2"/>
+<link as="font" crossorigin="" href="../../_static/vendor/fontawesome/6.5.1/webfonts/fa-brands-400.woff2" rel="preload" type="font/woff2"/>
+<link as="font" crossorigin="" href="../../_static/vendor/fontawesome/6.5.1/webfonts/fa-regular-400.woff2" rel="preload" type="font/woff2"/>
+<link href="../../_static/pygments.css?v=a746c00c" rel="stylesheet" type="text/css"/>
+<link href="../../_static/copybutton.css?v=76b2166b" rel="stylesheet" type="text/css"/>
+<link href="../../_static/plot_directive.css" rel="stylesheet" type="text/css"/>
+<link href="https://fonts.googleapis.com/css?family=Vibur" rel="stylesheet" type="text/css"/>
+<link href="../../_static/jupyterlite_sphinx.css?v=f996933d" rel="stylesheet" type="text/css"/>
+<link href="../../_static/sg_gallery.css?v=61a4c737" rel="stylesheet" type="text/css"/>
+<link href="../../_static/sg_gallery-binder.css?v=f4aeca0c" rel="stylesheet" type="text/css"/>
+<link href="../../_static/sg_gallery-dataframe.css?v=2082cf3c" rel="stylesheet" type="text/css"/>
+<link href="../../_static/sg_gallery-rendered-html.css?v=1277b6f3" rel="stylesheet" type="text/css"/>
+<link href="../../_static/design-style.1e8bd061cd6da7fc9cf755528e8ffc24.min.css?v=0a3b3ea7" rel="stylesheet" type="text/css"/>
+<link href="../../_static/styles/colors.css?v=d5680186" rel="stylesheet" type="text/css"/>
+<link href="../../_static/styles/custom.css?v=3e2fb91a" rel="stylesheet" type="text/css"/>
+<!-- Pre-loaded scripts that we'll load fully later -->
+<link as="script" href="../../_static/scripts/bootstrap.js?digest=8d27b9dea8ad943066ae" rel="preload"/>
+<link as="script" href="../../_static/scripts/pydata-sphinx-theme.js?digest=8d27b9dea8ad943066ae" rel="preload"/>
+<script src="../../_static/vendor/fontawesome/6.5.1/js/all.min.js?digest=8d27b9dea8ad943066ae"></script>
+<script src="../../_static/documentation_options.js?v=a2c36881"></script>
+<script src="../../_static/doctools.js?v=888ff710"></script>
+<script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+<script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
+<script src="../../_static/copybutton.js?v=97f0b27d"></script>
+<script src="../../_static/jupyterlite_sphinx.js?v=f25406b8"></script>
+<script src="../../_static/design-tabs.js?v=36754332"></script>
+<script data-domain="scikit-learn.org" defer="defer" src="https://views.scientific-python.org/js/script.js"></script>
+<script async="async" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js"></script>
+<script>DOCUMENTATION_OPTIONS.pagename = 'auto_examples/model_selection/plot_grid_search_text_feature_extraction';</script>
+<script>
         DOCUMENTATION_OPTIONS.theme_version = '0.15.2';
         DOCUMENTATION_OPTIONS.theme_switcher_json_url = 'https://charlie-xiao.github.io/assets/json/sklearn-versions-test.json';
         DOCUMENTATION_OPTIONS.theme_switcher_version_match = '1.5.dev0';
         DOCUMENTATION_OPTIONS.show_version_warning_banner = true;
         </script>
-    <script src="../../_static/scripts/details-permalink.js?v=b0ed9290"></script>
-    <link rel="icon" href="../../_static/favicon.ico"/>
-    <link rel="author" title="About these documents" href="../../about.html" />
-    <link rel="search" title="Search" href="../../search.html" />
-    <link rel="next" title="Statistical comparison of models using grid search" href="plot_grid_search_stats.html" />
-    <link rel="prev" title="Receiver Operating Characteristic (ROC) with cross validation" href="plot_roc_crossval.html" />
-  <meta name="viewport" content="width=device-width, initial-scale=1"/>
-  <meta name="docsearch:language" content="en"/>
-  </head>
-  
-  
-  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
-
-  
-  
-  <a id="pst-skip-link" class="skip-link" href="#main-content">Skip to main content</a>
-  
-  <div id="pst-scroll-pixel-helper"></div>
-  
-  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
-    <i class="fa-solid fa-arrow-up"></i>
+<script src="../../_static/scripts/details-permalink.js?v=b0ed9290"></script>
+<link href="../../_static/favicon.ico" rel="icon"/>
+<link href="../../about.html" rel="author" title="About these documents"/>
+<link href="../../search.html" rel="search" title="Search"/>
+<link href="plot_grid_search_stats.html" rel="next" title="Statistical comparison of models using grid search"/>
+<link href="plot_roc_crossval.html" rel="prev" title="Receiver Operating Characteristic (ROC) with cross validation"/>
+<meta content="width=device-width, initial-scale=1" name="viewport"/>
+<meta content="en" name="docsearch:language"/>
+</head>
+<body data-bs-root-margin="0px 0px -60%" data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-default-mode="" data-offset="180">
+<a class="skip-link" href="#main-content" id="pst-skip-link">Skip to main content</a>
+<div id="pst-scroll-pixel-helper"></div>
+<button class="btn rounded-pill" id="pst-back-to-top" type="button">
+<i class="fa-solid fa-arrow-up"></i>
     Back to top
   </button>
-
-  
-  <input type="checkbox"
-          class="sidebar-toggle"
-          name="__primary"
-          id="__primary"/>
-  <label class="overlay overlay-primary" for="__primary"></label>
-  
-  <input type="checkbox"
-          class="sidebar-toggle"
-          name="__secondary"
-          id="__secondary"/>
-  <label class="overlay overlay-secondary" for="__secondary"></label>
-  
-  <div class="search-button__wrapper">
-    <div class="search-button__overlay"></div>
-    <div class="search-button__search-container">
-<form class="bd-search d-flex align-items-center"
-      action="../../search.html"
-      method="get">
-  <i class="fa-solid fa-magnifying-glass"></i>
-  <input type="search"
-         class="form-control"
-         name="q"
-         id="search-input"
-         placeholder="Search the docs ..."
-         aria-label="Search the docs ..."
-         autocomplete="off"
-         autocorrect="off"
-         autocapitalize="off"
-         spellcheck="false"/>
-  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+<input class="sidebar-toggle" id="__primary" name="__primary" type="checkbox"/>
+<label class="overlay overlay-primary" for="__primary"></label>
+<input class="sidebar-toggle" id="__secondary" name="__secondary" type="checkbox"/>
+<label class="overlay overlay-secondary" for="__secondary"></label>
+<div class="search-button__wrapper">
+<div class="search-button__overlay"></div>
+<div class="search-button__search-container">
+<form action="../../search.html" class="bd-search d-flex align-items-center" method="get">
+<i class="fa-solid fa-magnifying-glass"></i>
+<input aria-label="Search the docs ..." autocapitalize="off" autocomplete="off" autocorrect="off" class="form-control" id="search-input" name="q" placeholder="Search the docs ..." spellcheck="false" type="search"/>
+<span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
 </form></div>
-  </div>
-  
-    <header class="bd-header navbar navbar-expand-lg bd-navbar">
+</div>
+<header class="bd-header navbar navbar-expand-lg bd-navbar">
 <div class="bd-header__inner bd-page-width">
-  <label class="sidebar-toggle primary-toggle" for="__primary">
-    <span class="fa-solid fa-bars"></span>
-  </label>
-  
-  
-  <div class=" navbar-header-items__start">
-    
-      <div class="navbar-item">
-
-  
-
+<label class="sidebar-toggle primary-toggle" for="__primary">
+<span class="fa-solid fa-bars"></span>
+</label>
+<div class="navbar-header-items__start">
+<div class="navbar-item">
 <a class="navbar-brand logo" href="../../index.html">
-  
-  
-  
-  
-  
-    
-    
-      
-    
-    
-    <img src="../../_static/scikit-learn-logo-small.png" class="logo__image only-light" alt="scikit-learn homepage"/>
-    <script>document.write(`<img src="../../_static/scikit-learn-logo-small.png" class="logo__image only-dark" alt="scikit-learn homepage"/>`);</script>
-  
-  
+<img alt="scikit-learn homepage" class="logo__image only-light" src="../../_static/scikit-learn-logo-small.png"/>
+<script>document.write(`<img src="../../_static/scikit-learn-logo-small.png" class="logo__image only-dark" alt="scikit-learn homepage"/>`);</script>
 </a></div>
-    
-  </div>
-  
-  <div class=" navbar-header-items">
-    
-    <div class="me-auto navbar-header-items__center">
-      
-        <div class="navbar-item">
+</div>
+<div class="navbar-header-items">
+<div class="me-auto navbar-header-items__center">
+<div class="navbar-item">
 <nav class="navbar-nav">
-  <ul class="bd-navbar-elements navbar-nav">
-    
-                    <li class="nav-item">
-                      <a class="nav-link nav-internal" href="../../install.html">
+<ul class="bd-navbar-elements navbar-nav">
+<li class="nav-item">
+<a class="nav-link nav-internal" href="../../install.html">
                         Install
                       </a>
-                    </li>
-                
-
-                    <li class="nav-item">
-                      <a class="nav-link nav-internal" href="../../user_guide.html">
+</li>
+<li class="nav-item">
+<a class="nav-link nav-internal" href="../../user_guide.html">
                         User Guide
                       </a>
-                    </li>
-                
-
-                    <li class="nav-item">
-                      <a class="nav-link nav-internal" href="../../modules/classes.html">
+</li>
+<li class="nav-item">
+<a class="nav-link nav-internal" href="../../modules/classes.html">
                         API
                       </a>
-                    </li>
-                
-
-                    <li class="nav-item current active">
-                      <a class="nav-link nav-internal" href="../index.html">
+</li>
+<li class="nav-item current active">
+<a class="nav-link nav-internal" href="../index.html">
                         Examples
                       </a>
-                    </li>
-                
-
-                    <li class="nav-item">
-                      <a class="nav-link nav-external" href="https://blog.scikit-learn.org/">
+</li>
+<li class="nav-item">
+<a class="nav-link nav-external" href="https://blog.scikit-learn.org/">
                         Community
                       </a>
-                    </li>
-                
-            <li class="nav-item dropdown">
-                <button class="btn dropdown-toggle nav-item" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-controls="pst-nav-more-links">
+</li>
+<li class="nav-item dropdown">
+<button aria-controls="pst-nav-more-links" aria-expanded="false" class="btn dropdown-toggle nav-item" data-bs-toggle="dropdown" type="button">
                     More
                 </button>
-                <ul id="pst-nav-more-links" class="dropdown-menu">
-                    
-                    <li class="nav-item">
-                      <a class="nav-link dropdown-item nav-internal" href="../../getting_started.html">
+<ul class="dropdown-menu" id="pst-nav-more-links">
+<li class="nav-item">
+<a class="nav-link dropdown-item nav-internal" href="../../getting_started.html">
                         Getting Started
                       </a>
-                    </li>
-                
-
-                    <li class="nav-item">
-                      <a class="nav-link dropdown-item nav-internal" href="../../tutorial/index.html">
+</li>
+<li class="nav-item">
+<a class="nav-link dropdown-item nav-internal" href="../../tutorial/index.html">
                         Tutorials
                       </a>
-                    </li>
-                
-
-                    <li class="nav-item">
-                      <a class="nav-link dropdown-item nav-internal" href="../../whats_new.html">
+</li>
+<li class="nav-item">
+<a class="nav-link dropdown-item nav-internal" href="../../whats_new.html">
                         Release History
                       </a>
-                    </li>
-                
-
-                    <li class="nav-item">
-                      <a class="nav-link dropdown-item nav-internal" href="../../glossary.html">
+</li>
+<li class="nav-item">
+<a class="nav-link dropdown-item nav-internal" href="../../glossary.html">
                         Glossary
                       </a>
-                    </li>
-                
-
-                    <li class="nav-item">
-                      <a class="nav-link dropdown-item nav-internal" href="../../developers/index.html">
+</li>
+<li class="nav-item">
+<a class="nav-link dropdown-item nav-internal" href="../../developers/index.html">
                         Development
                       </a>
-                    </li>
-                
-
-                    <li class="nav-item">
-                      <a class="nav-link dropdown-item nav-internal" href="../../faq.html">
+</li>
+<li class="nav-item">
+<a class="nav-link dropdown-item nav-internal" href="../../faq.html">
                         FAQ
                       </a>
-                    </li>
-                
-
-                    <li class="nav-item">
-                      <a class="nav-link dropdown-item nav-internal" href="../../support.html">
+</li>
+<li class="nav-item">
+<a class="nav-link dropdown-item nav-internal" href="../../support.html">
                         Support
                       </a>
-                    </li>
-                
-
-                    <li class="nav-item">
-                      <a class="nav-link dropdown-item nav-internal" href="../../related_projects.html">
+</li>
+<li class="nav-item">
+<a class="nav-link dropdown-item nav-internal" href="../../related_projects.html">
                         Related Projects
                       </a>
-                    </li>
-                
-
-                    <li class="nav-item">
-                      <a class="nav-link dropdown-item nav-internal" href="../../roadmap.html">
+</li>
+<li class="nav-item">
+<a class="nav-link dropdown-item nav-internal" href="../../roadmap.html">
                         Roadmap
                       </a>
-                    </li>
-                
-
-                    <li class="nav-item">
-                      <a class="nav-link dropdown-item nav-internal" href="../../governance.html">
+</li>
+<li class="nav-item">
+<a class="nav-link dropdown-item nav-internal" href="../../governance.html">
                         Governance
                       </a>
-                    </li>
-                
-
-                    <li class="nav-item">
-                      <a class="nav-link dropdown-item nav-internal" href="../../about.html">
+</li>
+<li class="nav-item">
+<a class="nav-link dropdown-item nav-internal" href="../../about.html">
                         About us
                       </a>
-                    </li>
-                
-
-                    <li class="nav-item">
-                      <a class="nav-link dropdown-item nav-external" href="https://scikit-learn.org/dev/versions.html">
+</li>
+<li class="nav-item">
+<a class="nav-link dropdown-item nav-external" href="https://scikit-learn.org/dev/versions.html">
                         Other Versions and Download
                       </a>
-                    </li>
-                
-                </ul>
-            </li>
-            
-  </ul>
+</li>
+</ul>
+</li>
+</ul>
 </nav></div>
-      
-    </div>
-    
-    
-    <div class="navbar-header-items__end">
-      
-        <div class="navbar-item navbar-persistent--container">
-          
-
+</div>
+<div class="navbar-header-items__end">
+<div class="navbar-item navbar-persistent--container">
 <script>
 document.write(`
   <button class="btn btn-sm navbar-btn search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
@@ -312,11 +208,8 @@ document.write(`
   </button>
 `);
 </script>
-        </div>
-      
-      
-        <div class="navbar-item">
-
+</div>
+<div class="navbar-item">
 <script>
 document.write(`
   <button class="btn btn-sm navbar-btn theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
@@ -326,24 +219,13 @@ document.write(`
   </button>
 `);
 </script></div>
-      
-        <div class="navbar-item"><ul class="navbar-icon-links navbar-nav"
-    aria-label="Icon Links">
-        <li class="nav-item">
-          
-          
-          
-          
-          
-          
-          
-          
-          <a href="https://github.com/scikit-learn/scikit-learn" title="GitHub" class="nav-link" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><span><i class="fa-brands fa-square-github fa-lg" aria-hidden="true"></i></span>
-            <span class="sr-only">GitHub</span></a>
-        </li>
+<div class="navbar-item"><ul aria-label="Icon Links" class="navbar-icon-links navbar-nav">
+<li class="nav-item">
+<a class="nav-link" data-bs-placement="bottom" data-bs-toggle="tooltip" href="https://github.com/scikit-learn/scikit-learn" rel="noopener" target="_blank" title="GitHub"><span><i aria-hidden="true" class="fa-brands fa-square-github fa-lg"></i></span>
+<span class="sr-only">GitHub</span></a>
+</li>
 </ul></div>
-      
-        <div class="navbar-item">
+<div class="navbar-item">
 <script>
 document.write(`
   <div class="version-switcher__container dropdown">
@@ -366,14 +248,9 @@ document.write(`
   </div>
 `);
 </script></div>
-      
-    </div>
-    
-  </div>
-  
-  
-    <div class="navbar-persistent--mobile">
-
+</div>
+</div>
+<div class="navbar-persistent--mobile">
 <script>
 document.write(`
   <button class="btn btn-sm navbar-btn search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
@@ -381,174 +258,117 @@ document.write(`
   </button>
 `);
 </script>
-    </div>
-  
-
-  
-    <label class="sidebar-toggle secondary-toggle" for="__secondary" tabindex="0">
-      <span class="fa-solid fa-outdent"></span>
-    </label>
-  
 </div>
-
-    </header>
-  
-
-  <div class="bd-container">
-    <div class="bd-container__inner bd-page-width">
-      
-      
-      
-      <div class="bd-sidebar-primary bd-sidebar">
-        
-
-  
-  <div class="sidebar-header-items sidebar-primary__section">
-    
-    
-      <div class="sidebar-header-items__center">
-        
-          <div class="navbar-item">
+<label class="sidebar-toggle secondary-toggle" for="__secondary" tabindex="0">
+<span class="fa-solid fa-outdent"></span>
+</label>
+</div>
+</header>
+<div class="bd-container">
+<div class="bd-container__inner bd-page-width">
+<div class="bd-sidebar-primary bd-sidebar">
+<div class="sidebar-header-items sidebar-primary__section">
+<div class="sidebar-header-items__center">
+<div class="navbar-item">
 <nav class="navbar-nav">
-  <ul class="bd-navbar-elements navbar-nav">
-    
-                    <li class="nav-item">
-                      <a class="nav-link nav-internal" href="../../install.html">
+<ul class="bd-navbar-elements navbar-nav">
+<li class="nav-item">
+<a class="nav-link nav-internal" href="../../install.html">
                         Install
                       </a>
-                    </li>
-                
-
-                    <li class="nav-item">
-                      <a class="nav-link nav-internal" href="../../user_guide.html">
+</li>
+<li class="nav-item">
+<a class="nav-link nav-internal" href="../../user_guide.html">
                         User Guide
                       </a>
-                    </li>
-                
-
-                    <li class="nav-item">
-                      <a class="nav-link nav-internal" href="../../modules/classes.html">
+</li>
+<li class="nav-item">
+<a class="nav-link nav-internal" href="../../modules/classes.html">
                         API
                       </a>
-                    </li>
-                
-
-                    <li class="nav-item current active">
-                      <a class="nav-link nav-internal" href="../index.html">
+</li>
+<li class="nav-item current active">
+<a class="nav-link nav-internal" href="../index.html">
                         Examples
                       </a>
-                    </li>
-                
-
-                    <li class="nav-item">
-                      <a class="nav-link nav-external" href="https://blog.scikit-learn.org/">
+</li>
+<li class="nav-item">
+<a class="nav-link nav-external" href="https://blog.scikit-learn.org/">
                         Community
                       </a>
-                    </li>
-                
-            <li class="nav-item dropdown">
-                <button class="btn dropdown-toggle nav-item" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-controls="pst-nav-more-links-2">
+</li>
+<li class="nav-item dropdown">
+<button aria-controls="pst-nav-more-links-2" aria-expanded="false" class="btn dropdown-toggle nav-item" data-bs-toggle="dropdown" type="button">
                     More
                 </button>
-                <ul id="pst-nav-more-links-2" class="dropdown-menu">
-                    
-                    <li class="nav-item">
-                      <a class="nav-link dropdown-item nav-internal" href="../../getting_started.html">
+<ul class="dropdown-menu" id="pst-nav-more-links-2">
+<li class="nav-item">
+<a class="nav-link dropdown-item nav-internal" href="../../getting_started.html">
                         Getting Started
                       </a>
-                    </li>
-                
-
-                    <li class="nav-item">
-                      <a class="nav-link dropdown-item nav-internal" href="../../tutorial/index.html">
+</li>
+<li class="nav-item">
+<a class="nav-link dropdown-item nav-internal" href="../../tutorial/index.html">
                         Tutorials
                       </a>
-                    </li>
-                
-
-                    <li class="nav-item">
-                      <a class="nav-link dropdown-item nav-internal" href="../../whats_new.html">
+</li>
+<li class="nav-item">
+<a class="nav-link dropdown-item nav-internal" href="../../whats_new.html">
                         Release History
                       </a>
-                    </li>
-                
-
-                    <li class="nav-item">
-                      <a class="nav-link dropdown-item nav-internal" href="../../glossary.html">
+</li>
+<li class="nav-item">
+<a class="nav-link dropdown-item nav-internal" href="../../glossary.html">
                         Glossary
                       </a>
-                    </li>
-                
-
-                    <li class="nav-item">
-                      <a class="nav-link dropdown-item nav-internal" href="../../developers/index.html">
+</li>
+<li class="nav-item">
+<a class="nav-link dropdown-item nav-internal" href="../../developers/index.html">
                         Development
                       </a>
-                    </li>
-                
-
-                    <li class="nav-item">
-                      <a class="nav-link dropdown-item nav-internal" href="../../faq.html">
+</li>
+<li class="nav-item">
+<a class="nav-link dropdown-item nav-internal" href="../../faq.html">
                         FAQ
                       </a>
-                    </li>
-                
-
-                    <li class="nav-item">
-                      <a class="nav-link dropdown-item nav-internal" href="../../support.html">
+</li>
+<li class="nav-item">
+<a class="nav-link dropdown-item nav-internal" href="../../support.html">
                         Support
                       </a>
-                    </li>
-                
-
-                    <li class="nav-item">
-                      <a class="nav-link dropdown-item nav-internal" href="../../related_projects.html">
+</li>
+<li class="nav-item">
+<a class="nav-link dropdown-item nav-internal" href="../../related_projects.html">
                         Related Projects
                       </a>
-                    </li>
-                
-
-                    <li class="nav-item">
-                      <a class="nav-link dropdown-item nav-internal" href="../../roadmap.html">
+</li>
+<li class="nav-item">
+<a class="nav-link dropdown-item nav-internal" href="../../roadmap.html">
                         Roadmap
                       </a>
-                    </li>
-                
-
-                    <li class="nav-item">
-                      <a class="nav-link dropdown-item nav-internal" href="../../governance.html">
+</li>
+<li class="nav-item">
+<a class="nav-link dropdown-item nav-internal" href="../../governance.html">
                         Governance
                       </a>
-                    </li>
-                
-
-                    <li class="nav-item">
-                      <a class="nav-link dropdown-item nav-internal" href="../../about.html">
+</li>
+<li class="nav-item">
+<a class="nav-link dropdown-item nav-internal" href="../../about.html">
                         About us
                       </a>
-                    </li>
-                
-
-                    <li class="nav-item">
-                      <a class="nav-link dropdown-item nav-external" href="https://scikit-learn.org/dev/versions.html">
+</li>
+<li class="nav-item">
+<a class="nav-link dropdown-item nav-external" href="https://scikit-learn.org/dev/versions.html">
                         Other Versions and Download
                       </a>
-                    </li>
-                
-                </ul>
-            </li>
-            
-  </ul>
+</li>
+</ul>
+</li>
+</ul>
 </nav></div>
-        
-      </div>
-    
-    
-    
-      <div class="sidebar-header-items__end">
-        
-          <div class="navbar-item">
-
+</div>
+<div class="sidebar-header-items__end">
+<div class="navbar-item">
 <script>
 document.write(`
   <button class="btn btn-sm navbar-btn theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
@@ -558,24 +378,13 @@ document.write(`
   </button>
 `);
 </script></div>
-        
-          <div class="navbar-item"><ul class="navbar-icon-links navbar-nav"
-    aria-label="Icon Links">
-        <li class="nav-item">
-          
-          
-          
-          
-          
-          
-          
-          
-          <a href="https://github.com/scikit-learn/scikit-learn" title="GitHub" class="nav-link" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><span><i class="fa-brands fa-square-github fa-lg" aria-hidden="true"></i></span>
-            <span class="sr-only">GitHub</span></a>
-        </li>
+<div class="navbar-item"><ul aria-label="Icon Links" class="navbar-icon-links navbar-nav">
+<li class="nav-item">
+<a class="nav-link" data-bs-placement="bottom" data-bs-toggle="tooltip" href="https://github.com/scikit-learn/scikit-learn" rel="noopener" target="_blank" title="GitHub"><span><i aria-hidden="true" class="fa-brands fa-square-github fa-lg"></i></span>
+<span class="sr-only">GitHub</span></a>
+</li>
 </ul></div>
-        
-          <div class="navbar-item">
+<div class="navbar-item">
 <script>
 document.write(`
   <div class="version-switcher__container dropdown">
@@ -598,17 +407,13 @@ document.write(`
   </div>
 `);
 </script></div>
-        
-      </div>
-    
-  </div>
-  
-    <div class="sidebar-primary-items__start sidebar-primary__section">
-        <div class="sidebar-primary-item">
-<nav class="bd-docs-nav bd-links"
-     aria-label="Section Navigation">
-  <p class="bd-links__title" role="heading" aria-level="1">Section Navigation</p>
-  <div class="bd-toc-item navbar-nav"><ul class="current nav bd-sidenav">
+</div>
+</div>
+<div class="sidebar-primary-items__start sidebar-primary__section">
+<div class="sidebar-primary-item">
+<nav aria-label="Section Navigation" class="bd-docs-nav bd-links">
+<p aria-level="1" class="bd-links__title" role="heading">Section Navigation</p>
+<div class="bd-toc-item navbar-nav"><ul class="current nav bd-sidenav">
 <li class="toctree-l1 has-children"><a class="reference internal" href="../release_highlights/index.html">Release Highlights</a><input class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-1"><i class="fa-solid fa-chevron-down"></i></label><ul>
 <li class="toctree-l2"><a class="reference internal" href="../release_highlights/plot_release_highlights_1_4_0.html">Release Highlights for scikit-learn 1.4</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../release_highlights/plot_release_highlights_1_3_0.html">Release Highlights for scikit-learn 1.3</a></li>
@@ -1002,68 +807,37 @@ document.write(`
 </ul>
 </div>
 </nav></div>
-    </div>
-  
-  
-  <div class="sidebar-primary-items__end sidebar-primary__section">
-  </div>
-  
-  <div id="rtd-footer-container"></div>
-
-
-      </div>
-      
-      <main id="main-content" class="bd-main">
-        
-        
-          <div class="bd-content">
-            <div class="bd-article-container">
-              
-              <div class="bd-header-article">
+</div>
+<div class="sidebar-primary-items__end sidebar-primary__section">
+</div>
+<div id="rtd-footer-container"></div>
+</div>
+<main class="bd-main" id="main-content">
+<div class="bd-content">
+<div class="bd-article-container">
+<div class="bd-header-article">
 <div class="header-article-items header-article__inner">
-  
-    <div class="header-article-items__start">
-      
-        <div class="header-article-item">
-
-
-
+<div class="header-article-items__start">
+<div class="header-article-item">
 <nav aria-label="Breadcrumb">
-  <ul class="bd-breadcrumbs">
-    
-    <li class="breadcrumb-item breadcrumb-home">
-      <a href="../../index.html" class="nav-link" aria-label="Home">
-        <i class="fa-solid fa-home"></i>
-      </a>
-    </li>
-    
-    <li class="breadcrumb-item"><a href="../index.html" class="nav-link">Examples</a></li>
-    
-    
-    <li class="breadcrumb-item"><a href="index.html" class="nav-link">Model Selection</a></li>
-    
-    <li class="breadcrumb-item active" aria-current="page">Sample...</li>
-  </ul>
+<ul class="bd-breadcrumbs">
+<li class="breadcrumb-item breadcrumb-home">
+<a aria-label="Home" class="nav-link" href="../../index.html">
+<i class="fa-solid fa-home"></i>
+</a>
+</li>
+<li class="breadcrumb-item"><a class="nav-link" href="../index.html">Examples</a></li>
+<li class="breadcrumb-item"><a class="nav-link" href="index.html">Model Selection</a></li>
+<li aria-current="page" class="breadcrumb-item active">Sample...</li>
+</ul>
 </nav>
 </div>
-      
-    </div>
-  
-  
 </div>
 </div>
-              
-              
-              
-                
+</div>
 <div id="searchbox"></div>
-                <article class="bd-article">
-                  
-  <div class="sphx-glr-download-link-note admonition note">
-<p class="admonition-title">Note</p>
-<p><a class="reference internal" href="#sphx-glr-download-auto-examples-model-selection-plot-grid-search-text-feature-extraction-py"><span class="std std-ref">Go to the end</span></a>
-to download the full example code or to run this example in your browser via JupyterLite or Binder</p>
-</div>
+<article class="bd-article">
+
 <section class="sphx-glr-example-title" id="sample-pipeline-for-text-feature-extraction-and-evaluation">
 <span id="sphx-glr-auto-examples-model-selection-plot-grid-search-text-feature-extraction-py"></span><h1>Sample pipeline for text feature extraction and evaluation<a class="headerlink" href="#sample-pipeline-for-text-feature-extraction-and-evaluation" title="Link to this heading">#</a></h1>
 <p>The dataset used in this example is <a class="reference internal" href="../../datasets/real_world.html#newsgroups-dataset"><span class="std std-ref">The 20 newsgroups text dataset</span></a> which will be
@@ -1087,36 +861,36 @@ notebook.</p>
 categories by adding their names to the list or setting <code class="docutils literal notranslate"><span class="pre">categories=None</span></code> when
 calling the dataset loader <a class="reference internal" href="../../modules/generated/sklearn.datasets.fetch_20newsgroups.html#sklearn.datasets.fetch_20newsgroups" title="sklearn.datasets.fetch_20newsgroups"><code class="xref py py-func docutils literal notranslate"><span class="pre">fetch_20newsgroups</span></code></a> to get
 the 20 of them.</p>
-<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">sklearn.datasets</span> <span class="kn">import</span> <a href="../../modules/generated/sklearn.datasets.fetch_20newsgroups.html#sklearn.datasets.fetch_20newsgroups" title="sklearn.datasets.fetch_20newsgroups" class="sphx-glr-backref-module-sklearn-datasets sphx-glr-backref-type-py-function"><span class="n">fetch_20newsgroups</span></a>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">sklearn.datasets</span> <span class="kn">import</span> <a class="sphx-glr-backref-module-sklearn-datasets sphx-glr-backref-type-py-function" href="../../modules/generated/sklearn.datasets.fetch_20newsgroups.html#sklearn.datasets.fetch_20newsgroups" title="sklearn.datasets.fetch_20newsgroups"><span class="n">fetch_20newsgroups</span></a>
 
 <span class="n">categories</span> <span class="o">=</span> <span class="p">[</span>
-    <span class="s2">&quot;alt.atheism&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;talk.religion.misc&quot;</span><span class="p">,</span>
+    <span class="s2">"alt.atheism"</span><span class="p">,</span>
+    <span class="s2">"talk.religion.misc"</span><span class="p">,</span>
 <span class="p">]</span>
 
-<span class="n">data_train</span> <span class="o">=</span> <a href="../../modules/generated/sklearn.datasets.fetch_20newsgroups.html#sklearn.datasets.fetch_20newsgroups" title="sklearn.datasets.fetch_20newsgroups" class="sphx-glr-backref-module-sklearn-datasets sphx-glr-backref-type-py-function"><span class="n">fetch_20newsgroups</span></a><span class="p">(</span>
-    <span class="n">subset</span><span class="o">=</span><span class="s2">&quot;train&quot;</span><span class="p">,</span>
+<span class="n">data_train</span> <span class="o">=</span> <a class="sphx-glr-backref-module-sklearn-datasets sphx-glr-backref-type-py-function" href="../../modules/generated/sklearn.datasets.fetch_20newsgroups.html#sklearn.datasets.fetch_20newsgroups" title="sklearn.datasets.fetch_20newsgroups"><span class="n">fetch_20newsgroups</span></a><span class="p">(</span>
+    <span class="n">subset</span><span class="o">=</span><span class="s2">"train"</span><span class="p">,</span>
     <span class="n">categories</span><span class="o">=</span><span class="n">categories</span><span class="p">,</span>
     <span class="n">shuffle</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
     <span class="n">random_state</span><span class="o">=</span><span class="mi">42</span><span class="p">,</span>
-    <span class="n">remove</span><span class="o">=</span><span class="p">(</span><span class="s2">&quot;headers&quot;</span><span class="p">,</span> <span class="s2">&quot;footers&quot;</span><span class="p">,</span> <span class="s2">&quot;quotes&quot;</span><span class="p">),</span>
+    <span class="n">remove</span><span class="o">=</span><span class="p">(</span><span class="s2">"headers"</span><span class="p">,</span> <span class="s2">"footers"</span><span class="p">,</span> <span class="s2">"quotes"</span><span class="p">),</span>
 <span class="p">)</span>
 
-<span class="n">data_test</span> <span class="o">=</span> <a href="../../modules/generated/sklearn.datasets.fetch_20newsgroups.html#sklearn.datasets.fetch_20newsgroups" title="sklearn.datasets.fetch_20newsgroups" class="sphx-glr-backref-module-sklearn-datasets sphx-glr-backref-type-py-function"><span class="n">fetch_20newsgroups</span></a><span class="p">(</span>
-    <span class="n">subset</span><span class="o">=</span><span class="s2">&quot;test&quot;</span><span class="p">,</span>
+<span class="n">data_test</span> <span class="o">=</span> <a class="sphx-glr-backref-module-sklearn-datasets sphx-glr-backref-type-py-function" href="../../modules/generated/sklearn.datasets.fetch_20newsgroups.html#sklearn.datasets.fetch_20newsgroups" title="sklearn.datasets.fetch_20newsgroups"><span class="n">fetch_20newsgroups</span></a><span class="p">(</span>
+    <span class="n">subset</span><span class="o">=</span><span class="s2">"test"</span><span class="p">,</span>
     <span class="n">categories</span><span class="o">=</span><span class="n">categories</span><span class="p">,</span>
     <span class="n">shuffle</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
     <span class="n">random_state</span><span class="o">=</span><span class="mi">42</span><span class="p">,</span>
-    <span class="n">remove</span><span class="o">=</span><span class="p">(</span><span class="s2">&quot;headers&quot;</span><span class="p">,</span> <span class="s2">&quot;footers&quot;</span><span class="p">,</span> <span class="s2">&quot;quotes&quot;</span><span class="p">),</span>
+    <span class="n">remove</span><span class="o">=</span><span class="p">(</span><span class="s2">"headers"</span><span class="p">,</span> <span class="s2">"footers"</span><span class="p">,</span> <span class="s2">"quotes"</span><span class="p">),</span>
 <span class="p">)</span>
 
-<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Loading 20 newsgroups dataset for </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">data_train</span><span class="o">.</span><span class="n">target_names</span><span class="p">)</span><span class="si">}</span><span class="s2"> categories:&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Loading 20 newsgroups dataset for </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">data_train</span><span class="o">.</span><span class="n">target_names</span><span class="p">)</span><span class="si">}</span><span class="s2"> categories:"</span><span class="p">)</span>
 <span class="nb">print</span><span class="p">(</span><span class="n">data_train</span><span class="o">.</span><span class="n">target_names</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">data_train</span><span class="o">.</span><span class="n">data</span><span class="p">)</span><span class="si">}</span><span class="s2"> documents&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">data_train</span><span class="o">.</span><span class="n">data</span><span class="p">)</span><span class="si">}</span><span class="s2"> documents"</span><span class="p">)</span>
 </pre></div>
 </div>
 <div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>Loading 20 newsgroups dataset for 2 categories:
-[&#39;alt.atheism&#39;, &#39;talk.religion.misc&#39;]
+['alt.atheism', 'talk.religion.misc']
 857 documents
 </pre></div>
 </div>
@@ -1125,14 +899,14 @@ the 20 of them.</p>
 <h2>Pipeline with hyperparameter tuning<a class="headerlink" href="#pipeline-with-hyperparameter-tuning" title="Link to this heading">#</a></h2>
 <p>We define a pipeline combining a text feature vectorizer with a simple
 classifier yet effective for text classification.</p>
-<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">sklearn.feature_extraction.text</span> <span class="kn">import</span> <a href="../../modules/generated/sklearn.feature_extraction.text.TfidfVectorizer.html#sklearn.feature_extraction.text.TfidfVectorizer" title="sklearn.feature_extraction.text.TfidfVectorizer" class="sphx-glr-backref-module-sklearn-feature_extraction-text sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">TfidfVectorizer</span></a>
-<span class="kn">from</span> <span class="nn">sklearn.naive_bayes</span> <span class="kn">import</span> <a href="../../modules/generated/sklearn.naive_bayes.ComplementNB.html#sklearn.naive_bayes.ComplementNB" title="sklearn.naive_bayes.ComplementNB" class="sphx-glr-backref-module-sklearn-naive_bayes sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">ComplementNB</span></a>
-<span class="kn">from</span> <span class="nn">sklearn.pipeline</span> <span class="kn">import</span> <a href="../../modules/generated/sklearn.pipeline.Pipeline.html#sklearn.pipeline.Pipeline" title="sklearn.pipeline.Pipeline" class="sphx-glr-backref-module-sklearn-pipeline sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">Pipeline</span></a>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">sklearn.feature_extraction.text</span> <span class="kn">import</span> <a class="sphx-glr-backref-module-sklearn-feature_extraction-text sphx-glr-backref-type-py-class sphx-glr-backref-instance" href="../../modules/generated/sklearn.feature_extraction.text.TfidfVectorizer.html#sklearn.feature_extraction.text.TfidfVectorizer" title="sklearn.feature_extraction.text.TfidfVectorizer"><span class="n">TfidfVectorizer</span></a>
+<span class="kn">from</span> <span class="nn">sklearn.naive_bayes</span> <span class="kn">import</span> <a class="sphx-glr-backref-module-sklearn-naive_bayes sphx-glr-backref-type-py-class sphx-glr-backref-instance" href="../../modules/generated/sklearn.naive_bayes.ComplementNB.html#sklearn.naive_bayes.ComplementNB" title="sklearn.naive_bayes.ComplementNB"><span class="n">ComplementNB</span></a>
+<span class="kn">from</span> <span class="nn">sklearn.pipeline</span> <span class="kn">import</span> <a class="sphx-glr-backref-module-sklearn-pipeline sphx-glr-backref-type-py-class sphx-glr-backref-instance" href="../../modules/generated/sklearn.pipeline.Pipeline.html#sklearn.pipeline.Pipeline" title="sklearn.pipeline.Pipeline"><span class="n">Pipeline</span></a>
 
-<span class="n">pipeline</span> <span class="o">=</span> <a href="../../modules/generated/sklearn.pipeline.Pipeline.html#sklearn.pipeline.Pipeline" title="sklearn.pipeline.Pipeline" class="sphx-glr-backref-module-sklearn-pipeline sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">Pipeline</span></a><span class="p">(</span>
+<span class="n">pipeline</span> <span class="o">=</span> <a class="sphx-glr-backref-module-sklearn-pipeline sphx-glr-backref-type-py-class sphx-glr-backref-instance" href="../../modules/generated/sklearn.pipeline.Pipeline.html#sklearn.pipeline.Pipeline" title="sklearn.pipeline.Pipeline"><span class="n">Pipeline</span></a><span class="p">(</span>
     <span class="p">[</span>
-        <span class="p">(</span><span class="s2">&quot;vect&quot;</span><span class="p">,</span> <a href="../../modules/generated/sklearn.feature_extraction.text.TfidfVectorizer.html#sklearn.feature_extraction.text.TfidfVectorizer" title="sklearn.feature_extraction.text.TfidfVectorizer" class="sphx-glr-backref-module-sklearn-feature_extraction-text sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">TfidfVectorizer</span></a><span class="p">()),</span>
-        <span class="p">(</span><span class="s2">&quot;clf&quot;</span><span class="p">,</span> <a href="../../modules/generated/sklearn.naive_bayes.ComplementNB.html#sklearn.naive_bayes.ComplementNB" title="sklearn.naive_bayes.ComplementNB" class="sphx-glr-backref-module-sklearn-naive_bayes sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">ComplementNB</span></a><span class="p">()),</span>
+        <span class="p">(</span><span class="s2">"vect"</span><span class="p">,</span> <a class="sphx-glr-backref-module-sklearn-feature_extraction-text sphx-glr-backref-type-py-class sphx-glr-backref-instance" href="../../modules/generated/sklearn.feature_extraction.text.TfidfVectorizer.html#sklearn.feature_extraction.text.TfidfVectorizer" title="sklearn.feature_extraction.text.TfidfVectorizer"><span class="n">TfidfVectorizer</span></a><span class="p">()),</span>
+        <span class="p">(</span><span class="s2">"clf"</span><span class="p">,</span> <a class="sphx-glr-backref-module-sklearn-naive_bayes sphx-glr-backref-type-py-class sphx-glr-backref-instance" href="../../modules/generated/sklearn.naive_bayes.ComplementNB.html#sklearn.naive_bayes.ComplementNB" title="sklearn.naive_bayes.ComplementNB"><span class="n">ComplementNB</span></a><span class="p">()),</span>
     <span class="p">]</span>
 <span class="p">)</span>
 <span class="n">pipeline</span>
@@ -1543,10 +1317,10 @@ div.sk-label-container:hover .sk-estimator-doc-link.fitted:hover,
   /* fitted */
   background-color: var(--sklearn-color-fitted-level-3);
 }
-</style><div id="sk-container-id-56" class="sk-top-container"><div class="sk-text-repr-fallback"><pre>Pipeline(steps=[(&#x27;vect&#x27;, TfidfVectorizer()), (&#x27;clf&#x27;, ComplementNB())])</pre><b>In a Jupyter environment, please rerun this cell to show the HTML representation or trust the notebook. <br />On GitHub, the HTML representation is unable to render, please try loading this page with nbviewer.org.</b></div><div class="sk-container" hidden><div class="sk-item sk-dashed-wrapped"><div class="sk-label-container"><div class="sk-label  sk-toggleable"><input class="sk-toggleable__control sk-hidden--visually" id="sk-estimator-id-234" type="checkbox" ><label for="sk-estimator-id-234" class="sk-toggleable__label  sk-toggleable__label-arrow ">&nbsp;&nbsp;Pipeline<a class="sk-estimator-doc-link " rel="noreferrer" target="_blank" href="https://scikit-learn.org/dev/modules/generated/sklearn.pipeline.Pipeline.html">?<span>Documentation for Pipeline</span></a><span class="sk-estimator-doc-link ">i<span>Not fitted</span></span></label><div class="sk-toggleable__content "><pre>Pipeline(steps=[(&#x27;vect&#x27;, TfidfVectorizer()), (&#x27;clf&#x27;, ComplementNB())])</pre></div> </div></div><div class="sk-serial"><div class="sk-item"><div class="sk-estimator  sk-toggleable"><input class="sk-toggleable__control sk-hidden--visually" id="sk-estimator-id-235" type="checkbox" ><label for="sk-estimator-id-235" class="sk-toggleable__label  sk-toggleable__label-arrow ">&nbsp;TfidfVectorizer<a class="sk-estimator-doc-link " rel="noreferrer" target="_blank" href="https://scikit-learn.org/dev/modules/generated/sklearn.feature_extraction.text.TfidfVectorizer.html">?<span>Documentation for TfidfVectorizer</span></a></label><div class="sk-toggleable__content "><pre>TfidfVectorizer()</pre></div> </div></div><div class="sk-item"><div class="sk-estimator  sk-toggleable"><input class="sk-toggleable__control sk-hidden--visually" id="sk-estimator-id-236" type="checkbox" ><label for="sk-estimator-id-236" class="sk-toggleable__label  sk-toggleable__label-arrow ">&nbsp;ComplementNB<a class="sk-estimator-doc-link " rel="noreferrer" target="_blank" href="https://scikit-learn.org/dev/modules/generated/sklearn.naive_bayes.ComplementNB.html">?<span>Documentation for ComplementNB</span></a></label><div class="sk-toggleable__content "><pre>ComplementNB()</pre></div> </div></div></div></div></div></div>
+</style><div class="sk-top-container" id="sk-container-id-56"><div class="sk-text-repr-fallback"><pre>Pipeline(steps=[('vect', TfidfVectorizer()), ('clf', ComplementNB())])</pre><b>In a Jupyter environment, please rerun this cell to show the HTML representation or trust the notebook. <br/>On GitHub, the HTML representation is unable to render, please try loading this page with nbviewer.org.</b></div><div class="sk-container" hidden=""><div class="sk-item sk-dashed-wrapped"><div class="sk-label-container"><div class="sk-label sk-toggleable"><input class="sk-toggleable__control sk-hidden--visually" id="sk-estimator-id-234" type="checkbox"/><label class="sk-toggleable__label sk-toggleable__label-arrow" for="sk-estimator-id-234">  Pipeline<a class="sk-estimator-doc-link" href="https://scikit-learn.org/dev/modules/generated/sklearn.pipeline.Pipeline.html" rel="noreferrer" target="_blank">?<span>Documentation for Pipeline</span></a><span class="sk-estimator-doc-link">i<span>Not fitted</span></span></label><div class="sk-toggleable__content"><pre>Pipeline(steps=[('vect', TfidfVectorizer()), ('clf', ComplementNB())])</pre></div> </div></div><div class="sk-serial"><div class="sk-item"><div class="sk-estimator sk-toggleable"><input class="sk-toggleable__control sk-hidden--visually" id="sk-estimator-id-235" type="checkbox"/><label class="sk-toggleable__label sk-toggleable__label-arrow" for="sk-estimator-id-235"> TfidfVectorizer<a class="sk-estimator-doc-link" href="https://scikit-learn.org/dev/modules/generated/sklearn.feature_extraction.text.TfidfVectorizer.html" rel="noreferrer" target="_blank">?<span>Documentation for TfidfVectorizer</span></a></label><div class="sk-toggleable__content"><pre>TfidfVectorizer()</pre></div> </div></div><div class="sk-item"><div class="sk-estimator sk-toggleable"><input class="sk-toggleable__control sk-hidden--visually" id="sk-estimator-id-236" type="checkbox"/><label class="sk-toggleable__label sk-toggleable__label-arrow" for="sk-estimator-id-236"> ComplementNB<a class="sk-estimator-doc-link" href="https://scikit-learn.org/dev/modules/generated/sklearn.naive_bayes.ComplementNB.html" rel="noreferrer" target="_blank">?<span>Documentation for ComplementNB</span></a></label><div class="sk-toggleable__content"><pre>ComplementNB()</pre></div> </div></div></div></div></div></div>
 </div>
-<br />
-<br /><p>We define a grid of hyperparameters to be explored by the
+<br/>
+<br/><p>We define a grid of hyperparameters to be explored by the
 <a class="reference internal" href="../../modules/generated/sklearn.model_selection.RandomizedSearchCV.html#sklearn.model_selection.RandomizedSearchCV" title="sklearn.model_selection.RandomizedSearchCV"><code class="xref py py-class docutils literal notranslate"><span class="pre">RandomizedSearchCV</span></code></a>. Using a
 <a class="reference internal" href="../../modules/generated/sklearn.model_selection.GridSearchCV.html#sklearn.model_selection.GridSearchCV" title="sklearn.model_selection.GridSearchCV"><code class="xref py py-class docutils literal notranslate"><span class="pre">GridSearchCV</span></code></a> instead would explore all the
 possible combinations on the grid, which can be costly to compute, whereas the
@@ -1559,11 +1333,11 @@ classifier (<code class="docutils literal notranslate"><span class="pre">clf__</
 <div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 
 <span class="n">parameter_grid</span> <span class="o">=</span> <span class="p">{</span>
-    <span class="s2">&quot;vect__max_df&quot;</span><span class="p">:</span> <span class="p">(</span><span class="mf">0.2</span><span class="p">,</span> <span class="mf">0.4</span><span class="p">,</span> <span class="mf">0.6</span><span class="p">,</span> <span class="mf">0.8</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">),</span>
-    <span class="s2">&quot;vect__min_df&quot;</span><span class="p">:</span> <span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">10</span><span class="p">),</span>
-    <span class="s2">&quot;vect__ngram_range&quot;</span><span class="p">:</span> <span class="p">((</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span> <span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">)),</span>  <span class="c1"># unigrams or bigrams</span>
-    <span class="s2">&quot;vect__norm&quot;</span><span class="p">:</span> <span class="p">(</span><span class="s2">&quot;l1&quot;</span><span class="p">,</span> <span class="s2">&quot;l2&quot;</span><span class="p">),</span>
-    <span class="s2">&quot;clf__alpha&quot;</span><span class="p">:</span> <a href="https://numpy.org/doc/stable/reference/generated/numpy.logspace.html#numpy.logspace" title="numpy.logspace" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-function"><span class="n">np</span><span class="o">.</span><span class="n">logspace</span></a><span class="p">(</span><span class="o">-</span><span class="mi">6</span><span class="p">,</span> <span class="mi">6</span><span class="p">,</span> <span class="mi">13</span><span class="p">),</span>
+    <span class="s2">"vect__max_df"</span><span class="p">:</span> <span class="p">(</span><span class="mf">0.2</span><span class="p">,</span> <span class="mf">0.4</span><span class="p">,</span> <span class="mf">0.6</span><span class="p">,</span> <span class="mf">0.8</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">),</span>
+    <span class="s2">"vect__min_df"</span><span class="p">:</span> <span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">10</span><span class="p">),</span>
+    <span class="s2">"vect__ngram_range"</span><span class="p">:</span> <span class="p">((</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span> <span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">)),</span>  <span class="c1"># unigrams or bigrams</span>
+    <span class="s2">"vect__norm"</span><span class="p">:</span> <span class="p">(</span><span class="s2">"l1"</span><span class="p">,</span> <span class="s2">"l2"</span><span class="p">),</span>
+    <span class="s2">"clf__alpha"</span><span class="p">:</span> <a class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-function" href="https://numpy.org/doc/stable/reference/generated/numpy.logspace.html#numpy.logspace" title="numpy.logspace"><span class="n">np</span><span class="o">.</span><span class="n">logspace</span></a><span class="p">(</span><span class="o">-</span><span class="mi">6</span><span class="p">,</span> <span class="mi">6</span><span class="p">,</span> <span class="mi">13</span><span class="p">),</span>
 <span class="p">}</span>
 </pre></div>
 </div>
@@ -1573,11 +1347,11 @@ to get a more informative analysis. As a consequence, the computional time
 increases. We can reduce it by taking advantage of the parallelisation over
 the parameter combinations evaluation by increasing the number of CPUs used
 via the parameter <code class="docutils literal notranslate"><span class="pre">n_jobs</span></code>.</p>
-<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">pprint</span> <span class="kn">import</span> <a href="https://docs.python.org/3/library/pprint.html#pprint.pprint" title="pprint.pprint" class="sphx-glr-backref-module-pprint sphx-glr-backref-type-py-function"><span class="n">pprint</span></a>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">pprint</span> <span class="kn">import</span> <a class="sphx-glr-backref-module-pprint sphx-glr-backref-type-py-function" href="https://docs.python.org/3/library/pprint.html#pprint.pprint" title="pprint.pprint"><span class="n">pprint</span></a>
 
-<span class="kn">from</span> <span class="nn">sklearn.model_selection</span> <span class="kn">import</span> <a href="../../modules/generated/sklearn.model_selection.RandomizedSearchCV.html#sklearn.model_selection.RandomizedSearchCV" title="sklearn.model_selection.RandomizedSearchCV" class="sphx-glr-backref-module-sklearn-model_selection sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">RandomizedSearchCV</span></a>
+<span class="kn">from</span> <span class="nn">sklearn.model_selection</span> <span class="kn">import</span> <a class="sphx-glr-backref-module-sklearn-model_selection sphx-glr-backref-type-py-class sphx-glr-backref-instance" href="../../modules/generated/sklearn.model_selection.RandomizedSearchCV.html#sklearn.model_selection.RandomizedSearchCV" title="sklearn.model_selection.RandomizedSearchCV"><span class="n">RandomizedSearchCV</span></a>
 
-<span class="n">random_search</span> <span class="o">=</span> <a href="../../modules/generated/sklearn.model_selection.RandomizedSearchCV.html#sklearn.model_selection.RandomizedSearchCV" title="sklearn.model_selection.RandomizedSearchCV" class="sphx-glr-backref-module-sklearn-model_selection sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">RandomizedSearchCV</span></a><span class="p">(</span>
+<span class="n">random_search</span> <span class="o">=</span> <a class="sphx-glr-backref-module-sklearn-model_selection sphx-glr-backref-type-py-class sphx-glr-backref-instance" href="../../modules/generated/sklearn.model_selection.RandomizedSearchCV.html#sklearn.model_selection.RandomizedSearchCV" title="sklearn.model_selection.RandomizedSearchCV"><span class="n">RandomizedSearchCV</span></a><span class="p">(</span>
     <span class="n">estimator</span><span class="o">=</span><span class="n">pipeline</span><span class="p">,</span>
     <span class="n">param_distributions</span><span class="o">=</span><span class="n">parameter_grid</span><span class="p">,</span>
     <span class="n">n_iter</span><span class="o">=</span><span class="mi">40</span><span class="p">,</span>
@@ -1586,36 +1360,36 @@ via the parameter <code class="docutils literal notranslate"><span class="pre">n
     <span class="n">verbose</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
 <span class="p">)</span>
 
-<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Performing grid search...&quot;</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Hyperparameters to be evaluated:&quot;</span><span class="p">)</span>
-<a href="https://docs.python.org/3/library/pprint.html#pprint.pprint" title="pprint.pprint" class="sphx-glr-backref-module-pprint sphx-glr-backref-type-py-function"><span class="n">pprint</span></a><span class="p">(</span><span class="n">parameter_grid</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">"Performing grid search..."</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">"Hyperparameters to be evaluated:"</span><span class="p">)</span>
+<a class="sphx-glr-backref-module-pprint sphx-glr-backref-type-py-function" href="https://docs.python.org/3/library/pprint.html#pprint.pprint" title="pprint.pprint"><span class="n">pprint</span></a><span class="p">(</span><span class="n">parameter_grid</span><span class="p">)</span>
 </pre></div>
 </div>
 <div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>Performing grid search...
 Hyperparameters to be evaluated:
-{&#39;clf__alpha&#39;: array([1.e-06, 1.e-05, 1.e-04, 1.e-03, 1.e-02, 1.e-01, 1.e+00, 1.e+01,
+{'clf__alpha': array([1.e-06, 1.e-05, 1.e-04, 1.e-03, 1.e-02, 1.e-01, 1.e+00, 1.e+01,
        1.e+02, 1.e+03, 1.e+04, 1.e+05, 1.e+06]),
- &#39;vect__max_df&#39;: (0.2, 0.4, 0.6, 0.8, 1.0),
- &#39;vect__min_df&#39;: (1, 3, 5, 10),
- &#39;vect__ngram_range&#39;: ((1, 1), (1, 2)),
- &#39;vect__norm&#39;: (&#39;l1&#39;, &#39;l2&#39;)}
+ 'vect__max_df': (0.2, 0.4, 0.6, 0.8, 1.0),
+ 'vect__min_df': (1, 3, 5, 10),
+ 'vect__ngram_range': ((1, 1), (1, 2)),
+ 'vect__norm': ('l1', 'l2')}
 </pre></div>
 </div>
-<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">time</span> <span class="kn">import</span> <a href="https://docs.python.org/3/library/time.html#time.time" title="time.time" class="sphx-glr-backref-module-time sphx-glr-backref-type-py-function"><span class="n">time</span></a>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">time</span> <span class="kn">import</span> <a class="sphx-glr-backref-module-time sphx-glr-backref-type-py-function" href="https://docs.python.org/3/library/time.html#time.time" title="time.time"><span class="n">time</span></a>
 
-<span class="n">t0</span> <span class="o">=</span> <a href="https://docs.python.org/3/library/time.html#time.time" title="time.time" class="sphx-glr-backref-module-time sphx-glr-backref-type-py-function"><span class="n">time</span></a><span class="p">()</span>
+<span class="n">t0</span> <span class="o">=</span> <a class="sphx-glr-backref-module-time sphx-glr-backref-type-py-function" href="https://docs.python.org/3/library/time.html#time.time" title="time.time"><span class="n">time</span></a><span class="p">()</span>
 <span class="n">random_search</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">data_train</span><span class="o">.</span><span class="n">data</span><span class="p">,</span> <span class="n">data_train</span><span class="o">.</span><span class="n">target</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Done in </span><span class="si">{</span><a href="https://docs.python.org/3/library/time.html#time.time" title="time.time" class="sphx-glr-backref-module-time sphx-glr-backref-type-py-function"><span class="n">time</span></a><span class="p">()</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">t0</span><span class="si">:</span><span class="s2">.3f</span><span class="si">}</span><span class="s2">s&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Done in </span><span class="si">{</span><a class="sphx-glr-backref-module-time sphx-glr-backref-type-py-function" href="https://docs.python.org/3/library/time.html#time.time" title="time.time"><span class="n">time</span></a><span class="p">()</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">t0</span><span class="si">:</span><span class="s2">.3f</span><span class="si">}</span><span class="s2">s"</span><span class="p">)</span>
 </pre></div>
 </div>
 <div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>Fitting 5 folds for each of 40 candidates, totalling 200 fits
-Done in 29.872s
+Done in 29.542s
 </pre></div>
 </div>
-<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Best parameters combination found:&quot;</span><span class="p">)</span>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="s2">"Best parameters combination found:"</span><span class="p">)</span>
 <span class="n">best_parameters</span> <span class="o">=</span> <span class="n">random_search</span><span class="o">.</span><span class="n">best_estimator_</span><span class="o">.</span><span class="n">get_params</span><span class="p">()</span>
 <span class="k">for</span> <span class="n">param_name</span> <span class="ow">in</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">parameter_grid</span><span class="o">.</span><span class="n">keys</span><span class="p">()):</span>
-    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">param_name</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">best_parameters</span><span class="p">[</span><span class="n">param_name</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">param_name</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">best_parameters</span><span class="p">[</span><span class="n">param_name</span><span class="p">]</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
 </pre></div>
 </div>
 <div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>Best parameters combination found:
@@ -1628,10 +1402,10 @@ vect__norm: l1
 </div>
 <div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">test_accuracy</span> <span class="o">=</span> <span class="n">random_search</span><span class="o">.</span><span class="n">score</span><span class="p">(</span><span class="n">data_test</span><span class="o">.</span><span class="n">data</span><span class="p">,</span> <span class="n">data_test</span><span class="o">.</span><span class="n">target</span><span class="p">)</span>
 <span class="nb">print</span><span class="p">(</span>
-    <span class="s2">&quot;Accuracy of the best parameters using the inner CV of &quot;</span>
-    <span class="sa">f</span><span class="s2">&quot;the random search: </span><span class="si">{</span><span class="n">random_search</span><span class="o">.</span><span class="n">best_score_</span><span class="si">:</span><span class="s2">.3f</span><span class="si">}</span><span class="s2">&quot;</span>
+    <span class="s2">"Accuracy of the best parameters using the inner CV of "</span>
+    <span class="sa">f</span><span class="s2">"the random search: </span><span class="si">{</span><span class="n">random_search</span><span class="o">.</span><span class="n">best_score_</span><span class="si">:</span><span class="s2">.3f</span><span class="si">}</span><span class="s2">"</span>
 <span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Accuracy on test set: </span><span class="si">{</span><span class="n">test_accuracy</span><span class="si">:</span><span class="s2">.3f</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Accuracy on test set: </span><span class="si">{</span><span class="n">test_accuracy</span><span class="si">:</span><span class="s2">.3f</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
 </pre></div>
 </div>
 <div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>Accuracy of the best parameters using the inner CV of the random search: 0.816
@@ -1646,13 +1420,13 @@ improve the readability.</p>
 
 
 <span class="k">def</span> <span class="nf">shorten_param</span><span class="p">(</span><span class="n">param_name</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Remove components&#39; prefixes in param_name.&quot;&quot;&quot;</span>
-    <span class="k">if</span> <span class="s2">&quot;__&quot;</span> <span class="ow">in</span> <span class="n">param_name</span><span class="p">:</span>
-        <span class="k">return</span> <span class="n">param_name</span><span class="o">.</span><span class="n">rsplit</span><span class="p">(</span><span class="s2">&quot;__&quot;</span><span class="p">,</span> <span class="mi">1</span><span class="p">)[</span><span class="mi">1</span><span class="p">]</span>
+<span class="w">    </span><span class="sd">"""Remove components' prefixes in param_name."""</span>
+    <span class="k">if</span> <span class="s2">"__"</span> <span class="ow">in</span> <span class="n">param_name</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">param_name</span><span class="o">.</span><span class="n">rsplit</span><span class="p">(</span><span class="s2">"__"</span><span class="p">,</span> <span class="mi">1</span><span class="p">)[</span><span class="mi">1</span><span class="p">]</span>
     <span class="k">return</span> <span class="n">param_name</span>
 
 
-<span class="n">cv_results</span> <span class="o">=</span> <a href="https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.DataFrame.html#pandas.DataFrame" title="pandas.DataFrame" class="sphx-glr-backref-module-pandas sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span></a><span class="p">(</span><span class="n">random_search</span><span class="o">.</span><span class="n">cv_results_</span><span class="p">)</span>
+<span class="n">cv_results</span> <span class="o">=</span> <a class="sphx-glr-backref-module-pandas sphx-glr-backref-type-py-class sphx-glr-backref-instance" href="https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.DataFrame.html#pandas.DataFrame" title="pandas.DataFrame"><span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span></a><span class="p">(</span><span class="n">random_search</span><span class="o">.</span><span class="n">cv_results_</span><span class="p">)</span>
 <span class="n">cv_results</span> <span class="o">=</span> <span class="n">cv_results</span><span class="o">.</span><span class="n">rename</span><span class="p">(</span><span class="n">shorten_param</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
 </pre></div>
 </div>
@@ -1665,36 +1439,36 @@ different folds of the cross-validation.</p>
 
 <span class="n">param_names</span> <span class="o">=</span> <span class="p">[</span><span class="n">shorten_param</span><span class="p">(</span><span class="n">name</span><span class="p">)</span> <span class="k">for</span> <span class="n">name</span> <span class="ow">in</span> <span class="n">parameter_grid</span><span class="o">.</span><span class="n">keys</span><span class="p">()]</span>
 <span class="n">labels</span> <span class="o">=</span> <span class="p">{</span>
-    <span class="s2">&quot;mean_score_time&quot;</span><span class="p">:</span> <span class="s2">&quot;CV Score time (s)&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;mean_test_score&quot;</span><span class="p">:</span> <span class="s2">&quot;CV score (accuracy)&quot;</span><span class="p">,</span>
+    <span class="s2">"mean_score_time"</span><span class="p">:</span> <span class="s2">"CV Score time (s)"</span><span class="p">,</span>
+    <span class="s2">"mean_test_score"</span><span class="p">:</span> <span class="s2">"CV score (accuracy)"</span><span class="p">,</span>
 <span class="p">}</span>
 <span class="n">fig</span> <span class="o">=</span> <span class="n">px</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span>
     <span class="n">cv_results</span><span class="p">,</span>
-    <span class="n">x</span><span class="o">=</span><span class="s2">&quot;mean_score_time&quot;</span><span class="p">,</span>
-    <span class="n">y</span><span class="o">=</span><span class="s2">&quot;mean_test_score&quot;</span><span class="p">,</span>
-    <span class="n">error_x</span><span class="o">=</span><span class="s2">&quot;std_score_time&quot;</span><span class="p">,</span>
-    <span class="n">error_y</span><span class="o">=</span><span class="s2">&quot;std_test_score&quot;</span><span class="p">,</span>
+    <span class="n">x</span><span class="o">=</span><span class="s2">"mean_score_time"</span><span class="p">,</span>
+    <span class="n">y</span><span class="o">=</span><span class="s2">"mean_test_score"</span><span class="p">,</span>
+    <span class="n">error_x</span><span class="o">=</span><span class="s2">"std_score_time"</span><span class="p">,</span>
+    <span class="n">error_y</span><span class="o">=</span><span class="s2">"std_test_score"</span><span class="p">,</span>
     <span class="n">hover_data</span><span class="o">=</span><span class="n">param_names</span><span class="p">,</span>
     <span class="n">labels</span><span class="o">=</span><span class="n">labels</span><span class="p">,</span>
 <span class="p">)</span>
 <span class="n">fig</span><span class="o">.</span><span class="n">update_layout</span><span class="p">(</span>
     <span class="n">title</span><span class="o">=</span><span class="p">{</span>
-        <span class="s2">&quot;text&quot;</span><span class="p">:</span> <span class="s2">&quot;trade-off between scoring time and mean test score&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;y&quot;</span><span class="p">:</span> <span class="mf">0.95</span><span class="p">,</span>
-        <span class="s2">&quot;x&quot;</span><span class="p">:</span> <span class="mf">0.5</span><span class="p">,</span>
-        <span class="s2">&quot;xanchor&quot;</span><span class="p">:</span> <span class="s2">&quot;center&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;yanchor&quot;</span><span class="p">:</span> <span class="s2">&quot;top&quot;</span><span class="p">,</span>
+        <span class="s2">"text"</span><span class="p">:</span> <span class="s2">"trade-off between scoring time and mean test score"</span><span class="p">,</span>
+        <span class="s2">"y"</span><span class="p">:</span> <span class="mf">0.95</span><span class="p">,</span>
+        <span class="s2">"x"</span><span class="p">:</span> <span class="mf">0.5</span><span class="p">,</span>
+        <span class="s2">"xanchor"</span><span class="p">:</span> <span class="s2">"center"</span><span class="p">,</span>
+        <span class="s2">"yanchor"</span><span class="p">:</span> <span class="s2">"top"</span><span class="p">,</span>
     <span class="p">}</span>
 <span class="p">)</span>
 <span class="n">fig</span>
 </pre></div>
 </div>
 <div class="output_subarea output_html rendered_html output_result">
-<div>            <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-AMS-MML_SVG"></script><script type="text/javascript">if (window.MathJax && window.MathJax.Hub && window.MathJax.Hub.Config) {window.MathJax.Hub.Config({SVG: {font: "STIX-Web"}});}</script>                <script type="text/javascript">window.PlotlyConfig = {MathJaxConfig: 'local'};</script>
-        <script charset="utf-8" src="https://cdn.plot.ly/plotly-2.27.0.min.js"></script>                <div id="4dcfbea6-de6d-4e08-baff-6411314b6c96" class="plotly-graph-div" style="height:525px; width:100%;"></div>            <script type="text/javascript">                                    window.PLOTLYENV=window.PLOTLYENV || {};                                    if (document.getElementById("4dcfbea6-de6d-4e08-baff-6411314b6c96")) {                    Plotly.newPlot(                        "4dcfbea6-de6d-4e08-baff-6411314b6c96",                        [{"customdata":[[1.0,3,[1,2],"l2",10.0],[0.6,3,[1,2],"l2",100.0],[0.6,10,[1,1],"l1",0.01],[1.0,10,[1,2],"l2",0.001],[0.2,3,[1,2],"l2",1.0],[0.2,1,[1,2],"l2",1000.0],[0.2,1,[1,2],"l2",1.0],[1.0,5,[1,2],"l1",100000.0],[0.2,5,[1,2],"l2",0.001],[0.4,10,[1,2],"l1",0.001],[1.0,5,[1,2],"l2",1e-06],[0.4,10,[1,2],"l2",100.0],[0.6,3,[1,2],"l1",100.0],[0.2,1,[1,1],"l1",0.01],[0.6,10,[1,2],"l2",0.01],[0.8,3,[1,2],"l1",0.001],[0.8,5,[1,1],"l1",10000.0],[0.8,1,[1,1],"l2",100.0],[0.4,5,[1,2],"l1",1.0],[0.8,1,[1,2],"l1",1.0],[0.2,1,[1,1],"l2",1e-06],[0.4,5,[1,2],"l2",1e-06],[0.8,1,[1,2],"l2",1.0],[0.4,10,[1,2],"l2",1e-06],[0.6,1,[1,1],"l2",1.0],[1.0,1,[1,2],"l1",1.0],[0.2,1,[1,2],"l1",1000000.0],[0.8,1,[1,2],"l2",10000.0],[0.8,10,[1,1],"l1",0.01],[1.0,5,[1,1],"l1",0.001],[0.2,5,[1,2],"l2",0.01],[0.8,10,[1,2],"l2",100000.0],[0.4,1,[1,2],"l1",1e-06],[0.6,3,[1,2],"l1",100000.0],[0.2,5,[1,1],"l2",10000.0],[1.0,1,[1,1],"l2",10000.0],[0.6,3,[1,2],"l1",1.0],[0.8,3,[1,2],"l2",1000000.0],[0.8,3,[1,2],"l2",0.001],[0.2,1,[1,2],"l2",0.09999999999999999]],"error_x":{"array":[0.008608968128763238,0.008182386877588486,0.0031297788504162927,0.005148195380311112,0.005169610764481095,0.0070181335185270114,0.008030768294602924,0.0055702598305681205,0.005658876912667135,0.006063017358664435,0.005170714160621175,0.005844955508179995,0.006343185132927213,0.0034976854717085185,0.004948090134148008,0.006075804845166502,0.004267438601284311,0.006896113499695452,0.008660401181998739,0.009835381115977197,0.004079356099878167,0.007104498085233773,0.0071547330367055335,0.005919247898684703,0.0033721094726763506,0.0076094158026801815,0.007244685441400048,0.005576940203020917,0.0031933177257550123,0.0030318334235957412,0.006327773336521355,0.006167190566444364,0.01326777273098254,0.00488403739969391,0.003607633870799117,0.0033593469466871527,0.0063315884259327535,0.006720358623900075,0.005664958493519706,0.007109751912220246]},"error_y":{"array":[0.021709462916372543,0.019660424372293657,0.02280701551644583,0.04141503839481188,0.025197247740550304,0.02185207140572817,0.03919239713819249,0.0064363918745756095,0.04904124161348298,0.05189316457318038,0.048501681550639386,0.03741855291831512,0.017469874157429344,0.02173863377120521,0.03542621298833128,0.025243761085853186,0.006667969931544837,0.006180189207600158,0.03507679946932842,0.011860875164389911,0.03629456169941096,0.04938433795727698,0.03192696045040785,0.039585633198194775,0.03748169491939798,0.008394295296711565,0.024477745202560856,0.009089774981294351,0.017562478457491922,0.023480916167601486,0.0422343170600075,0.0070716818832471,0.02787646303524185,0.017469874157429344,0.02866436715108689,0.0030358844335549935,0.024286892696920713,0.006307564442123955,0.03887461994008526,0.028260891331683496]},"hovertemplate":"CV Score time (s)=%{x}\u003cbr\u003eCV score (accuracy)=%{y}\u003cbr\u003emax_df=%{customdata[0]}\u003cbr\u003emin_df=%{customdata[1]}\u003cbr\u003engram_range=%{customdata[2]}\u003cbr\u003enorm=%{customdata[3]}\u003cbr\u003ealpha=%{customdata[4]}\u003cextra\u003e\u003c\u002fextra\u003e","legendgroup":"","marker":{"color":"#636efa","symbol":"circle"},"mode":"markers","name":"","orientation":"v","showlegend":false,"x":[0.04253072738647461,0.043018150329589847,0.019566726684570313,0.03734006881713867,0.04334821701049805,0.04914159774780273,0.049290943145751956,0.040374755859375,0.03894963264465332,0.037477874755859376,0.04095282554626465,0.03713488578796387,0.04147696495056152,0.02099299430847168,0.039488697052001955,0.044625473022460935,0.02140188217163086,0.024062395095825195,0.04168720245361328,0.05023417472839355,0.02161092758178711,0.04128122329711914,0.04987854957580566,0.03877887725830078,0.021130752563476563,0.048394203186035156,0.05072298049926758,0.053030967712402344,0.019492053985595705,0.0214231014251709,0.039414262771606444,0.03852114677429199,0.05261969566345215,0.044192838668823245,0.020945978164672852,0.020449495315551756,0.042164039611816403,0.041814565658569336,0.04260044097900391,0.05030293464660644],"xaxis":"x","y":[0.6067319461444309,0.6114035087719298,0.7444308445532435,0.7385624915000679,0.7735890112879098,0.6988916088671291,0.7350537195702435,0.5775873793009656,0.7723922208622331,0.7327281381748946,0.76890384876921,0.6603835169318646,0.599734802121583,0.8156262749898001,0.73625050999592,0.7958044335645316,0.5729294165646674,0.5705902352781178,0.6661906704746362,0.5857405140758873,0.7841425268597851,0.7665714674282607,0.670875832993336,0.7304229566163472,0.7000271997824018,0.5810825513395892,0.6673806609547123,0.5775873793009656,0.7479464164286685,0.7770909832721339,0.7747314021487828,0.5845913232694139,0.8109547123623011,0.599734802121583,0.7280769753841969,0.5624303005575955,0.6195498436012512,0.5752685978512172,0.7829389364885082,0.8132666938664489],"yaxis":"y","type":"scatter"}],                        {"template":{"data":{"histogram2dcontour":[{"type":"histogram2dcontour","colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]]}],"choropleth":[{"type":"choropleth","colorbar":{"outlinewidth":0,"ticks":""}}],"histogram2d":[{"type":"histogram2d","colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]]}],"heatmap":[{"type":"heatmap","colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]]}],"heatmapgl":[{"type":"heatmapgl","colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]]}],"contourcarpet":[{"type":"contourcarpet","colorbar":{"outlinewidth":0,"ticks":""}}],"contour":[{"type":"contour","colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]]}],"surface":[{"type":"surface","colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]]}],"mesh3d":[{"type":"mesh3d","colorbar":{"outlinewidth":0,"ticks":""}}],"scatter":[{"fillpattern":{"fillmode":"overlay","size":10,"solidity":0.2},"type":"scatter"}],"parcoords":[{"type":"parcoords","line":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"scatterpolargl":[{"type":"scatterpolargl","marker":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"bar":[{"error_x":{"color":"#2a3f5f"},"error_y":{"color":"#2a3f5f"},"marker":{"line":{"color":"#E5ECF6","width":0.5},"pattern":{"fillmode":"overlay","size":10,"solidity":0.2}},"type":"bar"}],"scattergeo":[{"type":"scattergeo","marker":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"scatterpolar":[{"type":"scatterpolar","marker":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"histogram":[{"marker":{"pattern":{"fillmode":"overlay","size":10,"solidity":0.2}},"type":"histogram"}],"scattergl":[{"type":"scattergl","marker":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"scatter3d":[{"type":"scatter3d","line":{"colorbar":{"outlinewidth":0,"ticks":""}},"marker":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"scattermapbox":[{"type":"scattermapbox","marker":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"scatterternary":[{"type":"scatterternary","marker":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"scattercarpet":[{"type":"scattercarpet","marker":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"carpet":[{"aaxis":{"endlinecolor":"#2a3f5f","gridcolor":"white","linecolor":"white","minorgridcolor":"white","startlinecolor":"#2a3f5f"},"baxis":{"endlinecolor":"#2a3f5f","gridcolor":"white","linecolor":"white","minorgridcolor":"white","startlinecolor":"#2a3f5f"},"type":"carpet"}],"table":[{"cells":{"fill":{"color":"#EBF0F8"},"line":{"color":"white"}},"header":{"fill":{"color":"#C8D4E3"},"line":{"color":"white"}},"type":"table"}],"barpolar":[{"marker":{"line":{"color":"#E5ECF6","width":0.5},"pattern":{"fillmode":"overlay","size":10,"solidity":0.2}},"type":"barpolar"}],"pie":[{"automargin":true,"type":"pie"}]},"layout":{"autotypenumbers":"strict","colorway":["#636efa","#EF553B","#00cc96","#ab63fa","#FFA15A","#19d3f3","#FF6692","#B6E880","#FF97FF","#FECB52"],"font":{"color":"#2a3f5f"},"hovermode":"closest","hoverlabel":{"align":"left"},"paper_bgcolor":"white","plot_bgcolor":"#E5ECF6","polar":{"bgcolor":"#E5ECF6","angularaxis":{"gridcolor":"white","linecolor":"white","ticks":""},"radialaxis":{"gridcolor":"white","linecolor":"white","ticks":""}},"ternary":{"bgcolor":"#E5ECF6","aaxis":{"gridcolor":"white","linecolor":"white","ticks":""},"baxis":{"gridcolor":"white","linecolor":"white","ticks":""},"caxis":{"gridcolor":"white","linecolor":"white","ticks":""}},"coloraxis":{"colorbar":{"outlinewidth":0,"ticks":""}},"colorscale":{"sequential":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]],"sequentialminus":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]],"diverging":[[0,"#8e0152"],[0.1,"#c51b7d"],[0.2,"#de77ae"],[0.3,"#f1b6da"],[0.4,"#fde0ef"],[0.5,"#f7f7f7"],[0.6,"#e6f5d0"],[0.7,"#b8e186"],[0.8,"#7fbc41"],[0.9,"#4d9221"],[1,"#276419"]]},"xaxis":{"gridcolor":"white","linecolor":"white","ticks":"","title":{"standoff":15},"zerolinecolor":"white","automargin":true,"zerolinewidth":2},"yaxis":{"gridcolor":"white","linecolor":"white","ticks":"","title":{"standoff":15},"zerolinecolor":"white","automargin":true,"zerolinewidth":2},"scene":{"xaxis":{"backgroundcolor":"#E5ECF6","gridcolor":"white","linecolor":"white","showbackground":true,"ticks":"","zerolinecolor":"white","gridwidth":2},"yaxis":{"backgroundcolor":"#E5ECF6","gridcolor":"white","linecolor":"white","showbackground":true,"ticks":"","zerolinecolor":"white","gridwidth":2},"zaxis":{"backgroundcolor":"#E5ECF6","gridcolor":"white","linecolor":"white","showbackground":true,"ticks":"","zerolinecolor":"white","gridwidth":2}},"shapedefaults":{"line":{"color":"#2a3f5f"}},"annotationdefaults":{"arrowcolor":"#2a3f5f","arrowhead":0,"arrowwidth":1},"geo":{"bgcolor":"white","landcolor":"#E5ECF6","subunitcolor":"white","showland":true,"showlakes":true,"lakecolor":"white"},"title":{"x":0.05},"mapbox":{"style":"light"}}},"xaxis":{"anchor":"y","domain":[0.0,1.0],"title":{"text":"CV Score time (s)"}},"yaxis":{"anchor":"x","domain":[0.0,1.0],"title":{"text":"CV score (accuracy)"}},"legend":{"tracegroupgap":0},"margin":{"t":60},"title":{"text":"trade-off between scoring time and mean test score","y":0.95,"x":0.5,"xanchor":"center","yanchor":"top"}},                        {"responsive": true}                    )                };                            </script>        </div>
+<div> <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-AMS-MML_SVG"></script><script type="text/javascript">if (window.MathJax && window.MathJax.Hub && window.MathJax.Hub.Config) {window.MathJax.Hub.Config({SVG: {font: "STIX-Web"}});}</script> <script type="text/javascript">window.PlotlyConfig = {MathJaxConfig: 'local'};</script>
+<script charset="utf-8" src="https://cdn.plot.ly/plotly-2.27.0.min.js"></script> <div class="plotly-graph-div" id="5c1a171e-455a-4445-ba67-a2affc1bf2c7" style="height:525px; width:100%;"></div> <script type="text/javascript">                                    window.PLOTLYENV=window.PLOTLYENV || {};                                    if (document.getElementById("5c1a171e-455a-4445-ba67-a2affc1bf2c7")) {                    Plotly.newPlot(                        "5c1a171e-455a-4445-ba67-a2affc1bf2c7",                        [{"customdata":[[1.0,3,[1,2],"l2",10.0],[0.6,3,[1,2],"l2",100.0],[0.6,10,[1,1],"l1",0.01],[1.0,10,[1,2],"l2",0.001],[0.2,3,[1,2],"l2",1.0],[0.2,1,[1,2],"l2",1000.0],[0.2,1,[1,2],"l2",1.0],[1.0,5,[1,2],"l1",100000.0],[0.2,5,[1,2],"l2",0.001],[0.4,10,[1,2],"l1",0.001],[1.0,5,[1,2],"l2",1e-06],[0.4,10,[1,2],"l2",100.0],[0.6,3,[1,2],"l1",100.0],[0.2,1,[1,1],"l1",0.01],[0.6,10,[1,2],"l2",0.01],[0.8,3,[1,2],"l1",0.001],[0.8,5,[1,1],"l1",10000.0],[0.8,1,[1,1],"l2",100.0],[0.4,5,[1,2],"l1",1.0],[0.8,1,[1,2],"l1",1.0],[0.2,1,[1,1],"l2",1e-06],[0.4,5,[1,2],"l2",1e-06],[0.8,1,[1,2],"l2",1.0],[0.4,10,[1,2],"l2",1e-06],[0.6,1,[1,1],"l2",1.0],[1.0,1,[1,2],"l1",1.0],[0.2,1,[1,2],"l1",1000000.0],[0.8,1,[1,2],"l2",10000.0],[0.8,10,[1,1],"l1",0.01],[1.0,5,[1,1],"l1",0.001],[0.2,5,[1,2],"l2",0.01],[0.8,10,[1,2],"l2",100000.0],[0.4,1,[1,2],"l1",1e-06],[0.6,3,[1,2],"l1",100000.0],[0.2,5,[1,1],"l2",10000.0],[1.0,1,[1,1],"l2",10000.0],[0.6,3,[1,2],"l1",1.0],[0.8,3,[1,2],"l2",1000000.0],[0.8,3,[1,2],"l2",0.001],[0.2,1,[1,2],"l2",0.09999999999999999]],"error_x":{"array":[0.0063478172725561985,0.009080957015785365,0.003869083254358443,0.006341628645584493,0.0052250962712550465,0.008889646018813918,0.010331580078999921,0.005599528063041426,0.011241416457231018,0.011005628040536349,0.005864274177745686,0.005716540236970957,0.007624281423658835,0.003109423360529423,0.013785252905827354,0.013946576963723567,0.0033789207511997063,0.0060659586196652295,0.00813493543131747,0.007190193144817797,0.004253414834473223,0.00630670256550199,0.007655431855001283,0.003917417989522541,0.003423349098458485,0.009453706750477301,0.006659893388069786,0.008791750181700806,0.004724968148823575,0.004233969821562615,0.006662531976860536,0.00535850211327592,0.007008146681928819,0.0070265499714226975,0.004133289238841072,0.003431138676729534,0.0062204953240615,0.005079459122990748,0.006858807559183019,0.01040911991222264]},"error_y":{"array":[0.021709462916372543,0.019660424372293657,0.02280701551644583,0.04141503839481188,0.025197247740550304,0.02185207140572817,0.03919239713819249,0.0064363918745756095,0.04904124161348298,0.05189316457318038,0.048501681550639386,0.03741855291831512,0.017469874157429344,0.02173863377120521,0.03542621298833128,0.025243761085853186,0.006667969931544837,0.006180189207600158,0.03507679946932842,0.011860875164389911,0.03629456169941096,0.04938433795727698,0.03192696045040785,0.039585633198194775,0.03748169491939798,0.008394295296711565,0.024477745202560856,0.009089774981294351,0.017562478457491922,0.023480916167601486,0.0422343170600075,0.0070716818832471,0.02787646303524185,0.017469874157429344,0.02866436715108689,0.0030358844335549935,0.024286892696920713,0.006307564442123955,0.03887461994008526,0.028260891331683496]},"hovertemplate":"CV Score time (s)=%{x}\u003cbr\u003eCV score (accuracy)=%{y}\u003cbr\u003emax_df=%{customdata[0]}\u003cbr\u003emin_df=%{customdata[1]}\u003cbr\u003engram_range=%{customdata[2]}\u003cbr\u003enorm=%{customdata[3]}\u003cbr\u003ealpha=%{customdata[4]}\u003cextra\u003e\u003c\u002fextra\u003e","legendgroup":"","marker":{"color":"#636efa","symbol":"circle"},"mode":"markers","name":"","orientation":"v","showlegend":false,"x":[0.04194803237915039,0.045652341842651364,0.022548103332519533,0.0366612434387207,0.04148993492126465,0.048067474365234376,0.05126299858093262,0.042722034454345706,0.045366334915161136,0.0421299934387207,0.03895483016967773,0.03916215896606445,0.04349308013916016,0.020218706130981444,0.04037041664123535,0.04589347839355469,0.01938972473144531,0.02333664894104004,0.04247331619262695,0.04695148468017578,0.020855188369750977,0.03975095748901367,0.04642481803894043,0.0388831615447998,0.021924829483032225,0.04779839515686035,0.05022473335266113,0.04788193702697754,0.01984438896179199,0.021079444885253908,0.03946108818054199,0.037605667114257814,0.05126638412475586,0.04320611953735352,0.020479154586791993,0.020340824127197267,0.04054803848266601,0.04240198135375976,0.0420875072479248,0.04964776039123535],"xaxis":"x","y":[0.6067319461444309,0.6114035087719298,0.7444308445532435,0.7385624915000679,0.7735890112879098,0.6988916088671291,0.7350537195702435,0.5775873793009656,0.7723922208622331,0.7327281381748946,0.76890384876921,0.6603835169318646,0.599734802121583,0.8156262749898001,0.73625050999592,0.7958044335645316,0.5729294165646674,0.5705902352781178,0.6661906704746362,0.5857405140758873,0.7841425268597851,0.7665714674282607,0.670875832993336,0.7304229566163472,0.7000271997824018,0.5810825513395892,0.6673806609547123,0.5775873793009656,0.7479464164286685,0.7770909832721339,0.7747314021487828,0.5845913232694139,0.8109547123623011,0.599734802121583,0.7280769753841969,0.5624303005575955,0.6195498436012512,0.5752685978512172,0.7829389364885082,0.8132666938664489],"yaxis":"y","type":"scatter"}],                        {"template":{"data":{"histogram2dcontour":[{"type":"histogram2dcontour","colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]]}],"choropleth":[{"type":"choropleth","colorbar":{"outlinewidth":0,"ticks":""}}],"histogram2d":[{"type":"histogram2d","colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]]}],"heatmap":[{"type":"heatmap","colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]]}],"heatmapgl":[{"type":"heatmapgl","colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]]}],"contourcarpet":[{"type":"contourcarpet","colorbar":{"outlinewidth":0,"ticks":""}}],"contour":[{"type":"contour","colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]]}],"surface":[{"type":"surface","colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]]}],"mesh3d":[{"type":"mesh3d","colorbar":{"outlinewidth":0,"ticks":""}}],"scatter":[{"fillpattern":{"fillmode":"overlay","size":10,"solidity":0.2},"type":"scatter"}],"parcoords":[{"type":"parcoords","line":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"scatterpolargl":[{"type":"scatterpolargl","marker":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"bar":[{"error_x":{"color":"#2a3f5f"},"error_y":{"color":"#2a3f5f"},"marker":{"line":{"color":"#E5ECF6","width":0.5},"pattern":{"fillmode":"overlay","size":10,"solidity":0.2}},"type":"bar"}],"scattergeo":[{"type":"scattergeo","marker":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"scatterpolar":[{"type":"scatterpolar","marker":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"histogram":[{"marker":{"pattern":{"fillmode":"overlay","size":10,"solidity":0.2}},"type":"histogram"}],"scattergl":[{"type":"scattergl","marker":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"scatter3d":[{"type":"scatter3d","line":{"colorbar":{"outlinewidth":0,"ticks":""}},"marker":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"scattermapbox":[{"type":"scattermapbox","marker":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"scatterternary":[{"type":"scatterternary","marker":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"scattercarpet":[{"type":"scattercarpet","marker":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"carpet":[{"aaxis":{"endlinecolor":"#2a3f5f","gridcolor":"white","linecolor":"white","minorgridcolor":"white","startlinecolor":"#2a3f5f"},"baxis":{"endlinecolor":"#2a3f5f","gridcolor":"white","linecolor":"white","minorgridcolor":"white","startlinecolor":"#2a3f5f"},"type":"carpet"}],"table":[{"cells":{"fill":{"color":"#EBF0F8"},"line":{"color":"white"}},"header":{"fill":{"color":"#C8D4E3"},"line":{"color":"white"}},"type":"table"}],"barpolar":[{"marker":{"line":{"color":"#E5ECF6","width":0.5},"pattern":{"fillmode":"overlay","size":10,"solidity":0.2}},"type":"barpolar"}],"pie":[{"automargin":true,"type":"pie"}]},"layout":{"autotypenumbers":"strict","colorway":["#636efa","#EF553B","#00cc96","#ab63fa","#FFA15A","#19d3f3","#FF6692","#B6E880","#FF97FF","#FECB52"],"font":{"color":"#2a3f5f"},"hovermode":"closest","hoverlabel":{"align":"left"},"paper_bgcolor":"white","plot_bgcolor":"#E5ECF6","polar":{"bgcolor":"#E5ECF6","angularaxis":{"gridcolor":"white","linecolor":"white","ticks":""},"radialaxis":{"gridcolor":"white","linecolor":"white","ticks":""}},"ternary":{"bgcolor":"#E5ECF6","aaxis":{"gridcolor":"white","linecolor":"white","ticks":""},"baxis":{"gridcolor":"white","linecolor":"white","ticks":""},"caxis":{"gridcolor":"white","linecolor":"white","ticks":""}},"coloraxis":{"colorbar":{"outlinewidth":0,"ticks":""}},"colorscale":{"sequential":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]],"sequentialminus":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]],"diverging":[[0,"#8e0152"],[0.1,"#c51b7d"],[0.2,"#de77ae"],[0.3,"#f1b6da"],[0.4,"#fde0ef"],[0.5,"#f7f7f7"],[0.6,"#e6f5d0"],[0.7,"#b8e186"],[0.8,"#7fbc41"],[0.9,"#4d9221"],[1,"#276419"]]},"xaxis":{"gridcolor":"white","linecolor":"white","ticks":"","title":{"standoff":15},"zerolinecolor":"white","automargin":true,"zerolinewidth":2},"yaxis":{"gridcolor":"white","linecolor":"white","ticks":"","title":{"standoff":15},"zerolinecolor":"white","automargin":true,"zerolinewidth":2},"scene":{"xaxis":{"backgroundcolor":"#E5ECF6","gridcolor":"white","linecolor":"white","showbackground":true,"ticks":"","zerolinecolor":"white","gridwidth":2},"yaxis":{"backgroundcolor":"#E5ECF6","gridcolor":"white","linecolor":"white","showbackground":true,"ticks":"","zerolinecolor":"white","gridwidth":2},"zaxis":{"backgroundcolor":"#E5ECF6","gridcolor":"white","linecolor":"white","showbackground":true,"ticks":"","zerolinecolor":"white","gridwidth":2}},"shapedefaults":{"line":{"color":"#2a3f5f"}},"annotationdefaults":{"arrowcolor":"#2a3f5f","arrowhead":0,"arrowwidth":1},"geo":{"bgcolor":"white","landcolor":"#E5ECF6","subunitcolor":"white","showland":true,"showlakes":true,"lakecolor":"white"},"title":{"x":0.05},"mapbox":{"style":"light"}}},"xaxis":{"anchor":"y","domain":[0.0,1.0],"title":{"text":"CV Score time (s)"}},"yaxis":{"anchor":"x","domain":[0.0,1.0],"title":{"text":"CV score (accuracy)"}},"legend":{"tracegroupgap":0},"margin":{"t":60},"title":{"text":"trade-off between scoring time and mean test score","y":0.95,"x":0.5,"xanchor":"center","yanchor":"top"}},                        {"responsive": true}                    )                };                            </script> </div>
 </div>
-<br />
-<br /><p>Notice that the cluster of models in the upper-left corner of the plot have
+<br/>
+<br/><p>Notice that the cluster of models in the upper-left corner of the plot have
 the best trade-off between accuracy and scoring time. In this case, using
 bigrams increases the required scoring time without improving considerably the
 accuracy of the pipeline.</p>
@@ -1714,40 +1488,40 @@ active range and improve the readability of the plot. A value <span class="math 
 said axis is to be understood as <span class="math notranslate nohighlight">\(10^x\)</span>.</p>
 <div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">math</span>
 
-<span class="n">column_results</span> <span class="o">=</span> <span class="n">param_names</span> <span class="o">+</span> <span class="p">[</span><span class="s2">&quot;mean_test_score&quot;</span><span class="p">,</span> <span class="s2">&quot;mean_score_time&quot;</span><span class="p">]</span>
+<span class="n">column_results</span> <span class="o">=</span> <span class="n">param_names</span> <span class="o">+</span> <span class="p">[</span><span class="s2">"mean_test_score"</span><span class="p">,</span> <span class="s2">"mean_score_time"</span><span class="p">]</span>
 
 <span class="n">transform_funcs</span> <span class="o">=</span> <span class="nb">dict</span><span class="o">.</span><span class="n">fromkeys</span><span class="p">(</span><span class="n">column_results</span><span class="p">,</span> <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="p">)</span>
 <span class="c1"># Using a logarithmic scale for alpha</span>
-<span class="n">transform_funcs</span><span class="p">[</span><span class="s2">&quot;alpha&quot;</span><span class="p">]</span> <span class="o">=</span> <a href="https://docs.python.org/3/library/math.html#math.log10" title="math.log10" class="sphx-glr-backref-module-math sphx-glr-backref-type-py-function"><span class="n">math</span><span class="o">.</span><span class="n">log10</span></a>
+<span class="n">transform_funcs</span><span class="p">[</span><span class="s2">"alpha"</span><span class="p">]</span> <span class="o">=</span> <a class="sphx-glr-backref-module-math sphx-glr-backref-type-py-function" href="https://docs.python.org/3/library/math.html#math.log10" title="math.log10"><span class="n">math</span><span class="o">.</span><span class="n">log10</span></a>
 <span class="c1"># L1 norms are mapped to index 1, and L2 norms to index 2</span>
-<span class="n">transform_funcs</span><span class="p">[</span><span class="s2">&quot;norm&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="mi">2</span> <span class="k">if</span> <span class="n">x</span> <span class="o">==</span> <span class="s2">&quot;l2&quot;</span> <span class="k">else</span> <span class="mi">1</span>
+<span class="n">transform_funcs</span><span class="p">[</span><span class="s2">"norm"</span><span class="p">]</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="mi">2</span> <span class="k">if</span> <span class="n">x</span> <span class="o">==</span> <span class="s2">"l2"</span> <span class="k">else</span> <span class="mi">1</span>
 <span class="c1"># Unigrams are mapped to index 1 and bigrams to index 2</span>
-<span class="n">transform_funcs</span><span class="p">[</span><span class="s2">&quot;ngram_range&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+<span class="n">transform_funcs</span><span class="p">[</span><span class="s2">"ngram_range"</span><span class="p">]</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
 
 <span class="n">fig</span> <span class="o">=</span> <span class="n">px</span><span class="o">.</span><span class="n">parallel_coordinates</span><span class="p">(</span>
     <span class="n">cv_results</span><span class="p">[</span><span class="n">column_results</span><span class="p">]</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="n">transform_funcs</span><span class="p">),</span>
-    <span class="n">color</span><span class="o">=</span><span class="s2">&quot;mean_test_score&quot;</span><span class="p">,</span>
+    <span class="n">color</span><span class="o">=</span><span class="s2">"mean_test_score"</span><span class="p">,</span>
     <span class="n">color_continuous_scale</span><span class="o">=</span><span class="n">px</span><span class="o">.</span><span class="n">colors</span><span class="o">.</span><span class="n">sequential</span><span class="o">.</span><span class="n">Viridis_r</span><span class="p">,</span>
     <span class="n">labels</span><span class="o">=</span><span class="n">labels</span><span class="p">,</span>
 <span class="p">)</span>
 <span class="n">fig</span><span class="o">.</span><span class="n">update_layout</span><span class="p">(</span>
     <span class="n">title</span><span class="o">=</span><span class="p">{</span>
-        <span class="s2">&quot;text&quot;</span><span class="p">:</span> <span class="s2">&quot;Parallel coordinates plot of text classifier pipeline&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;y&quot;</span><span class="p">:</span> <span class="mf">0.99</span><span class="p">,</span>
-        <span class="s2">&quot;x&quot;</span><span class="p">:</span> <span class="mf">0.5</span><span class="p">,</span>
-        <span class="s2">&quot;xanchor&quot;</span><span class="p">:</span> <span class="s2">&quot;center&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;yanchor&quot;</span><span class="p">:</span> <span class="s2">&quot;top&quot;</span><span class="p">,</span>
+        <span class="s2">"text"</span><span class="p">:</span> <span class="s2">"Parallel coordinates plot of text classifier pipeline"</span><span class="p">,</span>
+        <span class="s2">"y"</span><span class="p">:</span> <span class="mf">0.99</span><span class="p">,</span>
+        <span class="s2">"x"</span><span class="p">:</span> <span class="mf">0.5</span><span class="p">,</span>
+        <span class="s2">"xanchor"</span><span class="p">:</span> <span class="s2">"center"</span><span class="p">,</span>
+        <span class="s2">"yanchor"</span><span class="p">:</span> <span class="s2">"top"</span><span class="p">,</span>
     <span class="p">}</span>
 <span class="p">)</span>
 <span class="n">fig</span>
 </pre></div>
 </div>
 <div class="output_subarea output_html rendered_html output_result">
-<div>            <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-AMS-MML_SVG"></script><script type="text/javascript">if (window.MathJax && window.MathJax.Hub && window.MathJax.Hub.Config) {window.MathJax.Hub.Config({SVG: {font: "STIX-Web"}});}</script>                <script type="text/javascript">window.PlotlyConfig = {MathJaxConfig: 'local'};</script>
-        <script charset="utf-8" src="https://cdn.plot.ly/plotly-2.27.0.min.js"></script>                <div id="6cdcb69c-173e-4980-960d-80c9e37649e7" class="plotly-graph-div" style="height:525px; width:100%;"></div>            <script type="text/javascript">                                    window.PLOTLYENV=window.PLOTLYENV || {};                                    if (document.getElementById("6cdcb69c-173e-4980-960d-80c9e37649e7")) {                    Plotly.newPlot(                        "6cdcb69c-173e-4980-960d-80c9e37649e7",                        [{"dimensions":[{"label":"max_df","values":[1.0,0.6,0.6,1.0,0.2,0.2,0.2,1.0,0.2,0.4,1.0,0.4,0.6,0.2,0.6,0.8,0.8,0.8,0.4,0.8,0.2,0.4,0.8,0.4,0.6,1.0,0.2,0.8,0.8,1.0,0.2,0.8,0.4,0.6,0.2,1.0,0.6,0.8,0.8,0.2]},{"label":"min_df","values":[3,3,10,10,3,1,1,5,5,10,5,10,3,1,10,3,5,1,5,1,1,5,1,10,1,1,1,1,10,5,5,10,1,3,5,1,3,3,3,1]},{"label":"ngram_range","values":[2,2,1,2,2,2,2,2,2,2,2,2,2,1,2,2,1,1,2,2,1,2,2,2,1,2,2,2,1,1,2,2,2,2,1,1,2,2,2,2]},{"label":"norm","values":[2,2,1,2,2,2,2,1,2,1,2,2,1,1,2,1,1,2,1,1,2,2,2,2,2,1,1,2,1,1,2,2,1,1,2,2,1,2,2,2]},{"label":"alpha","values":[1.0,2.0,-2.0,-3.0,0.0,3.0,0.0,5.0,-3.0,-3.0,-6.0,2.0,2.0,-2.0,-2.0,-3.0,4.0,2.0,0.0,0.0,-6.0,-6.0,0.0,-6.0,0.0,0.0,6.0,4.0,-2.0,-3.0,-2.0,5.0,-6.0,5.0,4.0,4.0,0.0,6.0,-3.0,-1.0]},{"label":"CV score (accuracy)","values":[0.6067319461444309,0.6114035087719298,0.7444308445532435,0.7385624915000679,0.7735890112879098,0.6988916088671291,0.7350537195702435,0.5775873793009656,0.7723922208622331,0.7327281381748946,0.76890384876921,0.6603835169318646,0.599734802121583,0.8156262749898001,0.73625050999592,0.7958044335645316,0.5729294165646674,0.5705902352781178,0.6661906704746362,0.5857405140758873,0.7841425268597851,0.7665714674282607,0.670875832993336,0.7304229566163472,0.7000271997824018,0.5810825513395892,0.6673806609547123,0.5775873793009656,0.7479464164286685,0.7770909832721339,0.7747314021487828,0.5845913232694139,0.8109547123623011,0.599734802121583,0.7280769753841969,0.5624303005575955,0.6195498436012512,0.5752685978512172,0.7829389364885082,0.8132666938664489]},{"label":"CV Score time (s)","values":[0.04253072738647461,0.043018150329589847,0.019566726684570313,0.03734006881713867,0.04334821701049805,0.04914159774780273,0.049290943145751956,0.040374755859375,0.03894963264465332,0.037477874755859376,0.04095282554626465,0.03713488578796387,0.04147696495056152,0.02099299430847168,0.039488697052001955,0.044625473022460935,0.02140188217163086,0.024062395095825195,0.04168720245361328,0.05023417472839355,0.02161092758178711,0.04128122329711914,0.04987854957580566,0.03877887725830078,0.021130752563476563,0.048394203186035156,0.05072298049926758,0.053030967712402344,0.019492053985595705,0.0214231014251709,0.039414262771606444,0.03852114677429199,0.05261969566345215,0.044192838668823245,0.020945978164672852,0.020449495315551756,0.042164039611816403,0.041814565658569336,0.04260044097900391,0.05030293464660644]}],"domain":{"x":[0.0,1.0],"y":[0.0,1.0]},"line":{"color":[0.6067319461444309,0.6114035087719298,0.7444308445532435,0.7385624915000679,0.7735890112879098,0.6988916088671291,0.7350537195702435,0.5775873793009656,0.7723922208622331,0.7327281381748946,0.76890384876921,0.6603835169318646,0.599734802121583,0.8156262749898001,0.73625050999592,0.7958044335645316,0.5729294165646674,0.5705902352781178,0.6661906704746362,0.5857405140758873,0.7841425268597851,0.7665714674282607,0.670875832993336,0.7304229566163472,0.7000271997824018,0.5810825513395892,0.6673806609547123,0.5775873793009656,0.7479464164286685,0.7770909832721339,0.7747314021487828,0.5845913232694139,0.8109547123623011,0.599734802121583,0.7280769753841969,0.5624303005575955,0.6195498436012512,0.5752685978512172,0.7829389364885082,0.8132666938664489],"coloraxis":"coloraxis"},"name":"","type":"parcoords"}],                        {"template":{"data":{"histogram2dcontour":[{"type":"histogram2dcontour","colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]]}],"choropleth":[{"type":"choropleth","colorbar":{"outlinewidth":0,"ticks":""}}],"histogram2d":[{"type":"histogram2d","colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]]}],"heatmap":[{"type":"heatmap","colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]]}],"heatmapgl":[{"type":"heatmapgl","colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]]}],"contourcarpet":[{"type":"contourcarpet","colorbar":{"outlinewidth":0,"ticks":""}}],"contour":[{"type":"contour","colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]]}],"surface":[{"type":"surface","colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]]}],"mesh3d":[{"type":"mesh3d","colorbar":{"outlinewidth":0,"ticks":""}}],"scatter":[{"fillpattern":{"fillmode":"overlay","size":10,"solidity":0.2},"type":"scatter"}],"parcoords":[{"type":"parcoords","line":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"scatterpolargl":[{"type":"scatterpolargl","marker":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"bar":[{"error_x":{"color":"#2a3f5f"},"error_y":{"color":"#2a3f5f"},"marker":{"line":{"color":"#E5ECF6","width":0.5},"pattern":{"fillmode":"overlay","size":10,"solidity":0.2}},"type":"bar"}],"scattergeo":[{"type":"scattergeo","marker":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"scatterpolar":[{"type":"scatterpolar","marker":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"histogram":[{"marker":{"pattern":{"fillmode":"overlay","size":10,"solidity":0.2}},"type":"histogram"}],"scattergl":[{"type":"scattergl","marker":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"scatter3d":[{"type":"scatter3d","line":{"colorbar":{"outlinewidth":0,"ticks":""}},"marker":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"scattermapbox":[{"type":"scattermapbox","marker":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"scatterternary":[{"type":"scatterternary","marker":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"scattercarpet":[{"type":"scattercarpet","marker":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"carpet":[{"aaxis":{"endlinecolor":"#2a3f5f","gridcolor":"white","linecolor":"white","minorgridcolor":"white","startlinecolor":"#2a3f5f"},"baxis":{"endlinecolor":"#2a3f5f","gridcolor":"white","linecolor":"white","minorgridcolor":"white","startlinecolor":"#2a3f5f"},"type":"carpet"}],"table":[{"cells":{"fill":{"color":"#EBF0F8"},"line":{"color":"white"}},"header":{"fill":{"color":"#C8D4E3"},"line":{"color":"white"}},"type":"table"}],"barpolar":[{"marker":{"line":{"color":"#E5ECF6","width":0.5},"pattern":{"fillmode":"overlay","size":10,"solidity":0.2}},"type":"barpolar"}],"pie":[{"automargin":true,"type":"pie"}]},"layout":{"autotypenumbers":"strict","colorway":["#636efa","#EF553B","#00cc96","#ab63fa","#FFA15A","#19d3f3","#FF6692","#B6E880","#FF97FF","#FECB52"],"font":{"color":"#2a3f5f"},"hovermode":"closest","hoverlabel":{"align":"left"},"paper_bgcolor":"white","plot_bgcolor":"#E5ECF6","polar":{"bgcolor":"#E5ECF6","angularaxis":{"gridcolor":"white","linecolor":"white","ticks":""},"radialaxis":{"gridcolor":"white","linecolor":"white","ticks":""}},"ternary":{"bgcolor":"#E5ECF6","aaxis":{"gridcolor":"white","linecolor":"white","ticks":""},"baxis":{"gridcolor":"white","linecolor":"white","ticks":""},"caxis":{"gridcolor":"white","linecolor":"white","ticks":""}},"coloraxis":{"colorbar":{"outlinewidth":0,"ticks":""}},"colorscale":{"sequential":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]],"sequentialminus":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]],"diverging":[[0,"#8e0152"],[0.1,"#c51b7d"],[0.2,"#de77ae"],[0.3,"#f1b6da"],[0.4,"#fde0ef"],[0.5,"#f7f7f7"],[0.6,"#e6f5d0"],[0.7,"#b8e186"],[0.8,"#7fbc41"],[0.9,"#4d9221"],[1,"#276419"]]},"xaxis":{"gridcolor":"white","linecolor":"white","ticks":"","title":{"standoff":15},"zerolinecolor":"white","automargin":true,"zerolinewidth":2},"yaxis":{"gridcolor":"white","linecolor":"white","ticks":"","title":{"standoff":15},"zerolinecolor":"white","automargin":true,"zerolinewidth":2},"scene":{"xaxis":{"backgroundcolor":"#E5ECF6","gridcolor":"white","linecolor":"white","showbackground":true,"ticks":"","zerolinecolor":"white","gridwidth":2},"yaxis":{"backgroundcolor":"#E5ECF6","gridcolor":"white","linecolor":"white","showbackground":true,"ticks":"","zerolinecolor":"white","gridwidth":2},"zaxis":{"backgroundcolor":"#E5ECF6","gridcolor":"white","linecolor":"white","showbackground":true,"ticks":"","zerolinecolor":"white","gridwidth":2}},"shapedefaults":{"line":{"color":"#2a3f5f"}},"annotationdefaults":{"arrowcolor":"#2a3f5f","arrowhead":0,"arrowwidth":1},"geo":{"bgcolor":"white","landcolor":"#E5ECF6","subunitcolor":"white","showland":true,"showlakes":true,"lakecolor":"white"},"title":{"x":0.05},"mapbox":{"style":"light"}}},"coloraxis":{"colorbar":{"title":{"text":"CV score (accuracy)"}},"colorscale":[[0.0,"#fde725"],[0.1111111111111111,"#b5de2b"],[0.2222222222222222,"#6ece58"],[0.3333333333333333,"#35b779"],[0.4444444444444444,"#1f9e89"],[0.5555555555555556,"#26828e"],[0.6666666666666666,"#31688e"],[0.7777777777777778,"#3e4989"],[0.8888888888888888,"#482878"],[1.0,"#440154"]]},"legend":{"tracegroupgap":0},"margin":{"t":60},"title":{"text":"Parallel coordinates plot of text classifier pipeline","y":0.99,"x":0.5,"xanchor":"center","yanchor":"top"}},                        {"responsive": true}                    )                };                            </script>        </div>
+<div> <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-AMS-MML_SVG"></script><script type="text/javascript">if (window.MathJax && window.MathJax.Hub && window.MathJax.Hub.Config) {window.MathJax.Hub.Config({SVG: {font: "STIX-Web"}});}</script> <script type="text/javascript">window.PlotlyConfig = {MathJaxConfig: 'local'};</script>
+<script charset="utf-8" src="https://cdn.plot.ly/plotly-2.27.0.min.js"></script> <div class="plotly-graph-div" id="3ab2c9ff-b55c-485c-abc2-2fc191c39f71" style="height:525px; width:100%;"></div> <script type="text/javascript">                                    window.PLOTLYENV=window.PLOTLYENV || {};                                    if (document.getElementById("3ab2c9ff-b55c-485c-abc2-2fc191c39f71")) {                    Plotly.newPlot(                        "3ab2c9ff-b55c-485c-abc2-2fc191c39f71",                        [{"dimensions":[{"label":"max_df","values":[1.0,0.6,0.6,1.0,0.2,0.2,0.2,1.0,0.2,0.4,1.0,0.4,0.6,0.2,0.6,0.8,0.8,0.8,0.4,0.8,0.2,0.4,0.8,0.4,0.6,1.0,0.2,0.8,0.8,1.0,0.2,0.8,0.4,0.6,0.2,1.0,0.6,0.8,0.8,0.2]},{"label":"min_df","values":[3,3,10,10,3,1,1,5,5,10,5,10,3,1,10,3,5,1,5,1,1,5,1,10,1,1,1,1,10,5,5,10,1,3,5,1,3,3,3,1]},{"label":"ngram_range","values":[2,2,1,2,2,2,2,2,2,2,2,2,2,1,2,2,1,1,2,2,1,2,2,2,1,2,2,2,1,1,2,2,2,2,1,1,2,2,2,2]},{"label":"norm","values":[2,2,1,2,2,2,2,1,2,1,2,2,1,1,2,1,1,2,1,1,2,2,2,2,2,1,1,2,1,1,2,2,1,1,2,2,1,2,2,2]},{"label":"alpha","values":[1.0,2.0,-2.0,-3.0,0.0,3.0,0.0,5.0,-3.0,-3.0,-6.0,2.0,2.0,-2.0,-2.0,-3.0,4.0,2.0,0.0,0.0,-6.0,-6.0,0.0,-6.0,0.0,0.0,6.0,4.0,-2.0,-3.0,-2.0,5.0,-6.0,5.0,4.0,4.0,0.0,6.0,-3.0,-1.0]},{"label":"CV score (accuracy)","values":[0.6067319461444309,0.6114035087719298,0.7444308445532435,0.7385624915000679,0.7735890112879098,0.6988916088671291,0.7350537195702435,0.5775873793009656,0.7723922208622331,0.7327281381748946,0.76890384876921,0.6603835169318646,0.599734802121583,0.8156262749898001,0.73625050999592,0.7958044335645316,0.5729294165646674,0.5705902352781178,0.6661906704746362,0.5857405140758873,0.7841425268597851,0.7665714674282607,0.670875832993336,0.7304229566163472,0.7000271997824018,0.5810825513395892,0.6673806609547123,0.5775873793009656,0.7479464164286685,0.7770909832721339,0.7747314021487828,0.5845913232694139,0.8109547123623011,0.599734802121583,0.7280769753841969,0.5624303005575955,0.6195498436012512,0.5752685978512172,0.7829389364885082,0.8132666938664489]},{"label":"CV Score time (s)","values":[0.04194803237915039,0.045652341842651364,0.022548103332519533,0.0366612434387207,0.04148993492126465,0.048067474365234376,0.05126299858093262,0.042722034454345706,0.045366334915161136,0.0421299934387207,0.03895483016967773,0.03916215896606445,0.04349308013916016,0.020218706130981444,0.04037041664123535,0.04589347839355469,0.01938972473144531,0.02333664894104004,0.04247331619262695,0.04695148468017578,0.020855188369750977,0.03975095748901367,0.04642481803894043,0.0388831615447998,0.021924829483032225,0.04779839515686035,0.05022473335266113,0.04788193702697754,0.01984438896179199,0.021079444885253908,0.03946108818054199,0.037605667114257814,0.05126638412475586,0.04320611953735352,0.020479154586791993,0.020340824127197267,0.04054803848266601,0.04240198135375976,0.0420875072479248,0.04964776039123535]}],"domain":{"x":[0.0,1.0],"y":[0.0,1.0]},"line":{"color":[0.6067319461444309,0.6114035087719298,0.7444308445532435,0.7385624915000679,0.7735890112879098,0.6988916088671291,0.7350537195702435,0.5775873793009656,0.7723922208622331,0.7327281381748946,0.76890384876921,0.6603835169318646,0.599734802121583,0.8156262749898001,0.73625050999592,0.7958044335645316,0.5729294165646674,0.5705902352781178,0.6661906704746362,0.5857405140758873,0.7841425268597851,0.7665714674282607,0.670875832993336,0.7304229566163472,0.7000271997824018,0.5810825513395892,0.6673806609547123,0.5775873793009656,0.7479464164286685,0.7770909832721339,0.7747314021487828,0.5845913232694139,0.8109547123623011,0.599734802121583,0.7280769753841969,0.5624303005575955,0.6195498436012512,0.5752685978512172,0.7829389364885082,0.8132666938664489],"coloraxis":"coloraxis"},"name":"","type":"parcoords"}],                        {"template":{"data":{"histogram2dcontour":[{"type":"histogram2dcontour","colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]]}],"choropleth":[{"type":"choropleth","colorbar":{"outlinewidth":0,"ticks":""}}],"histogram2d":[{"type":"histogram2d","colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]]}],"heatmap":[{"type":"heatmap","colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]]}],"heatmapgl":[{"type":"heatmapgl","colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]]}],"contourcarpet":[{"type":"contourcarpet","colorbar":{"outlinewidth":0,"ticks":""}}],"contour":[{"type":"contour","colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]]}],"surface":[{"type":"surface","colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]]}],"mesh3d":[{"type":"mesh3d","colorbar":{"outlinewidth":0,"ticks":""}}],"scatter":[{"fillpattern":{"fillmode":"overlay","size":10,"solidity":0.2},"type":"scatter"}],"parcoords":[{"type":"parcoords","line":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"scatterpolargl":[{"type":"scatterpolargl","marker":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"bar":[{"error_x":{"color":"#2a3f5f"},"error_y":{"color":"#2a3f5f"},"marker":{"line":{"color":"#E5ECF6","width":0.5},"pattern":{"fillmode":"overlay","size":10,"solidity":0.2}},"type":"bar"}],"scattergeo":[{"type":"scattergeo","marker":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"scatterpolar":[{"type":"scatterpolar","marker":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"histogram":[{"marker":{"pattern":{"fillmode":"overlay","size":10,"solidity":0.2}},"type":"histogram"}],"scattergl":[{"type":"scattergl","marker":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"scatter3d":[{"type":"scatter3d","line":{"colorbar":{"outlinewidth":0,"ticks":""}},"marker":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"scattermapbox":[{"type":"scattermapbox","marker":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"scatterternary":[{"type":"scatterternary","marker":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"scattercarpet":[{"type":"scattercarpet","marker":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"carpet":[{"aaxis":{"endlinecolor":"#2a3f5f","gridcolor":"white","linecolor":"white","minorgridcolor":"white","startlinecolor":"#2a3f5f"},"baxis":{"endlinecolor":"#2a3f5f","gridcolor":"white","linecolor":"white","minorgridcolor":"white","startlinecolor":"#2a3f5f"},"type":"carpet"}],"table":[{"cells":{"fill":{"color":"#EBF0F8"},"line":{"color":"white"}},"header":{"fill":{"color":"#C8D4E3"},"line":{"color":"white"}},"type":"table"}],"barpolar":[{"marker":{"line":{"color":"#E5ECF6","width":0.5},"pattern":{"fillmode":"overlay","size":10,"solidity":0.2}},"type":"barpolar"}],"pie":[{"automargin":true,"type":"pie"}]},"layout":{"autotypenumbers":"strict","colorway":["#636efa","#EF553B","#00cc96","#ab63fa","#FFA15A","#19d3f3","#FF6692","#B6E880","#FF97FF","#FECB52"],"font":{"color":"#2a3f5f"},"hovermode":"closest","hoverlabel":{"align":"left"},"paper_bgcolor":"white","plot_bgcolor":"#E5ECF6","polar":{"bgcolor":"#E5ECF6","angularaxis":{"gridcolor":"white","linecolor":"white","ticks":""},"radialaxis":{"gridcolor":"white","linecolor":"white","ticks":""}},"ternary":{"bgcolor":"#E5ECF6","aaxis":{"gridcolor":"white","linecolor":"white","ticks":""},"baxis":{"gridcolor":"white","linecolor":"white","ticks":""},"caxis":{"gridcolor":"white","linecolor":"white","ticks":""}},"coloraxis":{"colorbar":{"outlinewidth":0,"ticks":""}},"colorscale":{"sequential":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]],"sequentialminus":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]],"diverging":[[0,"#8e0152"],[0.1,"#c51b7d"],[0.2,"#de77ae"],[0.3,"#f1b6da"],[0.4,"#fde0ef"],[0.5,"#f7f7f7"],[0.6,"#e6f5d0"],[0.7,"#b8e186"],[0.8,"#7fbc41"],[0.9,"#4d9221"],[1,"#276419"]]},"xaxis":{"gridcolor":"white","linecolor":"white","ticks":"","title":{"standoff":15},"zerolinecolor":"white","automargin":true,"zerolinewidth":2},"yaxis":{"gridcolor":"white","linecolor":"white","ticks":"","title":{"standoff":15},"zerolinecolor":"white","automargin":true,"zerolinewidth":2},"scene":{"xaxis":{"backgroundcolor":"#E5ECF6","gridcolor":"white","linecolor":"white","showbackground":true,"ticks":"","zerolinecolor":"white","gridwidth":2},"yaxis":{"backgroundcolor":"#E5ECF6","gridcolor":"white","linecolor":"white","showbackground":true,"ticks":"","zerolinecolor":"white","gridwidth":2},"zaxis":{"backgroundcolor":"#E5ECF6","gridcolor":"white","linecolor":"white","showbackground":true,"ticks":"","zerolinecolor":"white","gridwidth":2}},"shapedefaults":{"line":{"color":"#2a3f5f"}},"annotationdefaults":{"arrowcolor":"#2a3f5f","arrowhead":0,"arrowwidth":1},"geo":{"bgcolor":"white","landcolor":"#E5ECF6","subunitcolor":"white","showland":true,"showlakes":true,"lakecolor":"white"},"title":{"x":0.05},"mapbox":{"style":"light"}}},"coloraxis":{"colorbar":{"title":{"text":"CV score (accuracy)"}},"colorscale":[[0.0,"#fde725"],[0.1111111111111111,"#b5de2b"],[0.2222222222222222,"#6ece58"],[0.3333333333333333,"#35b779"],[0.4444444444444444,"#1f9e89"],[0.5555555555555556,"#26828e"],[0.6666666666666666,"#31688e"],[0.7777777777777778,"#3e4989"],[0.8888888888888888,"#482878"],[1.0,"#440154"]]},"legend":{"tracegroupgap":0},"margin":{"t":60},"title":{"text":"Parallel coordinates plot of text classifier pipeline","y":0.99,"x":0.5,"xanchor":"center","yanchor":"top"}},                        {"responsive": true}                    )                };                            </script> </div>
 </div>
-<br />
-<br /><p>The parallel coordinates plot displays the values of the hyperparameters on
+<br/>
+<br/><p>The parallel coordinates plot displays the values of the hyperparameters on
 different columns while the performance metric is color coded. It is possible
 to select a range of results by clicking and holding on any axis of the
 parallel coordinate plot. You can then slide (move) the range selection and
@@ -1762,143 +1536,82 @@ overfit and therefore require a stronger regularization to compensate. Having
 less features require less regularization and less scoring time.</p>
 <p>The best accuracy scores are obtained when <code class="docutils literal notranslate"><span class="pre">alpha</span></code> is between <span class="math notranslate nohighlight">\(10^{-6}\)</span>
 and <span class="math notranslate nohighlight">\(10^0\)</span>, regardless of the hyperparameter <code class="docutils literal notranslate"><span class="pre">norm</span></code>.</p>
-<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> (0 minutes 32.011 seconds)</p>
-<div class="sphx-glr-footer sphx-glr-footer-example docutils container" id="sphx-glr-download-auto-examples-model-selection-plot-grid-search-text-feature-extraction-py">
-<div class="binder-badge docutils container">
-<a class="reference external image-reference" href="https://mybinder.org/v2/gh/scikit-learn/scikit-learn/main?urlpath=lab/tree/notebooks/auto_examples/model_selection/plot_grid_search_text_feature_extraction.ipynb"><img alt="Launch binder" src="../../_images/binder_badge_logo22.svg" width="150px" /></a>
-</div>
-<div class="lite-badge docutils container">
-<a class="reference external image-reference" href="../../lite/lab/?path=auto_examples/model_selection/plot_grid_search_text_feature_extraction.ipynb"><img alt="Launch JupyterLite" src="../../_images/jupyterlite_badge_logo22.svg" width="150px" /></a>
-</div>
-<div class="sphx-glr-download sphx-glr-download-jupyter docutils container">
-<p><a class="reference download internal" download="" href="../../_downloads/3992a64e742c874f5df2ba26ae9c049b/plot_grid_search_text_feature_extraction.ipynb"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Jupyter</span> <span class="pre">notebook:</span> <span class="pre">plot_grid_search_text_feature_extraction.ipynb</span></code></a></p>
-</div>
-<div class="sphx-glr-download sphx-glr-download-python docutils container">
-<p><a class="reference download internal" download="" href="../../_downloads/091282551e0bf11fedc96b869dfa8408/plot_grid_search_text_feature_extraction.py"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Python</span> <span class="pre">source</span> <span class="pre">code:</span> <span class="pre">plot_grid_search_text_feature_extraction.py</span></code></a></p>
-</div>
-</div>
+<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> (0 minutes 31.597 seconds)</p>
+
 <p class="rubric">Related examples</p>
-<div class="sphx-glr-thumbnails"><div class="sphx-glr-thumbcontainer" tooltip="This is an example showing how scikit-learn can be used to classify documents by topics using a..."><img alt="" src="../../_images/sphx_glr_plot_document_classification_20newsgroups_thumb.png" />
+<div class="sphx-glr-thumbnails"><div class="sphx-glr-thumbcontainer" tooltip="This is an example showing how scikit-learn can be used to classify documents by topics using a..."><img alt="" src="../../_images/sphx_glr_plot_document_classification_20newsgroups_thumb.png"/>
 <p><a class="reference internal" href="../text/plot_document_classification_20newsgroups.html#sphx-glr-auto-examples-text-plot-document-classification-20newsgroups-py"><span class="std std-ref">Classification of text documents using sparse features</span></a></p>
-  <div class="sphx-glr-thumbnail-title">Classification of text documents using sparse features</div>
-</div><div class="sphx-glr-thumbcontainer" tooltip="In this example we compare the performance of Random Forest (RF) and Histogram Gradient Boostin..."><img alt="" src="../../_images/sphx_glr_plot_forest_hist_grad_boosting_comparison_thumb.png" />
+<div class="sphx-glr-thumbnail-title">Classification of text documents using sparse features</div>
+</div><div class="sphx-glr-thumbcontainer" tooltip="In this example we compare the performance of Random Forest (RF) and Histogram Gradient Boostin..."><img alt="" src="../../_images/sphx_glr_plot_forest_hist_grad_boosting_comparison_thumb.png"/>
 <p><a class="reference internal" href="../ensemble/plot_forest_hist_grad_boosting_comparison.html#sphx-glr-auto-examples-ensemble-plot-forest-hist-grad-boosting-comparison-py"><span class="std std-ref">Comparing Random Forests and Histogram Gradient Boosting models</span></a></p>
-  <div class="sphx-glr-thumbnail-title">Comparing Random Forests and Histogram Gradient Boosting models</div>
-</div><div class="sphx-glr-thumbcontainer" tooltip="This example balances model complexity and cross-validated score by finding a decent accuracy w..."><img alt="" src="../../_images/sphx_glr_plot_grid_search_refit_callable_thumb.png" />
+<div class="sphx-glr-thumbnail-title">Comparing Random Forests and Histogram Gradient Boosting models</div>
+</div><div class="sphx-glr-thumbcontainer" tooltip="This example balances model complexity and cross-validated score by finding a decent accuracy w..."><img alt="" src="../../_images/sphx_glr_plot_grid_search_refit_callable_thumb.png"/>
 <p><a class="reference internal" href="plot_grid_search_refit_callable.html#sphx-glr-auto-examples-model-selection-plot-grid-search-refit-callable-py"><span class="std std-ref">Balance model complexity and cross-validated score</span></a></p>
-  <div class="sphx-glr-thumbnail-title">Balance model complexity and cross-validated score</div>
-</div><div class="sphx-glr-thumbcontainer" tooltip="This example illustrates how to apply different preprocessing and feature extraction pipelines ..."><img alt="" src="../../_images/sphx_glr_plot_column_transformer_mixed_types_thumb.png" />
+<div class="sphx-glr-thumbnail-title">Balance model complexity and cross-validated score</div>
+</div><div class="sphx-glr-thumbcontainer" tooltip="This example illustrates how to apply different preprocessing and feature extraction pipelines ..."><img alt="" src="../../_images/sphx_glr_plot_column_transformer_mixed_types_thumb.png"/>
 <p><a class="reference internal" href="../compose/plot_column_transformer_mixed_types.html#sphx-glr-auto-examples-compose-plot-column-transformer-mixed-types-py"><span class="std std-ref">Column Transformer with Mixed Types</span></a></p>
-  <div class="sphx-glr-thumbnail-title">Column Transformer with Mixed Types</div>
-</div><div class="sphx-glr-thumbcontainer" tooltip="This is an example showing how the scikit-learn API can be used to cluster documents by topics ..."><img alt="" src="../../_images/sphx_glr_plot_document_clustering_thumb.png" />
-<p><a class="reference internal" href="../text/plot_document_clustering.html#sphx-glr-auto-examples-text-plot-document-clustering-py"><span class="std std-ref">Clustering text documents using k-means</span></a></p>
-  <div class="sphx-glr-thumbnail-title">Clustering text documents using k-means</div>
+<div class="sphx-glr-thumbnail-title">Column Transformer with Mixed Types</div>
 </div></div><p class="sphx-glr-signature"><a class="reference external" href="https://sphinx-gallery.github.io">Gallery generated by Sphinx-Gallery</a></p>
 </section>
 </section>
-
-
-                </article>
-              
-              
-              
-                <footer class="bd-footer-article">
-                  <div class="footer-article-items footer-article__inner">
-  
-    <div class="footer-article-item">
+</article>
+<footer class="bd-footer-article">
+<div class="footer-article-items footer-article__inner">
+<div class="footer-article-item">
 <div class="prev-next-area">
-    <a class="left-prev"
-       href="plot_roc_crossval.html"
-       title="previous page">
-      <i class="fa-solid fa-angle-left"></i>
-      <div class="prev-next-info">
-        <p class="prev-next-subtitle">previous</p>
-        <p class="prev-next-title">Receiver Operating Characteristic (ROC) with cross validation</p>
-      </div>
-    </a>
-    <a class="right-next"
-       href="plot_grid_search_stats.html"
-       title="next page">
-      <div class="prev-next-info">
-        <p class="prev-next-subtitle">next</p>
-        <p class="prev-next-title">Statistical comparison of models using grid search</p>
-      </div>
-      <i class="fa-solid fa-angle-right"></i>
-    </a>
-</div></div>
-  
+<a class="left-prev" href="plot_roc_crossval.html" title="previous page">
+<i class="fa-solid fa-angle-left"></i>
+<div class="prev-next-info">
+<p class="prev-next-subtitle">previous</p>
+<p class="prev-next-title">Receiver Operating Characteristic (ROC) with cross validation</p>
 </div>
-                </footer>
-              
-              
-              
-            </div>
-            
-            
-              
-                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
-
-
-  <div class="sidebar-secondary-item">
-<div
-    id="pst-page-navigation-heading-2"
-    class="page-toc tocsection onthispage">
-    <i class="fa-solid fa-list"></i> On this page
+</a>
+<a class="right-next" href="plot_grid_search_stats.html" title="next page">
+<div class="prev-next-info">
+<p class="prev-next-subtitle">next</p>
+<p class="prev-next-title">Statistical comparison of models using grid search</p>
+</div>
+<i class="fa-solid fa-angle-right"></i>
+</a>
+</div></div>
+</div>
+</footer>
+</div>
+<div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+<div class="sidebar-secondary-item">
+<div class="page-toc tocsection onthispage" id="pst-page-navigation-heading-2">
+<i class="fa-solid fa-list"></i> On this page
   </div>
-  <nav class="bd-toc-nav page-toc" aria-labelledby="pst-page-navigation-heading-2">
-    <ul class="visible nav section-nav flex-column">
+<nav aria-labelledby="pst-page-navigation-heading-2" class="bd-toc-nav page-toc">
+<ul class="visible nav section-nav flex-column">
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#data-loading">Data loading</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#pipeline-with-hyperparameter-tuning">Pipeline with hyperparameter tuning</a></li>
 </ul>
-  </nav></div>
+</nav></div>
 
-  <div class="sidebar-secondary-item">
-
-  <div class="tocsection sourcelink">
-    <a href="../../_sources/auto_examples/model_selection/plot_grid_search_text_feature_extraction.rst.txt">
-      <i class="fa-solid fa-file-lines"></i> Show Source
-    </a>
-  </div>
+<div class="sidebar-secondary-item"><div title="plot_grid_search_text_feature_extraction.py"><a download="" href="../../_downloads/091282551e0bf11fedc96b869dfa8408/plot_grid_search_text_feature_extraction.py"><i class="fa-solid fa-download"></i> Download source code</a></div><div title="plot_grid_search_text_feature_extraction.ipynb"><a download="" href="../../_downloads/3992a64e742c874f5df2ba26ae9c049b/plot_grid_search_text_feature_extraction.ipynb"><i class="fa-solid fa-download"></i> Download Jupyter notebook</a></div></div><div class="sidebar-secondary-item"><div><a href="../../lite/lab/?path=auto_examples/model_selection/plot_grid_search_text_feature_extraction.ipynb"><img alt="Launch JupyterLite" height="20" src="../../_images/jupyterlite_badge_logo22.svg"/></a></div><div><a href="https://mybinder.org/v2/gh/scikit-learn/scikit-learn/main?urlpath=lab/tree/notebooks/auto_examples/model_selection/plot_grid_search_text_feature_extraction.ipynb"><img alt="Launch binder" height="20" src="../../_images/binder_badge_logo22.svg"/></a></div></div></div></div>
 </div>
-
-</div></div>
-              
-            
-          </div>
-          <footer class="bd-footer-content">
-            
-          </footer>
-        
-      </main>
-    </div>
-  </div>
-  
-  <!-- Scripts loaded after <body> so the DOM is not blocked -->
-  <script src="../../_static/scripts/bootstrap.js?digest=8d27b9dea8ad943066ae"></script>
+<footer class="bd-footer-content">
+</footer>
+</main>
+</div>
+</div>
+<!-- Scripts loaded after <body> so the DOM is not blocked -->
+<script src="../../_static/scripts/bootstrap.js?digest=8d27b9dea8ad943066ae"></script>
 <script src="../../_static/scripts/pydata-sphinx-theme.js?digest=8d27b9dea8ad943066ae"></script>
-
-  <footer class="bd-footer">
+<footer class="bd-footer">
 <div class="bd-footer__inner bd-page-width">
-  
-    <div class="footer-items__start">
-      
-        <div class="footer-item">
-
-  <p class="copyright">
+<div class="footer-items__start">
+<div class="footer-item">
+<p class="copyright">
     
       © Copyright 2007 - 2024, scikit-learn developers (BSD License).
       <br/>
-    
-  </p>
+</p>
 </div>
-      
-    </div>
-  
-  
-  
 </div>
-
-  </footer>
+</div>
+</footer>
     <script src="https://scikit-learn.org/versionwarning.js"></script>
-  </body>
+</body>
 </html>

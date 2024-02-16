@@ -1,309 +1,205 @@
 
 <!DOCTYPE html>
 
-
-<html lang="en" data-content_root="../../" >
-
-  <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
-<meta property="og:title" content="Lasso model selection: AIC-BIC / cross-validation" />
-<meta property="og:type" content="website" />
-<meta property="og:url" content="https://scikit-learn/stable/auto_examples/linear_model/plot_lasso_model_selection.html" />
-<meta property="og:site_name" content="scikit-learn" />
-<meta property="og:description" content="This example focuses on model selection for Lasso models that are linear models with an L1 penalty for regression problems. Indeed, several strategies can be used to select the value of the regular..." />
-<meta property="og:image" content="https://scikit-learn.org/stable/_static/scikit-learn-logo-small.png" />
-<meta property="og:image:alt" content="scikit-learn" />
-<meta name="description" content="This example focuses on model selection for Lasso models that are linear models with an L1 penalty for regression problems. Indeed, several strategies can be used to select the value of the regular..." />
-
-    <title>Lasso model selection: AIC-BIC / cross-validation &#8212; scikit-learn 1.5.dev0 documentation</title>
-  
-  
-  
-  <script data-cfasync="false">
+<html data-content_root="../../" lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/><meta content="width=device-width, initial-scale=1" name="viewport"/>
+<meta content="Lasso model selection: AIC-BIC / cross-validation" property="og:title"/>
+<meta content="website" property="og:type"/>
+<meta content="https://scikit-learn/stable/auto_examples/linear_model/plot_lasso_model_selection.html" property="og:url"/>
+<meta content="scikit-learn" property="og:site_name"/>
+<meta content="This example focuses on model selection for Lasso models that are linear models with an L1 penalty for regression problems. Indeed, several strategies can be used to select the value of the regular..." property="og:description"/>
+<meta content="https://scikit-learn.org/stable/_static/scikit-learn-logo-small.png" property="og:image"/>
+<meta content="scikit-learn" property="og:image:alt"/>
+<meta content="This example focuses on model selection for Lasso models that are linear models with an L1 penalty for regression problems. Indeed, several strategies can be used to select the value of the regular..." name="description"/>
+<title>Lasso model selection: AIC-BIC / cross-validation — scikit-learn 1.5.dev0 documentation</title>
+<script data-cfasync="false">
     document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
     document.documentElement.dataset.theme = localStorage.getItem("theme") || "light";
   </script>
-  
-  <!-- Loaded before other Sphinx assets -->
-  <link href="../../_static/styles/theme.css?digest=8d27b9dea8ad943066ae" rel="stylesheet" />
-<link href="../../_static/styles/bootstrap.css?digest=8d27b9dea8ad943066ae" rel="stylesheet" />
-<link href="../../_static/styles/pydata-sphinx-theme.css?digest=8d27b9dea8ad943066ae" rel="stylesheet" />
-
-  
-  <link href="../../_static/vendor/fontawesome/6.5.1/css/all.min.css?digest=8d27b9dea8ad943066ae" rel="stylesheet" />
-  <link rel="preload" as="font" type="font/woff2" crossorigin href="../../_static/vendor/fontawesome/6.5.1/webfonts/fa-solid-900.woff2" />
-<link rel="preload" as="font" type="font/woff2" crossorigin href="../../_static/vendor/fontawesome/6.5.1/webfonts/fa-brands-400.woff2" />
-<link rel="preload" as="font" type="font/woff2" crossorigin href="../../_static/vendor/fontawesome/6.5.1/webfonts/fa-regular-400.woff2" />
-
-    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=a746c00c" />
-    <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
-    <link rel="stylesheet" type="text/css" href="../../_static/plot_directive.css" />
-    <link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Vibur" />
-    <link rel="stylesheet" type="text/css" href="../../_static/jupyterlite_sphinx.css?v=f996933d" />
-    <link rel="stylesheet" type="text/css" href="../../_static/sg_gallery.css?v=61a4c737" />
-    <link rel="stylesheet" type="text/css" href="../../_static/sg_gallery-binder.css?v=f4aeca0c" />
-    <link rel="stylesheet" type="text/css" href="../../_static/sg_gallery-dataframe.css?v=2082cf3c" />
-    <link rel="stylesheet" type="text/css" href="../../_static/sg_gallery-rendered-html.css?v=1277b6f3" />
-    <link rel="stylesheet" type="text/css" href="../../_static/design-style.1e8bd061cd6da7fc9cf755528e8ffc24.min.css?v=0a3b3ea7" />
-    <link rel="stylesheet" type="text/css" href="../../_static/styles/colors.css?v=d5680186" />
-    <link rel="stylesheet" type="text/css" href="../../_static/styles/custom.css?v=3e2fb91a" />
-  
-  <!-- Pre-loaded scripts that we'll load fully later -->
-  <link rel="preload" as="script" href="../../_static/scripts/bootstrap.js?digest=8d27b9dea8ad943066ae" />
-<link rel="preload" as="script" href="../../_static/scripts/pydata-sphinx-theme.js?digest=8d27b9dea8ad943066ae" />
-  <script src="../../_static/vendor/fontawesome/6.5.1/js/all.min.js?digest=8d27b9dea8ad943066ae"></script>
-
-    <script src="../../_static/documentation_options.js?v=a2c36881"></script>
-    <script src="../../_static/doctools.js?v=888ff710"></script>
-    <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
-    <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
-    <script src="../../_static/copybutton.js?v=97f0b27d"></script>
-    <script src="../../_static/jupyterlite_sphinx.js?v=f25406b8"></script>
-    <script src="../../_static/design-tabs.js?v=36754332"></script>
-    <script data-domain="scikit-learn.org" defer="defer" src="https://views.scientific-python.org/js/script.js"></script>
-    <script>DOCUMENTATION_OPTIONS.pagename = 'auto_examples/linear_model/plot_lasso_model_selection';</script>
-    <script>
+<!-- Loaded before other Sphinx assets -->
+<link href="../../_static/styles/theme.css?digest=8d27b9dea8ad943066ae" rel="stylesheet"/>
+<link href="../../_static/styles/bootstrap.css?digest=8d27b9dea8ad943066ae" rel="stylesheet"/>
+<link href="../../_static/styles/pydata-sphinx-theme.css?digest=8d27b9dea8ad943066ae" rel="stylesheet"/>
+<link href="../../_static/vendor/fontawesome/6.5.1/css/all.min.css?digest=8d27b9dea8ad943066ae" rel="stylesheet"/>
+<link as="font" crossorigin="" href="../../_static/vendor/fontawesome/6.5.1/webfonts/fa-solid-900.woff2" rel="preload" type="font/woff2"/>
+<link as="font" crossorigin="" href="../../_static/vendor/fontawesome/6.5.1/webfonts/fa-brands-400.woff2" rel="preload" type="font/woff2"/>
+<link as="font" crossorigin="" href="../../_static/vendor/fontawesome/6.5.1/webfonts/fa-regular-400.woff2" rel="preload" type="font/woff2"/>
+<link href="../../_static/pygments.css?v=a746c00c" rel="stylesheet" type="text/css"/>
+<link href="../../_static/copybutton.css?v=76b2166b" rel="stylesheet" type="text/css"/>
+<link href="../../_static/plot_directive.css" rel="stylesheet" type="text/css"/>
+<link href="https://fonts.googleapis.com/css?family=Vibur" rel="stylesheet" type="text/css"/>
+<link href="../../_static/jupyterlite_sphinx.css?v=f996933d" rel="stylesheet" type="text/css"/>
+<link href="../../_static/sg_gallery.css?v=61a4c737" rel="stylesheet" type="text/css"/>
+<link href="../../_static/sg_gallery-binder.css?v=f4aeca0c" rel="stylesheet" type="text/css"/>
+<link href="../../_static/sg_gallery-dataframe.css?v=2082cf3c" rel="stylesheet" type="text/css"/>
+<link href="../../_static/sg_gallery-rendered-html.css?v=1277b6f3" rel="stylesheet" type="text/css"/>
+<link href="../../_static/design-style.1e8bd061cd6da7fc9cf755528e8ffc24.min.css?v=0a3b3ea7" rel="stylesheet" type="text/css"/>
+<link href="../../_static/styles/colors.css?v=d5680186" rel="stylesheet" type="text/css"/>
+<link href="../../_static/styles/custom.css?v=3e2fb91a" rel="stylesheet" type="text/css"/>
+<!-- Pre-loaded scripts that we'll load fully later -->
+<link as="script" href="../../_static/scripts/bootstrap.js?digest=8d27b9dea8ad943066ae" rel="preload"/>
+<link as="script" href="../../_static/scripts/pydata-sphinx-theme.js?digest=8d27b9dea8ad943066ae" rel="preload"/>
+<script src="../../_static/vendor/fontawesome/6.5.1/js/all.min.js?digest=8d27b9dea8ad943066ae"></script>
+<script src="../../_static/documentation_options.js?v=a2c36881"></script>
+<script src="../../_static/doctools.js?v=888ff710"></script>
+<script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+<script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
+<script src="../../_static/copybutton.js?v=97f0b27d"></script>
+<script src="../../_static/jupyterlite_sphinx.js?v=f25406b8"></script>
+<script src="../../_static/design-tabs.js?v=36754332"></script>
+<script data-domain="scikit-learn.org" defer="defer" src="https://views.scientific-python.org/js/script.js"></script>
+<script>DOCUMENTATION_OPTIONS.pagename = 'auto_examples/linear_model/plot_lasso_model_selection';</script>
+<script>
         DOCUMENTATION_OPTIONS.theme_version = '0.15.2';
         DOCUMENTATION_OPTIONS.theme_switcher_json_url = 'https://charlie-xiao.github.io/assets/json/sklearn-versions-test.json';
         DOCUMENTATION_OPTIONS.theme_switcher_version_match = '1.5.dev0';
         DOCUMENTATION_OPTIONS.show_version_warning_banner = true;
         </script>
-    <script src="../../_static/scripts/details-permalink.js?v=b0ed9290"></script>
-    <link rel="icon" href="../../_static/favicon.ico"/>
-    <link rel="author" title="About these documents" href="../../about.html" />
-    <link rel="search" title="Search" href="../../search.html" />
-    <link rel="next" title="Lasso on dense and sparse data" href="plot_lasso_dense_vs_sparse_data.html" />
-    <link rel="prev" title="Lasso model selection via information criteria" href="plot_lasso_lars_ic.html" />
-  <meta name="viewport" content="width=device-width, initial-scale=1"/>
-  <meta name="docsearch:language" content="en"/>
-  </head>
-  
-  
-  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
-
-  
-  
-  <a id="pst-skip-link" class="skip-link" href="#main-content">Skip to main content</a>
-  
-  <div id="pst-scroll-pixel-helper"></div>
-  
-  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
-    <i class="fa-solid fa-arrow-up"></i>
+<script src="../../_static/scripts/details-permalink.js?v=b0ed9290"></script>
+<link href="../../_static/favicon.ico" rel="icon"/>
+<link href="../../about.html" rel="author" title="About these documents"/>
+<link href="../../search.html" rel="search" title="Search"/>
+<link href="plot_lasso_dense_vs_sparse_data.html" rel="next" title="Lasso on dense and sparse data"/>
+<link href="plot_lasso_lars_ic.html" rel="prev" title="Lasso model selection via information criteria"/>
+<meta content="width=device-width, initial-scale=1" name="viewport"/>
+<meta content="en" name="docsearch:language"/>
+</head>
+<body data-bs-root-margin="0px 0px -60%" data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-default-mode="" data-offset="180">
+<a class="skip-link" href="#main-content" id="pst-skip-link">Skip to main content</a>
+<div id="pst-scroll-pixel-helper"></div>
+<button class="btn rounded-pill" id="pst-back-to-top" type="button">
+<i class="fa-solid fa-arrow-up"></i>
     Back to top
   </button>
-
-  
-  <input type="checkbox"
-          class="sidebar-toggle"
-          name="__primary"
-          id="__primary"/>
-  <label class="overlay overlay-primary" for="__primary"></label>
-  
-  <input type="checkbox"
-          class="sidebar-toggle"
-          name="__secondary"
-          id="__secondary"/>
-  <label class="overlay overlay-secondary" for="__secondary"></label>
-  
-  <div class="search-button__wrapper">
-    <div class="search-button__overlay"></div>
-    <div class="search-button__search-container">
-<form class="bd-search d-flex align-items-center"
-      action="../../search.html"
-      method="get">
-  <i class="fa-solid fa-magnifying-glass"></i>
-  <input type="search"
-         class="form-control"
-         name="q"
-         id="search-input"
-         placeholder="Search the docs ..."
-         aria-label="Search the docs ..."
-         autocomplete="off"
-         autocorrect="off"
-         autocapitalize="off"
-         spellcheck="false"/>
-  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+<input class="sidebar-toggle" id="__primary" name="__primary" type="checkbox"/>
+<label class="overlay overlay-primary" for="__primary"></label>
+<input class="sidebar-toggle" id="__secondary" name="__secondary" type="checkbox"/>
+<label class="overlay overlay-secondary" for="__secondary"></label>
+<div class="search-button__wrapper">
+<div class="search-button__overlay"></div>
+<div class="search-button__search-container">
+<form action="../../search.html" class="bd-search d-flex align-items-center" method="get">
+<i class="fa-solid fa-magnifying-glass"></i>
+<input aria-label="Search the docs ..." autocapitalize="off" autocomplete="off" autocorrect="off" class="form-control" id="search-input" name="q" placeholder="Search the docs ..." spellcheck="false" type="search"/>
+<span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
 </form></div>
-  </div>
-  
-    <header class="bd-header navbar navbar-expand-lg bd-navbar">
+</div>
+<header class="bd-header navbar navbar-expand-lg bd-navbar">
 <div class="bd-header__inner bd-page-width">
-  <label class="sidebar-toggle primary-toggle" for="__primary">
-    <span class="fa-solid fa-bars"></span>
-  </label>
-  
-  
-  <div class=" navbar-header-items__start">
-    
-      <div class="navbar-item">
-
-  
-
+<label class="sidebar-toggle primary-toggle" for="__primary">
+<span class="fa-solid fa-bars"></span>
+</label>
+<div class="navbar-header-items__start">
+<div class="navbar-item">
 <a class="navbar-brand logo" href="../../index.html">
-  
-  
-  
-  
-  
-    
-    
-      
-    
-    
-    <img src="../../_static/scikit-learn-logo-small.png" class="logo__image only-light" alt="scikit-learn homepage"/>
-    <script>document.write(`<img src="../../_static/scikit-learn-logo-small.png" class="logo__image only-dark" alt="scikit-learn homepage"/>`);</script>
-  
-  
+<img alt="scikit-learn homepage" class="logo__image only-light" src="../../_static/scikit-learn-logo-small.png"/>
+<script>document.write(`<img src="../../_static/scikit-learn-logo-small.png" class="logo__image only-dark" alt="scikit-learn homepage"/>`);</script>
 </a></div>
-    
-  </div>
-  
-  <div class=" navbar-header-items">
-    
-    <div class="me-auto navbar-header-items__center">
-      
-        <div class="navbar-item">
+</div>
+<div class="navbar-header-items">
+<div class="me-auto navbar-header-items__center">
+<div class="navbar-item">
 <nav class="navbar-nav">
-  <ul class="bd-navbar-elements navbar-nav">
-    
-                    <li class="nav-item">
-                      <a class="nav-link nav-internal" href="../../install.html">
+<ul class="bd-navbar-elements navbar-nav">
+<li class="nav-item">
+<a class="nav-link nav-internal" href="../../install.html">
                         Install
                       </a>
-                    </li>
-                
-
-                    <li class="nav-item">
-                      <a class="nav-link nav-internal" href="../../user_guide.html">
+</li>
+<li class="nav-item">
+<a class="nav-link nav-internal" href="../../user_guide.html">
                         User Guide
                       </a>
-                    </li>
-                
-
-                    <li class="nav-item">
-                      <a class="nav-link nav-internal" href="../../modules/classes.html">
+</li>
+<li class="nav-item">
+<a class="nav-link nav-internal" href="../../modules/classes.html">
                         API
                       </a>
-                    </li>
-                
-
-                    <li class="nav-item current active">
-                      <a class="nav-link nav-internal" href="../index.html">
+</li>
+<li class="nav-item current active">
+<a class="nav-link nav-internal" href="../index.html">
                         Examples
                       </a>
-                    </li>
-                
-
-                    <li class="nav-item">
-                      <a class="nav-link nav-external" href="https://blog.scikit-learn.org/">
+</li>
+<li class="nav-item">
+<a class="nav-link nav-external" href="https://blog.scikit-learn.org/">
                         Community
                       </a>
-                    </li>
-                
-            <li class="nav-item dropdown">
-                <button class="btn dropdown-toggle nav-item" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-controls="pst-nav-more-links">
+</li>
+<li class="nav-item dropdown">
+<button aria-controls="pst-nav-more-links" aria-expanded="false" class="btn dropdown-toggle nav-item" data-bs-toggle="dropdown" type="button">
                     More
                 </button>
-                <ul id="pst-nav-more-links" class="dropdown-menu">
-                    
-                    <li class="nav-item">
-                      <a class="nav-link dropdown-item nav-internal" href="../../getting_started.html">
+<ul class="dropdown-menu" id="pst-nav-more-links">
+<li class="nav-item">
+<a class="nav-link dropdown-item nav-internal" href="../../getting_started.html">
                         Getting Started
                       </a>
-                    </li>
-                
-
-                    <li class="nav-item">
-                      <a class="nav-link dropdown-item nav-internal" href="../../tutorial/index.html">
+</li>
+<li class="nav-item">
+<a class="nav-link dropdown-item nav-internal" href="../../tutorial/index.html">
                         Tutorials
                       </a>
-                    </li>
-                
-
-                    <li class="nav-item">
-                      <a class="nav-link dropdown-item nav-internal" href="../../whats_new.html">
+</li>
+<li class="nav-item">
+<a class="nav-link dropdown-item nav-internal" href="../../whats_new.html">
                         Release History
                       </a>
-                    </li>
-                
-
-                    <li class="nav-item">
-                      <a class="nav-link dropdown-item nav-internal" href="../../glossary.html">
+</li>
+<li class="nav-item">
+<a class="nav-link dropdown-item nav-internal" href="../../glossary.html">
                         Glossary
                       </a>
-                    </li>
-                
-
-                    <li class="nav-item">
-                      <a class="nav-link dropdown-item nav-internal" href="../../developers/index.html">
+</li>
+<li class="nav-item">
+<a class="nav-link dropdown-item nav-internal" href="../../developers/index.html">
                         Development
                       </a>
-                    </li>
-                
-
-                    <li class="nav-item">
-                      <a class="nav-link dropdown-item nav-internal" href="../../faq.html">
+</li>
+<li class="nav-item">
+<a class="nav-link dropdown-item nav-internal" href="../../faq.html">
                         FAQ
                       </a>
-                    </li>
-                
-
-                    <li class="nav-item">
-                      <a class="nav-link dropdown-item nav-internal" href="../../support.html">
+</li>
+<li class="nav-item">
+<a class="nav-link dropdown-item nav-internal" href="../../support.html">
                         Support
                       </a>
-                    </li>
-                
-
-                    <li class="nav-item">
-                      <a class="nav-link dropdown-item nav-internal" href="../../related_projects.html">
+</li>
+<li class="nav-item">
+<a class="nav-link dropdown-item nav-internal" href="../../related_projects.html">
                         Related Projects
                       </a>
-                    </li>
-                
-
-                    <li class="nav-item">
-                      <a class="nav-link dropdown-item nav-internal" href="../../roadmap.html">
+</li>
+<li class="nav-item">
+<a class="nav-link dropdown-item nav-internal" href="../../roadmap.html">
                         Roadmap
                       </a>
-                    </li>
-                
-
-                    <li class="nav-item">
-                      <a class="nav-link dropdown-item nav-internal" href="../../governance.html">
+</li>
+<li class="nav-item">
+<a class="nav-link dropdown-item nav-internal" href="../../governance.html">
                         Governance
                       </a>
-                    </li>
-                
-
-                    <li class="nav-item">
-                      <a class="nav-link dropdown-item nav-internal" href="../../about.html">
+</li>
+<li class="nav-item">
+<a class="nav-link dropdown-item nav-internal" href="../../about.html">
                         About us
                       </a>
-                    </li>
-                
-
-                    <li class="nav-item">
-                      <a class="nav-link dropdown-item nav-external" href="https://scikit-learn.org/dev/versions.html">
+</li>
+<li class="nav-item">
+<a class="nav-link dropdown-item nav-external" href="https://scikit-learn.org/dev/versions.html">
                         Other Versions and Download
                       </a>
-                    </li>
-                
-                </ul>
-            </li>
-            
-  </ul>
+</li>
+</ul>
+</li>
+</ul>
 </nav></div>
-      
-    </div>
-    
-    
-    <div class="navbar-header-items__end">
-      
-        <div class="navbar-item navbar-persistent--container">
-          
-
+</div>
+<div class="navbar-header-items__end">
+<div class="navbar-item navbar-persistent--container">
 <script>
 document.write(`
   <button class="btn btn-sm navbar-btn search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
@@ -311,11 +207,8 @@ document.write(`
   </button>
 `);
 </script>
-        </div>
-      
-      
-        <div class="navbar-item">
-
+</div>
+<div class="navbar-item">
 <script>
 document.write(`
   <button class="btn btn-sm navbar-btn theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
@@ -325,24 +218,13 @@ document.write(`
   </button>
 `);
 </script></div>
-      
-        <div class="navbar-item"><ul class="navbar-icon-links navbar-nav"
-    aria-label="Icon Links">
-        <li class="nav-item">
-          
-          
-          
-          
-          
-          
-          
-          
-          <a href="https://github.com/scikit-learn/scikit-learn" title="GitHub" class="nav-link" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><span><i class="fa-brands fa-square-github fa-lg" aria-hidden="true"></i></span>
-            <span class="sr-only">GitHub</span></a>
-        </li>
+<div class="navbar-item"><ul aria-label="Icon Links" class="navbar-icon-links navbar-nav">
+<li class="nav-item">
+<a class="nav-link" data-bs-placement="bottom" data-bs-toggle="tooltip" href="https://github.com/scikit-learn/scikit-learn" rel="noopener" target="_blank" title="GitHub"><span><i aria-hidden="true" class="fa-brands fa-square-github fa-lg"></i></span>
+<span class="sr-only">GitHub</span></a>
+</li>
 </ul></div>
-      
-        <div class="navbar-item">
+<div class="navbar-item">
 <script>
 document.write(`
   <div class="version-switcher__container dropdown">
@@ -365,14 +247,9 @@ document.write(`
   </div>
 `);
 </script></div>
-      
-    </div>
-    
-  </div>
-  
-  
-    <div class="navbar-persistent--mobile">
-
+</div>
+</div>
+<div class="navbar-persistent--mobile">
 <script>
 document.write(`
   <button class="btn btn-sm navbar-btn search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
@@ -380,174 +257,117 @@ document.write(`
   </button>
 `);
 </script>
-    </div>
-  
-
-  
-    <label class="sidebar-toggle secondary-toggle" for="__secondary" tabindex="0">
-      <span class="fa-solid fa-outdent"></span>
-    </label>
-  
 </div>
-
-    </header>
-  
-
-  <div class="bd-container">
-    <div class="bd-container__inner bd-page-width">
-      
-      
-      
-      <div class="bd-sidebar-primary bd-sidebar">
-        
-
-  
-  <div class="sidebar-header-items sidebar-primary__section">
-    
-    
-      <div class="sidebar-header-items__center">
-        
-          <div class="navbar-item">
+<label class="sidebar-toggle secondary-toggle" for="__secondary" tabindex="0">
+<span class="fa-solid fa-outdent"></span>
+</label>
+</div>
+</header>
+<div class="bd-container">
+<div class="bd-container__inner bd-page-width">
+<div class="bd-sidebar-primary bd-sidebar">
+<div class="sidebar-header-items sidebar-primary__section">
+<div class="sidebar-header-items__center">
+<div class="navbar-item">
 <nav class="navbar-nav">
-  <ul class="bd-navbar-elements navbar-nav">
-    
-                    <li class="nav-item">
-                      <a class="nav-link nav-internal" href="../../install.html">
+<ul class="bd-navbar-elements navbar-nav">
+<li class="nav-item">
+<a class="nav-link nav-internal" href="../../install.html">
                         Install
                       </a>
-                    </li>
-                
-
-                    <li class="nav-item">
-                      <a class="nav-link nav-internal" href="../../user_guide.html">
+</li>
+<li class="nav-item">
+<a class="nav-link nav-internal" href="../../user_guide.html">
                         User Guide
                       </a>
-                    </li>
-                
-
-                    <li class="nav-item">
-                      <a class="nav-link nav-internal" href="../../modules/classes.html">
+</li>
+<li class="nav-item">
+<a class="nav-link nav-internal" href="../../modules/classes.html">
                         API
                       </a>
-                    </li>
-                
-
-                    <li class="nav-item current active">
-                      <a class="nav-link nav-internal" href="../index.html">
+</li>
+<li class="nav-item current active">
+<a class="nav-link nav-internal" href="../index.html">
                         Examples
                       </a>
-                    </li>
-                
-
-                    <li class="nav-item">
-                      <a class="nav-link nav-external" href="https://blog.scikit-learn.org/">
+</li>
+<li class="nav-item">
+<a class="nav-link nav-external" href="https://blog.scikit-learn.org/">
                         Community
                       </a>
-                    </li>
-                
-            <li class="nav-item dropdown">
-                <button class="btn dropdown-toggle nav-item" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-controls="pst-nav-more-links-2">
+</li>
+<li class="nav-item dropdown">
+<button aria-controls="pst-nav-more-links-2" aria-expanded="false" class="btn dropdown-toggle nav-item" data-bs-toggle="dropdown" type="button">
                     More
                 </button>
-                <ul id="pst-nav-more-links-2" class="dropdown-menu">
-                    
-                    <li class="nav-item">
-                      <a class="nav-link dropdown-item nav-internal" href="../../getting_started.html">
+<ul class="dropdown-menu" id="pst-nav-more-links-2">
+<li class="nav-item">
+<a class="nav-link dropdown-item nav-internal" href="../../getting_started.html">
                         Getting Started
                       </a>
-                    </li>
-                
-
-                    <li class="nav-item">
-                      <a class="nav-link dropdown-item nav-internal" href="../../tutorial/index.html">
+</li>
+<li class="nav-item">
+<a class="nav-link dropdown-item nav-internal" href="../../tutorial/index.html">
                         Tutorials
                       </a>
-                    </li>
-                
-
-                    <li class="nav-item">
-                      <a class="nav-link dropdown-item nav-internal" href="../../whats_new.html">
+</li>
+<li class="nav-item">
+<a class="nav-link dropdown-item nav-internal" href="../../whats_new.html">
                         Release History
                       </a>
-                    </li>
-                
-
-                    <li class="nav-item">
-                      <a class="nav-link dropdown-item nav-internal" href="../../glossary.html">
+</li>
+<li class="nav-item">
+<a class="nav-link dropdown-item nav-internal" href="../../glossary.html">
                         Glossary
                       </a>
-                    </li>
-                
-
-                    <li class="nav-item">
-                      <a class="nav-link dropdown-item nav-internal" href="../../developers/index.html">
+</li>
+<li class="nav-item">
+<a class="nav-link dropdown-item nav-internal" href="../../developers/index.html">
                         Development
                       </a>
-                    </li>
-                
-
-                    <li class="nav-item">
-                      <a class="nav-link dropdown-item nav-internal" href="../../faq.html">
+</li>
+<li class="nav-item">
+<a class="nav-link dropdown-item nav-internal" href="../../faq.html">
                         FAQ
                       </a>
-                    </li>
-                
-
-                    <li class="nav-item">
-                      <a class="nav-link dropdown-item nav-internal" href="../../support.html">
+</li>
+<li class="nav-item">
+<a class="nav-link dropdown-item nav-internal" href="../../support.html">
                         Support
                       </a>
-                    </li>
-                
-
-                    <li class="nav-item">
-                      <a class="nav-link dropdown-item nav-internal" href="../../related_projects.html">
+</li>
+<li class="nav-item">
+<a class="nav-link dropdown-item nav-internal" href="../../related_projects.html">
                         Related Projects
                       </a>
-                    </li>
-                
-
-                    <li class="nav-item">
-                      <a class="nav-link dropdown-item nav-internal" href="../../roadmap.html">
+</li>
+<li class="nav-item">
+<a class="nav-link dropdown-item nav-internal" href="../../roadmap.html">
                         Roadmap
                       </a>
-                    </li>
-                
-
-                    <li class="nav-item">
-                      <a class="nav-link dropdown-item nav-internal" href="../../governance.html">
+</li>
+<li class="nav-item">
+<a class="nav-link dropdown-item nav-internal" href="../../governance.html">
                         Governance
                       </a>
-                    </li>
-                
-
-                    <li class="nav-item">
-                      <a class="nav-link dropdown-item nav-internal" href="../../about.html">
+</li>
+<li class="nav-item">
+<a class="nav-link dropdown-item nav-internal" href="../../about.html">
                         About us
                       </a>
-                    </li>
-                
-
-                    <li class="nav-item">
-                      <a class="nav-link dropdown-item nav-external" href="https://scikit-learn.org/dev/versions.html">
+</li>
+<li class="nav-item">
+<a class="nav-link dropdown-item nav-external" href="https://scikit-learn.org/dev/versions.html">
                         Other Versions and Download
                       </a>
-                    </li>
-                
-                </ul>
-            </li>
-            
-  </ul>
+</li>
+</ul>
+</li>
+</ul>
 </nav></div>
-        
-      </div>
-    
-    
-    
-      <div class="sidebar-header-items__end">
-        
-          <div class="navbar-item">
-
+</div>
+<div class="sidebar-header-items__end">
+<div class="navbar-item">
 <script>
 document.write(`
   <button class="btn btn-sm navbar-btn theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
@@ -557,24 +377,13 @@ document.write(`
   </button>
 `);
 </script></div>
-        
-          <div class="navbar-item"><ul class="navbar-icon-links navbar-nav"
-    aria-label="Icon Links">
-        <li class="nav-item">
-          
-          
-          
-          
-          
-          
-          
-          
-          <a href="https://github.com/scikit-learn/scikit-learn" title="GitHub" class="nav-link" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><span><i class="fa-brands fa-square-github fa-lg" aria-hidden="true"></i></span>
-            <span class="sr-only">GitHub</span></a>
-        </li>
+<div class="navbar-item"><ul aria-label="Icon Links" class="navbar-icon-links navbar-nav">
+<li class="nav-item">
+<a class="nav-link" data-bs-placement="bottom" data-bs-toggle="tooltip" href="https://github.com/scikit-learn/scikit-learn" rel="noopener" target="_blank" title="GitHub"><span><i aria-hidden="true" class="fa-brands fa-square-github fa-lg"></i></span>
+<span class="sr-only">GitHub</span></a>
+</li>
 </ul></div>
-        
-          <div class="navbar-item">
+<div class="navbar-item">
 <script>
 document.write(`
   <div class="version-switcher__container dropdown">
@@ -597,17 +406,13 @@ document.write(`
   </div>
 `);
 </script></div>
-        
-      </div>
-    
-  </div>
-  
-    <div class="sidebar-primary-items__start sidebar-primary__section">
-        <div class="sidebar-primary-item">
-<nav class="bd-docs-nav bd-links"
-     aria-label="Section Navigation">
-  <p class="bd-links__title" role="heading" aria-level="1">Section Navigation</p>
-  <div class="bd-toc-item navbar-nav"><ul class="current nav bd-sidenav">
+</div>
+</div>
+<div class="sidebar-primary-items__start sidebar-primary__section">
+<div class="sidebar-primary-item">
+<nav aria-label="Section Navigation" class="bd-docs-nav bd-links">
+<p aria-level="1" class="bd-links__title" role="heading">Section Navigation</p>
+<div class="bd-toc-item navbar-nav"><ul class="current nav bd-sidenav">
 <li class="toctree-l1 has-children"><a class="reference internal" href="../release_highlights/index.html">Release Highlights</a><input class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-1"><i class="fa-solid fa-chevron-down"></i></label><ul>
 <li class="toctree-l2"><a class="reference internal" href="../release_highlights/plot_release_highlights_1_4_0.html">Release Highlights for scikit-learn 1.4</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../release_highlights/plot_release_highlights_1_3_0.html">Release Highlights for scikit-learn 1.3</a></li>
@@ -1001,68 +806,37 @@ document.write(`
 </ul>
 </div>
 </nav></div>
-    </div>
-  
-  
-  <div class="sidebar-primary-items__end sidebar-primary__section">
-  </div>
-  
-  <div id="rtd-footer-container"></div>
-
-
-      </div>
-      
-      <main id="main-content" class="bd-main">
-        
-        
-          <div class="bd-content">
-            <div class="bd-article-container">
-              
-              <div class="bd-header-article">
+</div>
+<div class="sidebar-primary-items__end sidebar-primary__section">
+</div>
+<div id="rtd-footer-container"></div>
+</div>
+<main class="bd-main" id="main-content">
+<div class="bd-content">
+<div class="bd-article-container">
+<div class="bd-header-article">
 <div class="header-article-items header-article__inner">
-  
-    <div class="header-article-items__start">
-      
-        <div class="header-article-item">
-
-
-
+<div class="header-article-items__start">
+<div class="header-article-item">
 <nav aria-label="Breadcrumb">
-  <ul class="bd-breadcrumbs">
-    
-    <li class="breadcrumb-item breadcrumb-home">
-      <a href="../../index.html" class="nav-link" aria-label="Home">
-        <i class="fa-solid fa-home"></i>
-      </a>
-    </li>
-    
-    <li class="breadcrumb-item"><a href="../index.html" class="nav-link">Examples</a></li>
-    
-    
-    <li class="breadcrumb-item"><a href="index.html" class="nav-link">Generalized Linear Models</a></li>
-    
-    <li class="breadcrumb-item active" aria-current="page">Lasso model...</li>
-  </ul>
+<ul class="bd-breadcrumbs">
+<li class="breadcrumb-item breadcrumb-home">
+<a aria-label="Home" class="nav-link" href="../../index.html">
+<i class="fa-solid fa-home"></i>
+</a>
+</li>
+<li class="breadcrumb-item"><a class="nav-link" href="../index.html">Examples</a></li>
+<li class="breadcrumb-item"><a class="nav-link" href="index.html">Generalized Linear Models</a></li>
+<li aria-current="page" class="breadcrumb-item active">Lasso model...</li>
+</ul>
 </nav>
 </div>
-      
-    </div>
-  
-  
 </div>
 </div>
-              
-              
-              
-                
+</div>
 <div id="searchbox"></div>
-                <article class="bd-article">
-                  
-  <div class="sphx-glr-download-link-note admonition note">
-<p class="admonition-title">Note</p>
-<p><a class="reference internal" href="#sphx-glr-download-auto-examples-linear-model-plot-lasso-model-selection-py"><span class="std std-ref">Go to the end</span></a>
-to download the full example code or to run this example in your browser via JupyterLite or Binder</p>
-</div>
+<article class="bd-article">
+
 <section class="sphx-glr-example-title" id="lasso-model-selection-aic-bic-cross-validation">
 <span id="sphx-glr-auto-examples-linear-model-plot-lasso-model-selection-py"></span><h1>Lasso model selection: AIC-BIC / cross-validation<a class="headerlink" href="#lasso-model-selection-aic-bic-cross-validation" title="Link to this heading">#</a></h1>
 <p>This example focuses on model selection for Lasso models that are
@@ -1081,15 +855,15 @@ criterion, namely AIC or BIC.</p>
 <section id="dataset">
 <h2>Dataset<a class="headerlink" href="#dataset" title="Link to this heading">#</a></h2>
 <p>In this example, we will use the diabetes dataset.</p>
-<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">sklearn.datasets</span> <span class="kn">import</span> <a href="../../modules/generated/sklearn.datasets.load_diabetes.html#sklearn.datasets.load_diabetes" title="sklearn.datasets.load_diabetes" class="sphx-glr-backref-module-sklearn-datasets sphx-glr-backref-type-py-function"><span class="n">load_diabetes</span></a>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">sklearn.datasets</span> <span class="kn">import</span> <a class="sphx-glr-backref-module-sklearn-datasets sphx-glr-backref-type-py-function" href="../../modules/generated/sklearn.datasets.load_diabetes.html#sklearn.datasets.load_diabetes" title="sklearn.datasets.load_diabetes"><span class="n">load_diabetes</span></a>
 
-<span class="n">X</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <a href="../../modules/generated/sklearn.datasets.load_diabetes.html#sklearn.datasets.load_diabetes" title="sklearn.datasets.load_diabetes" class="sphx-glr-backref-module-sklearn-datasets sphx-glr-backref-type-py-function"><span class="n">load_diabetes</span></a><span class="p">(</span><span class="n">return_X_y</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">as_frame</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">X</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <a class="sphx-glr-backref-module-sklearn-datasets sphx-glr-backref-type-py-function" href="../../modules/generated/sklearn.datasets.load_diabetes.html#sklearn.datasets.load_diabetes" title="sklearn.datasets.load_diabetes"><span class="n">load_diabetes</span></a><span class="p">(</span><span class="n">return_X_y</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">as_frame</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 <span class="n">X</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
 </pre></div>
 </div>
 <div class="output_subarea output_html rendered_html output_result">
 <div>
-<style scoped>
+<style scoped="">
     .dataframe tbody tr th:only-of-type {
         vertical-align: middle;
     }
@@ -1103,111 +877,111 @@ criterion, namely AIC or BIC.</p>
     }
 </style>
 <table border="1" class="dataframe">
-  <thead>
-    <tr style="text-align: right;">
-      <th></th>
-      <th>age</th>
-      <th>sex</th>
-      <th>bmi</th>
-      <th>bp</th>
-      <th>s1</th>
-      <th>s2</th>
-      <th>s3</th>
-      <th>s4</th>
-      <th>s5</th>
-      <th>s6</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <th>0</th>
-      <td>0.038076</td>
-      <td>0.050680</td>
-      <td>0.061696</td>
-      <td>0.021872</td>
-      <td>-0.044223</td>
-      <td>-0.034821</td>
-      <td>-0.043401</td>
-      <td>-0.002592</td>
-      <td>0.019907</td>
-      <td>-0.017646</td>
-    </tr>
-    <tr>
-      <th>1</th>
-      <td>-0.001882</td>
-      <td>-0.044642</td>
-      <td>-0.051474</td>
-      <td>-0.026328</td>
-      <td>-0.008449</td>
-      <td>-0.019163</td>
-      <td>0.074412</td>
-      <td>-0.039493</td>
-      <td>-0.068332</td>
-      <td>-0.092204</td>
-    </tr>
-    <tr>
-      <th>2</th>
-      <td>0.085299</td>
-      <td>0.050680</td>
-      <td>0.044451</td>
-      <td>-0.005670</td>
-      <td>-0.045599</td>
-      <td>-0.034194</td>
-      <td>-0.032356</td>
-      <td>-0.002592</td>
-      <td>0.002861</td>
-      <td>-0.025930</td>
-    </tr>
-    <tr>
-      <th>3</th>
-      <td>-0.089063</td>
-      <td>-0.044642</td>
-      <td>-0.011595</td>
-      <td>-0.036656</td>
-      <td>0.012191</td>
-      <td>0.024991</td>
-      <td>-0.036038</td>
-      <td>0.034309</td>
-      <td>0.022688</td>
-      <td>-0.009362</td>
-    </tr>
-    <tr>
-      <th>4</th>
-      <td>0.005383</td>
-      <td>-0.044642</td>
-      <td>-0.036385</td>
-      <td>0.021872</td>
-      <td>0.003935</td>
-      <td>0.015596</td>
-      <td>0.008142</td>
-      <td>-0.002592</td>
-      <td>-0.031988</td>
-      <td>-0.046641</td>
-    </tr>
-  </tbody>
+<thead>
+<tr style="text-align: right;">
+<th></th>
+<th>age</th>
+<th>sex</th>
+<th>bmi</th>
+<th>bp</th>
+<th>s1</th>
+<th>s2</th>
+<th>s3</th>
+<th>s4</th>
+<th>s5</th>
+<th>s6</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<th>0</th>
+<td>0.038076</td>
+<td>0.050680</td>
+<td>0.061696</td>
+<td>0.021872</td>
+<td>-0.044223</td>
+<td>-0.034821</td>
+<td>-0.043401</td>
+<td>-0.002592</td>
+<td>0.019907</td>
+<td>-0.017646</td>
+</tr>
+<tr>
+<th>1</th>
+<td>-0.001882</td>
+<td>-0.044642</td>
+<td>-0.051474</td>
+<td>-0.026328</td>
+<td>-0.008449</td>
+<td>-0.019163</td>
+<td>0.074412</td>
+<td>-0.039493</td>
+<td>-0.068332</td>
+<td>-0.092204</td>
+</tr>
+<tr>
+<th>2</th>
+<td>0.085299</td>
+<td>0.050680</td>
+<td>0.044451</td>
+<td>-0.005670</td>
+<td>-0.045599</td>
+<td>-0.034194</td>
+<td>-0.032356</td>
+<td>-0.002592</td>
+<td>0.002861</td>
+<td>-0.025930</td>
+</tr>
+<tr>
+<th>3</th>
+<td>-0.089063</td>
+<td>-0.044642</td>
+<td>-0.011595</td>
+<td>-0.036656</td>
+<td>0.012191</td>
+<td>0.024991</td>
+<td>-0.036038</td>
+<td>0.034309</td>
+<td>0.022688</td>
+<td>-0.009362</td>
+</tr>
+<tr>
+<th>4</th>
+<td>0.005383</td>
+<td>-0.044642</td>
+<td>-0.036385</td>
+<td>0.021872</td>
+<td>0.003935</td>
+<td>0.015596</td>
+<td>0.008142</td>
+<td>-0.002592</td>
+<td>-0.031988</td>
+<td>-0.046641</td>
+</tr>
+</tbody>
 </table>
 </div>
 </div>
-<br />
-<br /><p>In addition, we add some random features to the original data to
+<br/>
+<br/><p>In addition, we add some random features to the original data to
 better illustrate the feature selection performed by the Lasso model.</p>
 <div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 <span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
 
-<span class="n">rng</span> <span class="o">=</span> <a href="https://numpy.org/doc/stable/reference/random/legacy.html#numpy.random.RandomState" title="numpy.random.RandomState" class="sphx-glr-backref-module-numpy-random sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">RandomState</span></a><span class="p">(</span><span class="mi">42</span><span class="p">)</span>
+<span class="n">rng</span> <span class="o">=</span> <a class="sphx-glr-backref-module-numpy-random sphx-glr-backref-type-py-class sphx-glr-backref-instance" href="https://numpy.org/doc/stable/reference/random/legacy.html#numpy.random.RandomState" title="numpy.random.RandomState"><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">RandomState</span></a><span class="p">(</span><span class="mi">42</span><span class="p">)</span>
 <span class="n">n_random_features</span> <span class="o">=</span> <span class="mi">14</span>
-<span class="n">X_random</span> <span class="o">=</span> <a href="https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.DataFrame.html#pandas.DataFrame" title="pandas.DataFrame" class="sphx-glr-backref-module-pandas sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span></a><span class="p">(</span>
+<span class="n">X_random</span> <span class="o">=</span> <a class="sphx-glr-backref-module-pandas sphx-glr-backref-type-py-class sphx-glr-backref-instance" href="https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.DataFrame.html#pandas.DataFrame" title="pandas.DataFrame"><span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span></a><span class="p">(</span>
     <span class="n">rng</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="n">X</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">n_random_features</span><span class="p">),</span>
-    <span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="sa">f</span><span class="s2">&quot;random_</span><span class="si">{</span><span class="n">i</span><span class="si">:</span><span class="s2">02d</span><span class="si">}</span><span class="s2">&quot;</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n_random_features</span><span class="p">)],</span>
+    <span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="sa">f</span><span class="s2">"random_</span><span class="si">{</span><span class="n">i</span><span class="si">:</span><span class="s2">02d</span><span class="si">}</span><span class="s2">"</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n_random_features</span><span class="p">)],</span>
 <span class="p">)</span>
-<span class="n">X</span> <span class="o">=</span> <a href="https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.concat.html#pandas.concat" title="pandas.concat" class="sphx-glr-backref-module-pandas sphx-glr-backref-type-py-function"><span class="n">pd</span><span class="o">.</span><span class="n">concat</span></a><span class="p">([</span><span class="n">X</span><span class="p">,</span> <span class="n">X_random</span><span class="p">],</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">X</span> <span class="o">=</span> <a class="sphx-glr-backref-module-pandas sphx-glr-backref-type-py-function" href="https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.concat.html#pandas.concat" title="pandas.concat"><span class="n">pd</span><span class="o">.</span><span class="n">concat</span></a><span class="p">([</span><span class="n">X</span><span class="p">,</span> <span class="n">X_random</span><span class="p">],</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
 <span class="c1"># Show only a subset of the columns</span>
 <span class="n">X</span><span class="p">[</span><span class="n">X</span><span class="o">.</span><span class="n">columns</span><span class="p">[::</span><span class="mi">3</span><span class="p">]]</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
 </pre></div>
 </div>
 <div class="output_subarea output_html rendered_html output_result">
 <div>
-<style scoped>
+<style scoped="">
     .dataframe tbody tr th:only-of-type {
         vertical-align: middle;
     }
@@ -1221,81 +995,81 @@ better illustrate the feature selection performed by the Lasso model.</p>
     }
 </style>
 <table border="1" class="dataframe">
-  <thead>
-    <tr style="text-align: right;">
-      <th></th>
-      <th>age</th>
-      <th>bp</th>
-      <th>s3</th>
-      <th>s6</th>
-      <th>random_02</th>
-      <th>random_05</th>
-      <th>random_08</th>
-      <th>random_11</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <th>0</th>
-      <td>0.038076</td>
-      <td>0.021872</td>
-      <td>-0.043401</td>
-      <td>-0.017646</td>
-      <td>0.647689</td>
-      <td>-0.234137</td>
-      <td>-0.469474</td>
-      <td>-0.465730</td>
-    </tr>
-    <tr>
-      <th>1</th>
-      <td>-0.001882</td>
-      <td>-0.026328</td>
-      <td>0.074412</td>
-      <td>-0.092204</td>
-      <td>-1.012831</td>
-      <td>-1.412304</td>
-      <td>0.067528</td>
-      <td>0.110923</td>
-    </tr>
-    <tr>
-      <th>2</th>
-      <td>0.085299</td>
-      <td>-0.005670</td>
-      <td>-0.032356</td>
-      <td>-0.025930</td>
-      <td>-0.601707</td>
-      <td>-1.057711</td>
-      <td>0.208864</td>
-      <td>0.196861</td>
-    </tr>
-    <tr>
-      <th>3</th>
-      <td>-0.089063</td>
-      <td>-0.036656</td>
-      <td>-0.036038</td>
-      <td>-0.009362</td>
-      <td>-1.478522</td>
-      <td>1.057122</td>
-      <td>0.324084</td>
-      <td>0.611676</td>
-    </tr>
-    <tr>
-      <th>4</th>
-      <td>0.005383</td>
-      <td>0.021872</td>
-      <td>0.008142</td>
-      <td>-0.046641</td>
-      <td>0.331263</td>
-      <td>-0.185659</td>
-      <td>0.812526</td>
-      <td>1.003533</td>
-    </tr>
-  </tbody>
+<thead>
+<tr style="text-align: right;">
+<th></th>
+<th>age</th>
+<th>bp</th>
+<th>s3</th>
+<th>s6</th>
+<th>random_02</th>
+<th>random_05</th>
+<th>random_08</th>
+<th>random_11</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<th>0</th>
+<td>0.038076</td>
+<td>0.021872</td>
+<td>-0.043401</td>
+<td>-0.017646</td>
+<td>0.647689</td>
+<td>-0.234137</td>
+<td>-0.469474</td>
+<td>-0.465730</td>
+</tr>
+<tr>
+<th>1</th>
+<td>-0.001882</td>
+<td>-0.026328</td>
+<td>0.074412</td>
+<td>-0.092204</td>
+<td>-1.012831</td>
+<td>-1.412304</td>
+<td>0.067528</td>
+<td>0.110923</td>
+</tr>
+<tr>
+<th>2</th>
+<td>0.085299</td>
+<td>-0.005670</td>
+<td>-0.032356</td>
+<td>-0.025930</td>
+<td>-0.601707</td>
+<td>-1.057711</td>
+<td>0.208864</td>
+<td>0.196861</td>
+</tr>
+<tr>
+<th>3</th>
+<td>-0.089063</td>
+<td>-0.036656</td>
+<td>-0.036038</td>
+<td>-0.009362</td>
+<td>-1.478522</td>
+<td>1.057122</td>
+<td>0.324084</td>
+<td>0.611676</td>
+</tr>
+<tr>
+<th>4</th>
+<td>0.005383</td>
+<td>0.021872</td>
+<td>0.008142</td>
+<td>-0.046641</td>
+<td>0.331263</td>
+<td>-0.185659</td>
+<td>0.812526</td>
+<td>1.003533</td>
+</tr>
+</tbody>
 </table>
 </div>
 </div>
-<br />
-<br /></section>
+<br/>
+<br/></section>
 <section id="selecting-lasso-via-an-information-criterion">
 <h2>Selecting Lasso via an information criterion<a class="headerlink" href="#selecting-lasso-via-an-information-criterion" title="Link to this heading">#</a></h2>
 <p><a class="reference internal" href="../../modules/generated/sklearn.linear_model.LassoLarsIC.html#sklearn.linear_model.LassoLarsIC" title="sklearn.linear_model.LassoLarsIC"><code class="xref py py-class docutils literal notranslate"><span class="pre">LassoLarsIC</span></code></a> provides a Lasso estimator that
@@ -1309,35 +1083,35 @@ compare with the cross-validation strategy.</p>
 <p>We will first fit a Lasso model with the AIC criterion.</p>
 <div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">time</span>
 
-<span class="kn">from</span> <span class="nn">sklearn.linear_model</span> <span class="kn">import</span> <a href="../../modules/generated/sklearn.linear_model.LassoLarsIC.html#sklearn.linear_model.LassoLarsIC" title="sklearn.linear_model.LassoLarsIC" class="sphx-glr-backref-module-sklearn-linear_model sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">LassoLarsIC</span></a>
-<span class="kn">from</span> <span class="nn">sklearn.pipeline</span> <span class="kn">import</span> <a href="../../modules/generated/sklearn.pipeline.make_pipeline.html#sklearn.pipeline.make_pipeline" title="sklearn.pipeline.make_pipeline" class="sphx-glr-backref-module-sklearn-pipeline sphx-glr-backref-type-py-function"><span class="n">make_pipeline</span></a>
-<span class="kn">from</span> <span class="nn">sklearn.preprocessing</span> <span class="kn">import</span> <a href="../../modules/generated/sklearn.preprocessing.StandardScaler.html#sklearn.preprocessing.StandardScaler" title="sklearn.preprocessing.StandardScaler" class="sphx-glr-backref-module-sklearn-preprocessing sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">StandardScaler</span></a>
+<span class="kn">from</span> <span class="nn">sklearn.linear_model</span> <span class="kn">import</span> <a class="sphx-glr-backref-module-sklearn-linear_model sphx-glr-backref-type-py-class sphx-glr-backref-instance" href="../../modules/generated/sklearn.linear_model.LassoLarsIC.html#sklearn.linear_model.LassoLarsIC" title="sklearn.linear_model.LassoLarsIC"><span class="n">LassoLarsIC</span></a>
+<span class="kn">from</span> <span class="nn">sklearn.pipeline</span> <span class="kn">import</span> <a class="sphx-glr-backref-module-sklearn-pipeline sphx-glr-backref-type-py-function" href="../../modules/generated/sklearn.pipeline.make_pipeline.html#sklearn.pipeline.make_pipeline" title="sklearn.pipeline.make_pipeline"><span class="n">make_pipeline</span></a>
+<span class="kn">from</span> <span class="nn">sklearn.preprocessing</span> <span class="kn">import</span> <a class="sphx-glr-backref-module-sklearn-preprocessing sphx-glr-backref-type-py-class sphx-glr-backref-instance" href="../../modules/generated/sklearn.preprocessing.StandardScaler.html#sklearn.preprocessing.StandardScaler" title="sklearn.preprocessing.StandardScaler"><span class="n">StandardScaler</span></a>
 
-<span class="n">start_time</span> <span class="o">=</span> <a href="https://docs.python.org/3/library/time.html#time.time" title="time.time" class="sphx-glr-backref-module-time sphx-glr-backref-type-py-function"><span class="n">time</span><span class="o">.</span><span class="n">time</span></a><span class="p">()</span>
-<span class="n">lasso_lars_ic</span> <span class="o">=</span> <a href="../../modules/generated/sklearn.pipeline.make_pipeline.html#sklearn.pipeline.make_pipeline" title="sklearn.pipeline.make_pipeline" class="sphx-glr-backref-module-sklearn-pipeline sphx-glr-backref-type-py-function"><span class="n">make_pipeline</span></a><span class="p">(</span><a href="../../modules/generated/sklearn.preprocessing.StandardScaler.html#sklearn.preprocessing.StandardScaler" title="sklearn.preprocessing.StandardScaler" class="sphx-glr-backref-module-sklearn-preprocessing sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">StandardScaler</span></a><span class="p">(),</span> <a href="../../modules/generated/sklearn.linear_model.LassoLarsIC.html#sklearn.linear_model.LassoLarsIC" title="sklearn.linear_model.LassoLarsIC" class="sphx-glr-backref-module-sklearn-linear_model sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">LassoLarsIC</span></a><span class="p">(</span><span class="n">criterion</span><span class="o">=</span><span class="s2">&quot;aic&quot;</span><span class="p">))</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
-<span class="n">fit_time</span> <span class="o">=</span> <a href="https://docs.python.org/3/library/time.html#time.time" title="time.time" class="sphx-glr-backref-module-time sphx-glr-backref-type-py-function"><span class="n">time</span><span class="o">.</span><span class="n">time</span></a><span class="p">()</span> <span class="o">-</span> <span class="n">start_time</span>
+<span class="n">start_time</span> <span class="o">=</span> <a class="sphx-glr-backref-module-time sphx-glr-backref-type-py-function" href="https://docs.python.org/3/library/time.html#time.time" title="time.time"><span class="n">time</span><span class="o">.</span><span class="n">time</span></a><span class="p">()</span>
+<span class="n">lasso_lars_ic</span> <span class="o">=</span> <a class="sphx-glr-backref-module-sklearn-pipeline sphx-glr-backref-type-py-function" href="../../modules/generated/sklearn.pipeline.make_pipeline.html#sklearn.pipeline.make_pipeline" title="sklearn.pipeline.make_pipeline"><span class="n">make_pipeline</span></a><span class="p">(</span><a class="sphx-glr-backref-module-sklearn-preprocessing sphx-glr-backref-type-py-class sphx-glr-backref-instance" href="../../modules/generated/sklearn.preprocessing.StandardScaler.html#sklearn.preprocessing.StandardScaler" title="sklearn.preprocessing.StandardScaler"><span class="n">StandardScaler</span></a><span class="p">(),</span> <a class="sphx-glr-backref-module-sklearn-linear_model sphx-glr-backref-type-py-class sphx-glr-backref-instance" href="../../modules/generated/sklearn.linear_model.LassoLarsIC.html#sklearn.linear_model.LassoLarsIC" title="sklearn.linear_model.LassoLarsIC"><span class="n">LassoLarsIC</span></a><span class="p">(</span><span class="n">criterion</span><span class="o">=</span><span class="s2">"aic"</span><span class="p">))</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
+<span class="n">fit_time</span> <span class="o">=</span> <a class="sphx-glr-backref-module-time sphx-glr-backref-type-py-function" href="https://docs.python.org/3/library/time.html#time.time" title="time.time"><span class="n">time</span><span class="o">.</span><span class="n">time</span></a><span class="p">()</span> <span class="o">-</span> <span class="n">start_time</span>
 </pre></div>
 </div>
 <p>We store the AIC metric for each value of alpha used during <code class="docutils literal notranslate"><span class="pre">fit</span></code>.</p>
-<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">results</span> <span class="o">=</span> <a href="https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.DataFrame.html#pandas.DataFrame" title="pandas.DataFrame" class="sphx-glr-backref-module-pandas sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span></a><span class="p">(</span>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">results</span> <span class="o">=</span> <a class="sphx-glr-backref-module-pandas sphx-glr-backref-type-py-class sphx-glr-backref-instance" href="https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.DataFrame.html#pandas.DataFrame" title="pandas.DataFrame"><span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span></a><span class="p">(</span>
     <span class="p">{</span>
-        <span class="s2">&quot;alphas&quot;</span><span class="p">:</span> <span class="n">lasso_lars_ic</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">alphas_</span><span class="p">,</span>
-        <span class="s2">&quot;AIC criterion&quot;</span><span class="p">:</span> <span class="n">lasso_lars_ic</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">criterion_</span><span class="p">,</span>
+        <span class="s2">"alphas"</span><span class="p">:</span> <span class="n">lasso_lars_ic</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">alphas_</span><span class="p">,</span>
+        <span class="s2">"AIC criterion"</span><span class="p">:</span> <span class="n">lasso_lars_ic</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">criterion_</span><span class="p">,</span>
     <span class="p">}</span>
-<span class="p">)</span><span class="o">.</span><span class="n">set_index</span><span class="p">(</span><span class="s2">&quot;alphas&quot;</span><span class="p">)</span>
+<span class="p">)</span><span class="o">.</span><span class="n">set_index</span><span class="p">(</span><span class="s2">"alphas"</span><span class="p">)</span>
 <span class="n">alpha_aic</span> <span class="o">=</span> <span class="n">lasso_lars_ic</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">alpha_</span>
 </pre></div>
 </div>
 <p>Now, we perform the same analysis using the BIC criterion.</p>
-<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">lasso_lars_ic</span><span class="o">.</span><span class="n">set_params</span><span class="p">(</span><span class="n">lassolarsic__criterion</span><span class="o">=</span><span class="s2">&quot;bic&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
-<span class="n">results</span><span class="p">[</span><span class="s2">&quot;BIC criterion&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">lasso_lars_ic</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">criterion_</span>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">lasso_lars_ic</span><span class="o">.</span><span class="n">set_params</span><span class="p">(</span><span class="n">lassolarsic__criterion</span><span class="o">=</span><span class="s2">"bic"</span><span class="p">)</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
+<span class="n">results</span><span class="p">[</span><span class="s2">"BIC criterion"</span><span class="p">]</span> <span class="o">=</span> <span class="n">lasso_lars_ic</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">criterion_</span>
 <span class="n">alpha_bic</span> <span class="o">=</span> <span class="n">lasso_lars_ic</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">alpha_</span>
 </pre></div>
 </div>
 <p>We can check which value of <code class="docutils literal notranslate"><span class="pre">alpha</span></code> leads to the minimum AIC and BIC.</p>
 <div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">highlight_min</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
     <span class="n">x_min</span> <span class="o">=</span> <span class="n">x</span><span class="o">.</span><span class="n">min</span><span class="p">()</span>
-    <span class="k">return</span> <span class="p">[</span><span class="s2">&quot;font-weight: bold&quot;</span> <span class="k">if</span> <span class="n">v</span> <span class="o">==</span> <span class="n">x_min</span> <span class="k">else</span> <span class="s2">&quot;&quot;</span> <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">x</span><span class="p">]</span>
+    <span class="k">return</span> <span class="p">[</span><span class="s2">"font-weight: bold"</span> <span class="k">if</span> <span class="n">v</span> <span class="o">==</span> <span class="n">x_min</span> <span class="k">else</span> <span class="s2">""</span> <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">x</span><span class="p">]</span>
 
 
 <span class="n">results</span><span class="o">.</span><span class="n">style</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="n">highlight_min</span><span class="p">)</span>
@@ -1345,195 +1119,194 @@ compare with the cross-validation strategy.</p>
 </div>
 <div class="output_subarea output_html rendered_html output_result">
 <style type="text/css">
-#T_b282c_row6_col1, #T_b282c_row21_col0 {
+#T_bad08_row6_col1, #T_bad08_row21_col0 {
   font-weight: bold;
 }
 </style>
-<table id="T_b282c">
-  <thead>
-    <tr>
-      <th class="blank level0" >&nbsp;</th>
-      <th id="T_b282c_level0_col0" class="col_heading level0 col0" >AIC criterion</th>
-      <th id="T_b282c_level0_col1" class="col_heading level0 col1" >BIC criterion</th>
-    </tr>
-    <tr>
-      <th class="index_name level0" >alphas</th>
-      <th class="blank col0" >&nbsp;</th>
-      <th class="blank col1" >&nbsp;</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <th id="T_b282c_level0_row0" class="row_heading level0 row0" >45.160030</th>
-      <td id="T_b282c_row0_col0" class="data row0 col0" >5244.764779</td>
-      <td id="T_b282c_row0_col1" class="data row0 col1" >5244.764779</td>
-    </tr>
-    <tr>
-      <th id="T_b282c_level0_row1" class="row_heading level0 row1" >42.300343</th>
-      <td id="T_b282c_row1_col0" class="data row1 col0" >5208.250639</td>
-      <td id="T_b282c_row1_col1" class="data row1 col1" >5212.341949</td>
-    </tr>
-    <tr>
-      <th id="T_b282c_level0_row2" class="row_heading level0 row2" >21.542052</th>
-      <td id="T_b282c_row2_col0" class="data row2 col0" >4928.018900</td>
-      <td id="T_b282c_row2_col1" class="data row2 col1" >4936.201520</td>
-    </tr>
-    <tr>
-      <th id="T_b282c_level0_row3" class="row_heading level0 row3" >15.034077</th>
-      <td id="T_b282c_row3_col0" class="data row3 col0" >4869.678359</td>
-      <td id="T_b282c_row3_col1" class="data row3 col1" >4881.952289</td>
-    </tr>
-    <tr>
-      <th id="T_b282c_level0_row4" class="row_heading level0 row4" >6.189631</th>
-      <td id="T_b282c_row4_col0" class="data row4 col0" >4815.437362</td>
-      <td id="T_b282c_row4_col1" class="data row4 col1" >4831.802601</td>
-    </tr>
-    <tr>
-      <th id="T_b282c_level0_row5" class="row_heading level0 row5" >5.329616</th>
-      <td id="T_b282c_row5_col0" class="data row5 col0" >4810.423641</td>
-      <td id="T_b282c_row5_col1" class="data row5 col1" >4830.880191</td>
-    </tr>
-    <tr>
-      <th id="T_b282c_level0_row6" class="row_heading level0 row6" >4.306012</th>
-      <td id="T_b282c_row6_col0" class="data row6 col0" >4803.573491</td>
-      <td id="T_b282c_row6_col1" class="data row6 col1" >4828.121351</td>
-    </tr>
-    <tr>
-      <th id="T_b282c_level0_row7" class="row_heading level0 row7" >4.124225</th>
-      <td id="T_b282c_row7_col0" class="data row7 col0" >4804.126502</td>
-      <td id="T_b282c_row7_col1" class="data row7 col1" >4832.765671</td>
-    </tr>
-    <tr>
-      <th id="T_b282c_level0_row8" class="row_heading level0 row8" >3.820705</th>
-      <td id="T_b282c_row8_col0" class="data row8 col0" >4803.621645</td>
-      <td id="T_b282c_row8_col1" class="data row8 col1" >4836.352124</td>
-    </tr>
-    <tr>
-      <th id="T_b282c_level0_row9" class="row_heading level0 row9" >3.750389</th>
-      <td id="T_b282c_row9_col0" class="data row9 col0" >4805.012521</td>
-      <td id="T_b282c_row9_col1" class="data row9 col1" >4841.834310</td>
-    </tr>
-    <tr>
-      <th id="T_b282c_level0_row10" class="row_heading level0 row10" >3.570655</th>
-      <td id="T_b282c_row10_col0" class="data row10 col0" >4805.290075</td>
-      <td id="T_b282c_row10_col1" class="data row10 col1" >4846.203174</td>
-    </tr>
-    <tr>
-      <th id="T_b282c_level0_row11" class="row_heading level0 row11" >3.550213</th>
-      <td id="T_b282c_row11_col0" class="data row11 col0" >4807.075887</td>
-      <td id="T_b282c_row11_col1" class="data row11 col1" >4852.080295</td>
-    </tr>
-    <tr>
-      <th id="T_b282c_level0_row12" class="row_heading level0 row12" >3.358295</th>
-      <td id="T_b282c_row12_col0" class="data row12 col0" >4806.878051</td>
-      <td id="T_b282c_row12_col1" class="data row12 col1" >4855.973770</td>
-    </tr>
-    <tr>
-      <th id="T_b282c_level0_row13" class="row_heading level0 row13" >3.259297</th>
-      <td id="T_b282c_row13_col0" class="data row13 col0" >4807.706026</td>
-      <td id="T_b282c_row13_col1" class="data row13 col1" >4860.893055</td>
-    </tr>
-    <tr>
-      <th id="T_b282c_level0_row14" class="row_heading level0 row14" >3.237703</th>
-      <td id="T_b282c_row14_col0" class="data row14 col0" >4809.440409</td>
-      <td id="T_b282c_row14_col1" class="data row14 col1" >4866.718747</td>
-    </tr>
-    <tr>
-      <th id="T_b282c_level0_row15" class="row_heading level0 row15" >2.850031</th>
-      <td id="T_b282c_row15_col0" class="data row15 col0" >4805.989341</td>
-      <td id="T_b282c_row15_col1" class="data row15 col1" >4867.358990</td>
-    </tr>
-    <tr>
-      <th id="T_b282c_level0_row16" class="row_heading level0 row16" >2.384338</th>
-      <td id="T_b282c_row16_col0" class="data row16 col0" >4801.702266</td>
-      <td id="T_b282c_row16_col1" class="data row16 col1" >4867.163224</td>
-    </tr>
-    <tr>
-      <th id="T_b282c_level0_row17" class="row_heading level0 row17" >2.296575</th>
-      <td id="T_b282c_row17_col0" class="data row17 col0" >4802.594754</td>
-      <td id="T_b282c_row17_col1" class="data row17 col1" >4872.147022</td>
-    </tr>
-    <tr>
-      <th id="T_b282c_level0_row18" class="row_heading level0 row18" >2.031555</th>
-      <td id="T_b282c_row18_col0" class="data row18 col0" >4801.236720</td>
-      <td id="T_b282c_row18_col1" class="data row18 col1" >4874.880298</td>
-    </tr>
-    <tr>
-      <th id="T_b282c_level0_row19" class="row_heading level0 row19" >1.618263</th>
-      <td id="T_b282c_row19_col0" class="data row19 col0" >4798.484109</td>
-      <td id="T_b282c_row19_col1" class="data row19 col1" >4876.218997</td>
-    </tr>
-    <tr>
-      <th id="T_b282c_level0_row20" class="row_heading level0 row20" >1.526599</th>
-      <td id="T_b282c_row20_col0" class="data row20 col0" >4799.543841</td>
-      <td id="T_b282c_row20_col1" class="data row20 col1" >4881.370039</td>
-    </tr>
-    <tr>
-      <th id="T_b282c_level0_row21" class="row_heading level0 row21" >0.586798</th>
-      <td id="T_b282c_row21_col0" class="data row21 col0" >4794.238744</td>
-      <td id="T_b282c_row21_col1" class="data row21 col1" >4880.156252</td>
-    </tr>
-    <tr>
-      <th id="T_b282c_level0_row22" class="row_heading level0 row22" >0.445978</th>
-      <td id="T_b282c_row22_col0" class="data row22 col0" >4795.589715</td>
-      <td id="T_b282c_row22_col1" class="data row22 col1" >4885.598533</td>
-    </tr>
-    <tr>
-      <th id="T_b282c_level0_row23" class="row_heading level0 row23" >0.259031</th>
-      <td id="T_b282c_row23_col0" class="data row23 col0" >4796.966981</td>
-      <td id="T_b282c_row23_col1" class="data row23 col1" >4891.067109</td>
-    </tr>
-    <tr>
-      <th id="T_b282c_level0_row24" class="row_heading level0 row24" >0.032179</th>
-      <td id="T_b282c_row24_col0" class="data row24 col0" >4796.662409</td>
-      <td id="T_b282c_row24_col1" class="data row24 col1" >4894.853846</td>
-    </tr>
-    <tr>
-      <th id="T_b282c_level0_row25" class="row_heading level0 row25" >0.019069</th>
-      <td id="T_b282c_row25_col0" class="data row25 col0" >4794.652739</td>
-      <td id="T_b282c_row25_col1" class="data row25 col1" >4888.752867</td>
-    </tr>
-    <tr>
-      <th id="T_b282c_level0_row26" class="row_heading level0 row26" >0.000000</th>
-      <td id="T_b282c_row26_col0" class="data row26 col0" >4796.626286</td>
-      <td id="T_b282c_row26_col1" class="data row26 col1" >4894.817724</td>
-    </tr>
-  </tbody>
+<table id="T_bad08">
+<thead>
+<tr>
+<th class="blank level0"> </th>
+<th class="col_heading level0 col0" id="T_bad08_level0_col0">AIC criterion</th>
+<th class="col_heading level0 col1" id="T_bad08_level0_col1">BIC criterion</th>
+</tr>
+<tr>
+<th class="index_name level0">alphas</th>
+<th class="blank col0"> </th>
+<th class="blank col1"> </th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<th class="row_heading level0 row0" id="T_bad08_level0_row0">45.160030</th>
+<td class="data row0 col0" id="T_bad08_row0_col0">5244.764779</td>
+<td class="data row0 col1" id="T_bad08_row0_col1">5244.764779</td>
+</tr>
+<tr>
+<th class="row_heading level0 row1" id="T_bad08_level0_row1">42.300343</th>
+<td class="data row1 col0" id="T_bad08_row1_col0">5208.250639</td>
+<td class="data row1 col1" id="T_bad08_row1_col1">5212.341949</td>
+</tr>
+<tr>
+<th class="row_heading level0 row2" id="T_bad08_level0_row2">21.542052</th>
+<td class="data row2 col0" id="T_bad08_row2_col0">4928.018900</td>
+<td class="data row2 col1" id="T_bad08_row2_col1">4936.201520</td>
+</tr>
+<tr>
+<th class="row_heading level0 row3" id="T_bad08_level0_row3">15.034077</th>
+<td class="data row3 col0" id="T_bad08_row3_col0">4869.678359</td>
+<td class="data row3 col1" id="T_bad08_row3_col1">4881.952289</td>
+</tr>
+<tr>
+<th class="row_heading level0 row4" id="T_bad08_level0_row4">6.189631</th>
+<td class="data row4 col0" id="T_bad08_row4_col0">4815.437362</td>
+<td class="data row4 col1" id="T_bad08_row4_col1">4831.802601</td>
+</tr>
+<tr>
+<th class="row_heading level0 row5" id="T_bad08_level0_row5">5.329616</th>
+<td class="data row5 col0" id="T_bad08_row5_col0">4810.423641</td>
+<td class="data row5 col1" id="T_bad08_row5_col1">4830.880191</td>
+</tr>
+<tr>
+<th class="row_heading level0 row6" id="T_bad08_level0_row6">4.306012</th>
+<td class="data row6 col0" id="T_bad08_row6_col0">4803.573491</td>
+<td class="data row6 col1" id="T_bad08_row6_col1">4828.121351</td>
+</tr>
+<tr>
+<th class="row_heading level0 row7" id="T_bad08_level0_row7">4.124225</th>
+<td class="data row7 col0" id="T_bad08_row7_col0">4804.126502</td>
+<td class="data row7 col1" id="T_bad08_row7_col1">4832.765671</td>
+</tr>
+<tr>
+<th class="row_heading level0 row8" id="T_bad08_level0_row8">3.820705</th>
+<td class="data row8 col0" id="T_bad08_row8_col0">4803.621645</td>
+<td class="data row8 col1" id="T_bad08_row8_col1">4836.352124</td>
+</tr>
+<tr>
+<th class="row_heading level0 row9" id="T_bad08_level0_row9">3.750389</th>
+<td class="data row9 col0" id="T_bad08_row9_col0">4805.012521</td>
+<td class="data row9 col1" id="T_bad08_row9_col1">4841.834310</td>
+</tr>
+<tr>
+<th class="row_heading level0 row10" id="T_bad08_level0_row10">3.570655</th>
+<td class="data row10 col0" id="T_bad08_row10_col0">4805.290075</td>
+<td class="data row10 col1" id="T_bad08_row10_col1">4846.203174</td>
+</tr>
+<tr>
+<th class="row_heading level0 row11" id="T_bad08_level0_row11">3.550213</th>
+<td class="data row11 col0" id="T_bad08_row11_col0">4807.075887</td>
+<td class="data row11 col1" id="T_bad08_row11_col1">4852.080295</td>
+</tr>
+<tr>
+<th class="row_heading level0 row12" id="T_bad08_level0_row12">3.358295</th>
+<td class="data row12 col0" id="T_bad08_row12_col0">4806.878051</td>
+<td class="data row12 col1" id="T_bad08_row12_col1">4855.973770</td>
+</tr>
+<tr>
+<th class="row_heading level0 row13" id="T_bad08_level0_row13">3.259297</th>
+<td class="data row13 col0" id="T_bad08_row13_col0">4807.706026</td>
+<td class="data row13 col1" id="T_bad08_row13_col1">4860.893055</td>
+</tr>
+<tr>
+<th class="row_heading level0 row14" id="T_bad08_level0_row14">3.237703</th>
+<td class="data row14 col0" id="T_bad08_row14_col0">4809.440409</td>
+<td class="data row14 col1" id="T_bad08_row14_col1">4866.718747</td>
+</tr>
+<tr>
+<th class="row_heading level0 row15" id="T_bad08_level0_row15">2.850031</th>
+<td class="data row15 col0" id="T_bad08_row15_col0">4805.989341</td>
+<td class="data row15 col1" id="T_bad08_row15_col1">4867.358990</td>
+</tr>
+<tr>
+<th class="row_heading level0 row16" id="T_bad08_level0_row16">2.384338</th>
+<td class="data row16 col0" id="T_bad08_row16_col0">4801.702266</td>
+<td class="data row16 col1" id="T_bad08_row16_col1">4867.163224</td>
+</tr>
+<tr>
+<th class="row_heading level0 row17" id="T_bad08_level0_row17">2.296575</th>
+<td class="data row17 col0" id="T_bad08_row17_col0">4802.594754</td>
+<td class="data row17 col1" id="T_bad08_row17_col1">4872.147022</td>
+</tr>
+<tr>
+<th class="row_heading level0 row18" id="T_bad08_level0_row18">2.031555</th>
+<td class="data row18 col0" id="T_bad08_row18_col0">4801.236720</td>
+<td class="data row18 col1" id="T_bad08_row18_col1">4874.880298</td>
+</tr>
+<tr>
+<th class="row_heading level0 row19" id="T_bad08_level0_row19">1.618263</th>
+<td class="data row19 col0" id="T_bad08_row19_col0">4798.484109</td>
+<td class="data row19 col1" id="T_bad08_row19_col1">4876.218997</td>
+</tr>
+<tr>
+<th class="row_heading level0 row20" id="T_bad08_level0_row20">1.526599</th>
+<td class="data row20 col0" id="T_bad08_row20_col0">4799.543841</td>
+<td class="data row20 col1" id="T_bad08_row20_col1">4881.370039</td>
+</tr>
+<tr>
+<th class="row_heading level0 row21" id="T_bad08_level0_row21">0.586798</th>
+<td class="data row21 col0" id="T_bad08_row21_col0">4794.238744</td>
+<td class="data row21 col1" id="T_bad08_row21_col1">4880.156252</td>
+</tr>
+<tr>
+<th class="row_heading level0 row22" id="T_bad08_level0_row22">0.445978</th>
+<td class="data row22 col0" id="T_bad08_row22_col0">4795.589715</td>
+<td class="data row22 col1" id="T_bad08_row22_col1">4885.598533</td>
+</tr>
+<tr>
+<th class="row_heading level0 row23" id="T_bad08_level0_row23">0.259031</th>
+<td class="data row23 col0" id="T_bad08_row23_col0">4796.966981</td>
+<td class="data row23 col1" id="T_bad08_row23_col1">4891.067109</td>
+</tr>
+<tr>
+<th class="row_heading level0 row24" id="T_bad08_level0_row24">0.032179</th>
+<td class="data row24 col0" id="T_bad08_row24_col0">4796.662409</td>
+<td class="data row24 col1" id="T_bad08_row24_col1">4894.853846</td>
+</tr>
+<tr>
+<th class="row_heading level0 row25" id="T_bad08_level0_row25">0.019069</th>
+<td class="data row25 col0" id="T_bad08_row25_col0">4794.652739</td>
+<td class="data row25 col1" id="T_bad08_row25_col1">4888.752867</td>
+</tr>
+<tr>
+<th class="row_heading level0 row26" id="T_bad08_level0_row26">0.000000</th>
+<td class="data row26 col0" id="T_bad08_row26_col0">4796.626286</td>
+<td class="data row26 col1" id="T_bad08_row26_col1">4894.817724</td>
+</tr>
+</tbody>
 </table>
-
 </div>
-<br />
-<br /><p>Finally, we can plot the AIC and BIC values for the different alpha values.
+<br/>
+<br/><p>Finally, we can plot the AIC and BIC values for the different alpha values.
 The vertical lines in the plot correspond to the alpha chosen for each
 criterion. The selected alpha corresponds to the minimum of the AIC or BIC
 criterion.</p>
 <div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">ax</span> <span class="o">=</span> <span class="n">results</span><span class="o">.</span><span class="n">plot</span><span class="p">()</span>
 <span class="n">ax</span><span class="o">.</span><span class="n">vlines</span><span class="p">(</span>
     <span class="n">alpha_aic</span><span class="p">,</span>
-    <span class="n">results</span><span class="p">[</span><span class="s2">&quot;AIC criterion&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">min</span><span class="p">(),</span>
-    <span class="n">results</span><span class="p">[</span><span class="s2">&quot;AIC criterion&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">max</span><span class="p">(),</span>
-    <span class="n">label</span><span class="o">=</span><span class="s2">&quot;alpha: AIC estimate&quot;</span><span class="p">,</span>
-    <span class="n">linestyles</span><span class="o">=</span><span class="s2">&quot;--&quot;</span><span class="p">,</span>
-    <span class="n">color</span><span class="o">=</span><span class="s2">&quot;tab:blue&quot;</span><span class="p">,</span>
+    <span class="n">results</span><span class="p">[</span><span class="s2">"AIC criterion"</span><span class="p">]</span><span class="o">.</span><span class="n">min</span><span class="p">(),</span>
+    <span class="n">results</span><span class="p">[</span><span class="s2">"AIC criterion"</span><span class="p">]</span><span class="o">.</span><span class="n">max</span><span class="p">(),</span>
+    <span class="n">label</span><span class="o">=</span><span class="s2">"alpha: AIC estimate"</span><span class="p">,</span>
+    <span class="n">linestyles</span><span class="o">=</span><span class="s2">"--"</span><span class="p">,</span>
+    <span class="n">color</span><span class="o">=</span><span class="s2">"tab:blue"</span><span class="p">,</span>
 <span class="p">)</span>
 <span class="n">ax</span><span class="o">.</span><span class="n">vlines</span><span class="p">(</span>
     <span class="n">alpha_bic</span><span class="p">,</span>
-    <span class="n">results</span><span class="p">[</span><span class="s2">&quot;BIC criterion&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">min</span><span class="p">(),</span>
-    <span class="n">results</span><span class="p">[</span><span class="s2">&quot;BIC criterion&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">max</span><span class="p">(),</span>
-    <span class="n">label</span><span class="o">=</span><span class="s2">&quot;alpha: BIC estimate&quot;</span><span class="p">,</span>
-    <span class="n">linestyle</span><span class="o">=</span><span class="s2">&quot;--&quot;</span><span class="p">,</span>
-    <span class="n">color</span><span class="o">=</span><span class="s2">&quot;tab:orange&quot;</span><span class="p">,</span>
+    <span class="n">results</span><span class="p">[</span><span class="s2">"BIC criterion"</span><span class="p">]</span><span class="o">.</span><span class="n">min</span><span class="p">(),</span>
+    <span class="n">results</span><span class="p">[</span><span class="s2">"BIC criterion"</span><span class="p">]</span><span class="o">.</span><span class="n">max</span><span class="p">(),</span>
+    <span class="n">label</span><span class="o">=</span><span class="s2">"alpha: BIC estimate"</span><span class="p">,</span>
+    <span class="n">linestyle</span><span class="o">=</span><span class="s2">"--"</span><span class="p">,</span>
+    <span class="n">color</span><span class="o">=</span><span class="s2">"tab:orange"</span><span class="p">,</span>
 <span class="p">)</span>
-<span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;$\alpha$&quot;</span><span class="p">)</span>
-<span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s2">&quot;criterion&quot;</span><span class="p">)</span>
-<span class="n">ax</span><span class="o">.</span><span class="n">set_xscale</span><span class="p">(</span><span class="s2">&quot;log&quot;</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="sa">r</span><span class="s2">"$\alpha$"</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s2">"criterion"</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_xscale</span><span class="p">(</span><span class="s2">"log"</span><span class="p">)</span>
 <span class="n">ax</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
 <span class="n">_</span> <span class="o">=</span> <span class="n">ax</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span>
-    <span class="sa">f</span><span class="s2">&quot;Information-criterion for model selection (training time </span><span class="si">{</span><span class="n">fit_time</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2">s)&quot;</span>
+    <span class="sa">f</span><span class="s2">"Information-criterion for model selection (training time </span><span class="si">{</span><span class="n">fit_time</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2">s)"</span>
 <span class="p">)</span>
 </pre></div>
 </div>
-<img src="../../_images/sphx_glr_plot_lasso_model_selection_001.png" srcset="../../_images/sphx_glr_plot_lasso_model_selection_001.png" alt="Information-criterion for model selection (training time 0.01s)" class = "sphx-glr-single-img"/><p>Model selection with an information-criterion is very fast. It relies on
+<img alt="Information-criterion for model selection (training time 0.01s)" class="sphx-glr-single-img" src="../../_images/sphx_glr_plot_lasso_model_selection_001.png" srcset="../../_images/sphx_glr_plot_lasso_model_selection_001.png"/><p>Model selection with an information-criterion is very fast. It relies on
 computing the criterion on the in-sample set provided to <code class="docutils literal notranslate"><span class="pre">fit</span></code>. Both criteria
 estimate the model generalization error based on the training set error and
 penalize this overly optimistic error. However, this penalty relies on a
@@ -1559,67 +1332,67 @@ algorithms, we will use a 20-fold cross-validation strategy.</p>
 <h3>Lasso via coordinate descent<a class="headerlink" href="#lasso-via-coordinate-descent" title="Link to this heading">#</a></h3>
 <p>Let’s start by making the hyperparameter tuning using
 <a class="reference internal" href="../../modules/generated/sklearn.linear_model.LassoCV.html#sklearn.linear_model.LassoCV" title="sklearn.linear_model.LassoCV"><code class="xref py py-class docutils literal notranslate"><span class="pre">LassoCV</span></code></a>.</p>
-<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">sklearn.linear_model</span> <span class="kn">import</span> <a href="../../modules/generated/sklearn.linear_model.LassoCV.html#sklearn.linear_model.LassoCV" title="sklearn.linear_model.LassoCV" class="sphx-glr-backref-module-sklearn-linear_model sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">LassoCV</span></a>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">sklearn.linear_model</span> <span class="kn">import</span> <a class="sphx-glr-backref-module-sklearn-linear_model sphx-glr-backref-type-py-class sphx-glr-backref-instance" href="../../modules/generated/sklearn.linear_model.LassoCV.html#sklearn.linear_model.LassoCV" title="sklearn.linear_model.LassoCV"><span class="n">LassoCV</span></a>
 
-<span class="n">start_time</span> <span class="o">=</span> <a href="https://docs.python.org/3/library/time.html#time.time" title="time.time" class="sphx-glr-backref-module-time sphx-glr-backref-type-py-function"><span class="n">time</span><span class="o">.</span><span class="n">time</span></a><span class="p">()</span>
-<span class="n">model</span> <span class="o">=</span> <a href="../../modules/generated/sklearn.pipeline.make_pipeline.html#sklearn.pipeline.make_pipeline" title="sklearn.pipeline.make_pipeline" class="sphx-glr-backref-module-sklearn-pipeline sphx-glr-backref-type-py-function"><span class="n">make_pipeline</span></a><span class="p">(</span><a href="../../modules/generated/sklearn.preprocessing.StandardScaler.html#sklearn.preprocessing.StandardScaler" title="sklearn.preprocessing.StandardScaler" class="sphx-glr-backref-module-sklearn-preprocessing sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">StandardScaler</span></a><span class="p">(),</span> <a href="../../modules/generated/sklearn.linear_model.LassoCV.html#sklearn.linear_model.LassoCV" title="sklearn.linear_model.LassoCV" class="sphx-glr-backref-module-sklearn-linear_model sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">LassoCV</span></a><span class="p">(</span><span class="n">cv</span><span class="o">=</span><span class="mi">20</span><span class="p">))</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
-<span class="n">fit_time</span> <span class="o">=</span> <a href="https://docs.python.org/3/library/time.html#time.time" title="time.time" class="sphx-glr-backref-module-time sphx-glr-backref-type-py-function"><span class="n">time</span><span class="o">.</span><span class="n">time</span></a><span class="p">()</span> <span class="o">-</span> <span class="n">start_time</span>
+<span class="n">start_time</span> <span class="o">=</span> <a class="sphx-glr-backref-module-time sphx-glr-backref-type-py-function" href="https://docs.python.org/3/library/time.html#time.time" title="time.time"><span class="n">time</span><span class="o">.</span><span class="n">time</span></a><span class="p">()</span>
+<span class="n">model</span> <span class="o">=</span> <a class="sphx-glr-backref-module-sklearn-pipeline sphx-glr-backref-type-py-function" href="../../modules/generated/sklearn.pipeline.make_pipeline.html#sklearn.pipeline.make_pipeline" title="sklearn.pipeline.make_pipeline"><span class="n">make_pipeline</span></a><span class="p">(</span><a class="sphx-glr-backref-module-sklearn-preprocessing sphx-glr-backref-type-py-class sphx-glr-backref-instance" href="../../modules/generated/sklearn.preprocessing.StandardScaler.html#sklearn.preprocessing.StandardScaler" title="sklearn.preprocessing.StandardScaler"><span class="n">StandardScaler</span></a><span class="p">(),</span> <a class="sphx-glr-backref-module-sklearn-linear_model sphx-glr-backref-type-py-class sphx-glr-backref-instance" href="../../modules/generated/sklearn.linear_model.LassoCV.html#sklearn.linear_model.LassoCV" title="sklearn.linear_model.LassoCV"><span class="n">LassoCV</span></a><span class="p">(</span><span class="n">cv</span><span class="o">=</span><span class="mi">20</span><span class="p">))</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
+<span class="n">fit_time</span> <span class="o">=</span> <a class="sphx-glr-backref-module-time sphx-glr-backref-type-py-function" href="https://docs.python.org/3/library/time.html#time.time" title="time.time"><span class="n">time</span><span class="o">.</span><span class="n">time</span></a><span class="p">()</span> <span class="o">-</span> <span class="n">start_time</span>
 </pre></div>
 </div>
 <div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
 
 <span class="n">ymin</span><span class="p">,</span> <span class="n">ymax</span> <span class="o">=</span> <span class="mi">2300</span><span class="p">,</span> <span class="mi">3800</span>
 <span class="n">lasso</span> <span class="o">=</span> <span class="n">model</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
-<a href="https://matplotlib.org/stable/api/_as_gen/matplotlib.pyplot.semilogx.html#matplotlib.pyplot.semilogx" title="matplotlib.pyplot.semilogx" class="sphx-glr-backref-module-matplotlib-pyplot sphx-glr-backref-type-py-function"><span class="n">plt</span><span class="o">.</span><span class="n">semilogx</span></a><span class="p">(</span><span class="n">lasso</span><span class="o">.</span><span class="n">alphas_</span><span class="p">,</span> <span class="n">lasso</span><span class="o">.</span><span class="n">mse_path_</span><span class="p">,</span> <span class="n">linestyle</span><span class="o">=</span><span class="s2">&quot;:&quot;</span><span class="p">)</span>
-<a href="https://matplotlib.org/stable/api/_as_gen/matplotlib.pyplot.plot.html#matplotlib.pyplot.plot" title="matplotlib.pyplot.plot" class="sphx-glr-backref-module-matplotlib-pyplot sphx-glr-backref-type-py-function"><span class="n">plt</span><span class="o">.</span><span class="n">plot</span></a><span class="p">(</span>
+<a class="sphx-glr-backref-module-matplotlib-pyplot sphx-glr-backref-type-py-function" href="https://matplotlib.org/stable/api/_as_gen/matplotlib.pyplot.semilogx.html#matplotlib.pyplot.semilogx" title="matplotlib.pyplot.semilogx"><span class="n">plt</span><span class="o">.</span><span class="n">semilogx</span></a><span class="p">(</span><span class="n">lasso</span><span class="o">.</span><span class="n">alphas_</span><span class="p">,</span> <span class="n">lasso</span><span class="o">.</span><span class="n">mse_path_</span><span class="p">,</span> <span class="n">linestyle</span><span class="o">=</span><span class="s2">":"</span><span class="p">)</span>
+<a class="sphx-glr-backref-module-matplotlib-pyplot sphx-glr-backref-type-py-function" href="https://matplotlib.org/stable/api/_as_gen/matplotlib.pyplot.plot.html#matplotlib.pyplot.plot" title="matplotlib.pyplot.plot"><span class="n">plt</span><span class="o">.</span><span class="n">plot</span></a><span class="p">(</span>
     <span class="n">lasso</span><span class="o">.</span><span class="n">alphas_</span><span class="p">,</span>
     <span class="n">lasso</span><span class="o">.</span><span class="n">mse_path_</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">axis</span><span class="o">=-</span><span class="mi">1</span><span class="p">),</span>
-    <span class="n">color</span><span class="o">=</span><span class="s2">&quot;black&quot;</span><span class="p">,</span>
-    <span class="n">label</span><span class="o">=</span><span class="s2">&quot;Average across the folds&quot;</span><span class="p">,</span>
+    <span class="n">color</span><span class="o">=</span><span class="s2">"black"</span><span class="p">,</span>
+    <span class="n">label</span><span class="o">=</span><span class="s2">"Average across the folds"</span><span class="p">,</span>
     <span class="n">linewidth</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span>
 <span class="p">)</span>
-<a href="https://matplotlib.org/stable/api/_as_gen/matplotlib.pyplot.axvline.html#matplotlib.pyplot.axvline" title="matplotlib.pyplot.axvline" class="sphx-glr-backref-module-matplotlib-pyplot sphx-glr-backref-type-py-function"><span class="n">plt</span><span class="o">.</span><span class="n">axvline</span></a><span class="p">(</span><span class="n">lasso</span><span class="o">.</span><span class="n">alpha_</span><span class="p">,</span> <span class="n">linestyle</span><span class="o">=</span><span class="s2">&quot;--&quot;</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;black&quot;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;alpha: CV estimate&quot;</span><span class="p">)</span>
+<a class="sphx-glr-backref-module-matplotlib-pyplot sphx-glr-backref-type-py-function" href="https://matplotlib.org/stable/api/_as_gen/matplotlib.pyplot.axvline.html#matplotlib.pyplot.axvline" title="matplotlib.pyplot.axvline"><span class="n">plt</span><span class="o">.</span><span class="n">axvline</span></a><span class="p">(</span><span class="n">lasso</span><span class="o">.</span><span class="n">alpha_</span><span class="p">,</span> <span class="n">linestyle</span><span class="o">=</span><span class="s2">"--"</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">"black"</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">"alpha: CV estimate"</span><span class="p">)</span>
 
-<a href="https://matplotlib.org/stable/api/_as_gen/matplotlib.pyplot.ylim.html#matplotlib.pyplot.ylim" title="matplotlib.pyplot.ylim" class="sphx-glr-backref-module-matplotlib-pyplot sphx-glr-backref-type-py-function"><span class="n">plt</span><span class="o">.</span><span class="n">ylim</span></a><span class="p">(</span><span class="n">ymin</span><span class="p">,</span> <span class="n">ymax</span><span class="p">)</span>
-<a href="https://matplotlib.org/stable/api/_as_gen/matplotlib.pyplot.xlabel.html#matplotlib.pyplot.xlabel" title="matplotlib.pyplot.xlabel" class="sphx-glr-backref-module-matplotlib-pyplot sphx-glr-backref-type-py-function"><span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span></a><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;$\alpha$&quot;</span><span class="p">)</span>
-<a href="https://matplotlib.org/stable/api/_as_gen/matplotlib.pyplot.ylabel.html#matplotlib.pyplot.ylabel" title="matplotlib.pyplot.ylabel" class="sphx-glr-backref-module-matplotlib-pyplot sphx-glr-backref-type-py-function"><span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span></a><span class="p">(</span><span class="s2">&quot;Mean square error&quot;</span><span class="p">)</span>
-<a href="https://matplotlib.org/stable/api/_as_gen/matplotlib.pyplot.legend.html#matplotlib.pyplot.legend" title="matplotlib.pyplot.legend" class="sphx-glr-backref-module-matplotlib-pyplot sphx-glr-backref-type-py-function"><span class="n">plt</span><span class="o">.</span><span class="n">legend</span></a><span class="p">()</span>
-<span class="n">_</span> <span class="o">=</span> <a href="https://matplotlib.org/stable/api/_as_gen/matplotlib.pyplot.title.html#matplotlib.pyplot.title" title="matplotlib.pyplot.title" class="sphx-glr-backref-module-matplotlib-pyplot sphx-glr-backref-type-py-function"><span class="n">plt</span><span class="o">.</span><span class="n">title</span></a><span class="p">(</span>
-    <span class="sa">f</span><span class="s2">&quot;Mean square error on each fold: coordinate descent (train time: </span><span class="si">{</span><span class="n">fit_time</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2">s)&quot;</span>
+<a class="sphx-glr-backref-module-matplotlib-pyplot sphx-glr-backref-type-py-function" href="https://matplotlib.org/stable/api/_as_gen/matplotlib.pyplot.ylim.html#matplotlib.pyplot.ylim" title="matplotlib.pyplot.ylim"><span class="n">plt</span><span class="o">.</span><span class="n">ylim</span></a><span class="p">(</span><span class="n">ymin</span><span class="p">,</span> <span class="n">ymax</span><span class="p">)</span>
+<a class="sphx-glr-backref-module-matplotlib-pyplot sphx-glr-backref-type-py-function" href="https://matplotlib.org/stable/api/_as_gen/matplotlib.pyplot.xlabel.html#matplotlib.pyplot.xlabel" title="matplotlib.pyplot.xlabel"><span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span></a><span class="p">(</span><span class="sa">r</span><span class="s2">"$\alpha$"</span><span class="p">)</span>
+<a class="sphx-glr-backref-module-matplotlib-pyplot sphx-glr-backref-type-py-function" href="https://matplotlib.org/stable/api/_as_gen/matplotlib.pyplot.ylabel.html#matplotlib.pyplot.ylabel" title="matplotlib.pyplot.ylabel"><span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span></a><span class="p">(</span><span class="s2">"Mean square error"</span><span class="p">)</span>
+<a class="sphx-glr-backref-module-matplotlib-pyplot sphx-glr-backref-type-py-function" href="https://matplotlib.org/stable/api/_as_gen/matplotlib.pyplot.legend.html#matplotlib.pyplot.legend" title="matplotlib.pyplot.legend"><span class="n">plt</span><span class="o">.</span><span class="n">legend</span></a><span class="p">()</span>
+<span class="n">_</span> <span class="o">=</span> <a class="sphx-glr-backref-module-matplotlib-pyplot sphx-glr-backref-type-py-function" href="https://matplotlib.org/stable/api/_as_gen/matplotlib.pyplot.title.html#matplotlib.pyplot.title" title="matplotlib.pyplot.title"><span class="n">plt</span><span class="o">.</span><span class="n">title</span></a><span class="p">(</span>
+    <span class="sa">f</span><span class="s2">"Mean square error on each fold: coordinate descent (train time: </span><span class="si">{</span><span class="n">fit_time</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2">s)"</span>
 <span class="p">)</span>
 </pre></div>
 </div>
-<img src="../../_images/sphx_glr_plot_lasso_model_selection_002.png" srcset="../../_images/sphx_glr_plot_lasso_model_selection_002.png" alt="Mean square error on each fold: coordinate descent (train time: 0.46s)" class = "sphx-glr-single-img"/></section>
+<img alt="Mean square error on each fold: coordinate descent (train time: 0.26s)" class="sphx-glr-single-img" src="../../_images/sphx_glr_plot_lasso_model_selection_002.png" srcset="../../_images/sphx_glr_plot_lasso_model_selection_002.png"/></section>
 <section id="lasso-via-least-angle-regression">
 <h3>Lasso via least angle regression<a class="headerlink" href="#lasso-via-least-angle-regression" title="Link to this heading">#</a></h3>
 <p>Let’s start by making the hyperparameter tuning using
 <a class="reference internal" href="../../modules/generated/sklearn.linear_model.LassoLarsCV.html#sklearn.linear_model.LassoLarsCV" title="sklearn.linear_model.LassoLarsCV"><code class="xref py py-class docutils literal notranslate"><span class="pre">LassoLarsCV</span></code></a>.</p>
-<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">sklearn.linear_model</span> <span class="kn">import</span> <a href="../../modules/generated/sklearn.linear_model.LassoLarsCV.html#sklearn.linear_model.LassoLarsCV" title="sklearn.linear_model.LassoLarsCV" class="sphx-glr-backref-module-sklearn-linear_model sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">LassoLarsCV</span></a>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">sklearn.linear_model</span> <span class="kn">import</span> <a class="sphx-glr-backref-module-sklearn-linear_model sphx-glr-backref-type-py-class sphx-glr-backref-instance" href="../../modules/generated/sklearn.linear_model.LassoLarsCV.html#sklearn.linear_model.LassoLarsCV" title="sklearn.linear_model.LassoLarsCV"><span class="n">LassoLarsCV</span></a>
 
-<span class="n">start_time</span> <span class="o">=</span> <a href="https://docs.python.org/3/library/time.html#time.time" title="time.time" class="sphx-glr-backref-module-time sphx-glr-backref-type-py-function"><span class="n">time</span><span class="o">.</span><span class="n">time</span></a><span class="p">()</span>
-<span class="n">model</span> <span class="o">=</span> <a href="../../modules/generated/sklearn.pipeline.make_pipeline.html#sklearn.pipeline.make_pipeline" title="sklearn.pipeline.make_pipeline" class="sphx-glr-backref-module-sklearn-pipeline sphx-glr-backref-type-py-function"><span class="n">make_pipeline</span></a><span class="p">(</span><a href="../../modules/generated/sklearn.preprocessing.StandardScaler.html#sklearn.preprocessing.StandardScaler" title="sklearn.preprocessing.StandardScaler" class="sphx-glr-backref-module-sklearn-preprocessing sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">StandardScaler</span></a><span class="p">(),</span> <a href="../../modules/generated/sklearn.linear_model.LassoLarsCV.html#sklearn.linear_model.LassoLarsCV" title="sklearn.linear_model.LassoLarsCV" class="sphx-glr-backref-module-sklearn-linear_model sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">LassoLarsCV</span></a><span class="p">(</span><span class="n">cv</span><span class="o">=</span><span class="mi">20</span><span class="p">))</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
-<span class="n">fit_time</span> <span class="o">=</span> <a href="https://docs.python.org/3/library/time.html#time.time" title="time.time" class="sphx-glr-backref-module-time sphx-glr-backref-type-py-function"><span class="n">time</span><span class="o">.</span><span class="n">time</span></a><span class="p">()</span> <span class="o">-</span> <span class="n">start_time</span>
+<span class="n">start_time</span> <span class="o">=</span> <a class="sphx-glr-backref-module-time sphx-glr-backref-type-py-function" href="https://docs.python.org/3/library/time.html#time.time" title="time.time"><span class="n">time</span><span class="o">.</span><span class="n">time</span></a><span class="p">()</span>
+<span class="n">model</span> <span class="o">=</span> <a class="sphx-glr-backref-module-sklearn-pipeline sphx-glr-backref-type-py-function" href="../../modules/generated/sklearn.pipeline.make_pipeline.html#sklearn.pipeline.make_pipeline" title="sklearn.pipeline.make_pipeline"><span class="n">make_pipeline</span></a><span class="p">(</span><a class="sphx-glr-backref-module-sklearn-preprocessing sphx-glr-backref-type-py-class sphx-glr-backref-instance" href="../../modules/generated/sklearn.preprocessing.StandardScaler.html#sklearn.preprocessing.StandardScaler" title="sklearn.preprocessing.StandardScaler"><span class="n">StandardScaler</span></a><span class="p">(),</span> <a class="sphx-glr-backref-module-sklearn-linear_model sphx-glr-backref-type-py-class sphx-glr-backref-instance" href="../../modules/generated/sklearn.linear_model.LassoLarsCV.html#sklearn.linear_model.LassoLarsCV" title="sklearn.linear_model.LassoLarsCV"><span class="n">LassoLarsCV</span></a><span class="p">(</span><span class="n">cv</span><span class="o">=</span><span class="mi">20</span><span class="p">))</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
+<span class="n">fit_time</span> <span class="o">=</span> <a class="sphx-glr-backref-module-time sphx-glr-backref-type-py-function" href="https://docs.python.org/3/library/time.html#time.time" title="time.time"><span class="n">time</span><span class="o">.</span><span class="n">time</span></a><span class="p">()</span> <span class="o">-</span> <span class="n">start_time</span>
 </pre></div>
 </div>
 <div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">lasso</span> <span class="o">=</span> <span class="n">model</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
-<a href="https://matplotlib.org/stable/api/_as_gen/matplotlib.pyplot.semilogx.html#matplotlib.pyplot.semilogx" title="matplotlib.pyplot.semilogx" class="sphx-glr-backref-module-matplotlib-pyplot sphx-glr-backref-type-py-function"><span class="n">plt</span><span class="o">.</span><span class="n">semilogx</span></a><span class="p">(</span><span class="n">lasso</span><span class="o">.</span><span class="n">cv_alphas_</span><span class="p">,</span> <span class="n">lasso</span><span class="o">.</span><span class="n">mse_path_</span><span class="p">,</span> <span class="s2">&quot;:&quot;</span><span class="p">)</span>
-<a href="https://matplotlib.org/stable/api/_as_gen/matplotlib.pyplot.semilogx.html#matplotlib.pyplot.semilogx" title="matplotlib.pyplot.semilogx" class="sphx-glr-backref-module-matplotlib-pyplot sphx-glr-backref-type-py-function"><span class="n">plt</span><span class="o">.</span><span class="n">semilogx</span></a><span class="p">(</span>
+<a class="sphx-glr-backref-module-matplotlib-pyplot sphx-glr-backref-type-py-function" href="https://matplotlib.org/stable/api/_as_gen/matplotlib.pyplot.semilogx.html#matplotlib.pyplot.semilogx" title="matplotlib.pyplot.semilogx"><span class="n">plt</span><span class="o">.</span><span class="n">semilogx</span></a><span class="p">(</span><span class="n">lasso</span><span class="o">.</span><span class="n">cv_alphas_</span><span class="p">,</span> <span class="n">lasso</span><span class="o">.</span><span class="n">mse_path_</span><span class="p">,</span> <span class="s2">":"</span><span class="p">)</span>
+<a class="sphx-glr-backref-module-matplotlib-pyplot sphx-glr-backref-type-py-function" href="https://matplotlib.org/stable/api/_as_gen/matplotlib.pyplot.semilogx.html#matplotlib.pyplot.semilogx" title="matplotlib.pyplot.semilogx"><span class="n">plt</span><span class="o">.</span><span class="n">semilogx</span></a><span class="p">(</span>
     <span class="n">lasso</span><span class="o">.</span><span class="n">cv_alphas_</span><span class="p">,</span>
     <span class="n">lasso</span><span class="o">.</span><span class="n">mse_path_</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">axis</span><span class="o">=-</span><span class="mi">1</span><span class="p">),</span>
-    <span class="n">color</span><span class="o">=</span><span class="s2">&quot;black&quot;</span><span class="p">,</span>
-    <span class="n">label</span><span class="o">=</span><span class="s2">&quot;Average across the folds&quot;</span><span class="p">,</span>
+    <span class="n">color</span><span class="o">=</span><span class="s2">"black"</span><span class="p">,</span>
+    <span class="n">label</span><span class="o">=</span><span class="s2">"Average across the folds"</span><span class="p">,</span>
     <span class="n">linewidth</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span>
 <span class="p">)</span>
-<a href="https://matplotlib.org/stable/api/_as_gen/matplotlib.pyplot.axvline.html#matplotlib.pyplot.axvline" title="matplotlib.pyplot.axvline" class="sphx-glr-backref-module-matplotlib-pyplot sphx-glr-backref-type-py-function"><span class="n">plt</span><span class="o">.</span><span class="n">axvline</span></a><span class="p">(</span><span class="n">lasso</span><span class="o">.</span><span class="n">alpha_</span><span class="p">,</span> <span class="n">linestyle</span><span class="o">=</span><span class="s2">&quot;--&quot;</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;black&quot;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;alpha CV&quot;</span><span class="p">)</span>
+<a class="sphx-glr-backref-module-matplotlib-pyplot sphx-glr-backref-type-py-function" href="https://matplotlib.org/stable/api/_as_gen/matplotlib.pyplot.axvline.html#matplotlib.pyplot.axvline" title="matplotlib.pyplot.axvline"><span class="n">plt</span><span class="o">.</span><span class="n">axvline</span></a><span class="p">(</span><span class="n">lasso</span><span class="o">.</span><span class="n">alpha_</span><span class="p">,</span> <span class="n">linestyle</span><span class="o">=</span><span class="s2">"--"</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">"black"</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">"alpha CV"</span><span class="p">)</span>
 
-<a href="https://matplotlib.org/stable/api/_as_gen/matplotlib.pyplot.ylim.html#matplotlib.pyplot.ylim" title="matplotlib.pyplot.ylim" class="sphx-glr-backref-module-matplotlib-pyplot sphx-glr-backref-type-py-function"><span class="n">plt</span><span class="o">.</span><span class="n">ylim</span></a><span class="p">(</span><span class="n">ymin</span><span class="p">,</span> <span class="n">ymax</span><span class="p">)</span>
-<a href="https://matplotlib.org/stable/api/_as_gen/matplotlib.pyplot.xlabel.html#matplotlib.pyplot.xlabel" title="matplotlib.pyplot.xlabel" class="sphx-glr-backref-module-matplotlib-pyplot sphx-glr-backref-type-py-function"><span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span></a><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;$\alpha$&quot;</span><span class="p">)</span>
-<a href="https://matplotlib.org/stable/api/_as_gen/matplotlib.pyplot.ylabel.html#matplotlib.pyplot.ylabel" title="matplotlib.pyplot.ylabel" class="sphx-glr-backref-module-matplotlib-pyplot sphx-glr-backref-type-py-function"><span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span></a><span class="p">(</span><span class="s2">&quot;Mean square error&quot;</span><span class="p">)</span>
-<a href="https://matplotlib.org/stable/api/_as_gen/matplotlib.pyplot.legend.html#matplotlib.pyplot.legend" title="matplotlib.pyplot.legend" class="sphx-glr-backref-module-matplotlib-pyplot sphx-glr-backref-type-py-function"><span class="n">plt</span><span class="o">.</span><span class="n">legend</span></a><span class="p">()</span>
-<span class="n">_</span> <span class="o">=</span> <a href="https://matplotlib.org/stable/api/_as_gen/matplotlib.pyplot.title.html#matplotlib.pyplot.title" title="matplotlib.pyplot.title" class="sphx-glr-backref-module-matplotlib-pyplot sphx-glr-backref-type-py-function"><span class="n">plt</span><span class="o">.</span><span class="n">title</span></a><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Mean square error on each fold: Lars (train time: </span><span class="si">{</span><span class="n">fit_time</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2">s)&quot;</span><span class="p">)</span>
+<a class="sphx-glr-backref-module-matplotlib-pyplot sphx-glr-backref-type-py-function" href="https://matplotlib.org/stable/api/_as_gen/matplotlib.pyplot.ylim.html#matplotlib.pyplot.ylim" title="matplotlib.pyplot.ylim"><span class="n">plt</span><span class="o">.</span><span class="n">ylim</span></a><span class="p">(</span><span class="n">ymin</span><span class="p">,</span> <span class="n">ymax</span><span class="p">)</span>
+<a class="sphx-glr-backref-module-matplotlib-pyplot sphx-glr-backref-type-py-function" href="https://matplotlib.org/stable/api/_as_gen/matplotlib.pyplot.xlabel.html#matplotlib.pyplot.xlabel" title="matplotlib.pyplot.xlabel"><span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span></a><span class="p">(</span><span class="sa">r</span><span class="s2">"$\alpha$"</span><span class="p">)</span>
+<a class="sphx-glr-backref-module-matplotlib-pyplot sphx-glr-backref-type-py-function" href="https://matplotlib.org/stable/api/_as_gen/matplotlib.pyplot.ylabel.html#matplotlib.pyplot.ylabel" title="matplotlib.pyplot.ylabel"><span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span></a><span class="p">(</span><span class="s2">"Mean square error"</span><span class="p">)</span>
+<a class="sphx-glr-backref-module-matplotlib-pyplot sphx-glr-backref-type-py-function" href="https://matplotlib.org/stable/api/_as_gen/matplotlib.pyplot.legend.html#matplotlib.pyplot.legend" title="matplotlib.pyplot.legend"><span class="n">plt</span><span class="o">.</span><span class="n">legend</span></a><span class="p">()</span>
+<span class="n">_</span> <span class="o">=</span> <a class="sphx-glr-backref-module-matplotlib-pyplot sphx-glr-backref-type-py-function" href="https://matplotlib.org/stable/api/_as_gen/matplotlib.pyplot.title.html#matplotlib.pyplot.title" title="matplotlib.pyplot.title"><span class="n">plt</span><span class="o">.</span><span class="n">title</span></a><span class="p">(</span><span class="sa">f</span><span class="s2">"Mean square error on each fold: Lars (train time: </span><span class="si">{</span><span class="n">fit_time</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2">s)"</span><span class="p">)</span>
 </pre></div>
 </div>
-<img src="../../_images/sphx_glr_plot_lasso_model_selection_003.png" srcset="../../_images/sphx_glr_plot_lasso_model_selection_003.png" alt="Mean square error on each fold: Lars (train time: 0.10s)" class = "sphx-glr-single-img"/></section>
+<img alt="Mean square error on each fold: Lars (train time: 0.07s)" class="sphx-glr-single-img" src="../../_images/sphx_glr_plot_lasso_model_selection_003.png" srcset="../../_images/sphx_glr_plot_lasso_model_selection_003.png"/></section>
 <section id="summary-of-cross-validation-approach">
 <h3>Summary of cross-validation approach<a class="headerlink" href="#summary-of-cross-validation-approach" title="Link to this heading">#</a></h3>
 <p>Both algorithms give roughly the same results.</p>
@@ -1653,91 +1426,54 @@ performance. However, it can only be used when the number of samples is large
 enough compared to the number of features.</p>
 <p>That’s why hyperparameter optimization via cross-validation is a safe
 strategy: it works in different settings.</p>
-<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> (0 minutes 1.316 seconds)</p>
-<div class="sphx-glr-footer sphx-glr-footer-example docutils container" id="sphx-glr-download-auto-examples-linear-model-plot-lasso-model-selection-py">
-<div class="binder-badge docutils container">
-<a class="reference external image-reference" href="https://mybinder.org/v2/gh/scikit-learn/scikit-learn/main?urlpath=lab/tree/notebooks/auto_examples/linear_model/plot_lasso_model_selection.ipynb"><img alt="Launch binder" src="../../_images/binder_badge_logo18.svg" width="150px" /></a>
-</div>
-<div class="lite-badge docutils container">
-<a class="reference external image-reference" href="../../lite/lab/?path=auto_examples/linear_model/plot_lasso_model_selection.ipynb"><img alt="Launch JupyterLite" src="../../_images/jupyterlite_badge_logo18.svg" width="150px" /></a>
-</div>
-<div class="sphx-glr-download sphx-glr-download-jupyter docutils container">
-<p><a class="reference download internal" download="" href="../../_downloads/901ad159d788e1122a5616f537985e74/plot_lasso_model_selection.ipynb"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Jupyter</span> <span class="pre">notebook:</span> <span class="pre">plot_lasso_model_selection.ipynb</span></code></a></p>
-</div>
-<div class="sphx-glr-download sphx-glr-download-python docutils container">
-<p><a class="reference download internal" download="" href="../../_downloads/58580795dd881384f33e7e6492e154e2/plot_lasso_model_selection.py"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Python</span> <span class="pre">source</span> <span class="pre">code:</span> <span class="pre">plot_lasso_model_selection.py</span></code></a></p>
-</div>
-</div>
+<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> (0 minutes 0.869 seconds)</p>
+
 <p class="rubric">Related examples</p>
-<div class="sphx-glr-thumbnails"><div class="sphx-glr-thumbcontainer" tooltip="This example reproduces the example of Fig. 2 of [ZHT2007]_. A LassoLarsIC estimator is fit on ..."><img alt="" src="../../_images/sphx_glr_plot_lasso_lars_ic_thumb.png" />
+<div class="sphx-glr-thumbnails"><div class="sphx-glr-thumbcontainer" tooltip="This example reproduces the example of Fig. 2 of [ZHT2007]_. A LassoLarsIC estimator is fit on ..."><img alt="" src="../../_images/sphx_glr_plot_lasso_lars_ic_thumb.png"/>
 <p><a class="reference internal" href="plot_lasso_lars_ic.html#sphx-glr-auto-examples-linear-model-plot-lasso-lars-ic-py"><span class="std std-ref">Lasso model selection via information criteria</span></a></p>
-  <div class="sphx-glr-thumbnail-title">Lasso model selection via information criteria</div>
-</div><div class="sphx-glr-thumbcontainer" tooltip="The present example compares three l1-based regression models on a synthetic signal obtained fr..."><img alt="" src="../../_images/sphx_glr_plot_lasso_and_elasticnet_thumb.png" />
+<div class="sphx-glr-thumbnail-title">Lasso model selection via information criteria</div>
+</div><div class="sphx-glr-thumbcontainer" tooltip="The present example compares three l1-based regression models on a synthetic signal obtained fr..."><img alt="" src="../../_images/sphx_glr_plot_lasso_and_elasticnet_thumb.png"/>
 <p><a class="reference internal" href="plot_lasso_and_elasticnet.html#sphx-glr-auto-examples-linear-model-plot-lasso-and-elasticnet-py"><span class="std std-ref">L1-based models for Sparse Signals</span></a></p>
-  <div class="sphx-glr-thumbnail-title">L1-based models for Sparse Signals</div>
-</div><div class="sphx-glr-thumbcontainer" tooltip="Computes Lasso Path along the regularization parameter using the LARS algorithm on the diabetes..."><img alt="" src="../../_images/sphx_glr_plot_lasso_lars_thumb.png" />
+<div class="sphx-glr-thumbnail-title">L1-based models for Sparse Signals</div>
+</div><div class="sphx-glr-thumbcontainer" tooltip="Computes Lasso Path along the regularization parameter using the LARS algorithm on the diabetes..."><img alt="" src="../../_images/sphx_glr_plot_lasso_lars_thumb.png"/>
 <p><a class="reference internal" href="plot_lasso_lars.html#sphx-glr-auto-examples-linear-model-plot-lasso-lars-py"><span class="std std-ref">Lasso path using LARS</span></a></p>
-  <div class="sphx-glr-thumbnail-title">Lasso path using LARS</div>
-</div><div class="sphx-glr-thumbcontainer" tooltip="The multi-task lasso allows to fit multiple regression problems jointly enforcing the selected ..."><img alt="" src="../../_images/sphx_glr_plot_multi_task_lasso_support_thumb.png" />
+<div class="sphx-glr-thumbnail-title">Lasso path using LARS</div>
+</div><div class="sphx-glr-thumbcontainer" tooltip="The multi-task lasso allows to fit multiple regression problems jointly enforcing the selected ..."><img alt="" src="../../_images/sphx_glr_plot_multi_task_lasso_support_thumb.png"/>
 <p><a class="reference internal" href="plot_multi_task_lasso_support.html#sphx-glr-auto-examples-linear-model-plot-multi-task-lasso-support-py"><span class="std std-ref">Joint feature selection with multi-task Lasso</span></a></p>
-  <div class="sphx-glr-thumbnail-title">Joint feature selection with multi-task Lasso</div>
-</div><div class="sphx-glr-thumbcontainer" tooltip="Stochastic Gradient Descent is an optimization technique which minimizes a loss function in a s..."><img alt="" src="../../_images/sphx_glr_plot_sgd_early_stopping_thumb.png" />
-<p><a class="reference internal" href="plot_sgd_early_stopping.html#sphx-glr-auto-examples-linear-model-plot-sgd-early-stopping-py"><span class="std std-ref">Early stopping of Stochastic Gradient Descent</span></a></p>
-  <div class="sphx-glr-thumbnail-title">Early stopping of Stochastic Gradient Descent</div>
+<div class="sphx-glr-thumbnail-title">Joint feature selection with multi-task Lasso</div>
 </div></div><p class="sphx-glr-signature"><a class="reference external" href="https://sphinx-gallery.github.io">Gallery generated by Sphinx-Gallery</a></p>
 </section>
 </section>
-
-
-                </article>
-              
-              
-              
-                <footer class="bd-footer-article">
-                  <div class="footer-article-items footer-article__inner">
-  
-    <div class="footer-article-item">
+</article>
+<footer class="bd-footer-article">
+<div class="footer-article-items footer-article__inner">
+<div class="footer-article-item">
 <div class="prev-next-area">
-    <a class="left-prev"
-       href="plot_lasso_lars_ic.html"
-       title="previous page">
-      <i class="fa-solid fa-angle-left"></i>
-      <div class="prev-next-info">
-        <p class="prev-next-subtitle">previous</p>
-        <p class="prev-next-title">Lasso model selection via information criteria</p>
-      </div>
-    </a>
-    <a class="right-next"
-       href="plot_lasso_dense_vs_sparse_data.html"
-       title="next page">
-      <div class="prev-next-info">
-        <p class="prev-next-subtitle">next</p>
-        <p class="prev-next-title">Lasso on dense and sparse data</p>
-      </div>
-      <i class="fa-solid fa-angle-right"></i>
-    </a>
-</div></div>
-  
+<a class="left-prev" href="plot_lasso_lars_ic.html" title="previous page">
+<i class="fa-solid fa-angle-left"></i>
+<div class="prev-next-info">
+<p class="prev-next-subtitle">previous</p>
+<p class="prev-next-title">Lasso model selection via information criteria</p>
 </div>
-                </footer>
-              
-              
-              
-            </div>
-            
-            
-              
-                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
-
-
-  <div class="sidebar-secondary-item">
-<div
-    id="pst-page-navigation-heading-2"
-    class="page-toc tocsection onthispage">
-    <i class="fa-solid fa-list"></i> On this page
+</a>
+<a class="right-next" href="plot_lasso_dense_vs_sparse_data.html" title="next page">
+<div class="prev-next-info">
+<p class="prev-next-subtitle">next</p>
+<p class="prev-next-title">Lasso on dense and sparse data</p>
+</div>
+<i class="fa-solid fa-angle-right"></i>
+</a>
+</div></div>
+</div>
+</footer>
+</div>
+<div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+<div class="sidebar-secondary-item">
+<div class="page-toc tocsection onthispage" id="pst-page-navigation-heading-2">
+<i class="fa-solid fa-list"></i> On this page
   </div>
-  <nav class="bd-toc-nav page-toc" aria-labelledby="pst-page-navigation-heading-2">
-    <ul class="visible nav section-nav flex-column">
+<nav aria-labelledby="pst-page-navigation-heading-2" class="bd-toc-nav page-toc">
+<ul class="visible nav section-nav flex-column">
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#dataset">Dataset</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#selecting-lasso-via-an-information-criterion">Selecting Lasso via an information criterion</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#selecting-lasso-via-cross-validation">Selecting Lasso via cross-validation</a><ul class="nav section-nav flex-column">
@@ -1748,55 +1484,31 @@ strategy: it works in different settings.</p>
 </li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#conclusion">Conclusion</a></li>
 </ul>
-  </nav></div>
+</nav></div>
 
-  <div class="sidebar-secondary-item">
-
-  <div class="tocsection sourcelink">
-    <a href="../../_sources/auto_examples/linear_model/plot_lasso_model_selection.rst.txt">
-      <i class="fa-solid fa-file-lines"></i> Show Source
-    </a>
-  </div>
+<div class="sidebar-secondary-item"><div title="plot_lasso_model_selection.py"><a download="" href="../../_downloads/58580795dd881384f33e7e6492e154e2/plot_lasso_model_selection.py"><i class="fa-solid fa-download"></i> Download source code</a></div><div title="plot_lasso_model_selection.ipynb"><a download="" href="../../_downloads/901ad159d788e1122a5616f537985e74/plot_lasso_model_selection.ipynb"><i class="fa-solid fa-download"></i> Download Jupyter notebook</a></div></div><div class="sidebar-secondary-item"><div><a href="../../lite/lab/?path=auto_examples/linear_model/plot_lasso_model_selection.ipynb"><img alt="Launch JupyterLite" height="20" src="../../_images/jupyterlite_badge_logo18.svg"/></a></div><div><a href="https://mybinder.org/v2/gh/scikit-learn/scikit-learn/main?urlpath=lab/tree/notebooks/auto_examples/linear_model/plot_lasso_model_selection.ipynb"><img alt="Launch binder" height="20" src="../../_images/binder_badge_logo18.svg"/></a></div></div></div></div>
 </div>
-
-</div></div>
-              
-            
-          </div>
-          <footer class="bd-footer-content">
-            
-          </footer>
-        
-      </main>
-    </div>
-  </div>
-  
-  <!-- Scripts loaded after <body> so the DOM is not blocked -->
-  <script src="../../_static/scripts/bootstrap.js?digest=8d27b9dea8ad943066ae"></script>
+<footer class="bd-footer-content">
+</footer>
+</main>
+</div>
+</div>
+<!-- Scripts loaded after <body> so the DOM is not blocked -->
+<script src="../../_static/scripts/bootstrap.js?digest=8d27b9dea8ad943066ae"></script>
 <script src="../../_static/scripts/pydata-sphinx-theme.js?digest=8d27b9dea8ad943066ae"></script>
-
-  <footer class="bd-footer">
+<footer class="bd-footer">
 <div class="bd-footer__inner bd-page-width">
-  
-    <div class="footer-items__start">
-      
-        <div class="footer-item">
-
-  <p class="copyright">
+<div class="footer-items__start">
+<div class="footer-item">
+<p class="copyright">
     
       © Copyright 2007 - 2024, scikit-learn developers (BSD License).
       <br/>
-    
-  </p>
+</p>
 </div>
-      
-    </div>
-  
-  
-  
 </div>
-
-  </footer>
+</div>
+</footer>
     <script src="https://scikit-learn.org/versionwarning.js"></script>
-  </body>
+</body>
 </html>

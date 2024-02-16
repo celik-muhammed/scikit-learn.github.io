@@ -1,309 +1,205 @@
 
 <!DOCTYPE html>
 
-
-<html lang="en" data-content_root="../../" >
-
-  <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
-<meta property="og:title" content="Multi-dimensional scaling" />
-<meta property="og:type" content="website" />
-<meta property="og:url" content="https://scikit-learn/stable/auto_examples/manifold/plot_mds.html" />
-<meta property="og:site_name" content="scikit-learn" />
-<meta property="og:description" content="An illustration of the metric and non-metric MDS on generated noisy data. The reconstructed points using the metric MDS and non metric MDS are slightly shifted to avoid overlapping. Total running t..." />
-<meta property="og:image" content="https://scikit-learn.org/stable/_static/scikit-learn-logo-small.png" />
-<meta property="og:image:alt" content="scikit-learn" />
-<meta name="description" content="An illustration of the metric and non-metric MDS on generated noisy data. The reconstructed points using the metric MDS and non metric MDS are slightly shifted to avoid overlapping. Total running t..." />
-
-    <title>Multi-dimensional scaling &#8212; scikit-learn 1.5.dev0 documentation</title>
-  
-  
-  
-  <script data-cfasync="false">
+<html data-content_root="../../" lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/><meta content="width=device-width, initial-scale=1" name="viewport"/>
+<meta content="Multi-dimensional scaling" property="og:title"/>
+<meta content="website" property="og:type"/>
+<meta content="https://scikit-learn/stable/auto_examples/manifold/plot_mds.html" property="og:url"/>
+<meta content="scikit-learn" property="og:site_name"/>
+<meta content="An illustration of the metric and non-metric MDS on generated noisy data. The reconstructed points using the metric MDS and non metric MDS are slightly shifted to avoid overlapping. Total running t..." property="og:description"/>
+<meta content="https://scikit-learn.org/stable/_static/scikit-learn-logo-small.png" property="og:image"/>
+<meta content="scikit-learn" property="og:image:alt"/>
+<meta content="An illustration of the metric and non-metric MDS on generated noisy data. The reconstructed points using the metric MDS and non metric MDS are slightly shifted to avoid overlapping. Total running t..." name="description"/>
+<title>Multi-dimensional scaling — scikit-learn 1.5.dev0 documentation</title>
+<script data-cfasync="false">
     document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
     document.documentElement.dataset.theme = localStorage.getItem("theme") || "light";
   </script>
-  
-  <!-- Loaded before other Sphinx assets -->
-  <link href="../../_static/styles/theme.css?digest=8d27b9dea8ad943066ae" rel="stylesheet" />
-<link href="../../_static/styles/bootstrap.css?digest=8d27b9dea8ad943066ae" rel="stylesheet" />
-<link href="../../_static/styles/pydata-sphinx-theme.css?digest=8d27b9dea8ad943066ae" rel="stylesheet" />
-
-  
-  <link href="../../_static/vendor/fontawesome/6.5.1/css/all.min.css?digest=8d27b9dea8ad943066ae" rel="stylesheet" />
-  <link rel="preload" as="font" type="font/woff2" crossorigin href="../../_static/vendor/fontawesome/6.5.1/webfonts/fa-solid-900.woff2" />
-<link rel="preload" as="font" type="font/woff2" crossorigin href="../../_static/vendor/fontawesome/6.5.1/webfonts/fa-brands-400.woff2" />
-<link rel="preload" as="font" type="font/woff2" crossorigin href="../../_static/vendor/fontawesome/6.5.1/webfonts/fa-regular-400.woff2" />
-
-    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=a746c00c" />
-    <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
-    <link rel="stylesheet" type="text/css" href="../../_static/plot_directive.css" />
-    <link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Vibur" />
-    <link rel="stylesheet" type="text/css" href="../../_static/jupyterlite_sphinx.css?v=f996933d" />
-    <link rel="stylesheet" type="text/css" href="../../_static/sg_gallery.css?v=61a4c737" />
-    <link rel="stylesheet" type="text/css" href="../../_static/sg_gallery-binder.css?v=f4aeca0c" />
-    <link rel="stylesheet" type="text/css" href="../../_static/sg_gallery-dataframe.css?v=2082cf3c" />
-    <link rel="stylesheet" type="text/css" href="../../_static/sg_gallery-rendered-html.css?v=1277b6f3" />
-    <link rel="stylesheet" type="text/css" href="../../_static/design-style.1e8bd061cd6da7fc9cf755528e8ffc24.min.css?v=0a3b3ea7" />
-    <link rel="stylesheet" type="text/css" href="../../_static/styles/colors.css?v=d5680186" />
-    <link rel="stylesheet" type="text/css" href="../../_static/styles/custom.css?v=3e2fb91a" />
-  
-  <!-- Pre-loaded scripts that we'll load fully later -->
-  <link rel="preload" as="script" href="../../_static/scripts/bootstrap.js?digest=8d27b9dea8ad943066ae" />
-<link rel="preload" as="script" href="../../_static/scripts/pydata-sphinx-theme.js?digest=8d27b9dea8ad943066ae" />
-  <script src="../../_static/vendor/fontawesome/6.5.1/js/all.min.js?digest=8d27b9dea8ad943066ae"></script>
-
-    <script src="../../_static/documentation_options.js?v=a2c36881"></script>
-    <script src="../../_static/doctools.js?v=888ff710"></script>
-    <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
-    <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
-    <script src="../../_static/copybutton.js?v=97f0b27d"></script>
-    <script src="../../_static/jupyterlite_sphinx.js?v=f25406b8"></script>
-    <script src="../../_static/design-tabs.js?v=36754332"></script>
-    <script data-domain="scikit-learn.org" defer="defer" src="https://views.scientific-python.org/js/script.js"></script>
-    <script>DOCUMENTATION_OPTIONS.pagename = 'auto_examples/manifold/plot_mds';</script>
-    <script>
+<!-- Loaded before other Sphinx assets -->
+<link href="../../_static/styles/theme.css?digest=8d27b9dea8ad943066ae" rel="stylesheet"/>
+<link href="../../_static/styles/bootstrap.css?digest=8d27b9dea8ad943066ae" rel="stylesheet"/>
+<link href="../../_static/styles/pydata-sphinx-theme.css?digest=8d27b9dea8ad943066ae" rel="stylesheet"/>
+<link href="../../_static/vendor/fontawesome/6.5.1/css/all.min.css?digest=8d27b9dea8ad943066ae" rel="stylesheet"/>
+<link as="font" crossorigin="" href="../../_static/vendor/fontawesome/6.5.1/webfonts/fa-solid-900.woff2" rel="preload" type="font/woff2"/>
+<link as="font" crossorigin="" href="../../_static/vendor/fontawesome/6.5.1/webfonts/fa-brands-400.woff2" rel="preload" type="font/woff2"/>
+<link as="font" crossorigin="" href="../../_static/vendor/fontawesome/6.5.1/webfonts/fa-regular-400.woff2" rel="preload" type="font/woff2"/>
+<link href="../../_static/pygments.css?v=a746c00c" rel="stylesheet" type="text/css"/>
+<link href="../../_static/copybutton.css?v=76b2166b" rel="stylesheet" type="text/css"/>
+<link href="../../_static/plot_directive.css" rel="stylesheet" type="text/css"/>
+<link href="https://fonts.googleapis.com/css?family=Vibur" rel="stylesheet" type="text/css"/>
+<link href="../../_static/jupyterlite_sphinx.css?v=f996933d" rel="stylesheet" type="text/css"/>
+<link href="../../_static/sg_gallery.css?v=61a4c737" rel="stylesheet" type="text/css"/>
+<link href="../../_static/sg_gallery-binder.css?v=f4aeca0c" rel="stylesheet" type="text/css"/>
+<link href="../../_static/sg_gallery-dataframe.css?v=2082cf3c" rel="stylesheet" type="text/css"/>
+<link href="../../_static/sg_gallery-rendered-html.css?v=1277b6f3" rel="stylesheet" type="text/css"/>
+<link href="../../_static/design-style.1e8bd061cd6da7fc9cf755528e8ffc24.min.css?v=0a3b3ea7" rel="stylesheet" type="text/css"/>
+<link href="../../_static/styles/colors.css?v=d5680186" rel="stylesheet" type="text/css"/>
+<link href="../../_static/styles/custom.css?v=3e2fb91a" rel="stylesheet" type="text/css"/>
+<!-- Pre-loaded scripts that we'll load fully later -->
+<link as="script" href="../../_static/scripts/bootstrap.js?digest=8d27b9dea8ad943066ae" rel="preload"/>
+<link as="script" href="../../_static/scripts/pydata-sphinx-theme.js?digest=8d27b9dea8ad943066ae" rel="preload"/>
+<script src="../../_static/vendor/fontawesome/6.5.1/js/all.min.js?digest=8d27b9dea8ad943066ae"></script>
+<script src="../../_static/documentation_options.js?v=a2c36881"></script>
+<script src="../../_static/doctools.js?v=888ff710"></script>
+<script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+<script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
+<script src="../../_static/copybutton.js?v=97f0b27d"></script>
+<script src="../../_static/jupyterlite_sphinx.js?v=f25406b8"></script>
+<script src="../../_static/design-tabs.js?v=36754332"></script>
+<script data-domain="scikit-learn.org" defer="defer" src="https://views.scientific-python.org/js/script.js"></script>
+<script>DOCUMENTATION_OPTIONS.pagename = 'auto_examples/manifold/plot_mds';</script>
+<script>
         DOCUMENTATION_OPTIONS.theme_version = '0.15.2';
         DOCUMENTATION_OPTIONS.theme_switcher_json_url = 'https://charlie-xiao.github.io/assets/json/sklearn-versions-test.json';
         DOCUMENTATION_OPTIONS.theme_switcher_version_match = '1.5.dev0';
         DOCUMENTATION_OPTIONS.show_version_warning_banner = true;
         </script>
-    <script src="../../_static/scripts/details-permalink.js?v=b0ed9290"></script>
-    <link rel="icon" href="../../_static/favicon.ico"/>
-    <link rel="author" title="About these documents" href="../../about.html" />
-    <link rel="search" title="Search" href="../../search.html" />
-    <link rel="next" title="Swiss Roll And Swiss-Hole Reduction" href="plot_swissroll.html" />
-    <link rel="prev" title="Manifold learning on handwritten digits: Locally Linear Embedding, Isomap…" href="plot_lle_digits.html" />
-  <meta name="viewport" content="width=device-width, initial-scale=1"/>
-  <meta name="docsearch:language" content="en"/>
-  </head>
-  
-  
-  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
-
-  
-  
-  <a id="pst-skip-link" class="skip-link" href="#main-content">Skip to main content</a>
-  
-  <div id="pst-scroll-pixel-helper"></div>
-  
-  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
-    <i class="fa-solid fa-arrow-up"></i>
+<script src="../../_static/scripts/details-permalink.js?v=b0ed9290"></script>
+<link href="../../_static/favicon.ico" rel="icon"/>
+<link href="../../about.html" rel="author" title="About these documents"/>
+<link href="../../search.html" rel="search" title="Search"/>
+<link href="plot_swissroll.html" rel="next" title="Swiss Roll And Swiss-Hole Reduction"/>
+<link href="plot_lle_digits.html" rel="prev" title="Manifold learning on handwritten digits: Locally Linear Embedding, Isomap…"/>
+<meta content="width=device-width, initial-scale=1" name="viewport"/>
+<meta content="en" name="docsearch:language"/>
+</head>
+<body data-bs-root-margin="0px 0px -60%" data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-default-mode="" data-offset="180">
+<a class="skip-link" href="#main-content" id="pst-skip-link">Skip to main content</a>
+<div id="pst-scroll-pixel-helper"></div>
+<button class="btn rounded-pill" id="pst-back-to-top" type="button">
+<i class="fa-solid fa-arrow-up"></i>
     Back to top
   </button>
-
-  
-  <input type="checkbox"
-          class="sidebar-toggle"
-          name="__primary"
-          id="__primary"/>
-  <label class="overlay overlay-primary" for="__primary"></label>
-  
-  <input type="checkbox"
-          class="sidebar-toggle"
-          name="__secondary"
-          id="__secondary"/>
-  <label class="overlay overlay-secondary" for="__secondary"></label>
-  
-  <div class="search-button__wrapper">
-    <div class="search-button__overlay"></div>
-    <div class="search-button__search-container">
-<form class="bd-search d-flex align-items-center"
-      action="../../search.html"
-      method="get">
-  <i class="fa-solid fa-magnifying-glass"></i>
-  <input type="search"
-         class="form-control"
-         name="q"
-         id="search-input"
-         placeholder="Search the docs ..."
-         aria-label="Search the docs ..."
-         autocomplete="off"
-         autocorrect="off"
-         autocapitalize="off"
-         spellcheck="false"/>
-  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+<input class="sidebar-toggle" id="__primary" name="__primary" type="checkbox"/>
+<label class="overlay overlay-primary" for="__primary"></label>
+<input class="sidebar-toggle" id="__secondary" name="__secondary" type="checkbox"/>
+<label class="overlay overlay-secondary" for="__secondary"></label>
+<div class="search-button__wrapper">
+<div class="search-button__overlay"></div>
+<div class="search-button__search-container">
+<form action="../../search.html" class="bd-search d-flex align-items-center" method="get">
+<i class="fa-solid fa-magnifying-glass"></i>
+<input aria-label="Search the docs ..." autocapitalize="off" autocomplete="off" autocorrect="off" class="form-control" id="search-input" name="q" placeholder="Search the docs ..." spellcheck="false" type="search"/>
+<span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
 </form></div>
-  </div>
-  
-    <header class="bd-header navbar navbar-expand-lg bd-navbar">
+</div>
+<header class="bd-header navbar navbar-expand-lg bd-navbar">
 <div class="bd-header__inner bd-page-width">
-  <label class="sidebar-toggle primary-toggle" for="__primary">
-    <span class="fa-solid fa-bars"></span>
-  </label>
-  
-  
-  <div class=" navbar-header-items__start">
-    
-      <div class="navbar-item">
-
-  
-
+<label class="sidebar-toggle primary-toggle" for="__primary">
+<span class="fa-solid fa-bars"></span>
+</label>
+<div class="navbar-header-items__start">
+<div class="navbar-item">
 <a class="navbar-brand logo" href="../../index.html">
-  
-  
-  
-  
-  
-    
-    
-      
-    
-    
-    <img src="../../_static/scikit-learn-logo-small.png" class="logo__image only-light" alt="scikit-learn homepage"/>
-    <script>document.write(`<img src="../../_static/scikit-learn-logo-small.png" class="logo__image only-dark" alt="scikit-learn homepage"/>`);</script>
-  
-  
+<img alt="scikit-learn homepage" class="logo__image only-light" src="../../_static/scikit-learn-logo-small.png"/>
+<script>document.write(`<img src="../../_static/scikit-learn-logo-small.png" class="logo__image only-dark" alt="scikit-learn homepage"/>`);</script>
 </a></div>
-    
-  </div>
-  
-  <div class=" navbar-header-items">
-    
-    <div class="me-auto navbar-header-items__center">
-      
-        <div class="navbar-item">
+</div>
+<div class="navbar-header-items">
+<div class="me-auto navbar-header-items__center">
+<div class="navbar-item">
 <nav class="navbar-nav">
-  <ul class="bd-navbar-elements navbar-nav">
-    
-                    <li class="nav-item">
-                      <a class="nav-link nav-internal" href="../../install.html">
+<ul class="bd-navbar-elements navbar-nav">
+<li class="nav-item">
+<a class="nav-link nav-internal" href="../../install.html">
                         Install
                       </a>
-                    </li>
-                
-
-                    <li class="nav-item">
-                      <a class="nav-link nav-internal" href="../../user_guide.html">
+</li>
+<li class="nav-item">
+<a class="nav-link nav-internal" href="../../user_guide.html">
                         User Guide
                       </a>
-                    </li>
-                
-
-                    <li class="nav-item">
-                      <a class="nav-link nav-internal" href="../../modules/classes.html">
+</li>
+<li class="nav-item">
+<a class="nav-link nav-internal" href="../../modules/classes.html">
                         API
                       </a>
-                    </li>
-                
-
-                    <li class="nav-item current active">
-                      <a class="nav-link nav-internal" href="../index.html">
+</li>
+<li class="nav-item current active">
+<a class="nav-link nav-internal" href="../index.html">
                         Examples
                       </a>
-                    </li>
-                
-
-                    <li class="nav-item">
-                      <a class="nav-link nav-external" href="https://blog.scikit-learn.org/">
+</li>
+<li class="nav-item">
+<a class="nav-link nav-external" href="https://blog.scikit-learn.org/">
                         Community
                       </a>
-                    </li>
-                
-            <li class="nav-item dropdown">
-                <button class="btn dropdown-toggle nav-item" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-controls="pst-nav-more-links">
+</li>
+<li class="nav-item dropdown">
+<button aria-controls="pst-nav-more-links" aria-expanded="false" class="btn dropdown-toggle nav-item" data-bs-toggle="dropdown" type="button">
                     More
                 </button>
-                <ul id="pst-nav-more-links" class="dropdown-menu">
-                    
-                    <li class="nav-item">
-                      <a class="nav-link dropdown-item nav-internal" href="../../getting_started.html">
+<ul class="dropdown-menu" id="pst-nav-more-links">
+<li class="nav-item">
+<a class="nav-link dropdown-item nav-internal" href="../../getting_started.html">
                         Getting Started
                       </a>
-                    </li>
-                
-
-                    <li class="nav-item">
-                      <a class="nav-link dropdown-item nav-internal" href="../../tutorial/index.html">
+</li>
+<li class="nav-item">
+<a class="nav-link dropdown-item nav-internal" href="../../tutorial/index.html">
                         Tutorials
                       </a>
-                    </li>
-                
-
-                    <li class="nav-item">
-                      <a class="nav-link dropdown-item nav-internal" href="../../whats_new.html">
+</li>
+<li class="nav-item">
+<a class="nav-link dropdown-item nav-internal" href="../../whats_new.html">
                         Release History
                       </a>
-                    </li>
-                
-
-                    <li class="nav-item">
-                      <a class="nav-link dropdown-item nav-internal" href="../../glossary.html">
+</li>
+<li class="nav-item">
+<a class="nav-link dropdown-item nav-internal" href="../../glossary.html">
                         Glossary
                       </a>
-                    </li>
-                
-
-                    <li class="nav-item">
-                      <a class="nav-link dropdown-item nav-internal" href="../../developers/index.html">
+</li>
+<li class="nav-item">
+<a class="nav-link dropdown-item nav-internal" href="../../developers/index.html">
                         Development
                       </a>
-                    </li>
-                
-
-                    <li class="nav-item">
-                      <a class="nav-link dropdown-item nav-internal" href="../../faq.html">
+</li>
+<li class="nav-item">
+<a class="nav-link dropdown-item nav-internal" href="../../faq.html">
                         FAQ
                       </a>
-                    </li>
-                
-
-                    <li class="nav-item">
-                      <a class="nav-link dropdown-item nav-internal" href="../../support.html">
+</li>
+<li class="nav-item">
+<a class="nav-link dropdown-item nav-internal" href="../../support.html">
                         Support
                       </a>
-                    </li>
-                
-
-                    <li class="nav-item">
-                      <a class="nav-link dropdown-item nav-internal" href="../../related_projects.html">
+</li>
+<li class="nav-item">
+<a class="nav-link dropdown-item nav-internal" href="../../related_projects.html">
                         Related Projects
                       </a>
-                    </li>
-                
-
-                    <li class="nav-item">
-                      <a class="nav-link dropdown-item nav-internal" href="../../roadmap.html">
+</li>
+<li class="nav-item">
+<a class="nav-link dropdown-item nav-internal" href="../../roadmap.html">
                         Roadmap
                       </a>
-                    </li>
-                
-
-                    <li class="nav-item">
-                      <a class="nav-link dropdown-item nav-internal" href="../../governance.html">
+</li>
+<li class="nav-item">
+<a class="nav-link dropdown-item nav-internal" href="../../governance.html">
                         Governance
                       </a>
-                    </li>
-                
-
-                    <li class="nav-item">
-                      <a class="nav-link dropdown-item nav-internal" href="../../about.html">
+</li>
+<li class="nav-item">
+<a class="nav-link dropdown-item nav-internal" href="../../about.html">
                         About us
                       </a>
-                    </li>
-                
-
-                    <li class="nav-item">
-                      <a class="nav-link dropdown-item nav-external" href="https://scikit-learn.org/dev/versions.html">
+</li>
+<li class="nav-item">
+<a class="nav-link dropdown-item nav-external" href="https://scikit-learn.org/dev/versions.html">
                         Other Versions and Download
                       </a>
-                    </li>
-                
-                </ul>
-            </li>
-            
-  </ul>
+</li>
+</ul>
+</li>
+</ul>
 </nav></div>
-      
-    </div>
-    
-    
-    <div class="navbar-header-items__end">
-      
-        <div class="navbar-item navbar-persistent--container">
-          
-
+</div>
+<div class="navbar-header-items__end">
+<div class="navbar-item navbar-persistent--container">
 <script>
 document.write(`
   <button class="btn btn-sm navbar-btn search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
@@ -311,11 +207,8 @@ document.write(`
   </button>
 `);
 </script>
-        </div>
-      
-      
-        <div class="navbar-item">
-
+</div>
+<div class="navbar-item">
 <script>
 document.write(`
   <button class="btn btn-sm navbar-btn theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
@@ -325,24 +218,13 @@ document.write(`
   </button>
 `);
 </script></div>
-      
-        <div class="navbar-item"><ul class="navbar-icon-links navbar-nav"
-    aria-label="Icon Links">
-        <li class="nav-item">
-          
-          
-          
-          
-          
-          
-          
-          
-          <a href="https://github.com/scikit-learn/scikit-learn" title="GitHub" class="nav-link" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><span><i class="fa-brands fa-square-github fa-lg" aria-hidden="true"></i></span>
-            <span class="sr-only">GitHub</span></a>
-        </li>
+<div class="navbar-item"><ul aria-label="Icon Links" class="navbar-icon-links navbar-nav">
+<li class="nav-item">
+<a class="nav-link" data-bs-placement="bottom" data-bs-toggle="tooltip" href="https://github.com/scikit-learn/scikit-learn" rel="noopener" target="_blank" title="GitHub"><span><i aria-hidden="true" class="fa-brands fa-square-github fa-lg"></i></span>
+<span class="sr-only">GitHub</span></a>
+</li>
 </ul></div>
-      
-        <div class="navbar-item">
+<div class="navbar-item">
 <script>
 document.write(`
   <div class="version-switcher__container dropdown">
@@ -365,14 +247,9 @@ document.write(`
   </div>
 `);
 </script></div>
-      
-    </div>
-    
-  </div>
-  
-  
-    <div class="navbar-persistent--mobile">
-
+</div>
+</div>
+<div class="navbar-persistent--mobile">
 <script>
 document.write(`
   <button class="btn btn-sm navbar-btn search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
@@ -380,174 +257,117 @@ document.write(`
   </button>
 `);
 </script>
-    </div>
-  
-
-  
-    <label class="sidebar-toggle secondary-toggle" for="__secondary" tabindex="0">
-      <span class="fa-solid fa-outdent"></span>
-    </label>
-  
 </div>
-
-    </header>
-  
-
-  <div class="bd-container">
-    <div class="bd-container__inner bd-page-width">
-      
-      
-      
-      <div class="bd-sidebar-primary bd-sidebar">
-        
-
-  
-  <div class="sidebar-header-items sidebar-primary__section">
-    
-    
-      <div class="sidebar-header-items__center">
-        
-          <div class="navbar-item">
+<label class="sidebar-toggle secondary-toggle" for="__secondary" tabindex="0">
+<span class="fa-solid fa-outdent"></span>
+</label>
+</div>
+</header>
+<div class="bd-container">
+<div class="bd-container__inner bd-page-width">
+<div class="bd-sidebar-primary bd-sidebar">
+<div class="sidebar-header-items sidebar-primary__section">
+<div class="sidebar-header-items__center">
+<div class="navbar-item">
 <nav class="navbar-nav">
-  <ul class="bd-navbar-elements navbar-nav">
-    
-                    <li class="nav-item">
-                      <a class="nav-link nav-internal" href="../../install.html">
+<ul class="bd-navbar-elements navbar-nav">
+<li class="nav-item">
+<a class="nav-link nav-internal" href="../../install.html">
                         Install
                       </a>
-                    </li>
-                
-
-                    <li class="nav-item">
-                      <a class="nav-link nav-internal" href="../../user_guide.html">
+</li>
+<li class="nav-item">
+<a class="nav-link nav-internal" href="../../user_guide.html">
                         User Guide
                       </a>
-                    </li>
-                
-
-                    <li class="nav-item">
-                      <a class="nav-link nav-internal" href="../../modules/classes.html">
+</li>
+<li class="nav-item">
+<a class="nav-link nav-internal" href="../../modules/classes.html">
                         API
                       </a>
-                    </li>
-                
-
-                    <li class="nav-item current active">
-                      <a class="nav-link nav-internal" href="../index.html">
+</li>
+<li class="nav-item current active">
+<a class="nav-link nav-internal" href="../index.html">
                         Examples
                       </a>
-                    </li>
-                
-
-                    <li class="nav-item">
-                      <a class="nav-link nav-external" href="https://blog.scikit-learn.org/">
+</li>
+<li class="nav-item">
+<a class="nav-link nav-external" href="https://blog.scikit-learn.org/">
                         Community
                       </a>
-                    </li>
-                
-            <li class="nav-item dropdown">
-                <button class="btn dropdown-toggle nav-item" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-controls="pst-nav-more-links-2">
+</li>
+<li class="nav-item dropdown">
+<button aria-controls="pst-nav-more-links-2" aria-expanded="false" class="btn dropdown-toggle nav-item" data-bs-toggle="dropdown" type="button">
                     More
                 </button>
-                <ul id="pst-nav-more-links-2" class="dropdown-menu">
-                    
-                    <li class="nav-item">
-                      <a class="nav-link dropdown-item nav-internal" href="../../getting_started.html">
+<ul class="dropdown-menu" id="pst-nav-more-links-2">
+<li class="nav-item">
+<a class="nav-link dropdown-item nav-internal" href="../../getting_started.html">
                         Getting Started
                       </a>
-                    </li>
-                
-
-                    <li class="nav-item">
-                      <a class="nav-link dropdown-item nav-internal" href="../../tutorial/index.html">
+</li>
+<li class="nav-item">
+<a class="nav-link dropdown-item nav-internal" href="../../tutorial/index.html">
                         Tutorials
                       </a>
-                    </li>
-                
-
-                    <li class="nav-item">
-                      <a class="nav-link dropdown-item nav-internal" href="../../whats_new.html">
+</li>
+<li class="nav-item">
+<a class="nav-link dropdown-item nav-internal" href="../../whats_new.html">
                         Release History
                       </a>
-                    </li>
-                
-
-                    <li class="nav-item">
-                      <a class="nav-link dropdown-item nav-internal" href="../../glossary.html">
+</li>
+<li class="nav-item">
+<a class="nav-link dropdown-item nav-internal" href="../../glossary.html">
                         Glossary
                       </a>
-                    </li>
-                
-
-                    <li class="nav-item">
-                      <a class="nav-link dropdown-item nav-internal" href="../../developers/index.html">
+</li>
+<li class="nav-item">
+<a class="nav-link dropdown-item nav-internal" href="../../developers/index.html">
                         Development
                       </a>
-                    </li>
-                
-
-                    <li class="nav-item">
-                      <a class="nav-link dropdown-item nav-internal" href="../../faq.html">
+</li>
+<li class="nav-item">
+<a class="nav-link dropdown-item nav-internal" href="../../faq.html">
                         FAQ
                       </a>
-                    </li>
-                
-
-                    <li class="nav-item">
-                      <a class="nav-link dropdown-item nav-internal" href="../../support.html">
+</li>
+<li class="nav-item">
+<a class="nav-link dropdown-item nav-internal" href="../../support.html">
                         Support
                       </a>
-                    </li>
-                
-
-                    <li class="nav-item">
-                      <a class="nav-link dropdown-item nav-internal" href="../../related_projects.html">
+</li>
+<li class="nav-item">
+<a class="nav-link dropdown-item nav-internal" href="../../related_projects.html">
                         Related Projects
                       </a>
-                    </li>
-                
-
-                    <li class="nav-item">
-                      <a class="nav-link dropdown-item nav-internal" href="../../roadmap.html">
+</li>
+<li class="nav-item">
+<a class="nav-link dropdown-item nav-internal" href="../../roadmap.html">
                         Roadmap
                       </a>
-                    </li>
-                
-
-                    <li class="nav-item">
-                      <a class="nav-link dropdown-item nav-internal" href="../../governance.html">
+</li>
+<li class="nav-item">
+<a class="nav-link dropdown-item nav-internal" href="../../governance.html">
                         Governance
                       </a>
-                    </li>
-                
-
-                    <li class="nav-item">
-                      <a class="nav-link dropdown-item nav-internal" href="../../about.html">
+</li>
+<li class="nav-item">
+<a class="nav-link dropdown-item nav-internal" href="../../about.html">
                         About us
                       </a>
-                    </li>
-                
-
-                    <li class="nav-item">
-                      <a class="nav-link dropdown-item nav-external" href="https://scikit-learn.org/dev/versions.html">
+</li>
+<li class="nav-item">
+<a class="nav-link dropdown-item nav-external" href="https://scikit-learn.org/dev/versions.html">
                         Other Versions and Download
                       </a>
-                    </li>
-                
-                </ul>
-            </li>
-            
-  </ul>
+</li>
+</ul>
+</li>
+</ul>
 </nav></div>
-        
-      </div>
-    
-    
-    
-      <div class="sidebar-header-items__end">
-        
-          <div class="navbar-item">
-
+</div>
+<div class="sidebar-header-items__end">
+<div class="navbar-item">
 <script>
 document.write(`
   <button class="btn btn-sm navbar-btn theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
@@ -557,24 +377,13 @@ document.write(`
   </button>
 `);
 </script></div>
-        
-          <div class="navbar-item"><ul class="navbar-icon-links navbar-nav"
-    aria-label="Icon Links">
-        <li class="nav-item">
-          
-          
-          
-          
-          
-          
-          
-          
-          <a href="https://github.com/scikit-learn/scikit-learn" title="GitHub" class="nav-link" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><span><i class="fa-brands fa-square-github fa-lg" aria-hidden="true"></i></span>
-            <span class="sr-only">GitHub</span></a>
-        </li>
+<div class="navbar-item"><ul aria-label="Icon Links" class="navbar-icon-links navbar-nav">
+<li class="nav-item">
+<a class="nav-link" data-bs-placement="bottom" data-bs-toggle="tooltip" href="https://github.com/scikit-learn/scikit-learn" rel="noopener" target="_blank" title="GitHub"><span><i aria-hidden="true" class="fa-brands fa-square-github fa-lg"></i></span>
+<span class="sr-only">GitHub</span></a>
+</li>
 </ul></div>
-        
-          <div class="navbar-item">
+<div class="navbar-item">
 <script>
 document.write(`
   <div class="version-switcher__container dropdown">
@@ -597,17 +406,13 @@ document.write(`
   </div>
 `);
 </script></div>
-        
-      </div>
-    
-  </div>
-  
-    <div class="sidebar-primary-items__start sidebar-primary__section">
-        <div class="sidebar-primary-item">
-<nav class="bd-docs-nav bd-links"
-     aria-label="Section Navigation">
-  <p class="bd-links__title" role="heading" aria-level="1">Section Navigation</p>
-  <div class="bd-toc-item navbar-nav"><ul class="current nav bd-sidenav">
+</div>
+</div>
+<div class="sidebar-primary-items__start sidebar-primary__section">
+<div class="sidebar-primary-item">
+<nav aria-label="Section Navigation" class="bd-docs-nav bd-links">
+<p aria-level="1" class="bd-links__title" role="heading">Section Navigation</p>
+<div class="bd-toc-item navbar-nav"><ul class="current nav bd-sidenav">
 <li class="toctree-l1 has-children"><a class="reference internal" href="../release_highlights/index.html">Release Highlights</a><input class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-1"><i class="fa-solid fa-chevron-down"></i></label><ul>
 <li class="toctree-l2"><a class="reference internal" href="../release_highlights/plot_release_highlights_1_4_0.html">Release Highlights for scikit-learn 1.4</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../release_highlights/plot_release_highlights_1_3_0.html">Release Highlights for scikit-learn 1.3</a></li>
@@ -1001,87 +806,56 @@ document.write(`
 </ul>
 </div>
 </nav></div>
-    </div>
-  
-  
-  <div class="sidebar-primary-items__end sidebar-primary__section">
-  </div>
-  
-  <div id="rtd-footer-container"></div>
-
-
-      </div>
-      
-      <main id="main-content" class="bd-main">
-        
-        
-          <div class="bd-content">
-            <div class="bd-article-container">
-              
-              <div class="bd-header-article">
+</div>
+<div class="sidebar-primary-items__end sidebar-primary__section">
+</div>
+<div id="rtd-footer-container"></div>
+</div>
+<main class="bd-main" id="main-content">
+<div class="bd-content">
+<div class="bd-article-container">
+<div class="bd-header-article">
 <div class="header-article-items header-article__inner">
-  
-    <div class="header-article-items__start">
-      
-        <div class="header-article-item">
-
-
-
+<div class="header-article-items__start">
+<div class="header-article-item">
 <nav aria-label="Breadcrumb">
-  <ul class="bd-breadcrumbs">
-    
-    <li class="breadcrumb-item breadcrumb-home">
-      <a href="../../index.html" class="nav-link" aria-label="Home">
-        <i class="fa-solid fa-home"></i>
-      </a>
-    </li>
-    
-    <li class="breadcrumb-item"><a href="../index.html" class="nav-link">Examples</a></li>
-    
-    
-    <li class="breadcrumb-item"><a href="index.html" class="nav-link">Manifold learning</a></li>
-    
-    <li class="breadcrumb-item active" aria-current="page">Multi-dimens...</li>
-  </ul>
+<ul class="bd-breadcrumbs">
+<li class="breadcrumb-item breadcrumb-home">
+<a aria-label="Home" class="nav-link" href="../../index.html">
+<i class="fa-solid fa-home"></i>
+</a>
+</li>
+<li class="breadcrumb-item"><a class="nav-link" href="../index.html">Examples</a></li>
+<li class="breadcrumb-item"><a class="nav-link" href="index.html">Manifold learning</a></li>
+<li aria-current="page" class="breadcrumb-item active">Multi-dimens...</li>
+</ul>
 </nav>
 </div>
-      
-    </div>
-  
-  
 </div>
 </div>
-              
-              
-              
-                
+</div>
 <div id="searchbox"></div>
-                <article class="bd-article">
-                  
-  <div class="sphx-glr-download-link-note admonition note">
-<p class="admonition-title">Note</p>
-<p><a class="reference internal" href="#sphx-glr-download-auto-examples-manifold-plot-mds-py"><span class="std std-ref">Go to the end</span></a>
-to download the full example code or to run this example in your browser via JupyterLite or Binder</p>
-</div>
+<article class="bd-article">
+
 <section class="sphx-glr-example-title" id="multi-dimensional-scaling">
 <span id="sphx-glr-auto-examples-manifold-plot-mds-py"></span><h1>Multi-dimensional scaling<a class="headerlink" href="#multi-dimensional-scaling" title="Link to this heading">#</a></h1>
 <p>An illustration of the metric and non-metric MDS on generated noisy data.</p>
 <p>The reconstructed points using the metric MDS and non metric MDS are slightly
 shifted to avoid overlapping.</p>
-<img src="../../_images/sphx_glr_plot_mds_001.png" srcset="../../_images/sphx_glr_plot_mds_001.png" alt="plot mds" class = "sphx-glr-single-img"/><div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Author: Nelle Varoquaux &lt;nelle.varoquaux@gmail.com&gt;</span>
+<img alt="plot mds" class="sphx-glr-single-img" src="../../_images/sphx_glr_plot_mds_001.png" srcset="../../_images/sphx_glr_plot_mds_001.png"/><div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Author: Nelle Varoquaux &lt;nelle.varoquaux@gmail.com&gt;</span>
 <span class="c1"># License: BSD</span>
 
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 <span class="kn">from</span> <span class="nn">matplotlib</span> <span class="kn">import</span> <span class="n">pyplot</span> <span class="k">as</span> <span class="n">plt</span>
-<span class="kn">from</span> <span class="nn">matplotlib.collections</span> <span class="kn">import</span> <a href="https://matplotlib.org/stable/api/collections_api.html#matplotlib.collections.LineCollection" title="matplotlib.collections.LineCollection" class="sphx-glr-backref-module-matplotlib-collections sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">LineCollection</span></a>
+<span class="kn">from</span> <span class="nn">matplotlib.collections</span> <span class="kn">import</span> <a class="sphx-glr-backref-module-matplotlib-collections sphx-glr-backref-type-py-class sphx-glr-backref-instance" href="https://matplotlib.org/stable/api/collections_api.html#matplotlib.collections.LineCollection" title="matplotlib.collections.LineCollection"><span class="n">LineCollection</span></a>
 
 <span class="kn">from</span> <span class="nn">sklearn</span> <span class="kn">import</span> <span class="n">manifold</span>
-<span class="kn">from</span> <span class="nn">sklearn.decomposition</span> <span class="kn">import</span> <a href="../../modules/generated/sklearn.decomposition.PCA.html#sklearn.decomposition.PCA" title="sklearn.decomposition.PCA" class="sphx-glr-backref-module-sklearn-decomposition sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">PCA</span></a>
+<span class="kn">from</span> <span class="nn">sklearn.decomposition</span> <span class="kn">import</span> <a class="sphx-glr-backref-module-sklearn-decomposition sphx-glr-backref-type-py-class sphx-glr-backref-instance" href="../../modules/generated/sklearn.decomposition.PCA.html#sklearn.decomposition.PCA" title="sklearn.decomposition.PCA"><span class="n">PCA</span></a>
 <span class="kn">from</span> <span class="nn">sklearn.metrics</span> <span class="kn">import</span> <span class="n">euclidean_distances</span>
 
-<span class="n">EPSILON</span> <span class="o">=</span> <a href="https://numpy.org/doc/stable/reference/generated/numpy.finfo.html#numpy.finfo" title="numpy.finfo" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">np</span><span class="o">.</span><span class="n">finfo</span></a><span class="p">(</span><a href="https://numpy.org/doc/stable/reference/arrays.scalars.html#numpy.float32" title="numpy.float32" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-attribute"><span class="n">np</span><span class="o">.</span><span class="n">float32</span></a><span class="p">)</span><span class="o">.</span><span class="n">eps</span>
+<span class="n">EPSILON</span> <span class="o">=</span> <a class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-class sphx-glr-backref-instance" href="https://numpy.org/doc/stable/reference/generated/numpy.finfo.html#numpy.finfo" title="numpy.finfo"><span class="n">np</span><span class="o">.</span><span class="n">finfo</span></a><span class="p">(</span><a class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-attribute" href="https://numpy.org/doc/stable/reference/arrays.scalars.html#numpy.float32" title="numpy.float32"><span class="n">np</span><span class="o">.</span><span class="n">float32</span></a><span class="p">)</span><span class="o">.</span><span class="n">eps</span>
 <span class="n">n_samples</span> <span class="o">=</span> <span class="mi">20</span>
-<span class="n">seed</span> <span class="o">=</span> <a href="https://numpy.org/doc/stable/reference/random/legacy.html#numpy.random.RandomState" title="numpy.random.RandomState" class="sphx-glr-backref-module-numpy-random sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">RandomState</span></a><span class="p">(</span><span class="n">seed</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>
+<span class="n">seed</span> <span class="o">=</span> <a class="sphx-glr-backref-module-numpy-random sphx-glr-backref-type-py-class sphx-glr-backref-instance" href="https://numpy.org/doc/stable/reference/random/legacy.html#numpy.random.RandomState" title="numpy.random.RandomState"><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">RandomState</span></a><span class="p">(</span><span class="n">seed</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>
 <span class="n">X_true</span> <span class="o">=</span> <span class="n">seed</span><span class="o">.</span><span class="n">randint</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">20</span><span class="p">,</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">n_samples</span><span class="p">)</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">float</span><span class="p">)</span>
 <span class="n">X_true</span> <span class="o">=</span> <span class="n">X_true</span><span class="o">.</span><span class="n">reshape</span><span class="p">((</span><span class="n">n_samples</span><span class="p">,</span> <span class="mi">2</span><span class="p">))</span>
 <span class="c1"># Center the data</span>
@@ -1090,27 +864,27 @@ shifted to avoid overlapping.</p>
 <span class="n">similarities</span> <span class="o">=</span> <span class="n">euclidean_distances</span><span class="p">(</span><span class="n">X_true</span><span class="p">)</span>
 
 <span class="c1"># Add noise to the similarities</span>
-<span class="n">noise</span> <span class="o">=</span> <a href="https://numpy.org/doc/stable/reference/random/generated/numpy.random.rand.html#numpy.random.rand" title="numpy.random.rand" class="sphx-glr-backref-module-numpy-random sphx-glr-backref-type-py-function"><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">rand</span></a><span class="p">(</span><span class="n">n_samples</span><span class="p">,</span> <span class="n">n_samples</span><span class="p">)</span>
+<span class="n">noise</span> <span class="o">=</span> <a class="sphx-glr-backref-module-numpy-random sphx-glr-backref-type-py-function" href="https://numpy.org/doc/stable/reference/random/generated/numpy.random.rand.html#numpy.random.rand" title="numpy.random.rand"><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">rand</span></a><span class="p">(</span><span class="n">n_samples</span><span class="p">,</span> <span class="n">n_samples</span><span class="p">)</span>
 <span class="n">noise</span> <span class="o">=</span> <span class="n">noise</span> <span class="o">+</span> <span class="n">noise</span><span class="o">.</span><span class="n">T</span>
-<span class="n">noise</span><span class="p">[</span><a href="https://numpy.org/doc/stable/reference/generated/numpy.arange.html#numpy.arange" title="numpy.arange" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-function"><span class="n">np</span><span class="o">.</span><span class="n">arange</span></a><span class="p">(</span><span class="n">noise</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]),</span> <a href="https://numpy.org/doc/stable/reference/generated/numpy.arange.html#numpy.arange" title="numpy.arange" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-function"><span class="n">np</span><span class="o">.</span><span class="n">arange</span></a><span class="p">(</span><span class="n">noise</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">])]</span> <span class="o">=</span> <span class="mi">0</span>
+<span class="n">noise</span><span class="p">[</span><a class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-function" href="https://numpy.org/doc/stable/reference/generated/numpy.arange.html#numpy.arange" title="numpy.arange"><span class="n">np</span><span class="o">.</span><span class="n">arange</span></a><span class="p">(</span><span class="n">noise</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]),</span> <a class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-function" href="https://numpy.org/doc/stable/reference/generated/numpy.arange.html#numpy.arange" title="numpy.arange"><span class="n">np</span><span class="o">.</span><span class="n">arange</span></a><span class="p">(</span><span class="n">noise</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">])]</span> <span class="o">=</span> <span class="mi">0</span>
 <span class="n">similarities</span> <span class="o">+=</span> <span class="n">noise</span>
 
-<span class="n">mds</span> <span class="o">=</span> <a href="../../modules/generated/sklearn.manifold.MDS.html#sklearn.manifold.MDS" title="sklearn.manifold.MDS" class="sphx-glr-backref-module-sklearn-manifold sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">manifold</span><span class="o">.</span><span class="n">MDS</span></a><span class="p">(</span>
+<span class="n">mds</span> <span class="o">=</span> <a class="sphx-glr-backref-module-sklearn-manifold sphx-glr-backref-type-py-class sphx-glr-backref-instance" href="../../modules/generated/sklearn.manifold.MDS.html#sklearn.manifold.MDS" title="sklearn.manifold.MDS"><span class="n">manifold</span><span class="o">.</span><span class="n">MDS</span></a><span class="p">(</span>
     <span class="n">n_components</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span>
     <span class="n">max_iter</span><span class="o">=</span><span class="mi">3000</span><span class="p">,</span>
     <span class="n">eps</span><span class="o">=</span><span class="mf">1e-9</span><span class="p">,</span>
     <span class="n">random_state</span><span class="o">=</span><span class="n">seed</span><span class="p">,</span>
-    <span class="n">dissimilarity</span><span class="o">=</span><span class="s2">&quot;precomputed&quot;</span><span class="p">,</span>
+    <span class="n">dissimilarity</span><span class="o">=</span><span class="s2">"precomputed"</span><span class="p">,</span>
     <span class="n">n_jobs</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
 <span class="p">)</span>
 <span class="n">pos</span> <span class="o">=</span> <span class="n">mds</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">similarities</span><span class="p">)</span><span class="o">.</span><span class="n">embedding_</span>
 
-<span class="n">nmds</span> <span class="o">=</span> <a href="../../modules/generated/sklearn.manifold.MDS.html#sklearn.manifold.MDS" title="sklearn.manifold.MDS" class="sphx-glr-backref-module-sklearn-manifold sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">manifold</span><span class="o">.</span><span class="n">MDS</span></a><span class="p">(</span>
+<span class="n">nmds</span> <span class="o">=</span> <a class="sphx-glr-backref-module-sklearn-manifold sphx-glr-backref-type-py-class sphx-glr-backref-instance" href="../../modules/generated/sklearn.manifold.MDS.html#sklearn.manifold.MDS" title="sklearn.manifold.MDS"><span class="n">manifold</span><span class="o">.</span><span class="n">MDS</span></a><span class="p">(</span>
     <span class="n">n_components</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span>
     <span class="n">metric</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
     <span class="n">max_iter</span><span class="o">=</span><span class="mi">3000</span><span class="p">,</span>
     <span class="n">eps</span><span class="o">=</span><span class="mf">1e-12</span><span class="p">,</span>
-    <span class="n">dissimilarity</span><span class="o">=</span><span class="s2">&quot;precomputed&quot;</span><span class="p">,</span>
+    <span class="n">dissimilarity</span><span class="o">=</span><span class="s2">"precomputed"</span><span class="p">,</span>
     <span class="n">random_state</span><span class="o">=</span><span class="n">seed</span><span class="p">,</span>
     <span class="n">n_jobs</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
     <span class="n">n_init</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
@@ -1118,169 +892,111 @@ shifted to avoid overlapping.</p>
 <span class="n">npos</span> <span class="o">=</span> <span class="n">nmds</span><span class="o">.</span><span class="n">fit_transform</span><span class="p">(</span><span class="n">similarities</span><span class="p">,</span> <span class="n">init</span><span class="o">=</span><span class="n">pos</span><span class="p">)</span>
 
 <span class="c1"># Rescale the data</span>
-<span class="n">pos</span> <span class="o">*=</span> <a href="https://numpy.org/doc/stable/reference/generated/numpy.sqrt.html#numpy.sqrt" title="numpy.sqrt" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-data"><span class="n">np</span><span class="o">.</span><span class="n">sqrt</span></a><span class="p">((</span><span class="n">X_true</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span><span class="o">.</span><span class="n">sum</span><span class="p">())</span> <span class="o">/</span> <a href="https://numpy.org/doc/stable/reference/generated/numpy.sqrt.html#numpy.sqrt" title="numpy.sqrt" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-data"><span class="n">np</span><span class="o">.</span><span class="n">sqrt</span></a><span class="p">((</span><span class="n">pos</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span><span class="o">.</span><span class="n">sum</span><span class="p">())</span>
-<span class="n">npos</span> <span class="o">*=</span> <a href="https://numpy.org/doc/stable/reference/generated/numpy.sqrt.html#numpy.sqrt" title="numpy.sqrt" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-data"><span class="n">np</span><span class="o">.</span><span class="n">sqrt</span></a><span class="p">((</span><span class="n">X_true</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span><span class="o">.</span><span class="n">sum</span><span class="p">())</span> <span class="o">/</span> <a href="https://numpy.org/doc/stable/reference/generated/numpy.sqrt.html#numpy.sqrt" title="numpy.sqrt" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-data"><span class="n">np</span><span class="o">.</span><span class="n">sqrt</span></a><span class="p">((</span><span class="n">npos</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span><span class="o">.</span><span class="n">sum</span><span class="p">())</span>
+<span class="n">pos</span> <span class="o">*=</span> <a class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-data" href="https://numpy.org/doc/stable/reference/generated/numpy.sqrt.html#numpy.sqrt" title="numpy.sqrt"><span class="n">np</span><span class="o">.</span><span class="n">sqrt</span></a><span class="p">((</span><span class="n">X_true</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span><span class="o">.</span><span class="n">sum</span><span class="p">())</span> <span class="o">/</span> <a class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-data" href="https://numpy.org/doc/stable/reference/generated/numpy.sqrt.html#numpy.sqrt" title="numpy.sqrt"><span class="n">np</span><span class="o">.</span><span class="n">sqrt</span></a><span class="p">((</span><span class="n">pos</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span><span class="o">.</span><span class="n">sum</span><span class="p">())</span>
+<span class="n">npos</span> <span class="o">*=</span> <a class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-data" href="https://numpy.org/doc/stable/reference/generated/numpy.sqrt.html#numpy.sqrt" title="numpy.sqrt"><span class="n">np</span><span class="o">.</span><span class="n">sqrt</span></a><span class="p">((</span><span class="n">X_true</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span><span class="o">.</span><span class="n">sum</span><span class="p">())</span> <span class="o">/</span> <a class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-data" href="https://numpy.org/doc/stable/reference/generated/numpy.sqrt.html#numpy.sqrt" title="numpy.sqrt"><span class="n">np</span><span class="o">.</span><span class="n">sqrt</span></a><span class="p">((</span><span class="n">npos</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span><span class="o">.</span><span class="n">sum</span><span class="p">())</span>
 
 <span class="c1"># Rotate the data</span>
-<span class="n">clf</span> <span class="o">=</span> <a href="../../modules/generated/sklearn.decomposition.PCA.html#sklearn.decomposition.PCA" title="sklearn.decomposition.PCA" class="sphx-glr-backref-module-sklearn-decomposition sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">PCA</span></a><span class="p">(</span><span class="n">n_components</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+<span class="n">clf</span> <span class="o">=</span> <a class="sphx-glr-backref-module-sklearn-decomposition sphx-glr-backref-type-py-class sphx-glr-backref-instance" href="../../modules/generated/sklearn.decomposition.PCA.html#sklearn.decomposition.PCA" title="sklearn.decomposition.PCA"><span class="n">PCA</span></a><span class="p">(</span><span class="n">n_components</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
 <span class="n">X_true</span> <span class="o">=</span> <span class="n">clf</span><span class="o">.</span><span class="n">fit_transform</span><span class="p">(</span><span class="n">X_true</span><span class="p">)</span>
 
 <span class="n">pos</span> <span class="o">=</span> <span class="n">clf</span><span class="o">.</span><span class="n">fit_transform</span><span class="p">(</span><span class="n">pos</span><span class="p">)</span>
 
 <span class="n">npos</span> <span class="o">=</span> <span class="n">clf</span><span class="o">.</span><span class="n">fit_transform</span><span class="p">(</span><span class="n">npos</span><span class="p">)</span>
 
-<span class="n">fig</span> <span class="o">=</span> <a href="https://matplotlib.org/stable/api/_as_gen/matplotlib.pyplot.figure.html#matplotlib.pyplot.figure" title="matplotlib.pyplot.figure" class="sphx-glr-backref-module-matplotlib-pyplot sphx-glr-backref-type-py-function"><span class="n">plt</span><span class="o">.</span><span class="n">figure</span></a><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
-<span class="n">ax</span> <span class="o">=</span> <a href="https://matplotlib.org/stable/api/_as_gen/matplotlib.pyplot.axes.html#matplotlib.pyplot.axes" title="matplotlib.pyplot.axes" class="sphx-glr-backref-module-matplotlib-pyplot sphx-glr-backref-type-py-function"><span class="n">plt</span><span class="o">.</span><span class="n">axes</span></a><span class="p">([</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">])</span>
+<span class="n">fig</span> <span class="o">=</span> <a class="sphx-glr-backref-module-matplotlib-pyplot sphx-glr-backref-type-py-function" href="https://matplotlib.org/stable/api/_as_gen/matplotlib.pyplot.figure.html#matplotlib.pyplot.figure" title="matplotlib.pyplot.figure"><span class="n">plt</span><span class="o">.</span><span class="n">figure</span></a><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">ax</span> <span class="o">=</span> <a class="sphx-glr-backref-module-matplotlib-pyplot sphx-glr-backref-type-py-function" href="https://matplotlib.org/stable/api/_as_gen/matplotlib.pyplot.axes.html#matplotlib.pyplot.axes" title="matplotlib.pyplot.axes"><span class="n">plt</span><span class="o">.</span><span class="n">axes</span></a><span class="p">([</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">])</span>
 
 <span class="n">s</span> <span class="o">=</span> <span class="mi">100</span>
-<a href="https://matplotlib.org/stable/api/_as_gen/matplotlib.pyplot.scatter.html#matplotlib.pyplot.scatter" title="matplotlib.pyplot.scatter" class="sphx-glr-backref-module-matplotlib-pyplot sphx-glr-backref-type-py-function"><span class="n">plt</span><span class="o">.</span><span class="n">scatter</span></a><span class="p">(</span><span class="n">X_true</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">],</span> <span class="n">X_true</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">],</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;navy&quot;</span><span class="p">,</span> <span class="n">s</span><span class="o">=</span><span class="n">s</span><span class="p">,</span> <span class="n">lw</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;True Position&quot;</span><span class="p">)</span>
-<a href="https://matplotlib.org/stable/api/_as_gen/matplotlib.pyplot.scatter.html#matplotlib.pyplot.scatter" title="matplotlib.pyplot.scatter" class="sphx-glr-backref-module-matplotlib-pyplot sphx-glr-backref-type-py-function"><span class="n">plt</span><span class="o">.</span><span class="n">scatter</span></a><span class="p">(</span><span class="n">pos</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">],</span> <span class="n">pos</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">],</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;turquoise&quot;</span><span class="p">,</span> <span class="n">s</span><span class="o">=</span><span class="n">s</span><span class="p">,</span> <span class="n">lw</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;MDS&quot;</span><span class="p">)</span>
-<a href="https://matplotlib.org/stable/api/_as_gen/matplotlib.pyplot.scatter.html#matplotlib.pyplot.scatter" title="matplotlib.pyplot.scatter" class="sphx-glr-backref-module-matplotlib-pyplot sphx-glr-backref-type-py-function"><span class="n">plt</span><span class="o">.</span><span class="n">scatter</span></a><span class="p">(</span><span class="n">npos</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">],</span> <span class="n">npos</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">],</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;darkorange&quot;</span><span class="p">,</span> <span class="n">s</span><span class="o">=</span><span class="n">s</span><span class="p">,</span> <span class="n">lw</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;NMDS&quot;</span><span class="p">)</span>
-<a href="https://matplotlib.org/stable/api/_as_gen/matplotlib.pyplot.legend.html#matplotlib.pyplot.legend" title="matplotlib.pyplot.legend" class="sphx-glr-backref-module-matplotlib-pyplot sphx-glr-backref-type-py-function"><span class="n">plt</span><span class="o">.</span><span class="n">legend</span></a><span class="p">(</span><span class="n">scatterpoints</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">loc</span><span class="o">=</span><span class="s2">&quot;best&quot;</span><span class="p">,</span> <span class="n">shadow</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+<a class="sphx-glr-backref-module-matplotlib-pyplot sphx-glr-backref-type-py-function" href="https://matplotlib.org/stable/api/_as_gen/matplotlib.pyplot.scatter.html#matplotlib.pyplot.scatter" title="matplotlib.pyplot.scatter"><span class="n">plt</span><span class="o">.</span><span class="n">scatter</span></a><span class="p">(</span><span class="n">X_true</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">],</span> <span class="n">X_true</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">],</span> <span class="n">color</span><span class="o">=</span><span class="s2">"navy"</span><span class="p">,</span> <span class="n">s</span><span class="o">=</span><span class="n">s</span><span class="p">,</span> <span class="n">lw</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">"True Position"</span><span class="p">)</span>
+<a class="sphx-glr-backref-module-matplotlib-pyplot sphx-glr-backref-type-py-function" href="https://matplotlib.org/stable/api/_as_gen/matplotlib.pyplot.scatter.html#matplotlib.pyplot.scatter" title="matplotlib.pyplot.scatter"><span class="n">plt</span><span class="o">.</span><span class="n">scatter</span></a><span class="p">(</span><span class="n">pos</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">],</span> <span class="n">pos</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">],</span> <span class="n">color</span><span class="o">=</span><span class="s2">"turquoise"</span><span class="p">,</span> <span class="n">s</span><span class="o">=</span><span class="n">s</span><span class="p">,</span> <span class="n">lw</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">"MDS"</span><span class="p">)</span>
+<a class="sphx-glr-backref-module-matplotlib-pyplot sphx-glr-backref-type-py-function" href="https://matplotlib.org/stable/api/_as_gen/matplotlib.pyplot.scatter.html#matplotlib.pyplot.scatter" title="matplotlib.pyplot.scatter"><span class="n">plt</span><span class="o">.</span><span class="n">scatter</span></a><span class="p">(</span><span class="n">npos</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">],</span> <span class="n">npos</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">],</span> <span class="n">color</span><span class="o">=</span><span class="s2">"darkorange"</span><span class="p">,</span> <span class="n">s</span><span class="o">=</span><span class="n">s</span><span class="p">,</span> <span class="n">lw</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">"NMDS"</span><span class="p">)</span>
+<a class="sphx-glr-backref-module-matplotlib-pyplot sphx-glr-backref-type-py-function" href="https://matplotlib.org/stable/api/_as_gen/matplotlib.pyplot.legend.html#matplotlib.pyplot.legend" title="matplotlib.pyplot.legend"><span class="n">plt</span><span class="o">.</span><span class="n">legend</span></a><span class="p">(</span><span class="n">scatterpoints</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">loc</span><span class="o">=</span><span class="s2">"best"</span><span class="p">,</span> <span class="n">shadow</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
 
 <span class="n">similarities</span> <span class="o">=</span> <span class="n">similarities</span><span class="o">.</span><span class="n">max</span><span class="p">()</span> <span class="o">/</span> <span class="p">(</span><span class="n">similarities</span> <span class="o">+</span> <span class="n">EPSILON</span><span class="p">)</span> <span class="o">*</span> <span class="mi">100</span>
-<a href="https://numpy.org/doc/stable/reference/generated/numpy.fill_diagonal.html#numpy.fill_diagonal" title="numpy.fill_diagonal" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-function"><span class="n">np</span><span class="o">.</span><span class="n">fill_diagonal</span></a><span class="p">(</span><span class="n">similarities</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+<a class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-function" href="https://numpy.org/doc/stable/reference/generated/numpy.fill_diagonal.html#numpy.fill_diagonal" title="numpy.fill_diagonal"><span class="n">np</span><span class="o">.</span><span class="n">fill_diagonal</span></a><span class="p">(</span><span class="n">similarities</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
 <span class="c1"># Plot the edges</span>
-<span class="n">start_idx</span><span class="p">,</span> <span class="n">end_idx</span> <span class="o">=</span> <a href="https://numpy.org/doc/stable/reference/generated/numpy.where.html#numpy.where" title="numpy.where" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-function"><span class="n">np</span><span class="o">.</span><span class="n">where</span></a><span class="p">(</span><span class="n">pos</span><span class="p">)</span>
+<span class="n">start_idx</span><span class="p">,</span> <span class="n">end_idx</span> <span class="o">=</span> <a class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-function" href="https://numpy.org/doc/stable/reference/generated/numpy.where.html#numpy.where" title="numpy.where"><span class="n">np</span><span class="o">.</span><span class="n">where</span></a><span class="p">(</span><span class="n">pos</span><span class="p">)</span>
 <span class="c1"># a sequence of (*line0*, *line1*, *line2*), where::</span>
 <span class="c1">#            linen = (x0, y0), (x1, y1), ... (xm, ym)</span>
 <span class="n">segments</span> <span class="o">=</span> <span class="p">[</span>
     <span class="p">[</span><span class="n">X_true</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="p">:],</span> <span class="n">X_true</span><span class="p">[</span><span class="n">j</span><span class="p">,</span> <span class="p">:]]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">pos</span><span class="p">))</span> <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">pos</span><span class="p">))</span>
 <span class="p">]</span>
 <span class="n">values</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">similarities</span><span class="p">)</span>
-<span class="n">lc</span> <span class="o">=</span> <a href="https://matplotlib.org/stable/api/collections_api.html#matplotlib.collections.LineCollection" title="matplotlib.collections.LineCollection" class="sphx-glr-backref-module-matplotlib-collections sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">LineCollection</span></a><span class="p">(</span>
+<span class="n">lc</span> <span class="o">=</span> <a class="sphx-glr-backref-module-matplotlib-collections sphx-glr-backref-type-py-class sphx-glr-backref-instance" href="https://matplotlib.org/stable/api/collections_api.html#matplotlib.collections.LineCollection" title="matplotlib.collections.LineCollection"><span class="n">LineCollection</span></a><span class="p">(</span>
     <span class="n">segments</span><span class="p">,</span> <span class="n">zorder</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="n">plt</span><span class="o">.</span><span class="n">cm</span><span class="o">.</span><span class="n">Blues</span><span class="p">,</span> <span class="n">norm</span><span class="o">=</span><span class="n">plt</span><span class="o">.</span><span class="n">Normalize</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">values</span><span class="o">.</span><span class="n">max</span><span class="p">())</span>
 <span class="p">)</span>
 <span class="n">lc</span><span class="o">.</span><span class="n">set_array</span><span class="p">(</span><span class="n">similarities</span><span class="o">.</span><span class="n">flatten</span><span class="p">())</span>
-<span class="n">lc</span><span class="o">.</span><span class="n">set_linewidths</span><span class="p">(</span><a href="https://numpy.org/doc/stable/reference/generated/numpy.full.html#numpy.full" title="numpy.full" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-function"><span class="n">np</span><span class="o">.</span><span class="n">full</span></a><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">segments</span><span class="p">),</span> <span class="mf">0.5</span><span class="p">))</span>
+<span class="n">lc</span><span class="o">.</span><span class="n">set_linewidths</span><span class="p">(</span><a class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-function" href="https://numpy.org/doc/stable/reference/generated/numpy.full.html#numpy.full" title="numpy.full"><span class="n">np</span><span class="o">.</span><span class="n">full</span></a><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">segments</span><span class="p">),</span> <span class="mf">0.5</span><span class="p">))</span>
 <span class="n">ax</span><span class="o">.</span><span class="n">add_collection</span><span class="p">(</span><span class="n">lc</span><span class="p">)</span>
 
-<a href="https://matplotlib.org/stable/api/_as_gen/matplotlib.pyplot.show.html#matplotlib.pyplot.show" title="matplotlib.pyplot.show" class="sphx-glr-backref-module-matplotlib-pyplot sphx-glr-backref-type-py-function"><span class="n">plt</span><span class="o">.</span><span class="n">show</span></a><span class="p">()</span>
+<a class="sphx-glr-backref-module-matplotlib-pyplot sphx-glr-backref-type-py-function" href="https://matplotlib.org/stable/api/_as_gen/matplotlib.pyplot.show.html#matplotlib.pyplot.show" title="matplotlib.pyplot.show"><span class="n">plt</span><span class="o">.</span><span class="n">show</span></a><span class="p">()</span>
 </pre></div>
 </div>
-<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> (0 minutes 0.196 seconds)</p>
-<div class="sphx-glr-footer sphx-glr-footer-example docutils container" id="sphx-glr-download-auto-examples-manifold-plot-mds-py">
-<div class="binder-badge docutils container">
-<a class="reference external image-reference" href="https://mybinder.org/v2/gh/scikit-learn/scikit-learn/main?urlpath=lab/tree/notebooks/auto_examples/manifold/plot_mds.ipynb"><img alt="Launch binder" src="../../_images/binder_badge_logo19.svg" width="150px" /></a>
-</div>
-<div class="lite-badge docutils container">
-<a class="reference external image-reference" href="../../lite/lab/?path=auto_examples/manifold/plot_mds.ipynb"><img alt="Launch JupyterLite" src="../../_images/jupyterlite_badge_logo19.svg" width="150px" /></a>
-</div>
-<div class="sphx-glr-download sphx-glr-download-jupyter docutils container">
-<p><a class="reference download internal" download="" href="../../_downloads/a9a5b8f39dd796eae478e4c9c39cd207/plot_mds.ipynb"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Jupyter</span> <span class="pre">notebook:</span> <span class="pre">plot_mds.ipynb</span></code></a></p>
-</div>
-<div class="sphx-glr-download sphx-glr-download-python docutils container">
-<p><a class="reference download internal" download="" href="../../_downloads/d64ed0728005aaeba058d3ccec909e73/plot_mds.py"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Python</span> <span class="pre">source</span> <span class="pre">code:</span> <span class="pre">plot_mds.py</span></code></a></p>
-</div>
-</div>
+<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> (0 minutes 0.179 seconds)</p>
+
 <p class="rubric">Related examples</p>
-<div class="sphx-glr-thumbnails"><div class="sphx-glr-thumbcontainer" tooltip="An illustration of dimensionality reduction on the S-curve dataset with various manifold learni..."><img alt="" src="../../_images/sphx_glr_plot_compare_methods_thumb.png" />
+<div class="sphx-glr-thumbnails"><div class="sphx-glr-thumbcontainer" tooltip="An illustration of dimensionality reduction on the S-curve dataset with various manifold learni..."><img alt="" src="../../_images/sphx_glr_plot_compare_methods_thumb.png"/>
 <p><a class="reference internal" href="plot_compare_methods.html#sphx-glr-auto-examples-manifold-plot-compare-methods-py"><span class="std std-ref">Comparison of Manifold Learning methods</span></a></p>
-  <div class="sphx-glr-thumbnail-title">Comparison of Manifold Learning methods</div>
-</div><div class="sphx-glr-thumbcontainer" tooltip="Demonstrates the effect of different metrics on the hierarchical clustering."><img alt="" src="../../_images/sphx_glr_plot_agglomerative_clustering_metrics_thumb.png" />
+<div class="sphx-glr-thumbnail-title">Comparison of Manifold Learning methods</div>
+</div><div class="sphx-glr-thumbcontainer" tooltip="Demonstrates the effect of different metrics on the hierarchical clustering."><img alt="" src="../../_images/sphx_glr_plot_agglomerative_clustering_metrics_thumb.png"/>
 <p><a class="reference internal" href="../cluster/plot_agglomerative_clustering_metrics.html#sphx-glr-auto-examples-cluster-plot-agglomerative-clustering-metrics-py"><span class="std std-ref">Agglomerative clustering with different metrics</span></a></p>
-  <div class="sphx-glr-thumbnail-title">Agglomerative clustering with different metrics</div>
-</div><div class="sphx-glr-thumbcontainer" tooltip="An application of the different manifold techniques on a spherical data-set. Here one can see t..."><img alt="" src="../../_images/sphx_glr_plot_manifold_sphere_thumb.png" />
+<div class="sphx-glr-thumbnail-title">Agglomerative clustering with different metrics</div>
+</div><div class="sphx-glr-thumbcontainer" tooltip="An application of the different manifold techniques on a spherical data-set. Here one can see t..."><img alt="" src="../../_images/sphx_glr_plot_manifold_sphere_thumb.png"/>
 <p><a class="reference internal" href="plot_manifold_sphere.html#sphx-glr-auto-examples-manifold-plot-manifold-sphere-py"><span class="std std-ref">Manifold Learning methods on a severed sphere</span></a></p>
-  <div class="sphx-glr-thumbnail-title">Manifold Learning methods on a severed sphere</div>
-</div><div class="sphx-glr-thumbcontainer" tooltip="This example demonstrates Gradient Boosting to produce a predictive model from an ensemble of w..."><img alt="" src="../../_images/sphx_glr_plot_gradient_boosting_regression_thumb.png" />
+<div class="sphx-glr-thumbnail-title">Manifold Learning methods on a severed sphere</div>
+</div><div class="sphx-glr-thumbcontainer" tooltip="This example demonstrates Gradient Boosting to produce a predictive model from an ensemble of w..."><img alt="" src="../../_images/sphx_glr_plot_gradient_boosting_regression_thumb.png"/>
 <p><a class="reference internal" href="../ensemble/plot_gradient_boosting_regression.html#sphx-glr-auto-examples-ensemble-plot-gradient-boosting-regression-py"><span class="std std-ref">Gradient Boosting regression</span></a></p>
-  <div class="sphx-glr-thumbnail-title">Gradient Boosting regression</div>
-</div><div class="sphx-glr-thumbcontainer" tooltip="An illustration of the isotonic regression on generated data (non-linear monotonic trend with h..."><img alt="" src="../../_images/sphx_glr_plot_isotonic_regression_thumb.png" />
-<p><a class="reference internal" href="../miscellaneous/plot_isotonic_regression.html#sphx-glr-auto-examples-miscellaneous-plot-isotonic-regression-py"><span class="std std-ref">Isotonic Regression</span></a></p>
-  <div class="sphx-glr-thumbnail-title">Isotonic Regression</div>
+<div class="sphx-glr-thumbnail-title">Gradient Boosting regression</div>
 </div></div><p class="sphx-glr-signature"><a class="reference external" href="https://sphinx-gallery.github.io">Gallery generated by Sphinx-Gallery</a></p>
 </section>
-
-
-                </article>
-              
-              
-              
-                <footer class="bd-footer-article">
-                  <div class="footer-article-items footer-article__inner">
-  
-    <div class="footer-article-item">
+</article>
+<footer class="bd-footer-article">
+<div class="footer-article-items footer-article__inner">
+<div class="footer-article-item">
 <div class="prev-next-area">
-    <a class="left-prev"
-       href="plot_lle_digits.html"
-       title="previous page">
-      <i class="fa-solid fa-angle-left"></i>
-      <div class="prev-next-info">
-        <p class="prev-next-subtitle">previous</p>
-        <p class="prev-next-title">Manifold learning on handwritten digits: Locally Linear Embedding, Isomap…</p>
-      </div>
-    </a>
-    <a class="right-next"
-       href="plot_swissroll.html"
-       title="next page">
-      <div class="prev-next-info">
-        <p class="prev-next-subtitle">next</p>
-        <p class="prev-next-title">Swiss Roll And Swiss-Hole Reduction</p>
-      </div>
-      <i class="fa-solid fa-angle-right"></i>
-    </a>
-</div></div>
-  
+<a class="left-prev" href="plot_lle_digits.html" title="previous page">
+<i class="fa-solid fa-angle-left"></i>
+<div class="prev-next-info">
+<p class="prev-next-subtitle">previous</p>
+<p class="prev-next-title">Manifold learning on handwritten digits: Locally Linear Embedding, Isomap…</p>
 </div>
-                </footer>
-              
-              
-              
-            </div>
-            
-            
-              
-                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
-
-
-  <div class="sidebar-secondary-item">
-
-  <div class="tocsection sourcelink">
-    <a href="../../_sources/auto_examples/manifold/plot_mds.rst.txt">
-      <i class="fa-solid fa-file-lines"></i> Show Source
-    </a>
-  </div>
+</a>
+<a class="right-next" href="plot_swissroll.html" title="next page">
+<div class="prev-next-info">
+<p class="prev-next-subtitle">next</p>
+<p class="prev-next-title">Swiss Roll And Swiss-Hole Reduction</p>
 </div>
-
+<i class="fa-solid fa-angle-right"></i>
+</a>
 </div></div>
-              
-            
-          </div>
-          <footer class="bd-footer-content">
-            
-          </footer>
-        
-      </main>
-    </div>
-  </div>
-  
-  <!-- Scripts loaded after <body> so the DOM is not blocked -->
-  <script src="../../_static/scripts/bootstrap.js?digest=8d27b9dea8ad943066ae"></script>
+</div>
+</footer>
+</div>
+<div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+<div class="sidebar-secondary-item"><div title="plot_mds.py"><a download="" href="../../_downloads/d64ed0728005aaeba058d3ccec909e73/plot_mds.py"><i class="fa-solid fa-download"></i> Download source code</a></div><div title="plot_mds.ipynb"><a download="" href="../../_downloads/a9a5b8f39dd796eae478e4c9c39cd207/plot_mds.ipynb"><i class="fa-solid fa-download"></i> Download Jupyter notebook</a></div></div><div class="sidebar-secondary-item"><div><a href="../../lite/lab/?path=auto_examples/manifold/plot_mds.ipynb"><img alt="Launch JupyterLite" height="20" src="../../_images/jupyterlite_badge_logo19.svg"/></a></div><div><a href="https://mybinder.org/v2/gh/scikit-learn/scikit-learn/main?urlpath=lab/tree/notebooks/auto_examples/manifold/plot_mds.ipynb"><img alt="Launch binder" height="20" src="../../_images/binder_badge_logo19.svg"/></a></div></div></div></div>
+</div>
+<footer class="bd-footer-content">
+</footer>
+</main>
+</div>
+</div>
+<!-- Scripts loaded after <body> so the DOM is not blocked -->
+<script src="../../_static/scripts/bootstrap.js?digest=8d27b9dea8ad943066ae"></script>
 <script src="../../_static/scripts/pydata-sphinx-theme.js?digest=8d27b9dea8ad943066ae"></script>
-
-  <footer class="bd-footer">
+<footer class="bd-footer">
 <div class="bd-footer__inner bd-page-width">
-  
-    <div class="footer-items__start">
-      
-        <div class="footer-item">
-
-  <p class="copyright">
+<div class="footer-items__start">
+<div class="footer-item">
+<p class="copyright">
     
       © Copyright 2007 - 2024, scikit-learn developers (BSD License).
       <br/>
-    
-  </p>
+</p>
 </div>
-      
-    </div>
-  
-  
-  
 </div>
-
-  </footer>
+</div>
+</footer>
     <script src="https://scikit-learn.org/versionwarning.js"></script>
-  </body>
+</body>
 </html>

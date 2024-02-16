@@ -1,310 +1,206 @@
 
 <!DOCTYPE html>
 
-
-<html lang="en" data-content_root="../../" >
-
-  <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
-<meta property="og:title" content="Faces dataset decompositions" />
-<meta property="og:type" content="website" />
-<meta property="og:url" content="https://scikit-learn/stable/auto_examples/decomposition/plot_faces_decomposition.html" />
-<meta property="og:site_name" content="scikit-learn" />
-<meta property="og:description" content="This example applies to The Olivetti faces dataset different unsupervised matrix decomposition (dimension reduction) methods from the module sklearn.decomposition(see the documentation chapter Deco..." />
-<meta property="og:image" content="https://scikit-learn.org/stable/_static/scikit-learn-logo-small.png" />
-<meta property="og:image:alt" content="scikit-learn" />
-<meta name="description" content="This example applies to The Olivetti faces dataset different unsupervised matrix decomposition (dimension reduction) methods from the module sklearn.decomposition(see the documentation chapter Deco..." />
-
-    <title>Faces dataset decompositions &#8212; scikit-learn 1.5.dev0 documentation</title>
-  
-  
-  
-  <script data-cfasync="false">
+<html data-content_root="../../" lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/><meta content="width=device-width, initial-scale=1" name="viewport"/>
+<meta content="Faces dataset decompositions" property="og:title"/>
+<meta content="website" property="og:type"/>
+<meta content="https://scikit-learn/stable/auto_examples/decomposition/plot_faces_decomposition.html" property="og:url"/>
+<meta content="scikit-learn" property="og:site_name"/>
+<meta content="This example applies to The Olivetti faces dataset different unsupervised matrix decomposition (dimension reduction) methods from the module sklearn.decomposition(see the documentation chapter Deco..." property="og:description"/>
+<meta content="https://scikit-learn.org/stable/_static/scikit-learn-logo-small.png" property="og:image"/>
+<meta content="scikit-learn" property="og:image:alt"/>
+<meta content="This example applies to The Olivetti faces dataset different unsupervised matrix decomposition (dimension reduction) methods from the module sklearn.decomposition(see the documentation chapter Deco..." name="description"/>
+<title>Faces dataset decompositions — scikit-learn 1.5.dev0 documentation</title>
+<script data-cfasync="false">
     document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
     document.documentElement.dataset.theme = localStorage.getItem("theme") || "light";
   </script>
-  
-  <!-- Loaded before other Sphinx assets -->
-  <link href="../../_static/styles/theme.css?digest=8d27b9dea8ad943066ae" rel="stylesheet" />
-<link href="../../_static/styles/bootstrap.css?digest=8d27b9dea8ad943066ae" rel="stylesheet" />
-<link href="../../_static/styles/pydata-sphinx-theme.css?digest=8d27b9dea8ad943066ae" rel="stylesheet" />
-
-  
-  <link href="../../_static/vendor/fontawesome/6.5.1/css/all.min.css?digest=8d27b9dea8ad943066ae" rel="stylesheet" />
-  <link rel="preload" as="font" type="font/woff2" crossorigin href="../../_static/vendor/fontawesome/6.5.1/webfonts/fa-solid-900.woff2" />
-<link rel="preload" as="font" type="font/woff2" crossorigin href="../../_static/vendor/fontawesome/6.5.1/webfonts/fa-brands-400.woff2" />
-<link rel="preload" as="font" type="font/woff2" crossorigin href="../../_static/vendor/fontawesome/6.5.1/webfonts/fa-regular-400.woff2" />
-
-    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=a746c00c" />
-    <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
-    <link rel="stylesheet" type="text/css" href="../../_static/plot_directive.css" />
-    <link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Vibur" />
-    <link rel="stylesheet" type="text/css" href="../../_static/jupyterlite_sphinx.css?v=f996933d" />
-    <link rel="stylesheet" type="text/css" href="../../_static/sg_gallery.css?v=61a4c737" />
-    <link rel="stylesheet" type="text/css" href="../../_static/sg_gallery-binder.css?v=f4aeca0c" />
-    <link rel="stylesheet" type="text/css" href="../../_static/sg_gallery-dataframe.css?v=2082cf3c" />
-    <link rel="stylesheet" type="text/css" href="../../_static/sg_gallery-rendered-html.css?v=1277b6f3" />
-    <link rel="stylesheet" type="text/css" href="../../_static/design-style.1e8bd061cd6da7fc9cf755528e8ffc24.min.css?v=0a3b3ea7" />
-    <link rel="stylesheet" type="text/css" href="../../_static/styles/colors.css?v=d5680186" />
-    <link rel="stylesheet" type="text/css" href="../../_static/styles/custom.css?v=3e2fb91a" />
-  
-  <!-- Pre-loaded scripts that we'll load fully later -->
-  <link rel="preload" as="script" href="../../_static/scripts/bootstrap.js?digest=8d27b9dea8ad943066ae" />
-<link rel="preload" as="script" href="../../_static/scripts/pydata-sphinx-theme.js?digest=8d27b9dea8ad943066ae" />
-  <script src="../../_static/vendor/fontawesome/6.5.1/js/all.min.js?digest=8d27b9dea8ad943066ae"></script>
-
-    <script src="../../_static/documentation_options.js?v=a2c36881"></script>
-    <script src="../../_static/doctools.js?v=888ff710"></script>
-    <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
-    <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
-    <script src="../../_static/copybutton.js?v=97f0b27d"></script>
-    <script src="../../_static/jupyterlite_sphinx.js?v=f25406b8"></script>
-    <script src="../../_static/design-tabs.js?v=36754332"></script>
-    <script data-domain="scikit-learn.org" defer="defer" src="https://views.scientific-python.org/js/script.js"></script>
-    <script async="async" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js"></script>
-    <script>DOCUMENTATION_OPTIONS.pagename = 'auto_examples/decomposition/plot_faces_decomposition';</script>
-    <script>
+<!-- Loaded before other Sphinx assets -->
+<link href="../../_static/styles/theme.css?digest=8d27b9dea8ad943066ae" rel="stylesheet"/>
+<link href="../../_static/styles/bootstrap.css?digest=8d27b9dea8ad943066ae" rel="stylesheet"/>
+<link href="../../_static/styles/pydata-sphinx-theme.css?digest=8d27b9dea8ad943066ae" rel="stylesheet"/>
+<link href="../../_static/vendor/fontawesome/6.5.1/css/all.min.css?digest=8d27b9dea8ad943066ae" rel="stylesheet"/>
+<link as="font" crossorigin="" href="../../_static/vendor/fontawesome/6.5.1/webfonts/fa-solid-900.woff2" rel="preload" type="font/woff2"/>
+<link as="font" crossorigin="" href="../../_static/vendor/fontawesome/6.5.1/webfonts/fa-brands-400.woff2" rel="preload" type="font/woff2"/>
+<link as="font" crossorigin="" href="../../_static/vendor/fontawesome/6.5.1/webfonts/fa-regular-400.woff2" rel="preload" type="font/woff2"/>
+<link href="../../_static/pygments.css?v=a746c00c" rel="stylesheet" type="text/css"/>
+<link href="../../_static/copybutton.css?v=76b2166b" rel="stylesheet" type="text/css"/>
+<link href="../../_static/plot_directive.css" rel="stylesheet" type="text/css"/>
+<link href="https://fonts.googleapis.com/css?family=Vibur" rel="stylesheet" type="text/css"/>
+<link href="../../_static/jupyterlite_sphinx.css?v=f996933d" rel="stylesheet" type="text/css"/>
+<link href="../../_static/sg_gallery.css?v=61a4c737" rel="stylesheet" type="text/css"/>
+<link href="../../_static/sg_gallery-binder.css?v=f4aeca0c" rel="stylesheet" type="text/css"/>
+<link href="../../_static/sg_gallery-dataframe.css?v=2082cf3c" rel="stylesheet" type="text/css"/>
+<link href="../../_static/sg_gallery-rendered-html.css?v=1277b6f3" rel="stylesheet" type="text/css"/>
+<link href="../../_static/design-style.1e8bd061cd6da7fc9cf755528e8ffc24.min.css?v=0a3b3ea7" rel="stylesheet" type="text/css"/>
+<link href="../../_static/styles/colors.css?v=d5680186" rel="stylesheet" type="text/css"/>
+<link href="../../_static/styles/custom.css?v=3e2fb91a" rel="stylesheet" type="text/css"/>
+<!-- Pre-loaded scripts that we'll load fully later -->
+<link as="script" href="../../_static/scripts/bootstrap.js?digest=8d27b9dea8ad943066ae" rel="preload"/>
+<link as="script" href="../../_static/scripts/pydata-sphinx-theme.js?digest=8d27b9dea8ad943066ae" rel="preload"/>
+<script src="../../_static/vendor/fontawesome/6.5.1/js/all.min.js?digest=8d27b9dea8ad943066ae"></script>
+<script src="../../_static/documentation_options.js?v=a2c36881"></script>
+<script src="../../_static/doctools.js?v=888ff710"></script>
+<script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+<script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
+<script src="../../_static/copybutton.js?v=97f0b27d"></script>
+<script src="../../_static/jupyterlite_sphinx.js?v=f25406b8"></script>
+<script src="../../_static/design-tabs.js?v=36754332"></script>
+<script data-domain="scikit-learn.org" defer="defer" src="https://views.scientific-python.org/js/script.js"></script>
+<script async="async" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js"></script>
+<script>DOCUMENTATION_OPTIONS.pagename = 'auto_examples/decomposition/plot_faces_decomposition';</script>
+<script>
         DOCUMENTATION_OPTIONS.theme_version = '0.15.2';
         DOCUMENTATION_OPTIONS.theme_switcher_json_url = 'https://charlie-xiao.github.io/assets/json/sklearn-versions-test.json';
         DOCUMENTATION_OPTIONS.theme_switcher_version_match = '1.5.dev0';
         DOCUMENTATION_OPTIONS.show_version_warning_banner = true;
         </script>
-    <script src="../../_static/scripts/details-permalink.js?v=b0ed9290"></script>
-    <link rel="icon" href="../../_static/favicon.ico"/>
-    <link rel="author" title="About these documents" href="../../about.html" />
-    <link rel="search" title="Search" href="../../search.html" />
-    <link rel="next" title="Factor Analysis (with rotation) to visualize patterns" href="plot_varimax_fa.html" />
-    <link rel="prev" title="Comparison of LDA and PCA 2D projection of Iris dataset" href="plot_pca_vs_lda.html" />
-  <meta name="viewport" content="width=device-width, initial-scale=1"/>
-  <meta name="docsearch:language" content="en"/>
-  </head>
-  
-  
-  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
-
-  
-  
-  <a id="pst-skip-link" class="skip-link" href="#main-content">Skip to main content</a>
-  
-  <div id="pst-scroll-pixel-helper"></div>
-  
-  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
-    <i class="fa-solid fa-arrow-up"></i>
+<script src="../../_static/scripts/details-permalink.js?v=b0ed9290"></script>
+<link href="../../_static/favicon.ico" rel="icon"/>
+<link href="../../about.html" rel="author" title="About these documents"/>
+<link href="../../search.html" rel="search" title="Search"/>
+<link href="plot_varimax_fa.html" rel="next" title="Factor Analysis (with rotation) to visualize patterns"/>
+<link href="plot_pca_vs_lda.html" rel="prev" title="Comparison of LDA and PCA 2D projection of Iris dataset"/>
+<meta content="width=device-width, initial-scale=1" name="viewport"/>
+<meta content="en" name="docsearch:language"/>
+</head>
+<body data-bs-root-margin="0px 0px -60%" data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-default-mode="" data-offset="180">
+<a class="skip-link" href="#main-content" id="pst-skip-link">Skip to main content</a>
+<div id="pst-scroll-pixel-helper"></div>
+<button class="btn rounded-pill" id="pst-back-to-top" type="button">
+<i class="fa-solid fa-arrow-up"></i>
     Back to top
   </button>
-
-  
-  <input type="checkbox"
-          class="sidebar-toggle"
-          name="__primary"
-          id="__primary"/>
-  <label class="overlay overlay-primary" for="__primary"></label>
-  
-  <input type="checkbox"
-          class="sidebar-toggle"
-          name="__secondary"
-          id="__secondary"/>
-  <label class="overlay overlay-secondary" for="__secondary"></label>
-  
-  <div class="search-button__wrapper">
-    <div class="search-button__overlay"></div>
-    <div class="search-button__search-container">
-<form class="bd-search d-flex align-items-center"
-      action="../../search.html"
-      method="get">
-  <i class="fa-solid fa-magnifying-glass"></i>
-  <input type="search"
-         class="form-control"
-         name="q"
-         id="search-input"
-         placeholder="Search the docs ..."
-         aria-label="Search the docs ..."
-         autocomplete="off"
-         autocorrect="off"
-         autocapitalize="off"
-         spellcheck="false"/>
-  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+<input class="sidebar-toggle" id="__primary" name="__primary" type="checkbox"/>
+<label class="overlay overlay-primary" for="__primary"></label>
+<input class="sidebar-toggle" id="__secondary" name="__secondary" type="checkbox"/>
+<label class="overlay overlay-secondary" for="__secondary"></label>
+<div class="search-button__wrapper">
+<div class="search-button__overlay"></div>
+<div class="search-button__search-container">
+<form action="../../search.html" class="bd-search d-flex align-items-center" method="get">
+<i class="fa-solid fa-magnifying-glass"></i>
+<input aria-label="Search the docs ..." autocapitalize="off" autocomplete="off" autocorrect="off" class="form-control" id="search-input" name="q" placeholder="Search the docs ..." spellcheck="false" type="search"/>
+<span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
 </form></div>
-  </div>
-  
-    <header class="bd-header navbar navbar-expand-lg bd-navbar">
+</div>
+<header class="bd-header navbar navbar-expand-lg bd-navbar">
 <div class="bd-header__inner bd-page-width">
-  <label class="sidebar-toggle primary-toggle" for="__primary">
-    <span class="fa-solid fa-bars"></span>
-  </label>
-  
-  
-  <div class=" navbar-header-items__start">
-    
-      <div class="navbar-item">
-
-  
-
+<label class="sidebar-toggle primary-toggle" for="__primary">
+<span class="fa-solid fa-bars"></span>
+</label>
+<div class="navbar-header-items__start">
+<div class="navbar-item">
 <a class="navbar-brand logo" href="../../index.html">
-  
-  
-  
-  
-  
-    
-    
-      
-    
-    
-    <img src="../../_static/scikit-learn-logo-small.png" class="logo__image only-light" alt="scikit-learn homepage"/>
-    <script>document.write(`<img src="../../_static/scikit-learn-logo-small.png" class="logo__image only-dark" alt="scikit-learn homepage"/>`);</script>
-  
-  
+<img alt="scikit-learn homepage" class="logo__image only-light" src="../../_static/scikit-learn-logo-small.png"/>
+<script>document.write(`<img src="../../_static/scikit-learn-logo-small.png" class="logo__image only-dark" alt="scikit-learn homepage"/>`);</script>
 </a></div>
-    
-  </div>
-  
-  <div class=" navbar-header-items">
-    
-    <div class="me-auto navbar-header-items__center">
-      
-        <div class="navbar-item">
+</div>
+<div class="navbar-header-items">
+<div class="me-auto navbar-header-items__center">
+<div class="navbar-item">
 <nav class="navbar-nav">
-  <ul class="bd-navbar-elements navbar-nav">
-    
-                    <li class="nav-item">
-                      <a class="nav-link nav-internal" href="../../install.html">
+<ul class="bd-navbar-elements navbar-nav">
+<li class="nav-item">
+<a class="nav-link nav-internal" href="../../install.html">
                         Install
                       </a>
-                    </li>
-                
-
-                    <li class="nav-item">
-                      <a class="nav-link nav-internal" href="../../user_guide.html">
+</li>
+<li class="nav-item">
+<a class="nav-link nav-internal" href="../../user_guide.html">
                         User Guide
                       </a>
-                    </li>
-                
-
-                    <li class="nav-item">
-                      <a class="nav-link nav-internal" href="../../modules/classes.html">
+</li>
+<li class="nav-item">
+<a class="nav-link nav-internal" href="../../modules/classes.html">
                         API
                       </a>
-                    </li>
-                
-
-                    <li class="nav-item current active">
-                      <a class="nav-link nav-internal" href="../index.html">
+</li>
+<li class="nav-item current active">
+<a class="nav-link nav-internal" href="../index.html">
                         Examples
                       </a>
-                    </li>
-                
-
-                    <li class="nav-item">
-                      <a class="nav-link nav-external" href="https://blog.scikit-learn.org/">
+</li>
+<li class="nav-item">
+<a class="nav-link nav-external" href="https://blog.scikit-learn.org/">
                         Community
                       </a>
-                    </li>
-                
-            <li class="nav-item dropdown">
-                <button class="btn dropdown-toggle nav-item" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-controls="pst-nav-more-links">
+</li>
+<li class="nav-item dropdown">
+<button aria-controls="pst-nav-more-links" aria-expanded="false" class="btn dropdown-toggle nav-item" data-bs-toggle="dropdown" type="button">
                     More
                 </button>
-                <ul id="pst-nav-more-links" class="dropdown-menu">
-                    
-                    <li class="nav-item">
-                      <a class="nav-link dropdown-item nav-internal" href="../../getting_started.html">
+<ul class="dropdown-menu" id="pst-nav-more-links">
+<li class="nav-item">
+<a class="nav-link dropdown-item nav-internal" href="../../getting_started.html">
                         Getting Started
                       </a>
-                    </li>
-                
-
-                    <li class="nav-item">
-                      <a class="nav-link dropdown-item nav-internal" href="../../tutorial/index.html">
+</li>
+<li class="nav-item">
+<a class="nav-link dropdown-item nav-internal" href="../../tutorial/index.html">
                         Tutorials
                       </a>
-                    </li>
-                
-
-                    <li class="nav-item">
-                      <a class="nav-link dropdown-item nav-internal" href="../../whats_new.html">
+</li>
+<li class="nav-item">
+<a class="nav-link dropdown-item nav-internal" href="../../whats_new.html">
                         Release History
                       </a>
-                    </li>
-                
-
-                    <li class="nav-item">
-                      <a class="nav-link dropdown-item nav-internal" href="../../glossary.html">
+</li>
+<li class="nav-item">
+<a class="nav-link dropdown-item nav-internal" href="../../glossary.html">
                         Glossary
                       </a>
-                    </li>
-                
-
-                    <li class="nav-item">
-                      <a class="nav-link dropdown-item nav-internal" href="../../developers/index.html">
+</li>
+<li class="nav-item">
+<a class="nav-link dropdown-item nav-internal" href="../../developers/index.html">
                         Development
                       </a>
-                    </li>
-                
-
-                    <li class="nav-item">
-                      <a class="nav-link dropdown-item nav-internal" href="../../faq.html">
+</li>
+<li class="nav-item">
+<a class="nav-link dropdown-item nav-internal" href="../../faq.html">
                         FAQ
                       </a>
-                    </li>
-                
-
-                    <li class="nav-item">
-                      <a class="nav-link dropdown-item nav-internal" href="../../support.html">
+</li>
+<li class="nav-item">
+<a class="nav-link dropdown-item nav-internal" href="../../support.html">
                         Support
                       </a>
-                    </li>
-                
-
-                    <li class="nav-item">
-                      <a class="nav-link dropdown-item nav-internal" href="../../related_projects.html">
+</li>
+<li class="nav-item">
+<a class="nav-link dropdown-item nav-internal" href="../../related_projects.html">
                         Related Projects
                       </a>
-                    </li>
-                
-
-                    <li class="nav-item">
-                      <a class="nav-link dropdown-item nav-internal" href="../../roadmap.html">
+</li>
+<li class="nav-item">
+<a class="nav-link dropdown-item nav-internal" href="../../roadmap.html">
                         Roadmap
                       </a>
-                    </li>
-                
-
-                    <li class="nav-item">
-                      <a class="nav-link dropdown-item nav-internal" href="../../governance.html">
+</li>
+<li class="nav-item">
+<a class="nav-link dropdown-item nav-internal" href="../../governance.html">
                         Governance
                       </a>
-                    </li>
-                
-
-                    <li class="nav-item">
-                      <a class="nav-link dropdown-item nav-internal" href="../../about.html">
+</li>
+<li class="nav-item">
+<a class="nav-link dropdown-item nav-internal" href="../../about.html">
                         About us
                       </a>
-                    </li>
-                
-
-                    <li class="nav-item">
-                      <a class="nav-link dropdown-item nav-external" href="https://scikit-learn.org/dev/versions.html">
+</li>
+<li class="nav-item">
+<a class="nav-link dropdown-item nav-external" href="https://scikit-learn.org/dev/versions.html">
                         Other Versions and Download
                       </a>
-                    </li>
-                
-                </ul>
-            </li>
-            
-  </ul>
+</li>
+</ul>
+</li>
+</ul>
 </nav></div>
-      
-    </div>
-    
-    
-    <div class="navbar-header-items__end">
-      
-        <div class="navbar-item navbar-persistent--container">
-          
-
+</div>
+<div class="navbar-header-items__end">
+<div class="navbar-item navbar-persistent--container">
 <script>
 document.write(`
   <button class="btn btn-sm navbar-btn search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
@@ -312,11 +208,8 @@ document.write(`
   </button>
 `);
 </script>
-        </div>
-      
-      
-        <div class="navbar-item">
-
+</div>
+<div class="navbar-item">
 <script>
 document.write(`
   <button class="btn btn-sm navbar-btn theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
@@ -326,24 +219,13 @@ document.write(`
   </button>
 `);
 </script></div>
-      
-        <div class="navbar-item"><ul class="navbar-icon-links navbar-nav"
-    aria-label="Icon Links">
-        <li class="nav-item">
-          
-          
-          
-          
-          
-          
-          
-          
-          <a href="https://github.com/scikit-learn/scikit-learn" title="GitHub" class="nav-link" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><span><i class="fa-brands fa-square-github fa-lg" aria-hidden="true"></i></span>
-            <span class="sr-only">GitHub</span></a>
-        </li>
+<div class="navbar-item"><ul aria-label="Icon Links" class="navbar-icon-links navbar-nav">
+<li class="nav-item">
+<a class="nav-link" data-bs-placement="bottom" data-bs-toggle="tooltip" href="https://github.com/scikit-learn/scikit-learn" rel="noopener" target="_blank" title="GitHub"><span><i aria-hidden="true" class="fa-brands fa-square-github fa-lg"></i></span>
+<span class="sr-only">GitHub</span></a>
+</li>
 </ul></div>
-      
-        <div class="navbar-item">
+<div class="navbar-item">
 <script>
 document.write(`
   <div class="version-switcher__container dropdown">
@@ -366,14 +248,9 @@ document.write(`
   </div>
 `);
 </script></div>
-      
-    </div>
-    
-  </div>
-  
-  
-    <div class="navbar-persistent--mobile">
-
+</div>
+</div>
+<div class="navbar-persistent--mobile">
 <script>
 document.write(`
   <button class="btn btn-sm navbar-btn search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
@@ -381,174 +258,117 @@ document.write(`
   </button>
 `);
 </script>
-    </div>
-  
-
-  
-    <label class="sidebar-toggle secondary-toggle" for="__secondary" tabindex="0">
-      <span class="fa-solid fa-outdent"></span>
-    </label>
-  
 </div>
-
-    </header>
-  
-
-  <div class="bd-container">
-    <div class="bd-container__inner bd-page-width">
-      
-      
-      
-      <div class="bd-sidebar-primary bd-sidebar">
-        
-
-  
-  <div class="sidebar-header-items sidebar-primary__section">
-    
-    
-      <div class="sidebar-header-items__center">
-        
-          <div class="navbar-item">
+<label class="sidebar-toggle secondary-toggle" for="__secondary" tabindex="0">
+<span class="fa-solid fa-outdent"></span>
+</label>
+</div>
+</header>
+<div class="bd-container">
+<div class="bd-container__inner bd-page-width">
+<div class="bd-sidebar-primary bd-sidebar">
+<div class="sidebar-header-items sidebar-primary__section">
+<div class="sidebar-header-items__center">
+<div class="navbar-item">
 <nav class="navbar-nav">
-  <ul class="bd-navbar-elements navbar-nav">
-    
-                    <li class="nav-item">
-                      <a class="nav-link nav-internal" href="../../install.html">
+<ul class="bd-navbar-elements navbar-nav">
+<li class="nav-item">
+<a class="nav-link nav-internal" href="../../install.html">
                         Install
                       </a>
-                    </li>
-                
-
-                    <li class="nav-item">
-                      <a class="nav-link nav-internal" href="../../user_guide.html">
+</li>
+<li class="nav-item">
+<a class="nav-link nav-internal" href="../../user_guide.html">
                         User Guide
                       </a>
-                    </li>
-                
-
-                    <li class="nav-item">
-                      <a class="nav-link nav-internal" href="../../modules/classes.html">
+</li>
+<li class="nav-item">
+<a class="nav-link nav-internal" href="../../modules/classes.html">
                         API
                       </a>
-                    </li>
-                
-
-                    <li class="nav-item current active">
-                      <a class="nav-link nav-internal" href="../index.html">
+</li>
+<li class="nav-item current active">
+<a class="nav-link nav-internal" href="../index.html">
                         Examples
                       </a>
-                    </li>
-                
-
-                    <li class="nav-item">
-                      <a class="nav-link nav-external" href="https://blog.scikit-learn.org/">
+</li>
+<li class="nav-item">
+<a class="nav-link nav-external" href="https://blog.scikit-learn.org/">
                         Community
                       </a>
-                    </li>
-                
-            <li class="nav-item dropdown">
-                <button class="btn dropdown-toggle nav-item" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-controls="pst-nav-more-links-2">
+</li>
+<li class="nav-item dropdown">
+<button aria-controls="pst-nav-more-links-2" aria-expanded="false" class="btn dropdown-toggle nav-item" data-bs-toggle="dropdown" type="button">
                     More
                 </button>
-                <ul id="pst-nav-more-links-2" class="dropdown-menu">
-                    
-                    <li class="nav-item">
-                      <a class="nav-link dropdown-item nav-internal" href="../../getting_started.html">
+<ul class="dropdown-menu" id="pst-nav-more-links-2">
+<li class="nav-item">
+<a class="nav-link dropdown-item nav-internal" href="../../getting_started.html">
                         Getting Started
                       </a>
-                    </li>
-                
-
-                    <li class="nav-item">
-                      <a class="nav-link dropdown-item nav-internal" href="../../tutorial/index.html">
+</li>
+<li class="nav-item">
+<a class="nav-link dropdown-item nav-internal" href="../../tutorial/index.html">
                         Tutorials
                       </a>
-                    </li>
-                
-
-                    <li class="nav-item">
-                      <a class="nav-link dropdown-item nav-internal" href="../../whats_new.html">
+</li>
+<li class="nav-item">
+<a class="nav-link dropdown-item nav-internal" href="../../whats_new.html">
                         Release History
                       </a>
-                    </li>
-                
-
-                    <li class="nav-item">
-                      <a class="nav-link dropdown-item nav-internal" href="../../glossary.html">
+</li>
+<li class="nav-item">
+<a class="nav-link dropdown-item nav-internal" href="../../glossary.html">
                         Glossary
                       </a>
-                    </li>
-                
-
-                    <li class="nav-item">
-                      <a class="nav-link dropdown-item nav-internal" href="../../developers/index.html">
+</li>
+<li class="nav-item">
+<a class="nav-link dropdown-item nav-internal" href="../../developers/index.html">
                         Development
                       </a>
-                    </li>
-                
-
-                    <li class="nav-item">
-                      <a class="nav-link dropdown-item nav-internal" href="../../faq.html">
+</li>
+<li class="nav-item">
+<a class="nav-link dropdown-item nav-internal" href="../../faq.html">
                         FAQ
                       </a>
-                    </li>
-                
-
-                    <li class="nav-item">
-                      <a class="nav-link dropdown-item nav-internal" href="../../support.html">
+</li>
+<li class="nav-item">
+<a class="nav-link dropdown-item nav-internal" href="../../support.html">
                         Support
                       </a>
-                    </li>
-                
-
-                    <li class="nav-item">
-                      <a class="nav-link dropdown-item nav-internal" href="../../related_projects.html">
+</li>
+<li class="nav-item">
+<a class="nav-link dropdown-item nav-internal" href="../../related_projects.html">
                         Related Projects
                       </a>
-                    </li>
-                
-
-                    <li class="nav-item">
-                      <a class="nav-link dropdown-item nav-internal" href="../../roadmap.html">
+</li>
+<li class="nav-item">
+<a class="nav-link dropdown-item nav-internal" href="../../roadmap.html">
                         Roadmap
                       </a>
-                    </li>
-                
-
-                    <li class="nav-item">
-                      <a class="nav-link dropdown-item nav-internal" href="../../governance.html">
+</li>
+<li class="nav-item">
+<a class="nav-link dropdown-item nav-internal" href="../../governance.html">
                         Governance
                       </a>
-                    </li>
-                
-
-                    <li class="nav-item">
-                      <a class="nav-link dropdown-item nav-internal" href="../../about.html">
+</li>
+<li class="nav-item">
+<a class="nav-link dropdown-item nav-internal" href="../../about.html">
                         About us
                       </a>
-                    </li>
-                
-
-                    <li class="nav-item">
-                      <a class="nav-link dropdown-item nav-external" href="https://scikit-learn.org/dev/versions.html">
+</li>
+<li class="nav-item">
+<a class="nav-link dropdown-item nav-external" href="https://scikit-learn.org/dev/versions.html">
                         Other Versions and Download
                       </a>
-                    </li>
-                
-                </ul>
-            </li>
-            
-  </ul>
+</li>
+</ul>
+</li>
+</ul>
 </nav></div>
-        
-      </div>
-    
-    
-    
-      <div class="sidebar-header-items__end">
-        
-          <div class="navbar-item">
-
+</div>
+<div class="sidebar-header-items__end">
+<div class="navbar-item">
 <script>
 document.write(`
   <button class="btn btn-sm navbar-btn theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
@@ -558,24 +378,13 @@ document.write(`
   </button>
 `);
 </script></div>
-        
-          <div class="navbar-item"><ul class="navbar-icon-links navbar-nav"
-    aria-label="Icon Links">
-        <li class="nav-item">
-          
-          
-          
-          
-          
-          
-          
-          
-          <a href="https://github.com/scikit-learn/scikit-learn" title="GitHub" class="nav-link" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><span><i class="fa-brands fa-square-github fa-lg" aria-hidden="true"></i></span>
-            <span class="sr-only">GitHub</span></a>
-        </li>
+<div class="navbar-item"><ul aria-label="Icon Links" class="navbar-icon-links navbar-nav">
+<li class="nav-item">
+<a class="nav-link" data-bs-placement="bottom" data-bs-toggle="tooltip" href="https://github.com/scikit-learn/scikit-learn" rel="noopener" target="_blank" title="GitHub"><span><i aria-hidden="true" class="fa-brands fa-square-github fa-lg"></i></span>
+<span class="sr-only">GitHub</span></a>
+</li>
 </ul></div>
-        
-          <div class="navbar-item">
+<div class="navbar-item">
 <script>
 document.write(`
   <div class="version-switcher__container dropdown">
@@ -598,17 +407,13 @@ document.write(`
   </div>
 `);
 </script></div>
-        
-      </div>
-    
-  </div>
-  
-    <div class="sidebar-primary-items__start sidebar-primary__section">
-        <div class="sidebar-primary-item">
-<nav class="bd-docs-nav bd-links"
-     aria-label="Section Navigation">
-  <p class="bd-links__title" role="heading" aria-level="1">Section Navigation</p>
-  <div class="bd-toc-item navbar-nav"><ul class="current nav bd-sidenav">
+</div>
+</div>
+<div class="sidebar-primary-items__start sidebar-primary__section">
+<div class="sidebar-primary-item">
+<nav aria-label="Section Navigation" class="bd-docs-nav bd-links">
+<p aria-level="1" class="bd-links__title" role="heading">Section Navigation</p>
+<div class="bd-toc-item navbar-nav"><ul class="current nav bd-sidenav">
 <li class="toctree-l1 has-children"><a class="reference internal" href="../release_highlights/index.html">Release Highlights</a><input class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-1"><i class="fa-solid fa-chevron-down"></i></label><ul>
 <li class="toctree-l2"><a class="reference internal" href="../release_highlights/plot_release_highlights_1_4_0.html">Release Highlights for scikit-learn 1.4</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../release_highlights/plot_release_highlights_1_3_0.html">Release Highlights for scikit-learn 1.3</a></li>
@@ -1002,68 +807,37 @@ document.write(`
 </ul>
 </div>
 </nav></div>
-    </div>
-  
-  
-  <div class="sidebar-primary-items__end sidebar-primary__section">
-  </div>
-  
-  <div id="rtd-footer-container"></div>
-
-
-      </div>
-      
-      <main id="main-content" class="bd-main">
-        
-        
-          <div class="bd-content">
-            <div class="bd-article-container">
-              
-              <div class="bd-header-article">
+</div>
+<div class="sidebar-primary-items__end sidebar-primary__section">
+</div>
+<div id="rtd-footer-container"></div>
+</div>
+<main class="bd-main" id="main-content">
+<div class="bd-content">
+<div class="bd-article-container">
+<div class="bd-header-article">
 <div class="header-article-items header-article__inner">
-  
-    <div class="header-article-items__start">
-      
-        <div class="header-article-item">
-
-
-
+<div class="header-article-items__start">
+<div class="header-article-item">
 <nav aria-label="Breadcrumb">
-  <ul class="bd-breadcrumbs">
-    
-    <li class="breadcrumb-item breadcrumb-home">
-      <a href="../../index.html" class="nav-link" aria-label="Home">
-        <i class="fa-solid fa-home"></i>
-      </a>
-    </li>
-    
-    <li class="breadcrumb-item"><a href="../index.html" class="nav-link">Examples</a></li>
-    
-    
-    <li class="breadcrumb-item"><a href="index.html" class="nav-link">Decomposition</a></li>
-    
-    <li class="breadcrumb-item active" aria-current="page">Faces...</li>
-  </ul>
+<ul class="bd-breadcrumbs">
+<li class="breadcrumb-item breadcrumb-home">
+<a aria-label="Home" class="nav-link" href="../../index.html">
+<i class="fa-solid fa-home"></i>
+</a>
+</li>
+<li class="breadcrumb-item"><a class="nav-link" href="../index.html">Examples</a></li>
+<li class="breadcrumb-item"><a class="nav-link" href="index.html">Decomposition</a></li>
+<li aria-current="page" class="breadcrumb-item active">Faces...</li>
+</ul>
 </nav>
 </div>
-      
-    </div>
-  
-  
 </div>
 </div>
-              
-              
-              
-                
+</div>
 <div id="searchbox"></div>
-                <article class="bd-article">
-                  
-  <div class="sphx-glr-download-link-note admonition note">
-<p class="admonition-title">Note</p>
-<p><a class="reference internal" href="#sphx-glr-download-auto-examples-decomposition-plot-faces-decomposition-py"><span class="std std-ref">Go to the end</span></a>
-to download the full example code or to run this example in your browser via JupyterLite or Binder</p>
-</div>
+<article class="bd-article">
+
 <section class="sphx-glr-example-title" id="faces-dataset-decompositions">
 <span id="sphx-glr-auto-examples-decomposition-plot-faces-decomposition-py"></span><h1>Faces dataset decompositions<a class="headerlink" href="#faces-dataset-decompositions" title="Link to this heading">#</a></h1>
 <p>This example applies to <a class="reference internal" href="../../datasets/real_world.html#olivetti-faces-dataset"><span class="std std-ref">The Olivetti faces dataset</span></a> different unsupervised
@@ -1080,17 +854,17 @@ matrix decomposition (dimension reduction) methods from the module
 <div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">logging</span>
 
 <span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
-<span class="kn">from</span> <span class="nn">numpy.random</span> <span class="kn">import</span> <a href="https://numpy.org/doc/stable/reference/random/legacy.html#numpy.random.RandomState" title="numpy.random.RandomState" class="sphx-glr-backref-module-numpy-random sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">RandomState</span></a>
+<span class="kn">from</span> <span class="nn">numpy.random</span> <span class="kn">import</span> <a class="sphx-glr-backref-module-numpy-random sphx-glr-backref-type-py-class sphx-glr-backref-instance" href="https://numpy.org/doc/stable/reference/random/legacy.html#numpy.random.RandomState" title="numpy.random.RandomState"><span class="n">RandomState</span></a>
 
 <span class="kn">from</span> <span class="nn">sklearn</span> <span class="kn">import</span> <span class="n">cluster</span><span class="p">,</span> <span class="n">decomposition</span>
-<span class="kn">from</span> <span class="nn">sklearn.datasets</span> <span class="kn">import</span> <a href="../../modules/generated/sklearn.datasets.fetch_olivetti_faces.html#sklearn.datasets.fetch_olivetti_faces" title="sklearn.datasets.fetch_olivetti_faces" class="sphx-glr-backref-module-sklearn-datasets sphx-glr-backref-type-py-function"><span class="n">fetch_olivetti_faces</span></a>
+<span class="kn">from</span> <span class="nn">sklearn.datasets</span> <span class="kn">import</span> <a class="sphx-glr-backref-module-sklearn-datasets sphx-glr-backref-type-py-function" href="../../modules/generated/sklearn.datasets.fetch_olivetti_faces.html#sklearn.datasets.fetch_olivetti_faces" title="sklearn.datasets.fetch_olivetti_faces"><span class="n">fetch_olivetti_faces</span></a>
 
-<span class="n">rng</span> <span class="o">=</span> <a href="https://numpy.org/doc/stable/reference/random/legacy.html#numpy.random.RandomState" title="numpy.random.RandomState" class="sphx-glr-backref-module-numpy-random sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">RandomState</span></a><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+<span class="n">rng</span> <span class="o">=</span> <a class="sphx-glr-backref-module-numpy-random sphx-glr-backref-type-py-class sphx-glr-backref-instance" href="https://numpy.org/doc/stable/reference/random/legacy.html#numpy.random.RandomState" title="numpy.random.RandomState"><span class="n">RandomState</span></a><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
 
 <span class="c1"># Display progress logs on stdout</span>
-<a href="https://docs.python.org/3/library/logging.html#logging.basicConfig" title="logging.basicConfig" class="sphx-glr-backref-module-logging sphx-glr-backref-type-py-function"><span class="n">logging</span><span class="o">.</span><span class="n">basicConfig</span></a><span class="p">(</span><span class="n">level</span><span class="o">=</span><a href="https://docs.python.org/3/library/logging.html#logging.INFO" title="logging.INFO" class="sphx-glr-backref-module-logging sphx-glr-backref-type-py-data"><span class="n">logging</span><span class="o">.</span><span class="n">INFO</span></a><span class="p">,</span> <span class="nb">format</span><span class="o">=</span><span class="s2">&quot;</span><span class="si">%(asctime)s</span><span class="s2"> </span><span class="si">%(levelname)s</span><span class="s2"> </span><span class="si">%(message)s</span><span class="s2">&quot;</span><span class="p">)</span>
+<a class="sphx-glr-backref-module-logging sphx-glr-backref-type-py-function" href="https://docs.python.org/3/library/logging.html#logging.basicConfig" title="logging.basicConfig"><span class="n">logging</span><span class="o">.</span><span class="n">basicConfig</span></a><span class="p">(</span><span class="n">level</span><span class="o">=</span><a class="sphx-glr-backref-module-logging sphx-glr-backref-type-py-data" href="https://docs.python.org/3/library/logging.html#logging.INFO" title="logging.INFO"><span class="n">logging</span><span class="o">.</span><span class="n">INFO</span></a><span class="p">,</span> <span class="nb">format</span><span class="o">=</span><span class="s2">"</span><span class="si">%(asctime)s</span><span class="s2"> </span><span class="si">%(levelname)s</span><span class="s2"> </span><span class="si">%(message)s</span><span class="s2">"</span><span class="p">)</span>
 
-<span class="n">faces</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <a href="../../modules/generated/sklearn.datasets.fetch_olivetti_faces.html#sklearn.datasets.fetch_olivetti_faces" title="sklearn.datasets.fetch_olivetti_faces" class="sphx-glr-backref-module-sklearn-datasets sphx-glr-backref-type-py-function"><span class="n">fetch_olivetti_faces</span></a><span class="p">(</span><span class="n">return_X_y</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">shuffle</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="n">rng</span><span class="p">)</span>
+<span class="n">faces</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <a class="sphx-glr-backref-module-sklearn-datasets sphx-glr-backref-type-py-function" href="../../modules/generated/sklearn.datasets.fetch_olivetti_faces.html#sklearn.datasets.fetch_olivetti_faces" title="sklearn.datasets.fetch_olivetti_faces"><span class="n">fetch_olivetti_faces</span></a><span class="p">(</span><span class="n">return_X_y</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">shuffle</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="n">rng</span><span class="p">)</span>
 <span class="n">n_samples</span><span class="p">,</span> <span class="n">n_features</span> <span class="o">=</span> <span class="n">faces</span><span class="o">.</span><span class="n">shape</span>
 
 <span class="c1"># Global centering (focus on one feature, centering all samples)</span>
@@ -1099,7 +873,7 @@ matrix decomposition (dimension reduction) methods from the module
 <span class="c1"># Local centering (focus on one sample, centering all features)</span>
 <span class="n">faces_centered</span> <span class="o">-=</span> <span class="n">faces_centered</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">n_samples</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">)</span>
 
-<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Dataset consists of </span><span class="si">%d</span><span class="s2"> faces&quot;</span> <span class="o">%</span> <span class="n">n_samples</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">"Dataset consists of </span><span class="si">%d</span><span class="s2"> faces"</span> <span class="o">%</span> <span class="n">n_samples</span><span class="p">)</span>
 </pre></div>
 </div>
 <div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>Dataset consists of 400 faces
@@ -1112,37 +886,37 @@ matrix decomposition (dimension reduction) methods from the module
 
 
 <span class="k">def</span> <span class="nf">plot_gallery</span><span class="p">(</span><span class="n">title</span><span class="p">,</span> <span class="n">images</span><span class="p">,</span> <span class="n">n_col</span><span class="o">=</span><span class="n">n_col</span><span class="p">,</span> <span class="n">n_row</span><span class="o">=</span><span class="n">n_row</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="n">plt</span><span class="o">.</span><span class="n">cm</span><span class="o">.</span><span class="n">gray</span><span class="p">):</span>
-    <span class="n">fig</span><span class="p">,</span> <span class="n">axs</span> <span class="o">=</span> <a href="https://matplotlib.org/stable/api/_as_gen/matplotlib.pyplot.subplots.html#matplotlib.pyplot.subplots" title="matplotlib.pyplot.subplots" class="sphx-glr-backref-module-matplotlib-pyplot sphx-glr-backref-type-py-function"><span class="n">plt</span><span class="o">.</span><span class="n">subplots</span></a><span class="p">(</span>
+    <span class="n">fig</span><span class="p">,</span> <span class="n">axs</span> <span class="o">=</span> <a class="sphx-glr-backref-module-matplotlib-pyplot sphx-glr-backref-type-py-function" href="https://matplotlib.org/stable/api/_as_gen/matplotlib.pyplot.subplots.html#matplotlib.pyplot.subplots" title="matplotlib.pyplot.subplots"><span class="n">plt</span><span class="o">.</span><span class="n">subplots</span></a><span class="p">(</span>
         <span class="n">nrows</span><span class="o">=</span><span class="n">n_row</span><span class="p">,</span>
         <span class="n">ncols</span><span class="o">=</span><span class="n">n_col</span><span class="p">,</span>
         <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mf">2.0</span> <span class="o">*</span> <span class="n">n_col</span><span class="p">,</span> <span class="mf">2.3</span> <span class="o">*</span> <span class="n">n_row</span><span class="p">),</span>
-        <span class="n">facecolor</span><span class="o">=</span><span class="s2">&quot;white&quot;</span><span class="p">,</span>
+        <span class="n">facecolor</span><span class="o">=</span><span class="s2">"white"</span><span class="p">,</span>
         <span class="n">constrained_layout</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
     <span class="p">)</span>
     <span class="n">fig</span><span class="o">.</span><span class="n">set_constrained_layout_pads</span><span class="p">(</span><span class="n">w_pad</span><span class="o">=</span><span class="mf">0.01</span><span class="p">,</span> <span class="n">h_pad</span><span class="o">=</span><span class="mf">0.02</span><span class="p">,</span> <span class="n">hspace</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">wspace</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
-    <span class="n">fig</span><span class="o">.</span><span class="n">set_edgecolor</span><span class="p">(</span><span class="s2">&quot;black&quot;</span><span class="p">)</span>
+    <span class="n">fig</span><span class="o">.</span><span class="n">set_edgecolor</span><span class="p">(</span><span class="s2">"black"</span><span class="p">)</span>
     <span class="n">fig</span><span class="o">.</span><span class="n">suptitle</span><span class="p">(</span><span class="n">title</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="mi">16</span><span class="p">)</span>
     <span class="k">for</span> <span class="n">ax</span><span class="p">,</span> <span class="n">vec</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">axs</span><span class="o">.</span><span class="n">flat</span><span class="p">,</span> <span class="n">images</span><span class="p">):</span>
         <span class="n">vmax</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="n">vec</span><span class="o">.</span><span class="n">max</span><span class="p">(),</span> <span class="o">-</span><span class="n">vec</span><span class="o">.</span><span class="n">min</span><span class="p">())</span>
         <span class="n">im</span> <span class="o">=</span> <span class="n">ax</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span>
             <span class="n">vec</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">image_shape</span><span class="p">),</span>
             <span class="n">cmap</span><span class="o">=</span><span class="n">cmap</span><span class="p">,</span>
-            <span class="n">interpolation</span><span class="o">=</span><span class="s2">&quot;nearest&quot;</span><span class="p">,</span>
+            <span class="n">interpolation</span><span class="o">=</span><span class="s2">"nearest"</span><span class="p">,</span>
             <span class="n">vmin</span><span class="o">=-</span><span class="n">vmax</span><span class="p">,</span>
             <span class="n">vmax</span><span class="o">=</span><span class="n">vmax</span><span class="p">,</span>
         <span class="p">)</span>
-        <span class="n">ax</span><span class="o">.</span><span class="n">axis</span><span class="p">(</span><span class="s2">&quot;off&quot;</span><span class="p">)</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">axis</span><span class="p">(</span><span class="s2">"off"</span><span class="p">)</span>
 
-    <span class="n">fig</span><span class="o">.</span><span class="n">colorbar</span><span class="p">(</span><span class="n">im</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="n">axs</span><span class="p">,</span> <span class="n">orientation</span><span class="o">=</span><span class="s2">&quot;horizontal&quot;</span><span class="p">,</span> <span class="n">shrink</span><span class="o">=</span><span class="mf">0.99</span><span class="p">,</span> <span class="n">aspect</span><span class="o">=</span><span class="mi">40</span><span class="p">,</span> <span class="n">pad</span><span class="o">=</span><span class="mf">0.01</span><span class="p">)</span>
-    <a href="https://matplotlib.org/stable/api/_as_gen/matplotlib.pyplot.show.html#matplotlib.pyplot.show" title="matplotlib.pyplot.show" class="sphx-glr-backref-module-matplotlib-pyplot sphx-glr-backref-type-py-function"><span class="n">plt</span><span class="o">.</span><span class="n">show</span></a><span class="p">()</span>
+    <span class="n">fig</span><span class="o">.</span><span class="n">colorbar</span><span class="p">(</span><span class="n">im</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="n">axs</span><span class="p">,</span> <span class="n">orientation</span><span class="o">=</span><span class="s2">"horizontal"</span><span class="p">,</span> <span class="n">shrink</span><span class="o">=</span><span class="mf">0.99</span><span class="p">,</span> <span class="n">aspect</span><span class="o">=</span><span class="mi">40</span><span class="p">,</span> <span class="n">pad</span><span class="o">=</span><span class="mf">0.01</span><span class="p">)</span>
+    <a class="sphx-glr-backref-module-matplotlib-pyplot sphx-glr-backref-type-py-function" href="https://matplotlib.org/stable/api/_as_gen/matplotlib.pyplot.show.html#matplotlib.pyplot.show" title="matplotlib.pyplot.show"><span class="n">plt</span><span class="o">.</span><span class="n">show</span></a><span class="p">()</span>
 </pre></div>
 </div>
 <p>Let’s take a look at our data. Gray color indicates negative values,
 white indicates positive values.</p>
-<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">plot_gallery</span><span class="p">(</span><span class="s2">&quot;Faces from dataset&quot;</span><span class="p">,</span> <span class="n">faces_centered</span><span class="p">[:</span><span class="n">n_components</span><span class="p">])</span>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">plot_gallery</span><span class="p">(</span><span class="s2">"Faces from dataset"</span><span class="p">,</span> <span class="n">faces_centered</span><span class="p">[:</span><span class="n">n_components</span><span class="p">])</span>
 </pre></div>
 </div>
-<img src="../../_images/sphx_glr_plot_faces_decomposition_001.png" srcset="../../_images/sphx_glr_plot_faces_decomposition_001.png" alt="Faces from dataset" class = "sphx-glr-single-img"/></section>
+<img alt="Faces from dataset" class="sphx-glr-single-img" src="../../_images/sphx_glr_plot_faces_decomposition_001.png" srcset="../../_images/sphx_glr_plot_faces_decomposition_001.png"/></section>
 <section id="decomposition">
 <h2>Decomposition<a class="headerlink" href="#decomposition" title="Link to this heading">#</a></h2>
 <p>Initialise different estimators for decomposition and fit each
@@ -1160,69 +934,69 @@ to project it to a lower dimensional space.</p>
 also provides a scalar <code class="docutils literal notranslate"><span class="pre">noise_variance_</span></code> (the mean of pixelwise variance)
 that cannot be displayed as an image.</p>
 </div>
-<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">pca_estimator</span> <span class="o">=</span> <a href="../../modules/generated/sklearn.decomposition.PCA.html#sklearn.decomposition.PCA" title="sklearn.decomposition.PCA" class="sphx-glr-backref-module-sklearn-decomposition sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">decomposition</span><span class="o">.</span><span class="n">PCA</span></a><span class="p">(</span>
-    <span class="n">n_components</span><span class="o">=</span><span class="n">n_components</span><span class="p">,</span> <span class="n">svd_solver</span><span class="o">=</span><span class="s2">&quot;randomized&quot;</span><span class="p">,</span> <span class="n">whiten</span><span class="o">=</span><span class="kc">True</span>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">pca_estimator</span> <span class="o">=</span> <a class="sphx-glr-backref-module-sklearn-decomposition sphx-glr-backref-type-py-class sphx-glr-backref-instance" href="../../modules/generated/sklearn.decomposition.PCA.html#sklearn.decomposition.PCA" title="sklearn.decomposition.PCA"><span class="n">decomposition</span><span class="o">.</span><span class="n">PCA</span></a><span class="p">(</span>
+    <span class="n">n_components</span><span class="o">=</span><span class="n">n_components</span><span class="p">,</span> <span class="n">svd_solver</span><span class="o">=</span><span class="s2">"randomized"</span><span class="p">,</span> <span class="n">whiten</span><span class="o">=</span><span class="kc">True</span>
 <span class="p">)</span>
 <span class="n">pca_estimator</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">faces_centered</span><span class="p">)</span>
 <span class="n">plot_gallery</span><span class="p">(</span>
-    <span class="s2">&quot;Eigenfaces - PCA using randomized SVD&quot;</span><span class="p">,</span> <span class="n">pca_estimator</span><span class="o">.</span><span class="n">components_</span><span class="p">[:</span><span class="n">n_components</span><span class="p">]</span>
+    <span class="s2">"Eigenfaces - PCA using randomized SVD"</span><span class="p">,</span> <span class="n">pca_estimator</span><span class="o">.</span><span class="n">components_</span><span class="p">[:</span><span class="n">n_components</span><span class="p">]</span>
 <span class="p">)</span>
 </pre></div>
 </div>
-<img src="../../_images/sphx_glr_plot_faces_decomposition_002.png" srcset="../../_images/sphx_glr_plot_faces_decomposition_002.png" alt="Eigenfaces - PCA using randomized SVD" class = "sphx-glr-single-img"/></section>
+<img alt="Eigenfaces - PCA using randomized SVD" class="sphx-glr-single-img" src="../../_images/sphx_glr_plot_faces_decomposition_002.png" srcset="../../_images/sphx_glr_plot_faces_decomposition_002.png"/></section>
 <section id="non-negative-components-nmf">
 <h3>Non-negative components - NMF<a class="headerlink" href="#non-negative-components-nmf" title="Link to this heading">#</a></h3>
 <p>Estimate non-negative original data as production of two non-negative matrices.</p>
-<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">nmf_estimator</span> <span class="o">=</span> <a href="../../modules/generated/sklearn.decomposition.NMF.html#sklearn.decomposition.NMF" title="sklearn.decomposition.NMF" class="sphx-glr-backref-module-sklearn-decomposition sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">decomposition</span><span class="o">.</span><span class="n">NMF</span></a><span class="p">(</span><span class="n">n_components</span><span class="o">=</span><span class="n">n_components</span><span class="p">,</span> <span class="n">tol</span><span class="o">=</span><span class="mf">5e-3</span><span class="p">)</span>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">nmf_estimator</span> <span class="o">=</span> <a class="sphx-glr-backref-module-sklearn-decomposition sphx-glr-backref-type-py-class sphx-glr-backref-instance" href="../../modules/generated/sklearn.decomposition.NMF.html#sklearn.decomposition.NMF" title="sklearn.decomposition.NMF"><span class="n">decomposition</span><span class="o">.</span><span class="n">NMF</span></a><span class="p">(</span><span class="n">n_components</span><span class="o">=</span><span class="n">n_components</span><span class="p">,</span> <span class="n">tol</span><span class="o">=</span><span class="mf">5e-3</span><span class="p">)</span>
 <span class="n">nmf_estimator</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">faces</span><span class="p">)</span>  <span class="c1"># original non- negative dataset</span>
-<span class="n">plot_gallery</span><span class="p">(</span><span class="s2">&quot;Non-negative components - NMF&quot;</span><span class="p">,</span> <span class="n">nmf_estimator</span><span class="o">.</span><span class="n">components_</span><span class="p">[:</span><span class="n">n_components</span><span class="p">])</span>
+<span class="n">plot_gallery</span><span class="p">(</span><span class="s2">"Non-negative components - NMF"</span><span class="p">,</span> <span class="n">nmf_estimator</span><span class="o">.</span><span class="n">components_</span><span class="p">[:</span><span class="n">n_components</span><span class="p">])</span>
 </pre></div>
 </div>
-<img src="../../_images/sphx_glr_plot_faces_decomposition_003.png" srcset="../../_images/sphx_glr_plot_faces_decomposition_003.png" alt="Non-negative components - NMF" class = "sphx-glr-single-img"/></section>
+<img alt="Non-negative components - NMF" class="sphx-glr-single-img" src="../../_images/sphx_glr_plot_faces_decomposition_003.png" srcset="../../_images/sphx_glr_plot_faces_decomposition_003.png"/></section>
 <section id="independent-components-fastica">
 <h3>Independent components - FastICA<a class="headerlink" href="#independent-components-fastica" title="Link to this heading">#</a></h3>
 <p>Independent component analysis separates a multivariate vectors into additive
 subcomponents that are maximally independent.</p>
-<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">ica_estimator</span> <span class="o">=</span> <a href="../../modules/generated/sklearn.decomposition.FastICA.html#sklearn.decomposition.FastICA" title="sklearn.decomposition.FastICA" class="sphx-glr-backref-module-sklearn-decomposition sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">decomposition</span><span class="o">.</span><span class="n">FastICA</span></a><span class="p">(</span>
-    <span class="n">n_components</span><span class="o">=</span><span class="n">n_components</span><span class="p">,</span> <span class="n">max_iter</span><span class="o">=</span><span class="mi">400</span><span class="p">,</span> <span class="n">whiten</span><span class="o">=</span><span class="s2">&quot;arbitrary-variance&quot;</span><span class="p">,</span> <span class="n">tol</span><span class="o">=</span><span class="mf">15e-5</span>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">ica_estimator</span> <span class="o">=</span> <a class="sphx-glr-backref-module-sklearn-decomposition sphx-glr-backref-type-py-class sphx-glr-backref-instance" href="../../modules/generated/sklearn.decomposition.FastICA.html#sklearn.decomposition.FastICA" title="sklearn.decomposition.FastICA"><span class="n">decomposition</span><span class="o">.</span><span class="n">FastICA</span></a><span class="p">(</span>
+    <span class="n">n_components</span><span class="o">=</span><span class="n">n_components</span><span class="p">,</span> <span class="n">max_iter</span><span class="o">=</span><span class="mi">400</span><span class="p">,</span> <span class="n">whiten</span><span class="o">=</span><span class="s2">"arbitrary-variance"</span><span class="p">,</span> <span class="n">tol</span><span class="o">=</span><span class="mf">15e-5</span>
 <span class="p">)</span>
 <span class="n">ica_estimator</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">faces_centered</span><span class="p">)</span>
 <span class="n">plot_gallery</span><span class="p">(</span>
-    <span class="s2">&quot;Independent components - FastICA&quot;</span><span class="p">,</span> <span class="n">ica_estimator</span><span class="o">.</span><span class="n">components_</span><span class="p">[:</span><span class="n">n_components</span><span class="p">]</span>
+    <span class="s2">"Independent components - FastICA"</span><span class="p">,</span> <span class="n">ica_estimator</span><span class="o">.</span><span class="n">components_</span><span class="p">[:</span><span class="n">n_components</span><span class="p">]</span>
 <span class="p">)</span>
 </pre></div>
 </div>
-<img src="../../_images/sphx_glr_plot_faces_decomposition_004.png" srcset="../../_images/sphx_glr_plot_faces_decomposition_004.png" alt="Independent components - FastICA" class = "sphx-glr-single-img"/></section>
+<img alt="Independent components - FastICA" class="sphx-glr-single-img" src="../../_images/sphx_glr_plot_faces_decomposition_004.png" srcset="../../_images/sphx_glr_plot_faces_decomposition_004.png"/></section>
 <section id="sparse-components-minibatchsparsepca">
 <h3>Sparse components - MiniBatchSparsePCA<a class="headerlink" href="#sparse-components-minibatchsparsepca" title="Link to this heading">#</a></h3>
 <p>Mini-batch sparse PCA (<a class="reference internal" href="../../modules/generated/sklearn.decomposition.MiniBatchSparsePCA.html#sklearn.decomposition.MiniBatchSparsePCA" title="sklearn.decomposition.MiniBatchSparsePCA"><code class="xref py py-class docutils literal notranslate"><span class="pre">MiniBatchSparsePCA</span></code></a>)
 extracts the set of sparse components that best reconstruct the data. This
 variant is faster but less accurate than the similar
 <a class="reference internal" href="../../modules/generated/sklearn.decomposition.SparsePCA.html#sklearn.decomposition.SparsePCA" title="sklearn.decomposition.SparsePCA"><code class="xref py py-class docutils literal notranslate"><span class="pre">SparsePCA</span></code></a>.</p>
-<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">batch_pca_estimator</span> <span class="o">=</span> <a href="../../modules/generated/sklearn.decomposition.MiniBatchSparsePCA.html#sklearn.decomposition.MiniBatchSparsePCA" title="sklearn.decomposition.MiniBatchSparsePCA" class="sphx-glr-backref-module-sklearn-decomposition sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">decomposition</span><span class="o">.</span><span class="n">MiniBatchSparsePCA</span></a><span class="p">(</span>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">batch_pca_estimator</span> <span class="o">=</span> <a class="sphx-glr-backref-module-sklearn-decomposition sphx-glr-backref-type-py-class sphx-glr-backref-instance" href="../../modules/generated/sklearn.decomposition.MiniBatchSparsePCA.html#sklearn.decomposition.MiniBatchSparsePCA" title="sklearn.decomposition.MiniBatchSparsePCA"><span class="n">decomposition</span><span class="o">.</span><span class="n">MiniBatchSparsePCA</span></a><span class="p">(</span>
     <span class="n">n_components</span><span class="o">=</span><span class="n">n_components</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.1</span><span class="p">,</span> <span class="n">max_iter</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">batch_size</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="n">rng</span>
 <span class="p">)</span>
 <span class="n">batch_pca_estimator</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">faces_centered</span><span class="p">)</span>
 <span class="n">plot_gallery</span><span class="p">(</span>
-    <span class="s2">&quot;Sparse components - MiniBatchSparsePCA&quot;</span><span class="p">,</span>
+    <span class="s2">"Sparse components - MiniBatchSparsePCA"</span><span class="p">,</span>
     <span class="n">batch_pca_estimator</span><span class="o">.</span><span class="n">components_</span><span class="p">[:</span><span class="n">n_components</span><span class="p">],</span>
 <span class="p">)</span>
 </pre></div>
 </div>
-<img src="../../_images/sphx_glr_plot_faces_decomposition_005.png" srcset="../../_images/sphx_glr_plot_faces_decomposition_005.png" alt="Sparse components - MiniBatchSparsePCA" class = "sphx-glr-single-img"/></section>
+<img alt="Sparse components - MiniBatchSparsePCA" class="sphx-glr-single-img" src="../../_images/sphx_glr_plot_faces_decomposition_005.png" srcset="../../_images/sphx_glr_plot_faces_decomposition_005.png"/></section>
 <section id="dictionary-learning">
 <h3>Dictionary learning<a class="headerlink" href="#dictionary-learning" title="Link to this heading">#</a></h3>
 <p>By default, <a class="reference internal" href="../../modules/generated/sklearn.decomposition.MiniBatchDictionaryLearning.html#sklearn.decomposition.MiniBatchDictionaryLearning" title="sklearn.decomposition.MiniBatchDictionaryLearning"><code class="xref py py-class docutils literal notranslate"><span class="pre">MiniBatchDictionaryLearning</span></code></a>
 divides the data into mini-batches and optimizes in an online manner by
 cycling over the mini-batches for the specified number of iterations.</p>
-<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">batch_dict_estimator</span> <span class="o">=</span> <a href="../../modules/generated/sklearn.decomposition.MiniBatchDictionaryLearning.html#sklearn.decomposition.MiniBatchDictionaryLearning" title="sklearn.decomposition.MiniBatchDictionaryLearning" class="sphx-glr-backref-module-sklearn-decomposition sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">decomposition</span><span class="o">.</span><span class="n">MiniBatchDictionaryLearning</span></a><span class="p">(</span>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">batch_dict_estimator</span> <span class="o">=</span> <a class="sphx-glr-backref-module-sklearn-decomposition sphx-glr-backref-type-py-class sphx-glr-backref-instance" href="../../modules/generated/sklearn.decomposition.MiniBatchDictionaryLearning.html#sklearn.decomposition.MiniBatchDictionaryLearning" title="sklearn.decomposition.MiniBatchDictionaryLearning"><span class="n">decomposition</span><span class="o">.</span><span class="n">MiniBatchDictionaryLearning</span></a><span class="p">(</span>
     <span class="n">n_components</span><span class="o">=</span><span class="n">n_components</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.1</span><span class="p">,</span> <span class="n">max_iter</span><span class="o">=</span><span class="mi">50</span><span class="p">,</span> <span class="n">batch_size</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="n">rng</span>
 <span class="p">)</span>
 <span class="n">batch_dict_estimator</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">faces_centered</span><span class="p">)</span>
-<span class="n">plot_gallery</span><span class="p">(</span><span class="s2">&quot;Dictionary learning&quot;</span><span class="p">,</span> <span class="n">batch_dict_estimator</span><span class="o">.</span><span class="n">components_</span><span class="p">[:</span><span class="n">n_components</span><span class="p">])</span>
+<span class="n">plot_gallery</span><span class="p">(</span><span class="s2">"Dictionary learning"</span><span class="p">,</span> <span class="n">batch_dict_estimator</span><span class="o">.</span><span class="n">components_</span><span class="p">[:</span><span class="n">n_components</span><span class="p">])</span>
 </pre></div>
 </div>
-<img src="../../_images/sphx_glr_plot_faces_decomposition_006.png" srcset="../../_images/sphx_glr_plot_faces_decomposition_006.png" alt="Dictionary learning" class = "sphx-glr-single-img"/></section>
+<img alt="Dictionary learning" class="sphx-glr-single-img" src="../../_images/sphx_glr_plot_faces_decomposition_006.png" srcset="../../_images/sphx_glr_plot_faces_decomposition_006.png"/></section>
 <section id="cluster-centers-minibatchkmeans">
 <h3>Cluster centers - MiniBatchKMeans<a class="headerlink" href="#cluster-centers-minibatchkmeans" title="Link to this heading">#</a></h3>
 <p><a class="reference internal" href="../../modules/generated/sklearn.cluster.MiniBatchKMeans.html#sklearn.cluster.MiniBatchKMeans" title="sklearn.cluster.MiniBatchKMeans"><code class="xref py py-class docutils literal notranslate"><span class="pre">sklearn.cluster.MiniBatchKMeans</span></code></a> is computationally efficient and
@@ -1230,7 +1004,7 @@ implements on-line learning with a
 <a class="reference internal" href="../../modules/generated/sklearn.cluster.MiniBatchKMeans.html#sklearn.cluster.MiniBatchKMeans.partial_fit" title="sklearn.cluster.MiniBatchKMeans.partial_fit"><code class="xref py py-meth docutils literal notranslate"><span class="pre">partial_fit</span></code></a> method. That is
 why it could be beneficial to enhance some time-consuming algorithms with
 <a class="reference internal" href="../../modules/generated/sklearn.cluster.MiniBatchKMeans.html#sklearn.cluster.MiniBatchKMeans" title="sklearn.cluster.MiniBatchKMeans"><code class="xref py py-class docutils literal notranslate"><span class="pre">MiniBatchKMeans</span></code></a>.</p>
-<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">kmeans_estimator</span> <span class="o">=</span> <a href="../../modules/generated/sklearn.cluster.MiniBatchKMeans.html#sklearn.cluster.MiniBatchKMeans" title="sklearn.cluster.MiniBatchKMeans" class="sphx-glr-backref-module-sklearn-cluster sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">cluster</span><span class="o">.</span><span class="n">MiniBatchKMeans</span></a><span class="p">(</span>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">kmeans_estimator</span> <span class="o">=</span> <a class="sphx-glr-backref-module-sklearn-cluster sphx-glr-backref-type-py-class sphx-glr-backref-instance" href="../../modules/generated/sklearn.cluster.MiniBatchKMeans.html#sklearn.cluster.MiniBatchKMeans" title="sklearn.cluster.MiniBatchKMeans"><span class="n">cluster</span><span class="o">.</span><span class="n">MiniBatchKMeans</span></a><span class="p">(</span>
     <span class="n">n_clusters</span><span class="o">=</span><span class="n">n_components</span><span class="p">,</span>
     <span class="n">tol</span><span class="o">=</span><span class="mf">1e-3</span><span class="p">,</span>
     <span class="n">batch_size</span><span class="o">=</span><span class="mi">20</span><span class="p">,</span>
@@ -1239,42 +1013,42 @@ why it could be beneficial to enhance some time-consuming algorithms with
 <span class="p">)</span>
 <span class="n">kmeans_estimator</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">faces_centered</span><span class="p">)</span>
 <span class="n">plot_gallery</span><span class="p">(</span>
-    <span class="s2">&quot;Cluster centers - MiniBatchKMeans&quot;</span><span class="p">,</span>
+    <span class="s2">"Cluster centers - MiniBatchKMeans"</span><span class="p">,</span>
     <span class="n">kmeans_estimator</span><span class="o">.</span><span class="n">cluster_centers_</span><span class="p">[:</span><span class="n">n_components</span><span class="p">],</span>
 <span class="p">)</span>
 </pre></div>
 </div>
-<img src="../../_images/sphx_glr_plot_faces_decomposition_007.png" srcset="../../_images/sphx_glr_plot_faces_decomposition_007.png" alt="Cluster centers - MiniBatchKMeans" class = "sphx-glr-single-img"/></section>
+<img alt="Cluster centers - MiniBatchKMeans" class="sphx-glr-single-img" src="../../_images/sphx_glr_plot_faces_decomposition_007.png" srcset="../../_images/sphx_glr_plot_faces_decomposition_007.png"/></section>
 <section id="factor-analysis-components-fa">
 <h3>Factor Analysis components - FA<a class="headerlink" href="#factor-analysis-components-fa" title="Link to this heading">#</a></h3>
 <p><a class="reference internal" href="../../modules/generated/sklearn.decomposition.FactorAnalysis.html#sklearn.decomposition.FactorAnalysis" title="sklearn.decomposition.FactorAnalysis"><code class="xref py py-class docutils literal notranslate"><span class="pre">FactorAnalysis</span></code></a> is similar to
 <a class="reference internal" href="../../modules/generated/sklearn.decomposition.PCA.html#sklearn.decomposition.PCA" title="sklearn.decomposition.PCA"><code class="xref py py-class docutils literal notranslate"><span class="pre">PCA</span></code></a> but has the advantage of modelling the
 variance in every direction of the input space independently (heteroscedastic
 noise). Read more in the <a class="reference internal" href="../../modules/decomposition.html#fa"><span class="std std-ref">User Guide</span></a>.</p>
-<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">fa_estimator</span> <span class="o">=</span> <a href="../../modules/generated/sklearn.decomposition.FactorAnalysis.html#sklearn.decomposition.FactorAnalysis" title="sklearn.decomposition.FactorAnalysis" class="sphx-glr-backref-module-sklearn-decomposition sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">decomposition</span><span class="o">.</span><span class="n">FactorAnalysis</span></a><span class="p">(</span><span class="n">n_components</span><span class="o">=</span><span class="n">n_components</span><span class="p">,</span> <span class="n">max_iter</span><span class="o">=</span><span class="mi">20</span><span class="p">)</span>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">fa_estimator</span> <span class="o">=</span> <a class="sphx-glr-backref-module-sklearn-decomposition sphx-glr-backref-type-py-class sphx-glr-backref-instance" href="../../modules/generated/sklearn.decomposition.FactorAnalysis.html#sklearn.decomposition.FactorAnalysis" title="sklearn.decomposition.FactorAnalysis"><span class="n">decomposition</span><span class="o">.</span><span class="n">FactorAnalysis</span></a><span class="p">(</span><span class="n">n_components</span><span class="o">=</span><span class="n">n_components</span><span class="p">,</span> <span class="n">max_iter</span><span class="o">=</span><span class="mi">20</span><span class="p">)</span>
 <span class="n">fa_estimator</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">faces_centered</span><span class="p">)</span>
-<span class="n">plot_gallery</span><span class="p">(</span><span class="s2">&quot;Factor Analysis (FA)&quot;</span><span class="p">,</span> <span class="n">fa_estimator</span><span class="o">.</span><span class="n">components_</span><span class="p">[:</span><span class="n">n_components</span><span class="p">])</span>
+<span class="n">plot_gallery</span><span class="p">(</span><span class="s2">"Factor Analysis (FA)"</span><span class="p">,</span> <span class="n">fa_estimator</span><span class="o">.</span><span class="n">components_</span><span class="p">[:</span><span class="n">n_components</span><span class="p">])</span>
 
 <span class="c1"># --- Pixelwise variance</span>
-<a href="https://matplotlib.org/stable/api/_as_gen/matplotlib.pyplot.figure.html#matplotlib.pyplot.figure" title="matplotlib.pyplot.figure" class="sphx-glr-backref-module-matplotlib-pyplot sphx-glr-backref-type-py-function"><span class="n">plt</span><span class="o">.</span><span class="n">figure</span></a><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mf">3.2</span><span class="p">,</span> <span class="mf">3.6</span><span class="p">),</span> <span class="n">facecolor</span><span class="o">=</span><span class="s2">&quot;white&quot;</span><span class="p">,</span> <span class="n">tight_layout</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<a class="sphx-glr-backref-module-matplotlib-pyplot sphx-glr-backref-type-py-function" href="https://matplotlib.org/stable/api/_as_gen/matplotlib.pyplot.figure.html#matplotlib.pyplot.figure" title="matplotlib.pyplot.figure"><span class="n">plt</span><span class="o">.</span><span class="n">figure</span></a><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mf">3.2</span><span class="p">,</span> <span class="mf">3.6</span><span class="p">),</span> <span class="n">facecolor</span><span class="o">=</span><span class="s2">"white"</span><span class="p">,</span> <span class="n">tight_layout</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 <span class="n">vec</span> <span class="o">=</span> <span class="n">fa_estimator</span><span class="o">.</span><span class="n">noise_variance_</span>
 <span class="n">vmax</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="n">vec</span><span class="o">.</span><span class="n">max</span><span class="p">(),</span> <span class="o">-</span><span class="n">vec</span><span class="o">.</span><span class="n">min</span><span class="p">())</span>
-<a href="https://matplotlib.org/stable/api/_as_gen/matplotlib.pyplot.imshow.html#matplotlib.pyplot.imshow" title="matplotlib.pyplot.imshow" class="sphx-glr-backref-module-matplotlib-pyplot sphx-glr-backref-type-py-function"><span class="n">plt</span><span class="o">.</span><span class="n">imshow</span></a><span class="p">(</span>
+<a class="sphx-glr-backref-module-matplotlib-pyplot sphx-glr-backref-type-py-function" href="https://matplotlib.org/stable/api/_as_gen/matplotlib.pyplot.imshow.html#matplotlib.pyplot.imshow" title="matplotlib.pyplot.imshow"><span class="n">plt</span><span class="o">.</span><span class="n">imshow</span></a><span class="p">(</span>
     <span class="n">vec</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">image_shape</span><span class="p">),</span>
     <span class="n">cmap</span><span class="o">=</span><span class="n">plt</span><span class="o">.</span><span class="n">cm</span><span class="o">.</span><span class="n">gray</span><span class="p">,</span>
-    <span class="n">interpolation</span><span class="o">=</span><span class="s2">&quot;nearest&quot;</span><span class="p">,</span>
+    <span class="n">interpolation</span><span class="o">=</span><span class="s2">"nearest"</span><span class="p">,</span>
     <span class="n">vmin</span><span class="o">=-</span><span class="n">vmax</span><span class="p">,</span>
     <span class="n">vmax</span><span class="o">=</span><span class="n">vmax</span><span class="p">,</span>
 <span class="p">)</span>
-<a href="https://matplotlib.org/stable/api/_as_gen/matplotlib.pyplot.axis.html#matplotlib.pyplot.axis" title="matplotlib.pyplot.axis" class="sphx-glr-backref-module-matplotlib-pyplot sphx-glr-backref-type-py-function"><span class="n">plt</span><span class="o">.</span><span class="n">axis</span></a><span class="p">(</span><span class="s2">&quot;off&quot;</span><span class="p">)</span>
-<a href="https://matplotlib.org/stable/api/_as_gen/matplotlib.pyplot.title.html#matplotlib.pyplot.title" title="matplotlib.pyplot.title" class="sphx-glr-backref-module-matplotlib-pyplot sphx-glr-backref-type-py-function"><span class="n">plt</span><span class="o">.</span><span class="n">title</span></a><span class="p">(</span><span class="s2">&quot;Pixelwise variance from </span><span class="se">\n</span><span class="s2"> Factor Analysis (FA)&quot;</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="mi">16</span><span class="p">,</span> <span class="n">wrap</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-<a href="https://matplotlib.org/stable/api/_as_gen/matplotlib.pyplot.colorbar.html#matplotlib.pyplot.colorbar" title="matplotlib.pyplot.colorbar" class="sphx-glr-backref-module-matplotlib-pyplot sphx-glr-backref-type-py-function"><span class="n">plt</span><span class="o">.</span><span class="n">colorbar</span></a><span class="p">(</span><span class="n">orientation</span><span class="o">=</span><span class="s2">&quot;horizontal&quot;</span><span class="p">,</span> <span class="n">shrink</span><span class="o">=</span><span class="mf">0.8</span><span class="p">,</span> <span class="n">pad</span><span class="o">=</span><span class="mf">0.03</span><span class="p">)</span>
-<a href="https://matplotlib.org/stable/api/_as_gen/matplotlib.pyplot.show.html#matplotlib.pyplot.show" title="matplotlib.pyplot.show" class="sphx-glr-backref-module-matplotlib-pyplot sphx-glr-backref-type-py-function"><span class="n">plt</span><span class="o">.</span><span class="n">show</span></a><span class="p">()</span>
+<a class="sphx-glr-backref-module-matplotlib-pyplot sphx-glr-backref-type-py-function" href="https://matplotlib.org/stable/api/_as_gen/matplotlib.pyplot.axis.html#matplotlib.pyplot.axis" title="matplotlib.pyplot.axis"><span class="n">plt</span><span class="o">.</span><span class="n">axis</span></a><span class="p">(</span><span class="s2">"off"</span><span class="p">)</span>
+<a class="sphx-glr-backref-module-matplotlib-pyplot sphx-glr-backref-type-py-function" href="https://matplotlib.org/stable/api/_as_gen/matplotlib.pyplot.title.html#matplotlib.pyplot.title" title="matplotlib.pyplot.title"><span class="n">plt</span><span class="o">.</span><span class="n">title</span></a><span class="p">(</span><span class="s2">"Pixelwise variance from </span><span class="se">\n</span><span class="s2"> Factor Analysis (FA)"</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="mi">16</span><span class="p">,</span> <span class="n">wrap</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<a class="sphx-glr-backref-module-matplotlib-pyplot sphx-glr-backref-type-py-function" href="https://matplotlib.org/stable/api/_as_gen/matplotlib.pyplot.colorbar.html#matplotlib.pyplot.colorbar" title="matplotlib.pyplot.colorbar"><span class="n">plt</span><span class="o">.</span><span class="n">colorbar</span></a><span class="p">(</span><span class="n">orientation</span><span class="o">=</span><span class="s2">"horizontal"</span><span class="p">,</span> <span class="n">shrink</span><span class="o">=</span><span class="mf">0.8</span><span class="p">,</span> <span class="n">pad</span><span class="o">=</span><span class="mf">0.03</span><span class="p">)</span>
+<a class="sphx-glr-backref-module-matplotlib-pyplot sphx-glr-backref-type-py-function" href="https://matplotlib.org/stable/api/_as_gen/matplotlib.pyplot.show.html#matplotlib.pyplot.show" title="matplotlib.pyplot.show"><span class="n">plt</span><span class="o">.</span><span class="n">show</span></a><span class="p">()</span>
 </pre></div>
 </div>
 <ul class="sphx-glr-horizontal">
-<li><img src="../../_images/sphx_glr_plot_faces_decomposition_008.png" srcset="../../_images/sphx_glr_plot_faces_decomposition_008.png" alt="Factor Analysis (FA)" class = "sphx-glr-multi-img"/></li>
-<li><img src="../../_images/sphx_glr_plot_faces_decomposition_009.png" srcset="../../_images/sphx_glr_plot_faces_decomposition_009.png" alt="Pixelwise variance from   Factor Analysis (FA)" class = "sphx-glr-multi-img"/></li>
+<li><img alt="Factor Analysis (FA)" class="sphx-glr-multi-img" src="../../_images/sphx_glr_plot_faces_decomposition_008.png" srcset="../../_images/sphx_glr_plot_faces_decomposition_008.png"/></li>
+<li><img alt="Pixelwise variance from   Factor Analysis (FA)" class="sphx-glr-multi-img" src="../../_images/sphx_glr_plot_faces_decomposition_009.png" srcset="../../_images/sphx_glr_plot_faces_decomposition_009.png"/></li>
 </ul>
 </section>
 </section>
@@ -1291,10 +1065,10 @@ is better suited for large datasets. Read more in the <a class="reference intern
 <p>Plot the same samples from our dataset but with another colormap.
 Red indicates negative values, blue indicates positive values,
 and white represents zeros.</p>
-<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">plot_gallery</span><span class="p">(</span><span class="s2">&quot;Faces from dataset&quot;</span><span class="p">,</span> <span class="n">faces_centered</span><span class="p">[:</span><span class="n">n_components</span><span class="p">],</span> <span class="n">cmap</span><span class="o">=</span><span class="n">plt</span><span class="o">.</span><span class="n">cm</span><span class="o">.</span><span class="n">RdBu</span><span class="p">)</span>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">plot_gallery</span><span class="p">(</span><span class="s2">"Faces from dataset"</span><span class="p">,</span> <span class="n">faces_centered</span><span class="p">[:</span><span class="n">n_components</span><span class="p">],</span> <span class="n">cmap</span><span class="o">=</span><span class="n">plt</span><span class="o">.</span><span class="n">cm</span><span class="o">.</span><span class="n">RdBu</span><span class="p">)</span>
 </pre></div>
 </div>
-<img src="../../_images/sphx_glr_plot_faces_decomposition_010.png" srcset="../../_images/sphx_glr_plot_faces_decomposition_010.png" alt="Faces from dataset" class = "sphx-glr-single-img"/><p>Similar to the previous examples, we change parameters and train
+<img alt="Faces from dataset" class="sphx-glr-single-img" src="../../_images/sphx_glr_plot_faces_decomposition_010.png" srcset="../../_images/sphx_glr_plot_faces_decomposition_010.png"/><p>Similar to the previous examples, we change parameters and train
 <a class="reference internal" href="../../modules/generated/sklearn.decomposition.MiniBatchDictionaryLearning.html#sklearn.decomposition.MiniBatchDictionaryLearning" title="sklearn.decomposition.MiniBatchDictionaryLearning"><code class="xref py py-class docutils literal notranslate"><span class="pre">MiniBatchDictionaryLearning</span></code></a> estimator on all
 images. Generally, the dictionary learning and sparse encoding decompose
 input data into the dictionary and the coding coefficients matrices. <span class="math notranslate nohighlight">\(X
@@ -1306,7 +1080,7 @@ coefficients are positively constrained.</p>
 <section id="dictionary-learning-positive-dictionary">
 <h3>Dictionary learning - positive dictionary<a class="headerlink" href="#dictionary-learning-positive-dictionary" title="Link to this heading">#</a></h3>
 <p>In the following section we enforce positivity when finding the dictionary.</p>
-<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">dict_pos_dict_estimator</span> <span class="o">=</span> <a href="../../modules/generated/sklearn.decomposition.MiniBatchDictionaryLearning.html#sklearn.decomposition.MiniBatchDictionaryLearning" title="sklearn.decomposition.MiniBatchDictionaryLearning" class="sphx-glr-backref-module-sklearn-decomposition sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">decomposition</span><span class="o">.</span><span class="n">MiniBatchDictionaryLearning</span></a><span class="p">(</span>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">dict_pos_dict_estimator</span> <span class="o">=</span> <a class="sphx-glr-backref-module-sklearn-decomposition sphx-glr-backref-type-py-class sphx-glr-backref-instance" href="../../modules/generated/sklearn.decomposition.MiniBatchDictionaryLearning.html#sklearn.decomposition.MiniBatchDictionaryLearning" title="sklearn.decomposition.MiniBatchDictionaryLearning"><span class="n">decomposition</span><span class="o">.</span><span class="n">MiniBatchDictionaryLearning</span></a><span class="p">(</span>
     <span class="n">n_components</span><span class="o">=</span><span class="n">n_components</span><span class="p">,</span>
     <span class="n">alpha</span><span class="o">=</span><span class="mf">0.1</span><span class="p">,</span>
     <span class="n">max_iter</span><span class="o">=</span><span class="mi">50</span><span class="p">,</span>
@@ -1316,142 +1090,105 @@ coefficients are positively constrained.</p>
 <span class="p">)</span>
 <span class="n">dict_pos_dict_estimator</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">faces_centered</span><span class="p">)</span>
 <span class="n">plot_gallery</span><span class="p">(</span>
-    <span class="s2">&quot;Dictionary learning - positive dictionary&quot;</span><span class="p">,</span>
+    <span class="s2">"Dictionary learning - positive dictionary"</span><span class="p">,</span>
     <span class="n">dict_pos_dict_estimator</span><span class="o">.</span><span class="n">components_</span><span class="p">[:</span><span class="n">n_components</span><span class="p">],</span>
     <span class="n">cmap</span><span class="o">=</span><span class="n">plt</span><span class="o">.</span><span class="n">cm</span><span class="o">.</span><span class="n">RdBu</span><span class="p">,</span>
 <span class="p">)</span>
 </pre></div>
 </div>
-<img src="../../_images/sphx_glr_plot_faces_decomposition_011.png" srcset="../../_images/sphx_glr_plot_faces_decomposition_011.png" alt="Dictionary learning - positive dictionary" class = "sphx-glr-single-img"/></section>
+<img alt="Dictionary learning - positive dictionary" class="sphx-glr-single-img" src="../../_images/sphx_glr_plot_faces_decomposition_011.png" srcset="../../_images/sphx_glr_plot_faces_decomposition_011.png"/></section>
 <section id="dictionary-learning-positive-code">
 <h3>Dictionary learning - positive code<a class="headerlink" href="#dictionary-learning-positive-code" title="Link to this heading">#</a></h3>
 <p>Below we constrain the coding coefficients as a positive matrix.</p>
-<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">dict_pos_code_estimator</span> <span class="o">=</span> <a href="../../modules/generated/sklearn.decomposition.MiniBatchDictionaryLearning.html#sklearn.decomposition.MiniBatchDictionaryLearning" title="sklearn.decomposition.MiniBatchDictionaryLearning" class="sphx-glr-backref-module-sklearn-decomposition sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">decomposition</span><span class="o">.</span><span class="n">MiniBatchDictionaryLearning</span></a><span class="p">(</span>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">dict_pos_code_estimator</span> <span class="o">=</span> <a class="sphx-glr-backref-module-sklearn-decomposition sphx-glr-backref-type-py-class sphx-glr-backref-instance" href="../../modules/generated/sklearn.decomposition.MiniBatchDictionaryLearning.html#sklearn.decomposition.MiniBatchDictionaryLearning" title="sklearn.decomposition.MiniBatchDictionaryLearning"><span class="n">decomposition</span><span class="o">.</span><span class="n">MiniBatchDictionaryLearning</span></a><span class="p">(</span>
     <span class="n">n_components</span><span class="o">=</span><span class="n">n_components</span><span class="p">,</span>
     <span class="n">alpha</span><span class="o">=</span><span class="mf">0.1</span><span class="p">,</span>
     <span class="n">max_iter</span><span class="o">=</span><span class="mi">50</span><span class="p">,</span>
     <span class="n">batch_size</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span>
-    <span class="n">fit_algorithm</span><span class="o">=</span><span class="s2">&quot;cd&quot;</span><span class="p">,</span>
+    <span class="n">fit_algorithm</span><span class="o">=</span><span class="s2">"cd"</span><span class="p">,</span>
     <span class="n">random_state</span><span class="o">=</span><span class="n">rng</span><span class="p">,</span>
     <span class="n">positive_code</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
 <span class="p">)</span>
 <span class="n">dict_pos_code_estimator</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">faces_centered</span><span class="p">)</span>
 <span class="n">plot_gallery</span><span class="p">(</span>
-    <span class="s2">&quot;Dictionary learning - positive code&quot;</span><span class="p">,</span>
+    <span class="s2">"Dictionary learning - positive code"</span><span class="p">,</span>
     <span class="n">dict_pos_code_estimator</span><span class="o">.</span><span class="n">components_</span><span class="p">[:</span><span class="n">n_components</span><span class="p">],</span>
     <span class="n">cmap</span><span class="o">=</span><span class="n">plt</span><span class="o">.</span><span class="n">cm</span><span class="o">.</span><span class="n">RdBu</span><span class="p">,</span>
 <span class="p">)</span>
 </pre></div>
 </div>
-<img src="../../_images/sphx_glr_plot_faces_decomposition_012.png" srcset="../../_images/sphx_glr_plot_faces_decomposition_012.png" alt="Dictionary learning - positive code" class = "sphx-glr-single-img"/></section>
+<img alt="Dictionary learning - positive code" class="sphx-glr-single-img" src="../../_images/sphx_glr_plot_faces_decomposition_012.png" srcset="../../_images/sphx_glr_plot_faces_decomposition_012.png"/></section>
 <section id="dictionary-learning-positive-dictionary-code">
 <h3>Dictionary learning - positive dictionary &amp; code<a class="headerlink" href="#dictionary-learning-positive-dictionary-code" title="Link to this heading">#</a></h3>
 <p>Also below are the results if the dictionary values and coding
 coefficients are positively constrained.</p>
-<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">dict_pos_estimator</span> <span class="o">=</span> <a href="../../modules/generated/sklearn.decomposition.MiniBatchDictionaryLearning.html#sklearn.decomposition.MiniBatchDictionaryLearning" title="sklearn.decomposition.MiniBatchDictionaryLearning" class="sphx-glr-backref-module-sklearn-decomposition sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">decomposition</span><span class="o">.</span><span class="n">MiniBatchDictionaryLearning</span></a><span class="p">(</span>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">dict_pos_estimator</span> <span class="o">=</span> <a class="sphx-glr-backref-module-sklearn-decomposition sphx-glr-backref-type-py-class sphx-glr-backref-instance" href="../../modules/generated/sklearn.decomposition.MiniBatchDictionaryLearning.html#sklearn.decomposition.MiniBatchDictionaryLearning" title="sklearn.decomposition.MiniBatchDictionaryLearning"><span class="n">decomposition</span><span class="o">.</span><span class="n">MiniBatchDictionaryLearning</span></a><span class="p">(</span>
     <span class="n">n_components</span><span class="o">=</span><span class="n">n_components</span><span class="p">,</span>
     <span class="n">alpha</span><span class="o">=</span><span class="mf">0.1</span><span class="p">,</span>
     <span class="n">max_iter</span><span class="o">=</span><span class="mi">50</span><span class="p">,</span>
     <span class="n">batch_size</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span>
-    <span class="n">fit_algorithm</span><span class="o">=</span><span class="s2">&quot;cd&quot;</span><span class="p">,</span>
+    <span class="n">fit_algorithm</span><span class="o">=</span><span class="s2">"cd"</span><span class="p">,</span>
     <span class="n">random_state</span><span class="o">=</span><span class="n">rng</span><span class="p">,</span>
     <span class="n">positive_dict</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
     <span class="n">positive_code</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
 <span class="p">)</span>
 <span class="n">dict_pos_estimator</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">faces_centered</span><span class="p">)</span>
 <span class="n">plot_gallery</span><span class="p">(</span>
-    <span class="s2">&quot;Dictionary learning - positive dictionary &amp; code&quot;</span><span class="p">,</span>
+    <span class="s2">"Dictionary learning - positive dictionary &amp; code"</span><span class="p">,</span>
     <span class="n">dict_pos_estimator</span><span class="o">.</span><span class="n">components_</span><span class="p">[:</span><span class="n">n_components</span><span class="p">],</span>
     <span class="n">cmap</span><span class="o">=</span><span class="n">plt</span><span class="o">.</span><span class="n">cm</span><span class="o">.</span><span class="n">RdBu</span><span class="p">,</span>
 <span class="p">)</span>
 </pre></div>
 </div>
-<img src="../../_images/sphx_glr_plot_faces_decomposition_013.png" srcset="../../_images/sphx_glr_plot_faces_decomposition_013.png" alt="Dictionary learning - positive dictionary & code" class = "sphx-glr-single-img"/><p class="sphx-glr-timing"><strong>Total running time of the script:</strong> (0 minutes 10.427 seconds)</p>
-<div class="sphx-glr-footer sphx-glr-footer-example docutils container" id="sphx-glr-download-auto-examples-decomposition-plot-faces-decomposition-py">
-<div class="binder-badge docutils container">
-<a class="reference external image-reference" href="https://mybinder.org/v2/gh/scikit-learn/scikit-learn/main?urlpath=lab/tree/notebooks/auto_examples/decomposition/plot_faces_decomposition.ipynb"><img alt="Launch binder" src="../../_images/binder_badge_logo9.svg" width="150px" /></a>
-</div>
-<div class="lite-badge docutils container">
-<a class="reference external image-reference" href="../../lite/lab/?path=auto_examples/decomposition/plot_faces_decomposition.ipynb"><img alt="Launch JupyterLite" src="../../_images/jupyterlite_badge_logo9.svg" width="150px" /></a>
-</div>
-<div class="sphx-glr-download sphx-glr-download-jupyter docutils container">
-<p><a class="reference download internal" download="" href="../../_downloads/fcae36814d8e700024ca855a1eb87ca9/plot_faces_decomposition.ipynb"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Jupyter</span> <span class="pre">notebook:</span> <span class="pre">plot_faces_decomposition.ipynb</span></code></a></p>
-</div>
-<div class="sphx-glr-download sphx-glr-download-python docutils container">
-<p><a class="reference download internal" download="" href="../../_downloads/4825fc8223d1af0f3b61080c3dea3a62/plot_faces_decomposition.py"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Python</span> <span class="pre">source</span> <span class="pre">code:</span> <span class="pre">plot_faces_decomposition.py</span></code></a></p>
-</div>
-</div>
+<img alt="Dictionary learning - positive dictionary &amp; code" class="sphx-glr-single-img" src="../../_images/sphx_glr_plot_faces_decomposition_013.png" srcset="../../_images/sphx_glr_plot_faces_decomposition_013.png"/><p class="sphx-glr-timing"><strong>Total running time of the script:</strong> (0 minutes 9.114 seconds)</p>
+
 <p class="rubric">Related examples</p>
-<div class="sphx-glr-thumbnails"><div class="sphx-glr-thumbcontainer" tooltip="This example uses a large dataset of faces to learn a set of 20 x 20 images patches that consti..."><img alt="" src="../../_images/sphx_glr_plot_dict_face_patches_thumb.png" />
+<div class="sphx-glr-thumbnails"><div class="sphx-glr-thumbcontainer" tooltip="This example uses a large dataset of faces to learn a set of 20 x 20 images patches that consti..."><img alt="" src="../../_images/sphx_glr_plot_dict_face_patches_thumb.png"/>
 <p><a class="reference internal" href="../cluster/plot_dict_face_patches.html#sphx-glr-auto-examples-cluster-plot-dict-face-patches-py"><span class="std std-ref">Online learning of a dictionary of parts of faces</span></a></p>
-  <div class="sphx-glr-thumbnail-title">Online learning of a dictionary of parts of faces</div>
-</div><div class="sphx-glr-thumbcontainer" tooltip="Transform a signal as a sparse combination of Ricker wavelets. This example visually compares d..."><img alt="" src="../../_images/sphx_glr_plot_sparse_coding_thumb.png" />
+<div class="sphx-glr-thumbnail-title">Online learning of a dictionary of parts of faces</div>
+</div><div class="sphx-glr-thumbcontainer" tooltip="Transform a signal as a sparse combination of Ricker wavelets. This example visually compares d..."><img alt="" src="../../_images/sphx_glr_plot_sparse_coding_thumb.png"/>
 <p><a class="reference internal" href="plot_sparse_coding.html#sphx-glr-auto-examples-decomposition-plot-sparse-coding-py"><span class="std std-ref">Sparse coding with a precomputed dictionary</span></a></p>
-  <div class="sphx-glr-thumbnail-title">Sparse coding with a precomputed dictionary</div>
-</div><div class="sphx-glr-thumbcontainer" tooltip="The dataset used in this example is a preprocessed excerpt of the &quot;Labeled Faces in the Wild&quot;, ..."><img alt="" src="../../_images/sphx_glr_plot_face_recognition_thumb.png" />
+<div class="sphx-glr-thumbnail-title">Sparse coding with a precomputed dictionary</div>
+</div><div class="sphx-glr-thumbcontainer" tooltip='The dataset used in this example is a preprocessed excerpt of the "Labeled Faces in the Wild", ...'><img alt="" src="../../_images/sphx_glr_plot_face_recognition_thumb.png"/>
 <p><a class="reference internal" href="../applications/plot_face_recognition.html#sphx-glr-auto-examples-applications-plot-face-recognition-py"><span class="std std-ref">Faces recognition example using eigenfaces and SVMs</span></a></p>
-  <div class="sphx-glr-thumbnail-title">Faces recognition example using eigenfaces and SVMs</div>
-</div><div class="sphx-glr-thumbcontainer" tooltip="Probabilistic PCA and Factor Analysis are probabilistic models. The consequence is that the lik..."><img alt="" src="../../_images/sphx_glr_plot_pca_vs_fa_model_selection_thumb.png" />
+<div class="sphx-glr-thumbnail-title">Faces recognition example using eigenfaces and SVMs</div>
+</div><div class="sphx-glr-thumbcontainer" tooltip="Probabilistic PCA and Factor Analysis are probabilistic models. The consequence is that the lik..."><img alt="" src="../../_images/sphx_glr_plot_pca_vs_fa_model_selection_thumb.png"/>
 <p><a class="reference internal" href="plot_pca_vs_fa_model_selection.html#sphx-glr-auto-examples-decomposition-plot-pca-vs-fa-model-selection-py"><span class="std std-ref">Model selection with Probabilistic PCA and Factor Analysis (FA)</span></a></p>
-  <div class="sphx-glr-thumbnail-title">Model selection with Probabilistic PCA and Factor Analysis (FA)</div>
-</div><div class="sphx-glr-thumbcontainer" tooltip="Investigating the Iris dataset, we see that sepal length, petal length and petal width are high..."><img alt="" src="../../_images/sphx_glr_plot_varimax_fa_thumb.png" />
-<p><a class="reference internal" href="plot_varimax_fa.html#sphx-glr-auto-examples-decomposition-plot-varimax-fa-py"><span class="std std-ref">Factor Analysis (with rotation) to visualize patterns</span></a></p>
-  <div class="sphx-glr-thumbnail-title">Factor Analysis (with rotation) to visualize patterns</div>
+<div class="sphx-glr-thumbnail-title">Model selection with Probabilistic PCA and Factor Analysis (FA)</div>
 </div></div><p class="sphx-glr-signature"><a class="reference external" href="https://sphinx-gallery.github.io">Gallery generated by Sphinx-Gallery</a></p>
 </section>
 </section>
 </section>
-
-
-                </article>
-              
-              
-              
-                <footer class="bd-footer-article">
-                  <div class="footer-article-items footer-article__inner">
-  
-    <div class="footer-article-item">
+</article>
+<footer class="bd-footer-article">
+<div class="footer-article-items footer-article__inner">
+<div class="footer-article-item">
 <div class="prev-next-area">
-    <a class="left-prev"
-       href="plot_pca_vs_lda.html"
-       title="previous page">
-      <i class="fa-solid fa-angle-left"></i>
-      <div class="prev-next-info">
-        <p class="prev-next-subtitle">previous</p>
-        <p class="prev-next-title">Comparison of LDA and PCA 2D projection of Iris dataset</p>
-      </div>
-    </a>
-    <a class="right-next"
-       href="plot_varimax_fa.html"
-       title="next page">
-      <div class="prev-next-info">
-        <p class="prev-next-subtitle">next</p>
-        <p class="prev-next-title">Factor Analysis (with rotation) to visualize patterns</p>
-      </div>
-      <i class="fa-solid fa-angle-right"></i>
-    </a>
-</div></div>
-  
+<a class="left-prev" href="plot_pca_vs_lda.html" title="previous page">
+<i class="fa-solid fa-angle-left"></i>
+<div class="prev-next-info">
+<p class="prev-next-subtitle">previous</p>
+<p class="prev-next-title">Comparison of LDA and PCA 2D projection of Iris dataset</p>
 </div>
-                </footer>
-              
-              
-              
-            </div>
-            
-            
-              
-                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
-
-
-  <div class="sidebar-secondary-item">
-<div
-    id="pst-page-navigation-heading-2"
-    class="page-toc tocsection onthispage">
-    <i class="fa-solid fa-list"></i> On this page
+</a>
+<a class="right-next" href="plot_varimax_fa.html" title="next page">
+<div class="prev-next-info">
+<p class="prev-next-subtitle">next</p>
+<p class="prev-next-title">Factor Analysis (with rotation) to visualize patterns</p>
+</div>
+<i class="fa-solid fa-angle-right"></i>
+</a>
+</div></div>
+</div>
+</footer>
+</div>
+<div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+<div class="sidebar-secondary-item">
+<div class="page-toc tocsection onthispage" id="pst-page-navigation-heading-2">
+<i class="fa-solid fa-list"></i> On this page
   </div>
-  <nav class="bd-toc-nav page-toc" aria-labelledby="pst-page-navigation-heading-2">
-    <ul class="visible nav section-nav flex-column">
+<nav aria-labelledby="pst-page-navigation-heading-2" class="bd-toc-nav page-toc">
+<ul class="visible nav section-nav flex-column">
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#dataset-preparation">Dataset preparation</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#decomposition">Decomposition</a><ul class="nav section-nav flex-column">
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#eigenfaces-pca-using-randomized-svd">Eigenfaces - PCA using randomized SVD</a></li>
@@ -1470,55 +1207,31 @@ coefficients are positively constrained.</p>
 </ul>
 </li>
 </ul>
-  </nav></div>
+</nav></div>
 
-  <div class="sidebar-secondary-item">
-
-  <div class="tocsection sourcelink">
-    <a href="../../_sources/auto_examples/decomposition/plot_faces_decomposition.rst.txt">
-      <i class="fa-solid fa-file-lines"></i> Show Source
-    </a>
-  </div>
+<div class="sidebar-secondary-item"><div title="plot_faces_decomposition.py"><a download="" href="../../_downloads/4825fc8223d1af0f3b61080c3dea3a62/plot_faces_decomposition.py"><i class="fa-solid fa-download"></i> Download source code</a></div><div title="plot_faces_decomposition.ipynb"><a download="" href="../../_downloads/fcae36814d8e700024ca855a1eb87ca9/plot_faces_decomposition.ipynb"><i class="fa-solid fa-download"></i> Download Jupyter notebook</a></div></div><div class="sidebar-secondary-item"><div><a href="../../lite/lab/?path=auto_examples/decomposition/plot_faces_decomposition.ipynb"><img alt="Launch JupyterLite" height="20" src="../../_images/jupyterlite_badge_logo9.svg"/></a></div><div><a href="https://mybinder.org/v2/gh/scikit-learn/scikit-learn/main?urlpath=lab/tree/notebooks/auto_examples/decomposition/plot_faces_decomposition.ipynb"><img alt="Launch binder" height="20" src="../../_images/binder_badge_logo9.svg"/></a></div></div></div></div>
 </div>
-
-</div></div>
-              
-            
-          </div>
-          <footer class="bd-footer-content">
-            
-          </footer>
-        
-      </main>
-    </div>
-  </div>
-  
-  <!-- Scripts loaded after <body> so the DOM is not blocked -->
-  <script src="../../_static/scripts/bootstrap.js?digest=8d27b9dea8ad943066ae"></script>
+<footer class="bd-footer-content">
+</footer>
+</main>
+</div>
+</div>
+<!-- Scripts loaded after <body> so the DOM is not blocked -->
+<script src="../../_static/scripts/bootstrap.js?digest=8d27b9dea8ad943066ae"></script>
 <script src="../../_static/scripts/pydata-sphinx-theme.js?digest=8d27b9dea8ad943066ae"></script>
-
-  <footer class="bd-footer">
+<footer class="bd-footer">
 <div class="bd-footer__inner bd-page-width">
-  
-    <div class="footer-items__start">
-      
-        <div class="footer-item">
-
-  <p class="copyright">
+<div class="footer-items__start">
+<div class="footer-item">
+<p class="copyright">
     
       © Copyright 2007 - 2024, scikit-learn developers (BSD License).
       <br/>
-    
-  </p>
+</p>
 </div>
-      
-    </div>
-  
-  
-  
 </div>
-
-  </footer>
+</div>
+</footer>
     <script src="https://scikit-learn.org/versionwarning.js"></script>
-  </body>
+</body>
 </html>

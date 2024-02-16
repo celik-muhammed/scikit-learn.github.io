@@ -1,310 +1,206 @@
 
 <!DOCTYPE html>
 
-
-<html lang="en" data-content_root="../../" >
-
-  <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
-<meta property="og:title" content="Lagged features for time series forecasting" />
-<meta property="og:type" content="website" />
-<meta property="og:url" content="https://scikit-learn/stable/auto_examples/applications/plot_time_series_lagged_features.html" />
-<meta property="og:site_name" content="scikit-learn" />
-<meta property="og:description" content="This example demonstrates how pandas-engineered lagged features can be used for time series forecasting with HistGradientBoostingRegressor on the Bike Sharing Demand dataset. See the example on Tim..." />
-<meta property="og:image" content="https://scikit-learn.org/stable/_static/scikit-learn-logo-small.png" />
-<meta property="og:image:alt" content="scikit-learn" />
-<meta name="description" content="This example demonstrates how pandas-engineered lagged features can be used for time series forecasting with HistGradientBoostingRegressor on the Bike Sharing Demand dataset. See the example on Tim..." />
-
-    <title>Lagged features for time series forecasting &#8212; scikit-learn 1.5.dev0 documentation</title>
-  
-  
-  
-  <script data-cfasync="false">
+<html data-content_root="../../" lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/><meta content="width=device-width, initial-scale=1" name="viewport"/>
+<meta content="Lagged features for time series forecasting" property="og:title"/>
+<meta content="website" property="og:type"/>
+<meta content="https://scikit-learn/stable/auto_examples/applications/plot_time_series_lagged_features.html" property="og:url"/>
+<meta content="scikit-learn" property="og:site_name"/>
+<meta content="This example demonstrates how pandas-engineered lagged features can be used for time series forecasting with HistGradientBoostingRegressor on the Bike Sharing Demand dataset. See the example on Tim..." property="og:description"/>
+<meta content="https://scikit-learn.org/stable/_static/scikit-learn-logo-small.png" property="og:image"/>
+<meta content="scikit-learn" property="og:image:alt"/>
+<meta content="This example demonstrates how pandas-engineered lagged features can be used for time series forecasting with HistGradientBoostingRegressor on the Bike Sharing Demand dataset. See the example on Tim..." name="description"/>
+<title>Lagged features for time series forecasting — scikit-learn 1.5.dev0 documentation</title>
+<script data-cfasync="false">
     document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
     document.documentElement.dataset.theme = localStorage.getItem("theme") || "light";
   </script>
-  
-  <!-- Loaded before other Sphinx assets -->
-  <link href="../../_static/styles/theme.css?digest=8d27b9dea8ad943066ae" rel="stylesheet" />
-<link href="../../_static/styles/bootstrap.css?digest=8d27b9dea8ad943066ae" rel="stylesheet" />
-<link href="../../_static/styles/pydata-sphinx-theme.css?digest=8d27b9dea8ad943066ae" rel="stylesheet" />
-
-  
-  <link href="../../_static/vendor/fontawesome/6.5.1/css/all.min.css?digest=8d27b9dea8ad943066ae" rel="stylesheet" />
-  <link rel="preload" as="font" type="font/woff2" crossorigin href="../../_static/vendor/fontawesome/6.5.1/webfonts/fa-solid-900.woff2" />
-<link rel="preload" as="font" type="font/woff2" crossorigin href="../../_static/vendor/fontawesome/6.5.1/webfonts/fa-brands-400.woff2" />
-<link rel="preload" as="font" type="font/woff2" crossorigin href="../../_static/vendor/fontawesome/6.5.1/webfonts/fa-regular-400.woff2" />
-
-    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=a746c00c" />
-    <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
-    <link rel="stylesheet" type="text/css" href="../../_static/plot_directive.css" />
-    <link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Vibur" />
-    <link rel="stylesheet" type="text/css" href="../../_static/jupyterlite_sphinx.css?v=f996933d" />
-    <link rel="stylesheet" type="text/css" href="../../_static/sg_gallery.css?v=61a4c737" />
-    <link rel="stylesheet" type="text/css" href="../../_static/sg_gallery-binder.css?v=f4aeca0c" />
-    <link rel="stylesheet" type="text/css" href="../../_static/sg_gallery-dataframe.css?v=2082cf3c" />
-    <link rel="stylesheet" type="text/css" href="../../_static/sg_gallery-rendered-html.css?v=1277b6f3" />
-    <link rel="stylesheet" type="text/css" href="../../_static/design-style.1e8bd061cd6da7fc9cf755528e8ffc24.min.css?v=0a3b3ea7" />
-    <link rel="stylesheet" type="text/css" href="../../_static/styles/colors.css?v=d5680186" />
-    <link rel="stylesheet" type="text/css" href="../../_static/styles/custom.css?v=3e2fb91a" />
-  
-  <!-- Pre-loaded scripts that we'll load fully later -->
-  <link rel="preload" as="script" href="../../_static/scripts/bootstrap.js?digest=8d27b9dea8ad943066ae" />
-<link rel="preload" as="script" href="../../_static/scripts/pydata-sphinx-theme.js?digest=8d27b9dea8ad943066ae" />
-  <script src="../../_static/vendor/fontawesome/6.5.1/js/all.min.js?digest=8d27b9dea8ad943066ae"></script>
-
-    <script src="../../_static/documentation_options.js?v=a2c36881"></script>
-    <script src="../../_static/doctools.js?v=888ff710"></script>
-    <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
-    <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
-    <script src="../../_static/copybutton.js?v=97f0b27d"></script>
-    <script src="../../_static/jupyterlite_sphinx.js?v=f25406b8"></script>
-    <script src="../../_static/design-tabs.js?v=36754332"></script>
-    <script data-domain="scikit-learn.org" defer="defer" src="https://views.scientific-python.org/js/script.js"></script>
-    <script async="async" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js"></script>
-    <script>DOCUMENTATION_OPTIONS.pagename = 'auto_examples/applications/plot_time_series_lagged_features';</script>
-    <script>
+<!-- Loaded before other Sphinx assets -->
+<link href="../../_static/styles/theme.css?digest=8d27b9dea8ad943066ae" rel="stylesheet"/>
+<link href="../../_static/styles/bootstrap.css?digest=8d27b9dea8ad943066ae" rel="stylesheet"/>
+<link href="../../_static/styles/pydata-sphinx-theme.css?digest=8d27b9dea8ad943066ae" rel="stylesheet"/>
+<link href="../../_static/vendor/fontawesome/6.5.1/css/all.min.css?digest=8d27b9dea8ad943066ae" rel="stylesheet"/>
+<link as="font" crossorigin="" href="../../_static/vendor/fontawesome/6.5.1/webfonts/fa-solid-900.woff2" rel="preload" type="font/woff2"/>
+<link as="font" crossorigin="" href="../../_static/vendor/fontawesome/6.5.1/webfonts/fa-brands-400.woff2" rel="preload" type="font/woff2"/>
+<link as="font" crossorigin="" href="../../_static/vendor/fontawesome/6.5.1/webfonts/fa-regular-400.woff2" rel="preload" type="font/woff2"/>
+<link href="../../_static/pygments.css?v=a746c00c" rel="stylesheet" type="text/css"/>
+<link href="../../_static/copybutton.css?v=76b2166b" rel="stylesheet" type="text/css"/>
+<link href="../../_static/plot_directive.css" rel="stylesheet" type="text/css"/>
+<link href="https://fonts.googleapis.com/css?family=Vibur" rel="stylesheet" type="text/css"/>
+<link href="../../_static/jupyterlite_sphinx.css?v=f996933d" rel="stylesheet" type="text/css"/>
+<link href="../../_static/sg_gallery.css?v=61a4c737" rel="stylesheet" type="text/css"/>
+<link href="../../_static/sg_gallery-binder.css?v=f4aeca0c" rel="stylesheet" type="text/css"/>
+<link href="../../_static/sg_gallery-dataframe.css?v=2082cf3c" rel="stylesheet" type="text/css"/>
+<link href="../../_static/sg_gallery-rendered-html.css?v=1277b6f3" rel="stylesheet" type="text/css"/>
+<link href="../../_static/design-style.1e8bd061cd6da7fc9cf755528e8ffc24.min.css?v=0a3b3ea7" rel="stylesheet" type="text/css"/>
+<link href="../../_static/styles/colors.css?v=d5680186" rel="stylesheet" type="text/css"/>
+<link href="../../_static/styles/custom.css?v=3e2fb91a" rel="stylesheet" type="text/css"/>
+<!-- Pre-loaded scripts that we'll load fully later -->
+<link as="script" href="../../_static/scripts/bootstrap.js?digest=8d27b9dea8ad943066ae" rel="preload"/>
+<link as="script" href="../../_static/scripts/pydata-sphinx-theme.js?digest=8d27b9dea8ad943066ae" rel="preload"/>
+<script src="../../_static/vendor/fontawesome/6.5.1/js/all.min.js?digest=8d27b9dea8ad943066ae"></script>
+<script src="../../_static/documentation_options.js?v=a2c36881"></script>
+<script src="../../_static/doctools.js?v=888ff710"></script>
+<script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+<script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
+<script src="../../_static/copybutton.js?v=97f0b27d"></script>
+<script src="../../_static/jupyterlite_sphinx.js?v=f25406b8"></script>
+<script src="../../_static/design-tabs.js?v=36754332"></script>
+<script data-domain="scikit-learn.org" defer="defer" src="https://views.scientific-python.org/js/script.js"></script>
+<script async="async" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js"></script>
+<script>DOCUMENTATION_OPTIONS.pagename = 'auto_examples/applications/plot_time_series_lagged_features';</script>
+<script>
         DOCUMENTATION_OPTIONS.theme_version = '0.15.2';
         DOCUMENTATION_OPTIONS.theme_switcher_json_url = 'https://charlie-xiao.github.io/assets/json/sklearn-versions-test.json';
         DOCUMENTATION_OPTIONS.theme_switcher_version_match = '1.5.dev0';
         DOCUMENTATION_OPTIONS.show_version_warning_banner = true;
         </script>
-    <script src="../../_static/scripts/details-permalink.js?v=b0ed9290"></script>
-    <link rel="icon" href="../../_static/favicon.ico"/>
-    <link rel="author" title="About these documents" href="../../about.html" />
-    <link rel="search" title="Search" href="../../search.html" />
-    <link rel="next" title="Libsvm GUI" href="svm_gui.html" />
-    <link rel="prev" title="Image denoising using kernel PCA" href="plot_digits_denoising.html" />
-  <meta name="viewport" content="width=device-width, initial-scale=1"/>
-  <meta name="docsearch:language" content="en"/>
-  </head>
-  
-  
-  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
-
-  
-  
-  <a id="pst-skip-link" class="skip-link" href="#main-content">Skip to main content</a>
-  
-  <div id="pst-scroll-pixel-helper"></div>
-  
-  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
-    <i class="fa-solid fa-arrow-up"></i>
+<script src="../../_static/scripts/details-permalink.js?v=b0ed9290"></script>
+<link href="../../_static/favicon.ico" rel="icon"/>
+<link href="../../about.html" rel="author" title="About these documents"/>
+<link href="../../search.html" rel="search" title="Search"/>
+<link href="svm_gui.html" rel="next" title="Libsvm GUI"/>
+<link href="plot_digits_denoising.html" rel="prev" title="Image denoising using kernel PCA"/>
+<meta content="width=device-width, initial-scale=1" name="viewport"/>
+<meta content="en" name="docsearch:language"/>
+</head>
+<body data-bs-root-margin="0px 0px -60%" data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-default-mode="" data-offset="180">
+<a class="skip-link" href="#main-content" id="pst-skip-link">Skip to main content</a>
+<div id="pst-scroll-pixel-helper"></div>
+<button class="btn rounded-pill" id="pst-back-to-top" type="button">
+<i class="fa-solid fa-arrow-up"></i>
     Back to top
   </button>
-
-  
-  <input type="checkbox"
-          class="sidebar-toggle"
-          name="__primary"
-          id="__primary"/>
-  <label class="overlay overlay-primary" for="__primary"></label>
-  
-  <input type="checkbox"
-          class="sidebar-toggle"
-          name="__secondary"
-          id="__secondary"/>
-  <label class="overlay overlay-secondary" for="__secondary"></label>
-  
-  <div class="search-button__wrapper">
-    <div class="search-button__overlay"></div>
-    <div class="search-button__search-container">
-<form class="bd-search d-flex align-items-center"
-      action="../../search.html"
-      method="get">
-  <i class="fa-solid fa-magnifying-glass"></i>
-  <input type="search"
-         class="form-control"
-         name="q"
-         id="search-input"
-         placeholder="Search the docs ..."
-         aria-label="Search the docs ..."
-         autocomplete="off"
-         autocorrect="off"
-         autocapitalize="off"
-         spellcheck="false"/>
-  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+<input class="sidebar-toggle" id="__primary" name="__primary" type="checkbox"/>
+<label class="overlay overlay-primary" for="__primary"></label>
+<input class="sidebar-toggle" id="__secondary" name="__secondary" type="checkbox"/>
+<label class="overlay overlay-secondary" for="__secondary"></label>
+<div class="search-button__wrapper">
+<div class="search-button__overlay"></div>
+<div class="search-button__search-container">
+<form action="../../search.html" class="bd-search d-flex align-items-center" method="get">
+<i class="fa-solid fa-magnifying-glass"></i>
+<input aria-label="Search the docs ..." autocapitalize="off" autocomplete="off" autocorrect="off" class="form-control" id="search-input" name="q" placeholder="Search the docs ..." spellcheck="false" type="search"/>
+<span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
 </form></div>
-  </div>
-  
-    <header class="bd-header navbar navbar-expand-lg bd-navbar">
+</div>
+<header class="bd-header navbar navbar-expand-lg bd-navbar">
 <div class="bd-header__inner bd-page-width">
-  <label class="sidebar-toggle primary-toggle" for="__primary">
-    <span class="fa-solid fa-bars"></span>
-  </label>
-  
-  
-  <div class=" navbar-header-items__start">
-    
-      <div class="navbar-item">
-
-  
-
+<label class="sidebar-toggle primary-toggle" for="__primary">
+<span class="fa-solid fa-bars"></span>
+</label>
+<div class="navbar-header-items__start">
+<div class="navbar-item">
 <a class="navbar-brand logo" href="../../index.html">
-  
-  
-  
-  
-  
-    
-    
-      
-    
-    
-    <img src="../../_static/scikit-learn-logo-small.png" class="logo__image only-light" alt="scikit-learn homepage"/>
-    <script>document.write(`<img src="../../_static/scikit-learn-logo-small.png" class="logo__image only-dark" alt="scikit-learn homepage"/>`);</script>
-  
-  
+<img alt="scikit-learn homepage" class="logo__image only-light" src="../../_static/scikit-learn-logo-small.png"/>
+<script>document.write(`<img src="../../_static/scikit-learn-logo-small.png" class="logo__image only-dark" alt="scikit-learn homepage"/>`);</script>
 </a></div>
-    
-  </div>
-  
-  <div class=" navbar-header-items">
-    
-    <div class="me-auto navbar-header-items__center">
-      
-        <div class="navbar-item">
+</div>
+<div class="navbar-header-items">
+<div class="me-auto navbar-header-items__center">
+<div class="navbar-item">
 <nav class="navbar-nav">
-  <ul class="bd-navbar-elements navbar-nav">
-    
-                    <li class="nav-item">
-                      <a class="nav-link nav-internal" href="../../install.html">
+<ul class="bd-navbar-elements navbar-nav">
+<li class="nav-item">
+<a class="nav-link nav-internal" href="../../install.html">
                         Install
                       </a>
-                    </li>
-                
-
-                    <li class="nav-item">
-                      <a class="nav-link nav-internal" href="../../user_guide.html">
+</li>
+<li class="nav-item">
+<a class="nav-link nav-internal" href="../../user_guide.html">
                         User Guide
                       </a>
-                    </li>
-                
-
-                    <li class="nav-item">
-                      <a class="nav-link nav-internal" href="../../modules/classes.html">
+</li>
+<li class="nav-item">
+<a class="nav-link nav-internal" href="../../modules/classes.html">
                         API
                       </a>
-                    </li>
-                
-
-                    <li class="nav-item current active">
-                      <a class="nav-link nav-internal" href="../index.html">
+</li>
+<li class="nav-item current active">
+<a class="nav-link nav-internal" href="../index.html">
                         Examples
                       </a>
-                    </li>
-                
-
-                    <li class="nav-item">
-                      <a class="nav-link nav-external" href="https://blog.scikit-learn.org/">
+</li>
+<li class="nav-item">
+<a class="nav-link nav-external" href="https://blog.scikit-learn.org/">
                         Community
                       </a>
-                    </li>
-                
-            <li class="nav-item dropdown">
-                <button class="btn dropdown-toggle nav-item" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-controls="pst-nav-more-links">
+</li>
+<li class="nav-item dropdown">
+<button aria-controls="pst-nav-more-links" aria-expanded="false" class="btn dropdown-toggle nav-item" data-bs-toggle="dropdown" type="button">
                     More
                 </button>
-                <ul id="pst-nav-more-links" class="dropdown-menu">
-                    
-                    <li class="nav-item">
-                      <a class="nav-link dropdown-item nav-internal" href="../../getting_started.html">
+<ul class="dropdown-menu" id="pst-nav-more-links">
+<li class="nav-item">
+<a class="nav-link dropdown-item nav-internal" href="../../getting_started.html">
                         Getting Started
                       </a>
-                    </li>
-                
-
-                    <li class="nav-item">
-                      <a class="nav-link dropdown-item nav-internal" href="../../tutorial/index.html">
+</li>
+<li class="nav-item">
+<a class="nav-link dropdown-item nav-internal" href="../../tutorial/index.html">
                         Tutorials
                       </a>
-                    </li>
-                
-
-                    <li class="nav-item">
-                      <a class="nav-link dropdown-item nav-internal" href="../../whats_new.html">
+</li>
+<li class="nav-item">
+<a class="nav-link dropdown-item nav-internal" href="../../whats_new.html">
                         Release History
                       </a>
-                    </li>
-                
-
-                    <li class="nav-item">
-                      <a class="nav-link dropdown-item nav-internal" href="../../glossary.html">
+</li>
+<li class="nav-item">
+<a class="nav-link dropdown-item nav-internal" href="../../glossary.html">
                         Glossary
                       </a>
-                    </li>
-                
-
-                    <li class="nav-item">
-                      <a class="nav-link dropdown-item nav-internal" href="../../developers/index.html">
+</li>
+<li class="nav-item">
+<a class="nav-link dropdown-item nav-internal" href="../../developers/index.html">
                         Development
                       </a>
-                    </li>
-                
-
-                    <li class="nav-item">
-                      <a class="nav-link dropdown-item nav-internal" href="../../faq.html">
+</li>
+<li class="nav-item">
+<a class="nav-link dropdown-item nav-internal" href="../../faq.html">
                         FAQ
                       </a>
-                    </li>
-                
-
-                    <li class="nav-item">
-                      <a class="nav-link dropdown-item nav-internal" href="../../support.html">
+</li>
+<li class="nav-item">
+<a class="nav-link dropdown-item nav-internal" href="../../support.html">
                         Support
                       </a>
-                    </li>
-                
-
-                    <li class="nav-item">
-                      <a class="nav-link dropdown-item nav-internal" href="../../related_projects.html">
+</li>
+<li class="nav-item">
+<a class="nav-link dropdown-item nav-internal" href="../../related_projects.html">
                         Related Projects
                       </a>
-                    </li>
-                
-
-                    <li class="nav-item">
-                      <a class="nav-link dropdown-item nav-internal" href="../../roadmap.html">
+</li>
+<li class="nav-item">
+<a class="nav-link dropdown-item nav-internal" href="../../roadmap.html">
                         Roadmap
                       </a>
-                    </li>
-                
-
-                    <li class="nav-item">
-                      <a class="nav-link dropdown-item nav-internal" href="../../governance.html">
+</li>
+<li class="nav-item">
+<a class="nav-link dropdown-item nav-internal" href="../../governance.html">
                         Governance
                       </a>
-                    </li>
-                
-
-                    <li class="nav-item">
-                      <a class="nav-link dropdown-item nav-internal" href="../../about.html">
+</li>
+<li class="nav-item">
+<a class="nav-link dropdown-item nav-internal" href="../../about.html">
                         About us
                       </a>
-                    </li>
-                
-
-                    <li class="nav-item">
-                      <a class="nav-link dropdown-item nav-external" href="https://scikit-learn.org/dev/versions.html">
+</li>
+<li class="nav-item">
+<a class="nav-link dropdown-item nav-external" href="https://scikit-learn.org/dev/versions.html">
                         Other Versions and Download
                       </a>
-                    </li>
-                
-                </ul>
-            </li>
-            
-  </ul>
+</li>
+</ul>
+</li>
+</ul>
 </nav></div>
-      
-    </div>
-    
-    
-    <div class="navbar-header-items__end">
-      
-        <div class="navbar-item navbar-persistent--container">
-          
-
+</div>
+<div class="navbar-header-items__end">
+<div class="navbar-item navbar-persistent--container">
 <script>
 document.write(`
   <button class="btn btn-sm navbar-btn search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
@@ -312,11 +208,8 @@ document.write(`
   </button>
 `);
 </script>
-        </div>
-      
-      
-        <div class="navbar-item">
-
+</div>
+<div class="navbar-item">
 <script>
 document.write(`
   <button class="btn btn-sm navbar-btn theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
@@ -326,24 +219,13 @@ document.write(`
   </button>
 `);
 </script></div>
-      
-        <div class="navbar-item"><ul class="navbar-icon-links navbar-nav"
-    aria-label="Icon Links">
-        <li class="nav-item">
-          
-          
-          
-          
-          
-          
-          
-          
-          <a href="https://github.com/scikit-learn/scikit-learn" title="GitHub" class="nav-link" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><span><i class="fa-brands fa-square-github fa-lg" aria-hidden="true"></i></span>
-            <span class="sr-only">GitHub</span></a>
-        </li>
+<div class="navbar-item"><ul aria-label="Icon Links" class="navbar-icon-links navbar-nav">
+<li class="nav-item">
+<a class="nav-link" data-bs-placement="bottom" data-bs-toggle="tooltip" href="https://github.com/scikit-learn/scikit-learn" rel="noopener" target="_blank" title="GitHub"><span><i aria-hidden="true" class="fa-brands fa-square-github fa-lg"></i></span>
+<span class="sr-only">GitHub</span></a>
+</li>
 </ul></div>
-      
-        <div class="navbar-item">
+<div class="navbar-item">
 <script>
 document.write(`
   <div class="version-switcher__container dropdown">
@@ -366,14 +248,9 @@ document.write(`
   </div>
 `);
 </script></div>
-      
-    </div>
-    
-  </div>
-  
-  
-    <div class="navbar-persistent--mobile">
-
+</div>
+</div>
+<div class="navbar-persistent--mobile">
 <script>
 document.write(`
   <button class="btn btn-sm navbar-btn search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
@@ -381,174 +258,117 @@ document.write(`
   </button>
 `);
 </script>
-    </div>
-  
-
-  
-    <label class="sidebar-toggle secondary-toggle" for="__secondary" tabindex="0">
-      <span class="fa-solid fa-outdent"></span>
-    </label>
-  
 </div>
-
-    </header>
-  
-
-  <div class="bd-container">
-    <div class="bd-container__inner bd-page-width">
-      
-      
-      
-      <div class="bd-sidebar-primary bd-sidebar">
-        
-
-  
-  <div class="sidebar-header-items sidebar-primary__section">
-    
-    
-      <div class="sidebar-header-items__center">
-        
-          <div class="navbar-item">
+<label class="sidebar-toggle secondary-toggle" for="__secondary" tabindex="0">
+<span class="fa-solid fa-outdent"></span>
+</label>
+</div>
+</header>
+<div class="bd-container">
+<div class="bd-container__inner bd-page-width">
+<div class="bd-sidebar-primary bd-sidebar">
+<div class="sidebar-header-items sidebar-primary__section">
+<div class="sidebar-header-items__center">
+<div class="navbar-item">
 <nav class="navbar-nav">
-  <ul class="bd-navbar-elements navbar-nav">
-    
-                    <li class="nav-item">
-                      <a class="nav-link nav-internal" href="../../install.html">
+<ul class="bd-navbar-elements navbar-nav">
+<li class="nav-item">
+<a class="nav-link nav-internal" href="../../install.html">
                         Install
                       </a>
-                    </li>
-                
-
-                    <li class="nav-item">
-                      <a class="nav-link nav-internal" href="../../user_guide.html">
+</li>
+<li class="nav-item">
+<a class="nav-link nav-internal" href="../../user_guide.html">
                         User Guide
                       </a>
-                    </li>
-                
-
-                    <li class="nav-item">
-                      <a class="nav-link nav-internal" href="../../modules/classes.html">
+</li>
+<li class="nav-item">
+<a class="nav-link nav-internal" href="../../modules/classes.html">
                         API
                       </a>
-                    </li>
-                
-
-                    <li class="nav-item current active">
-                      <a class="nav-link nav-internal" href="../index.html">
+</li>
+<li class="nav-item current active">
+<a class="nav-link nav-internal" href="../index.html">
                         Examples
                       </a>
-                    </li>
-                
-
-                    <li class="nav-item">
-                      <a class="nav-link nav-external" href="https://blog.scikit-learn.org/">
+</li>
+<li class="nav-item">
+<a class="nav-link nav-external" href="https://blog.scikit-learn.org/">
                         Community
                       </a>
-                    </li>
-                
-            <li class="nav-item dropdown">
-                <button class="btn dropdown-toggle nav-item" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-controls="pst-nav-more-links-2">
+</li>
+<li class="nav-item dropdown">
+<button aria-controls="pst-nav-more-links-2" aria-expanded="false" class="btn dropdown-toggle nav-item" data-bs-toggle="dropdown" type="button">
                     More
                 </button>
-                <ul id="pst-nav-more-links-2" class="dropdown-menu">
-                    
-                    <li class="nav-item">
-                      <a class="nav-link dropdown-item nav-internal" href="../../getting_started.html">
+<ul class="dropdown-menu" id="pst-nav-more-links-2">
+<li class="nav-item">
+<a class="nav-link dropdown-item nav-internal" href="../../getting_started.html">
                         Getting Started
                       </a>
-                    </li>
-                
-
-                    <li class="nav-item">
-                      <a class="nav-link dropdown-item nav-internal" href="../../tutorial/index.html">
+</li>
+<li class="nav-item">
+<a class="nav-link dropdown-item nav-internal" href="../../tutorial/index.html">
                         Tutorials
                       </a>
-                    </li>
-                
-
-                    <li class="nav-item">
-                      <a class="nav-link dropdown-item nav-internal" href="../../whats_new.html">
+</li>
+<li class="nav-item">
+<a class="nav-link dropdown-item nav-internal" href="../../whats_new.html">
                         Release History
                       </a>
-                    </li>
-                
-
-                    <li class="nav-item">
-                      <a class="nav-link dropdown-item nav-internal" href="../../glossary.html">
+</li>
+<li class="nav-item">
+<a class="nav-link dropdown-item nav-internal" href="../../glossary.html">
                         Glossary
                       </a>
-                    </li>
-                
-
-                    <li class="nav-item">
-                      <a class="nav-link dropdown-item nav-internal" href="../../developers/index.html">
+</li>
+<li class="nav-item">
+<a class="nav-link dropdown-item nav-internal" href="../../developers/index.html">
                         Development
                       </a>
-                    </li>
-                
-
-                    <li class="nav-item">
-                      <a class="nav-link dropdown-item nav-internal" href="../../faq.html">
+</li>
+<li class="nav-item">
+<a class="nav-link dropdown-item nav-internal" href="../../faq.html">
                         FAQ
                       </a>
-                    </li>
-                
-
-                    <li class="nav-item">
-                      <a class="nav-link dropdown-item nav-internal" href="../../support.html">
+</li>
+<li class="nav-item">
+<a class="nav-link dropdown-item nav-internal" href="../../support.html">
                         Support
                       </a>
-                    </li>
-                
-
-                    <li class="nav-item">
-                      <a class="nav-link dropdown-item nav-internal" href="../../related_projects.html">
+</li>
+<li class="nav-item">
+<a class="nav-link dropdown-item nav-internal" href="../../related_projects.html">
                         Related Projects
                       </a>
-                    </li>
-                
-
-                    <li class="nav-item">
-                      <a class="nav-link dropdown-item nav-internal" href="../../roadmap.html">
+</li>
+<li class="nav-item">
+<a class="nav-link dropdown-item nav-internal" href="../../roadmap.html">
                         Roadmap
                       </a>
-                    </li>
-                
-
-                    <li class="nav-item">
-                      <a class="nav-link dropdown-item nav-internal" href="../../governance.html">
+</li>
+<li class="nav-item">
+<a class="nav-link dropdown-item nav-internal" href="../../governance.html">
                         Governance
                       </a>
-                    </li>
-                
-
-                    <li class="nav-item">
-                      <a class="nav-link dropdown-item nav-internal" href="../../about.html">
+</li>
+<li class="nav-item">
+<a class="nav-link dropdown-item nav-internal" href="../../about.html">
                         About us
                       </a>
-                    </li>
-                
-
-                    <li class="nav-item">
-                      <a class="nav-link dropdown-item nav-external" href="https://scikit-learn.org/dev/versions.html">
+</li>
+<li class="nav-item">
+<a class="nav-link dropdown-item nav-external" href="https://scikit-learn.org/dev/versions.html">
                         Other Versions and Download
                       </a>
-                    </li>
-                
-                </ul>
-            </li>
-            
-  </ul>
+</li>
+</ul>
+</li>
+</ul>
 </nav></div>
-        
-      </div>
-    
-    
-    
-      <div class="sidebar-header-items__end">
-        
-          <div class="navbar-item">
-
+</div>
+<div class="sidebar-header-items__end">
+<div class="navbar-item">
 <script>
 document.write(`
   <button class="btn btn-sm navbar-btn theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
@@ -558,24 +378,13 @@ document.write(`
   </button>
 `);
 </script></div>
-        
-          <div class="navbar-item"><ul class="navbar-icon-links navbar-nav"
-    aria-label="Icon Links">
-        <li class="nav-item">
-          
-          
-          
-          
-          
-          
-          
-          
-          <a href="https://github.com/scikit-learn/scikit-learn" title="GitHub" class="nav-link" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><span><i class="fa-brands fa-square-github fa-lg" aria-hidden="true"></i></span>
-            <span class="sr-only">GitHub</span></a>
-        </li>
+<div class="navbar-item"><ul aria-label="Icon Links" class="navbar-icon-links navbar-nav">
+<li class="nav-item">
+<a class="nav-link" data-bs-placement="bottom" data-bs-toggle="tooltip" href="https://github.com/scikit-learn/scikit-learn" rel="noopener" target="_blank" title="GitHub"><span><i aria-hidden="true" class="fa-brands fa-square-github fa-lg"></i></span>
+<span class="sr-only">GitHub</span></a>
+</li>
 </ul></div>
-        
-          <div class="navbar-item">
+<div class="navbar-item">
 <script>
 document.write(`
   <div class="version-switcher__container dropdown">
@@ -598,17 +407,13 @@ document.write(`
   </div>
 `);
 </script></div>
-        
-      </div>
-    
-  </div>
-  
-    <div class="sidebar-primary-items__start sidebar-primary__section">
-        <div class="sidebar-primary-item">
-<nav class="bd-docs-nav bd-links"
-     aria-label="Section Navigation">
-  <p class="bd-links__title" role="heading" aria-level="1">Section Navigation</p>
-  <div class="bd-toc-item navbar-nav"><ul class="current nav bd-sidenav">
+</div>
+</div>
+<div class="sidebar-primary-items__start sidebar-primary__section">
+<div class="sidebar-primary-item">
+<nav aria-label="Section Navigation" class="bd-docs-nav bd-links">
+<p aria-level="1" class="bd-links__title" role="heading">Section Navigation</p>
+<div class="bd-toc-item navbar-nav"><ul class="current nav bd-sidenav">
 <li class="toctree-l1 has-children"><a class="reference internal" href="../release_highlights/index.html">Release Highlights</a><input class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-1"><i class="fa-solid fa-chevron-down"></i></label><ul>
 <li class="toctree-l2"><a class="reference internal" href="../release_highlights/plot_release_highlights_1_4_0.html">Release Highlights for scikit-learn 1.4</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../release_highlights/plot_release_highlights_1_3_0.html">Release Highlights for scikit-learn 1.3</a></li>
@@ -1002,68 +807,37 @@ document.write(`
 </ul>
 </div>
 </nav></div>
-    </div>
-  
-  
-  <div class="sidebar-primary-items__end sidebar-primary__section">
-  </div>
-  
-  <div id="rtd-footer-container"></div>
-
-
-      </div>
-      
-      <main id="main-content" class="bd-main">
-        
-        
-          <div class="bd-content">
-            <div class="bd-article-container">
-              
-              <div class="bd-header-article">
+</div>
+<div class="sidebar-primary-items__end sidebar-primary__section">
+</div>
+<div id="rtd-footer-container"></div>
+</div>
+<main class="bd-main" id="main-content">
+<div class="bd-content">
+<div class="bd-article-container">
+<div class="bd-header-article">
 <div class="header-article-items header-article__inner">
-  
-    <div class="header-article-items__start">
-      
-        <div class="header-article-item">
-
-
-
+<div class="header-article-items__start">
+<div class="header-article-item">
 <nav aria-label="Breadcrumb">
-  <ul class="bd-breadcrumbs">
-    
-    <li class="breadcrumb-item breadcrumb-home">
-      <a href="../../index.html" class="nav-link" aria-label="Home">
-        <i class="fa-solid fa-home"></i>
-      </a>
-    </li>
-    
-    <li class="breadcrumb-item"><a href="../index.html" class="nav-link">Examples</a></li>
-    
-    
-    <li class="breadcrumb-item"><a href="index.html" class="nav-link">Examples based on real world datasets</a></li>
-    
-    <li class="breadcrumb-item active" aria-current="page">Lagged...</li>
-  </ul>
+<ul class="bd-breadcrumbs">
+<li class="breadcrumb-item breadcrumb-home">
+<a aria-label="Home" class="nav-link" href="../../index.html">
+<i class="fa-solid fa-home"></i>
+</a>
+</li>
+<li class="breadcrumb-item"><a class="nav-link" href="../index.html">Examples</a></li>
+<li class="breadcrumb-item"><a class="nav-link" href="index.html">Examples based on real world datasets</a></li>
+<li aria-current="page" class="breadcrumb-item active">Lagged...</li>
+</ul>
 </nav>
 </div>
-      
-    </div>
-  
-  
 </div>
 </div>
-              
-              
-              
-                
+</div>
 <div id="searchbox"></div>
-                <article class="bd-article">
-                  
-  <div class="sphx-glr-download-link-note admonition note">
-<p class="admonition-title">Note</p>
-<p><a class="reference internal" href="#sphx-glr-download-auto-examples-applications-plot-time-series-lagged-features-py"><span class="std std-ref">Go to the end</span></a>
-to download the full example code or to run this example in your browser via JupyterLite or Binder</p>
-</div>
+<article class="bd-article">
+
 <section class="sphx-glr-example-title" id="lagged-features-for-time-series-forecasting">
 <span id="sphx-glr-auto-examples-applications-plot-time-series-lagged-features-py"></span><h1>Lagged features for time series forecasting<a class="headerlink" href="#lagged-features-for-time-series-forecasting" title="Link to this heading">#</a></h1>
 <p>This example demonstrates how pandas-engineered lagged features can be used
@@ -1080,175 +854,174 @@ engineering.</p>
 <div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 <span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
 
-<span class="kn">from</span> <span class="nn">sklearn.datasets</span> <span class="kn">import</span> <a href="../../modules/generated/sklearn.datasets.fetch_openml.html#sklearn.datasets.fetch_openml" title="sklearn.datasets.fetch_openml" class="sphx-glr-backref-module-sklearn-datasets sphx-glr-backref-type-py-function"><span class="n">fetch_openml</span></a>
+<span class="kn">from</span> <span class="nn">sklearn.datasets</span> <span class="kn">import</span> <a class="sphx-glr-backref-module-sklearn-datasets sphx-glr-backref-type-py-function" href="../../modules/generated/sklearn.datasets.fetch_openml.html#sklearn.datasets.fetch_openml" title="sklearn.datasets.fetch_openml"><span class="n">fetch_openml</span></a>
 
-<span class="n">bike_sharing</span> <span class="o">=</span> <a href="../../modules/generated/sklearn.datasets.fetch_openml.html#sklearn.datasets.fetch_openml" title="sklearn.datasets.fetch_openml" class="sphx-glr-backref-module-sklearn-datasets sphx-glr-backref-type-py-function"><span class="n">fetch_openml</span></a><span class="p">(</span>
-    <span class="s2">&quot;Bike_Sharing_Demand&quot;</span><span class="p">,</span> <span class="n">version</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">as_frame</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">parser</span><span class="o">=</span><span class="s2">&quot;pandas&quot;</span>
+<span class="n">bike_sharing</span> <span class="o">=</span> <a class="sphx-glr-backref-module-sklearn-datasets sphx-glr-backref-type-py-function" href="../../modules/generated/sklearn.datasets.fetch_openml.html#sklearn.datasets.fetch_openml" title="sklearn.datasets.fetch_openml"><span class="n">fetch_openml</span></a><span class="p">(</span>
+    <span class="s2">"Bike_Sharing_Demand"</span><span class="p">,</span> <span class="n">version</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">as_frame</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">parser</span><span class="o">=</span><span class="s2">"pandas"</span>
 <span class="p">)</span>
 <span class="n">df</span> <span class="o">=</span> <span class="n">bike_sharing</span><span class="o">.</span><span class="n">frame</span>
 </pre></div>
 </div>
 <p>Next, we take a look at the statistical summary of the dataset
 so that we can better understand the data that we are working with.</p>
-<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">summary</span> <span class="o">=</span> <a href="https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.DataFrame.html#pandas.DataFrame" title="pandas.DataFrame" class="sphx-glr-backref-module-pandas sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span></a><span class="p">(</span><span class="n">df</span><span class="o">.</span><span class="n">describe</span><span class="p">())</span>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">summary</span> <span class="o">=</span> <a class="sphx-glr-backref-module-pandas sphx-glr-backref-type-py-class sphx-glr-backref-instance" href="https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.DataFrame.html#pandas.DataFrame" title="pandas.DataFrame"><span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span></a><span class="p">(</span><span class="n">df</span><span class="o">.</span><span class="n">describe</span><span class="p">())</span>
 <span class="n">summary</span> <span class="o">=</span> <span class="p">(</span>
     <span class="n">summary</span><span class="o">.</span><span class="n">style</span><span class="o">.</span><span class="n">background_gradient</span><span class="p">()</span>
-    <span class="o">.</span><span class="n">set_table_attributes</span><span class="p">(</span><span class="s2">&quot;style = &#39;display: inline&#39;&quot;</span><span class="p">)</span>
-    <span class="o">.</span><span class="n">set_caption</span><span class="p">(</span><span class="s2">&quot;Statistics of the Dataset&quot;</span><span class="p">)</span>
-    <span class="o">.</span><span class="n">set_table_styles</span><span class="p">([{</span><span class="s2">&quot;selector&quot;</span><span class="p">:</span> <span class="s2">&quot;caption&quot;</span><span class="p">,</span> <span class="s2">&quot;props&quot;</span><span class="p">:</span> <span class="p">[(</span><span class="s2">&quot;font-size&quot;</span><span class="p">,</span> <span class="s2">&quot;16px&quot;</span><span class="p">)]}])</span>
+    <span class="o">.</span><span class="n">set_table_attributes</span><span class="p">(</span><span class="s2">"style = 'display: inline'"</span><span class="p">)</span>
+    <span class="o">.</span><span class="n">set_caption</span><span class="p">(</span><span class="s2">"Statistics of the Dataset"</span><span class="p">)</span>
+    <span class="o">.</span><span class="n">set_table_styles</span><span class="p">([{</span><span class="s2">"selector"</span><span class="p">:</span> <span class="s2">"caption"</span><span class="p">,</span> <span class="s2">"props"</span><span class="p">:</span> <span class="p">[(</span><span class="s2">"font-size"</span><span class="p">,</span> <span class="s2">"16px"</span><span class="p">)]}])</span>
 <span class="p">)</span>
 <span class="n">summary</span>
 </pre></div>
 </div>
 <div class="output_subarea output_html rendered_html output_result">
 <style type="text/css">
-#T_8589f caption {
+#T_d3608 caption {
   font-size: 16px;
 }
-#T_8589f_row0_col0, #T_8589f_row0_col1, #T_8589f_row0_col2, #T_8589f_row0_col3, #T_8589f_row0_col4, #T_8589f_row0_col5, #T_8589f_row0_col6, #T_8589f_row0_col7, #T_8589f_row0_col8 {
+#T_d3608_row0_col0, #T_d3608_row0_col1, #T_d3608_row0_col2, #T_d3608_row0_col3, #T_d3608_row0_col4, #T_d3608_row0_col5, #T_d3608_row0_col6, #T_d3608_row0_col7, #T_d3608_row0_col8 {
   background-color: #023858;
   color: #f1f1f1;
 }
-#T_8589f_row1_col0, #T_8589f_row1_col1, #T_8589f_row1_col2, #T_8589f_row1_col3, #T_8589f_row1_col4, #T_8589f_row1_col5, #T_8589f_row1_col6, #T_8589f_row1_col7, #T_8589f_row2_col0, #T_8589f_row2_col1, #T_8589f_row2_col2, #T_8589f_row2_col3, #T_8589f_row2_col4, #T_8589f_row2_col5, #T_8589f_row2_col6, #T_8589f_row2_col7, #T_8589f_row3_col0, #T_8589f_row3_col1, #T_8589f_row3_col2, #T_8589f_row3_col3, #T_8589f_row3_col4, #T_8589f_row3_col5, #T_8589f_row3_col6, #T_8589f_row3_col7, #T_8589f_row3_col8, #T_8589f_row4_col0, #T_8589f_row4_col1, #T_8589f_row4_col2, #T_8589f_row4_col3, #T_8589f_row4_col4, #T_8589f_row4_col5, #T_8589f_row4_col6, #T_8589f_row4_col7, #T_8589f_row4_col8, #T_8589f_row5_col0, #T_8589f_row5_col1, #T_8589f_row5_col2, #T_8589f_row5_col3, #T_8589f_row5_col4, #T_8589f_row5_col5, #T_8589f_row5_col6, #T_8589f_row5_col7, #T_8589f_row6_col0, #T_8589f_row6_col1, #T_8589f_row6_col2, #T_8589f_row6_col3, #T_8589f_row6_col4, #T_8589f_row6_col5, #T_8589f_row6_col6, #T_8589f_row6_col7, #T_8589f_row7_col0, #T_8589f_row7_col1, #T_8589f_row7_col2, #T_8589f_row7_col3, #T_8589f_row7_col4, #T_8589f_row7_col5, #T_8589f_row7_col6, #T_8589f_row7_col7 {
+#T_d3608_row1_col0, #T_d3608_row1_col1, #T_d3608_row1_col2, #T_d3608_row1_col3, #T_d3608_row1_col4, #T_d3608_row1_col5, #T_d3608_row1_col6, #T_d3608_row1_col7, #T_d3608_row2_col0, #T_d3608_row2_col1, #T_d3608_row2_col2, #T_d3608_row2_col3, #T_d3608_row2_col4, #T_d3608_row2_col5, #T_d3608_row2_col6, #T_d3608_row2_col7, #T_d3608_row3_col0, #T_d3608_row3_col1, #T_d3608_row3_col2, #T_d3608_row3_col3, #T_d3608_row3_col4, #T_d3608_row3_col5, #T_d3608_row3_col6, #T_d3608_row3_col7, #T_d3608_row3_col8, #T_d3608_row4_col0, #T_d3608_row4_col1, #T_d3608_row4_col2, #T_d3608_row4_col3, #T_d3608_row4_col4, #T_d3608_row4_col5, #T_d3608_row4_col6, #T_d3608_row4_col7, #T_d3608_row4_col8, #T_d3608_row5_col0, #T_d3608_row5_col1, #T_d3608_row5_col2, #T_d3608_row5_col3, #T_d3608_row5_col4, #T_d3608_row5_col5, #T_d3608_row5_col6, #T_d3608_row5_col7, #T_d3608_row6_col0, #T_d3608_row6_col1, #T_d3608_row6_col2, #T_d3608_row6_col3, #T_d3608_row6_col4, #T_d3608_row6_col5, #T_d3608_row6_col6, #T_d3608_row6_col7, #T_d3608_row7_col0, #T_d3608_row7_col1, #T_d3608_row7_col2, #T_d3608_row7_col3, #T_d3608_row7_col4, #T_d3608_row7_col5, #T_d3608_row7_col6, #T_d3608_row7_col7 {
   background-color: #fff7fb;
   color: #000000;
 }
-#T_8589f_row1_col8, #T_8589f_row2_col8, #T_8589f_row5_col8 {
+#T_d3608_row1_col8, #T_d3608_row2_col8, #T_d3608_row5_col8 {
   background-color: #fef6fa;
   color: #000000;
 }
-#T_8589f_row6_col8 {
+#T_d3608_row6_col8 {
   background-color: #fdf5fa;
   color: #000000;
 }
-#T_8589f_row7_col8 {
+#T_d3608_row7_col8 {
   background-color: #f7f0f7;
   color: #000000;
 }
 </style>
-<table id="T_8589f" style = 'display: inline'>
-  <caption>Statistics of the Dataset</caption>
-  <thead>
-    <tr>
-      <th class="blank level0" >&nbsp;</th>
-      <th id="T_8589f_level0_col0" class="col_heading level0 col0" >year</th>
-      <th id="T_8589f_level0_col1" class="col_heading level0 col1" >month</th>
-      <th id="T_8589f_level0_col2" class="col_heading level0 col2" >hour</th>
-      <th id="T_8589f_level0_col3" class="col_heading level0 col3" >weekday</th>
-      <th id="T_8589f_level0_col4" class="col_heading level0 col4" >temp</th>
-      <th id="T_8589f_level0_col5" class="col_heading level0 col5" >feel_temp</th>
-      <th id="T_8589f_level0_col6" class="col_heading level0 col6" >humidity</th>
-      <th id="T_8589f_level0_col7" class="col_heading level0 col7" >windspeed</th>
-      <th id="T_8589f_level0_col8" class="col_heading level0 col8" >count</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <th id="T_8589f_level0_row0" class="row_heading level0 row0" >count</th>
-      <td id="T_8589f_row0_col0" class="data row0 col0" >17379.000000</td>
-      <td id="T_8589f_row0_col1" class="data row0 col1" >17379.000000</td>
-      <td id="T_8589f_row0_col2" class="data row0 col2" >17379.000000</td>
-      <td id="T_8589f_row0_col3" class="data row0 col3" >17379.000000</td>
-      <td id="T_8589f_row0_col4" class="data row0 col4" >17379.000000</td>
-      <td id="T_8589f_row0_col5" class="data row0 col5" >17379.000000</td>
-      <td id="T_8589f_row0_col6" class="data row0 col6" >17379.000000</td>
-      <td id="T_8589f_row0_col7" class="data row0 col7" >17379.000000</td>
-      <td id="T_8589f_row0_col8" class="data row0 col8" >17379.000000</td>
-    </tr>
-    <tr>
-      <th id="T_8589f_level0_row1" class="row_heading level0 row1" >mean</th>
-      <td id="T_8589f_row1_col0" class="data row1 col0" >0.502561</td>
-      <td id="T_8589f_row1_col1" class="data row1 col1" >6.537775</td>
-      <td id="T_8589f_row1_col2" class="data row1 col2" >11.546752</td>
-      <td id="T_8589f_row1_col3" class="data row1 col3" >3.003683</td>
-      <td id="T_8589f_row1_col4" class="data row1 col4" >20.376474</td>
-      <td id="T_8589f_row1_col5" class="data row1 col5" >23.788755</td>
-      <td id="T_8589f_row1_col6" class="data row1 col6" >0.627229</td>
-      <td id="T_8589f_row1_col7" class="data row1 col7" >12.736540</td>
-      <td id="T_8589f_row1_col8" class="data row1 col8" >189.463088</td>
-    </tr>
-    <tr>
-      <th id="T_8589f_level0_row2" class="row_heading level0 row2" >std</th>
-      <td id="T_8589f_row2_col0" class="data row2 col0" >0.500008</td>
-      <td id="T_8589f_row2_col1" class="data row2 col1" >3.438776</td>
-      <td id="T_8589f_row2_col2" class="data row2 col2" >6.914405</td>
-      <td id="T_8589f_row2_col3" class="data row2 col3" >2.005771</td>
-      <td id="T_8589f_row2_col4" class="data row2 col4" >7.894801</td>
-      <td id="T_8589f_row2_col5" class="data row2 col5" >8.592511</td>
-      <td id="T_8589f_row2_col6" class="data row2 col6" >0.192930</td>
-      <td id="T_8589f_row2_col7" class="data row2 col7" >8.196795</td>
-      <td id="T_8589f_row2_col8" class="data row2 col8" >181.387599</td>
-    </tr>
-    <tr>
-      <th id="T_8589f_level0_row3" class="row_heading level0 row3" >min</th>
-      <td id="T_8589f_row3_col0" class="data row3 col0" >0.000000</td>
-      <td id="T_8589f_row3_col1" class="data row3 col1" >1.000000</td>
-      <td id="T_8589f_row3_col2" class="data row3 col2" >0.000000</td>
-      <td id="T_8589f_row3_col3" class="data row3 col3" >0.000000</td>
-      <td id="T_8589f_row3_col4" class="data row3 col4" >0.820000</td>
-      <td id="T_8589f_row3_col5" class="data row3 col5" >0.000000</td>
-      <td id="T_8589f_row3_col6" class="data row3 col6" >0.000000</td>
-      <td id="T_8589f_row3_col7" class="data row3 col7" >0.000000</td>
-      <td id="T_8589f_row3_col8" class="data row3 col8" >1.000000</td>
-    </tr>
-    <tr>
-      <th id="T_8589f_level0_row4" class="row_heading level0 row4" >25%</th>
-      <td id="T_8589f_row4_col0" class="data row4 col0" >0.000000</td>
-      <td id="T_8589f_row4_col1" class="data row4 col1" >4.000000</td>
-      <td id="T_8589f_row4_col2" class="data row4 col2" >6.000000</td>
-      <td id="T_8589f_row4_col3" class="data row4 col3" >1.000000</td>
-      <td id="T_8589f_row4_col4" class="data row4 col4" >13.940000</td>
-      <td id="T_8589f_row4_col5" class="data row4 col5" >16.665000</td>
-      <td id="T_8589f_row4_col6" class="data row4 col6" >0.480000</td>
-      <td id="T_8589f_row4_col7" class="data row4 col7" >7.001500</td>
-      <td id="T_8589f_row4_col8" class="data row4 col8" >40.000000</td>
-    </tr>
-    <tr>
-      <th id="T_8589f_level0_row5" class="row_heading level0 row5" >50%</th>
-      <td id="T_8589f_row5_col0" class="data row5 col0" >1.000000</td>
-      <td id="T_8589f_row5_col1" class="data row5 col1" >7.000000</td>
-      <td id="T_8589f_row5_col2" class="data row5 col2" >12.000000</td>
-      <td id="T_8589f_row5_col3" class="data row5 col3" >3.000000</td>
-      <td id="T_8589f_row5_col4" class="data row5 col4" >20.500000</td>
-      <td id="T_8589f_row5_col5" class="data row5 col5" >24.240000</td>
-      <td id="T_8589f_row5_col6" class="data row5 col6" >0.630000</td>
-      <td id="T_8589f_row5_col7" class="data row5 col7" >12.998000</td>
-      <td id="T_8589f_row5_col8" class="data row5 col8" >142.000000</td>
-    </tr>
-    <tr>
-      <th id="T_8589f_level0_row6" class="row_heading level0 row6" >75%</th>
-      <td id="T_8589f_row6_col0" class="data row6 col0" >1.000000</td>
-      <td id="T_8589f_row6_col1" class="data row6 col1" >10.000000</td>
-      <td id="T_8589f_row6_col2" class="data row6 col2" >18.000000</td>
-      <td id="T_8589f_row6_col3" class="data row6 col3" >5.000000</td>
-      <td id="T_8589f_row6_col4" class="data row6 col4" >27.060000</td>
-      <td id="T_8589f_row6_col5" class="data row6 col5" >31.060000</td>
-      <td id="T_8589f_row6_col6" class="data row6 col6" >0.780000</td>
-      <td id="T_8589f_row6_col7" class="data row6 col7" >16.997900</td>
-      <td id="T_8589f_row6_col8" class="data row6 col8" >281.000000</td>
-    </tr>
-    <tr>
-      <th id="T_8589f_level0_row7" class="row_heading level0 row7" >max</th>
-      <td id="T_8589f_row7_col0" class="data row7 col0" >1.000000</td>
-      <td id="T_8589f_row7_col1" class="data row7 col1" >12.000000</td>
-      <td id="T_8589f_row7_col2" class="data row7 col2" >23.000000</td>
-      <td id="T_8589f_row7_col3" class="data row7 col3" >6.000000</td>
-      <td id="T_8589f_row7_col4" class="data row7 col4" >41.000000</td>
-      <td id="T_8589f_row7_col5" class="data row7 col5" >50.000000</td>
-      <td id="T_8589f_row7_col6" class="data row7 col6" >1.000000</td>
-      <td id="T_8589f_row7_col7" class="data row7 col7" >56.996900</td>
-      <td id="T_8589f_row7_col8" class="data row7 col8" >977.000000</td>
-    </tr>
-  </tbody>
+<table id="T_d3608" style="display: inline">
+<caption>Statistics of the Dataset</caption>
+<thead>
+<tr>
+<th class="blank level0"> </th>
+<th class="col_heading level0 col0" id="T_d3608_level0_col0">year</th>
+<th class="col_heading level0 col1" id="T_d3608_level0_col1">month</th>
+<th class="col_heading level0 col2" id="T_d3608_level0_col2">hour</th>
+<th class="col_heading level0 col3" id="T_d3608_level0_col3">weekday</th>
+<th class="col_heading level0 col4" id="T_d3608_level0_col4">temp</th>
+<th class="col_heading level0 col5" id="T_d3608_level0_col5">feel_temp</th>
+<th class="col_heading level0 col6" id="T_d3608_level0_col6">humidity</th>
+<th class="col_heading level0 col7" id="T_d3608_level0_col7">windspeed</th>
+<th class="col_heading level0 col8" id="T_d3608_level0_col8">count</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<th class="row_heading level0 row0" id="T_d3608_level0_row0">count</th>
+<td class="data row0 col0" id="T_d3608_row0_col0">17379.000000</td>
+<td class="data row0 col1" id="T_d3608_row0_col1">17379.000000</td>
+<td class="data row0 col2" id="T_d3608_row0_col2">17379.000000</td>
+<td class="data row0 col3" id="T_d3608_row0_col3">17379.000000</td>
+<td class="data row0 col4" id="T_d3608_row0_col4">17379.000000</td>
+<td class="data row0 col5" id="T_d3608_row0_col5">17379.000000</td>
+<td class="data row0 col6" id="T_d3608_row0_col6">17379.000000</td>
+<td class="data row0 col7" id="T_d3608_row0_col7">17379.000000</td>
+<td class="data row0 col8" id="T_d3608_row0_col8">17379.000000</td>
+</tr>
+<tr>
+<th class="row_heading level0 row1" id="T_d3608_level0_row1">mean</th>
+<td class="data row1 col0" id="T_d3608_row1_col0">0.502561</td>
+<td class="data row1 col1" id="T_d3608_row1_col1">6.537775</td>
+<td class="data row1 col2" id="T_d3608_row1_col2">11.546752</td>
+<td class="data row1 col3" id="T_d3608_row1_col3">3.003683</td>
+<td class="data row1 col4" id="T_d3608_row1_col4">20.376474</td>
+<td class="data row1 col5" id="T_d3608_row1_col5">23.788755</td>
+<td class="data row1 col6" id="T_d3608_row1_col6">0.627229</td>
+<td class="data row1 col7" id="T_d3608_row1_col7">12.736540</td>
+<td class="data row1 col8" id="T_d3608_row1_col8">189.463088</td>
+</tr>
+<tr>
+<th class="row_heading level0 row2" id="T_d3608_level0_row2">std</th>
+<td class="data row2 col0" id="T_d3608_row2_col0">0.500008</td>
+<td class="data row2 col1" id="T_d3608_row2_col1">3.438776</td>
+<td class="data row2 col2" id="T_d3608_row2_col2">6.914405</td>
+<td class="data row2 col3" id="T_d3608_row2_col3">2.005771</td>
+<td class="data row2 col4" id="T_d3608_row2_col4">7.894801</td>
+<td class="data row2 col5" id="T_d3608_row2_col5">8.592511</td>
+<td class="data row2 col6" id="T_d3608_row2_col6">0.192930</td>
+<td class="data row2 col7" id="T_d3608_row2_col7">8.196795</td>
+<td class="data row2 col8" id="T_d3608_row2_col8">181.387599</td>
+</tr>
+<tr>
+<th class="row_heading level0 row3" id="T_d3608_level0_row3">min</th>
+<td class="data row3 col0" id="T_d3608_row3_col0">0.000000</td>
+<td class="data row3 col1" id="T_d3608_row3_col1">1.000000</td>
+<td class="data row3 col2" id="T_d3608_row3_col2">0.000000</td>
+<td class="data row3 col3" id="T_d3608_row3_col3">0.000000</td>
+<td class="data row3 col4" id="T_d3608_row3_col4">0.820000</td>
+<td class="data row3 col5" id="T_d3608_row3_col5">0.000000</td>
+<td class="data row3 col6" id="T_d3608_row3_col6">0.000000</td>
+<td class="data row3 col7" id="T_d3608_row3_col7">0.000000</td>
+<td class="data row3 col8" id="T_d3608_row3_col8">1.000000</td>
+</tr>
+<tr>
+<th class="row_heading level0 row4" id="T_d3608_level0_row4">25%</th>
+<td class="data row4 col0" id="T_d3608_row4_col0">0.000000</td>
+<td class="data row4 col1" id="T_d3608_row4_col1">4.000000</td>
+<td class="data row4 col2" id="T_d3608_row4_col2">6.000000</td>
+<td class="data row4 col3" id="T_d3608_row4_col3">1.000000</td>
+<td class="data row4 col4" id="T_d3608_row4_col4">13.940000</td>
+<td class="data row4 col5" id="T_d3608_row4_col5">16.665000</td>
+<td class="data row4 col6" id="T_d3608_row4_col6">0.480000</td>
+<td class="data row4 col7" id="T_d3608_row4_col7">7.001500</td>
+<td class="data row4 col8" id="T_d3608_row4_col8">40.000000</td>
+</tr>
+<tr>
+<th class="row_heading level0 row5" id="T_d3608_level0_row5">50%</th>
+<td class="data row5 col0" id="T_d3608_row5_col0">1.000000</td>
+<td class="data row5 col1" id="T_d3608_row5_col1">7.000000</td>
+<td class="data row5 col2" id="T_d3608_row5_col2">12.000000</td>
+<td class="data row5 col3" id="T_d3608_row5_col3">3.000000</td>
+<td class="data row5 col4" id="T_d3608_row5_col4">20.500000</td>
+<td class="data row5 col5" id="T_d3608_row5_col5">24.240000</td>
+<td class="data row5 col6" id="T_d3608_row5_col6">0.630000</td>
+<td class="data row5 col7" id="T_d3608_row5_col7">12.998000</td>
+<td class="data row5 col8" id="T_d3608_row5_col8">142.000000</td>
+</tr>
+<tr>
+<th class="row_heading level0 row6" id="T_d3608_level0_row6">75%</th>
+<td class="data row6 col0" id="T_d3608_row6_col0">1.000000</td>
+<td class="data row6 col1" id="T_d3608_row6_col1">10.000000</td>
+<td class="data row6 col2" id="T_d3608_row6_col2">18.000000</td>
+<td class="data row6 col3" id="T_d3608_row6_col3">5.000000</td>
+<td class="data row6 col4" id="T_d3608_row6_col4">27.060000</td>
+<td class="data row6 col5" id="T_d3608_row6_col5">31.060000</td>
+<td class="data row6 col6" id="T_d3608_row6_col6">0.780000</td>
+<td class="data row6 col7" id="T_d3608_row6_col7">16.997900</td>
+<td class="data row6 col8" id="T_d3608_row6_col8">281.000000</td>
+</tr>
+<tr>
+<th class="row_heading level0 row7" id="T_d3608_level0_row7">max</th>
+<td class="data row7 col0" id="T_d3608_row7_col0">1.000000</td>
+<td class="data row7 col1" id="T_d3608_row7_col1">12.000000</td>
+<td class="data row7 col2" id="T_d3608_row7_col2">23.000000</td>
+<td class="data row7 col3" id="T_d3608_row7_col3">6.000000</td>
+<td class="data row7 col4" id="T_d3608_row7_col4">41.000000</td>
+<td class="data row7 col5" id="T_d3608_row7_col5">50.000000</td>
+<td class="data row7 col6" id="T_d3608_row7_col6">1.000000</td>
+<td class="data row7 col7" id="T_d3608_row7_col7">56.996900</td>
+<td class="data row7 col8" id="T_d3608_row7_col8">977.000000</td>
+</tr>
+</tbody>
 </table>
-
 </div>
-<br />
-<br /><p>Let us look at the count of the seasons <code class="docutils literal notranslate"><span class="pre">&quot;fall&quot;</span></code>, <code class="docutils literal notranslate"><span class="pre">&quot;spring&quot;</span></code>, <code class="docutils literal notranslate"><span class="pre">&quot;summer&quot;</span></code>
-and <code class="docutils literal notranslate"><span class="pre">&quot;winter&quot;</span></code> present in the dataset to confirm they are balanced.</p>
+<br/>
+<br/><p>Let us look at the count of the seasons <code class="docutils literal notranslate"><span class="pre">"fall"</span></code>, <code class="docutils literal notranslate"><span class="pre">"spring"</span></code>, <code class="docutils literal notranslate"><span class="pre">"summer"</span></code>
+and <code class="docutils literal notranslate"><span class="pre">"winter"</span></code> present in the dataset to confirm they are balanced.</p>
 <div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
 
-<span class="n">df</span><span class="p">[</span><span class="s2">&quot;season&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">value_counts</span><span class="p">()</span>
+<span class="n">df</span><span class="p">[</span><span class="s2">"season"</span><span class="p">]</span><span class="o">.</span><span class="n">value_counts</span><span class="p">()</span>
 </pre></div>
 </div>
 <div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>season
@@ -1267,32 +1040,32 @@ next hour given past demands. Since the demand is a continuous
 variable, one could intuitively use any regression model. However, we do
 not have the usual <code class="docutils literal notranslate"><span class="pre">(X_train,</span> <span class="pre">y_train)</span></code> dataset. Instead, we just have
 the <code class="docutils literal notranslate"><span class="pre">y_train</span></code> demand data sequentially organized by time.</p>
-<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">count</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="s2">&quot;count&quot;</span><span class="p">]</span>
-<span class="n">lagged_df</span> <span class="o">=</span> <a href="https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.concat.html#pandas.concat" title="pandas.concat" class="sphx-glr-backref-module-pandas sphx-glr-backref-type-py-function"><span class="n">pd</span><span class="o">.</span><span class="n">concat</span></a><span class="p">(</span>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">count</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="s2">"count"</span><span class="p">]</span>
+<span class="n">lagged_df</span> <span class="o">=</span> <a class="sphx-glr-backref-module-pandas sphx-glr-backref-type-py-function" href="https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.concat.html#pandas.concat" title="pandas.concat"><span class="n">pd</span><span class="o">.</span><span class="n">concat</span></a><span class="p">(</span>
     <span class="p">[</span>
         <span class="n">count</span><span class="p">,</span>
-        <span class="n">count</span><span class="o">.</span><span class="n">shift</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">rename</span><span class="p">(</span><span class="s2">&quot;lagged_count_1h&quot;</span><span class="p">),</span>
-        <span class="n">count</span><span class="o">.</span><span class="n">shift</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span><span class="o">.</span><span class="n">rename</span><span class="p">(</span><span class="s2">&quot;lagged_count_2h&quot;</span><span class="p">),</span>
-        <span class="n">count</span><span class="o">.</span><span class="n">shift</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span><span class="o">.</span><span class="n">rename</span><span class="p">(</span><span class="s2">&quot;lagged_count_3h&quot;</span><span class="p">),</span>
-        <span class="n">count</span><span class="o">.</span><span class="n">shift</span><span class="p">(</span><span class="mi">24</span><span class="p">)</span><span class="o">.</span><span class="n">rename</span><span class="p">(</span><span class="s2">&quot;lagged_count_1d&quot;</span><span class="p">),</span>
-        <span class="n">count</span><span class="o">.</span><span class="n">shift</span><span class="p">(</span><span class="mi">24</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">rename</span><span class="p">(</span><span class="s2">&quot;lagged_count_1d_1h&quot;</span><span class="p">),</span>
-        <span class="n">count</span><span class="o">.</span><span class="n">shift</span><span class="p">(</span><span class="mi">7</span> <span class="o">*</span> <span class="mi">24</span><span class="p">)</span><span class="o">.</span><span class="n">rename</span><span class="p">(</span><span class="s2">&quot;lagged_count_7d&quot;</span><span class="p">),</span>
-        <span class="n">count</span><span class="o">.</span><span class="n">shift</span><span class="p">(</span><span class="mi">7</span> <span class="o">*</span> <span class="mi">24</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">rename</span><span class="p">(</span><span class="s2">&quot;lagged_count_7d_1h&quot;</span><span class="p">),</span>
-        <span class="n">count</span><span class="o">.</span><span class="n">shift</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">rolling</span><span class="p">(</span><span class="mi">24</span><span class="p">)</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span><span class="o">.</span><span class="n">rename</span><span class="p">(</span><span class="s2">&quot;lagged_mean_24h&quot;</span><span class="p">),</span>
-        <span class="n">count</span><span class="o">.</span><span class="n">shift</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">rolling</span><span class="p">(</span><span class="mi">24</span><span class="p">)</span><span class="o">.</span><span class="n">max</span><span class="p">()</span><span class="o">.</span><span class="n">rename</span><span class="p">(</span><span class="s2">&quot;lagged_max_24h&quot;</span><span class="p">),</span>
-        <span class="n">count</span><span class="o">.</span><span class="n">shift</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">rolling</span><span class="p">(</span><span class="mi">24</span><span class="p">)</span><span class="o">.</span><span class="n">min</span><span class="p">()</span><span class="o">.</span><span class="n">rename</span><span class="p">(</span><span class="s2">&quot;lagged_min_24h&quot;</span><span class="p">),</span>
-        <span class="n">count</span><span class="o">.</span><span class="n">shift</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">rolling</span><span class="p">(</span><span class="mi">7</span> <span class="o">*</span> <span class="mi">24</span><span class="p">)</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span><span class="o">.</span><span class="n">rename</span><span class="p">(</span><span class="s2">&quot;lagged_mean_7d&quot;</span><span class="p">),</span>
-        <span class="n">count</span><span class="o">.</span><span class="n">shift</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">rolling</span><span class="p">(</span><span class="mi">7</span> <span class="o">*</span> <span class="mi">24</span><span class="p">)</span><span class="o">.</span><span class="n">max</span><span class="p">()</span><span class="o">.</span><span class="n">rename</span><span class="p">(</span><span class="s2">&quot;lagged_max_7d&quot;</span><span class="p">),</span>
-        <span class="n">count</span><span class="o">.</span><span class="n">shift</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">rolling</span><span class="p">(</span><span class="mi">7</span> <span class="o">*</span> <span class="mi">24</span><span class="p">)</span><span class="o">.</span><span class="n">min</span><span class="p">()</span><span class="o">.</span><span class="n">rename</span><span class="p">(</span><span class="s2">&quot;lagged_min_7d&quot;</span><span class="p">),</span>
+        <span class="n">count</span><span class="o">.</span><span class="n">shift</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">rename</span><span class="p">(</span><span class="s2">"lagged_count_1h"</span><span class="p">),</span>
+        <span class="n">count</span><span class="o">.</span><span class="n">shift</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span><span class="o">.</span><span class="n">rename</span><span class="p">(</span><span class="s2">"lagged_count_2h"</span><span class="p">),</span>
+        <span class="n">count</span><span class="o">.</span><span class="n">shift</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span><span class="o">.</span><span class="n">rename</span><span class="p">(</span><span class="s2">"lagged_count_3h"</span><span class="p">),</span>
+        <span class="n">count</span><span class="o">.</span><span class="n">shift</span><span class="p">(</span><span class="mi">24</span><span class="p">)</span><span class="o">.</span><span class="n">rename</span><span class="p">(</span><span class="s2">"lagged_count_1d"</span><span class="p">),</span>
+        <span class="n">count</span><span class="o">.</span><span class="n">shift</span><span class="p">(</span><span class="mi">24</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">rename</span><span class="p">(</span><span class="s2">"lagged_count_1d_1h"</span><span class="p">),</span>
+        <span class="n">count</span><span class="o">.</span><span class="n">shift</span><span class="p">(</span><span class="mi">7</span> <span class="o">*</span> <span class="mi">24</span><span class="p">)</span><span class="o">.</span><span class="n">rename</span><span class="p">(</span><span class="s2">"lagged_count_7d"</span><span class="p">),</span>
+        <span class="n">count</span><span class="o">.</span><span class="n">shift</span><span class="p">(</span><span class="mi">7</span> <span class="o">*</span> <span class="mi">24</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">rename</span><span class="p">(</span><span class="s2">"lagged_count_7d_1h"</span><span class="p">),</span>
+        <span class="n">count</span><span class="o">.</span><span class="n">shift</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">rolling</span><span class="p">(</span><span class="mi">24</span><span class="p">)</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span><span class="o">.</span><span class="n">rename</span><span class="p">(</span><span class="s2">"lagged_mean_24h"</span><span class="p">),</span>
+        <span class="n">count</span><span class="o">.</span><span class="n">shift</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">rolling</span><span class="p">(</span><span class="mi">24</span><span class="p">)</span><span class="o">.</span><span class="n">max</span><span class="p">()</span><span class="o">.</span><span class="n">rename</span><span class="p">(</span><span class="s2">"lagged_max_24h"</span><span class="p">),</span>
+        <span class="n">count</span><span class="o">.</span><span class="n">shift</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">rolling</span><span class="p">(</span><span class="mi">24</span><span class="p">)</span><span class="o">.</span><span class="n">min</span><span class="p">()</span><span class="o">.</span><span class="n">rename</span><span class="p">(</span><span class="s2">"lagged_min_24h"</span><span class="p">),</span>
+        <span class="n">count</span><span class="o">.</span><span class="n">shift</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">rolling</span><span class="p">(</span><span class="mi">7</span> <span class="o">*</span> <span class="mi">24</span><span class="p">)</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span><span class="o">.</span><span class="n">rename</span><span class="p">(</span><span class="s2">"lagged_mean_7d"</span><span class="p">),</span>
+        <span class="n">count</span><span class="o">.</span><span class="n">shift</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">rolling</span><span class="p">(</span><span class="mi">7</span> <span class="o">*</span> <span class="mi">24</span><span class="p">)</span><span class="o">.</span><span class="n">max</span><span class="p">()</span><span class="o">.</span><span class="n">rename</span><span class="p">(</span><span class="s2">"lagged_max_7d"</span><span class="p">),</span>
+        <span class="n">count</span><span class="o">.</span><span class="n">shift</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">rolling</span><span class="p">(</span><span class="mi">7</span> <span class="o">*</span> <span class="mi">24</span><span class="p">)</span><span class="o">.</span><span class="n">min</span><span class="p">()</span><span class="o">.</span><span class="n">rename</span><span class="p">(</span><span class="s2">"lagged_min_7d"</span><span class="p">),</span>
     <span class="p">],</span>
-    <span class="n">axis</span><span class="o">=</span><span class="s2">&quot;columns&quot;</span><span class="p">,</span>
+    <span class="n">axis</span><span class="o">=</span><span class="s2">"columns"</span><span class="p">,</span>
 <span class="p">)</span>
 <span class="n">lagged_df</span><span class="o">.</span><span class="n">tail</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span>
 </pre></div>
 </div>
 <div class="output_subarea output_html rendered_html output_result">
 <div>
-<style scoped>
+<style scoped="">
     .dataframe tbody tr th:only-of-type {
         vertical-align: middle;
     }
@@ -1306,209 +1079,209 @@ the <code class="docutils literal notranslate"><span class="pre">y_train</span><
     }
 </style>
 <table border="1" class="dataframe">
-  <thead>
-    <tr style="text-align: right;">
-      <th></th>
-      <th>count</th>
-      <th>lagged_count_1h</th>
-      <th>lagged_count_2h</th>
-      <th>lagged_count_3h</th>
-      <th>lagged_count_1d</th>
-      <th>lagged_count_1d_1h</th>
-      <th>lagged_count_7d</th>
-      <th>lagged_count_7d_1h</th>
-      <th>lagged_mean_24h</th>
-      <th>lagged_max_24h</th>
-      <th>lagged_min_24h</th>
-      <th>lagged_mean_7d</th>
-      <th>lagged_max_7d</th>
-      <th>lagged_min_7d</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <th>17369</th>
-      <td>247</td>
-      <td>203.0</td>
-      <td>224.0</td>
-      <td>157.0</td>
-      <td>160.0</td>
-      <td>169.0</td>
-      <td>70.0</td>
-      <td>135.0</td>
-      <td>93.500000</td>
-      <td>224.0</td>
-      <td>1.0</td>
-      <td>67.732143</td>
-      <td>271.0</td>
-      <td>1.0</td>
-    </tr>
-    <tr>
-      <th>17370</th>
-      <td>315</td>
-      <td>247.0</td>
-      <td>203.0</td>
-      <td>224.0</td>
-      <td>138.0</td>
-      <td>160.0</td>
-      <td>46.0</td>
-      <td>70.0</td>
-      <td>97.125000</td>
-      <td>247.0</td>
-      <td>1.0</td>
-      <td>68.785714</td>
-      <td>271.0</td>
-      <td>1.0</td>
-    </tr>
-    <tr>
-      <th>17371</th>
-      <td>214</td>
-      <td>315.0</td>
-      <td>247.0</td>
-      <td>203.0</td>
-      <td>133.0</td>
-      <td>138.0</td>
-      <td>33.0</td>
-      <td>46.0</td>
-      <td>104.500000</td>
-      <td>315.0</td>
-      <td>1.0</td>
-      <td>70.386905</td>
-      <td>315.0</td>
-      <td>1.0</td>
-    </tr>
-    <tr>
-      <th>17372</th>
-      <td>164</td>
-      <td>214.0</td>
-      <td>315.0</td>
-      <td>247.0</td>
-      <td>123.0</td>
-      <td>133.0</td>
-      <td>33.0</td>
-      <td>33.0</td>
-      <td>107.875000</td>
-      <td>315.0</td>
-      <td>1.0</td>
-      <td>71.464286</td>
-      <td>315.0</td>
-      <td>1.0</td>
-    </tr>
-    <tr>
-      <th>17373</th>
-      <td>122</td>
-      <td>164.0</td>
-      <td>214.0</td>
-      <td>315.0</td>
-      <td>125.0</td>
-      <td>123.0</td>
-      <td>26.0</td>
-      <td>33.0</td>
-      <td>109.583333</td>
-      <td>315.0</td>
-      <td>1.0</td>
-      <td>72.244048</td>
-      <td>315.0</td>
-      <td>1.0</td>
-    </tr>
-    <tr>
-      <th>17374</th>
-      <td>119</td>
-      <td>122.0</td>
-      <td>164.0</td>
-      <td>214.0</td>
-      <td>102.0</td>
-      <td>125.0</td>
-      <td>26.0</td>
-      <td>26.0</td>
-      <td>109.458333</td>
-      <td>315.0</td>
-      <td>1.0</td>
-      <td>72.815476</td>
-      <td>315.0</td>
-      <td>1.0</td>
-    </tr>
-    <tr>
-      <th>17375</th>
-      <td>89</td>
-      <td>119.0</td>
-      <td>122.0</td>
-      <td>164.0</td>
-      <td>72.0</td>
-      <td>102.0</td>
-      <td>18.0</td>
-      <td>26.0</td>
-      <td>110.166667</td>
-      <td>315.0</td>
-      <td>1.0</td>
-      <td>73.369048</td>
-      <td>315.0</td>
-      <td>1.0</td>
-    </tr>
-    <tr>
-      <th>17376</th>
-      <td>90</td>
-      <td>89.0</td>
-      <td>119.0</td>
-      <td>122.0</td>
-      <td>47.0</td>
-      <td>72.0</td>
-      <td>23.0</td>
-      <td>18.0</td>
-      <td>110.875000</td>
-      <td>315.0</td>
-      <td>1.0</td>
-      <td>73.791667</td>
-      <td>315.0</td>
-      <td>1.0</td>
-    </tr>
-    <tr>
-      <th>17377</th>
-      <td>61</td>
-      <td>90.0</td>
-      <td>89.0</td>
-      <td>119.0</td>
-      <td>36.0</td>
-      <td>47.0</td>
-      <td>22.0</td>
-      <td>23.0</td>
-      <td>112.666667</td>
-      <td>315.0</td>
-      <td>1.0</td>
-      <td>74.190476</td>
-      <td>315.0</td>
-      <td>1.0</td>
-    </tr>
-    <tr>
-      <th>17378</th>
-      <td>49</td>
-      <td>61.0</td>
-      <td>90.0</td>
-      <td>89.0</td>
-      <td>49.0</td>
-      <td>36.0</td>
-      <td>12.0</td>
-      <td>22.0</td>
-      <td>113.708333</td>
-      <td>315.0</td>
-      <td>1.0</td>
-      <td>74.422619</td>
-      <td>315.0</td>
-      <td>1.0</td>
-    </tr>
-  </tbody>
+<thead>
+<tr style="text-align: right;">
+<th></th>
+<th>count</th>
+<th>lagged_count_1h</th>
+<th>lagged_count_2h</th>
+<th>lagged_count_3h</th>
+<th>lagged_count_1d</th>
+<th>lagged_count_1d_1h</th>
+<th>lagged_count_7d</th>
+<th>lagged_count_7d_1h</th>
+<th>lagged_mean_24h</th>
+<th>lagged_max_24h</th>
+<th>lagged_min_24h</th>
+<th>lagged_mean_7d</th>
+<th>lagged_max_7d</th>
+<th>lagged_min_7d</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<th>17369</th>
+<td>247</td>
+<td>203.0</td>
+<td>224.0</td>
+<td>157.0</td>
+<td>160.0</td>
+<td>169.0</td>
+<td>70.0</td>
+<td>135.0</td>
+<td>93.500000</td>
+<td>224.0</td>
+<td>1.0</td>
+<td>67.732143</td>
+<td>271.0</td>
+<td>1.0</td>
+</tr>
+<tr>
+<th>17370</th>
+<td>315</td>
+<td>247.0</td>
+<td>203.0</td>
+<td>224.0</td>
+<td>138.0</td>
+<td>160.0</td>
+<td>46.0</td>
+<td>70.0</td>
+<td>97.125000</td>
+<td>247.0</td>
+<td>1.0</td>
+<td>68.785714</td>
+<td>271.0</td>
+<td>1.0</td>
+</tr>
+<tr>
+<th>17371</th>
+<td>214</td>
+<td>315.0</td>
+<td>247.0</td>
+<td>203.0</td>
+<td>133.0</td>
+<td>138.0</td>
+<td>33.0</td>
+<td>46.0</td>
+<td>104.500000</td>
+<td>315.0</td>
+<td>1.0</td>
+<td>70.386905</td>
+<td>315.0</td>
+<td>1.0</td>
+</tr>
+<tr>
+<th>17372</th>
+<td>164</td>
+<td>214.0</td>
+<td>315.0</td>
+<td>247.0</td>
+<td>123.0</td>
+<td>133.0</td>
+<td>33.0</td>
+<td>33.0</td>
+<td>107.875000</td>
+<td>315.0</td>
+<td>1.0</td>
+<td>71.464286</td>
+<td>315.0</td>
+<td>1.0</td>
+</tr>
+<tr>
+<th>17373</th>
+<td>122</td>
+<td>164.0</td>
+<td>214.0</td>
+<td>315.0</td>
+<td>125.0</td>
+<td>123.0</td>
+<td>26.0</td>
+<td>33.0</td>
+<td>109.583333</td>
+<td>315.0</td>
+<td>1.0</td>
+<td>72.244048</td>
+<td>315.0</td>
+<td>1.0</td>
+</tr>
+<tr>
+<th>17374</th>
+<td>119</td>
+<td>122.0</td>
+<td>164.0</td>
+<td>214.0</td>
+<td>102.0</td>
+<td>125.0</td>
+<td>26.0</td>
+<td>26.0</td>
+<td>109.458333</td>
+<td>315.0</td>
+<td>1.0</td>
+<td>72.815476</td>
+<td>315.0</td>
+<td>1.0</td>
+</tr>
+<tr>
+<th>17375</th>
+<td>89</td>
+<td>119.0</td>
+<td>122.0</td>
+<td>164.0</td>
+<td>72.0</td>
+<td>102.0</td>
+<td>18.0</td>
+<td>26.0</td>
+<td>110.166667</td>
+<td>315.0</td>
+<td>1.0</td>
+<td>73.369048</td>
+<td>315.0</td>
+<td>1.0</td>
+</tr>
+<tr>
+<th>17376</th>
+<td>90</td>
+<td>89.0</td>
+<td>119.0</td>
+<td>122.0</td>
+<td>47.0</td>
+<td>72.0</td>
+<td>23.0</td>
+<td>18.0</td>
+<td>110.875000</td>
+<td>315.0</td>
+<td>1.0</td>
+<td>73.791667</td>
+<td>315.0</td>
+<td>1.0</td>
+</tr>
+<tr>
+<th>17377</th>
+<td>61</td>
+<td>90.0</td>
+<td>89.0</td>
+<td>119.0</td>
+<td>36.0</td>
+<td>47.0</td>
+<td>22.0</td>
+<td>23.0</td>
+<td>112.666667</td>
+<td>315.0</td>
+<td>1.0</td>
+<td>74.190476</td>
+<td>315.0</td>
+<td>1.0</td>
+</tr>
+<tr>
+<th>17378</th>
+<td>49</td>
+<td>61.0</td>
+<td>90.0</td>
+<td>89.0</td>
+<td>49.0</td>
+<td>36.0</td>
+<td>12.0</td>
+<td>22.0</td>
+<td>113.708333</td>
+<td>315.0</td>
+<td>1.0</td>
+<td>74.422619</td>
+<td>315.0</td>
+<td>1.0</td>
+</tr>
+</tbody>
 </table>
 </div>
 </div>
-<br />
-<br /><p>Watch out however, the first lines have undefined values because their own
+<br/>
+<br/><p>Watch out however, the first lines have undefined values because their own
 past is unknown. This depends on how much lag we used:</p>
 <div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">lagged_df</span><span class="o">.</span><span class="n">head</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span>
 </pre></div>
 </div>
 <div class="output_subarea output_html rendered_html output_result">
 <div>
-<style scoped>
+<style scoped="">
     .dataframe tbody tr th:only-of-type {
         vertical-align: middle;
     }
@@ -1522,207 +1295,207 @@ past is unknown. This depends on how much lag we used:</p>
     }
 </style>
 <table border="1" class="dataframe">
-  <thead>
-    <tr style="text-align: right;">
-      <th></th>
-      <th>count</th>
-      <th>lagged_count_1h</th>
-      <th>lagged_count_2h</th>
-      <th>lagged_count_3h</th>
-      <th>lagged_count_1d</th>
-      <th>lagged_count_1d_1h</th>
-      <th>lagged_count_7d</th>
-      <th>lagged_count_7d_1h</th>
-      <th>lagged_mean_24h</th>
-      <th>lagged_max_24h</th>
-      <th>lagged_min_24h</th>
-      <th>lagged_mean_7d</th>
-      <th>lagged_max_7d</th>
-      <th>lagged_min_7d</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <th>0</th>
-      <td>16</td>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>NaN</td>
-    </tr>
-    <tr>
-      <th>1</th>
-      <td>40</td>
-      <td>16.0</td>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>NaN</td>
-    </tr>
-    <tr>
-      <th>2</th>
-      <td>32</td>
-      <td>40.0</td>
-      <td>16.0</td>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>NaN</td>
-    </tr>
-    <tr>
-      <th>3</th>
-      <td>13</td>
-      <td>32.0</td>
-      <td>40.0</td>
-      <td>16.0</td>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>NaN</td>
-    </tr>
-    <tr>
-      <th>4</th>
-      <td>1</td>
-      <td>13.0</td>
-      <td>32.0</td>
-      <td>40.0</td>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>NaN</td>
-    </tr>
-    <tr>
-      <th>5</th>
-      <td>1</td>
-      <td>1.0</td>
-      <td>13.0</td>
-      <td>32.0</td>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>NaN</td>
-    </tr>
-    <tr>
-      <th>6</th>
-      <td>2</td>
-      <td>1.0</td>
-      <td>1.0</td>
-      <td>13.0</td>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>NaN</td>
-    </tr>
-    <tr>
-      <th>7</th>
-      <td>3</td>
-      <td>2.0</td>
-      <td>1.0</td>
-      <td>1.0</td>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>NaN</td>
-    </tr>
-    <tr>
-      <th>8</th>
-      <td>8</td>
-      <td>3.0</td>
-      <td>2.0</td>
-      <td>1.0</td>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>NaN</td>
-    </tr>
-    <tr>
-      <th>9</th>
-      <td>14</td>
-      <td>8.0</td>
-      <td>3.0</td>
-      <td>2.0</td>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>NaN</td>
-    </tr>
-  </tbody>
+<thead>
+<tr style="text-align: right;">
+<th></th>
+<th>count</th>
+<th>lagged_count_1h</th>
+<th>lagged_count_2h</th>
+<th>lagged_count_3h</th>
+<th>lagged_count_1d</th>
+<th>lagged_count_1d_1h</th>
+<th>lagged_count_7d</th>
+<th>lagged_count_7d_1h</th>
+<th>lagged_mean_24h</th>
+<th>lagged_max_24h</th>
+<th>lagged_min_24h</th>
+<th>lagged_mean_7d</th>
+<th>lagged_max_7d</th>
+<th>lagged_min_7d</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<th>0</th>
+<td>16</td>
+<td>NaN</td>
+<td>NaN</td>
+<td>NaN</td>
+<td>NaN</td>
+<td>NaN</td>
+<td>NaN</td>
+<td>NaN</td>
+<td>NaN</td>
+<td>NaN</td>
+<td>NaN</td>
+<td>NaN</td>
+<td>NaN</td>
+<td>NaN</td>
+</tr>
+<tr>
+<th>1</th>
+<td>40</td>
+<td>16.0</td>
+<td>NaN</td>
+<td>NaN</td>
+<td>NaN</td>
+<td>NaN</td>
+<td>NaN</td>
+<td>NaN</td>
+<td>NaN</td>
+<td>NaN</td>
+<td>NaN</td>
+<td>NaN</td>
+<td>NaN</td>
+<td>NaN</td>
+</tr>
+<tr>
+<th>2</th>
+<td>32</td>
+<td>40.0</td>
+<td>16.0</td>
+<td>NaN</td>
+<td>NaN</td>
+<td>NaN</td>
+<td>NaN</td>
+<td>NaN</td>
+<td>NaN</td>
+<td>NaN</td>
+<td>NaN</td>
+<td>NaN</td>
+<td>NaN</td>
+<td>NaN</td>
+</tr>
+<tr>
+<th>3</th>
+<td>13</td>
+<td>32.0</td>
+<td>40.0</td>
+<td>16.0</td>
+<td>NaN</td>
+<td>NaN</td>
+<td>NaN</td>
+<td>NaN</td>
+<td>NaN</td>
+<td>NaN</td>
+<td>NaN</td>
+<td>NaN</td>
+<td>NaN</td>
+<td>NaN</td>
+</tr>
+<tr>
+<th>4</th>
+<td>1</td>
+<td>13.0</td>
+<td>32.0</td>
+<td>40.0</td>
+<td>NaN</td>
+<td>NaN</td>
+<td>NaN</td>
+<td>NaN</td>
+<td>NaN</td>
+<td>NaN</td>
+<td>NaN</td>
+<td>NaN</td>
+<td>NaN</td>
+<td>NaN</td>
+</tr>
+<tr>
+<th>5</th>
+<td>1</td>
+<td>1.0</td>
+<td>13.0</td>
+<td>32.0</td>
+<td>NaN</td>
+<td>NaN</td>
+<td>NaN</td>
+<td>NaN</td>
+<td>NaN</td>
+<td>NaN</td>
+<td>NaN</td>
+<td>NaN</td>
+<td>NaN</td>
+<td>NaN</td>
+</tr>
+<tr>
+<th>6</th>
+<td>2</td>
+<td>1.0</td>
+<td>1.0</td>
+<td>13.0</td>
+<td>NaN</td>
+<td>NaN</td>
+<td>NaN</td>
+<td>NaN</td>
+<td>NaN</td>
+<td>NaN</td>
+<td>NaN</td>
+<td>NaN</td>
+<td>NaN</td>
+<td>NaN</td>
+</tr>
+<tr>
+<th>7</th>
+<td>3</td>
+<td>2.0</td>
+<td>1.0</td>
+<td>1.0</td>
+<td>NaN</td>
+<td>NaN</td>
+<td>NaN</td>
+<td>NaN</td>
+<td>NaN</td>
+<td>NaN</td>
+<td>NaN</td>
+<td>NaN</td>
+<td>NaN</td>
+<td>NaN</td>
+</tr>
+<tr>
+<th>8</th>
+<td>8</td>
+<td>3.0</td>
+<td>2.0</td>
+<td>1.0</td>
+<td>NaN</td>
+<td>NaN</td>
+<td>NaN</td>
+<td>NaN</td>
+<td>NaN</td>
+<td>NaN</td>
+<td>NaN</td>
+<td>NaN</td>
+<td>NaN</td>
+<td>NaN</td>
+</tr>
+<tr>
+<th>9</th>
+<td>14</td>
+<td>8.0</td>
+<td>3.0</td>
+<td>2.0</td>
+<td>NaN</td>
+<td>NaN</td>
+<td>NaN</td>
+<td>NaN</td>
+<td>NaN</td>
+<td>NaN</td>
+<td>NaN</td>
+<td>NaN</td>
+<td>NaN</td>
+<td>NaN</td>
+</tr>
+</tbody>
 </table>
 </div>
 </div>
-<br />
-<br /><p>We can now separate the lagged features in a matrix <code class="docutils literal notranslate"><span class="pre">X</span></code> and the target variable
+<br/>
+<br/><p>We can now separate the lagged features in a matrix <code class="docutils literal notranslate"><span class="pre">X</span></code> and the target variable
 (the counts to predict) in an array of the same first dimension <code class="docutils literal notranslate"><span class="pre">y</span></code>.</p>
 <div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">lagged_df</span> <span class="o">=</span> <span class="n">lagged_df</span><span class="o">.</span><span class="n">dropna</span><span class="p">()</span>
-<span class="n">X</span> <span class="o">=</span> <span class="n">lagged_df</span><span class="o">.</span><span class="n">drop</span><span class="p">(</span><span class="s2">&quot;count&quot;</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="s2">&quot;columns&quot;</span><span class="p">)</span>
-<span class="n">y</span> <span class="o">=</span> <span class="n">lagged_df</span><span class="p">[</span><span class="s2">&quot;count&quot;</span><span class="p">]</span>
-<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;X shape: </span><span class="si">{}</span><span class="se">\n</span><span class="s2">y shape: </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">X</span><span class="o">.</span><span class="n">shape</span><span class="p">,</span> <span class="n">y</span><span class="o">.</span><span class="n">shape</span><span class="p">))</span>
+<span class="n">X</span> <span class="o">=</span> <span class="n">lagged_df</span><span class="o">.</span><span class="n">drop</span><span class="p">(</span><span class="s2">"count"</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="s2">"columns"</span><span class="p">)</span>
+<span class="n">y</span> <span class="o">=</span> <span class="n">lagged_df</span><span class="p">[</span><span class="s2">"count"</span><span class="p">]</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">"X shape: </span><span class="si">{}</span><span class="se">\n</span><span class="s2">y shape: </span><span class="si">{}</span><span class="s2">"</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">X</span><span class="o">.</span><span class="n">shape</span><span class="p">,</span> <span class="n">y</span><span class="o">.</span><span class="n">shape</span><span class="p">))</span>
 </pre></div>
 </div>
 <div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>X shape: (17210, 13)
@@ -1740,21 +1513,21 @@ data that are ulterior to the testing data. In time series machine learning
 the “i.i.d” (independent and identically distributed) assumption does not
 hold true as the data points are not independent and have a temporal
 relationship.</p>
-<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">sklearn.ensemble</span> <span class="kn">import</span> <a href="../../modules/generated/sklearn.ensemble.HistGradientBoostingRegressor.html#sklearn.ensemble.HistGradientBoostingRegressor" title="sklearn.ensemble.HistGradientBoostingRegressor" class="sphx-glr-backref-module-sklearn-ensemble sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">HistGradientBoostingRegressor</span></a>
-<span class="kn">from</span> <span class="nn">sklearn.model_selection</span> <span class="kn">import</span> <a href="../../modules/generated/sklearn.model_selection.train_test_split.html#sklearn.model_selection.train_test_split" title="sklearn.model_selection.train_test_split" class="sphx-glr-backref-module-sklearn-model_selection sphx-glr-backref-type-py-function"><span class="n">train_test_split</span></a>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">sklearn.ensemble</span> <span class="kn">import</span> <a class="sphx-glr-backref-module-sklearn-ensemble sphx-glr-backref-type-py-class sphx-glr-backref-instance" href="../../modules/generated/sklearn.ensemble.HistGradientBoostingRegressor.html#sklearn.ensemble.HistGradientBoostingRegressor" title="sklearn.ensemble.HistGradientBoostingRegressor"><span class="n">HistGradientBoostingRegressor</span></a>
+<span class="kn">from</span> <span class="nn">sklearn.model_selection</span> <span class="kn">import</span> <a class="sphx-glr-backref-module-sklearn-model_selection sphx-glr-backref-type-py-function" href="../../modules/generated/sklearn.model_selection.train_test_split.html#sklearn.model_selection.train_test_split" title="sklearn.model_selection.train_test_split"><span class="n">train_test_split</span></a>
 
-<span class="n">X_train</span><span class="p">,</span> <span class="n">X_test</span><span class="p">,</span> <span class="n">y_train</span><span class="p">,</span> <span class="n">y_test</span> <span class="o">=</span> <a href="../../modules/generated/sklearn.model_selection.train_test_split.html#sklearn.model_selection.train_test_split" title="sklearn.model_selection.train_test_split" class="sphx-glr-backref-module-sklearn-model_selection sphx-glr-backref-type-py-function"><span class="n">train_test_split</span></a><span class="p">(</span>
+<span class="n">X_train</span><span class="p">,</span> <span class="n">X_test</span><span class="p">,</span> <span class="n">y_train</span><span class="p">,</span> <span class="n">y_test</span> <span class="o">=</span> <a class="sphx-glr-backref-module-sklearn-model_selection sphx-glr-backref-type-py-function" href="../../modules/generated/sklearn.model_selection.train_test_split.html#sklearn.model_selection.train_test_split" title="sklearn.model_selection.train_test_split"><span class="n">train_test_split</span></a><span class="p">(</span>
     <span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">test_size</span><span class="o">=</span><span class="mf">0.2</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="mi">42</span>
 <span class="p">)</span>
 
-<span class="n">model</span> <span class="o">=</span> <a href="../../modules/generated/sklearn.ensemble.HistGradientBoostingRegressor.html#sklearn.ensemble.HistGradientBoostingRegressor" title="sklearn.ensemble.HistGradientBoostingRegressor" class="sphx-glr-backref-module-sklearn-ensemble sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">HistGradientBoostingRegressor</span></a><span class="p">()</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X_train</span><span class="p">,</span> <span class="n">y_train</span><span class="p">)</span>
+<span class="n">model</span> <span class="o">=</span> <a class="sphx-glr-backref-module-sklearn-ensemble sphx-glr-backref-type-py-class sphx-glr-backref-instance" href="../../modules/generated/sklearn.ensemble.HistGradientBoostingRegressor.html#sklearn.ensemble.HistGradientBoostingRegressor" title="sklearn.ensemble.HistGradientBoostingRegressor"><span class="n">HistGradientBoostingRegressor</span></a><span class="p">()</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X_train</span><span class="p">,</span> <span class="n">y_train</span><span class="p">)</span>
 </pre></div>
 </div>
 <p>Taking a look at the performance of the model.</p>
-<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">sklearn.metrics</span> <span class="kn">import</span> <a href="../../modules/generated/sklearn.metrics.mean_absolute_percentage_error.html#sklearn.metrics.mean_absolute_percentage_error" title="sklearn.metrics.mean_absolute_percentage_error" class="sphx-glr-backref-module-sklearn-metrics sphx-glr-backref-type-py-function"><span class="n">mean_absolute_percentage_error</span></a>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">sklearn.metrics</span> <span class="kn">import</span> <a class="sphx-glr-backref-module-sklearn-metrics sphx-glr-backref-type-py-function" href="../../modules/generated/sklearn.metrics.mean_absolute_percentage_error.html#sklearn.metrics.mean_absolute_percentage_error" title="sklearn.metrics.mean_absolute_percentage_error"><span class="n">mean_absolute_percentage_error</span></a>
 
 <span class="n">y_pred</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">X_test</span><span class="p">)</span>
-<a href="../../modules/generated/sklearn.metrics.mean_absolute_percentage_error.html#sklearn.metrics.mean_absolute_percentage_error" title="sklearn.metrics.mean_absolute_percentage_error" class="sphx-glr-backref-module-sklearn-metrics sphx-glr-backref-type-py-function"><span class="n">mean_absolute_percentage_error</span></a><span class="p">(</span><span class="n">y_test</span><span class="p">,</span> <span class="n">y_pred</span><span class="p">)</span>
+<a class="sphx-glr-backref-module-sklearn-metrics sphx-glr-backref-type-py-function" href="../../modules/generated/sklearn.metrics.mean_absolute_percentage_error.html#sklearn.metrics.mean_absolute_percentage_error" title="sklearn.metrics.mean_absolute_percentage_error"><span class="n">mean_absolute_percentage_error</span></a><span class="p">(</span><span class="n">y_test</span><span class="p">,</span> <span class="n">y_pred</span><span class="p">)</span>
 </pre></div>
 </div>
 <div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>0.3889873516666431
@@ -1767,9 +1540,9 @@ relationship.</p>
 the temporal structure of the dataset to evaluate our model’s ability to
 predict data points in the future (to avoid cheating by reading values from
 the lagged features in the training set).</p>
-<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">sklearn.model_selection</span> <span class="kn">import</span> <a href="../../modules/generated/sklearn.model_selection.TimeSeriesSplit.html#sklearn.model_selection.TimeSeriesSplit" title="sklearn.model_selection.TimeSeriesSplit" class="sphx-glr-backref-module-sklearn-model_selection sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">TimeSeriesSplit</span></a>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">sklearn.model_selection</span> <span class="kn">import</span> <a class="sphx-glr-backref-module-sklearn-model_selection sphx-glr-backref-type-py-class sphx-glr-backref-instance" href="../../modules/generated/sklearn.model_selection.TimeSeriesSplit.html#sklearn.model_selection.TimeSeriesSplit" title="sklearn.model_selection.TimeSeriesSplit"><span class="n">TimeSeriesSplit</span></a>
 
-<span class="n">ts_cv</span> <span class="o">=</span> <a href="../../modules/generated/sklearn.model_selection.TimeSeriesSplit.html#sklearn.model_selection.TimeSeriesSplit" title="sklearn.model_selection.TimeSeriesSplit" class="sphx-glr-backref-module-sklearn-model_selection sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">TimeSeriesSplit</span></a><span class="p">(</span>
+<span class="n">ts_cv</span> <span class="o">=</span> <a class="sphx-glr-backref-module-sklearn-model_selection sphx-glr-backref-type-py-class sphx-glr-backref-instance" href="../../modules/generated/sklearn.model_selection.TimeSeriesSplit.html#sklearn.model_selection.TimeSeriesSplit" title="sklearn.model_selection.TimeSeriesSplit"><span class="n">TimeSeriesSplit</span></a><span class="p">(</span>
     <span class="n">n_splits</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span>  <span class="c1"># to keep the notebook fast enough on common laptops</span>
     <span class="n">gap</span><span class="o">=</span><span class="mi">48</span><span class="p">,</span>  <span class="c1"># 2 days data gap between train and test</span>
     <span class="n">max_train_size</span><span class="o">=</span><span class="mi">10000</span><span class="p">,</span>  <span class="c1"># keep train sets of comparable sizes</span>
@@ -1783,9 +1556,9 @@ the lagged features in the training set).</p>
 <span class="n">X_train</span><span class="p">,</span> <span class="n">X_test</span> <span class="o">=</span> <span class="n">X</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="n">train_idx</span><span class="p">],</span> <span class="n">X</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="n">test_idx</span><span class="p">]</span>
 <span class="n">y_train</span><span class="p">,</span> <span class="n">y_test</span> <span class="o">=</span> <span class="n">y</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="n">train_idx</span><span class="p">],</span> <span class="n">y</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="n">test_idx</span><span class="p">]</span>
 
-<span class="n">model</span> <span class="o">=</span> <a href="../../modules/generated/sklearn.ensemble.HistGradientBoostingRegressor.html#sklearn.ensemble.HistGradientBoostingRegressor" title="sklearn.ensemble.HistGradientBoostingRegressor" class="sphx-glr-backref-module-sklearn-ensemble sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">HistGradientBoostingRegressor</span></a><span class="p">()</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X_train</span><span class="p">,</span> <span class="n">y_train</span><span class="p">)</span>
+<span class="n">model</span> <span class="o">=</span> <a class="sphx-glr-backref-module-sklearn-ensemble sphx-glr-backref-type-py-class sphx-glr-backref-instance" href="../../modules/generated/sklearn.ensemble.HistGradientBoostingRegressor.html#sklearn.ensemble.HistGradientBoostingRegressor" title="sklearn.ensemble.HistGradientBoostingRegressor"><span class="n">HistGradientBoostingRegressor</span></a><span class="p">()</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X_train</span><span class="p">,</span> <span class="n">y_train</span><span class="p">)</span>
 <span class="n">y_pred</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">X_test</span><span class="p">)</span>
-<a href="../../modules/generated/sklearn.metrics.mean_absolute_percentage_error.html#sklearn.metrics.mean_absolute_percentage_error" title="sklearn.metrics.mean_absolute_percentage_error" class="sphx-glr-backref-module-sklearn-metrics sphx-glr-backref-type-py-function"><span class="n">mean_absolute_percentage_error</span></a><span class="p">(</span><span class="n">y_test</span><span class="p">,</span> <span class="n">y_pred</span><span class="p">)</span>
+<a class="sphx-glr-backref-module-sklearn-metrics sphx-glr-backref-type-py-function" href="../../modules/generated/sklearn.metrics.mean_absolute_percentage_error.html#sklearn.metrics.mean_absolute_percentage_error" title="sklearn.metrics.mean_absolute_percentage_error"><span class="n">mean_absolute_percentage_error</span></a><span class="p">(</span><span class="n">y_test</span><span class="p">,</span> <span class="n">y_pred</span><span class="p">)</span>
 </pre></div>
 </div>
 <div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>0.44300751539296973
@@ -1796,10 +1569,10 @@ is too optimistic. The generalization via a time-based split is likely to
 be more representative of the true performance of the regression model.
 Let’s assess this variability of our error evaluation with proper
 cross-validation:</p>
-<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">sklearn.model_selection</span> <span class="kn">import</span> <a href="../../modules/generated/sklearn.model_selection.cross_val_score.html#sklearn.model_selection.cross_val_score" title="sklearn.model_selection.cross_val_score" class="sphx-glr-backref-module-sklearn-model_selection sphx-glr-backref-type-py-function"><span class="n">cross_val_score</span></a>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">sklearn.model_selection</span> <span class="kn">import</span> <a class="sphx-glr-backref-module-sklearn-model_selection sphx-glr-backref-type-py-function" href="../../modules/generated/sklearn.model_selection.cross_val_score.html#sklearn.model_selection.cross_val_score" title="sklearn.model_selection.cross_val_score"><span class="n">cross_val_score</span></a>
 
-<span class="n">cv_mape_scores</span> <span class="o">=</span> <span class="o">-</span><a href="../../modules/generated/sklearn.model_selection.cross_val_score.html#sklearn.model_selection.cross_val_score" title="sklearn.model_selection.cross_val_score" class="sphx-glr-backref-module-sklearn-model_selection sphx-glr-backref-type-py-function"><span class="n">cross_val_score</span></a><span class="p">(</span>
-    <span class="n">model</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">cv</span><span class="o">=</span><span class="n">ts_cv</span><span class="p">,</span> <span class="n">scoring</span><span class="o">=</span><span class="s2">&quot;neg_mean_absolute_percentage_error&quot;</span>
+<span class="n">cv_mape_scores</span> <span class="o">=</span> <span class="o">-</span><a class="sphx-glr-backref-module-sklearn-model_selection sphx-glr-backref-type-py-function" href="../../modules/generated/sklearn.model_selection.cross_val_score.html#sklearn.model_selection.cross_val_score" title="sklearn.model_selection.cross_val_score"><span class="n">cross_val_score</span></a><span class="p">(</span>
+    <span class="n">model</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">cv</span><span class="o">=</span><span class="n">ts_cv</span><span class="p">,</span> <span class="n">scoring</span><span class="o">=</span><span class="s2">"neg_mean_absolute_percentage_error"</span>
 <span class="p">)</span>
 <span class="n">cv_mape_scores</span>
 </pre></div>
@@ -1810,7 +1583,7 @@ cross-validation:</p>
 <p>The variability across splits is quite large! In a real life setting
 it would be advised to use more splits to better assess the variability.
 Let’s report the mean CV scores and their standard deviation from now on.</p>
-<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;CV MAPE: </span><span class="si">{</span><span class="n">cv_mape_scores</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span><span class="si">:</span><span class="s2">.3f</span><span class="si">}</span><span class="s2"> ± </span><span class="si">{</span><span class="n">cv_mape_scores</span><span class="o">.</span><span class="n">std</span><span class="p">()</span><span class="si">:</span><span class="s2">.3f</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"CV MAPE: </span><span class="si">{</span><span class="n">cv_mape_scores</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span><span class="si">:</span><span class="s2">.3f</span><span class="si">}</span><span class="s2"> ± </span><span class="si">{</span><span class="n">cv_mape_scores</span><span class="o">.</span><span class="n">std</span><span class="p">()</span><span class="si">:</span><span class="s2">.3f</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
 </pre></div>
 </div>
 <div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>CV MAPE: 0.363 ± 0.068
@@ -1818,39 +1591,39 @@ Let’s report the mean CV scores and their standard deviation from now on.</p>
 </div>
 <p>We can compute several combinations of evaluation metrics and loss functions,
 which are reported a bit below.</p>
-<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">collections</span> <span class="kn">import</span> <a href="https://docs.python.org/3/library/collections.html#collections.defaultdict" title="collections.defaultdict" class="sphx-glr-backref-module-collections sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">defaultdict</span></a>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">collections</span> <span class="kn">import</span> <a class="sphx-glr-backref-module-collections sphx-glr-backref-type-py-class sphx-glr-backref-instance" href="https://docs.python.org/3/library/collections.html#collections.defaultdict" title="collections.defaultdict"><span class="n">defaultdict</span></a>
 
 <span class="kn">from</span> <span class="nn">sklearn.metrics</span> <span class="kn">import</span> <span class="p">(</span>
-    <a href="../../modules/generated/sklearn.metrics.make_scorer.html#sklearn.metrics.make_scorer" title="sklearn.metrics.make_scorer" class="sphx-glr-backref-module-sklearn-metrics sphx-glr-backref-type-py-function"><span class="n">make_scorer</span></a><span class="p">,</span>
-    <a href="../../modules/generated/sklearn.metrics.mean_absolute_error.html#sklearn.metrics.mean_absolute_error" title="sklearn.metrics.mean_absolute_error" class="sphx-glr-backref-module-sklearn-metrics sphx-glr-backref-type-py-function"><span class="n">mean_absolute_error</span></a><span class="p">,</span>
-    <a href="../../modules/generated/sklearn.metrics.mean_pinball_loss.html#sklearn.metrics.mean_pinball_loss" title="sklearn.metrics.mean_pinball_loss" class="sphx-glr-backref-module-sklearn-metrics sphx-glr-backref-type-py-function"><span class="n">mean_pinball_loss</span></a><span class="p">,</span>
-    <a href="../../modules/generated/sklearn.metrics.root_mean_squared_error.html#sklearn.metrics.root_mean_squared_error" title="sklearn.metrics.root_mean_squared_error" class="sphx-glr-backref-module-sklearn-metrics sphx-glr-backref-type-py-function"><span class="n">root_mean_squared_error</span></a><span class="p">,</span>
+    <a class="sphx-glr-backref-module-sklearn-metrics sphx-glr-backref-type-py-function" href="../../modules/generated/sklearn.metrics.make_scorer.html#sklearn.metrics.make_scorer" title="sklearn.metrics.make_scorer"><span class="n">make_scorer</span></a><span class="p">,</span>
+    <a class="sphx-glr-backref-module-sklearn-metrics sphx-glr-backref-type-py-function" href="../../modules/generated/sklearn.metrics.mean_absolute_error.html#sklearn.metrics.mean_absolute_error" title="sklearn.metrics.mean_absolute_error"><span class="n">mean_absolute_error</span></a><span class="p">,</span>
+    <a class="sphx-glr-backref-module-sklearn-metrics sphx-glr-backref-type-py-function" href="../../modules/generated/sklearn.metrics.mean_pinball_loss.html#sklearn.metrics.mean_pinball_loss" title="sklearn.metrics.mean_pinball_loss"><span class="n">mean_pinball_loss</span></a><span class="p">,</span>
+    <a class="sphx-glr-backref-module-sklearn-metrics sphx-glr-backref-type-py-function" href="../../modules/generated/sklearn.metrics.root_mean_squared_error.html#sklearn.metrics.root_mean_squared_error" title="sklearn.metrics.root_mean_squared_error"><span class="n">root_mean_squared_error</span></a><span class="p">,</span>
 <span class="p">)</span>
-<span class="kn">from</span> <span class="nn">sklearn.model_selection</span> <span class="kn">import</span> <a href="../../modules/generated/sklearn.model_selection.cross_validate.html#sklearn.model_selection.cross_validate" title="sklearn.model_selection.cross_validate" class="sphx-glr-backref-module-sklearn-model_selection sphx-glr-backref-type-py-function"><span class="n">cross_validate</span></a>
+<span class="kn">from</span> <span class="nn">sklearn.model_selection</span> <span class="kn">import</span> <a class="sphx-glr-backref-module-sklearn-model_selection sphx-glr-backref-type-py-function" href="../../modules/generated/sklearn.model_selection.cross_validate.html#sklearn.model_selection.cross_validate" title="sklearn.model_selection.cross_validate"><span class="n">cross_validate</span></a>
 
 
 <span class="k">def</span> <span class="nf">consolidate_scores</span><span class="p">(</span><span class="n">cv_results</span><span class="p">,</span> <span class="n">scores</span><span class="p">,</span> <span class="n">metric</span><span class="p">):</span>
-    <span class="k">if</span> <span class="n">metric</span> <span class="o">==</span> <span class="s2">&quot;MAPE&quot;</span><span class="p">:</span>
-        <span class="n">scores</span><span class="p">[</span><span class="n">metric</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">value</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2"> ± </span><span class="si">{</span><span class="n">value</span><span class="o">.</span><span class="n">std</span><span class="p">()</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">metric</span> <span class="o">==</span> <span class="s2">"MAPE"</span><span class="p">:</span>
+        <span class="n">scores</span><span class="p">[</span><span class="n">metric</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">value</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2"> ± </span><span class="si">{</span><span class="n">value</span><span class="o">.</span><span class="n">std</span><span class="p">()</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
     <span class="k">else</span><span class="p">:</span>
-        <span class="n">scores</span><span class="p">[</span><span class="n">metric</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">value</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span><span class="si">:</span><span class="s2">.1f</span><span class="si">}</span><span class="s2"> ± </span><span class="si">{</span><span class="n">value</span><span class="o">.</span><span class="n">std</span><span class="p">()</span><span class="si">:</span><span class="s2">.1f</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="n">scores</span><span class="p">[</span><span class="n">metric</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">value</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span><span class="si">:</span><span class="s2">.1f</span><span class="si">}</span><span class="s2"> ± </span><span class="si">{</span><span class="n">value</span><span class="o">.</span><span class="n">std</span><span class="p">()</span><span class="si">:</span><span class="s2">.1f</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
 
     <span class="k">return</span> <span class="n">scores</span>
 
 
 <span class="n">scoring</span> <span class="o">=</span> <span class="p">{</span>
-    <span class="s2">&quot;MAPE&quot;</span><span class="p">:</span> <a href="../../modules/generated/sklearn.metrics.make_scorer.html#sklearn.metrics.make_scorer" title="sklearn.metrics.make_scorer" class="sphx-glr-backref-module-sklearn-metrics sphx-glr-backref-type-py-function"><span class="n">make_scorer</span></a><span class="p">(</span><a href="../../modules/generated/sklearn.metrics.mean_absolute_percentage_error.html#sklearn.metrics.mean_absolute_percentage_error" title="sklearn.metrics.mean_absolute_percentage_error" class="sphx-glr-backref-module-sklearn-metrics sphx-glr-backref-type-py-function"><span class="n">mean_absolute_percentage_error</span></a><span class="p">),</span>
-    <span class="s2">&quot;RMSE&quot;</span><span class="p">:</span> <a href="../../modules/generated/sklearn.metrics.make_scorer.html#sklearn.metrics.make_scorer" title="sklearn.metrics.make_scorer" class="sphx-glr-backref-module-sklearn-metrics sphx-glr-backref-type-py-function"><span class="n">make_scorer</span></a><span class="p">(</span><a href="../../modules/generated/sklearn.metrics.root_mean_squared_error.html#sklearn.metrics.root_mean_squared_error" title="sklearn.metrics.root_mean_squared_error" class="sphx-glr-backref-module-sklearn-metrics sphx-glr-backref-type-py-function"><span class="n">root_mean_squared_error</span></a><span class="p">),</span>
-    <span class="s2">&quot;MAE&quot;</span><span class="p">:</span> <a href="../../modules/generated/sklearn.metrics.make_scorer.html#sklearn.metrics.make_scorer" title="sklearn.metrics.make_scorer" class="sphx-glr-backref-module-sklearn-metrics sphx-glr-backref-type-py-function"><span class="n">make_scorer</span></a><span class="p">(</span><a href="../../modules/generated/sklearn.metrics.mean_absolute_error.html#sklearn.metrics.mean_absolute_error" title="sklearn.metrics.mean_absolute_error" class="sphx-glr-backref-module-sklearn-metrics sphx-glr-backref-type-py-function"><span class="n">mean_absolute_error</span></a><span class="p">),</span>
-    <span class="s2">&quot;pinball_loss_05&quot;</span><span class="p">:</span> <a href="../../modules/generated/sklearn.metrics.make_scorer.html#sklearn.metrics.make_scorer" title="sklearn.metrics.make_scorer" class="sphx-glr-backref-module-sklearn-metrics sphx-glr-backref-type-py-function"><span class="n">make_scorer</span></a><span class="p">(</span><a href="../../modules/generated/sklearn.metrics.mean_pinball_loss.html#sklearn.metrics.mean_pinball_loss" title="sklearn.metrics.mean_pinball_loss" class="sphx-glr-backref-module-sklearn-metrics sphx-glr-backref-type-py-function"><span class="n">mean_pinball_loss</span></a><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.05</span><span class="p">),</span>
-    <span class="s2">&quot;pinball_loss_50&quot;</span><span class="p">:</span> <a href="../../modules/generated/sklearn.metrics.make_scorer.html#sklearn.metrics.make_scorer" title="sklearn.metrics.make_scorer" class="sphx-glr-backref-module-sklearn-metrics sphx-glr-backref-type-py-function"><span class="n">make_scorer</span></a><span class="p">(</span><a href="../../modules/generated/sklearn.metrics.mean_pinball_loss.html#sklearn.metrics.mean_pinball_loss" title="sklearn.metrics.mean_pinball_loss" class="sphx-glr-backref-module-sklearn-metrics sphx-glr-backref-type-py-function"><span class="n">mean_pinball_loss</span></a><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.50</span><span class="p">),</span>
-    <span class="s2">&quot;pinball_loss_95&quot;</span><span class="p">:</span> <a href="../../modules/generated/sklearn.metrics.make_scorer.html#sklearn.metrics.make_scorer" title="sklearn.metrics.make_scorer" class="sphx-glr-backref-module-sklearn-metrics sphx-glr-backref-type-py-function"><span class="n">make_scorer</span></a><span class="p">(</span><a href="../../modules/generated/sklearn.metrics.mean_pinball_loss.html#sklearn.metrics.mean_pinball_loss" title="sklearn.metrics.mean_pinball_loss" class="sphx-glr-backref-module-sklearn-metrics sphx-glr-backref-type-py-function"><span class="n">mean_pinball_loss</span></a><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.95</span><span class="p">),</span>
+    <span class="s2">"MAPE"</span><span class="p">:</span> <a class="sphx-glr-backref-module-sklearn-metrics sphx-glr-backref-type-py-function" href="../../modules/generated/sklearn.metrics.make_scorer.html#sklearn.metrics.make_scorer" title="sklearn.metrics.make_scorer"><span class="n">make_scorer</span></a><span class="p">(</span><a class="sphx-glr-backref-module-sklearn-metrics sphx-glr-backref-type-py-function" href="../../modules/generated/sklearn.metrics.mean_absolute_percentage_error.html#sklearn.metrics.mean_absolute_percentage_error" title="sklearn.metrics.mean_absolute_percentage_error"><span class="n">mean_absolute_percentage_error</span></a><span class="p">),</span>
+    <span class="s2">"RMSE"</span><span class="p">:</span> <a class="sphx-glr-backref-module-sklearn-metrics sphx-glr-backref-type-py-function" href="../../modules/generated/sklearn.metrics.make_scorer.html#sklearn.metrics.make_scorer" title="sklearn.metrics.make_scorer"><span class="n">make_scorer</span></a><span class="p">(</span><a class="sphx-glr-backref-module-sklearn-metrics sphx-glr-backref-type-py-function" href="../../modules/generated/sklearn.metrics.root_mean_squared_error.html#sklearn.metrics.root_mean_squared_error" title="sklearn.metrics.root_mean_squared_error"><span class="n">root_mean_squared_error</span></a><span class="p">),</span>
+    <span class="s2">"MAE"</span><span class="p">:</span> <a class="sphx-glr-backref-module-sklearn-metrics sphx-glr-backref-type-py-function" href="../../modules/generated/sklearn.metrics.make_scorer.html#sklearn.metrics.make_scorer" title="sklearn.metrics.make_scorer"><span class="n">make_scorer</span></a><span class="p">(</span><a class="sphx-glr-backref-module-sklearn-metrics sphx-glr-backref-type-py-function" href="../../modules/generated/sklearn.metrics.mean_absolute_error.html#sklearn.metrics.mean_absolute_error" title="sklearn.metrics.mean_absolute_error"><span class="n">mean_absolute_error</span></a><span class="p">),</span>
+    <span class="s2">"pinball_loss_05"</span><span class="p">:</span> <a class="sphx-glr-backref-module-sklearn-metrics sphx-glr-backref-type-py-function" href="../../modules/generated/sklearn.metrics.make_scorer.html#sklearn.metrics.make_scorer" title="sklearn.metrics.make_scorer"><span class="n">make_scorer</span></a><span class="p">(</span><a class="sphx-glr-backref-module-sklearn-metrics sphx-glr-backref-type-py-function" href="../../modules/generated/sklearn.metrics.mean_pinball_loss.html#sklearn.metrics.mean_pinball_loss" title="sklearn.metrics.mean_pinball_loss"><span class="n">mean_pinball_loss</span></a><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.05</span><span class="p">),</span>
+    <span class="s2">"pinball_loss_50"</span><span class="p">:</span> <a class="sphx-glr-backref-module-sklearn-metrics sphx-glr-backref-type-py-function" href="../../modules/generated/sklearn.metrics.make_scorer.html#sklearn.metrics.make_scorer" title="sklearn.metrics.make_scorer"><span class="n">make_scorer</span></a><span class="p">(</span><a class="sphx-glr-backref-module-sklearn-metrics sphx-glr-backref-type-py-function" href="../../modules/generated/sklearn.metrics.mean_pinball_loss.html#sklearn.metrics.mean_pinball_loss" title="sklearn.metrics.mean_pinball_loss"><span class="n">mean_pinball_loss</span></a><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.50</span><span class="p">),</span>
+    <span class="s2">"pinball_loss_95"</span><span class="p">:</span> <a class="sphx-glr-backref-module-sklearn-metrics sphx-glr-backref-type-py-function" href="../../modules/generated/sklearn.metrics.make_scorer.html#sklearn.metrics.make_scorer" title="sklearn.metrics.make_scorer"><span class="n">make_scorer</span></a><span class="p">(</span><a class="sphx-glr-backref-module-sklearn-metrics sphx-glr-backref-type-py-function" href="../../modules/generated/sklearn.metrics.mean_pinball_loss.html#sklearn.metrics.mean_pinball_loss" title="sklearn.metrics.mean_pinball_loss"><span class="n">mean_pinball_loss</span></a><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.95</span><span class="p">),</span>
 <span class="p">}</span>
-<span class="n">loss_functions</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;squared_error&quot;</span><span class="p">,</span> <span class="s2">&quot;poisson&quot;</span><span class="p">,</span> <span class="s2">&quot;absolute_error&quot;</span><span class="p">]</span>
-<span class="n">scores</span> <span class="o">=</span> <a href="https://docs.python.org/3/library/collections.html#collections.defaultdict" title="collections.defaultdict" class="sphx-glr-backref-module-collections sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">defaultdict</span></a><span class="p">(</span><span class="nb">list</span><span class="p">)</span>
+<span class="n">loss_functions</span> <span class="o">=</span> <span class="p">[</span><span class="s2">"squared_error"</span><span class="p">,</span> <span class="s2">"poisson"</span><span class="p">,</span> <span class="s2">"absolute_error"</span><span class="p">]</span>
+<span class="n">scores</span> <span class="o">=</span> <a class="sphx-glr-backref-module-collections sphx-glr-backref-type-py-class sphx-glr-backref-instance" href="https://docs.python.org/3/library/collections.html#collections.defaultdict" title="collections.defaultdict"><span class="n">defaultdict</span></a><span class="p">(</span><span class="nb">list</span><span class="p">)</span>
 <span class="k">for</span> <span class="n">loss_func</span> <span class="ow">in</span> <span class="n">loss_functions</span><span class="p">:</span>
-    <span class="n">model</span> <span class="o">=</span> <a href="../../modules/generated/sklearn.ensemble.HistGradientBoostingRegressor.html#sklearn.ensemble.HistGradientBoostingRegressor" title="sklearn.ensemble.HistGradientBoostingRegressor" class="sphx-glr-backref-module-sklearn-ensemble sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">HistGradientBoostingRegressor</span></a><span class="p">(</span><span class="n">loss</span><span class="o">=</span><span class="n">loss_func</span><span class="p">)</span>
-    <span class="n">cv_results</span> <span class="o">=</span> <a href="../../modules/generated/sklearn.model_selection.cross_validate.html#sklearn.model_selection.cross_validate" title="sklearn.model_selection.cross_validate" class="sphx-glr-backref-module-sklearn-model_selection sphx-glr-backref-type-py-function"><span class="n">cross_validate</span></a><span class="p">(</span>
+    <span class="n">model</span> <span class="o">=</span> <a class="sphx-glr-backref-module-sklearn-ensemble sphx-glr-backref-type-py-class sphx-glr-backref-instance" href="../../modules/generated/sklearn.ensemble.HistGradientBoostingRegressor.html#sklearn.ensemble.HistGradientBoostingRegressor" title="sklearn.ensemble.HistGradientBoostingRegressor"><span class="n">HistGradientBoostingRegressor</span></a><span class="p">(</span><span class="n">loss</span><span class="o">=</span><span class="n">loss_func</span><span class="p">)</span>
+    <span class="n">cv_results</span> <span class="o">=</span> <a class="sphx-glr-backref-module-sklearn-model_selection sphx-glr-backref-type-py-function" href="../../modules/generated/sklearn.model_selection.cross_validate.html#sklearn.model_selection.cross_validate" title="sklearn.model_selection.cross_validate"><span class="n">cross_validate</span></a><span class="p">(</span>
         <span class="n">model</span><span class="p">,</span>
         <span class="n">X</span><span class="p">,</span>
         <span class="n">y</span><span class="p">,</span>
@@ -1858,13 +1631,13 @@ which are reported a bit below.</p>
         <span class="n">scoring</span><span class="o">=</span><span class="n">scoring</span><span class="p">,</span>
         <span class="n">n_jobs</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span>
     <span class="p">)</span>
-    <span class="n">time</span> <span class="o">=</span> <span class="n">cv_results</span><span class="p">[</span><span class="s2">&quot;fit_time&quot;</span><span class="p">]</span>
-    <span class="n">scores</span><span class="p">[</span><span class="s2">&quot;loss&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">loss_func</span><span class="p">)</span>
-    <span class="n">scores</span><span class="p">[</span><span class="s2">&quot;fit_time&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">time</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2"> ± </span><span class="si">{</span><span class="n">time</span><span class="o">.</span><span class="n">std</span><span class="p">()</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2"> s&quot;</span><span class="p">)</span>
+    <span class="n">time</span> <span class="o">=</span> <span class="n">cv_results</span><span class="p">[</span><span class="s2">"fit_time"</span><span class="p">]</span>
+    <span class="n">scores</span><span class="p">[</span><span class="s2">"loss"</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">loss_func</span><span class="p">)</span>
+    <span class="n">scores</span><span class="p">[</span><span class="s2">"fit_time"</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">time</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2"> ± </span><span class="si">{</span><span class="n">time</span><span class="o">.</span><span class="n">std</span><span class="p">()</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2"> s"</span><span class="p">)</span>
 
     <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">cv_results</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
-        <span class="k">if</span> <span class="n">key</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">&quot;test_&quot;</span><span class="p">):</span>
-            <span class="n">metric</span> <span class="o">=</span> <span class="n">key</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;test_&quot;</span><span class="p">)[</span><span class="mi">1</span><span class="p">]</span>
+        <span class="k">if</span> <span class="n">key</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">"test_"</span><span class="p">):</span>
+            <span class="n">metric</span> <span class="o">=</span> <span class="n">key</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">"test_"</span><span class="p">)[</span><span class="mi">1</span><span class="p">]</span>
             <span class="n">scores</span> <span class="o">=</span> <span class="n">consolidate_scores</span><span class="p">(</span><span class="n">cv_results</span><span class="p">,</span> <span class="n">scores</span><span class="p">,</span> <span class="n">metric</span><span class="p">)</span>
 </pre></div>
 </div>
@@ -1886,8 +1659,8 @@ distribution without making strong assumptions on its shape.</p>
 <div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">quantile_list</span> <span class="o">=</span> <span class="p">[</span><span class="mf">0.05</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">,</span> <span class="mf">0.95</span><span class="p">]</span>
 
 <span class="k">for</span> <span class="n">quantile</span> <span class="ow">in</span> <span class="n">quantile_list</span><span class="p">:</span>
-    <span class="n">model</span> <span class="o">=</span> <a href="../../modules/generated/sklearn.ensemble.HistGradientBoostingRegressor.html#sklearn.ensemble.HistGradientBoostingRegressor" title="sklearn.ensemble.HistGradientBoostingRegressor" class="sphx-glr-backref-module-sklearn-ensemble sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">HistGradientBoostingRegressor</span></a><span class="p">(</span><span class="n">loss</span><span class="o">=</span><span class="s2">&quot;quantile&quot;</span><span class="p">,</span> <span class="n">quantile</span><span class="o">=</span><span class="n">quantile</span><span class="p">)</span>
-    <span class="n">cv_results</span> <span class="o">=</span> <a href="../../modules/generated/sklearn.model_selection.cross_validate.html#sklearn.model_selection.cross_validate" title="sklearn.model_selection.cross_validate" class="sphx-glr-backref-module-sklearn-model_selection sphx-glr-backref-type-py-function"><span class="n">cross_validate</span></a><span class="p">(</span>
+    <span class="n">model</span> <span class="o">=</span> <a class="sphx-glr-backref-module-sklearn-ensemble sphx-glr-backref-type-py-class sphx-glr-backref-instance" href="../../modules/generated/sklearn.ensemble.HistGradientBoostingRegressor.html#sklearn.ensemble.HistGradientBoostingRegressor" title="sklearn.ensemble.HistGradientBoostingRegressor"><span class="n">HistGradientBoostingRegressor</span></a><span class="p">(</span><span class="n">loss</span><span class="o">=</span><span class="s2">"quantile"</span><span class="p">,</span> <span class="n">quantile</span><span class="o">=</span><span class="n">quantile</span><span class="p">)</span>
+    <span class="n">cv_results</span> <span class="o">=</span> <a class="sphx-glr-backref-module-sklearn-model_selection sphx-glr-backref-type-py-function" href="../../modules/generated/sklearn.model_selection.cross_validate.html#sklearn.model_selection.cross_validate" title="sklearn.model_selection.cross_validate"><span class="n">cross_validate</span></a><span class="p">(</span>
         <span class="n">model</span><span class="p">,</span>
         <span class="n">X</span><span class="p">,</span>
         <span class="n">y</span><span class="p">,</span>
@@ -1895,40 +1668,40 @@ distribution without making strong assumptions on its shape.</p>
         <span class="n">scoring</span><span class="o">=</span><span class="n">scoring</span><span class="p">,</span>
         <span class="n">n_jobs</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span>
     <span class="p">)</span>
-    <span class="n">time</span> <span class="o">=</span> <span class="n">cv_results</span><span class="p">[</span><span class="s2">&quot;fit_time&quot;</span><span class="p">]</span>
-    <span class="n">scores</span><span class="p">[</span><span class="s2">&quot;fit_time&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">time</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2"> ± </span><span class="si">{</span><span class="n">time</span><span class="o">.</span><span class="n">std</span><span class="p">()</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2"> s&quot;</span><span class="p">)</span>
+    <span class="n">time</span> <span class="o">=</span> <span class="n">cv_results</span><span class="p">[</span><span class="s2">"fit_time"</span><span class="p">]</span>
+    <span class="n">scores</span><span class="p">[</span><span class="s2">"fit_time"</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">time</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2"> ± </span><span class="si">{</span><span class="n">time</span><span class="o">.</span><span class="n">std</span><span class="p">()</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2"> s"</span><span class="p">)</span>
 
-    <span class="n">scores</span><span class="p">[</span><span class="s2">&quot;loss&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;quantile </span><span class="si">{</span><span class="nb">int</span><span class="p">(</span><span class="n">quantile</span><span class="o">*</span><span class="mi">100</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="n">scores</span><span class="p">[</span><span class="s2">"loss"</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="sa">f</span><span class="s2">"quantile </span><span class="si">{</span><span class="nb">int</span><span class="p">(</span><span class="n">quantile</span><span class="o">*</span><span class="mi">100</span><span class="p">)</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
     <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">cv_results</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
-        <span class="k">if</span> <span class="n">key</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">&quot;test_&quot;</span><span class="p">):</span>
-            <span class="n">metric</span> <span class="o">=</span> <span class="n">key</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;test_&quot;</span><span class="p">)[</span><span class="mi">1</span><span class="p">]</span>
+        <span class="k">if</span> <span class="n">key</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">"test_"</span><span class="p">):</span>
+            <span class="n">metric</span> <span class="o">=</span> <span class="n">key</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">"test_"</span><span class="p">)[</span><span class="mi">1</span><span class="p">]</span>
             <span class="n">scores</span> <span class="o">=</span> <span class="n">consolidate_scores</span><span class="p">(</span><span class="n">cv_results</span><span class="p">,</span> <span class="n">scores</span><span class="p">,</span> <span class="n">metric</span><span class="p">)</span>
 
-<span class="n">df</span> <span class="o">=</span> <a href="https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.DataFrame.html#pandas.DataFrame" title="pandas.DataFrame" class="sphx-glr-backref-module-pandas sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span></a><span class="p">(</span><span class="n">scores</span><span class="p">)</span>
+<span class="n">df</span> <span class="o">=</span> <a class="sphx-glr-backref-module-pandas sphx-glr-backref-type-py-class sphx-glr-backref-instance" href="https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.DataFrame.html#pandas.DataFrame" title="pandas.DataFrame"><span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span></a><span class="p">(</span><span class="n">scores</span><span class="p">)</span>
 
 <span class="n">styled_df_copy</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
 
 
 <span class="k">def</span> <span class="nf">extract_numeric</span><span class="p">(</span><span class="n">value</span><span class="p">):</span>
-    <span class="n">parts</span> <span class="o">=</span> <span class="n">value</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;±&quot;</span><span class="p">)</span>
+    <span class="n">parts</span> <span class="o">=</span> <span class="n">value</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">"±"</span><span class="p">)</span>
     <span class="n">mean_value</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">parts</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
     <span class="n">std_value</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">parts</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">split</span><span class="p">()[</span><span class="mi">0</span><span class="p">])</span>
 
     <span class="k">return</span> <span class="n">mean_value</span><span class="p">,</span> <span class="n">std_value</span>
 
 
-<span class="c1"># Convert columns containing &quot;±&quot; to tuples of numerical values</span>
-<span class="n">cols_to_convert</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">columns</span><span class="p">[</span><span class="mi">1</span><span class="p">:]</span>  <span class="c1"># Exclude the &quot;loss&quot; column</span>
+<span class="c1"># Convert columns containing "±" to tuples of numerical values</span>
+<span class="n">cols_to_convert</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">columns</span><span class="p">[</span><span class="mi">1</span><span class="p">:]</span>  <span class="c1"># Exclude the "loss" column</span>
 <span class="k">for</span> <span class="n">col</span> <span class="ow">in</span> <span class="n">cols_to_convert</span><span class="p">:</span>
     <span class="n">df</span><span class="p">[</span><span class="n">col</span><span class="p">]</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="n">col</span><span class="p">]</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="n">extract_numeric</span><span class="p">)</span>
 
 <span class="n">min_values</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">min</span><span class="p">()</span>
 
 <span class="c1"># Create a mask for highlighting minimum values</span>
-<span class="n">mask</span> <span class="o">=</span> <a href="https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.DataFrame.html#pandas.DataFrame" title="pandas.DataFrame" class="sphx-glr-backref-module-pandas sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span></a><span class="p">(</span><span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="n">df</span><span class="o">.</span><span class="n">index</span><span class="p">,</span> <span class="n">columns</span><span class="o">=</span><span class="n">df</span><span class="o">.</span><span class="n">columns</span><span class="p">)</span>
+<span class="n">mask</span> <span class="o">=</span> <a class="sphx-glr-backref-module-pandas sphx-glr-backref-type-py-class sphx-glr-backref-instance" href="https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.DataFrame.html#pandas.DataFrame" title="pandas.DataFrame"><span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span></a><span class="p">(</span><span class="s2">""</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="n">df</span><span class="o">.</span><span class="n">index</span><span class="p">,</span> <span class="n">columns</span><span class="o">=</span><span class="n">df</span><span class="o">.</span><span class="n">columns</span><span class="p">)</span>
 <span class="k">for</span> <span class="n">col</span> <span class="ow">in</span> <span class="n">cols_to_convert</span><span class="p">:</span>
     <span class="n">mask</span><span class="p">[</span><span class="n">col</span><span class="p">]</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="n">col</span><span class="p">]</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span>
-        <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="s2">&quot;font-weight: bold&quot;</span> <span class="k">if</span> <span class="n">x</span> <span class="o">==</span> <span class="n">min_values</span><span class="p">[</span><span class="n">col</span><span class="p">]</span> <span class="k">else</span> <span class="s2">&quot;&quot;</span>
+        <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="s2">"font-weight: bold"</span> <span class="k">if</span> <span class="n">x</span> <span class="o">==</span> <span class="n">min_values</span><span class="p">[</span><span class="n">col</span><span class="p">]</span> <span class="k">else</span> <span class="s2">""</span>
     <span class="p">)</span>
 
 <span class="n">styled_df_copy</span> <span class="o">=</span> <span class="n">styled_df_copy</span><span class="o">.</span><span class="n">style</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">mask</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
@@ -1937,99 +1710,98 @@ distribution without making strong assumptions on its shape.</p>
 </div>
 <div class="output_subarea output_html rendered_html output_result">
 <style type="text/css">
-#T_fa322_row0_col1, #T_fa322_row0_col3, #T_fa322_row0_col4, #T_fa322_row0_col6, #T_fa322_row2_col2, #T_fa322_row3_col5, #T_fa322_row4_col2, #T_fa322_row5_col7 {
+#T_d1467_row0_col1, #T_d1467_row0_col3, #T_d1467_row0_col4, #T_d1467_row0_col6, #T_d1467_row2_col2, #T_d1467_row3_col5, #T_d1467_row4_col2, #T_d1467_row5_col7 {
   font-weight: bold;
 }
 </style>
-<table id="T_fa322">
-  <thead>
-    <tr>
-      <th class="blank level0" >&nbsp;</th>
-      <th id="T_fa322_level0_col0" class="col_heading level0 col0" >loss</th>
-      <th id="T_fa322_level0_col1" class="col_heading level0 col1" >fit_time</th>
-      <th id="T_fa322_level0_col2" class="col_heading level0 col2" >MAPE</th>
-      <th id="T_fa322_level0_col3" class="col_heading level0 col3" >RMSE</th>
-      <th id="T_fa322_level0_col4" class="col_heading level0 col4" >MAE</th>
-      <th id="T_fa322_level0_col5" class="col_heading level0 col5" >pinball_loss_05</th>
-      <th id="T_fa322_level0_col6" class="col_heading level0 col6" >pinball_loss_50</th>
-      <th id="T_fa322_level0_col7" class="col_heading level0 col7" >pinball_loss_95</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <th id="T_fa322_level0_row0" class="row_heading level0 row0" >0</th>
-      <td id="T_fa322_row0_col0" class="data row0 col0" >squared_error</td>
-      <td id="T_fa322_row0_col1" class="data row0 col1" >0.34 ± 0.01 s</td>
-      <td id="T_fa322_row0_col2" class="data row0 col2" >0.36 ± 0.07</td>
-      <td id="T_fa322_row0_col3" class="data row0 col3" >62.3 ± 3.5</td>
-      <td id="T_fa322_row0_col4" class="data row0 col4" >39.1 ± 2.3</td>
-      <td id="T_fa322_row0_col5" class="data row0 col5" >17.7 ± 1.3</td>
-      <td id="T_fa322_row0_col6" class="data row0 col6" >19.5 ± 1.1</td>
-      <td id="T_fa322_row0_col7" class="data row0 col7" >21.4 ± 2.4</td>
-    </tr>
-    <tr>
-      <th id="T_fa322_level0_row1" class="row_heading level0 row1" >1</th>
-      <td id="T_fa322_row1_col0" class="data row1 col0" >poisson</td>
-      <td id="T_fa322_row1_col1" class="data row1 col1" >0.38 ± 0.02 s</td>
-      <td id="T_fa322_row1_col2" class="data row1 col2" >0.32 ± 0.07</td>
-      <td id="T_fa322_row1_col3" class="data row1 col3" >64.2 ± 4.0</td>
-      <td id="T_fa322_row1_col4" class="data row1 col4" >39.3 ± 2.8</td>
-      <td id="T_fa322_row1_col5" class="data row1 col5" >16.7 ± 1.5</td>
-      <td id="T_fa322_row1_col6" class="data row1 col6" >19.7 ± 1.4</td>
-      <td id="T_fa322_row1_col7" class="data row1 col7" >22.6 ± 3.0</td>
-    </tr>
-    <tr>
-      <th id="T_fa322_level0_row2" class="row_heading level0 row2" >2</th>
-      <td id="T_fa322_row2_col0" class="data row2 col0" >absolute_error</td>
-      <td id="T_fa322_row2_col1" class="data row2 col1" >0.49 ± 0.01 s</td>
-      <td id="T_fa322_row2_col2" class="data row2 col2" >0.32 ± 0.06</td>
-      <td id="T_fa322_row2_col3" class="data row2 col3" >64.6 ± 3.8</td>
-      <td id="T_fa322_row2_col4" class="data row2 col4" >39.9 ± 3.2</td>
-      <td id="T_fa322_row2_col5" class="data row2 col5" >17.1 ± 1.1</td>
-      <td id="T_fa322_row2_col6" class="data row2 col6" >19.9 ± 1.6</td>
-      <td id="T_fa322_row2_col7" class="data row2 col7" >22.7 ± 3.1</td>
-    </tr>
-    <tr>
-      <th id="T_fa322_level0_row3" class="row_heading level0 row3" >3</th>
-      <td id="T_fa322_row3_col0" class="data row3 col0" >quantile 5</td>
-      <td id="T_fa322_row3_col1" class="data row3 col1" >0.70 ± 0.09 s</td>
-      <td id="T_fa322_row3_col2" class="data row3 col2" >0.41 ± 0.01</td>
-      <td id="T_fa322_row3_col3" class="data row3 col3" >145.6 ± 20.9</td>
-      <td id="T_fa322_row3_col4" class="data row3 col4" >92.5 ± 16.2</td>
-      <td id="T_fa322_row3_col5" class="data row3 col5" >5.9 ± 0.9</td>
-      <td id="T_fa322_row3_col6" class="data row3 col6" >46.2 ± 8.1</td>
-      <td id="T_fa322_row3_col7" class="data row3 col7" >86.6 ± 15.3</td>
-    </tr>
-    <tr>
-      <th id="T_fa322_level0_row4" class="row_heading level0 row4" >4</th>
-      <td id="T_fa322_row4_col0" class="data row4 col0" >quantile 50</td>
-      <td id="T_fa322_row4_col1" class="data row4 col1" >0.78 ± 0.08 s</td>
-      <td id="T_fa322_row4_col2" class="data row4 col2" >0.32 ± 0.06</td>
-      <td id="T_fa322_row4_col3" class="data row4 col3" >64.6 ± 3.8</td>
-      <td id="T_fa322_row4_col4" class="data row4 col4" >39.9 ± 3.2</td>
-      <td id="T_fa322_row4_col5" class="data row4 col5" >17.1 ± 1.1</td>
-      <td id="T_fa322_row4_col6" class="data row4 col6" >19.9 ± 1.6</td>
-      <td id="T_fa322_row4_col7" class="data row4 col7" >22.7 ± 3.1</td>
-    </tr>
-    <tr>
-      <th id="T_fa322_level0_row5" class="row_heading level0 row5" >5</th>
-      <td id="T_fa322_row5_col0" class="data row5 col0" >quantile 95</td>
-      <td id="T_fa322_row5_col1" class="data row5 col1" >0.69 ± 0.06 s</td>
-      <td id="T_fa322_row5_col2" class="data row5 col2" >1.07 ± 0.27</td>
-      <td id="T_fa322_row5_col3" class="data row5 col3" >99.6 ± 8.7</td>
-      <td id="T_fa322_row5_col4" class="data row5 col4" >72.0 ± 6.1</td>
-      <td id="T_fa322_row5_col5" class="data row5 col5" >62.9 ± 7.4</td>
-      <td id="T_fa322_row5_col6" class="data row5 col6" >36.0 ± 3.1</td>
-      <td id="T_fa322_row5_col7" class="data row5 col7" >9.1 ± 1.3</td>
-    </tr>
-  </tbody>
+<table id="T_d1467">
+<thead>
+<tr>
+<th class="blank level0"> </th>
+<th class="col_heading level0 col0" id="T_d1467_level0_col0">loss</th>
+<th class="col_heading level0 col1" id="T_d1467_level0_col1">fit_time</th>
+<th class="col_heading level0 col2" id="T_d1467_level0_col2">MAPE</th>
+<th class="col_heading level0 col3" id="T_d1467_level0_col3">RMSE</th>
+<th class="col_heading level0 col4" id="T_d1467_level0_col4">MAE</th>
+<th class="col_heading level0 col5" id="T_d1467_level0_col5">pinball_loss_05</th>
+<th class="col_heading level0 col6" id="T_d1467_level0_col6">pinball_loss_50</th>
+<th class="col_heading level0 col7" id="T_d1467_level0_col7">pinball_loss_95</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<th class="row_heading level0 row0" id="T_d1467_level0_row0">0</th>
+<td class="data row0 col0" id="T_d1467_row0_col0">squared_error</td>
+<td class="data row0 col1" id="T_d1467_row0_col1">0.29 ± 0.01 s</td>
+<td class="data row0 col2" id="T_d1467_row0_col2">0.36 ± 0.07</td>
+<td class="data row0 col3" id="T_d1467_row0_col3">62.3 ± 3.5</td>
+<td class="data row0 col4" id="T_d1467_row0_col4">39.1 ± 2.3</td>
+<td class="data row0 col5" id="T_d1467_row0_col5">17.7 ± 1.3</td>
+<td class="data row0 col6" id="T_d1467_row0_col6">19.5 ± 1.1</td>
+<td class="data row0 col7" id="T_d1467_row0_col7">21.4 ± 2.4</td>
+</tr>
+<tr>
+<th class="row_heading level0 row1" id="T_d1467_level0_row1">1</th>
+<td class="data row1 col0" id="T_d1467_row1_col0">poisson</td>
+<td class="data row1 col1" id="T_d1467_row1_col1">0.33 ± 0.01 s</td>
+<td class="data row1 col2" id="T_d1467_row1_col2">0.32 ± 0.07</td>
+<td class="data row1 col3" id="T_d1467_row1_col3">64.2 ± 4.0</td>
+<td class="data row1 col4" id="T_d1467_row1_col4">39.3 ± 2.8</td>
+<td class="data row1 col5" id="T_d1467_row1_col5">16.7 ± 1.5</td>
+<td class="data row1 col6" id="T_d1467_row1_col6">19.7 ± 1.4</td>
+<td class="data row1 col7" id="T_d1467_row1_col7">22.6 ± 3.0</td>
+</tr>
+<tr>
+<th class="row_heading level0 row2" id="T_d1467_level0_row2">2</th>
+<td class="data row2 col0" id="T_d1467_row2_col0">absolute_error</td>
+<td class="data row2 col1" id="T_d1467_row2_col1">0.42 ± 0.01 s</td>
+<td class="data row2 col2" id="T_d1467_row2_col2">0.32 ± 0.06</td>
+<td class="data row2 col3" id="T_d1467_row2_col3">64.6 ± 3.8</td>
+<td class="data row2 col4" id="T_d1467_row2_col4">39.9 ± 3.2</td>
+<td class="data row2 col5" id="T_d1467_row2_col5">17.1 ± 1.1</td>
+<td class="data row2 col6" id="T_d1467_row2_col6">19.9 ± 1.6</td>
+<td class="data row2 col7" id="T_d1467_row2_col7">22.7 ± 3.1</td>
+</tr>
+<tr>
+<th class="row_heading level0 row3" id="T_d1467_level0_row3">3</th>
+<td class="data row3 col0" id="T_d1467_row3_col0">quantile 5</td>
+<td class="data row3 col1" id="T_d1467_row3_col1">0.59 ± 0.05 s</td>
+<td class="data row3 col2" id="T_d1467_row3_col2">0.41 ± 0.01</td>
+<td class="data row3 col3" id="T_d1467_row3_col3">145.6 ± 20.9</td>
+<td class="data row3 col4" id="T_d1467_row3_col4">92.5 ± 16.2</td>
+<td class="data row3 col5" id="T_d1467_row3_col5">5.9 ± 0.9</td>
+<td class="data row3 col6" id="T_d1467_row3_col6">46.2 ± 8.1</td>
+<td class="data row3 col7" id="T_d1467_row3_col7">86.6 ± 15.3</td>
+</tr>
+<tr>
+<th class="row_heading level0 row4" id="T_d1467_level0_row4">4</th>
+<td class="data row4 col0" id="T_d1467_row4_col0">quantile 50</td>
+<td class="data row4 col1" id="T_d1467_row4_col1">0.58 ± 0.01 s</td>
+<td class="data row4 col2" id="T_d1467_row4_col2">0.32 ± 0.06</td>
+<td class="data row4 col3" id="T_d1467_row4_col3">64.6 ± 3.8</td>
+<td class="data row4 col4" id="T_d1467_row4_col4">39.9 ± 3.2</td>
+<td class="data row4 col5" id="T_d1467_row4_col5">17.1 ± 1.1</td>
+<td class="data row4 col6" id="T_d1467_row4_col6">19.9 ± 1.6</td>
+<td class="data row4 col7" id="T_d1467_row4_col7">22.7 ± 3.1</td>
+</tr>
+<tr>
+<th class="row_heading level0 row5" id="T_d1467_level0_row5">5</th>
+<td class="data row5 col0" id="T_d1467_row5_col0">quantile 95</td>
+<td class="data row5 col1" id="T_d1467_row5_col1">0.56 ± 0.01 s</td>
+<td class="data row5 col2" id="T_d1467_row5_col2">1.07 ± 0.27</td>
+<td class="data row5 col3" id="T_d1467_row5_col3">99.6 ± 8.7</td>
+<td class="data row5 col4" id="T_d1467_row5_col4">72.0 ± 6.1</td>
+<td class="data row5 col5" id="T_d1467_row5_col5">62.9 ± 7.4</td>
+<td class="data row5 col6" id="T_d1467_row5_col6">36.0 ± 3.1</td>
+<td class="data row5 col7" id="T_d1467_row5_col7">9.1 ± 1.3</td>
+</tr>
+</tbody>
 </table>
-
 </div>
-<br />
-<br /><p>Even if the score distributions overlap due to the variance in the dataset, it
-is true that the average RMSE is lower when <code class="docutils literal notranslate"><span class="pre">loss=&quot;squared_error&quot;</span></code>, whereas
-the average MAPE is lower when <code class="docutils literal notranslate"><span class="pre">loss=&quot;absolute_error&quot;</span></code> as expected. That is
+<br/>
+<br/><p>Even if the score distributions overlap due to the variance in the dataset, it
+is true that the average RMSE is lower when <code class="docutils literal notranslate"><span class="pre">loss="squared_error"</span></code>, whereas
+the average MAPE is lower when <code class="docutils literal notranslate"><span class="pre">loss="absolute_error"</span></code> as expected. That is
 also the case for the Mean Pinball Loss with the quantiles 5 and 95. The score
 corresponding to the 50 quantile loss is overlapping with the score obtained
 by minimizing other loss functions, which is also the case for the MAE.</p>
@@ -2045,24 +1817,24 @@ to the 5th percentile, median and the 95th percentile:</p>
 <span class="n">y_train</span><span class="p">,</span> <span class="n">y_test</span> <span class="o">=</span> <span class="n">y</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="n">train_idx</span><span class="p">],</span> <span class="n">y</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="n">test_idx</span><span class="p">]</span>
 
 <span class="n">max_iter</span> <span class="o">=</span> <span class="mi">50</span>
-<span class="n">gbrt_mean_poisson</span> <span class="o">=</span> <a href="../../modules/generated/sklearn.ensemble.HistGradientBoostingRegressor.html#sklearn.ensemble.HistGradientBoostingRegressor" title="sklearn.ensemble.HistGradientBoostingRegressor" class="sphx-glr-backref-module-sklearn-ensemble sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">HistGradientBoostingRegressor</span></a><span class="p">(</span><span class="n">loss</span><span class="o">=</span><span class="s2">&quot;poisson&quot;</span><span class="p">,</span> <span class="n">max_iter</span><span class="o">=</span><span class="n">max_iter</span><span class="p">)</span>
+<span class="n">gbrt_mean_poisson</span> <span class="o">=</span> <a class="sphx-glr-backref-module-sklearn-ensemble sphx-glr-backref-type-py-class sphx-glr-backref-instance" href="../../modules/generated/sklearn.ensemble.HistGradientBoostingRegressor.html#sklearn.ensemble.HistGradientBoostingRegressor" title="sklearn.ensemble.HistGradientBoostingRegressor"><span class="n">HistGradientBoostingRegressor</span></a><span class="p">(</span><span class="n">loss</span><span class="o">=</span><span class="s2">"poisson"</span><span class="p">,</span> <span class="n">max_iter</span><span class="o">=</span><span class="n">max_iter</span><span class="p">)</span>
 <span class="n">gbrt_mean_poisson</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X_train</span><span class="p">,</span> <span class="n">y_train</span><span class="p">)</span>
 <span class="n">mean_predictions</span> <span class="o">=</span> <span class="n">gbrt_mean_poisson</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">X_test</span><span class="p">)</span>
 
-<span class="n">gbrt_median</span> <span class="o">=</span> <a href="../../modules/generated/sklearn.ensemble.HistGradientBoostingRegressor.html#sklearn.ensemble.HistGradientBoostingRegressor" title="sklearn.ensemble.HistGradientBoostingRegressor" class="sphx-glr-backref-module-sklearn-ensemble sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">HistGradientBoostingRegressor</span></a><span class="p">(</span>
-    <span class="n">loss</span><span class="o">=</span><span class="s2">&quot;quantile&quot;</span><span class="p">,</span> <span class="n">quantile</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">max_iter</span><span class="o">=</span><span class="n">max_iter</span>
+<span class="n">gbrt_median</span> <span class="o">=</span> <a class="sphx-glr-backref-module-sklearn-ensemble sphx-glr-backref-type-py-class sphx-glr-backref-instance" href="../../modules/generated/sklearn.ensemble.HistGradientBoostingRegressor.html#sklearn.ensemble.HistGradientBoostingRegressor" title="sklearn.ensemble.HistGradientBoostingRegressor"><span class="n">HistGradientBoostingRegressor</span></a><span class="p">(</span>
+    <span class="n">loss</span><span class="o">=</span><span class="s2">"quantile"</span><span class="p">,</span> <span class="n">quantile</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">max_iter</span><span class="o">=</span><span class="n">max_iter</span>
 <span class="p">)</span>
 <span class="n">gbrt_median</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X_train</span><span class="p">,</span> <span class="n">y_train</span><span class="p">)</span>
 <span class="n">median_predictions</span> <span class="o">=</span> <span class="n">gbrt_median</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">X_test</span><span class="p">)</span>
 
-<span class="n">gbrt_percentile_5</span> <span class="o">=</span> <a href="../../modules/generated/sklearn.ensemble.HistGradientBoostingRegressor.html#sklearn.ensemble.HistGradientBoostingRegressor" title="sklearn.ensemble.HistGradientBoostingRegressor" class="sphx-glr-backref-module-sklearn-ensemble sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">HistGradientBoostingRegressor</span></a><span class="p">(</span>
-    <span class="n">loss</span><span class="o">=</span><span class="s2">&quot;quantile&quot;</span><span class="p">,</span> <span class="n">quantile</span><span class="o">=</span><span class="mf">0.05</span><span class="p">,</span> <span class="n">max_iter</span><span class="o">=</span><span class="n">max_iter</span>
+<span class="n">gbrt_percentile_5</span> <span class="o">=</span> <a class="sphx-glr-backref-module-sklearn-ensemble sphx-glr-backref-type-py-class sphx-glr-backref-instance" href="../../modules/generated/sklearn.ensemble.HistGradientBoostingRegressor.html#sklearn.ensemble.HistGradientBoostingRegressor" title="sklearn.ensemble.HistGradientBoostingRegressor"><span class="n">HistGradientBoostingRegressor</span></a><span class="p">(</span>
+    <span class="n">loss</span><span class="o">=</span><span class="s2">"quantile"</span><span class="p">,</span> <span class="n">quantile</span><span class="o">=</span><span class="mf">0.05</span><span class="p">,</span> <span class="n">max_iter</span><span class="o">=</span><span class="n">max_iter</span>
 <span class="p">)</span>
 <span class="n">gbrt_percentile_5</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X_train</span><span class="p">,</span> <span class="n">y_train</span><span class="p">)</span>
 <span class="n">percentile_5_predictions</span> <span class="o">=</span> <span class="n">gbrt_percentile_5</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">X_test</span><span class="p">)</span>
 
-<span class="n">gbrt_percentile_95</span> <span class="o">=</span> <a href="../../modules/generated/sklearn.ensemble.HistGradientBoostingRegressor.html#sklearn.ensemble.HistGradientBoostingRegressor" title="sklearn.ensemble.HistGradientBoostingRegressor" class="sphx-glr-backref-module-sklearn-ensemble sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">HistGradientBoostingRegressor</span></a><span class="p">(</span>
-    <span class="n">loss</span><span class="o">=</span><span class="s2">&quot;quantile&quot;</span><span class="p">,</span> <span class="n">quantile</span><span class="o">=</span><span class="mf">0.95</span><span class="p">,</span> <span class="n">max_iter</span><span class="o">=</span><span class="n">max_iter</span>
+<span class="n">gbrt_percentile_95</span> <span class="o">=</span> <a class="sphx-glr-backref-module-sklearn-ensemble sphx-glr-backref-type-py-class sphx-glr-backref-instance" href="../../modules/generated/sklearn.ensemble.HistGradientBoostingRegressor.html#sklearn.ensemble.HistGradientBoostingRegressor" title="sklearn.ensemble.HistGradientBoostingRegressor"><span class="n">HistGradientBoostingRegressor</span></a><span class="p">(</span>
+    <span class="n">loss</span><span class="o">=</span><span class="s2">"quantile"</span><span class="p">,</span> <span class="n">quantile</span><span class="o">=</span><span class="mf">0.95</span><span class="p">,</span> <span class="n">max_iter</span><span class="o">=</span><span class="n">max_iter</span>
 <span class="p">)</span>
 <span class="n">gbrt_percentile_95</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X_train</span><span class="p">,</span> <span class="n">y_train</span><span class="p">)</span>
 <span class="n">percentile_95_predictions</span> <span class="o">=</span> <span class="n">gbrt_percentile_95</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">X_test</span><span class="p">)</span>
@@ -2070,36 +1842,36 @@ to the 5th percentile, median and the 95th percentile:</p>
 </div>
 <p>We can now take a look at the predictions made by the regression models:</p>
 <div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">last_hours</span> <span class="o">=</span> <span class="nb">slice</span><span class="p">(</span><span class="o">-</span><span class="mi">96</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
-<span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <a href="https://matplotlib.org/stable/api/_as_gen/matplotlib.pyplot.subplots.html#matplotlib.pyplot.subplots" title="matplotlib.pyplot.subplots" class="sphx-glr-backref-module-matplotlib-pyplot sphx-glr-backref-type-py-function"><span class="n">plt</span><span class="o">.</span><span class="n">subplots</span></a><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">15</span><span class="p">,</span> <span class="mi">7</span><span class="p">))</span>
-<a href="https://matplotlib.org/stable/api/_as_gen/matplotlib.pyplot.title.html#matplotlib.pyplot.title" title="matplotlib.pyplot.title" class="sphx-glr-backref-module-matplotlib-pyplot sphx-glr-backref-type-py-function"><span class="n">plt</span><span class="o">.</span><span class="n">title</span></a><span class="p">(</span><span class="s2">&quot;Predictions by regression models&quot;</span><span class="p">)</span>
+<span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <a class="sphx-glr-backref-module-matplotlib-pyplot sphx-glr-backref-type-py-function" href="https://matplotlib.org/stable/api/_as_gen/matplotlib.pyplot.subplots.html#matplotlib.pyplot.subplots" title="matplotlib.pyplot.subplots"><span class="n">plt</span><span class="o">.</span><span class="n">subplots</span></a><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">15</span><span class="p">,</span> <span class="mi">7</span><span class="p">))</span>
+<a class="sphx-glr-backref-module-matplotlib-pyplot sphx-glr-backref-type-py-function" href="https://matplotlib.org/stable/api/_as_gen/matplotlib.pyplot.title.html#matplotlib.pyplot.title" title="matplotlib.pyplot.title"><span class="n">plt</span><span class="o">.</span><span class="n">title</span></a><span class="p">(</span><span class="s2">"Predictions by regression models"</span><span class="p">)</span>
 <span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span>
     <span class="n">y_test</span><span class="o">.</span><span class="n">values</span><span class="p">[</span><span class="n">last_hours</span><span class="p">],</span>
-    <span class="s2">&quot;x-&quot;</span><span class="p">,</span>
+    <span class="s2">"x-"</span><span class="p">,</span>
     <span class="n">alpha</span><span class="o">=</span><span class="mf">0.2</span><span class="p">,</span>
-    <span class="n">label</span><span class="o">=</span><span class="s2">&quot;Actual demand&quot;</span><span class="p">,</span>
-    <span class="n">color</span><span class="o">=</span><span class="s2">&quot;black&quot;</span><span class="p">,</span>
+    <span class="n">label</span><span class="o">=</span><span class="s2">"Actual demand"</span><span class="p">,</span>
+    <span class="n">color</span><span class="o">=</span><span class="s2">"black"</span><span class="p">,</span>
 <span class="p">)</span>
 <span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span>
     <span class="n">median_predictions</span><span class="p">[</span><span class="n">last_hours</span><span class="p">],</span>
-    <span class="s2">&quot;^-&quot;</span><span class="p">,</span>
-    <span class="n">label</span><span class="o">=</span><span class="s2">&quot;GBRT median&quot;</span><span class="p">,</span>
+    <span class="s2">"^-"</span><span class="p">,</span>
+    <span class="n">label</span><span class="o">=</span><span class="s2">"GBRT median"</span><span class="p">,</span>
 <span class="p">)</span>
 <span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span>
     <span class="n">mean_predictions</span><span class="p">[</span><span class="n">last_hours</span><span class="p">],</span>
-    <span class="s2">&quot;x-&quot;</span><span class="p">,</span>
-    <span class="n">label</span><span class="o">=</span><span class="s2">&quot;GBRT mean (Poisson)&quot;</span><span class="p">,</span>
+    <span class="s2">"x-"</span><span class="p">,</span>
+    <span class="n">label</span><span class="o">=</span><span class="s2">"GBRT mean (Poisson)"</span><span class="p">,</span>
 <span class="p">)</span>
 <span class="n">ax</span><span class="o">.</span><span class="n">fill_between</span><span class="p">(</span>
-    <a href="https://numpy.org/doc/stable/reference/generated/numpy.arange.html#numpy.arange" title="numpy.arange" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-function"><span class="n">np</span><span class="o">.</span><span class="n">arange</span></a><span class="p">(</span><span class="mi">96</span><span class="p">),</span>
+    <a class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-function" href="https://numpy.org/doc/stable/reference/generated/numpy.arange.html#numpy.arange" title="numpy.arange"><span class="n">np</span><span class="o">.</span><span class="n">arange</span></a><span class="p">(</span><span class="mi">96</span><span class="p">),</span>
     <span class="n">percentile_5_predictions</span><span class="p">[</span><span class="n">last_hours</span><span class="p">],</span>
     <span class="n">percentile_95_predictions</span><span class="p">[</span><span class="n">last_hours</span><span class="p">],</span>
     <span class="n">alpha</span><span class="o">=</span><span class="mf">0.3</span><span class="p">,</span>
-    <span class="n">label</span><span class="o">=</span><span class="s2">&quot;GBRT 90</span><span class="si">% i</span><span class="s2">nterval&quot;</span><span class="p">,</span>
+    <span class="n">label</span><span class="o">=</span><span class="s2">"GBRT 90</span><span class="si">% i</span><span class="s2">nterval"</span><span class="p">,</span>
 <span class="p">)</span>
 <span class="n">_</span> <span class="o">=</span> <span class="n">ax</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
 </pre></div>
 </div>
-<img src="../../_images/sphx_glr_plot_time_series_lagged_features_001.png" srcset="../../_images/sphx_glr_plot_time_series_lagged_features_001.png" alt="Predictions by regression models" class = "sphx-glr-single-img"/><p>Here it’s interesting to notice that the blue area between the 5% and 95%
+<img alt="Predictions by regression models" class="sphx-glr-single-img" src="../../_images/sphx_glr_plot_time_series_lagged_features_001.png" srcset="../../_images/sphx_glr_plot_time_series_lagged_features_001.png"/><p>Here it’s interesting to notice that the blue area between the 5% and 95%
 percentile estimators has a width that varies with the time of the day:</p>
 <ul class="simple">
 <li><p>At night, the blue band is much narrower: the pair of models is quite
@@ -2122,33 +1894,33 @@ the <a class="reference internal" href="../ensemble/plot_gradient_boosting_quant
 the best models:</p>
 <div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">sklearn.metrics</span> <span class="kn">import</span> <span class="n">PredictionErrorDisplay</span>
 
-<span class="n">fig</span><span class="p">,</span> <span class="n">axes</span> <span class="o">=</span> <a href="https://matplotlib.org/stable/api/_as_gen/matplotlib.pyplot.subplots.html#matplotlib.pyplot.subplots" title="matplotlib.pyplot.subplots" class="sphx-glr-backref-module-matplotlib-pyplot sphx-glr-backref-type-py-function"><span class="n">plt</span><span class="o">.</span><span class="n">subplots</span></a><span class="p">(</span><span class="n">ncols</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">15</span><span class="p">,</span> <span class="mi">6</span><span class="p">),</span> <span class="n">sharey</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-<span class="n">fig</span><span class="o">.</span><span class="n">suptitle</span><span class="p">(</span><span class="s2">&quot;Non-linear regression models&quot;</span><span class="p">)</span>
+<span class="n">fig</span><span class="p">,</span> <span class="n">axes</span> <span class="o">=</span> <a class="sphx-glr-backref-module-matplotlib-pyplot sphx-glr-backref-type-py-function" href="https://matplotlib.org/stable/api/_as_gen/matplotlib.pyplot.subplots.html#matplotlib.pyplot.subplots" title="matplotlib.pyplot.subplots"><span class="n">plt</span><span class="o">.</span><span class="n">subplots</span></a><span class="p">(</span><span class="n">ncols</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">15</span><span class="p">,</span> <span class="mi">6</span><span class="p">),</span> <span class="n">sharey</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">fig</span><span class="o">.</span><span class="n">suptitle</span><span class="p">(</span><span class="s2">"Non-linear regression models"</span><span class="p">)</span>
 <span class="n">predictions</span> <span class="o">=</span> <span class="p">[</span>
     <span class="n">median_predictions</span><span class="p">,</span>
     <span class="n">percentile_5_predictions</span><span class="p">,</span>
     <span class="n">percentile_95_predictions</span><span class="p">,</span>
 <span class="p">]</span>
 <span class="n">labels</span> <span class="o">=</span> <span class="p">[</span>
-    <span class="s2">&quot;Median&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;5th percentile&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;95th percentile&quot;</span><span class="p">,</span>
+    <span class="s2">"Median"</span><span class="p">,</span>
+    <span class="s2">"5th percentile"</span><span class="p">,</span>
+    <span class="s2">"95th percentile"</span><span class="p">,</span>
 <span class="p">]</span>
 <span class="k">for</span> <span class="n">ax</span><span class="p">,</span> <span class="n">pred</span><span class="p">,</span> <span class="n">label</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">axes</span><span class="p">,</span> <span class="n">predictions</span><span class="p">,</span> <span class="n">labels</span><span class="p">):</span>
-    <a href="../../modules/generated/sklearn.metrics.PredictionErrorDisplay.html#sklearn.metrics.PredictionErrorDisplay.from_predictions" title="sklearn.metrics.PredictionErrorDisplay.from_predictions" class="sphx-glr-backref-module-sklearn-metrics-PredictionErrorDisplay sphx-glr-backref-type-py-method"><span class="n">PredictionErrorDisplay</span><span class="o">.</span><span class="n">from_predictions</span></a><span class="p">(</span>
+    <a class="sphx-glr-backref-module-sklearn-metrics-PredictionErrorDisplay sphx-glr-backref-type-py-method" href="../../modules/generated/sklearn.metrics.PredictionErrorDisplay.html#sklearn.metrics.PredictionErrorDisplay.from_predictions" title="sklearn.metrics.PredictionErrorDisplay.from_predictions"><span class="n">PredictionErrorDisplay</span><span class="o">.</span><span class="n">from_predictions</span></a><span class="p">(</span>
         <span class="n">y_true</span><span class="o">=</span><span class="n">y_test</span><span class="o">.</span><span class="n">values</span><span class="p">,</span>
         <span class="n">y_pred</span><span class="o">=</span><span class="n">pred</span><span class="p">,</span>
-        <span class="n">kind</span><span class="o">=</span><span class="s2">&quot;residual_vs_predicted&quot;</span><span class="p">,</span>
-        <span class="n">scatter_kwargs</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;alpha&quot;</span><span class="p">:</span> <span class="mf">0.3</span><span class="p">},</span>
+        <span class="n">kind</span><span class="o">=</span><span class="s2">"residual_vs_predicted"</span><span class="p">,</span>
+        <span class="n">scatter_kwargs</span><span class="o">=</span><span class="p">{</span><span class="s2">"alpha"</span><span class="p">:</span> <span class="mf">0.3</span><span class="p">},</span>
         <span class="n">ax</span><span class="o">=</span><span class="n">ax</span><span class="p">,</span>
     <span class="p">)</span>
-    <span class="n">ax</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">xlabel</span><span class="o">=</span><span class="s2">&quot;Predicted demand&quot;</span><span class="p">,</span> <span class="n">ylabel</span><span class="o">=</span><span class="s2">&quot;True demand&quot;</span><span class="p">)</span>
-    <span class="n">ax</span><span class="o">.</span><span class="n">legend</span><span class="p">([</span><span class="s2">&quot;Best model&quot;</span><span class="p">,</span> <span class="n">label</span><span class="p">])</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">xlabel</span><span class="o">=</span><span class="s2">"Predicted demand"</span><span class="p">,</span> <span class="n">ylabel</span><span class="o">=</span><span class="s2">"True demand"</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">legend</span><span class="p">([</span><span class="s2">"Best model"</span><span class="p">,</span> <span class="n">label</span><span class="p">])</span>
 
-<a href="https://matplotlib.org/stable/api/_as_gen/matplotlib.pyplot.show.html#matplotlib.pyplot.show" title="matplotlib.pyplot.show" class="sphx-glr-backref-module-matplotlib-pyplot sphx-glr-backref-type-py-function"><span class="n">plt</span><span class="o">.</span><span class="n">show</span></a><span class="p">()</span>
+<a class="sphx-glr-backref-module-matplotlib-pyplot sphx-glr-backref-type-py-function" href="https://matplotlib.org/stable/api/_as_gen/matplotlib.pyplot.show.html#matplotlib.pyplot.show" title="matplotlib.pyplot.show"><span class="n">plt</span><span class="o">.</span><span class="n">show</span></a><span class="p">()</span>
 </pre></div>
 </div>
-<img src="../../_images/sphx_glr_plot_time_series_lagged_features_002.png" srcset="../../_images/sphx_glr_plot_time_series_lagged_features_002.png" alt="Non-linear regression models" class = "sphx-glr-single-img"/></section>
+<img alt="Non-linear regression models" class="sphx-glr-single-img" src="../../_images/sphx_glr_plot_time_series_lagged_features_002.png" srcset="../../_images/sphx_glr_plot_time_series_lagged_features_002.png"/></section>
 <section id="conclusion">
 <h2>Conclusion<a class="headerlink" href="#conclusion" title="Link to this heading">#</a></h2>
 <p>Through this example we explored time series forecasting using lagged
@@ -2162,7 +1934,7 @@ optimistic Mean Average Percentage Error (MAPE). The results
 produced from the time-based split better represent the performance
 of our time-series regression model. We also analyzed the predictive uncertainty
 of our model via Quantile Regression. Predictions based on the 5th and
-95th percentile using <code class="docutils literal notranslate"><span class="pre">loss=&quot;quantile&quot;</span></code> provide us with a quantitative estimate
+95th percentile using <code class="docutils literal notranslate"><span class="pre">loss="quantile"</span></code> provide us with a quantitative estimate
 of the uncertainty of the forecasts made by our time series regression model.
 Uncertainty estimation can also be performed
 using <a class="reference external" href="https://mapie.readthedocs.io/en/latest/index.html">MAPIE</a>,
@@ -2172,91 +1944,54 @@ Furthermore, functionalities provided
 by <a class="reference external" href="https://www.sktime.net/en/latest/users.html">sktime</a>
 can be used to extend scikit-learn estimators by making use of recursive time
 series forecasting, that enables dynamic predictions of future values.</p>
-<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> (0 minutes 10.961 seconds)</p>
-<div class="sphx-glr-footer sphx-glr-footer-example docutils container" id="sphx-glr-download-auto-examples-applications-plot-time-series-lagged-features-py">
-<div class="binder-badge docutils container">
-<a class="reference external image-reference" href="https://mybinder.org/v2/gh/scikit-learn/scikit-learn/main?urlpath=lab/tree/notebooks/auto_examples/applications/plot_time_series_lagged_features.ipynb"><img alt="Launch binder" src="../../_images/binder_badge_logo.svg" width="150px" /></a>
-</div>
-<div class="lite-badge docutils container">
-<a class="reference external image-reference" href="../../lite/lab/?path=auto_examples/applications/plot_time_series_lagged_features.ipynb"><img alt="Launch JupyterLite" src="../../_images/jupyterlite_badge_logo.svg" width="150px" /></a>
-</div>
-<div class="sphx-glr-download sphx-glr-download-jupyter docutils container">
-<p><a class="reference download internal" download="" href="../../_downloads/6953689dfdc5dd401dda89604bbdaefb/plot_time_series_lagged_features.ipynb"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Jupyter</span> <span class="pre">notebook:</span> <span class="pre">plot_time_series_lagged_features.ipynb</span></code></a></p>
-</div>
-<div class="sphx-glr-download sphx-glr-download-python docutils container">
-<p><a class="reference download internal" download="" href="../../_downloads/983937feb1a5f82dab78ed11a2af1217/plot_time_series_lagged_features.py"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Python</span> <span class="pre">source</span> <span class="pre">code:</span> <span class="pre">plot_time_series_lagged_features.py</span></code></a></p>
-</div>
-</div>
+<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> (0 minutes 9.606 seconds)</p>
+
 <p class="rubric">Related examples</p>
-<div class="sphx-glr-thumbnails"><div class="sphx-glr-thumbcontainer" tooltip="This notebook introduces different strategies to leverage time-related features for a bike shar..."><img alt="" src="../../_images/sphx_glr_plot_cyclical_feature_engineering_thumb.png" />
+<div class="sphx-glr-thumbnails"><div class="sphx-glr-thumbcontainer" tooltip="This notebook introduces different strategies to leverage time-related features for a bike shar..."><img alt="" src="../../_images/sphx_glr_plot_cyclical_feature_engineering_thumb.png"/>
 <p><a class="reference internal" href="plot_cyclical_feature_engineering.html#sphx-glr-auto-examples-applications-plot-cyclical-feature-engineering-py"><span class="std std-ref">Time-related feature engineering</span></a></p>
-  <div class="sphx-glr-thumbnail-title">Time-related feature engineering</div>
-</div><div class="sphx-glr-thumbcontainer" tooltip="This example shows how quantile regression can be used to create prediction intervals."><img alt="" src="../../_images/sphx_glr_plot_gradient_boosting_quantile_thumb.png" />
+<div class="sphx-glr-thumbnail-title">Time-related feature engineering</div>
+</div><div class="sphx-glr-thumbcontainer" tooltip="This example shows how quantile regression can be used to create prediction intervals."><img alt="" src="../../_images/sphx_glr_plot_gradient_boosting_quantile_thumb.png"/>
 <p><a class="reference internal" href="../ensemble/plot_gradient_boosting_quantile.html#sphx-glr-auto-examples-ensemble-plot-gradient-boosting-quantile-py"><span class="std std-ref">Prediction Intervals for Gradient Boosting Regression</span></a></p>
-  <div class="sphx-glr-thumbnail-title">Prediction Intervals for Gradient Boosting Regression</div>
-</div><div class="sphx-glr-thumbcontainer" tooltip="This example illustrates how quantile regression can predict non-trivial conditional quantiles."><img alt="" src="../../_images/sphx_glr_plot_quantile_regression_thumb.png" />
+<div class="sphx-glr-thumbnail-title">Prediction Intervals for Gradient Boosting Regression</div>
+</div><div class="sphx-glr-thumbcontainer" tooltip="This example illustrates how quantile regression can predict non-trivial conditional quantiles."><img alt="" src="../../_images/sphx_glr_plot_quantile_regression_thumb.png"/>
 <p><a class="reference internal" href="../linear_model/plot_quantile_regression.html#sphx-glr-auto-examples-linear-model-plot-quantile-regression-py"><span class="std std-ref">Quantile regression</span></a></p>
-  <div class="sphx-glr-thumbnail-title">Quantile regression</div>
-</div><div class="sphx-glr-thumbcontainer" tooltip="We are pleased to announce the release of scikit-learn 1.1! Many bug fixes and improvements wer..."><img alt="" src="../../_images/sphx_glr_plot_release_highlights_1_1_0_thumb.png" />
+<div class="sphx-glr-thumbnail-title">Quantile regression</div>
+</div><div class="sphx-glr-thumbcontainer" tooltip="We are pleased to announce the release of scikit-learn 1.1! Many bug fixes and improvements wer..."><img alt="" src="../../_images/sphx_glr_plot_release_highlights_1_1_0_thumb.png"/>
 <p><a class="reference internal" href="../release_highlights/plot_release_highlights_1_1_0.html#sphx-glr-auto-examples-release-highlights-plot-release-highlights-1-1-0-py"><span class="std std-ref">Release Highlights for scikit-learn 1.1</span></a></p>
-  <div class="sphx-glr-thumbnail-title">Release Highlights for scikit-learn 1.1</div>
-</div><div class="sphx-glr-thumbcontainer" tooltip="This example illustrates the use of log-linear Poisson regression on the French Motor Third-Par..."><img alt="" src="../../_images/sphx_glr_plot_poisson_regression_non_normal_loss_thumb.png" />
-<p><a class="reference internal" href="../linear_model/plot_poisson_regression_non_normal_loss.html#sphx-glr-auto-examples-linear-model-plot-poisson-regression-non-normal-loss-py"><span class="std std-ref">Poisson regression and non-normal loss</span></a></p>
-  <div class="sphx-glr-thumbnail-title">Poisson regression and non-normal loss</div>
+<div class="sphx-glr-thumbnail-title">Release Highlights for scikit-learn 1.1</div>
 </div></div><p class="sphx-glr-signature"><a class="reference external" href="https://sphinx-gallery.github.io">Gallery generated by Sphinx-Gallery</a></p>
 </section>
 </section>
-
-
-                </article>
-              
-              
-              
-                <footer class="bd-footer-article">
-                  <div class="footer-article-items footer-article__inner">
-  
-    <div class="footer-article-item">
+</article>
+<footer class="bd-footer-article">
+<div class="footer-article-items footer-article__inner">
+<div class="footer-article-item">
 <div class="prev-next-area">
-    <a class="left-prev"
-       href="plot_digits_denoising.html"
-       title="previous page">
-      <i class="fa-solid fa-angle-left"></i>
-      <div class="prev-next-info">
-        <p class="prev-next-subtitle">previous</p>
-        <p class="prev-next-title">Image denoising using kernel PCA</p>
-      </div>
-    </a>
-    <a class="right-next"
-       href="svm_gui.html"
-       title="next page">
-      <div class="prev-next-info">
-        <p class="prev-next-subtitle">next</p>
-        <p class="prev-next-title">Libsvm GUI</p>
-      </div>
-      <i class="fa-solid fa-angle-right"></i>
-    </a>
-</div></div>
-  
+<a class="left-prev" href="plot_digits_denoising.html" title="previous page">
+<i class="fa-solid fa-angle-left"></i>
+<div class="prev-next-info">
+<p class="prev-next-subtitle">previous</p>
+<p class="prev-next-title">Image denoising using kernel PCA</p>
 </div>
-                </footer>
-              
-              
-              
-            </div>
-            
-            
-              
-                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
-
-
-  <div class="sidebar-secondary-item">
-<div
-    id="pst-page-navigation-heading-2"
-    class="page-toc tocsection onthispage">
-    <i class="fa-solid fa-list"></i> On this page
+</a>
+<a class="right-next" href="svm_gui.html" title="next page">
+<div class="prev-next-info">
+<p class="prev-next-subtitle">next</p>
+<p class="prev-next-title">Libsvm GUI</p>
+</div>
+<i class="fa-solid fa-angle-right"></i>
+</a>
+</div></div>
+</div>
+</footer>
+</div>
+<div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+<div class="sidebar-secondary-item">
+<div class="page-toc tocsection onthispage" id="pst-page-navigation-heading-2">
+<i class="fa-solid fa-list"></i> On this page
   </div>
-  <nav class="bd-toc-nav page-toc" aria-labelledby="pst-page-navigation-heading-2">
-    <ul class="visible nav section-nav flex-column">
+<nav aria-labelledby="pst-page-navigation-heading-2" class="bd-toc-nav page-toc">
+<ul class="visible nav section-nav flex-column">
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#analyzing-the-bike-sharing-demand-dataset">Analyzing the Bike Sharing Demand dataset</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#generating-pandas-engineered-lagged-features">Generating pandas-engineered lagged features</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#naive-evaluation-of-the-next-hour-bike-demand-regression">Naive evaluation of the next hour bike demand regression</a></li>
@@ -2265,55 +2000,31 @@ series forecasting, that enables dynamic predictions of future values.</p>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#a-qualitative-look-at-the-predictions">A qualitative look at the predictions</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#conclusion">Conclusion</a></li>
 </ul>
-  </nav></div>
+</nav></div>
 
-  <div class="sidebar-secondary-item">
-
-  <div class="tocsection sourcelink">
-    <a href="../../_sources/auto_examples/applications/plot_time_series_lagged_features.rst.txt">
-      <i class="fa-solid fa-file-lines"></i> Show Source
-    </a>
-  </div>
+<div class="sidebar-secondary-item"><div title="plot_time_series_lagged_features.py"><a download="" href="../../_downloads/983937feb1a5f82dab78ed11a2af1217/plot_time_series_lagged_features.py"><i class="fa-solid fa-download"></i> Download source code</a></div><div title="plot_time_series_lagged_features.ipynb"><a download="" href="../../_downloads/6953689dfdc5dd401dda89604bbdaefb/plot_time_series_lagged_features.ipynb"><i class="fa-solid fa-download"></i> Download Jupyter notebook</a></div></div><div class="sidebar-secondary-item"><div><a href="../../lite/lab/?path=auto_examples/applications/plot_time_series_lagged_features.ipynb"><img alt="Launch JupyterLite" height="20" src="../../_images/jupyterlite_badge_logo.svg"/></a></div><div><a href="https://mybinder.org/v2/gh/scikit-learn/scikit-learn/main?urlpath=lab/tree/notebooks/auto_examples/applications/plot_time_series_lagged_features.ipynb"><img alt="Launch binder" height="20" src="../../_images/binder_badge_logo.svg"/></a></div></div></div></div>
 </div>
-
-</div></div>
-              
-            
-          </div>
-          <footer class="bd-footer-content">
-            
-          </footer>
-        
-      </main>
-    </div>
-  </div>
-  
-  <!-- Scripts loaded after <body> so the DOM is not blocked -->
-  <script src="../../_static/scripts/bootstrap.js?digest=8d27b9dea8ad943066ae"></script>
+<footer class="bd-footer-content">
+</footer>
+</main>
+</div>
+</div>
+<!-- Scripts loaded after <body> so the DOM is not blocked -->
+<script src="../../_static/scripts/bootstrap.js?digest=8d27b9dea8ad943066ae"></script>
 <script src="../../_static/scripts/pydata-sphinx-theme.js?digest=8d27b9dea8ad943066ae"></script>
-
-  <footer class="bd-footer">
+<footer class="bd-footer">
 <div class="bd-footer__inner bd-page-width">
-  
-    <div class="footer-items__start">
-      
-        <div class="footer-item">
-
-  <p class="copyright">
+<div class="footer-items__start">
+<div class="footer-item">
+<p class="copyright">
     
       © Copyright 2007 - 2024, scikit-learn developers (BSD License).
       <br/>
-    
-  </p>
+</p>
 </div>
-      
-    </div>
-  
-  
-  
 </div>
-
-  </footer>
+</div>
+</footer>
     <script src="https://scikit-learn.org/versionwarning.js"></script>
-  </body>
+</body>
 </html>

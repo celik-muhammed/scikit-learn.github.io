@@ -1,309 +1,205 @@
 
 <!DOCTYPE html>
 
-
-<html lang="en" data-content_root="../../" >
-
-  <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
-<meta property="og:title" content="Prediction Latency" />
-<meta property="og:type" content="website" />
-<meta property="og:url" content="https://scikit-learn/stable/auto_examples/applications/plot_prediction_latency.html" />
-<meta property="og:site_name" content="scikit-learn" />
-<meta property="og:description" content="This is an example showing the prediction latency of various scikit-learn estimators. The goal is to measure the latency one can expect when doing predictions either in bulk or atomic (i.e. one by ..." />
-<meta property="og:image" content="https://scikit-learn.org/stable/_static/scikit-learn-logo-small.png" />
-<meta property="og:image:alt" content="scikit-learn" />
-<meta name="description" content="This is an example showing the prediction latency of various scikit-learn estimators. The goal is to measure the latency one can expect when doing predictions either in bulk or atomic (i.e. one by ..." />
-
-    <title>Prediction Latency &#8212; scikit-learn 1.5.dev0 documentation</title>
-  
-  
-  
-  <script data-cfasync="false">
+<html data-content_root="../../" lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/><meta content="width=device-width, initial-scale=1" name="viewport"/>
+<meta content="Prediction Latency" property="og:title"/>
+<meta content="website" property="og:type"/>
+<meta content="https://scikit-learn/stable/auto_examples/applications/plot_prediction_latency.html" property="og:url"/>
+<meta content="scikit-learn" property="og:site_name"/>
+<meta content="This is an example showing the prediction latency of various scikit-learn estimators. The goal is to measure the latency one can expect when doing predictions either in bulk or atomic (i.e. one by ..." property="og:description"/>
+<meta content="https://scikit-learn.org/stable/_static/scikit-learn-logo-small.png" property="og:image"/>
+<meta content="scikit-learn" property="og:image:alt"/>
+<meta content="This is an example showing the prediction latency of various scikit-learn estimators. The goal is to measure the latency one can expect when doing predictions either in bulk or atomic (i.e. one by ..." name="description"/>
+<title>Prediction Latency — scikit-learn 1.5.dev0 documentation</title>
+<script data-cfasync="false">
     document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
     document.documentElement.dataset.theme = localStorage.getItem("theme") || "light";
   </script>
-  
-  <!-- Loaded before other Sphinx assets -->
-  <link href="../../_static/styles/theme.css?digest=8d27b9dea8ad943066ae" rel="stylesheet" />
-<link href="../../_static/styles/bootstrap.css?digest=8d27b9dea8ad943066ae" rel="stylesheet" />
-<link href="../../_static/styles/pydata-sphinx-theme.css?digest=8d27b9dea8ad943066ae" rel="stylesheet" />
-
-  
-  <link href="../../_static/vendor/fontawesome/6.5.1/css/all.min.css?digest=8d27b9dea8ad943066ae" rel="stylesheet" />
-  <link rel="preload" as="font" type="font/woff2" crossorigin href="../../_static/vendor/fontawesome/6.5.1/webfonts/fa-solid-900.woff2" />
-<link rel="preload" as="font" type="font/woff2" crossorigin href="../../_static/vendor/fontawesome/6.5.1/webfonts/fa-brands-400.woff2" />
-<link rel="preload" as="font" type="font/woff2" crossorigin href="../../_static/vendor/fontawesome/6.5.1/webfonts/fa-regular-400.woff2" />
-
-    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=a746c00c" />
-    <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
-    <link rel="stylesheet" type="text/css" href="../../_static/plot_directive.css" />
-    <link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Vibur" />
-    <link rel="stylesheet" type="text/css" href="../../_static/jupyterlite_sphinx.css?v=f996933d" />
-    <link rel="stylesheet" type="text/css" href="../../_static/sg_gallery.css?v=61a4c737" />
-    <link rel="stylesheet" type="text/css" href="../../_static/sg_gallery-binder.css?v=f4aeca0c" />
-    <link rel="stylesheet" type="text/css" href="../../_static/sg_gallery-dataframe.css?v=2082cf3c" />
-    <link rel="stylesheet" type="text/css" href="../../_static/sg_gallery-rendered-html.css?v=1277b6f3" />
-    <link rel="stylesheet" type="text/css" href="../../_static/design-style.1e8bd061cd6da7fc9cf755528e8ffc24.min.css?v=0a3b3ea7" />
-    <link rel="stylesheet" type="text/css" href="../../_static/styles/colors.css?v=d5680186" />
-    <link rel="stylesheet" type="text/css" href="../../_static/styles/custom.css?v=3e2fb91a" />
-  
-  <!-- Pre-loaded scripts that we'll load fully later -->
-  <link rel="preload" as="script" href="../../_static/scripts/bootstrap.js?digest=8d27b9dea8ad943066ae" />
-<link rel="preload" as="script" href="../../_static/scripts/pydata-sphinx-theme.js?digest=8d27b9dea8ad943066ae" />
-  <script src="../../_static/vendor/fontawesome/6.5.1/js/all.min.js?digest=8d27b9dea8ad943066ae"></script>
-
-    <script src="../../_static/documentation_options.js?v=a2c36881"></script>
-    <script src="../../_static/doctools.js?v=888ff710"></script>
-    <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
-    <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
-    <script src="../../_static/copybutton.js?v=97f0b27d"></script>
-    <script src="../../_static/jupyterlite_sphinx.js?v=f25406b8"></script>
-    <script src="../../_static/design-tabs.js?v=36754332"></script>
-    <script data-domain="scikit-learn.org" defer="defer" src="https://views.scientific-python.org/js/script.js"></script>
-    <script>DOCUMENTATION_OPTIONS.pagename = 'auto_examples/applications/plot_prediction_latency';</script>
-    <script>
+<!-- Loaded before other Sphinx assets -->
+<link href="../../_static/styles/theme.css?digest=8d27b9dea8ad943066ae" rel="stylesheet"/>
+<link href="../../_static/styles/bootstrap.css?digest=8d27b9dea8ad943066ae" rel="stylesheet"/>
+<link href="../../_static/styles/pydata-sphinx-theme.css?digest=8d27b9dea8ad943066ae" rel="stylesheet"/>
+<link href="../../_static/vendor/fontawesome/6.5.1/css/all.min.css?digest=8d27b9dea8ad943066ae" rel="stylesheet"/>
+<link as="font" crossorigin="" href="../../_static/vendor/fontawesome/6.5.1/webfonts/fa-solid-900.woff2" rel="preload" type="font/woff2"/>
+<link as="font" crossorigin="" href="../../_static/vendor/fontawesome/6.5.1/webfonts/fa-brands-400.woff2" rel="preload" type="font/woff2"/>
+<link as="font" crossorigin="" href="../../_static/vendor/fontawesome/6.5.1/webfonts/fa-regular-400.woff2" rel="preload" type="font/woff2"/>
+<link href="../../_static/pygments.css?v=a746c00c" rel="stylesheet" type="text/css"/>
+<link href="../../_static/copybutton.css?v=76b2166b" rel="stylesheet" type="text/css"/>
+<link href="../../_static/plot_directive.css" rel="stylesheet" type="text/css"/>
+<link href="https://fonts.googleapis.com/css?family=Vibur" rel="stylesheet" type="text/css"/>
+<link href="../../_static/jupyterlite_sphinx.css?v=f996933d" rel="stylesheet" type="text/css"/>
+<link href="../../_static/sg_gallery.css?v=61a4c737" rel="stylesheet" type="text/css"/>
+<link href="../../_static/sg_gallery-binder.css?v=f4aeca0c" rel="stylesheet" type="text/css"/>
+<link href="../../_static/sg_gallery-dataframe.css?v=2082cf3c" rel="stylesheet" type="text/css"/>
+<link href="../../_static/sg_gallery-rendered-html.css?v=1277b6f3" rel="stylesheet" type="text/css"/>
+<link href="../../_static/design-style.1e8bd061cd6da7fc9cf755528e8ffc24.min.css?v=0a3b3ea7" rel="stylesheet" type="text/css"/>
+<link href="../../_static/styles/colors.css?v=d5680186" rel="stylesheet" type="text/css"/>
+<link href="../../_static/styles/custom.css?v=3e2fb91a" rel="stylesheet" type="text/css"/>
+<!-- Pre-loaded scripts that we'll load fully later -->
+<link as="script" href="../../_static/scripts/bootstrap.js?digest=8d27b9dea8ad943066ae" rel="preload"/>
+<link as="script" href="../../_static/scripts/pydata-sphinx-theme.js?digest=8d27b9dea8ad943066ae" rel="preload"/>
+<script src="../../_static/vendor/fontawesome/6.5.1/js/all.min.js?digest=8d27b9dea8ad943066ae"></script>
+<script src="../../_static/documentation_options.js?v=a2c36881"></script>
+<script src="../../_static/doctools.js?v=888ff710"></script>
+<script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+<script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
+<script src="../../_static/copybutton.js?v=97f0b27d"></script>
+<script src="../../_static/jupyterlite_sphinx.js?v=f25406b8"></script>
+<script src="../../_static/design-tabs.js?v=36754332"></script>
+<script data-domain="scikit-learn.org" defer="defer" src="https://views.scientific-python.org/js/script.js"></script>
+<script>DOCUMENTATION_OPTIONS.pagename = 'auto_examples/applications/plot_prediction_latency';</script>
+<script>
         DOCUMENTATION_OPTIONS.theme_version = '0.15.2';
         DOCUMENTATION_OPTIONS.theme_switcher_json_url = 'https://charlie-xiao.github.io/assets/json/sklearn-versions-test.json';
         DOCUMENTATION_OPTIONS.theme_switcher_version_match = '1.5.dev0';
         DOCUMENTATION_OPTIONS.show_version_warning_banner = true;
         </script>
-    <script src="../../_static/scripts/details-permalink.js?v=b0ed9290"></script>
-    <link rel="icon" href="../../_static/favicon.ico"/>
-    <link rel="author" title="About these documents" href="../../about.html" />
-    <link rel="search" title="Search" href="../../search.html" />
-    <link rel="next" title="Species distribution modeling" href="plot_species_distribution_modeling.html" />
-    <link rel="prev" title="Outlier detection on a real data set" href="plot_outlier_detection_wine.html" />
-  <meta name="viewport" content="width=device-width, initial-scale=1"/>
-  <meta name="docsearch:language" content="en"/>
-  </head>
-  
-  
-  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
-
-  
-  
-  <a id="pst-skip-link" class="skip-link" href="#main-content">Skip to main content</a>
-  
-  <div id="pst-scroll-pixel-helper"></div>
-  
-  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
-    <i class="fa-solid fa-arrow-up"></i>
+<script src="../../_static/scripts/details-permalink.js?v=b0ed9290"></script>
+<link href="../../_static/favicon.ico" rel="icon"/>
+<link href="../../about.html" rel="author" title="About these documents"/>
+<link href="../../search.html" rel="search" title="Search"/>
+<link href="plot_species_distribution_modeling.html" rel="next" title="Species distribution modeling"/>
+<link href="plot_outlier_detection_wine.html" rel="prev" title="Outlier detection on a real data set"/>
+<meta content="width=device-width, initial-scale=1" name="viewport"/>
+<meta content="en" name="docsearch:language"/>
+</head>
+<body data-bs-root-margin="0px 0px -60%" data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-default-mode="" data-offset="180">
+<a class="skip-link" href="#main-content" id="pst-skip-link">Skip to main content</a>
+<div id="pst-scroll-pixel-helper"></div>
+<button class="btn rounded-pill" id="pst-back-to-top" type="button">
+<i class="fa-solid fa-arrow-up"></i>
     Back to top
   </button>
-
-  
-  <input type="checkbox"
-          class="sidebar-toggle"
-          name="__primary"
-          id="__primary"/>
-  <label class="overlay overlay-primary" for="__primary"></label>
-  
-  <input type="checkbox"
-          class="sidebar-toggle"
-          name="__secondary"
-          id="__secondary"/>
-  <label class="overlay overlay-secondary" for="__secondary"></label>
-  
-  <div class="search-button__wrapper">
-    <div class="search-button__overlay"></div>
-    <div class="search-button__search-container">
-<form class="bd-search d-flex align-items-center"
-      action="../../search.html"
-      method="get">
-  <i class="fa-solid fa-magnifying-glass"></i>
-  <input type="search"
-         class="form-control"
-         name="q"
-         id="search-input"
-         placeholder="Search the docs ..."
-         aria-label="Search the docs ..."
-         autocomplete="off"
-         autocorrect="off"
-         autocapitalize="off"
-         spellcheck="false"/>
-  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+<input class="sidebar-toggle" id="__primary" name="__primary" type="checkbox"/>
+<label class="overlay overlay-primary" for="__primary"></label>
+<input class="sidebar-toggle" id="__secondary" name="__secondary" type="checkbox"/>
+<label class="overlay overlay-secondary" for="__secondary"></label>
+<div class="search-button__wrapper">
+<div class="search-button__overlay"></div>
+<div class="search-button__search-container">
+<form action="../../search.html" class="bd-search d-flex align-items-center" method="get">
+<i class="fa-solid fa-magnifying-glass"></i>
+<input aria-label="Search the docs ..." autocapitalize="off" autocomplete="off" autocorrect="off" class="form-control" id="search-input" name="q" placeholder="Search the docs ..." spellcheck="false" type="search"/>
+<span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
 </form></div>
-  </div>
-  
-    <header class="bd-header navbar navbar-expand-lg bd-navbar">
+</div>
+<header class="bd-header navbar navbar-expand-lg bd-navbar">
 <div class="bd-header__inner bd-page-width">
-  <label class="sidebar-toggle primary-toggle" for="__primary">
-    <span class="fa-solid fa-bars"></span>
-  </label>
-  
-  
-  <div class=" navbar-header-items__start">
-    
-      <div class="navbar-item">
-
-  
-
+<label class="sidebar-toggle primary-toggle" for="__primary">
+<span class="fa-solid fa-bars"></span>
+</label>
+<div class="navbar-header-items__start">
+<div class="navbar-item">
 <a class="navbar-brand logo" href="../../index.html">
-  
-  
-  
-  
-  
-    
-    
-      
-    
-    
-    <img src="../../_static/scikit-learn-logo-small.png" class="logo__image only-light" alt="scikit-learn homepage"/>
-    <script>document.write(`<img src="../../_static/scikit-learn-logo-small.png" class="logo__image only-dark" alt="scikit-learn homepage"/>`);</script>
-  
-  
+<img alt="scikit-learn homepage" class="logo__image only-light" src="../../_static/scikit-learn-logo-small.png"/>
+<script>document.write(`<img src="../../_static/scikit-learn-logo-small.png" class="logo__image only-dark" alt="scikit-learn homepage"/>`);</script>
 </a></div>
-    
-  </div>
-  
-  <div class=" navbar-header-items">
-    
-    <div class="me-auto navbar-header-items__center">
-      
-        <div class="navbar-item">
+</div>
+<div class="navbar-header-items">
+<div class="me-auto navbar-header-items__center">
+<div class="navbar-item">
 <nav class="navbar-nav">
-  <ul class="bd-navbar-elements navbar-nav">
-    
-                    <li class="nav-item">
-                      <a class="nav-link nav-internal" href="../../install.html">
+<ul class="bd-navbar-elements navbar-nav">
+<li class="nav-item">
+<a class="nav-link nav-internal" href="../../install.html">
                         Install
                       </a>
-                    </li>
-                
-
-                    <li class="nav-item">
-                      <a class="nav-link nav-internal" href="../../user_guide.html">
+</li>
+<li class="nav-item">
+<a class="nav-link nav-internal" href="../../user_guide.html">
                         User Guide
                       </a>
-                    </li>
-                
-
-                    <li class="nav-item">
-                      <a class="nav-link nav-internal" href="../../modules/classes.html">
+</li>
+<li class="nav-item">
+<a class="nav-link nav-internal" href="../../modules/classes.html">
                         API
                       </a>
-                    </li>
-                
-
-                    <li class="nav-item current active">
-                      <a class="nav-link nav-internal" href="../index.html">
+</li>
+<li class="nav-item current active">
+<a class="nav-link nav-internal" href="../index.html">
                         Examples
                       </a>
-                    </li>
-                
-
-                    <li class="nav-item">
-                      <a class="nav-link nav-external" href="https://blog.scikit-learn.org/">
+</li>
+<li class="nav-item">
+<a class="nav-link nav-external" href="https://blog.scikit-learn.org/">
                         Community
                       </a>
-                    </li>
-                
-            <li class="nav-item dropdown">
-                <button class="btn dropdown-toggle nav-item" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-controls="pst-nav-more-links">
+</li>
+<li class="nav-item dropdown">
+<button aria-controls="pst-nav-more-links" aria-expanded="false" class="btn dropdown-toggle nav-item" data-bs-toggle="dropdown" type="button">
                     More
                 </button>
-                <ul id="pst-nav-more-links" class="dropdown-menu">
-                    
-                    <li class="nav-item">
-                      <a class="nav-link dropdown-item nav-internal" href="../../getting_started.html">
+<ul class="dropdown-menu" id="pst-nav-more-links">
+<li class="nav-item">
+<a class="nav-link dropdown-item nav-internal" href="../../getting_started.html">
                         Getting Started
                       </a>
-                    </li>
-                
-
-                    <li class="nav-item">
-                      <a class="nav-link dropdown-item nav-internal" href="../../tutorial/index.html">
+</li>
+<li class="nav-item">
+<a class="nav-link dropdown-item nav-internal" href="../../tutorial/index.html">
                         Tutorials
                       </a>
-                    </li>
-                
-
-                    <li class="nav-item">
-                      <a class="nav-link dropdown-item nav-internal" href="../../whats_new.html">
+</li>
+<li class="nav-item">
+<a class="nav-link dropdown-item nav-internal" href="../../whats_new.html">
                         Release History
                       </a>
-                    </li>
-                
-
-                    <li class="nav-item">
-                      <a class="nav-link dropdown-item nav-internal" href="../../glossary.html">
+</li>
+<li class="nav-item">
+<a class="nav-link dropdown-item nav-internal" href="../../glossary.html">
                         Glossary
                       </a>
-                    </li>
-                
-
-                    <li class="nav-item">
-                      <a class="nav-link dropdown-item nav-internal" href="../../developers/index.html">
+</li>
+<li class="nav-item">
+<a class="nav-link dropdown-item nav-internal" href="../../developers/index.html">
                         Development
                       </a>
-                    </li>
-                
-
-                    <li class="nav-item">
-                      <a class="nav-link dropdown-item nav-internal" href="../../faq.html">
+</li>
+<li class="nav-item">
+<a class="nav-link dropdown-item nav-internal" href="../../faq.html">
                         FAQ
                       </a>
-                    </li>
-                
-
-                    <li class="nav-item">
-                      <a class="nav-link dropdown-item nav-internal" href="../../support.html">
+</li>
+<li class="nav-item">
+<a class="nav-link dropdown-item nav-internal" href="../../support.html">
                         Support
                       </a>
-                    </li>
-                
-
-                    <li class="nav-item">
-                      <a class="nav-link dropdown-item nav-internal" href="../../related_projects.html">
+</li>
+<li class="nav-item">
+<a class="nav-link dropdown-item nav-internal" href="../../related_projects.html">
                         Related Projects
                       </a>
-                    </li>
-                
-
-                    <li class="nav-item">
-                      <a class="nav-link dropdown-item nav-internal" href="../../roadmap.html">
+</li>
+<li class="nav-item">
+<a class="nav-link dropdown-item nav-internal" href="../../roadmap.html">
                         Roadmap
                       </a>
-                    </li>
-                
-
-                    <li class="nav-item">
-                      <a class="nav-link dropdown-item nav-internal" href="../../governance.html">
+</li>
+<li class="nav-item">
+<a class="nav-link dropdown-item nav-internal" href="../../governance.html">
                         Governance
                       </a>
-                    </li>
-                
-
-                    <li class="nav-item">
-                      <a class="nav-link dropdown-item nav-internal" href="../../about.html">
+</li>
+<li class="nav-item">
+<a class="nav-link dropdown-item nav-internal" href="../../about.html">
                         About us
                       </a>
-                    </li>
-                
-
-                    <li class="nav-item">
-                      <a class="nav-link dropdown-item nav-external" href="https://scikit-learn.org/dev/versions.html">
+</li>
+<li class="nav-item">
+<a class="nav-link dropdown-item nav-external" href="https://scikit-learn.org/dev/versions.html">
                         Other Versions and Download
                       </a>
-                    </li>
-                
-                </ul>
-            </li>
-            
-  </ul>
+</li>
+</ul>
+</li>
+</ul>
 </nav></div>
-      
-    </div>
-    
-    
-    <div class="navbar-header-items__end">
-      
-        <div class="navbar-item navbar-persistent--container">
-          
-
+</div>
+<div class="navbar-header-items__end">
+<div class="navbar-item navbar-persistent--container">
 <script>
 document.write(`
   <button class="btn btn-sm navbar-btn search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
@@ -311,11 +207,8 @@ document.write(`
   </button>
 `);
 </script>
-        </div>
-      
-      
-        <div class="navbar-item">
-
+</div>
+<div class="navbar-item">
 <script>
 document.write(`
   <button class="btn btn-sm navbar-btn theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
@@ -325,24 +218,13 @@ document.write(`
   </button>
 `);
 </script></div>
-      
-        <div class="navbar-item"><ul class="navbar-icon-links navbar-nav"
-    aria-label="Icon Links">
-        <li class="nav-item">
-          
-          
-          
-          
-          
-          
-          
-          
-          <a href="https://github.com/scikit-learn/scikit-learn" title="GitHub" class="nav-link" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><span><i class="fa-brands fa-square-github fa-lg" aria-hidden="true"></i></span>
-            <span class="sr-only">GitHub</span></a>
-        </li>
+<div class="navbar-item"><ul aria-label="Icon Links" class="navbar-icon-links navbar-nav">
+<li class="nav-item">
+<a class="nav-link" data-bs-placement="bottom" data-bs-toggle="tooltip" href="https://github.com/scikit-learn/scikit-learn" rel="noopener" target="_blank" title="GitHub"><span><i aria-hidden="true" class="fa-brands fa-square-github fa-lg"></i></span>
+<span class="sr-only">GitHub</span></a>
+</li>
 </ul></div>
-      
-        <div class="navbar-item">
+<div class="navbar-item">
 <script>
 document.write(`
   <div class="version-switcher__container dropdown">
@@ -365,14 +247,9 @@ document.write(`
   </div>
 `);
 </script></div>
-      
-    </div>
-    
-  </div>
-  
-  
-    <div class="navbar-persistent--mobile">
-
+</div>
+</div>
+<div class="navbar-persistent--mobile">
 <script>
 document.write(`
   <button class="btn btn-sm navbar-btn search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
@@ -380,174 +257,117 @@ document.write(`
   </button>
 `);
 </script>
-    </div>
-  
-
-  
-    <label class="sidebar-toggle secondary-toggle" for="__secondary" tabindex="0">
-      <span class="fa-solid fa-outdent"></span>
-    </label>
-  
 </div>
-
-    </header>
-  
-
-  <div class="bd-container">
-    <div class="bd-container__inner bd-page-width">
-      
-      
-      
-      <div class="bd-sidebar-primary bd-sidebar">
-        
-
-  
-  <div class="sidebar-header-items sidebar-primary__section">
-    
-    
-      <div class="sidebar-header-items__center">
-        
-          <div class="navbar-item">
+<label class="sidebar-toggle secondary-toggle" for="__secondary" tabindex="0">
+<span class="fa-solid fa-outdent"></span>
+</label>
+</div>
+</header>
+<div class="bd-container">
+<div class="bd-container__inner bd-page-width">
+<div class="bd-sidebar-primary bd-sidebar">
+<div class="sidebar-header-items sidebar-primary__section">
+<div class="sidebar-header-items__center">
+<div class="navbar-item">
 <nav class="navbar-nav">
-  <ul class="bd-navbar-elements navbar-nav">
-    
-                    <li class="nav-item">
-                      <a class="nav-link nav-internal" href="../../install.html">
+<ul class="bd-navbar-elements navbar-nav">
+<li class="nav-item">
+<a class="nav-link nav-internal" href="../../install.html">
                         Install
                       </a>
-                    </li>
-                
-
-                    <li class="nav-item">
-                      <a class="nav-link nav-internal" href="../../user_guide.html">
+</li>
+<li class="nav-item">
+<a class="nav-link nav-internal" href="../../user_guide.html">
                         User Guide
                       </a>
-                    </li>
-                
-
-                    <li class="nav-item">
-                      <a class="nav-link nav-internal" href="../../modules/classes.html">
+</li>
+<li class="nav-item">
+<a class="nav-link nav-internal" href="../../modules/classes.html">
                         API
                       </a>
-                    </li>
-                
-
-                    <li class="nav-item current active">
-                      <a class="nav-link nav-internal" href="../index.html">
+</li>
+<li class="nav-item current active">
+<a class="nav-link nav-internal" href="../index.html">
                         Examples
                       </a>
-                    </li>
-                
-
-                    <li class="nav-item">
-                      <a class="nav-link nav-external" href="https://blog.scikit-learn.org/">
+</li>
+<li class="nav-item">
+<a class="nav-link nav-external" href="https://blog.scikit-learn.org/">
                         Community
                       </a>
-                    </li>
-                
-            <li class="nav-item dropdown">
-                <button class="btn dropdown-toggle nav-item" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-controls="pst-nav-more-links-2">
+</li>
+<li class="nav-item dropdown">
+<button aria-controls="pst-nav-more-links-2" aria-expanded="false" class="btn dropdown-toggle nav-item" data-bs-toggle="dropdown" type="button">
                     More
                 </button>
-                <ul id="pst-nav-more-links-2" class="dropdown-menu">
-                    
-                    <li class="nav-item">
-                      <a class="nav-link dropdown-item nav-internal" href="../../getting_started.html">
+<ul class="dropdown-menu" id="pst-nav-more-links-2">
+<li class="nav-item">
+<a class="nav-link dropdown-item nav-internal" href="../../getting_started.html">
                         Getting Started
                       </a>
-                    </li>
-                
-
-                    <li class="nav-item">
-                      <a class="nav-link dropdown-item nav-internal" href="../../tutorial/index.html">
+</li>
+<li class="nav-item">
+<a class="nav-link dropdown-item nav-internal" href="../../tutorial/index.html">
                         Tutorials
                       </a>
-                    </li>
-                
-
-                    <li class="nav-item">
-                      <a class="nav-link dropdown-item nav-internal" href="../../whats_new.html">
+</li>
+<li class="nav-item">
+<a class="nav-link dropdown-item nav-internal" href="../../whats_new.html">
                         Release History
                       </a>
-                    </li>
-                
-
-                    <li class="nav-item">
-                      <a class="nav-link dropdown-item nav-internal" href="../../glossary.html">
+</li>
+<li class="nav-item">
+<a class="nav-link dropdown-item nav-internal" href="../../glossary.html">
                         Glossary
                       </a>
-                    </li>
-                
-
-                    <li class="nav-item">
-                      <a class="nav-link dropdown-item nav-internal" href="../../developers/index.html">
+</li>
+<li class="nav-item">
+<a class="nav-link dropdown-item nav-internal" href="../../developers/index.html">
                         Development
                       </a>
-                    </li>
-                
-
-                    <li class="nav-item">
-                      <a class="nav-link dropdown-item nav-internal" href="../../faq.html">
+</li>
+<li class="nav-item">
+<a class="nav-link dropdown-item nav-internal" href="../../faq.html">
                         FAQ
                       </a>
-                    </li>
-                
-
-                    <li class="nav-item">
-                      <a class="nav-link dropdown-item nav-internal" href="../../support.html">
+</li>
+<li class="nav-item">
+<a class="nav-link dropdown-item nav-internal" href="../../support.html">
                         Support
                       </a>
-                    </li>
-                
-
-                    <li class="nav-item">
-                      <a class="nav-link dropdown-item nav-internal" href="../../related_projects.html">
+</li>
+<li class="nav-item">
+<a class="nav-link dropdown-item nav-internal" href="../../related_projects.html">
                         Related Projects
                       </a>
-                    </li>
-                
-
-                    <li class="nav-item">
-                      <a class="nav-link dropdown-item nav-internal" href="../../roadmap.html">
+</li>
+<li class="nav-item">
+<a class="nav-link dropdown-item nav-internal" href="../../roadmap.html">
                         Roadmap
                       </a>
-                    </li>
-                
-
-                    <li class="nav-item">
-                      <a class="nav-link dropdown-item nav-internal" href="../../governance.html">
+</li>
+<li class="nav-item">
+<a class="nav-link dropdown-item nav-internal" href="../../governance.html">
                         Governance
                       </a>
-                    </li>
-                
-
-                    <li class="nav-item">
-                      <a class="nav-link dropdown-item nav-internal" href="../../about.html">
+</li>
+<li class="nav-item">
+<a class="nav-link dropdown-item nav-internal" href="../../about.html">
                         About us
                       </a>
-                    </li>
-                
-
-                    <li class="nav-item">
-                      <a class="nav-link dropdown-item nav-external" href="https://scikit-learn.org/dev/versions.html">
+</li>
+<li class="nav-item">
+<a class="nav-link dropdown-item nav-external" href="https://scikit-learn.org/dev/versions.html">
                         Other Versions and Download
                       </a>
-                    </li>
-                
-                </ul>
-            </li>
-            
-  </ul>
+</li>
+</ul>
+</li>
+</ul>
 </nav></div>
-        
-      </div>
-    
-    
-    
-      <div class="sidebar-header-items__end">
-        
-          <div class="navbar-item">
-
+</div>
+<div class="sidebar-header-items__end">
+<div class="navbar-item">
 <script>
 document.write(`
   <button class="btn btn-sm navbar-btn theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
@@ -557,24 +377,13 @@ document.write(`
   </button>
 `);
 </script></div>
-        
-          <div class="navbar-item"><ul class="navbar-icon-links navbar-nav"
-    aria-label="Icon Links">
-        <li class="nav-item">
-          
-          
-          
-          
-          
-          
-          
-          
-          <a href="https://github.com/scikit-learn/scikit-learn" title="GitHub" class="nav-link" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><span><i class="fa-brands fa-square-github fa-lg" aria-hidden="true"></i></span>
-            <span class="sr-only">GitHub</span></a>
-        </li>
+<div class="navbar-item"><ul aria-label="Icon Links" class="navbar-icon-links navbar-nav">
+<li class="nav-item">
+<a class="nav-link" data-bs-placement="bottom" data-bs-toggle="tooltip" href="https://github.com/scikit-learn/scikit-learn" rel="noopener" target="_blank" title="GitHub"><span><i aria-hidden="true" class="fa-brands fa-square-github fa-lg"></i></span>
+<span class="sr-only">GitHub</span></a>
+</li>
 </ul></div>
-        
-          <div class="navbar-item">
+<div class="navbar-item">
 <script>
 document.write(`
   <div class="version-switcher__container dropdown">
@@ -597,17 +406,13 @@ document.write(`
   </div>
 `);
 </script></div>
-        
-      </div>
-    
-  </div>
-  
-    <div class="sidebar-primary-items__start sidebar-primary__section">
-        <div class="sidebar-primary-item">
-<nav class="bd-docs-nav bd-links"
-     aria-label="Section Navigation">
-  <p class="bd-links__title" role="heading" aria-level="1">Section Navigation</p>
-  <div class="bd-toc-item navbar-nav"><ul class="current nav bd-sidenav">
+</div>
+</div>
+<div class="sidebar-primary-items__start sidebar-primary__section">
+<div class="sidebar-primary-item">
+<nav aria-label="Section Navigation" class="bd-docs-nav bd-links">
+<p aria-level="1" class="bd-links__title" role="heading">Section Navigation</p>
+<div class="bd-toc-item navbar-nav"><ul class="current nav bd-sidenav">
 <li class="toctree-l1 has-children"><a class="reference internal" href="../release_highlights/index.html">Release Highlights</a><input class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-1"><i class="fa-solid fa-chevron-down"></i></label><ul>
 <li class="toctree-l2"><a class="reference internal" href="../release_highlights/plot_release_highlights_1_4_0.html">Release Highlights for scikit-learn 1.4</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../release_highlights/plot_release_highlights_1_3_0.html">Release Highlights for scikit-learn 1.3</a></li>
@@ -1001,68 +806,37 @@ document.write(`
 </ul>
 </div>
 </nav></div>
-    </div>
-  
-  
-  <div class="sidebar-primary-items__end sidebar-primary__section">
-  </div>
-  
-  <div id="rtd-footer-container"></div>
-
-
-      </div>
-      
-      <main id="main-content" class="bd-main">
-        
-        
-          <div class="bd-content">
-            <div class="bd-article-container">
-              
-              <div class="bd-header-article">
+</div>
+<div class="sidebar-primary-items__end sidebar-primary__section">
+</div>
+<div id="rtd-footer-container"></div>
+</div>
+<main class="bd-main" id="main-content">
+<div class="bd-content">
+<div class="bd-article-container">
+<div class="bd-header-article">
 <div class="header-article-items header-article__inner">
-  
-    <div class="header-article-items__start">
-      
-        <div class="header-article-item">
-
-
-
+<div class="header-article-items__start">
+<div class="header-article-item">
 <nav aria-label="Breadcrumb">
-  <ul class="bd-breadcrumbs">
-    
-    <li class="breadcrumb-item breadcrumb-home">
-      <a href="../../index.html" class="nav-link" aria-label="Home">
-        <i class="fa-solid fa-home"></i>
-      </a>
-    </li>
-    
-    <li class="breadcrumb-item"><a href="../index.html" class="nav-link">Examples</a></li>
-    
-    
-    <li class="breadcrumb-item"><a href="index.html" class="nav-link">Examples based on real world datasets</a></li>
-    
-    <li class="breadcrumb-item active" aria-current="page">Prediction Latency</li>
-  </ul>
+<ul class="bd-breadcrumbs">
+<li class="breadcrumb-item breadcrumb-home">
+<a aria-label="Home" class="nav-link" href="../../index.html">
+<i class="fa-solid fa-home"></i>
+</a>
+</li>
+<li class="breadcrumb-item"><a class="nav-link" href="../index.html">Examples</a></li>
+<li class="breadcrumb-item"><a class="nav-link" href="index.html">Examples based on real world datasets</a></li>
+<li aria-current="page" class="breadcrumb-item active">Prediction Latency</li>
+</ul>
 </nav>
 </div>
-      
-    </div>
-  
-  
 </div>
 </div>
-              
-              
-              
-                
+</div>
 <div id="searchbox"></div>
-                <article class="bd-article">
-                  
-  <div class="sphx-glr-download-link-note admonition note">
-<p class="admonition-title">Note</p>
-<p><a class="reference internal" href="#sphx-glr-download-auto-examples-applications-plot-prediction-latency-py"><span class="std std-ref">Go to the end</span></a>
-to download the full example code or to run this example in your browser via JupyterLite or Binder</p>
-</div>
+<article class="bd-article">
+
 <section class="sphx-glr-example-title" id="prediction-latency">
 <span id="sphx-glr-auto-examples-applications-plot-prediction-latency-py"></span><h1>Prediction Latency<a class="headerlink" href="#prediction-latency" title="Link to this heading">#</a></h1>
 <p>This is an example showing the prediction latency of various scikit-learn
@@ -1075,67 +849,67 @@ either in bulk or atomic (i.e. one by one) mode.</p>
 
 <span class="kn">import</span> <span class="nn">gc</span>
 <span class="kn">import</span> <span class="nn">time</span>
-<span class="kn">from</span> <span class="nn">collections</span> <span class="kn">import</span> <a href="https://docs.python.org/3/library/collections.html#collections.defaultdict" title="collections.defaultdict" class="sphx-glr-backref-module-collections sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">defaultdict</span></a>
+<span class="kn">from</span> <span class="nn">collections</span> <span class="kn">import</span> <a class="sphx-glr-backref-module-collections sphx-glr-backref-type-py-class sphx-glr-backref-instance" href="https://docs.python.org/3/library/collections.html#collections.defaultdict" title="collections.defaultdict"><span class="n">defaultdict</span></a>
 
 <span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 
-<span class="kn">from</span> <span class="nn">sklearn.datasets</span> <span class="kn">import</span> <a href="../../modules/generated/sklearn.datasets.make_regression.html#sklearn.datasets.make_regression" title="sklearn.datasets.make_regression" class="sphx-glr-backref-module-sklearn-datasets sphx-glr-backref-type-py-function"><span class="n">make_regression</span></a>
-<span class="kn">from</span> <span class="nn">sklearn.ensemble</span> <span class="kn">import</span> <a href="../../modules/generated/sklearn.ensemble.RandomForestRegressor.html#sklearn.ensemble.RandomForestRegressor" title="sklearn.ensemble.RandomForestRegressor" class="sphx-glr-backref-module-sklearn-ensemble sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">RandomForestRegressor</span></a>
-<span class="kn">from</span> <span class="nn">sklearn.linear_model</span> <span class="kn">import</span> <a href="../../modules/generated/sklearn.linear_model.Ridge.html#sklearn.linear_model.Ridge" title="sklearn.linear_model.Ridge" class="sphx-glr-backref-module-sklearn-linear_model sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">Ridge</span></a><span class="p">,</span> <a href="../../modules/generated/sklearn.linear_model.SGDRegressor.html#sklearn.linear_model.SGDRegressor" title="sklearn.linear_model.SGDRegressor" class="sphx-glr-backref-module-sklearn-linear_model sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">SGDRegressor</span></a>
-<span class="kn">from</span> <span class="nn">sklearn.model_selection</span> <span class="kn">import</span> <a href="../../modules/generated/sklearn.model_selection.train_test_split.html#sklearn.model_selection.train_test_split" title="sklearn.model_selection.train_test_split" class="sphx-glr-backref-module-sklearn-model_selection sphx-glr-backref-type-py-function"><span class="n">train_test_split</span></a>
-<span class="kn">from</span> <span class="nn">sklearn.preprocessing</span> <span class="kn">import</span> <a href="../../modules/generated/sklearn.preprocessing.StandardScaler.html#sklearn.preprocessing.StandardScaler" title="sklearn.preprocessing.StandardScaler" class="sphx-glr-backref-module-sklearn-preprocessing sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">StandardScaler</span></a>
-<span class="kn">from</span> <span class="nn">sklearn.svm</span> <span class="kn">import</span> <a href="../../modules/generated/sklearn.svm.SVR.html#sklearn.svm.SVR" title="sklearn.svm.SVR" class="sphx-glr-backref-module-sklearn-svm sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">SVR</span></a>
-<span class="kn">from</span> <span class="nn">sklearn.utils</span> <span class="kn">import</span> <a href="../../modules/generated/sklearn.utils.shuffle.html#sklearn.utils.shuffle" title="sklearn.utils.shuffle" class="sphx-glr-backref-module-sklearn-utils sphx-glr-backref-type-py-function"><span class="n">shuffle</span></a>
+<span class="kn">from</span> <span class="nn">sklearn.datasets</span> <span class="kn">import</span> <a class="sphx-glr-backref-module-sklearn-datasets sphx-glr-backref-type-py-function" href="../../modules/generated/sklearn.datasets.make_regression.html#sklearn.datasets.make_regression" title="sklearn.datasets.make_regression"><span class="n">make_regression</span></a>
+<span class="kn">from</span> <span class="nn">sklearn.ensemble</span> <span class="kn">import</span> <a class="sphx-glr-backref-module-sklearn-ensemble sphx-glr-backref-type-py-class sphx-glr-backref-instance" href="../../modules/generated/sklearn.ensemble.RandomForestRegressor.html#sklearn.ensemble.RandomForestRegressor" title="sklearn.ensemble.RandomForestRegressor"><span class="n">RandomForestRegressor</span></a>
+<span class="kn">from</span> <span class="nn">sklearn.linear_model</span> <span class="kn">import</span> <a class="sphx-glr-backref-module-sklearn-linear_model sphx-glr-backref-type-py-class sphx-glr-backref-instance" href="../../modules/generated/sklearn.linear_model.Ridge.html#sklearn.linear_model.Ridge" title="sklearn.linear_model.Ridge"><span class="n">Ridge</span></a><span class="p">,</span> <a class="sphx-glr-backref-module-sklearn-linear_model sphx-glr-backref-type-py-class sphx-glr-backref-instance" href="../../modules/generated/sklearn.linear_model.SGDRegressor.html#sklearn.linear_model.SGDRegressor" title="sklearn.linear_model.SGDRegressor"><span class="n">SGDRegressor</span></a>
+<span class="kn">from</span> <span class="nn">sklearn.model_selection</span> <span class="kn">import</span> <a class="sphx-glr-backref-module-sklearn-model_selection sphx-glr-backref-type-py-function" href="../../modules/generated/sklearn.model_selection.train_test_split.html#sklearn.model_selection.train_test_split" title="sklearn.model_selection.train_test_split"><span class="n">train_test_split</span></a>
+<span class="kn">from</span> <span class="nn">sklearn.preprocessing</span> <span class="kn">import</span> <a class="sphx-glr-backref-module-sklearn-preprocessing sphx-glr-backref-type-py-class sphx-glr-backref-instance" href="../../modules/generated/sklearn.preprocessing.StandardScaler.html#sklearn.preprocessing.StandardScaler" title="sklearn.preprocessing.StandardScaler"><span class="n">StandardScaler</span></a>
+<span class="kn">from</span> <span class="nn">sklearn.svm</span> <span class="kn">import</span> <a class="sphx-glr-backref-module-sklearn-svm sphx-glr-backref-type-py-class sphx-glr-backref-instance" href="../../modules/generated/sklearn.svm.SVR.html#sklearn.svm.SVR" title="sklearn.svm.SVR"><span class="n">SVR</span></a>
+<span class="kn">from</span> <span class="nn">sklearn.utils</span> <span class="kn">import</span> <a class="sphx-glr-backref-module-sklearn-utils sphx-glr-backref-type-py-function" href="../../modules/generated/sklearn.utils.shuffle.html#sklearn.utils.shuffle" title="sklearn.utils.shuffle"><span class="n">shuffle</span></a>
 
 
 <span class="k">def</span> <span class="nf">_not_in_sphinx</span><span class="p">():</span>
     <span class="c1"># Hack to detect whether we are running by the sphinx builder</span>
-    <span class="k">return</span> <span class="s2">&quot;__file__&quot;</span> <span class="ow">in</span> <span class="nb">globals</span><span class="p">()</span>
+    <span class="k">return</span> <span class="s2">"__file__"</span> <span class="ow">in</span> <span class="nb">globals</span><span class="p">()</span>
 </pre></div>
 </div>
 <section id="benchmark-and-plot-helper-functions">
 <h2>Benchmark and plot helper functions<a class="headerlink" href="#benchmark-and-plot-helper-functions" title="Link to this heading">#</a></h2>
 <div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">atomic_benchmark_estimator</span><span class="p">(</span><span class="n">estimator</span><span class="p">,</span> <span class="n">X_test</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Measure runtime prediction of each instance.&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""Measure runtime prediction of each instance."""</span>
     <span class="n">n_instances</span> <span class="o">=</span> <span class="n">X_test</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
-    <span class="n">runtimes</span> <span class="o">=</span> <a href="https://numpy.org/doc/stable/reference/generated/numpy.zeros.html#numpy.zeros" title="numpy.zeros" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-function"><span class="n">np</span><span class="o">.</span><span class="n">zeros</span></a><span class="p">(</span><span class="n">n_instances</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">float</span><span class="p">)</span>
+    <span class="n">runtimes</span> <span class="o">=</span> <a class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-function" href="https://numpy.org/doc/stable/reference/generated/numpy.zeros.html#numpy.zeros" title="numpy.zeros"><span class="n">np</span><span class="o">.</span><span class="n">zeros</span></a><span class="p">(</span><span class="n">n_instances</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">float</span><span class="p">)</span>
     <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n_instances</span><span class="p">):</span>
         <span class="n">instance</span> <span class="o">=</span> <span class="n">X_test</span><span class="p">[[</span><span class="n">i</span><span class="p">],</span> <span class="p">:]</span>
-        <span class="n">start</span> <span class="o">=</span> <a href="https://docs.python.org/3/library/time.html#time.time" title="time.time" class="sphx-glr-backref-module-time sphx-glr-backref-type-py-function"><span class="n">time</span><span class="o">.</span><span class="n">time</span></a><span class="p">()</span>
+        <span class="n">start</span> <span class="o">=</span> <a class="sphx-glr-backref-module-time sphx-glr-backref-type-py-function" href="https://docs.python.org/3/library/time.html#time.time" title="time.time"><span class="n">time</span><span class="o">.</span><span class="n">time</span></a><span class="p">()</span>
         <span class="n">estimator</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">instance</span><span class="p">)</span>
-        <span class="n">runtimes</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <a href="https://docs.python.org/3/library/time.html#time.time" title="time.time" class="sphx-glr-backref-module-time sphx-glr-backref-type-py-function"><span class="n">time</span><span class="o">.</span><span class="n">time</span></a><span class="p">()</span> <span class="o">-</span> <span class="n">start</span>
+        <span class="n">runtimes</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <a class="sphx-glr-backref-module-time sphx-glr-backref-type-py-function" href="https://docs.python.org/3/library/time.html#time.time" title="time.time"><span class="n">time</span><span class="o">.</span><span class="n">time</span></a><span class="p">()</span> <span class="o">-</span> <span class="n">start</span>
     <span class="k">if</span> <span class="n">verbose</span><span class="p">:</span>
         <span class="nb">print</span><span class="p">(</span>
-            <span class="s2">&quot;atomic_benchmark runtimes:&quot;</span><span class="p">,</span>
+            <span class="s2">"atomic_benchmark runtimes:"</span><span class="p">,</span>
             <span class="nb">min</span><span class="p">(</span><span class="n">runtimes</span><span class="p">),</span>
-            <a href="https://numpy.org/doc/stable/reference/generated/numpy.percentile.html#numpy.percentile" title="numpy.percentile" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-function"><span class="n">np</span><span class="o">.</span><span class="n">percentile</span></a><span class="p">(</span><span class="n">runtimes</span><span class="p">,</span> <span class="mi">50</span><span class="p">),</span>
+            <a class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-function" href="https://numpy.org/doc/stable/reference/generated/numpy.percentile.html#numpy.percentile" title="numpy.percentile"><span class="n">np</span><span class="o">.</span><span class="n">percentile</span></a><span class="p">(</span><span class="n">runtimes</span><span class="p">,</span> <span class="mi">50</span><span class="p">),</span>
             <span class="nb">max</span><span class="p">(</span><span class="n">runtimes</span><span class="p">),</span>
         <span class="p">)</span>
     <span class="k">return</span> <span class="n">runtimes</span>
 
 
 <span class="k">def</span> <span class="nf">bulk_benchmark_estimator</span><span class="p">(</span><span class="n">estimator</span><span class="p">,</span> <span class="n">X_test</span><span class="p">,</span> <span class="n">n_bulk_repeats</span><span class="p">,</span> <span class="n">verbose</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Measure runtime prediction of the whole input.&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""Measure runtime prediction of the whole input."""</span>
     <span class="n">n_instances</span> <span class="o">=</span> <span class="n">X_test</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
-    <span class="n">runtimes</span> <span class="o">=</span> <a href="https://numpy.org/doc/stable/reference/generated/numpy.zeros.html#numpy.zeros" title="numpy.zeros" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-function"><span class="n">np</span><span class="o">.</span><span class="n">zeros</span></a><span class="p">(</span><span class="n">n_bulk_repeats</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">float</span><span class="p">)</span>
+    <span class="n">runtimes</span> <span class="o">=</span> <a class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-function" href="https://numpy.org/doc/stable/reference/generated/numpy.zeros.html#numpy.zeros" title="numpy.zeros"><span class="n">np</span><span class="o">.</span><span class="n">zeros</span></a><span class="p">(</span><span class="n">n_bulk_repeats</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">float</span><span class="p">)</span>
     <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n_bulk_repeats</span><span class="p">):</span>
-        <span class="n">start</span> <span class="o">=</span> <a href="https://docs.python.org/3/library/time.html#time.time" title="time.time" class="sphx-glr-backref-module-time sphx-glr-backref-type-py-function"><span class="n">time</span><span class="o">.</span><span class="n">time</span></a><span class="p">()</span>
+        <span class="n">start</span> <span class="o">=</span> <a class="sphx-glr-backref-module-time sphx-glr-backref-type-py-function" href="https://docs.python.org/3/library/time.html#time.time" title="time.time"><span class="n">time</span><span class="o">.</span><span class="n">time</span></a><span class="p">()</span>
         <span class="n">estimator</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">X_test</span><span class="p">)</span>
-        <span class="n">runtimes</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <a href="https://docs.python.org/3/library/time.html#time.time" title="time.time" class="sphx-glr-backref-module-time sphx-glr-backref-type-py-function"><span class="n">time</span><span class="o">.</span><span class="n">time</span></a><span class="p">()</span> <span class="o">-</span> <span class="n">start</span>
-    <span class="n">runtimes</span> <span class="o">=</span> <a href="https://numpy.org/doc/stable/reference/generated/numpy.array.html#numpy.array" title="numpy.array" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-function"><span class="n">np</span><span class="o">.</span><span class="n">array</span></a><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span> <span class="o">/</span> <span class="nb">float</span><span class="p">(</span><span class="n">n_instances</span><span class="p">),</span> <span class="n">runtimes</span><span class="p">)))</span>
+        <span class="n">runtimes</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <a class="sphx-glr-backref-module-time sphx-glr-backref-type-py-function" href="https://docs.python.org/3/library/time.html#time.time" title="time.time"><span class="n">time</span><span class="o">.</span><span class="n">time</span></a><span class="p">()</span> <span class="o">-</span> <span class="n">start</span>
+    <span class="n">runtimes</span> <span class="o">=</span> <a class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-function" href="https://numpy.org/doc/stable/reference/generated/numpy.array.html#numpy.array" title="numpy.array"><span class="n">np</span><span class="o">.</span><span class="n">array</span></a><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span> <span class="o">/</span> <span class="nb">float</span><span class="p">(</span><span class="n">n_instances</span><span class="p">),</span> <span class="n">runtimes</span><span class="p">)))</span>
     <span class="k">if</span> <span class="n">verbose</span><span class="p">:</span>
         <span class="nb">print</span><span class="p">(</span>
-            <span class="s2">&quot;bulk_benchmark runtimes:&quot;</span><span class="p">,</span>
+            <span class="s2">"bulk_benchmark runtimes:"</span><span class="p">,</span>
             <span class="nb">min</span><span class="p">(</span><span class="n">runtimes</span><span class="p">),</span>
-            <a href="https://numpy.org/doc/stable/reference/generated/numpy.percentile.html#numpy.percentile" title="numpy.percentile" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-function"><span class="n">np</span><span class="o">.</span><span class="n">percentile</span></a><span class="p">(</span><span class="n">runtimes</span><span class="p">,</span> <span class="mi">50</span><span class="p">),</span>
+            <a class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-function" href="https://numpy.org/doc/stable/reference/generated/numpy.percentile.html#numpy.percentile" title="numpy.percentile"><span class="n">np</span><span class="o">.</span><span class="n">percentile</span></a><span class="p">(</span><span class="n">runtimes</span><span class="p">,</span> <span class="mi">50</span><span class="p">),</span>
             <span class="nb">max</span><span class="p">(</span><span class="n">runtimes</span><span class="p">),</span>
         <span class="p">)</span>
     <span class="k">return</span> <span class="n">runtimes</span>
 
 
 <span class="k">def</span> <span class="nf">benchmark_estimator</span><span class="p">(</span><span class="n">estimator</span><span class="p">,</span> <span class="n">X_test</span><span class="p">,</span> <span class="n">n_bulk_repeats</span><span class="o">=</span><span class="mi">30</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Measure runtimes of prediction in both atomic and bulk mode.</span>
 
 <span class="sd">    Parameters</span>
@@ -1149,109 +923,109 @@ either in bulk or atomic (i.e. one by one) mode.</p>
 <span class="sd">    atomic_runtimes, bulk_runtimes : a pair of `np.array` which contain the</span>
 <span class="sd">    runtimes in seconds.</span>
 
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
     <span class="n">atomic_runtimes</span> <span class="o">=</span> <span class="n">atomic_benchmark_estimator</span><span class="p">(</span><span class="n">estimator</span><span class="p">,</span> <span class="n">X_test</span><span class="p">,</span> <span class="n">verbose</span><span class="p">)</span>
     <span class="n">bulk_runtimes</span> <span class="o">=</span> <span class="n">bulk_benchmark_estimator</span><span class="p">(</span><span class="n">estimator</span><span class="p">,</span> <span class="n">X_test</span><span class="p">,</span> <span class="n">n_bulk_repeats</span><span class="p">,</span> <span class="n">verbose</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">atomic_runtimes</span><span class="p">,</span> <span class="n">bulk_runtimes</span>
 
 
 <span class="k">def</span> <span class="nf">generate_dataset</span><span class="p">(</span><span class="n">n_train</span><span class="p">,</span> <span class="n">n_test</span><span class="p">,</span> <span class="n">n_features</span><span class="p">,</span> <span class="n">noise</span><span class="o">=</span><span class="mf">0.1</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Generate a regression dataset with the given parameters.&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""Generate a regression dataset with the given parameters."""</span>
     <span class="k">if</span> <span class="n">verbose</span><span class="p">:</span>
-        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;generating dataset...&quot;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">"generating dataset..."</span><span class="p">)</span>
 
-    <span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">coef</span> <span class="o">=</span> <a href="../../modules/generated/sklearn.datasets.make_regression.html#sklearn.datasets.make_regression" title="sklearn.datasets.make_regression" class="sphx-glr-backref-module-sklearn-datasets sphx-glr-backref-type-py-function"><span class="n">make_regression</span></a><span class="p">(</span>
+    <span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">coef</span> <span class="o">=</span> <a class="sphx-glr-backref-module-sklearn-datasets sphx-glr-backref-type-py-function" href="../../modules/generated/sklearn.datasets.make_regression.html#sklearn.datasets.make_regression" title="sklearn.datasets.make_regression"><span class="n">make_regression</span></a><span class="p">(</span>
         <span class="n">n_samples</span><span class="o">=</span><span class="n">n_train</span> <span class="o">+</span> <span class="n">n_test</span><span class="p">,</span> <span class="n">n_features</span><span class="o">=</span><span class="n">n_features</span><span class="p">,</span> <span class="n">noise</span><span class="o">=</span><span class="n">noise</span><span class="p">,</span> <span class="n">coef</span><span class="o">=</span><span class="kc">True</span>
     <span class="p">)</span>
 
     <span class="n">random_seed</span> <span class="o">=</span> <span class="mi">13</span>
-    <span class="n">X_train</span><span class="p">,</span> <span class="n">X_test</span><span class="p">,</span> <span class="n">y_train</span><span class="p">,</span> <span class="n">y_test</span> <span class="o">=</span> <a href="../../modules/generated/sklearn.model_selection.train_test_split.html#sklearn.model_selection.train_test_split" title="sklearn.model_selection.train_test_split" class="sphx-glr-backref-module-sklearn-model_selection sphx-glr-backref-type-py-function"><span class="n">train_test_split</span></a><span class="p">(</span>
+    <span class="n">X_train</span><span class="p">,</span> <span class="n">X_test</span><span class="p">,</span> <span class="n">y_train</span><span class="p">,</span> <span class="n">y_test</span> <span class="o">=</span> <a class="sphx-glr-backref-module-sklearn-model_selection sphx-glr-backref-type-py-function" href="../../modules/generated/sklearn.model_selection.train_test_split.html#sklearn.model_selection.train_test_split" title="sklearn.model_selection.train_test_split"><span class="n">train_test_split</span></a><span class="p">(</span>
         <span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">train_size</span><span class="o">=</span><span class="n">n_train</span><span class="p">,</span> <span class="n">test_size</span><span class="o">=</span><span class="n">n_test</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="n">random_seed</span>
     <span class="p">)</span>
-    <span class="n">X_train</span><span class="p">,</span> <span class="n">y_train</span> <span class="o">=</span> <a href="../../modules/generated/sklearn.utils.shuffle.html#sklearn.utils.shuffle" title="sklearn.utils.shuffle" class="sphx-glr-backref-module-sklearn-utils sphx-glr-backref-type-py-function"><span class="n">shuffle</span></a><span class="p">(</span><span class="n">X_train</span><span class="p">,</span> <span class="n">y_train</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="n">random_seed</span><span class="p">)</span>
+    <span class="n">X_train</span><span class="p">,</span> <span class="n">y_train</span> <span class="o">=</span> <a class="sphx-glr-backref-module-sklearn-utils sphx-glr-backref-type-py-function" href="../../modules/generated/sklearn.utils.shuffle.html#sklearn.utils.shuffle" title="sklearn.utils.shuffle"><span class="n">shuffle</span></a><span class="p">(</span><span class="n">X_train</span><span class="p">,</span> <span class="n">y_train</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="n">random_seed</span><span class="p">)</span>
 
-    <span class="n">X_scaler</span> <span class="o">=</span> <a href="../../modules/generated/sklearn.preprocessing.StandardScaler.html#sklearn.preprocessing.StandardScaler" title="sklearn.preprocessing.StandardScaler" class="sphx-glr-backref-module-sklearn-preprocessing sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">StandardScaler</span></a><span class="p">()</span>
+    <span class="n">X_scaler</span> <span class="o">=</span> <a class="sphx-glr-backref-module-sklearn-preprocessing sphx-glr-backref-type-py-class sphx-glr-backref-instance" href="../../modules/generated/sklearn.preprocessing.StandardScaler.html#sklearn.preprocessing.StandardScaler" title="sklearn.preprocessing.StandardScaler"><span class="n">StandardScaler</span></a><span class="p">()</span>
     <span class="n">X_train</span> <span class="o">=</span> <span class="n">X_scaler</span><span class="o">.</span><span class="n">fit_transform</span><span class="p">(</span><span class="n">X_train</span><span class="p">)</span>
     <span class="n">X_test</span> <span class="o">=</span> <span class="n">X_scaler</span><span class="o">.</span><span class="n">transform</span><span class="p">(</span><span class="n">X_test</span><span class="p">)</span>
 
-    <span class="n">y_scaler</span> <span class="o">=</span> <a href="../../modules/generated/sklearn.preprocessing.StandardScaler.html#sklearn.preprocessing.StandardScaler" title="sklearn.preprocessing.StandardScaler" class="sphx-glr-backref-module-sklearn-preprocessing sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">StandardScaler</span></a><span class="p">()</span>
+    <span class="n">y_scaler</span> <span class="o">=</span> <a class="sphx-glr-backref-module-sklearn-preprocessing sphx-glr-backref-type-py-class sphx-glr-backref-instance" href="../../modules/generated/sklearn.preprocessing.StandardScaler.html#sklearn.preprocessing.StandardScaler" title="sklearn.preprocessing.StandardScaler"><span class="n">StandardScaler</span></a><span class="p">()</span>
     <span class="n">y_train</span> <span class="o">=</span> <span class="n">y_scaler</span><span class="o">.</span><span class="n">fit_transform</span><span class="p">(</span><span class="n">y_train</span><span class="p">[:,</span> <span class="kc">None</span><span class="p">])[:,</span> <span class="mi">0</span><span class="p">]</span>
     <span class="n">y_test</span> <span class="o">=</span> <span class="n">y_scaler</span><span class="o">.</span><span class="n">transform</span><span class="p">(</span><span class="n">y_test</span><span class="p">[:,</span> <span class="kc">None</span><span class="p">])[:,</span> <span class="mi">0</span><span class="p">]</span>
 
-    <a href="https://docs.python.org/3/library/gc.html#gc.collect" title="gc.collect" class="sphx-glr-backref-module-gc sphx-glr-backref-type-py-function"><span class="n">gc</span><span class="o">.</span><span class="n">collect</span></a><span class="p">()</span>
+    <a class="sphx-glr-backref-module-gc sphx-glr-backref-type-py-function" href="https://docs.python.org/3/library/gc.html#gc.collect" title="gc.collect"><span class="n">gc</span><span class="o">.</span><span class="n">collect</span></a><span class="p">()</span>
     <span class="k">if</span> <span class="n">verbose</span><span class="p">:</span>
-        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;ok&quot;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">"ok"</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">X_train</span><span class="p">,</span> <span class="n">y_train</span><span class="p">,</span> <span class="n">X_test</span><span class="p">,</span> <span class="n">y_test</span>
 
 
 <span class="k">def</span> <span class="nf">boxplot_runtimes</span><span class="p">(</span><span class="n">runtimes</span><span class="p">,</span> <span class="n">pred_type</span><span class="p">,</span> <span class="n">configuration</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Plot a new `Figure` with boxplots of prediction runtimes.</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
 <span class="sd">    runtimes : list of `np.array` of latencies in micro-seconds</span>
 <span class="sd">    cls_names : list of estimator class names that generated the runtimes</span>
-<span class="sd">    pred_type : &#39;bulk&#39; or &#39;atomic&#39;</span>
+<span class="sd">    pred_type : 'bulk' or 'atomic'</span>
 
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
 
-    <span class="n">fig</span><span class="p">,</span> <span class="n">ax1</span> <span class="o">=</span> <a href="https://matplotlib.org/stable/api/_as_gen/matplotlib.pyplot.subplots.html#matplotlib.pyplot.subplots" title="matplotlib.pyplot.subplots" class="sphx-glr-backref-module-matplotlib-pyplot sphx-glr-backref-type-py-function"><span class="n">plt</span><span class="o">.</span><span class="n">subplots</span></a><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">6</span><span class="p">))</span>
-    <span class="n">bp</span> <span class="o">=</span> <a href="https://matplotlib.org/stable/api/_as_gen/matplotlib.pyplot.boxplot.html#matplotlib.pyplot.boxplot" title="matplotlib.pyplot.boxplot" class="sphx-glr-backref-module-matplotlib-pyplot sphx-glr-backref-type-py-function"><span class="n">plt</span><span class="o">.</span><span class="n">boxplot</span></a><span class="p">(</span>
+    <span class="n">fig</span><span class="p">,</span> <span class="n">ax1</span> <span class="o">=</span> <a class="sphx-glr-backref-module-matplotlib-pyplot sphx-glr-backref-type-py-function" href="https://matplotlib.org/stable/api/_as_gen/matplotlib.pyplot.subplots.html#matplotlib.pyplot.subplots" title="matplotlib.pyplot.subplots"><span class="n">plt</span><span class="o">.</span><span class="n">subplots</span></a><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">6</span><span class="p">))</span>
+    <span class="n">bp</span> <span class="o">=</span> <a class="sphx-glr-backref-module-matplotlib-pyplot sphx-glr-backref-type-py-function" href="https://matplotlib.org/stable/api/_as_gen/matplotlib.pyplot.boxplot.html#matplotlib.pyplot.boxplot" title="matplotlib.pyplot.boxplot"><span class="n">plt</span><span class="o">.</span><span class="n">boxplot</span></a><span class="p">(</span>
         <span class="n">runtimes</span><span class="p">,</span>
     <span class="p">)</span>
 
     <span class="n">cls_infos</span> <span class="o">=</span> <span class="p">[</span>
-        <span class="s2">&quot;</span><span class="si">%s</span><span class="se">\n</span><span class="s2">(</span><span class="si">%d</span><span class="s2"> </span><span class="si">%s</span><span class="s2">)&quot;</span>
+        <span class="s2">"</span><span class="si">%s</span><span class="se">\n</span><span class="s2">(</span><span class="si">%d</span><span class="s2"> </span><span class="si">%s</span><span class="s2">)"</span>
         <span class="o">%</span> <span class="p">(</span>
-            <span class="n">estimator_conf</span><span class="p">[</span><span class="s2">&quot;name&quot;</span><span class="p">],</span>
-            <span class="n">estimator_conf</span><span class="p">[</span><span class="s2">&quot;complexity_computer&quot;</span><span class="p">](</span><span class="n">estimator_conf</span><span class="p">[</span><span class="s2">&quot;instance&quot;</span><span class="p">]),</span>
-            <span class="n">estimator_conf</span><span class="p">[</span><span class="s2">&quot;complexity_label&quot;</span><span class="p">],</span>
+            <span class="n">estimator_conf</span><span class="p">[</span><span class="s2">"name"</span><span class="p">],</span>
+            <span class="n">estimator_conf</span><span class="p">[</span><span class="s2">"complexity_computer"</span><span class="p">](</span><span class="n">estimator_conf</span><span class="p">[</span><span class="s2">"instance"</span><span class="p">]),</span>
+            <span class="n">estimator_conf</span><span class="p">[</span><span class="s2">"complexity_label"</span><span class="p">],</span>
         <span class="p">)</span>
-        <span class="k">for</span> <span class="n">estimator_conf</span> <span class="ow">in</span> <span class="n">configuration</span><span class="p">[</span><span class="s2">&quot;estimators&quot;</span><span class="p">]</span>
+        <span class="k">for</span> <span class="n">estimator_conf</span> <span class="ow">in</span> <span class="n">configuration</span><span class="p">[</span><span class="s2">"estimators"</span><span class="p">]</span>
     <span class="p">]</span>
-    <a href="https://matplotlib.org/stable/api/_as_gen/matplotlib.pyplot.setp.html#matplotlib.pyplot.setp" title="matplotlib.pyplot.setp" class="sphx-glr-backref-module-matplotlib-pyplot sphx-glr-backref-type-py-function"><span class="n">plt</span><span class="o">.</span><span class="n">setp</span></a><span class="p">(</span><span class="n">ax1</span><span class="p">,</span> <span class="n">xticklabels</span><span class="o">=</span><span class="n">cls_infos</span><span class="p">)</span>
-    <a href="https://matplotlib.org/stable/api/_as_gen/matplotlib.pyplot.setp.html#matplotlib.pyplot.setp" title="matplotlib.pyplot.setp" class="sphx-glr-backref-module-matplotlib-pyplot sphx-glr-backref-type-py-function"><span class="n">plt</span><span class="o">.</span><span class="n">setp</span></a><span class="p">(</span><span class="n">bp</span><span class="p">[</span><span class="s2">&quot;boxes&quot;</span><span class="p">],</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;black&quot;</span><span class="p">)</span>
-    <a href="https://matplotlib.org/stable/api/_as_gen/matplotlib.pyplot.setp.html#matplotlib.pyplot.setp" title="matplotlib.pyplot.setp" class="sphx-glr-backref-module-matplotlib-pyplot sphx-glr-backref-type-py-function"><span class="n">plt</span><span class="o">.</span><span class="n">setp</span></a><span class="p">(</span><span class="n">bp</span><span class="p">[</span><span class="s2">&quot;whiskers&quot;</span><span class="p">],</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;black&quot;</span><span class="p">)</span>
-    <a href="https://matplotlib.org/stable/api/_as_gen/matplotlib.pyplot.setp.html#matplotlib.pyplot.setp" title="matplotlib.pyplot.setp" class="sphx-glr-backref-module-matplotlib-pyplot sphx-glr-backref-type-py-function"><span class="n">plt</span><span class="o">.</span><span class="n">setp</span></a><span class="p">(</span><span class="n">bp</span><span class="p">[</span><span class="s2">&quot;fliers&quot;</span><span class="p">],</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;red&quot;</span><span class="p">,</span> <span class="n">marker</span><span class="o">=</span><span class="s2">&quot;+&quot;</span><span class="p">)</span>
+    <a class="sphx-glr-backref-module-matplotlib-pyplot sphx-glr-backref-type-py-function" href="https://matplotlib.org/stable/api/_as_gen/matplotlib.pyplot.setp.html#matplotlib.pyplot.setp" title="matplotlib.pyplot.setp"><span class="n">plt</span><span class="o">.</span><span class="n">setp</span></a><span class="p">(</span><span class="n">ax1</span><span class="p">,</span> <span class="n">xticklabels</span><span class="o">=</span><span class="n">cls_infos</span><span class="p">)</span>
+    <a class="sphx-glr-backref-module-matplotlib-pyplot sphx-glr-backref-type-py-function" href="https://matplotlib.org/stable/api/_as_gen/matplotlib.pyplot.setp.html#matplotlib.pyplot.setp" title="matplotlib.pyplot.setp"><span class="n">plt</span><span class="o">.</span><span class="n">setp</span></a><span class="p">(</span><span class="n">bp</span><span class="p">[</span><span class="s2">"boxes"</span><span class="p">],</span> <span class="n">color</span><span class="o">=</span><span class="s2">"black"</span><span class="p">)</span>
+    <a class="sphx-glr-backref-module-matplotlib-pyplot sphx-glr-backref-type-py-function" href="https://matplotlib.org/stable/api/_as_gen/matplotlib.pyplot.setp.html#matplotlib.pyplot.setp" title="matplotlib.pyplot.setp"><span class="n">plt</span><span class="o">.</span><span class="n">setp</span></a><span class="p">(</span><span class="n">bp</span><span class="p">[</span><span class="s2">"whiskers"</span><span class="p">],</span> <span class="n">color</span><span class="o">=</span><span class="s2">"black"</span><span class="p">)</span>
+    <a class="sphx-glr-backref-module-matplotlib-pyplot sphx-glr-backref-type-py-function" href="https://matplotlib.org/stable/api/_as_gen/matplotlib.pyplot.setp.html#matplotlib.pyplot.setp" title="matplotlib.pyplot.setp"><span class="n">plt</span><span class="o">.</span><span class="n">setp</span></a><span class="p">(</span><span class="n">bp</span><span class="p">[</span><span class="s2">"fliers"</span><span class="p">],</span> <span class="n">color</span><span class="o">=</span><span class="s2">"red"</span><span class="p">,</span> <span class="n">marker</span><span class="o">=</span><span class="s2">"+"</span><span class="p">)</span>
 
-    <span class="n">ax1</span><span class="o">.</span><span class="n">yaxis</span><span class="o">.</span><span class="n">grid</span><span class="p">(</span><span class="kc">True</span><span class="p">,</span> <span class="n">linestyle</span><span class="o">=</span><span class="s2">&quot;-&quot;</span><span class="p">,</span> <span class="n">which</span><span class="o">=</span><span class="s2">&quot;major&quot;</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;lightgrey&quot;</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.5</span><span class="p">)</span>
+    <span class="n">ax1</span><span class="o">.</span><span class="n">yaxis</span><span class="o">.</span><span class="n">grid</span><span class="p">(</span><span class="kc">True</span><span class="p">,</span> <span class="n">linestyle</span><span class="o">=</span><span class="s2">"-"</span><span class="p">,</span> <span class="n">which</span><span class="o">=</span><span class="s2">"major"</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">"lightgrey"</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.5</span><span class="p">)</span>
 
     <span class="n">ax1</span><span class="o">.</span><span class="n">set_axisbelow</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
     <span class="n">ax1</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span>
-        <span class="s2">&quot;Prediction Time per Instance - </span><span class="si">%s</span><span class="s2">, </span><span class="si">%d</span><span class="s2"> feats.&quot;</span>
-        <span class="o">%</span> <span class="p">(</span><span class="n">pred_type</span><span class="o">.</span><span class="n">capitalize</span><span class="p">(),</span> <span class="n">configuration</span><span class="p">[</span><span class="s2">&quot;n_features&quot;</span><span class="p">])</span>
+        <span class="s2">"Prediction Time per Instance - </span><span class="si">%s</span><span class="s2">, </span><span class="si">%d</span><span class="s2"> feats."</span>
+        <span class="o">%</span> <span class="p">(</span><span class="n">pred_type</span><span class="o">.</span><span class="n">capitalize</span><span class="p">(),</span> <span class="n">configuration</span><span class="p">[</span><span class="s2">"n_features"</span><span class="p">])</span>
     <span class="p">)</span>
-    <span class="n">ax1</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s2">&quot;Prediction Time (us)&quot;</span><span class="p">)</span>
+    <span class="n">ax1</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s2">"Prediction Time (us)"</span><span class="p">)</span>
 
-    <a href="https://matplotlib.org/stable/api/_as_gen/matplotlib.pyplot.show.html#matplotlib.pyplot.show" title="matplotlib.pyplot.show" class="sphx-glr-backref-module-matplotlib-pyplot sphx-glr-backref-type-py-function"><span class="n">plt</span><span class="o">.</span><span class="n">show</span></a><span class="p">()</span>
+    <a class="sphx-glr-backref-module-matplotlib-pyplot sphx-glr-backref-type-py-function" href="https://matplotlib.org/stable/api/_as_gen/matplotlib.pyplot.show.html#matplotlib.pyplot.show" title="matplotlib.pyplot.show"><span class="n">plt</span><span class="o">.</span><span class="n">show</span></a><span class="p">()</span>
 
 
 <span class="k">def</span> <span class="nf">benchmark</span><span class="p">(</span><span class="n">configuration</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Run the whole benchmark.&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""Run the whole benchmark."""</span>
     <span class="n">X_train</span><span class="p">,</span> <span class="n">y_train</span><span class="p">,</span> <span class="n">X_test</span><span class="p">,</span> <span class="n">y_test</span> <span class="o">=</span> <span class="n">generate_dataset</span><span class="p">(</span>
-        <span class="n">configuration</span><span class="p">[</span><span class="s2">&quot;n_train&quot;</span><span class="p">],</span> <span class="n">configuration</span><span class="p">[</span><span class="s2">&quot;n_test&quot;</span><span class="p">],</span> <span class="n">configuration</span><span class="p">[</span><span class="s2">&quot;n_features&quot;</span><span class="p">]</span>
+        <span class="n">configuration</span><span class="p">[</span><span class="s2">"n_train"</span><span class="p">],</span> <span class="n">configuration</span><span class="p">[</span><span class="s2">"n_test"</span><span class="p">],</span> <span class="n">configuration</span><span class="p">[</span><span class="s2">"n_features"</span><span class="p">]</span>
     <span class="p">)</span>
 
     <span class="n">stats</span> <span class="o">=</span> <span class="p">{}</span>
-    <span class="k">for</span> <span class="n">estimator_conf</span> <span class="ow">in</span> <span class="n">configuration</span><span class="p">[</span><span class="s2">&quot;estimators&quot;</span><span class="p">]:</span>
-        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Benchmarking&quot;</span><span class="p">,</span> <span class="n">estimator_conf</span><span class="p">[</span><span class="s2">&quot;instance&quot;</span><span class="p">])</span>
-        <span class="n">estimator_conf</span><span class="p">[</span><span class="s2">&quot;instance&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X_train</span><span class="p">,</span> <span class="n">y_train</span><span class="p">)</span>
-        <a href="https://docs.python.org/3/library/gc.html#gc.collect" title="gc.collect" class="sphx-glr-backref-module-gc sphx-glr-backref-type-py-function"><span class="n">gc</span><span class="o">.</span><span class="n">collect</span></a><span class="p">()</span>
-        <span class="n">a</span><span class="p">,</span> <span class="n">b</span> <span class="o">=</span> <span class="n">benchmark_estimator</span><span class="p">(</span><span class="n">estimator_conf</span><span class="p">[</span><span class="s2">&quot;instance&quot;</span><span class="p">],</span> <span class="n">X_test</span><span class="p">)</span>
-        <span class="n">stats</span><span class="p">[</span><span class="n">estimator_conf</span><span class="p">[</span><span class="s2">&quot;name&quot;</span><span class="p">]]</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;atomic&quot;</span><span class="p">:</span> <span class="n">a</span><span class="p">,</span> <span class="s2">&quot;bulk&quot;</span><span class="p">:</span> <span class="n">b</span><span class="p">}</span>
+    <span class="k">for</span> <span class="n">estimator_conf</span> <span class="ow">in</span> <span class="n">configuration</span><span class="p">[</span><span class="s2">"estimators"</span><span class="p">]:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">"Benchmarking"</span><span class="p">,</span> <span class="n">estimator_conf</span><span class="p">[</span><span class="s2">"instance"</span><span class="p">])</span>
+        <span class="n">estimator_conf</span><span class="p">[</span><span class="s2">"instance"</span><span class="p">]</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X_train</span><span class="p">,</span> <span class="n">y_train</span><span class="p">)</span>
+        <a class="sphx-glr-backref-module-gc sphx-glr-backref-type-py-function" href="https://docs.python.org/3/library/gc.html#gc.collect" title="gc.collect"><span class="n">gc</span><span class="o">.</span><span class="n">collect</span></a><span class="p">()</span>
+        <span class="n">a</span><span class="p">,</span> <span class="n">b</span> <span class="o">=</span> <span class="n">benchmark_estimator</span><span class="p">(</span><span class="n">estimator_conf</span><span class="p">[</span><span class="s2">"instance"</span><span class="p">],</span> <span class="n">X_test</span><span class="p">)</span>
+        <span class="n">stats</span><span class="p">[</span><span class="n">estimator_conf</span><span class="p">[</span><span class="s2">"name"</span><span class="p">]]</span> <span class="o">=</span> <span class="p">{</span><span class="s2">"atomic"</span><span class="p">:</span> <span class="n">a</span><span class="p">,</span> <span class="s2">"bulk"</span><span class="p">:</span> <span class="n">b</span><span class="p">}</span>
 
     <span class="n">cls_names</span> <span class="o">=</span> <span class="p">[</span>
-        <span class="n">estimator_conf</span><span class="p">[</span><span class="s2">&quot;name&quot;</span><span class="p">]</span> <span class="k">for</span> <span class="n">estimator_conf</span> <span class="ow">in</span> <span class="n">configuration</span><span class="p">[</span><span class="s2">&quot;estimators&quot;</span><span class="p">]</span>
+        <span class="n">estimator_conf</span><span class="p">[</span><span class="s2">"name"</span><span class="p">]</span> <span class="k">for</span> <span class="n">estimator_conf</span> <span class="ow">in</span> <span class="n">configuration</span><span class="p">[</span><span class="s2">"estimators"</span><span class="p">]</span>
     <span class="p">]</span>
-    <span class="n">runtimes</span> <span class="o">=</span> <span class="p">[</span><span class="mf">1e6</span> <span class="o">*</span> <span class="n">stats</span><span class="p">[</span><span class="n">clf_name</span><span class="p">][</span><span class="s2">&quot;atomic&quot;</span><span class="p">]</span> <span class="k">for</span> <span class="n">clf_name</span> <span class="ow">in</span> <span class="n">cls_names</span><span class="p">]</span>
-    <span class="n">boxplot_runtimes</span><span class="p">(</span><span class="n">runtimes</span><span class="p">,</span> <span class="s2">&quot;atomic&quot;</span><span class="p">,</span> <span class="n">configuration</span><span class="p">)</span>
-    <span class="n">runtimes</span> <span class="o">=</span> <span class="p">[</span><span class="mf">1e6</span> <span class="o">*</span> <span class="n">stats</span><span class="p">[</span><span class="n">clf_name</span><span class="p">][</span><span class="s2">&quot;bulk&quot;</span><span class="p">]</span> <span class="k">for</span> <span class="n">clf_name</span> <span class="ow">in</span> <span class="n">cls_names</span><span class="p">]</span>
-    <span class="n">boxplot_runtimes</span><span class="p">(</span><span class="n">runtimes</span><span class="p">,</span> <span class="s2">&quot;bulk (</span><span class="si">%d</span><span class="s2">)&quot;</span> <span class="o">%</span> <span class="n">configuration</span><span class="p">[</span><span class="s2">&quot;n_test&quot;</span><span class="p">],</span> <span class="n">configuration</span><span class="p">)</span>
+    <span class="n">runtimes</span> <span class="o">=</span> <span class="p">[</span><span class="mf">1e6</span> <span class="o">*</span> <span class="n">stats</span><span class="p">[</span><span class="n">clf_name</span><span class="p">][</span><span class="s2">"atomic"</span><span class="p">]</span> <span class="k">for</span> <span class="n">clf_name</span> <span class="ow">in</span> <span class="n">cls_names</span><span class="p">]</span>
+    <span class="n">boxplot_runtimes</span><span class="p">(</span><span class="n">runtimes</span><span class="p">,</span> <span class="s2">"atomic"</span><span class="p">,</span> <span class="n">configuration</span><span class="p">)</span>
+    <span class="n">runtimes</span> <span class="o">=</span> <span class="p">[</span><span class="mf">1e6</span> <span class="o">*</span> <span class="n">stats</span><span class="p">[</span><span class="n">clf_name</span><span class="p">][</span><span class="s2">"bulk"</span><span class="p">]</span> <span class="k">for</span> <span class="n">clf_name</span> <span class="ow">in</span> <span class="n">cls_names</span><span class="p">]</span>
+    <span class="n">boxplot_runtimes</span><span class="p">(</span><span class="n">runtimes</span><span class="p">,</span> <span class="s2">"bulk (</span><span class="si">%d</span><span class="s2">)"</span> <span class="o">%</span> <span class="n">configuration</span><span class="p">[</span><span class="s2">"n_test"</span><span class="p">],</span> <span class="n">configuration</span><span class="p">)</span>
 
 
 <span class="k">def</span> <span class="nf">n_feature_influence</span><span class="p">(</span><span class="n">estimators</span><span class="p">,</span> <span class="n">n_train</span><span class="p">,</span> <span class="n">n_test</span><span class="p">,</span> <span class="n">n_features</span><span class="p">,</span> <span class="n">percentile</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Estimate influence of the number of features on prediction time.</span>
 
 <span class="sd">    Parameters</span>
@@ -1269,111 +1043,111 @@ either in bulk or atomic (i.e. one by one) mode.</p>
 <span class="sd">    percentiles : dict(estimator_name,</span>
 <span class="sd">                       dict(n_features, percentile_perf_in_us))</span>
 
-<span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">percentiles</span> <span class="o">=</span> <a href="https://docs.python.org/3/library/collections.html#collections.defaultdict" title="collections.defaultdict" class="sphx-glr-backref-module-collections sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">defaultdict</span></a><span class="p">(</span><a href="https://docs.python.org/3/library/collections.html#collections.defaultdict" title="collections.defaultdict" class="sphx-glr-backref-module-collections sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">defaultdict</span></a><span class="p">)</span>
+<span class="sd">    """</span>
+    <span class="n">percentiles</span> <span class="o">=</span> <a class="sphx-glr-backref-module-collections sphx-glr-backref-type-py-class sphx-glr-backref-instance" href="https://docs.python.org/3/library/collections.html#collections.defaultdict" title="collections.defaultdict"><span class="n">defaultdict</span></a><span class="p">(</span><a class="sphx-glr-backref-module-collections sphx-glr-backref-type-py-class sphx-glr-backref-instance" href="https://docs.python.org/3/library/collections.html#collections.defaultdict" title="collections.defaultdict"><span class="n">defaultdict</span></a><span class="p">)</span>
     <span class="k">for</span> <span class="n">n</span> <span class="ow">in</span> <span class="n">n_features</span><span class="p">:</span>
-        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;benchmarking with </span><span class="si">%d</span><span class="s2"> features&quot;</span> <span class="o">%</span> <span class="n">n</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">"benchmarking with </span><span class="si">%d</span><span class="s2"> features"</span> <span class="o">%</span> <span class="n">n</span><span class="p">)</span>
         <span class="n">X_train</span><span class="p">,</span> <span class="n">y_train</span><span class="p">,</span> <span class="n">X_test</span><span class="p">,</span> <span class="n">y_test</span> <span class="o">=</span> <span class="n">generate_dataset</span><span class="p">(</span><span class="n">n_train</span><span class="p">,</span> <span class="n">n_test</span><span class="p">,</span> <span class="n">n</span><span class="p">)</span>
         <span class="k">for</span> <span class="n">cls_name</span><span class="p">,</span> <span class="n">estimator</span> <span class="ow">in</span> <span class="n">estimators</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
             <span class="n">estimator</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X_train</span><span class="p">,</span> <span class="n">y_train</span><span class="p">)</span>
-            <a href="https://docs.python.org/3/library/gc.html#gc.collect" title="gc.collect" class="sphx-glr-backref-module-gc sphx-glr-backref-type-py-function"><span class="n">gc</span><span class="o">.</span><span class="n">collect</span></a><span class="p">()</span>
+            <a class="sphx-glr-backref-module-gc sphx-glr-backref-type-py-function" href="https://docs.python.org/3/library/gc.html#gc.collect" title="gc.collect"><span class="n">gc</span><span class="o">.</span><span class="n">collect</span></a><span class="p">()</span>
             <span class="n">runtimes</span> <span class="o">=</span> <span class="n">bulk_benchmark_estimator</span><span class="p">(</span><span class="n">estimator</span><span class="p">,</span> <span class="n">X_test</span><span class="p">,</span> <span class="mi">30</span><span class="p">,</span> <span class="kc">False</span><span class="p">)</span>
-            <span class="n">percentiles</span><span class="p">[</span><span class="n">cls_name</span><span class="p">][</span><span class="n">n</span><span class="p">]</span> <span class="o">=</span> <span class="mf">1e6</span> <span class="o">*</span> <a href="https://numpy.org/doc/stable/reference/generated/numpy.percentile.html#numpy.percentile" title="numpy.percentile" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-function"><span class="n">np</span><span class="o">.</span><span class="n">percentile</span></a><span class="p">(</span><span class="n">runtimes</span><span class="p">,</span> <span class="n">percentile</span><span class="p">)</span>
+            <span class="n">percentiles</span><span class="p">[</span><span class="n">cls_name</span><span class="p">][</span><span class="n">n</span><span class="p">]</span> <span class="o">=</span> <span class="mf">1e6</span> <span class="o">*</span> <a class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-function" href="https://numpy.org/doc/stable/reference/generated/numpy.percentile.html#numpy.percentile" title="numpy.percentile"><span class="n">np</span><span class="o">.</span><span class="n">percentile</span></a><span class="p">(</span><span class="n">runtimes</span><span class="p">,</span> <span class="n">percentile</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">percentiles</span>
 
 
 <span class="k">def</span> <span class="nf">plot_n_features_influence</span><span class="p">(</span><span class="n">percentiles</span><span class="p">,</span> <span class="n">percentile</span><span class="p">):</span>
-    <span class="n">fig</span><span class="p">,</span> <span class="n">ax1</span> <span class="o">=</span> <a href="https://matplotlib.org/stable/api/_as_gen/matplotlib.pyplot.subplots.html#matplotlib.pyplot.subplots" title="matplotlib.pyplot.subplots" class="sphx-glr-backref-module-matplotlib-pyplot sphx-glr-backref-type-py-function"><span class="n">plt</span><span class="o">.</span><span class="n">subplots</span></a><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">6</span><span class="p">))</span>
-    <span class="n">colors</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;r&quot;</span><span class="p">,</span> <span class="s2">&quot;g&quot;</span><span class="p">,</span> <span class="s2">&quot;b&quot;</span><span class="p">]</span>
+    <span class="n">fig</span><span class="p">,</span> <span class="n">ax1</span> <span class="o">=</span> <a class="sphx-glr-backref-module-matplotlib-pyplot sphx-glr-backref-type-py-function" href="https://matplotlib.org/stable/api/_as_gen/matplotlib.pyplot.subplots.html#matplotlib.pyplot.subplots" title="matplotlib.pyplot.subplots"><span class="n">plt</span><span class="o">.</span><span class="n">subplots</span></a><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">6</span><span class="p">))</span>
+    <span class="n">colors</span> <span class="o">=</span> <span class="p">[</span><span class="s2">"r"</span><span class="p">,</span> <span class="s2">"g"</span><span class="p">,</span> <span class="s2">"b"</span><span class="p">]</span>
     <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">cls_name</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">percentiles</span><span class="o">.</span><span class="n">keys</span><span class="p">()):</span>
-        <span class="n">x</span> <span class="o">=</span> <a href="https://numpy.org/doc/stable/reference/generated/numpy.array.html#numpy.array" title="numpy.array" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-function"><span class="n">np</span><span class="o">.</span><span class="n">array</span></a><span class="p">(</span><span class="nb">sorted</span><span class="p">(</span><span class="n">percentiles</span><span class="p">[</span><span class="n">cls_name</span><span class="p">]</span><span class="o">.</span><span class="n">keys</span><span class="p">()))</span>
-        <span class="n">y</span> <span class="o">=</span> <a href="https://numpy.org/doc/stable/reference/generated/numpy.array.html#numpy.array" title="numpy.array" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-function"><span class="n">np</span><span class="o">.</span><span class="n">array</span></a><span class="p">([</span><span class="n">percentiles</span><span class="p">[</span><span class="n">cls_name</span><span class="p">][</span><span class="n">n</span><span class="p">]</span> <span class="k">for</span> <span class="n">n</span> <span class="ow">in</span> <span class="n">x</span><span class="p">])</span>
-        <a href="https://matplotlib.org/stable/api/_as_gen/matplotlib.pyplot.plot.html#matplotlib.pyplot.plot" title="matplotlib.pyplot.plot" class="sphx-glr-backref-module-matplotlib-pyplot sphx-glr-backref-type-py-function"><span class="n">plt</span><span class="o">.</span><span class="n">plot</span></a><span class="p">(</span>
+        <span class="n">x</span> <span class="o">=</span> <a class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-function" href="https://numpy.org/doc/stable/reference/generated/numpy.array.html#numpy.array" title="numpy.array"><span class="n">np</span><span class="o">.</span><span class="n">array</span></a><span class="p">(</span><span class="nb">sorted</span><span class="p">(</span><span class="n">percentiles</span><span class="p">[</span><span class="n">cls_name</span><span class="p">]</span><span class="o">.</span><span class="n">keys</span><span class="p">()))</span>
+        <span class="n">y</span> <span class="o">=</span> <a class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-function" href="https://numpy.org/doc/stable/reference/generated/numpy.array.html#numpy.array" title="numpy.array"><span class="n">np</span><span class="o">.</span><span class="n">array</span></a><span class="p">([</span><span class="n">percentiles</span><span class="p">[</span><span class="n">cls_name</span><span class="p">][</span><span class="n">n</span><span class="p">]</span> <span class="k">for</span> <span class="n">n</span> <span class="ow">in</span> <span class="n">x</span><span class="p">])</span>
+        <a class="sphx-glr-backref-module-matplotlib-pyplot sphx-glr-backref-type-py-function" href="https://matplotlib.org/stable/api/_as_gen/matplotlib.pyplot.plot.html#matplotlib.pyplot.plot" title="matplotlib.pyplot.plot"><span class="n">plt</span><span class="o">.</span><span class="n">plot</span></a><span class="p">(</span>
             <span class="n">x</span><span class="p">,</span>
             <span class="n">y</span><span class="p">,</span>
             <span class="n">color</span><span class="o">=</span><span class="n">colors</span><span class="p">[</span><span class="n">i</span><span class="p">],</span>
         <span class="p">)</span>
-    <span class="n">ax1</span><span class="o">.</span><span class="n">yaxis</span><span class="o">.</span><span class="n">grid</span><span class="p">(</span><span class="kc">True</span><span class="p">,</span> <span class="n">linestyle</span><span class="o">=</span><span class="s2">&quot;-&quot;</span><span class="p">,</span> <span class="n">which</span><span class="o">=</span><span class="s2">&quot;major&quot;</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;lightgrey&quot;</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.5</span><span class="p">)</span>
+    <span class="n">ax1</span><span class="o">.</span><span class="n">yaxis</span><span class="o">.</span><span class="n">grid</span><span class="p">(</span><span class="kc">True</span><span class="p">,</span> <span class="n">linestyle</span><span class="o">=</span><span class="s2">"-"</span><span class="p">,</span> <span class="n">which</span><span class="o">=</span><span class="s2">"major"</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">"lightgrey"</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.5</span><span class="p">)</span>
     <span class="n">ax1</span><span class="o">.</span><span class="n">set_axisbelow</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
-    <span class="n">ax1</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s2">&quot;Evolution of Prediction Time with #Features&quot;</span><span class="p">)</span>
-    <span class="n">ax1</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s2">&quot;#Features&quot;</span><span class="p">)</span>
-    <span class="n">ax1</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s2">&quot;Prediction Time at </span><span class="si">%d%%</span><span class="s2">-ile (us)&quot;</span> <span class="o">%</span> <span class="n">percentile</span><span class="p">)</span>
-    <a href="https://matplotlib.org/stable/api/_as_gen/matplotlib.pyplot.show.html#matplotlib.pyplot.show" title="matplotlib.pyplot.show" class="sphx-glr-backref-module-matplotlib-pyplot sphx-glr-backref-type-py-function"><span class="n">plt</span><span class="o">.</span><span class="n">show</span></a><span class="p">()</span>
+    <span class="n">ax1</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s2">"Evolution of Prediction Time with #Features"</span><span class="p">)</span>
+    <span class="n">ax1</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s2">"#Features"</span><span class="p">)</span>
+    <span class="n">ax1</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s2">"Prediction Time at </span><span class="si">%d%%</span><span class="s2">-ile (us)"</span> <span class="o">%</span> <span class="n">percentile</span><span class="p">)</span>
+    <a class="sphx-glr-backref-module-matplotlib-pyplot sphx-glr-backref-type-py-function" href="https://matplotlib.org/stable/api/_as_gen/matplotlib.pyplot.show.html#matplotlib.pyplot.show" title="matplotlib.pyplot.show"><span class="n">plt</span><span class="o">.</span><span class="n">show</span></a><span class="p">()</span>
 
 
 <span class="k">def</span> <span class="nf">benchmark_throughputs</span><span class="p">(</span><span class="n">configuration</span><span class="p">,</span> <span class="n">duration_secs</span><span class="o">=</span><span class="mf">0.1</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;benchmark throughput for different estimators.&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""benchmark throughput for different estimators."""</span>
     <span class="n">X_train</span><span class="p">,</span> <span class="n">y_train</span><span class="p">,</span> <span class="n">X_test</span><span class="p">,</span> <span class="n">y_test</span> <span class="o">=</span> <span class="n">generate_dataset</span><span class="p">(</span>
-        <span class="n">configuration</span><span class="p">[</span><span class="s2">&quot;n_train&quot;</span><span class="p">],</span> <span class="n">configuration</span><span class="p">[</span><span class="s2">&quot;n_test&quot;</span><span class="p">],</span> <span class="n">configuration</span><span class="p">[</span><span class="s2">&quot;n_features&quot;</span><span class="p">]</span>
+        <span class="n">configuration</span><span class="p">[</span><span class="s2">"n_train"</span><span class="p">],</span> <span class="n">configuration</span><span class="p">[</span><span class="s2">"n_test"</span><span class="p">],</span> <span class="n">configuration</span><span class="p">[</span><span class="s2">"n_features"</span><span class="p">]</span>
     <span class="p">)</span>
     <span class="n">throughputs</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">()</span>
-    <span class="k">for</span> <span class="n">estimator_config</span> <span class="ow">in</span> <span class="n">configuration</span><span class="p">[</span><span class="s2">&quot;estimators&quot;</span><span class="p">]:</span>
-        <span class="n">estimator_config</span><span class="p">[</span><span class="s2">&quot;instance&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X_train</span><span class="p">,</span> <span class="n">y_train</span><span class="p">)</span>
-        <span class="n">start_time</span> <span class="o">=</span> <a href="https://docs.python.org/3/library/time.html#time.time" title="time.time" class="sphx-glr-backref-module-time sphx-glr-backref-type-py-function"><span class="n">time</span><span class="o">.</span><span class="n">time</span></a><span class="p">()</span>
+    <span class="k">for</span> <span class="n">estimator_config</span> <span class="ow">in</span> <span class="n">configuration</span><span class="p">[</span><span class="s2">"estimators"</span><span class="p">]:</span>
+        <span class="n">estimator_config</span><span class="p">[</span><span class="s2">"instance"</span><span class="p">]</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X_train</span><span class="p">,</span> <span class="n">y_train</span><span class="p">)</span>
+        <span class="n">start_time</span> <span class="o">=</span> <a class="sphx-glr-backref-module-time sphx-glr-backref-type-py-function" href="https://docs.python.org/3/library/time.html#time.time" title="time.time"><span class="n">time</span><span class="o">.</span><span class="n">time</span></a><span class="p">()</span>
         <span class="n">n_predictions</span> <span class="o">=</span> <span class="mi">0</span>
-        <span class="k">while</span> <span class="p">(</span><a href="https://docs.python.org/3/library/time.html#time.time" title="time.time" class="sphx-glr-backref-module-time sphx-glr-backref-type-py-function"><span class="n">time</span><span class="o">.</span><span class="n">time</span></a><span class="p">()</span> <span class="o">-</span> <span class="n">start_time</span><span class="p">)</span> <span class="o">&lt;</span> <span class="n">duration_secs</span><span class="p">:</span>
-            <span class="n">estimator_config</span><span class="p">[</span><span class="s2">&quot;instance&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">X_test</span><span class="p">[[</span><span class="mi">0</span><span class="p">]])</span>
+        <span class="k">while</span> <span class="p">(</span><a class="sphx-glr-backref-module-time sphx-glr-backref-type-py-function" href="https://docs.python.org/3/library/time.html#time.time" title="time.time"><span class="n">time</span><span class="o">.</span><span class="n">time</span></a><span class="p">()</span> <span class="o">-</span> <span class="n">start_time</span><span class="p">)</span> <span class="o">&lt;</span> <span class="n">duration_secs</span><span class="p">:</span>
+            <span class="n">estimator_config</span><span class="p">[</span><span class="s2">"instance"</span><span class="p">]</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">X_test</span><span class="p">[[</span><span class="mi">0</span><span class="p">]])</span>
             <span class="n">n_predictions</span> <span class="o">+=</span> <span class="mi">1</span>
-        <span class="n">throughputs</span><span class="p">[</span><span class="n">estimator_config</span><span class="p">[</span><span class="s2">&quot;name&quot;</span><span class="p">]]</span> <span class="o">=</span> <span class="n">n_predictions</span> <span class="o">/</span> <span class="n">duration_secs</span>
+        <span class="n">throughputs</span><span class="p">[</span><span class="n">estimator_config</span><span class="p">[</span><span class="s2">"name"</span><span class="p">]]</span> <span class="o">=</span> <span class="n">n_predictions</span> <span class="o">/</span> <span class="n">duration_secs</span>
     <span class="k">return</span> <span class="n">throughputs</span>
 
 
 <span class="k">def</span> <span class="nf">plot_benchmark_throughput</span><span class="p">(</span><span class="n">throughputs</span><span class="p">,</span> <span class="n">configuration</span><span class="p">):</span>
-    <span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <a href="https://matplotlib.org/stable/api/_as_gen/matplotlib.pyplot.subplots.html#matplotlib.pyplot.subplots" title="matplotlib.pyplot.subplots" class="sphx-glr-backref-module-matplotlib-pyplot sphx-glr-backref-type-py-function"><span class="n">plt</span><span class="o">.</span><span class="n">subplots</span></a><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">6</span><span class="p">))</span>
-    <span class="n">colors</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;r&quot;</span><span class="p">,</span> <span class="s2">&quot;g&quot;</span><span class="p">,</span> <span class="s2">&quot;b&quot;</span><span class="p">]</span>
+    <span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <a class="sphx-glr-backref-module-matplotlib-pyplot sphx-glr-backref-type-py-function" href="https://matplotlib.org/stable/api/_as_gen/matplotlib.pyplot.subplots.html#matplotlib.pyplot.subplots" title="matplotlib.pyplot.subplots"><span class="n">plt</span><span class="o">.</span><span class="n">subplots</span></a><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">6</span><span class="p">))</span>
+    <span class="n">colors</span> <span class="o">=</span> <span class="p">[</span><span class="s2">"r"</span><span class="p">,</span> <span class="s2">"g"</span><span class="p">,</span> <span class="s2">"b"</span><span class="p">]</span>
     <span class="n">cls_infos</span> <span class="o">=</span> <span class="p">[</span>
-        <span class="s2">&quot;</span><span class="si">%s</span><span class="se">\n</span><span class="s2">(</span><span class="si">%d</span><span class="s2"> </span><span class="si">%s</span><span class="s2">)&quot;</span>
+        <span class="s2">"</span><span class="si">%s</span><span class="se">\n</span><span class="s2">(</span><span class="si">%d</span><span class="s2"> </span><span class="si">%s</span><span class="s2">)"</span>
         <span class="o">%</span> <span class="p">(</span>
-            <span class="n">estimator_conf</span><span class="p">[</span><span class="s2">&quot;name&quot;</span><span class="p">],</span>
-            <span class="n">estimator_conf</span><span class="p">[</span><span class="s2">&quot;complexity_computer&quot;</span><span class="p">](</span><span class="n">estimator_conf</span><span class="p">[</span><span class="s2">&quot;instance&quot;</span><span class="p">]),</span>
-            <span class="n">estimator_conf</span><span class="p">[</span><span class="s2">&quot;complexity_label&quot;</span><span class="p">],</span>
+            <span class="n">estimator_conf</span><span class="p">[</span><span class="s2">"name"</span><span class="p">],</span>
+            <span class="n">estimator_conf</span><span class="p">[</span><span class="s2">"complexity_computer"</span><span class="p">](</span><span class="n">estimator_conf</span><span class="p">[</span><span class="s2">"instance"</span><span class="p">]),</span>
+            <span class="n">estimator_conf</span><span class="p">[</span><span class="s2">"complexity_label"</span><span class="p">],</span>
         <span class="p">)</span>
-        <span class="k">for</span> <span class="n">estimator_conf</span> <span class="ow">in</span> <span class="n">configuration</span><span class="p">[</span><span class="s2">&quot;estimators&quot;</span><span class="p">]</span>
+        <span class="k">for</span> <span class="n">estimator_conf</span> <span class="ow">in</span> <span class="n">configuration</span><span class="p">[</span><span class="s2">"estimators"</span><span class="p">]</span>
     <span class="p">]</span>
     <span class="n">cls_values</span> <span class="o">=</span> <span class="p">[</span>
-        <span class="n">throughputs</span><span class="p">[</span><span class="n">estimator_conf</span><span class="p">[</span><span class="s2">&quot;name&quot;</span><span class="p">]]</span>
-        <span class="k">for</span> <span class="n">estimator_conf</span> <span class="ow">in</span> <span class="n">configuration</span><span class="p">[</span><span class="s2">&quot;estimators&quot;</span><span class="p">]</span>
+        <span class="n">throughputs</span><span class="p">[</span><span class="n">estimator_conf</span><span class="p">[</span><span class="s2">"name"</span><span class="p">]]</span>
+        <span class="k">for</span> <span class="n">estimator_conf</span> <span class="ow">in</span> <span class="n">configuration</span><span class="p">[</span><span class="s2">"estimators"</span><span class="p">]</span>
     <span class="p">]</span>
-    <a href="https://matplotlib.org/stable/api/_as_gen/matplotlib.pyplot.bar.html#matplotlib.pyplot.bar" title="matplotlib.pyplot.bar" class="sphx-glr-backref-module-matplotlib-pyplot sphx-glr-backref-type-py-function"><span class="n">plt</span><span class="o">.</span><span class="n">bar</span></a><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">throughputs</span><span class="p">)),</span> <span class="n">cls_values</span><span class="p">,</span> <span class="n">width</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="n">colors</span><span class="p">)</span>
-    <span class="n">ax</span><span class="o">.</span><span class="n">set_xticks</span><span class="p">(</span><a href="https://numpy.org/doc/stable/reference/generated/numpy.linspace.html#numpy.linspace" title="numpy.linspace" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-function"><span class="n">np</span><span class="o">.</span><span class="n">linspace</span></a><span class="p">(</span><span class="mf">0.25</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">throughputs</span><span class="p">)</span> <span class="o">-</span> <span class="mf">0.75</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">throughputs</span><span class="p">)))</span>
+    <a class="sphx-glr-backref-module-matplotlib-pyplot sphx-glr-backref-type-py-function" href="https://matplotlib.org/stable/api/_as_gen/matplotlib.pyplot.bar.html#matplotlib.pyplot.bar" title="matplotlib.pyplot.bar"><span class="n">plt</span><span class="o">.</span><span class="n">bar</span></a><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">throughputs</span><span class="p">)),</span> <span class="n">cls_values</span><span class="p">,</span> <span class="n">width</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="n">colors</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_xticks</span><span class="p">(</span><a class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-function" href="https://numpy.org/doc/stable/reference/generated/numpy.linspace.html#numpy.linspace" title="numpy.linspace"><span class="n">np</span><span class="o">.</span><span class="n">linspace</span></a><span class="p">(</span><span class="mf">0.25</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">throughputs</span><span class="p">)</span> <span class="o">-</span> <span class="mf">0.75</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">throughputs</span><span class="p">)))</span>
     <span class="n">ax</span><span class="o">.</span><span class="n">set_xticklabels</span><span class="p">(</span><span class="n">cls_infos</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
     <span class="n">ymax</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="n">cls_values</span><span class="p">)</span> <span class="o">*</span> <span class="mf">1.2</span>
     <span class="n">ax</span><span class="o">.</span><span class="n">set_ylim</span><span class="p">((</span><span class="mi">0</span><span class="p">,</span> <span class="n">ymax</span><span class="p">))</span>
-    <span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s2">&quot;Throughput (predictions/sec)&quot;</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s2">"Throughput (predictions/sec)"</span><span class="p">)</span>
     <span class="n">ax</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span>
-        <span class="s2">&quot;Prediction Throughput for different estimators (</span><span class="si">%d</span><span class="s2"> features)&quot;</span>
-        <span class="o">%</span> <span class="n">configuration</span><span class="p">[</span><span class="s2">&quot;n_features&quot;</span><span class="p">]</span>
+        <span class="s2">"Prediction Throughput for different estimators (</span><span class="si">%d</span><span class="s2"> features)"</span>
+        <span class="o">%</span> <span class="n">configuration</span><span class="p">[</span><span class="s2">"n_features"</span><span class="p">]</span>
     <span class="p">)</span>
-    <a href="https://matplotlib.org/stable/api/_as_gen/matplotlib.pyplot.show.html#matplotlib.pyplot.show" title="matplotlib.pyplot.show" class="sphx-glr-backref-module-matplotlib-pyplot sphx-glr-backref-type-py-function"><span class="n">plt</span><span class="o">.</span><span class="n">show</span></a><span class="p">()</span>
+    <a class="sphx-glr-backref-module-matplotlib-pyplot sphx-glr-backref-type-py-function" href="https://matplotlib.org/stable/api/_as_gen/matplotlib.pyplot.show.html#matplotlib.pyplot.show" title="matplotlib.pyplot.show"><span class="n">plt</span><span class="o">.</span><span class="n">show</span></a><span class="p">()</span>
 </pre></div>
 </div>
 </section>
 <section id="benchmark-bulk-atomic-prediction-speed-for-various-regressors">
 <h2>Benchmark bulk/atomic prediction speed for various regressors<a class="headerlink" href="#benchmark-bulk-atomic-prediction-speed-for-various-regressors" title="Link to this heading">#</a></h2>
 <div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">configuration</span> <span class="o">=</span> <span class="p">{</span>
-    <span class="s2">&quot;n_train&quot;</span><span class="p">:</span> <span class="nb">int</span><span class="p">(</span><span class="mf">1e3</span><span class="p">),</span>
-    <span class="s2">&quot;n_test&quot;</span><span class="p">:</span> <span class="nb">int</span><span class="p">(</span><span class="mf">1e2</span><span class="p">),</span>
-    <span class="s2">&quot;n_features&quot;</span><span class="p">:</span> <span class="nb">int</span><span class="p">(</span><span class="mf">1e2</span><span class="p">),</span>
-    <span class="s2">&quot;estimators&quot;</span><span class="p">:</span> <span class="p">[</span>
+    <span class="s2">"n_train"</span><span class="p">:</span> <span class="nb">int</span><span class="p">(</span><span class="mf">1e3</span><span class="p">),</span>
+    <span class="s2">"n_test"</span><span class="p">:</span> <span class="nb">int</span><span class="p">(</span><span class="mf">1e2</span><span class="p">),</span>
+    <span class="s2">"n_features"</span><span class="p">:</span> <span class="nb">int</span><span class="p">(</span><span class="mf">1e2</span><span class="p">),</span>
+    <span class="s2">"estimators"</span><span class="p">:</span> <span class="p">[</span>
         <span class="p">{</span>
-            <span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;Linear Model&quot;</span><span class="p">,</span>
-            <span class="s2">&quot;instance&quot;</span><span class="p">:</span> <a href="../../modules/generated/sklearn.linear_model.SGDRegressor.html#sklearn.linear_model.SGDRegressor" title="sklearn.linear_model.SGDRegressor" class="sphx-glr-backref-module-sklearn-linear_model sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">SGDRegressor</span></a><span class="p">(</span>
-                <span class="n">penalty</span><span class="o">=</span><span class="s2">&quot;elasticnet&quot;</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.01</span><span class="p">,</span> <span class="n">l1_ratio</span><span class="o">=</span><span class="mf">0.25</span><span class="p">,</span> <span class="n">tol</span><span class="o">=</span><span class="mf">1e-4</span>
+            <span class="s2">"name"</span><span class="p">:</span> <span class="s2">"Linear Model"</span><span class="p">,</span>
+            <span class="s2">"instance"</span><span class="p">:</span> <a class="sphx-glr-backref-module-sklearn-linear_model sphx-glr-backref-type-py-class sphx-glr-backref-instance" href="../../modules/generated/sklearn.linear_model.SGDRegressor.html#sklearn.linear_model.SGDRegressor" title="sklearn.linear_model.SGDRegressor"><span class="n">SGDRegressor</span></a><span class="p">(</span>
+                <span class="n">penalty</span><span class="o">=</span><span class="s2">"elasticnet"</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.01</span><span class="p">,</span> <span class="n">l1_ratio</span><span class="o">=</span><span class="mf">0.25</span><span class="p">,</span> <span class="n">tol</span><span class="o">=</span><span class="mf">1e-4</span>
             <span class="p">),</span>
-            <span class="s2">&quot;complexity_label&quot;</span><span class="p">:</span> <span class="s2">&quot;non-zero coefficients&quot;</span><span class="p">,</span>
-            <span class="s2">&quot;complexity_computer&quot;</span><span class="p">:</span> <span class="k">lambda</span> <span class="n">clf</span><span class="p">:</span> <a href="https://numpy.org/doc/stable/reference/generated/numpy.count_nonzero.html#numpy.count_nonzero" title="numpy.count_nonzero" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-function"><span class="n">np</span><span class="o">.</span><span class="n">count_nonzero</span></a><span class="p">(</span><span class="n">clf</span><span class="o">.</span><span class="n">coef_</span><span class="p">),</span>
+            <span class="s2">"complexity_label"</span><span class="p">:</span> <span class="s2">"non-zero coefficients"</span><span class="p">,</span>
+            <span class="s2">"complexity_computer"</span><span class="p">:</span> <span class="k">lambda</span> <span class="n">clf</span><span class="p">:</span> <a class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-function" href="https://numpy.org/doc/stable/reference/generated/numpy.count_nonzero.html#numpy.count_nonzero" title="numpy.count_nonzero"><span class="n">np</span><span class="o">.</span><span class="n">count_nonzero</span></a><span class="p">(</span><span class="n">clf</span><span class="o">.</span><span class="n">coef_</span><span class="p">),</span>
         <span class="p">},</span>
         <span class="p">{</span>
-            <span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;RandomForest&quot;</span><span class="p">,</span>
-            <span class="s2">&quot;instance&quot;</span><span class="p">:</span> <a href="../../modules/generated/sklearn.ensemble.RandomForestRegressor.html#sklearn.ensemble.RandomForestRegressor" title="sklearn.ensemble.RandomForestRegressor" class="sphx-glr-backref-module-sklearn-ensemble sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">RandomForestRegressor</span></a><span class="p">(),</span>
-            <span class="s2">&quot;complexity_label&quot;</span><span class="p">:</span> <span class="s2">&quot;estimators&quot;</span><span class="p">,</span>
-            <span class="s2">&quot;complexity_computer&quot;</span><span class="p">:</span> <span class="k">lambda</span> <span class="n">clf</span><span class="p">:</span> <span class="n">clf</span><span class="o">.</span><span class="n">n_estimators</span><span class="p">,</span>
+            <span class="s2">"name"</span><span class="p">:</span> <span class="s2">"RandomForest"</span><span class="p">,</span>
+            <span class="s2">"instance"</span><span class="p">:</span> <a class="sphx-glr-backref-module-sklearn-ensemble sphx-glr-backref-type-py-class sphx-glr-backref-instance" href="../../modules/generated/sklearn.ensemble.RandomForestRegressor.html#sklearn.ensemble.RandomForestRegressor" title="sklearn.ensemble.RandomForestRegressor"><span class="n">RandomForestRegressor</span></a><span class="p">(),</span>
+            <span class="s2">"complexity_label"</span><span class="p">:</span> <span class="s2">"estimators"</span><span class="p">,</span>
+            <span class="s2">"complexity_computer"</span><span class="p">:</span> <span class="k">lambda</span> <span class="n">clf</span><span class="p">:</span> <span class="n">clf</span><span class="o">.</span><span class="n">n_estimators</span><span class="p">,</span>
         <span class="p">},</span>
         <span class="p">{</span>
-            <span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;SVR&quot;</span><span class="p">,</span>
-            <span class="s2">&quot;instance&quot;</span><span class="p">:</span> <a href="../../modules/generated/sklearn.svm.SVR.html#sklearn.svm.SVR" title="sklearn.svm.SVR" class="sphx-glr-backref-module-sklearn-svm sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">SVR</span></a><span class="p">(</span><span class="n">kernel</span><span class="o">=</span><span class="s2">&quot;rbf&quot;</span><span class="p">),</span>
-            <span class="s2">&quot;complexity_label&quot;</span><span class="p">:</span> <span class="s2">&quot;support vectors&quot;</span><span class="p">,</span>
-            <span class="s2">&quot;complexity_computer&quot;</span><span class="p">:</span> <span class="k">lambda</span> <span class="n">clf</span><span class="p">:</span> <span class="nb">len</span><span class="p">(</span><span class="n">clf</span><span class="o">.</span><span class="n">support_vectors_</span><span class="p">),</span>
+            <span class="s2">"name"</span><span class="p">:</span> <span class="s2">"SVR"</span><span class="p">,</span>
+            <span class="s2">"instance"</span><span class="p">:</span> <a class="sphx-glr-backref-module-sklearn-svm sphx-glr-backref-type-py-class sphx-glr-backref-instance" href="../../modules/generated/sklearn.svm.SVR.html#sklearn.svm.SVR" title="sklearn.svm.SVR"><span class="n">SVR</span></a><span class="p">(</span><span class="n">kernel</span><span class="o">=</span><span class="s2">"rbf"</span><span class="p">),</span>
+            <span class="s2">"complexity_label"</span><span class="p">:</span> <span class="s2">"support vectors"</span><span class="p">,</span>
+            <span class="s2">"complexity_computer"</span><span class="p">:</span> <span class="k">lambda</span> <span class="n">clf</span><span class="p">:</span> <span class="nb">len</span><span class="p">(</span><span class="n">clf</span><span class="o">.</span><span class="n">support_vectors_</span><span class="p">),</span>
         <span class="p">},</span>
     <span class="p">],</span>
 <span class="p">}</span>
@@ -1381,10 +1155,10 @@ either in bulk or atomic (i.e. one by one) mode.</p>
 </pre></div>
 </div>
 <ul class="sphx-glr-horizontal">
-<li><img src="../../_images/sphx_glr_plot_prediction_latency_001.png" srcset="../../_images/sphx_glr_plot_prediction_latency_001.png" alt="Prediction Time per Instance - Atomic, 100 feats." class = "sphx-glr-multi-img"/></li>
-<li><img src="../../_images/sphx_glr_plot_prediction_latency_002.png" srcset="../../_images/sphx_glr_plot_prediction_latency_002.png" alt="Prediction Time per Instance - Bulk (100), 100 feats." class = "sphx-glr-multi-img"/></li>
+<li><img alt="Prediction Time per Instance - Atomic, 100 feats." class="sphx-glr-multi-img" src="../../_images/sphx_glr_plot_prediction_latency_001.png" srcset="../../_images/sphx_glr_plot_prediction_latency_001.png"/></li>
+<li><img alt="Prediction Time per Instance - Bulk (100), 100 feats." class="sphx-glr-multi-img" src="../../_images/sphx_glr_plot_prediction_latency_002.png" srcset="../../_images/sphx_glr_plot_prediction_latency_002.png"/></li>
 </ul>
-<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>Benchmarking SGDRegressor(alpha=0.01, l1_ratio=0.25, penalty=&#39;elasticnet&#39;, tol=0.0001)
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>Benchmarking SGDRegressor(alpha=0.01, l1_ratio=0.25, penalty='elasticnet', tol=0.0001)
 Benchmarking RandomForestRegressor()
 Benchmarking SVR()
 </pre></div>
@@ -1394,16 +1168,16 @@ Benchmarking SVR()
 <h2>Benchmark n_features influence on prediction speed<a class="headerlink" href="#benchmark-n-features-influence-on-prediction-speed" title="Link to this heading">#</a></h2>
 <div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">percentile</span> <span class="o">=</span> <span class="mi">90</span>
 <span class="n">percentiles</span> <span class="o">=</span> <span class="n">n_feature_influence</span><span class="p">(</span>
-    <span class="p">{</span><span class="s2">&quot;ridge&quot;</span><span class="p">:</span> <a href="../../modules/generated/sklearn.linear_model.Ridge.html#sklearn.linear_model.Ridge" title="sklearn.linear_model.Ridge" class="sphx-glr-backref-module-sklearn-linear_model sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">Ridge</span></a><span class="p">()},</span>
-    <span class="n">configuration</span><span class="p">[</span><span class="s2">&quot;n_train&quot;</span><span class="p">],</span>
-    <span class="n">configuration</span><span class="p">[</span><span class="s2">&quot;n_test&quot;</span><span class="p">],</span>
+    <span class="p">{</span><span class="s2">"ridge"</span><span class="p">:</span> <a class="sphx-glr-backref-module-sklearn-linear_model sphx-glr-backref-type-py-class sphx-glr-backref-instance" href="../../modules/generated/sklearn.linear_model.Ridge.html#sklearn.linear_model.Ridge" title="sklearn.linear_model.Ridge"><span class="n">Ridge</span></a><span class="p">()},</span>
+    <span class="n">configuration</span><span class="p">[</span><span class="s2">"n_train"</span><span class="p">],</span>
+    <span class="n">configuration</span><span class="p">[</span><span class="s2">"n_test"</span><span class="p">],</span>
     <span class="p">[</span><span class="mi">100</span><span class="p">,</span> <span class="mi">250</span><span class="p">,</span> <span class="mi">500</span><span class="p">],</span>
     <span class="n">percentile</span><span class="p">,</span>
 <span class="p">)</span>
 <span class="n">plot_n_features_influence</span><span class="p">(</span><span class="n">percentiles</span><span class="p">,</span> <span class="n">percentile</span><span class="p">)</span>
 </pre></div>
 </div>
-<img src="../../_images/sphx_glr_plot_prediction_latency_003.png" srcset="../../_images/sphx_glr_plot_prediction_latency_003.png" alt="Evolution of Prediction Time with #Features" class = "sphx-glr-single-img"/><div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>benchmarking with 100 features
+<img alt="Evolution of Prediction Time with #Features" class="sphx-glr-single-img" src="../../_images/sphx_glr_plot_prediction_latency_003.png" srcset="../../_images/sphx_glr_plot_prediction_latency_003.png"/><div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>benchmarking with 100 features
 benchmarking with 250 features
 benchmarking with 500 features
 </pre></div>
@@ -1415,145 +1189,84 @@ benchmarking with 500 features
 <span class="n">plot_benchmark_throughput</span><span class="p">(</span><span class="n">throughputs</span><span class="p">,</span> <span class="n">configuration</span><span class="p">)</span>
 </pre></div>
 </div>
-<img src="../../_images/sphx_glr_plot_prediction_latency_004.png" srcset="../../_images/sphx_glr_plot_prediction_latency_004.png" alt="Prediction Throughput for different estimators (100 features)" class = "sphx-glr-single-img"/><p class="sphx-glr-timing"><strong>Total running time of the script:</strong> (0 minutes 18.722 seconds)</p>
-<div class="sphx-glr-footer sphx-glr-footer-example docutils container" id="sphx-glr-download-auto-examples-applications-plot-prediction-latency-py">
-<div class="binder-badge docutils container">
-<a class="reference external image-reference" href="https://mybinder.org/v2/gh/scikit-learn/scikit-learn/main?urlpath=lab/tree/notebooks/auto_examples/applications/plot_prediction_latency.ipynb"><img alt="Launch binder" src="../../_images/binder_badge_logo.svg" width="150px" /></a>
-</div>
-<div class="lite-badge docutils container">
-<a class="reference external image-reference" href="../../lite/lab/?path=auto_examples/applications/plot_prediction_latency.ipynb"><img alt="Launch JupyterLite" src="../../_images/jupyterlite_badge_logo.svg" width="150px" /></a>
-</div>
-<div class="sphx-glr-download sphx-glr-download-jupyter docutils container">
-<p><a class="reference download internal" download="" href="../../_downloads/2c8efe31be0d68b7945dbfbff0788dd3/plot_prediction_latency.ipynb"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Jupyter</span> <span class="pre">notebook:</span> <span class="pre">plot_prediction_latency.ipynb</span></code></a></p>
-</div>
-<div class="sphx-glr-download sphx-glr-download-python docutils container">
-<p><a class="reference download internal" download="" href="../../_downloads/5f054219fb38e926537d741fe5832e8c/plot_prediction_latency.py"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Python</span> <span class="pre">source</span> <span class="pre">code:</span> <span class="pre">plot_prediction_latency.py</span></code></a></p>
-</div>
-</div>
+<img alt="Prediction Throughput for different estimators (100 features)" class="sphx-glr-single-img" src="../../_images/sphx_glr_plot_prediction_latency_004.png" srcset="../../_images/sphx_glr_plot_prediction_latency_004.png"/><p class="sphx-glr-timing"><strong>Total running time of the script:</strong> (0 minutes 16.001 seconds)</p>
+
 <p class="rubric">Related examples</p>
-<div class="sphx-glr-thumbnails"><div class="sphx-glr-thumbcontainer" tooltip="This example shows how to perform univariate feature selection before running a SVC (support ve..."><img alt="" src="../../_images/sphx_glr_plot_svm_anova_thumb.png" />
+<div class="sphx-glr-thumbnails"><div class="sphx-glr-thumbcontainer" tooltip="This example shows how to perform univariate feature selection before running a SVC (support ve..."><img alt="" src="../../_images/sphx_glr_plot_svm_anova_thumb.png"/>
 <p><a class="reference internal" href="../svm/plot_svm_anova.html#sphx-glr-auto-examples-svm-plot-svm-anova-py"><span class="std std-ref">SVM-Anova: SVM with univariate feature selection</span></a></p>
-  <div class="sphx-glr-thumbnail-title">SVM-Anova: SVM with univariate feature selection</div>
-</div><div class="sphx-glr-thumbcontainer" tooltip="This is an example showing how scikit-learn can be used for classification using an out-of-core..."><img alt="" src="../../_images/sphx_glr_plot_out_of_core_classification_thumb.png" />
+<div class="sphx-glr-thumbnail-title">SVM-Anova: SVM with univariate feature selection</div>
+</div><div class="sphx-glr-thumbcontainer" tooltip="This is an example showing how scikit-learn can be used for classification using an out-of-core..."><img alt="" src="../../_images/sphx_glr_plot_out_of_core_classification_thumb.png"/>
 <p><a class="reference internal" href="plot_out_of_core_classification.html#sphx-glr-auto-examples-applications-plot-out-of-core-classification-py"><span class="std std-ref">Out-of-core classification of text documents</span></a></p>
-  <div class="sphx-glr-thumbnail-title">Out-of-core classification of text documents</div>
-</div><div class="sphx-glr-thumbcontainer" tooltip="This example illustrates how the Ledoit-Wolf and Oracle Approximating Shrinkage (OAS) estimator..."><img alt="" src="../../_images/sphx_glr_plot_lda_thumb.png" />
+<div class="sphx-glr-thumbnail-title">Out-of-core classification of text documents</div>
+</div><div class="sphx-glr-thumbcontainer" tooltip="This example illustrates how the Ledoit-Wolf and Oracle Approximating Shrinkage (OAS) estimator..."><img alt="" src="../../_images/sphx_glr_plot_lda_thumb.png"/>
 <p><a class="reference internal" href="../classification/plot_lda.html#sphx-glr-auto-examples-classification-plot-lda-py"><span class="std std-ref">Normal, Ledoit-Wolf and OAS Linear Discriminant Analysis for classification</span></a></p>
-  <div class="sphx-glr-thumbnail-title">Normal, Ledoit-Wolf and OAS Linear Discriminant Analysis for classification</div>
-</div><div class="sphx-glr-thumbcontainer" tooltip="Demonstrate how model complexity influences both prediction accuracy and computational performa..."><img alt="" src="../../_images/sphx_glr_plot_model_complexity_influence_thumb.png" />
+<div class="sphx-glr-thumbnail-title">Normal, Ledoit-Wolf and OAS Linear Discriminant Analysis for classification</div>
+</div><div class="sphx-glr-thumbcontainer" tooltip="Demonstrate how model complexity influences both prediction accuracy and computational performa..."><img alt="" src="../../_images/sphx_glr_plot_model_complexity_influence_thumb.png"/>
 <p><a class="reference internal" href="plot_model_complexity_influence.html#sphx-glr-auto-examples-applications-plot-model-complexity-influence-py"><span class="std std-ref">Model Complexity Influence</span></a></p>
-  <div class="sphx-glr-thumbnail-title">Model Complexity Influence</div>
-</div><div class="sphx-glr-thumbcontainer" tooltip="This example illustrates and compares the bias-variance decomposition of the expected mean squa..."><img alt="" src="../../_images/sphx_glr_plot_bias_variance_thumb.png" />
-<p><a class="reference internal" href="../ensemble/plot_bias_variance.html#sphx-glr-auto-examples-ensemble-plot-bias-variance-py"><span class="std std-ref">Single estimator versus bagging: bias-variance decomposition</span></a></p>
-  <div class="sphx-glr-thumbnail-title">Single estimator versus bagging: bias-variance decomposition</div>
+<div class="sphx-glr-thumbnail-title">Model Complexity Influence</div>
 </div></div><p class="sphx-glr-signature"><a class="reference external" href="https://sphinx-gallery.github.io">Gallery generated by Sphinx-Gallery</a></p>
 </section>
 </section>
-
-
-                </article>
-              
-              
-              
-                <footer class="bd-footer-article">
-                  <div class="footer-article-items footer-article__inner">
-  
-    <div class="footer-article-item">
+</article>
+<footer class="bd-footer-article">
+<div class="footer-article-items footer-article__inner">
+<div class="footer-article-item">
 <div class="prev-next-area">
-    <a class="left-prev"
-       href="plot_outlier_detection_wine.html"
-       title="previous page">
-      <i class="fa-solid fa-angle-left"></i>
-      <div class="prev-next-info">
-        <p class="prev-next-subtitle">previous</p>
-        <p class="prev-next-title">Outlier detection on a real data set</p>
-      </div>
-    </a>
-    <a class="right-next"
-       href="plot_species_distribution_modeling.html"
-       title="next page">
-      <div class="prev-next-info">
-        <p class="prev-next-subtitle">next</p>
-        <p class="prev-next-title">Species distribution modeling</p>
-      </div>
-      <i class="fa-solid fa-angle-right"></i>
-    </a>
-</div></div>
-  
+<a class="left-prev" href="plot_outlier_detection_wine.html" title="previous page">
+<i class="fa-solid fa-angle-left"></i>
+<div class="prev-next-info">
+<p class="prev-next-subtitle">previous</p>
+<p class="prev-next-title">Outlier detection on a real data set</p>
 </div>
-                </footer>
-              
-              
-              
-            </div>
-            
-            
-              
-                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
-
-
-  <div class="sidebar-secondary-item">
-<div
-    id="pst-page-navigation-heading-2"
-    class="page-toc tocsection onthispage">
-    <i class="fa-solid fa-list"></i> On this page
+</a>
+<a class="right-next" href="plot_species_distribution_modeling.html" title="next page">
+<div class="prev-next-info">
+<p class="prev-next-subtitle">next</p>
+<p class="prev-next-title">Species distribution modeling</p>
+</div>
+<i class="fa-solid fa-angle-right"></i>
+</a>
+</div></div>
+</div>
+</footer>
+</div>
+<div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+<div class="sidebar-secondary-item">
+<div class="page-toc tocsection onthispage" id="pst-page-navigation-heading-2">
+<i class="fa-solid fa-list"></i> On this page
   </div>
-  <nav class="bd-toc-nav page-toc" aria-labelledby="pst-page-navigation-heading-2">
-    <ul class="visible nav section-nav flex-column">
+<nav aria-labelledby="pst-page-navigation-heading-2" class="bd-toc-nav page-toc">
+<ul class="visible nav section-nav flex-column">
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#benchmark-and-plot-helper-functions">Benchmark and plot helper functions</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#benchmark-bulk-atomic-prediction-speed-for-various-regressors">Benchmark bulk/atomic prediction speed for various regressors</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#benchmark-n-features-influence-on-prediction-speed">Benchmark n_features influence on prediction speed</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#benchmark-throughput">Benchmark throughput</a></li>
 </ul>
-  </nav></div>
+</nav></div>
 
-  <div class="sidebar-secondary-item">
-
-  <div class="tocsection sourcelink">
-    <a href="../../_sources/auto_examples/applications/plot_prediction_latency.rst.txt">
-      <i class="fa-solid fa-file-lines"></i> Show Source
-    </a>
-  </div>
+<div class="sidebar-secondary-item"><div title="plot_prediction_latency.py"><a download="" href="../../_downloads/5f054219fb38e926537d741fe5832e8c/plot_prediction_latency.py"><i class="fa-solid fa-download"></i> Download source code</a></div><div title="plot_prediction_latency.ipynb"><a download="" href="../../_downloads/2c8efe31be0d68b7945dbfbff0788dd3/plot_prediction_latency.ipynb"><i class="fa-solid fa-download"></i> Download Jupyter notebook</a></div></div><div class="sidebar-secondary-item"><div><a href="../../lite/lab/?path=auto_examples/applications/plot_prediction_latency.ipynb"><img alt="Launch JupyterLite" height="20" src="../../_images/jupyterlite_badge_logo.svg"/></a></div><div><a href="https://mybinder.org/v2/gh/scikit-learn/scikit-learn/main?urlpath=lab/tree/notebooks/auto_examples/applications/plot_prediction_latency.ipynb"><img alt="Launch binder" height="20" src="../../_images/binder_badge_logo.svg"/></a></div></div></div></div>
 </div>
-
-</div></div>
-              
-            
-          </div>
-          <footer class="bd-footer-content">
-            
-          </footer>
-        
-      </main>
-    </div>
-  </div>
-  
-  <!-- Scripts loaded after <body> so the DOM is not blocked -->
-  <script src="../../_static/scripts/bootstrap.js?digest=8d27b9dea8ad943066ae"></script>
+<footer class="bd-footer-content">
+</footer>
+</main>
+</div>
+</div>
+<!-- Scripts loaded after <body> so the DOM is not blocked -->
+<script src="../../_static/scripts/bootstrap.js?digest=8d27b9dea8ad943066ae"></script>
 <script src="../../_static/scripts/pydata-sphinx-theme.js?digest=8d27b9dea8ad943066ae"></script>
-
-  <footer class="bd-footer">
+<footer class="bd-footer">
 <div class="bd-footer__inner bd-page-width">
-  
-    <div class="footer-items__start">
-      
-        <div class="footer-item">
-
-  <p class="copyright">
+<div class="footer-items__start">
+<div class="footer-item">
+<p class="copyright">
     
       © Copyright 2007 - 2024, scikit-learn developers (BSD License).
       <br/>
-    
-  </p>
+</p>
 </div>
-      
-    </div>
-  
-  
-  
 </div>
-
-  </footer>
+</div>
+</footer>
     <script src="https://scikit-learn.org/versionwarning.js"></script>
-  </body>
+</body>
 </html>

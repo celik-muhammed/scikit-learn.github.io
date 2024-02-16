@@ -1,310 +1,206 @@
 
 <!DOCTYPE html>
 
-
-<html lang="en" data-content_root="../../" >
-
-  <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
-<meta property="og:title" content="Statistical comparison of models using grid search" />
-<meta property="og:type" content="website" />
-<meta property="og:url" content="https://scikit-learn/stable/auto_examples/model_selection/plot_grid_search_stats.html" />
-<meta property="og:site_name" content="scikit-learn" />
-<meta property="og:description" content="This example illustrates how to statistically compare the performance of models trained and evaluated using GridSearchCV. We will start by simulating moon shaped data (where the ideal separation be..." />
-<meta property="og:image" content="https://scikit-learn.org/stable/_static/scikit-learn-logo-small.png" />
-<meta property="og:image:alt" content="scikit-learn" />
-<meta name="description" content="This example illustrates how to statistically compare the performance of models trained and evaluated using GridSearchCV. We will start by simulating moon shaped data (where the ideal separation be..." />
-
-    <title>Statistical comparison of models using grid search &#8212; scikit-learn 1.5.dev0 documentation</title>
-  
-  
-  
-  <script data-cfasync="false">
+<html data-content_root="../../" lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/><meta content="width=device-width, initial-scale=1" name="viewport"/>
+<meta content="Statistical comparison of models using grid search" property="og:title"/>
+<meta content="website" property="og:type"/>
+<meta content="https://scikit-learn/stable/auto_examples/model_selection/plot_grid_search_stats.html" property="og:url"/>
+<meta content="scikit-learn" property="og:site_name"/>
+<meta content="This example illustrates how to statistically compare the performance of models trained and evaluated using GridSearchCV. We will start by simulating moon shaped data (where the ideal separation be..." property="og:description"/>
+<meta content="https://scikit-learn.org/stable/_static/scikit-learn-logo-small.png" property="og:image"/>
+<meta content="scikit-learn" property="og:image:alt"/>
+<meta content="This example illustrates how to statistically compare the performance of models trained and evaluated using GridSearchCV. We will start by simulating moon shaped data (where the ideal separation be..." name="description"/>
+<title>Statistical comparison of models using grid search — scikit-learn 1.5.dev0 documentation</title>
+<script data-cfasync="false">
     document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
     document.documentElement.dataset.theme = localStorage.getItem("theme") || "light";
   </script>
-  
-  <!-- Loaded before other Sphinx assets -->
-  <link href="../../_static/styles/theme.css?digest=8d27b9dea8ad943066ae" rel="stylesheet" />
-<link href="../../_static/styles/bootstrap.css?digest=8d27b9dea8ad943066ae" rel="stylesheet" />
-<link href="../../_static/styles/pydata-sphinx-theme.css?digest=8d27b9dea8ad943066ae" rel="stylesheet" />
-
-  
-  <link href="../../_static/vendor/fontawesome/6.5.1/css/all.min.css?digest=8d27b9dea8ad943066ae" rel="stylesheet" />
-  <link rel="preload" as="font" type="font/woff2" crossorigin href="../../_static/vendor/fontawesome/6.5.1/webfonts/fa-solid-900.woff2" />
-<link rel="preload" as="font" type="font/woff2" crossorigin href="../../_static/vendor/fontawesome/6.5.1/webfonts/fa-brands-400.woff2" />
-<link rel="preload" as="font" type="font/woff2" crossorigin href="../../_static/vendor/fontawesome/6.5.1/webfonts/fa-regular-400.woff2" />
-
-    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=a746c00c" />
-    <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
-    <link rel="stylesheet" type="text/css" href="../../_static/plot_directive.css" />
-    <link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Vibur" />
-    <link rel="stylesheet" type="text/css" href="../../_static/jupyterlite_sphinx.css?v=f996933d" />
-    <link rel="stylesheet" type="text/css" href="../../_static/sg_gallery.css?v=61a4c737" />
-    <link rel="stylesheet" type="text/css" href="../../_static/sg_gallery-binder.css?v=f4aeca0c" />
-    <link rel="stylesheet" type="text/css" href="../../_static/sg_gallery-dataframe.css?v=2082cf3c" />
-    <link rel="stylesheet" type="text/css" href="../../_static/sg_gallery-rendered-html.css?v=1277b6f3" />
-    <link rel="stylesheet" type="text/css" href="../../_static/design-style.1e8bd061cd6da7fc9cf755528e8ffc24.min.css?v=0a3b3ea7" />
-    <link rel="stylesheet" type="text/css" href="../../_static/styles/colors.css?v=d5680186" />
-    <link rel="stylesheet" type="text/css" href="../../_static/styles/custom.css?v=3e2fb91a" />
-  
-  <!-- Pre-loaded scripts that we'll load fully later -->
-  <link rel="preload" as="script" href="../../_static/scripts/bootstrap.js?digest=8d27b9dea8ad943066ae" />
-<link rel="preload" as="script" href="../../_static/scripts/pydata-sphinx-theme.js?digest=8d27b9dea8ad943066ae" />
-  <script src="../../_static/vendor/fontawesome/6.5.1/js/all.min.js?digest=8d27b9dea8ad943066ae"></script>
-
-    <script src="../../_static/documentation_options.js?v=a2c36881"></script>
-    <script src="../../_static/doctools.js?v=888ff710"></script>
-    <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
-    <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
-    <script src="../../_static/copybutton.js?v=97f0b27d"></script>
-    <script src="../../_static/jupyterlite_sphinx.js?v=f25406b8"></script>
-    <script src="../../_static/design-tabs.js?v=36754332"></script>
-    <script data-domain="scikit-learn.org" defer="defer" src="https://views.scientific-python.org/js/script.js"></script>
-    <script async="async" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js"></script>
-    <script>DOCUMENTATION_OPTIONS.pagename = 'auto_examples/model_selection/plot_grid_search_stats';</script>
-    <script>
+<!-- Loaded before other Sphinx assets -->
+<link href="../../_static/styles/theme.css?digest=8d27b9dea8ad943066ae" rel="stylesheet"/>
+<link href="../../_static/styles/bootstrap.css?digest=8d27b9dea8ad943066ae" rel="stylesheet"/>
+<link href="../../_static/styles/pydata-sphinx-theme.css?digest=8d27b9dea8ad943066ae" rel="stylesheet"/>
+<link href="../../_static/vendor/fontawesome/6.5.1/css/all.min.css?digest=8d27b9dea8ad943066ae" rel="stylesheet"/>
+<link as="font" crossorigin="" href="../../_static/vendor/fontawesome/6.5.1/webfonts/fa-solid-900.woff2" rel="preload" type="font/woff2"/>
+<link as="font" crossorigin="" href="../../_static/vendor/fontawesome/6.5.1/webfonts/fa-brands-400.woff2" rel="preload" type="font/woff2"/>
+<link as="font" crossorigin="" href="../../_static/vendor/fontawesome/6.5.1/webfonts/fa-regular-400.woff2" rel="preload" type="font/woff2"/>
+<link href="../../_static/pygments.css?v=a746c00c" rel="stylesheet" type="text/css"/>
+<link href="../../_static/copybutton.css?v=76b2166b" rel="stylesheet" type="text/css"/>
+<link href="../../_static/plot_directive.css" rel="stylesheet" type="text/css"/>
+<link href="https://fonts.googleapis.com/css?family=Vibur" rel="stylesheet" type="text/css"/>
+<link href="../../_static/jupyterlite_sphinx.css?v=f996933d" rel="stylesheet" type="text/css"/>
+<link href="../../_static/sg_gallery.css?v=61a4c737" rel="stylesheet" type="text/css"/>
+<link href="../../_static/sg_gallery-binder.css?v=f4aeca0c" rel="stylesheet" type="text/css"/>
+<link href="../../_static/sg_gallery-dataframe.css?v=2082cf3c" rel="stylesheet" type="text/css"/>
+<link href="../../_static/sg_gallery-rendered-html.css?v=1277b6f3" rel="stylesheet" type="text/css"/>
+<link href="../../_static/design-style.1e8bd061cd6da7fc9cf755528e8ffc24.min.css?v=0a3b3ea7" rel="stylesheet" type="text/css"/>
+<link href="../../_static/styles/colors.css?v=d5680186" rel="stylesheet" type="text/css"/>
+<link href="../../_static/styles/custom.css?v=3e2fb91a" rel="stylesheet" type="text/css"/>
+<!-- Pre-loaded scripts that we'll load fully later -->
+<link as="script" href="../../_static/scripts/bootstrap.js?digest=8d27b9dea8ad943066ae" rel="preload"/>
+<link as="script" href="../../_static/scripts/pydata-sphinx-theme.js?digest=8d27b9dea8ad943066ae" rel="preload"/>
+<script src="../../_static/vendor/fontawesome/6.5.1/js/all.min.js?digest=8d27b9dea8ad943066ae"></script>
+<script src="../../_static/documentation_options.js?v=a2c36881"></script>
+<script src="../../_static/doctools.js?v=888ff710"></script>
+<script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+<script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
+<script src="../../_static/copybutton.js?v=97f0b27d"></script>
+<script src="../../_static/jupyterlite_sphinx.js?v=f25406b8"></script>
+<script src="../../_static/design-tabs.js?v=36754332"></script>
+<script data-domain="scikit-learn.org" defer="defer" src="https://views.scientific-python.org/js/script.js"></script>
+<script async="async" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js"></script>
+<script>DOCUMENTATION_OPTIONS.pagename = 'auto_examples/model_selection/plot_grid_search_stats';</script>
+<script>
         DOCUMENTATION_OPTIONS.theme_version = '0.15.2';
         DOCUMENTATION_OPTIONS.theme_switcher_json_url = 'https://charlie-xiao.github.io/assets/json/sklearn-versions-test.json';
         DOCUMENTATION_OPTIONS.theme_switcher_version_match = '1.5.dev0';
         DOCUMENTATION_OPTIONS.show_version_warning_banner = true;
         </script>
-    <script src="../../_static/scripts/details-permalink.js?v=b0ed9290"></script>
-    <link rel="icon" href="../../_static/favicon.ico"/>
-    <link rel="author" title="About these documents" href="../../about.html" />
-    <link rel="search" title="Search" href="../../search.html" />
-    <link rel="next" title="Successive Halving Iterations" href="plot_successive_halving_iterations.html" />
-    <link rel="prev" title="Sample pipeline for text feature extraction and evaluation" href="plot_grid_search_text_feature_extraction.html" />
-  <meta name="viewport" content="width=device-width, initial-scale=1"/>
-  <meta name="docsearch:language" content="en"/>
-  </head>
-  
-  
-  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
-
-  
-  
-  <a id="pst-skip-link" class="skip-link" href="#main-content">Skip to main content</a>
-  
-  <div id="pst-scroll-pixel-helper"></div>
-  
-  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
-    <i class="fa-solid fa-arrow-up"></i>
+<script src="../../_static/scripts/details-permalink.js?v=b0ed9290"></script>
+<link href="../../_static/favicon.ico" rel="icon"/>
+<link href="../../about.html" rel="author" title="About these documents"/>
+<link href="../../search.html" rel="search" title="Search"/>
+<link href="plot_successive_halving_iterations.html" rel="next" title="Successive Halving Iterations"/>
+<link href="plot_grid_search_text_feature_extraction.html" rel="prev" title="Sample pipeline for text feature extraction and evaluation"/>
+<meta content="width=device-width, initial-scale=1" name="viewport"/>
+<meta content="en" name="docsearch:language"/>
+</head>
+<body data-bs-root-margin="0px 0px -60%" data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-default-mode="" data-offset="180">
+<a class="skip-link" href="#main-content" id="pst-skip-link">Skip to main content</a>
+<div id="pst-scroll-pixel-helper"></div>
+<button class="btn rounded-pill" id="pst-back-to-top" type="button">
+<i class="fa-solid fa-arrow-up"></i>
     Back to top
   </button>
-
-  
-  <input type="checkbox"
-          class="sidebar-toggle"
-          name="__primary"
-          id="__primary"/>
-  <label class="overlay overlay-primary" for="__primary"></label>
-  
-  <input type="checkbox"
-          class="sidebar-toggle"
-          name="__secondary"
-          id="__secondary"/>
-  <label class="overlay overlay-secondary" for="__secondary"></label>
-  
-  <div class="search-button__wrapper">
-    <div class="search-button__overlay"></div>
-    <div class="search-button__search-container">
-<form class="bd-search d-flex align-items-center"
-      action="../../search.html"
-      method="get">
-  <i class="fa-solid fa-magnifying-glass"></i>
-  <input type="search"
-         class="form-control"
-         name="q"
-         id="search-input"
-         placeholder="Search the docs ..."
-         aria-label="Search the docs ..."
-         autocomplete="off"
-         autocorrect="off"
-         autocapitalize="off"
-         spellcheck="false"/>
-  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+<input class="sidebar-toggle" id="__primary" name="__primary" type="checkbox"/>
+<label class="overlay overlay-primary" for="__primary"></label>
+<input class="sidebar-toggle" id="__secondary" name="__secondary" type="checkbox"/>
+<label class="overlay overlay-secondary" for="__secondary"></label>
+<div class="search-button__wrapper">
+<div class="search-button__overlay"></div>
+<div class="search-button__search-container">
+<form action="../../search.html" class="bd-search d-flex align-items-center" method="get">
+<i class="fa-solid fa-magnifying-glass"></i>
+<input aria-label="Search the docs ..." autocapitalize="off" autocomplete="off" autocorrect="off" class="form-control" id="search-input" name="q" placeholder="Search the docs ..." spellcheck="false" type="search"/>
+<span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
 </form></div>
-  </div>
-  
-    <header class="bd-header navbar navbar-expand-lg bd-navbar">
+</div>
+<header class="bd-header navbar navbar-expand-lg bd-navbar">
 <div class="bd-header__inner bd-page-width">
-  <label class="sidebar-toggle primary-toggle" for="__primary">
-    <span class="fa-solid fa-bars"></span>
-  </label>
-  
-  
-  <div class=" navbar-header-items__start">
-    
-      <div class="navbar-item">
-
-  
-
+<label class="sidebar-toggle primary-toggle" for="__primary">
+<span class="fa-solid fa-bars"></span>
+</label>
+<div class="navbar-header-items__start">
+<div class="navbar-item">
 <a class="navbar-brand logo" href="../../index.html">
-  
-  
-  
-  
-  
-    
-    
-      
-    
-    
-    <img src="../../_static/scikit-learn-logo-small.png" class="logo__image only-light" alt="scikit-learn homepage"/>
-    <script>document.write(`<img src="../../_static/scikit-learn-logo-small.png" class="logo__image only-dark" alt="scikit-learn homepage"/>`);</script>
-  
-  
+<img alt="scikit-learn homepage" class="logo__image only-light" src="../../_static/scikit-learn-logo-small.png"/>
+<script>document.write(`<img src="../../_static/scikit-learn-logo-small.png" class="logo__image only-dark" alt="scikit-learn homepage"/>`);</script>
 </a></div>
-    
-  </div>
-  
-  <div class=" navbar-header-items">
-    
-    <div class="me-auto navbar-header-items__center">
-      
-        <div class="navbar-item">
+</div>
+<div class="navbar-header-items">
+<div class="me-auto navbar-header-items__center">
+<div class="navbar-item">
 <nav class="navbar-nav">
-  <ul class="bd-navbar-elements navbar-nav">
-    
-                    <li class="nav-item">
-                      <a class="nav-link nav-internal" href="../../install.html">
+<ul class="bd-navbar-elements navbar-nav">
+<li class="nav-item">
+<a class="nav-link nav-internal" href="../../install.html">
                         Install
                       </a>
-                    </li>
-                
-
-                    <li class="nav-item">
-                      <a class="nav-link nav-internal" href="../../user_guide.html">
+</li>
+<li class="nav-item">
+<a class="nav-link nav-internal" href="../../user_guide.html">
                         User Guide
                       </a>
-                    </li>
-                
-
-                    <li class="nav-item">
-                      <a class="nav-link nav-internal" href="../../modules/classes.html">
+</li>
+<li class="nav-item">
+<a class="nav-link nav-internal" href="../../modules/classes.html">
                         API
                       </a>
-                    </li>
-                
-
-                    <li class="nav-item current active">
-                      <a class="nav-link nav-internal" href="../index.html">
+</li>
+<li class="nav-item current active">
+<a class="nav-link nav-internal" href="../index.html">
                         Examples
                       </a>
-                    </li>
-                
-
-                    <li class="nav-item">
-                      <a class="nav-link nav-external" href="https://blog.scikit-learn.org/">
+</li>
+<li class="nav-item">
+<a class="nav-link nav-external" href="https://blog.scikit-learn.org/">
                         Community
                       </a>
-                    </li>
-                
-            <li class="nav-item dropdown">
-                <button class="btn dropdown-toggle nav-item" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-controls="pst-nav-more-links">
+</li>
+<li class="nav-item dropdown">
+<button aria-controls="pst-nav-more-links" aria-expanded="false" class="btn dropdown-toggle nav-item" data-bs-toggle="dropdown" type="button">
                     More
                 </button>
-                <ul id="pst-nav-more-links" class="dropdown-menu">
-                    
-                    <li class="nav-item">
-                      <a class="nav-link dropdown-item nav-internal" href="../../getting_started.html">
+<ul class="dropdown-menu" id="pst-nav-more-links">
+<li class="nav-item">
+<a class="nav-link dropdown-item nav-internal" href="../../getting_started.html">
                         Getting Started
                       </a>
-                    </li>
-                
-
-                    <li class="nav-item">
-                      <a class="nav-link dropdown-item nav-internal" href="../../tutorial/index.html">
+</li>
+<li class="nav-item">
+<a class="nav-link dropdown-item nav-internal" href="../../tutorial/index.html">
                         Tutorials
                       </a>
-                    </li>
-                
-
-                    <li class="nav-item">
-                      <a class="nav-link dropdown-item nav-internal" href="../../whats_new.html">
+</li>
+<li class="nav-item">
+<a class="nav-link dropdown-item nav-internal" href="../../whats_new.html">
                         Release History
                       </a>
-                    </li>
-                
-
-                    <li class="nav-item">
-                      <a class="nav-link dropdown-item nav-internal" href="../../glossary.html">
+</li>
+<li class="nav-item">
+<a class="nav-link dropdown-item nav-internal" href="../../glossary.html">
                         Glossary
                       </a>
-                    </li>
-                
-
-                    <li class="nav-item">
-                      <a class="nav-link dropdown-item nav-internal" href="../../developers/index.html">
+</li>
+<li class="nav-item">
+<a class="nav-link dropdown-item nav-internal" href="../../developers/index.html">
                         Development
                       </a>
-                    </li>
-                
-
-                    <li class="nav-item">
-                      <a class="nav-link dropdown-item nav-internal" href="../../faq.html">
+</li>
+<li class="nav-item">
+<a class="nav-link dropdown-item nav-internal" href="../../faq.html">
                         FAQ
                       </a>
-                    </li>
-                
-
-                    <li class="nav-item">
-                      <a class="nav-link dropdown-item nav-internal" href="../../support.html">
+</li>
+<li class="nav-item">
+<a class="nav-link dropdown-item nav-internal" href="../../support.html">
                         Support
                       </a>
-                    </li>
-                
-
-                    <li class="nav-item">
-                      <a class="nav-link dropdown-item nav-internal" href="../../related_projects.html">
+</li>
+<li class="nav-item">
+<a class="nav-link dropdown-item nav-internal" href="../../related_projects.html">
                         Related Projects
                       </a>
-                    </li>
-                
-
-                    <li class="nav-item">
-                      <a class="nav-link dropdown-item nav-internal" href="../../roadmap.html">
+</li>
+<li class="nav-item">
+<a class="nav-link dropdown-item nav-internal" href="../../roadmap.html">
                         Roadmap
                       </a>
-                    </li>
-                
-
-                    <li class="nav-item">
-                      <a class="nav-link dropdown-item nav-internal" href="../../governance.html">
+</li>
+<li class="nav-item">
+<a class="nav-link dropdown-item nav-internal" href="../../governance.html">
                         Governance
                       </a>
-                    </li>
-                
-
-                    <li class="nav-item">
-                      <a class="nav-link dropdown-item nav-internal" href="../../about.html">
+</li>
+<li class="nav-item">
+<a class="nav-link dropdown-item nav-internal" href="../../about.html">
                         About us
                       </a>
-                    </li>
-                
-
-                    <li class="nav-item">
-                      <a class="nav-link dropdown-item nav-external" href="https://scikit-learn.org/dev/versions.html">
+</li>
+<li class="nav-item">
+<a class="nav-link dropdown-item nav-external" href="https://scikit-learn.org/dev/versions.html">
                         Other Versions and Download
                       </a>
-                    </li>
-                
-                </ul>
-            </li>
-            
-  </ul>
+</li>
+</ul>
+</li>
+</ul>
 </nav></div>
-      
-    </div>
-    
-    
-    <div class="navbar-header-items__end">
-      
-        <div class="navbar-item navbar-persistent--container">
-          
-
+</div>
+<div class="navbar-header-items__end">
+<div class="navbar-item navbar-persistent--container">
 <script>
 document.write(`
   <button class="btn btn-sm navbar-btn search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
@@ -312,11 +208,8 @@ document.write(`
   </button>
 `);
 </script>
-        </div>
-      
-      
-        <div class="navbar-item">
-
+</div>
+<div class="navbar-item">
 <script>
 document.write(`
   <button class="btn btn-sm navbar-btn theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
@@ -326,24 +219,13 @@ document.write(`
   </button>
 `);
 </script></div>
-      
-        <div class="navbar-item"><ul class="navbar-icon-links navbar-nav"
-    aria-label="Icon Links">
-        <li class="nav-item">
-          
-          
-          
-          
-          
-          
-          
-          
-          <a href="https://github.com/scikit-learn/scikit-learn" title="GitHub" class="nav-link" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><span><i class="fa-brands fa-square-github fa-lg" aria-hidden="true"></i></span>
-            <span class="sr-only">GitHub</span></a>
-        </li>
+<div class="navbar-item"><ul aria-label="Icon Links" class="navbar-icon-links navbar-nav">
+<li class="nav-item">
+<a class="nav-link" data-bs-placement="bottom" data-bs-toggle="tooltip" href="https://github.com/scikit-learn/scikit-learn" rel="noopener" target="_blank" title="GitHub"><span><i aria-hidden="true" class="fa-brands fa-square-github fa-lg"></i></span>
+<span class="sr-only">GitHub</span></a>
+</li>
 </ul></div>
-      
-        <div class="navbar-item">
+<div class="navbar-item">
 <script>
 document.write(`
   <div class="version-switcher__container dropdown">
@@ -366,14 +248,9 @@ document.write(`
   </div>
 `);
 </script></div>
-      
-    </div>
-    
-  </div>
-  
-  
-    <div class="navbar-persistent--mobile">
-
+</div>
+</div>
+<div class="navbar-persistent--mobile">
 <script>
 document.write(`
   <button class="btn btn-sm navbar-btn search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
@@ -381,174 +258,117 @@ document.write(`
   </button>
 `);
 </script>
-    </div>
-  
-
-  
-    <label class="sidebar-toggle secondary-toggle" for="__secondary" tabindex="0">
-      <span class="fa-solid fa-outdent"></span>
-    </label>
-  
 </div>
-
-    </header>
-  
-
-  <div class="bd-container">
-    <div class="bd-container__inner bd-page-width">
-      
-      
-      
-      <div class="bd-sidebar-primary bd-sidebar">
-        
-
-  
-  <div class="sidebar-header-items sidebar-primary__section">
-    
-    
-      <div class="sidebar-header-items__center">
-        
-          <div class="navbar-item">
+<label class="sidebar-toggle secondary-toggle" for="__secondary" tabindex="0">
+<span class="fa-solid fa-outdent"></span>
+</label>
+</div>
+</header>
+<div class="bd-container">
+<div class="bd-container__inner bd-page-width">
+<div class="bd-sidebar-primary bd-sidebar">
+<div class="sidebar-header-items sidebar-primary__section">
+<div class="sidebar-header-items__center">
+<div class="navbar-item">
 <nav class="navbar-nav">
-  <ul class="bd-navbar-elements navbar-nav">
-    
-                    <li class="nav-item">
-                      <a class="nav-link nav-internal" href="../../install.html">
+<ul class="bd-navbar-elements navbar-nav">
+<li class="nav-item">
+<a class="nav-link nav-internal" href="../../install.html">
                         Install
                       </a>
-                    </li>
-                
-
-                    <li class="nav-item">
-                      <a class="nav-link nav-internal" href="../../user_guide.html">
+</li>
+<li class="nav-item">
+<a class="nav-link nav-internal" href="../../user_guide.html">
                         User Guide
                       </a>
-                    </li>
-                
-
-                    <li class="nav-item">
-                      <a class="nav-link nav-internal" href="../../modules/classes.html">
+</li>
+<li class="nav-item">
+<a class="nav-link nav-internal" href="../../modules/classes.html">
                         API
                       </a>
-                    </li>
-                
-
-                    <li class="nav-item current active">
-                      <a class="nav-link nav-internal" href="../index.html">
+</li>
+<li class="nav-item current active">
+<a class="nav-link nav-internal" href="../index.html">
                         Examples
                       </a>
-                    </li>
-                
-
-                    <li class="nav-item">
-                      <a class="nav-link nav-external" href="https://blog.scikit-learn.org/">
+</li>
+<li class="nav-item">
+<a class="nav-link nav-external" href="https://blog.scikit-learn.org/">
                         Community
                       </a>
-                    </li>
-                
-            <li class="nav-item dropdown">
-                <button class="btn dropdown-toggle nav-item" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-controls="pst-nav-more-links-2">
+</li>
+<li class="nav-item dropdown">
+<button aria-controls="pst-nav-more-links-2" aria-expanded="false" class="btn dropdown-toggle nav-item" data-bs-toggle="dropdown" type="button">
                     More
                 </button>
-                <ul id="pst-nav-more-links-2" class="dropdown-menu">
-                    
-                    <li class="nav-item">
-                      <a class="nav-link dropdown-item nav-internal" href="../../getting_started.html">
+<ul class="dropdown-menu" id="pst-nav-more-links-2">
+<li class="nav-item">
+<a class="nav-link dropdown-item nav-internal" href="../../getting_started.html">
                         Getting Started
                       </a>
-                    </li>
-                
-
-                    <li class="nav-item">
-                      <a class="nav-link dropdown-item nav-internal" href="../../tutorial/index.html">
+</li>
+<li class="nav-item">
+<a class="nav-link dropdown-item nav-internal" href="../../tutorial/index.html">
                         Tutorials
                       </a>
-                    </li>
-                
-
-                    <li class="nav-item">
-                      <a class="nav-link dropdown-item nav-internal" href="../../whats_new.html">
+</li>
+<li class="nav-item">
+<a class="nav-link dropdown-item nav-internal" href="../../whats_new.html">
                         Release History
                       </a>
-                    </li>
-                
-
-                    <li class="nav-item">
-                      <a class="nav-link dropdown-item nav-internal" href="../../glossary.html">
+</li>
+<li class="nav-item">
+<a class="nav-link dropdown-item nav-internal" href="../../glossary.html">
                         Glossary
                       </a>
-                    </li>
-                
-
-                    <li class="nav-item">
-                      <a class="nav-link dropdown-item nav-internal" href="../../developers/index.html">
+</li>
+<li class="nav-item">
+<a class="nav-link dropdown-item nav-internal" href="../../developers/index.html">
                         Development
                       </a>
-                    </li>
-                
-
-                    <li class="nav-item">
-                      <a class="nav-link dropdown-item nav-internal" href="../../faq.html">
+</li>
+<li class="nav-item">
+<a class="nav-link dropdown-item nav-internal" href="../../faq.html">
                         FAQ
                       </a>
-                    </li>
-                
-
-                    <li class="nav-item">
-                      <a class="nav-link dropdown-item nav-internal" href="../../support.html">
+</li>
+<li class="nav-item">
+<a class="nav-link dropdown-item nav-internal" href="../../support.html">
                         Support
                       </a>
-                    </li>
-                
-
-                    <li class="nav-item">
-                      <a class="nav-link dropdown-item nav-internal" href="../../related_projects.html">
+</li>
+<li class="nav-item">
+<a class="nav-link dropdown-item nav-internal" href="../../related_projects.html">
                         Related Projects
                       </a>
-                    </li>
-                
-
-                    <li class="nav-item">
-                      <a class="nav-link dropdown-item nav-internal" href="../../roadmap.html">
+</li>
+<li class="nav-item">
+<a class="nav-link dropdown-item nav-internal" href="../../roadmap.html">
                         Roadmap
                       </a>
-                    </li>
-                
-
-                    <li class="nav-item">
-                      <a class="nav-link dropdown-item nav-internal" href="../../governance.html">
+</li>
+<li class="nav-item">
+<a class="nav-link dropdown-item nav-internal" href="../../governance.html">
                         Governance
                       </a>
-                    </li>
-                
-
-                    <li class="nav-item">
-                      <a class="nav-link dropdown-item nav-internal" href="../../about.html">
+</li>
+<li class="nav-item">
+<a class="nav-link dropdown-item nav-internal" href="../../about.html">
                         About us
                       </a>
-                    </li>
-                
-
-                    <li class="nav-item">
-                      <a class="nav-link dropdown-item nav-external" href="https://scikit-learn.org/dev/versions.html">
+</li>
+<li class="nav-item">
+<a class="nav-link dropdown-item nav-external" href="https://scikit-learn.org/dev/versions.html">
                         Other Versions and Download
                       </a>
-                    </li>
-                
-                </ul>
-            </li>
-            
-  </ul>
+</li>
+</ul>
+</li>
+</ul>
 </nav></div>
-        
-      </div>
-    
-    
-    
-      <div class="sidebar-header-items__end">
-        
-          <div class="navbar-item">
-
+</div>
+<div class="sidebar-header-items__end">
+<div class="navbar-item">
 <script>
 document.write(`
   <button class="btn btn-sm navbar-btn theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
@@ -558,24 +378,13 @@ document.write(`
   </button>
 `);
 </script></div>
-        
-          <div class="navbar-item"><ul class="navbar-icon-links navbar-nav"
-    aria-label="Icon Links">
-        <li class="nav-item">
-          
-          
-          
-          
-          
-          
-          
-          
-          <a href="https://github.com/scikit-learn/scikit-learn" title="GitHub" class="nav-link" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><span><i class="fa-brands fa-square-github fa-lg" aria-hidden="true"></i></span>
-            <span class="sr-only">GitHub</span></a>
-        </li>
+<div class="navbar-item"><ul aria-label="Icon Links" class="navbar-icon-links navbar-nav">
+<li class="nav-item">
+<a class="nav-link" data-bs-placement="bottom" data-bs-toggle="tooltip" href="https://github.com/scikit-learn/scikit-learn" rel="noopener" target="_blank" title="GitHub"><span><i aria-hidden="true" class="fa-brands fa-square-github fa-lg"></i></span>
+<span class="sr-only">GitHub</span></a>
+</li>
 </ul></div>
-        
-          <div class="navbar-item">
+<div class="navbar-item">
 <script>
 document.write(`
   <div class="version-switcher__container dropdown">
@@ -598,17 +407,13 @@ document.write(`
   </div>
 `);
 </script></div>
-        
-      </div>
-    
-  </div>
-  
-    <div class="sidebar-primary-items__start sidebar-primary__section">
-        <div class="sidebar-primary-item">
-<nav class="bd-docs-nav bd-links"
-     aria-label="Section Navigation">
-  <p class="bd-links__title" role="heading" aria-level="1">Section Navigation</p>
-  <div class="bd-toc-item navbar-nav"><ul class="current nav bd-sidenav">
+</div>
+</div>
+<div class="sidebar-primary-items__start sidebar-primary__section">
+<div class="sidebar-primary-item">
+<nav aria-label="Section Navigation" class="bd-docs-nav bd-links">
+<p aria-level="1" class="bd-links__title" role="heading">Section Navigation</p>
+<div class="bd-toc-item navbar-nav"><ul class="current nav bd-sidenav">
 <li class="toctree-l1 has-children"><a class="reference internal" href="../release_highlights/index.html">Release Highlights</a><input class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-1"><i class="fa-solid fa-chevron-down"></i></label><ul>
 <li class="toctree-l2"><a class="reference internal" href="../release_highlights/plot_release_highlights_1_4_0.html">Release Highlights for scikit-learn 1.4</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../release_highlights/plot_release_highlights_1_3_0.html">Release Highlights for scikit-learn 1.3</a></li>
@@ -1002,68 +807,37 @@ document.write(`
 </ul>
 </div>
 </nav></div>
-    </div>
-  
-  
-  <div class="sidebar-primary-items__end sidebar-primary__section">
-  </div>
-  
-  <div id="rtd-footer-container"></div>
-
-
-      </div>
-      
-      <main id="main-content" class="bd-main">
-        
-        
-          <div class="bd-content">
-            <div class="bd-article-container">
-              
-              <div class="bd-header-article">
+</div>
+<div class="sidebar-primary-items__end sidebar-primary__section">
+</div>
+<div id="rtd-footer-container"></div>
+</div>
+<main class="bd-main" id="main-content">
+<div class="bd-content">
+<div class="bd-article-container">
+<div class="bd-header-article">
 <div class="header-article-items header-article__inner">
-  
-    <div class="header-article-items__start">
-      
-        <div class="header-article-item">
-
-
-
+<div class="header-article-items__start">
+<div class="header-article-item">
 <nav aria-label="Breadcrumb">
-  <ul class="bd-breadcrumbs">
-    
-    <li class="breadcrumb-item breadcrumb-home">
-      <a href="../../index.html" class="nav-link" aria-label="Home">
-        <i class="fa-solid fa-home"></i>
-      </a>
-    </li>
-    
-    <li class="breadcrumb-item"><a href="../index.html" class="nav-link">Examples</a></li>
-    
-    
-    <li class="breadcrumb-item"><a href="index.html" class="nav-link">Model Selection</a></li>
-    
-    <li class="breadcrumb-item active" aria-current="page">Statistical...</li>
-  </ul>
+<ul class="bd-breadcrumbs">
+<li class="breadcrumb-item breadcrumb-home">
+<a aria-label="Home" class="nav-link" href="../../index.html">
+<i class="fa-solid fa-home"></i>
+</a>
+</li>
+<li class="breadcrumb-item"><a class="nav-link" href="../index.html">Examples</a></li>
+<li class="breadcrumb-item"><a class="nav-link" href="index.html">Model Selection</a></li>
+<li aria-current="page" class="breadcrumb-item active">Statistical...</li>
+</ul>
 </nav>
 </div>
-      
-    </div>
-  
-  
 </div>
 </div>
-              
-              
-              
-                
+</div>
 <div id="searchbox"></div>
-                <article class="bd-article">
-                  
-  <div class="sphx-glr-download-link-note admonition note">
-<p class="admonition-title">Note</p>
-<p><a class="reference internal" href="#sphx-glr-download-auto-examples-model-selection-plot-grid-search-stats-py"><span class="std std-ref">Go to the end</span></a>
-to download the full example code or to run this example in your browser via JupyterLite or Binder</p>
-</div>
+<article class="bd-article">
+
 <section class="sphx-glr-example-title" id="statistical-comparison-of-models-using-grid-search">
 <span id="sphx-glr-auto-examples-model-selection-plot-grid-search-stats-py"></span><h1>Statistical comparison of models using grid search<a class="headerlink" href="#statistical-comparison-of-models-using-grid-search" title="Link to this heading">#</a></h1>
 <p>This example illustrates how to statistically compare the performance of models
@@ -1075,17 +849,17 @@ features. We will simulate 50 samples for each class:</p>
 <div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
 <span class="kn">import</span> <span class="nn">seaborn</span> <span class="k">as</span> <span class="nn">sns</span>
 
-<span class="kn">from</span> <span class="nn">sklearn.datasets</span> <span class="kn">import</span> <a href="../../modules/generated/sklearn.datasets.make_moons.html#sklearn.datasets.make_moons" title="sklearn.datasets.make_moons" class="sphx-glr-backref-module-sklearn-datasets sphx-glr-backref-type-py-function"><span class="n">make_moons</span></a>
+<span class="kn">from</span> <span class="nn">sklearn.datasets</span> <span class="kn">import</span> <a class="sphx-glr-backref-module-sklearn-datasets sphx-glr-backref-type-py-function" href="../../modules/generated/sklearn.datasets.make_moons.html#sklearn.datasets.make_moons" title="sklearn.datasets.make_moons"><span class="n">make_moons</span></a>
 
-<span class="n">X</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <a href="../../modules/generated/sklearn.datasets.make_moons.html#sklearn.datasets.make_moons" title="sklearn.datasets.make_moons" class="sphx-glr-backref-module-sklearn-datasets sphx-glr-backref-type-py-function"><span class="n">make_moons</span></a><span class="p">(</span><span class="n">noise</span><span class="o">=</span><span class="mf">0.352</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">n_samples</span><span class="o">=</span><span class="mi">100</span><span class="p">)</span>
+<span class="n">X</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <a class="sphx-glr-backref-module-sklearn-datasets sphx-glr-backref-type-py-function" href="../../modules/generated/sklearn.datasets.make_moons.html#sklearn.datasets.make_moons" title="sklearn.datasets.make_moons"><span class="n">make_moons</span></a><span class="p">(</span><span class="n">noise</span><span class="o">=</span><span class="mf">0.352</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">n_samples</span><span class="o">=</span><span class="mi">100</span><span class="p">)</span>
 
-<a href="https://seaborn.pydata.org/generated/seaborn.scatterplot.html#seaborn.scatterplot" title="seaborn.scatterplot" class="sphx-glr-backref-module-seaborn sphx-glr-backref-type-py-function"><span class="n">sns</span><span class="o">.</span><span class="n">scatterplot</span></a><span class="p">(</span>
-    <span class="n">x</span><span class="o">=</span><span class="n">X</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">],</span> <span class="n">y</span><span class="o">=</span><span class="n">X</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">],</span> <span class="n">hue</span><span class="o">=</span><span class="n">y</span><span class="p">,</span> <span class="n">marker</span><span class="o">=</span><span class="s2">&quot;o&quot;</span><span class="p">,</span> <span class="n">s</span><span class="o">=</span><span class="mi">25</span><span class="p">,</span> <span class="n">edgecolor</span><span class="o">=</span><span class="s2">&quot;k&quot;</span><span class="p">,</span> <span class="n">legend</span><span class="o">=</span><span class="kc">False</span>
-<span class="p">)</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s2">&quot;Data&quot;</span><span class="p">)</span>
-<a href="https://matplotlib.org/stable/api/_as_gen/matplotlib.pyplot.show.html#matplotlib.pyplot.show" title="matplotlib.pyplot.show" class="sphx-glr-backref-module-matplotlib-pyplot sphx-glr-backref-type-py-function"><span class="n">plt</span><span class="o">.</span><span class="n">show</span></a><span class="p">()</span>
+<a class="sphx-glr-backref-module-seaborn sphx-glr-backref-type-py-function" href="https://seaborn.pydata.org/generated/seaborn.scatterplot.html#seaborn.scatterplot" title="seaborn.scatterplot"><span class="n">sns</span><span class="o">.</span><span class="n">scatterplot</span></a><span class="p">(</span>
+    <span class="n">x</span><span class="o">=</span><span class="n">X</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">],</span> <span class="n">y</span><span class="o">=</span><span class="n">X</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">],</span> <span class="n">hue</span><span class="o">=</span><span class="n">y</span><span class="p">,</span> <span class="n">marker</span><span class="o">=</span><span class="s2">"o"</span><span class="p">,</span> <span class="n">s</span><span class="o">=</span><span class="mi">25</span><span class="p">,</span> <span class="n">edgecolor</span><span class="o">=</span><span class="s2">"k"</span><span class="p">,</span> <span class="n">legend</span><span class="o">=</span><span class="kc">False</span>
+<span class="p">)</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s2">"Data"</span><span class="p">)</span>
+<a class="sphx-glr-backref-module-matplotlib-pyplot sphx-glr-backref-type-py-function" href="https://matplotlib.org/stable/api/_as_gen/matplotlib.pyplot.show.html#matplotlib.pyplot.show" title="matplotlib.pyplot.show"><span class="n">plt</span><span class="o">.</span><span class="n">show</span></a><span class="p">()</span>
 </pre></div>
 </div>
-<img src="../../_images/sphx_glr_plot_grid_search_stats_001.png" srcset="../../_images/sphx_glr_plot_grid_search_stats_001.png" alt="Data" class = "sphx-glr-single-img"/><p>We will compare the performance of <a class="reference internal" href="../../modules/generated/sklearn.svm.SVC.html#sklearn.svm.SVC" title="sklearn.svm.SVC"><code class="xref py py-class docutils literal notranslate"><span class="pre">SVC</span></code></a> estimators that
+<img alt="Data" class="sphx-glr-single-img" src="../../_images/sphx_glr_plot_grid_search_stats_001.png" srcset="../../_images/sphx_glr_plot_grid_search_stats_001.png"/><p>We will compare the performance of <a class="reference internal" href="../../modules/generated/sklearn.svm.SVC.html#sklearn.svm.SVC" title="sklearn.svm.SVC"><code class="xref py py-class docutils literal notranslate"><span class="pre">SVC</span></code></a> estimators that
 vary on their <code class="docutils literal notranslate"><span class="pre">kernel</span></code> parameter, to decide which choice of this
 hyper-parameter predicts our simulated data best.
 We will evaluate the performance of the models using
@@ -1093,20 +867,20 @@ We will evaluate the performance of the models using
 a 10-fold stratified cross validation using a different randomization of the
 data in each repetition. The performance will be evaluated using
 <a class="reference internal" href="../../modules/generated/sklearn.metrics.roc_auc_score.html#sklearn.metrics.roc_auc_score" title="sklearn.metrics.roc_auc_score"><code class="xref py py-class docutils literal notranslate"><span class="pre">roc_auc_score</span></code></a>.</p>
-<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">sklearn.model_selection</span> <span class="kn">import</span> <a href="../../modules/generated/sklearn.model_selection.GridSearchCV.html#sklearn.model_selection.GridSearchCV" title="sklearn.model_selection.GridSearchCV" class="sphx-glr-backref-module-sklearn-model_selection sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">GridSearchCV</span></a><span class="p">,</span> <a href="../../modules/generated/sklearn.model_selection.RepeatedStratifiedKFold.html#sklearn.model_selection.RepeatedStratifiedKFold" title="sklearn.model_selection.RepeatedStratifiedKFold" class="sphx-glr-backref-module-sklearn-model_selection sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">RepeatedStratifiedKFold</span></a>
-<span class="kn">from</span> <span class="nn">sklearn.svm</span> <span class="kn">import</span> <a href="../../modules/generated/sklearn.svm.SVC.html#sklearn.svm.SVC" title="sklearn.svm.SVC" class="sphx-glr-backref-module-sklearn-svm sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">SVC</span></a>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">sklearn.model_selection</span> <span class="kn">import</span> <a class="sphx-glr-backref-module-sklearn-model_selection sphx-glr-backref-type-py-class sphx-glr-backref-instance" href="../../modules/generated/sklearn.model_selection.GridSearchCV.html#sklearn.model_selection.GridSearchCV" title="sklearn.model_selection.GridSearchCV"><span class="n">GridSearchCV</span></a><span class="p">,</span> <a class="sphx-glr-backref-module-sklearn-model_selection sphx-glr-backref-type-py-class sphx-glr-backref-instance" href="../../modules/generated/sklearn.model_selection.RepeatedStratifiedKFold.html#sklearn.model_selection.RepeatedStratifiedKFold" title="sklearn.model_selection.RepeatedStratifiedKFold"><span class="n">RepeatedStratifiedKFold</span></a>
+<span class="kn">from</span> <span class="nn">sklearn.svm</span> <span class="kn">import</span> <a class="sphx-glr-backref-module-sklearn-svm sphx-glr-backref-type-py-class sphx-glr-backref-instance" href="../../modules/generated/sklearn.svm.SVC.html#sklearn.svm.SVC" title="sklearn.svm.SVC"><span class="n">SVC</span></a>
 
 <span class="n">param_grid</span> <span class="o">=</span> <span class="p">[</span>
-    <span class="p">{</span><span class="s2">&quot;kernel&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;linear&quot;</span><span class="p">]},</span>
-    <span class="p">{</span><span class="s2">&quot;kernel&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;poly&quot;</span><span class="p">],</span> <span class="s2">&quot;degree&quot;</span><span class="p">:</span> <span class="p">[</span><span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">]},</span>
-    <span class="p">{</span><span class="s2">&quot;kernel&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;rbf&quot;</span><span class="p">]},</span>
+    <span class="p">{</span><span class="s2">"kernel"</span><span class="p">:</span> <span class="p">[</span><span class="s2">"linear"</span><span class="p">]},</span>
+    <span class="p">{</span><span class="s2">"kernel"</span><span class="p">:</span> <span class="p">[</span><span class="s2">"poly"</span><span class="p">],</span> <span class="s2">"degree"</span><span class="p">:</span> <span class="p">[</span><span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">]},</span>
+    <span class="p">{</span><span class="s2">"kernel"</span><span class="p">:</span> <span class="p">[</span><span class="s2">"rbf"</span><span class="p">]},</span>
 <span class="p">]</span>
 
-<span class="n">svc</span> <span class="o">=</span> <a href="../../modules/generated/sklearn.svm.SVC.html#sklearn.svm.SVC" title="sklearn.svm.SVC" class="sphx-glr-backref-module-sklearn-svm sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">SVC</span></a><span class="p">(</span><span class="n">random_state</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+<span class="n">svc</span> <span class="o">=</span> <a class="sphx-glr-backref-module-sklearn-svm sphx-glr-backref-type-py-class sphx-glr-backref-instance" href="../../modules/generated/sklearn.svm.SVC.html#sklearn.svm.SVC" title="sklearn.svm.SVC"><span class="n">SVC</span></a><span class="p">(</span><span class="n">random_state</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
 
-<span class="n">cv</span> <span class="o">=</span> <a href="../../modules/generated/sklearn.model_selection.RepeatedStratifiedKFold.html#sklearn.model_selection.RepeatedStratifiedKFold" title="sklearn.model_selection.RepeatedStratifiedKFold" class="sphx-glr-backref-module-sklearn-model_selection sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">RepeatedStratifiedKFold</span></a><span class="p">(</span><span class="n">n_splits</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">n_repeats</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+<span class="n">cv</span> <span class="o">=</span> <a class="sphx-glr-backref-module-sklearn-model_selection sphx-glr-backref-type-py-class sphx-glr-backref-instance" href="../../modules/generated/sklearn.model_selection.RepeatedStratifiedKFold.html#sklearn.model_selection.RepeatedStratifiedKFold" title="sklearn.model_selection.RepeatedStratifiedKFold"><span class="n">RepeatedStratifiedKFold</span></a><span class="p">(</span><span class="n">n_splits</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">n_repeats</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
 
-<span class="n">search</span> <span class="o">=</span> <a href="../../modules/generated/sklearn.model_selection.GridSearchCV.html#sklearn.model_selection.GridSearchCV" title="sklearn.model_selection.GridSearchCV" class="sphx-glr-backref-module-sklearn-model_selection sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">GridSearchCV</span></a><span class="p">(</span><span class="n">estimator</span><span class="o">=</span><span class="n">svc</span><span class="p">,</span> <span class="n">param_grid</span><span class="o">=</span><span class="n">param_grid</span><span class="p">,</span> <span class="n">scoring</span><span class="o">=</span><span class="s2">&quot;roc_auc&quot;</span><span class="p">,</span> <span class="n">cv</span><span class="o">=</span><span class="n">cv</span><span class="p">)</span>
+<span class="n">search</span> <span class="o">=</span> <a class="sphx-glr-backref-module-sklearn-model_selection sphx-glr-backref-type-py-class sphx-glr-backref-instance" href="../../modules/generated/sklearn.model_selection.GridSearchCV.html#sklearn.model_selection.GridSearchCV" title="sklearn.model_selection.GridSearchCV"><span class="n">GridSearchCV</span></a><span class="p">(</span><span class="n">estimator</span><span class="o">=</span><span class="n">svc</span><span class="p">,</span> <span class="n">param_grid</span><span class="o">=</span><span class="n">param_grid</span><span class="p">,</span> <span class="n">scoring</span><span class="o">=</span><span class="s2">"roc_auc"</span><span class="p">,</span> <span class="n">cv</span><span class="o">=</span><span class="n">cv</span><span class="p">)</span>
 <span class="n">search</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
 </pre></div>
 </div>
@@ -1515,34 +1289,34 @@ div.sk-label-container:hover .sk-estimator-doc-link.fitted:hover,
   /* fitted */
   background-color: var(--sklearn-color-fitted-level-3);
 }
-</style><div id="sk-container-id-57" class="sk-top-container"><div class="sk-text-repr-fallback"><pre>GridSearchCV(cv=RepeatedStratifiedKFold(n_repeats=10, n_splits=10, random_state=0),
+</style><div class="sk-top-container" id="sk-container-id-57"><div class="sk-text-repr-fallback"><pre>GridSearchCV(cv=RepeatedStratifiedKFold(n_repeats=10, n_splits=10, random_state=0),
              estimator=SVC(random_state=0),
-             param_grid=[{&#x27;kernel&#x27;: [&#x27;linear&#x27;]},
-                         {&#x27;degree&#x27;: [2, 3], &#x27;kernel&#x27;: [&#x27;poly&#x27;]},
-                         {&#x27;kernel&#x27;: [&#x27;rbf&#x27;]}],
-             scoring=&#x27;roc_auc&#x27;)</pre><b>In a Jupyter environment, please rerun this cell to show the HTML representation or trust the notebook. <br />On GitHub, the HTML representation is unable to render, please try loading this page with nbviewer.org.</b></div><div class="sk-container" hidden><div class="sk-item sk-dashed-wrapped"><div class="sk-label-container"><div class="sk-label fitted sk-toggleable"><input class="sk-toggleable__control sk-hidden--visually" id="sk-estimator-id-237" type="checkbox" ><label for="sk-estimator-id-237" class="sk-toggleable__label fitted sk-toggleable__label-arrow fitted">&nbsp;&nbsp;GridSearchCV<a class="sk-estimator-doc-link fitted" rel="noreferrer" target="_blank" href="https://scikit-learn.org/dev/modules/generated/sklearn.model_selection.GridSearchCV.html">?<span>Documentation for GridSearchCV</span></a><span class="sk-estimator-doc-link fitted">i<span>Fitted</span></span></label><div class="sk-toggleable__content fitted"><pre>GridSearchCV(cv=RepeatedStratifiedKFold(n_repeats=10, n_splits=10, random_state=0),
+             param_grid=[{'kernel': ['linear']},
+                         {'degree': [2, 3], 'kernel': ['poly']},
+                         {'kernel': ['rbf']}],
+             scoring='roc_auc')</pre><b>In a Jupyter environment, please rerun this cell to show the HTML representation or trust the notebook. <br/>On GitHub, the HTML representation is unable to render, please try loading this page with nbviewer.org.</b></div><div class="sk-container" hidden=""><div class="sk-item sk-dashed-wrapped"><div class="sk-label-container"><div class="sk-label fitted sk-toggleable"><input class="sk-toggleable__control sk-hidden--visually" id="sk-estimator-id-237" type="checkbox"/><label class="sk-toggleable__label fitted sk-toggleable__label-arrow fitted" for="sk-estimator-id-237">  GridSearchCV<a class="sk-estimator-doc-link fitted" href="https://scikit-learn.org/dev/modules/generated/sklearn.model_selection.GridSearchCV.html" rel="noreferrer" target="_blank">?<span>Documentation for GridSearchCV</span></a><span class="sk-estimator-doc-link fitted">i<span>Fitted</span></span></label><div class="sk-toggleable__content fitted"><pre>GridSearchCV(cv=RepeatedStratifiedKFold(n_repeats=10, n_splits=10, random_state=0),
              estimator=SVC(random_state=0),
-             param_grid=[{&#x27;kernel&#x27;: [&#x27;linear&#x27;]},
-                         {&#x27;degree&#x27;: [2, 3], &#x27;kernel&#x27;: [&#x27;poly&#x27;]},
-                         {&#x27;kernel&#x27;: [&#x27;rbf&#x27;]}],
-             scoring=&#x27;roc_auc&#x27;)</pre></div> </div></div><div class="sk-parallel"><div class="sk-parallel-item"><div class="sk-item"><div class="sk-label-container"><div class="sk-label fitted sk-toggleable"><input class="sk-toggleable__control sk-hidden--visually" id="sk-estimator-id-238" type="checkbox" ><label for="sk-estimator-id-238" class="sk-toggleable__label fitted sk-toggleable__label-arrow fitted">estimator: SVC</label><div class="sk-toggleable__content fitted"><pre>SVC(random_state=0)</pre></div> </div></div><div class="sk-serial"><div class="sk-item"><div class="sk-estimator fitted sk-toggleable"><input class="sk-toggleable__control sk-hidden--visually" id="sk-estimator-id-239" type="checkbox" ><label for="sk-estimator-id-239" class="sk-toggleable__label fitted sk-toggleable__label-arrow fitted">&nbsp;SVC<a class="sk-estimator-doc-link fitted" rel="noreferrer" target="_blank" href="https://scikit-learn.org/dev/modules/generated/sklearn.svm.SVC.html">?<span>Documentation for SVC</span></a></label><div class="sk-toggleable__content fitted"><pre>SVC(random_state=0)</pre></div> </div></div></div></div></div></div></div></div></div>
+             param_grid=[{'kernel': ['linear']},
+                         {'degree': [2, 3], 'kernel': ['poly']},
+                         {'kernel': ['rbf']}],
+             scoring='roc_auc')</pre></div> </div></div><div class="sk-parallel"><div class="sk-parallel-item"><div class="sk-item"><div class="sk-label-container"><div class="sk-label fitted sk-toggleable"><input class="sk-toggleable__control sk-hidden--visually" id="sk-estimator-id-238" type="checkbox"/><label class="sk-toggleable__label fitted sk-toggleable__label-arrow fitted" for="sk-estimator-id-238">estimator: SVC</label><div class="sk-toggleable__content fitted"><pre>SVC(random_state=0)</pre></div> </div></div><div class="sk-serial"><div class="sk-item"><div class="sk-estimator fitted sk-toggleable"><input class="sk-toggleable__control sk-hidden--visually" id="sk-estimator-id-239" type="checkbox"/><label class="sk-toggleable__label fitted sk-toggleable__label-arrow fitted" for="sk-estimator-id-239"> SVC<a class="sk-estimator-doc-link fitted" href="https://scikit-learn.org/dev/modules/generated/sklearn.svm.SVC.html" rel="noreferrer" target="_blank">?<span>Documentation for SVC</span></a></label><div class="sk-toggleable__content fitted"><pre>SVC(random_state=0)</pre></div> </div></div></div></div></div></div></div></div></div>
 </div>
-<br />
-<br /><p>We can now inspect the results of our search, sorted by their
+<br/>
+<br/><p>We can now inspect the results of our search, sorted by their
 <code class="docutils literal notranslate"><span class="pre">mean_test_score</span></code>:</p>
 <div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
 
-<span class="n">results_df</span> <span class="o">=</span> <a href="https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.DataFrame.html#pandas.DataFrame" title="pandas.DataFrame" class="sphx-glr-backref-module-pandas sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span></a><span class="p">(</span><span class="n">search</span><span class="o">.</span><span class="n">cv_results_</span><span class="p">)</span>
-<span class="n">results_df</span> <span class="o">=</span> <span class="n">results_df</span><span class="o">.</span><span class="n">sort_values</span><span class="p">(</span><span class="n">by</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;rank_test_score&quot;</span><span class="p">])</span>
+<span class="n">results_df</span> <span class="o">=</span> <a class="sphx-glr-backref-module-pandas sphx-glr-backref-type-py-class sphx-glr-backref-instance" href="https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.DataFrame.html#pandas.DataFrame" title="pandas.DataFrame"><span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span></a><span class="p">(</span><span class="n">search</span><span class="o">.</span><span class="n">cv_results_</span><span class="p">)</span>
+<span class="n">results_df</span> <span class="o">=</span> <span class="n">results_df</span><span class="o">.</span><span class="n">sort_values</span><span class="p">(</span><span class="n">by</span><span class="o">=</span><span class="p">[</span><span class="s2">"rank_test_score"</span><span class="p">])</span>
 <span class="n">results_df</span> <span class="o">=</span> <span class="n">results_df</span><span class="o">.</span><span class="n">set_index</span><span class="p">(</span>
-    <span class="n">results_df</span><span class="p">[</span><span class="s2">&quot;params&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="s2">&quot;_&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">val</span><span class="p">)</span> <span class="k">for</span> <span class="n">val</span> <span class="ow">in</span> <span class="n">x</span><span class="o">.</span><span class="n">values</span><span class="p">()))</span>
-<span class="p">)</span><span class="o">.</span><span class="n">rename_axis</span><span class="p">(</span><span class="s2">&quot;kernel&quot;</span><span class="p">)</span>
-<span class="n">results_df</span><span class="p">[[</span><span class="s2">&quot;params&quot;</span><span class="p">,</span> <span class="s2">&quot;rank_test_score&quot;</span><span class="p">,</span> <span class="s2">&quot;mean_test_score&quot;</span><span class="p">,</span> <span class="s2">&quot;std_test_score&quot;</span><span class="p">]]</span>
+    <span class="n">results_df</span><span class="p">[</span><span class="s2">"params"</span><span class="p">]</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="s2">"_"</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">val</span><span class="p">)</span> <span class="k">for</span> <span class="n">val</span> <span class="ow">in</span> <span class="n">x</span><span class="o">.</span><span class="n">values</span><span class="p">()))</span>
+<span class="p">)</span><span class="o">.</span><span class="n">rename_axis</span><span class="p">(</span><span class="s2">"kernel"</span><span class="p">)</span>
+<span class="n">results_df</span><span class="p">[[</span><span class="s2">"params"</span><span class="p">,</span> <span class="s2">"rank_test_score"</span><span class="p">,</span> <span class="s2">"mean_test_score"</span><span class="p">,</span> <span class="s2">"std_test_score"</span><span class="p">]]</span>
 </pre></div>
 </div>
 <div class="output_subarea output_html rendered_html output_result">
 <div>
-<style scoped>
+<style scoped="">
     .dataframe tbody tr th:only-of-type {
         vertical-align: middle;
     }
@@ -1556,57 +1330,57 @@ div.sk-label-container:hover .sk-estimator-doc-link.fitted:hover,
     }
 </style>
 <table border="1" class="dataframe">
-  <thead>
-    <tr style="text-align: right;">
-      <th></th>
-      <th>params</th>
-      <th>rank_test_score</th>
-      <th>mean_test_score</th>
-      <th>std_test_score</th>
-    </tr>
-    <tr>
-      <th>kernel</th>
-      <th></th>
-      <th></th>
-      <th></th>
-      <th></th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <th>rbf</th>
-      <td>{'kernel': 'rbf'}</td>
-      <td>1</td>
-      <td>0.9400</td>
-      <td>0.079297</td>
-    </tr>
-    <tr>
-      <th>linear</th>
-      <td>{'kernel': 'linear'}</td>
-      <td>2</td>
-      <td>0.9300</td>
-      <td>0.077846</td>
-    </tr>
-    <tr>
-      <th>3_poly</th>
-      <td>{'degree': 3, 'kernel': 'poly'}</td>
-      <td>3</td>
-      <td>0.9044</td>
-      <td>0.098776</td>
-    </tr>
-    <tr>
-      <th>2_poly</th>
-      <td>{'degree': 2, 'kernel': 'poly'}</td>
-      <td>4</td>
-      <td>0.6852</td>
-      <td>0.169106</td>
-    </tr>
-  </tbody>
+<thead>
+<tr style="text-align: right;">
+<th></th>
+<th>params</th>
+<th>rank_test_score</th>
+<th>mean_test_score</th>
+<th>std_test_score</th>
+</tr>
+<tr>
+<th>kernel</th>
+<th></th>
+<th></th>
+<th></th>
+<th></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<th>rbf</th>
+<td>{'kernel': 'rbf'}</td>
+<td>1</td>
+<td>0.9400</td>
+<td>0.079297</td>
+</tr>
+<tr>
+<th>linear</th>
+<td>{'kernel': 'linear'}</td>
+<td>2</td>
+<td>0.9300</td>
+<td>0.077846</td>
+</tr>
+<tr>
+<th>3_poly</th>
+<td>{'degree': 3, 'kernel': 'poly'}</td>
+<td>3</td>
+<td>0.9044</td>
+<td>0.098776</td>
+</tr>
+<tr>
+<th>2_poly</th>
+<td>{'degree': 2, 'kernel': 'poly'}</td>
+<td>4</td>
+<td>0.6852</td>
+<td>0.169106</td>
+</tr>
+</tbody>
 </table>
 </div>
 </div>
-<br />
-<br /><p>We can see that the estimator using the <code class="docutils literal notranslate"><span class="pre">'rbf'</span></code> kernel performed best,
+<br/>
+<br/><p>We can see that the estimator using the <code class="docutils literal notranslate"><span class="pre">'rbf'</span></code> kernel performed best,
 closely followed by <code class="docutils literal notranslate"><span class="pre">'linear'</span></code>. Both estimators with a <code class="docutils literal notranslate"><span class="pre">'poly'</span></code> kernel
 performed worse, with the one using a two-degree polynomial achieving a much
 lower performance than all other models.</p>
@@ -1627,28 +1401,28 @@ co-vary.</p>
 <p>Let’s inspect this partition effect by plotting the performance of all models
 in each fold, and calculating the correlation between models across folds:</p>
 <div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="c1"># create df of model scores ordered by performance</span>
-<span class="n">model_scores</span> <span class="o">=</span> <span class="n">results_df</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">regex</span><span class="o">=</span><span class="sa">r</span><span class="s2">&quot;split\d*_test_score&quot;</span><span class="p">)</span>
+<span class="n">model_scores</span> <span class="o">=</span> <span class="n">results_df</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">regex</span><span class="o">=</span><span class="sa">r</span><span class="s2">"split\d*_test_score"</span><span class="p">)</span>
 
 <span class="c1"># plot 30 examples of dependency between cv fold and AUC scores</span>
-<span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <a href="https://matplotlib.org/stable/api/_as_gen/matplotlib.pyplot.subplots.html#matplotlib.pyplot.subplots" title="matplotlib.pyplot.subplots" class="sphx-glr-backref-module-matplotlib-pyplot sphx-glr-backref-type-py-function"><span class="n">plt</span><span class="o">.</span><span class="n">subplots</span></a><span class="p">()</span>
-<a href="https://seaborn.pydata.org/generated/seaborn.lineplot.html#seaborn.lineplot" title="seaborn.lineplot" class="sphx-glr-backref-module-seaborn sphx-glr-backref-type-py-function"><span class="n">sns</span><span class="o">.</span><span class="n">lineplot</span></a><span class="p">(</span>
+<span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <a class="sphx-glr-backref-module-matplotlib-pyplot sphx-glr-backref-type-py-function" href="https://matplotlib.org/stable/api/_as_gen/matplotlib.pyplot.subplots.html#matplotlib.pyplot.subplots" title="matplotlib.pyplot.subplots"><span class="n">plt</span><span class="o">.</span><span class="n">subplots</span></a><span class="p">()</span>
+<a class="sphx-glr-backref-module-seaborn sphx-glr-backref-type-py-function" href="https://seaborn.pydata.org/generated/seaborn.lineplot.html#seaborn.lineplot" title="seaborn.lineplot"><span class="n">sns</span><span class="o">.</span><span class="n">lineplot</span></a><span class="p">(</span>
     <span class="n">data</span><span class="o">=</span><span class="n">model_scores</span><span class="o">.</span><span class="n">transpose</span><span class="p">()</span><span class="o">.</span><span class="n">iloc</span><span class="p">[:</span><span class="mi">30</span><span class="p">],</span>
     <span class="n">dashes</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
-    <span class="n">palette</span><span class="o">=</span><span class="s2">&quot;Set1&quot;</span><span class="p">,</span>
-    <span class="n">marker</span><span class="o">=</span><span class="s2">&quot;o&quot;</span><span class="p">,</span>
+    <span class="n">palette</span><span class="o">=</span><span class="s2">"Set1"</span><span class="p">,</span>
+    <span class="n">marker</span><span class="o">=</span><span class="s2">"o"</span><span class="p">,</span>
     <span class="n">alpha</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span>
     <span class="n">ax</span><span class="o">=</span><span class="n">ax</span><span class="p">,</span>
 <span class="p">)</span>
-<span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s2">&quot;CV test fold&quot;</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="mi">12</span><span class="p">,</span> <span class="n">labelpad</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
-<span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s2">&quot;Model AUC&quot;</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="mi">12</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s2">"CV test fold"</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="mi">12</span><span class="p">,</span> <span class="n">labelpad</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s2">"Model AUC"</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="mi">12</span><span class="p">)</span>
 <span class="n">ax</span><span class="o">.</span><span class="n">tick_params</span><span class="p">(</span><span class="n">bottom</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">labelbottom</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
-<a href="https://matplotlib.org/stable/api/_as_gen/matplotlib.pyplot.show.html#matplotlib.pyplot.show" title="matplotlib.pyplot.show" class="sphx-glr-backref-module-matplotlib-pyplot sphx-glr-backref-type-py-function"><span class="n">plt</span><span class="o">.</span><span class="n">show</span></a><span class="p">()</span>
+<a class="sphx-glr-backref-module-matplotlib-pyplot sphx-glr-backref-type-py-function" href="https://matplotlib.org/stable/api/_as_gen/matplotlib.pyplot.show.html#matplotlib.pyplot.show" title="matplotlib.pyplot.show"><span class="n">plt</span><span class="o">.</span><span class="n">show</span></a><span class="p">()</span>
 
 <span class="c1"># print correlation of AUC scores across folds</span>
-<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Correlation of models:</span><span class="se">\n</span><span class="s2"> </span><span class="si">{</span><span class="n">model_scores</span><span class="o">.</span><span class="n">transpose</span><span class="p">()</span><span class="o">.</span><span class="n">corr</span><span class="p">()</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Correlation of models:</span><span class="se">\n</span><span class="s2"> </span><span class="si">{</span><span class="n">model_scores</span><span class="o">.</span><span class="n">transpose</span><span class="p">()</span><span class="o">.</span><span class="n">corr</span><span class="p">()</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
 </pre></div>
 </div>
-<img src="../../_images/sphx_glr_plot_grid_search_stats_002.png" srcset="../../_images/sphx_glr_plot_grid_search_stats_002.png" alt="plot grid search stats" class = "sphx-glr-single-img"/><div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>Correlation of models:
+<img alt="plot grid search stats" class="sphx-glr-single-img" src="../../_images/sphx_glr_plot_grid_search_stats_002.png" srcset="../../_images/sphx_glr_plot_grid_search_stats_002.png"/><div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>Correlation of models:
  kernel       rbf    linear    3_poly    2_poly
 kernel
 rbf     1.000000  0.882561  0.783392  0.351390
@@ -1697,11 +1471,11 @@ performance of the first model is significantly better than that of the
 second model. Our null hypothesis is that the second model performs at least
 as good as the first model.</p>
 <div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
-<span class="kn">from</span> <span class="nn">scipy.stats</span> <span class="kn">import</span> <a href="https://docs.scipy.org/doc/scipy/reference/generated/scipy.stats.t.html#scipy.stats.t" title="scipy.stats.t" class="sphx-glr-backref-module-scipy-stats sphx-glr-backref-type-py-data"><span class="n">t</span></a>
+<span class="kn">from</span> <span class="nn">scipy.stats</span> <span class="kn">import</span> <a class="sphx-glr-backref-module-scipy-stats sphx-glr-backref-type-py-data" href="https://docs.scipy.org/doc/scipy/reference/generated/scipy.stats.t.html#scipy.stats.t" title="scipy.stats.t"><span class="n">t</span></a>
 
 
 <span class="k">def</span> <span class="nf">corrected_std</span><span class="p">(</span><span class="n">differences</span><span class="p">,</span> <span class="n">n_train</span><span class="p">,</span> <span class="n">n_test</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Corrects standard deviation using Nadeau and Bengio&#39;s approach.</span>
+<span class="w">    </span><span class="sd">"""Corrects standard deviation using Nadeau and Bengio's approach.</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
@@ -1716,17 +1490,17 @@ as good as the first model.</p>
 <span class="sd">    -------</span>
 <span class="sd">    corrected_std : float</span>
 <span class="sd">        Variance-corrected standard deviation of the set of differences.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
     <span class="c1"># kr = k times r, r times repeated k-fold crossvalidation,</span>
     <span class="c1"># kr equals the number of times the model was evaluated</span>
     <span class="n">kr</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">differences</span><span class="p">)</span>
-    <span class="n">corrected_var</span> <span class="o">=</span> <a href="https://numpy.org/doc/stable/reference/generated/numpy.var.html#numpy.var" title="numpy.var" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-function"><span class="n">np</span><span class="o">.</span><span class="n">var</span></a><span class="p">(</span><span class="n">differences</span><span class="p">,</span> <span class="n">ddof</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span><span class="mi">1</span> <span class="o">/</span> <span class="n">kr</span> <span class="o">+</span> <span class="n">n_test</span> <span class="o">/</span> <span class="n">n_train</span><span class="p">)</span>
-    <span class="n">corrected_std</span> <span class="o">=</span> <a href="https://numpy.org/doc/stable/reference/generated/numpy.sqrt.html#numpy.sqrt" title="numpy.sqrt" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-data"><span class="n">np</span><span class="o">.</span><span class="n">sqrt</span></a><span class="p">(</span><span class="n">corrected_var</span><span class="p">)</span>
+    <span class="n">corrected_var</span> <span class="o">=</span> <a class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-function" href="https://numpy.org/doc/stable/reference/generated/numpy.var.html#numpy.var" title="numpy.var"><span class="n">np</span><span class="o">.</span><span class="n">var</span></a><span class="p">(</span><span class="n">differences</span><span class="p">,</span> <span class="n">ddof</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span><span class="mi">1</span> <span class="o">/</span> <span class="n">kr</span> <span class="o">+</span> <span class="n">n_test</span> <span class="o">/</span> <span class="n">n_train</span><span class="p">)</span>
+    <span class="n">corrected_std</span> <span class="o">=</span> <a class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-data" href="https://numpy.org/doc/stable/reference/generated/numpy.sqrt.html#numpy.sqrt" title="numpy.sqrt"><span class="n">np</span><span class="o">.</span><span class="n">sqrt</span></a><span class="p">(</span><span class="n">corrected_var</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">corrected_std</span>
 
 
 <span class="k">def</span> <span class="nf">compute_corrected_ttest</span><span class="p">(</span><span class="n">differences</span><span class="p">,</span> <span class="n">df</span><span class="p">,</span> <span class="n">n_train</span><span class="p">,</span> <span class="n">n_test</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Computes right-tailed paired t-test with corrected variance.</span>
+<span class="w">    </span><span class="sd">"""Computes right-tailed paired t-test with corrected variance.</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
@@ -1745,11 +1519,11 @@ as good as the first model.</p>
 <span class="sd">        Variance-corrected t-statistic.</span>
 <span class="sd">    p_val : float</span>
 <span class="sd">        Variance-corrected p-value.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">mean</span> <span class="o">=</span> <a href="https://numpy.org/doc/stable/reference/generated/numpy.mean.html#numpy.mean" title="numpy.mean" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-function"><span class="n">np</span><span class="o">.</span><span class="n">mean</span></a><span class="p">(</span><span class="n">differences</span><span class="p">)</span>
+<span class="sd">    """</span>
+    <span class="n">mean</span> <span class="o">=</span> <a class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-function" href="https://numpy.org/doc/stable/reference/generated/numpy.mean.html#numpy.mean" title="numpy.mean"><span class="n">np</span><span class="o">.</span><span class="n">mean</span></a><span class="p">(</span><span class="n">differences</span><span class="p">)</span>
     <span class="n">std</span> <span class="o">=</span> <span class="n">corrected_std</span><span class="p">(</span><span class="n">differences</span><span class="p">,</span> <span class="n">n_train</span><span class="p">,</span> <span class="n">n_test</span><span class="p">)</span>
     <span class="n">t_stat</span> <span class="o">=</span> <span class="n">mean</span> <span class="o">/</span> <span class="n">std</span>
-    <span class="n">p_val</span> <span class="o">=</span> <a href="https://docs.scipy.org/doc/scipy/reference/generated/scipy.stats.t.html#scipy.stats.t" title="scipy.stats.t" class="sphx-glr-backref-module-scipy-stats sphx-glr-backref-type-py-data"><span class="n">t</span></a><span class="o">.</span><span class="n">sf</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">t_stat</span><span class="p">),</span> <span class="n">df</span><span class="p">)</span>  <span class="c1"># right-tailed t-test</span>
+    <span class="n">p_val</span> <span class="o">=</span> <a class="sphx-glr-backref-module-scipy-stats sphx-glr-backref-type-py-data" href="https://docs.scipy.org/doc/scipy/reference/generated/scipy.stats.t.html#scipy.stats.t" title="scipy.stats.t"><span class="n">t</span></a><span class="o">.</span><span class="n">sf</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">t_stat</span><span class="p">),</span> <span class="n">df</span><span class="p">)</span>  <span class="c1"># right-tailed t-test</span>
     <span class="k">return</span> <span class="n">t_stat</span><span class="p">,</span> <span class="n">p_val</span>
 </pre></div>
 </div>
@@ -1764,7 +1538,7 @@ as good as the first model.</p>
 <span class="n">n_test</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="n">cv</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">))[</span><span class="mi">0</span><span class="p">][</span><span class="mi">1</span><span class="p">])</span>
 
 <span class="n">t_stat</span><span class="p">,</span> <span class="n">p_val</span> <span class="o">=</span> <span class="n">compute_corrected_ttest</span><span class="p">(</span><span class="n">differences</span><span class="p">,</span> <span class="n">df</span><span class="p">,</span> <span class="n">n_train</span><span class="p">,</span> <span class="n">n_test</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Corrected t-value: </span><span class="si">{</span><span class="n">t_stat</span><span class="si">:</span><span class="s2">.3f</span><span class="si">}</span><span class="se">\n</span><span class="s2">Corrected p-value: </span><span class="si">{</span><span class="n">p_val</span><span class="si">:</span><span class="s2">.3f</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Corrected t-value: </span><span class="si">{</span><span class="n">t_stat</span><span class="si">:</span><span class="s2">.3f</span><span class="si">}</span><span class="se">\n</span><span class="s2">Corrected p-value: </span><span class="si">{</span><span class="n">p_val</span><span class="si">:</span><span class="s2">.3f</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
 </pre></div>
 </div>
 <div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>Corrected t-value: 0.750
@@ -1772,12 +1546,12 @@ Corrected p-value: 0.227
 </pre></div>
 </div>
 <p>We can compare the corrected t- and p-values with the uncorrected ones:</p>
-<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">t_stat_uncorrected</span> <span class="o">=</span> <a href="https://numpy.org/doc/stable/reference/generated/numpy.mean.html#numpy.mean" title="numpy.mean" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-function"><span class="n">np</span><span class="o">.</span><span class="n">mean</span></a><span class="p">(</span><span class="n">differences</span><span class="p">)</span> <span class="o">/</span> <a href="https://numpy.org/doc/stable/reference/generated/numpy.sqrt.html#numpy.sqrt" title="numpy.sqrt" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-data"><span class="n">np</span><span class="o">.</span><span class="n">sqrt</span></a><span class="p">(</span><a href="https://numpy.org/doc/stable/reference/generated/numpy.var.html#numpy.var" title="numpy.var" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-function"><span class="n">np</span><span class="o">.</span><span class="n">var</span></a><span class="p">(</span><span class="n">differences</span><span class="p">,</span> <span class="n">ddof</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span> <span class="o">/</span> <span class="n">n</span><span class="p">)</span>
-<span class="n">p_val_uncorrected</span> <span class="o">=</span> <a href="https://docs.scipy.org/doc/scipy/reference/generated/scipy.stats.t.html#scipy.stats.t" title="scipy.stats.t" class="sphx-glr-backref-module-scipy-stats sphx-glr-backref-type-py-data"><span class="n">t</span></a><span class="o">.</span><span class="n">sf</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">t_stat_uncorrected</span><span class="p">),</span> <span class="n">df</span><span class="p">)</span>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">t_stat_uncorrected</span> <span class="o">=</span> <a class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-function" href="https://numpy.org/doc/stable/reference/generated/numpy.mean.html#numpy.mean" title="numpy.mean"><span class="n">np</span><span class="o">.</span><span class="n">mean</span></a><span class="p">(</span><span class="n">differences</span><span class="p">)</span> <span class="o">/</span> <a class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-data" href="https://numpy.org/doc/stable/reference/generated/numpy.sqrt.html#numpy.sqrt" title="numpy.sqrt"><span class="n">np</span><span class="o">.</span><span class="n">sqrt</span></a><span class="p">(</span><a class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-function" href="https://numpy.org/doc/stable/reference/generated/numpy.var.html#numpy.var" title="numpy.var"><span class="n">np</span><span class="o">.</span><span class="n">var</span></a><span class="p">(</span><span class="n">differences</span><span class="p">,</span> <span class="n">ddof</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span> <span class="o">/</span> <span class="n">n</span><span class="p">)</span>
+<span class="n">p_val_uncorrected</span> <span class="o">=</span> <a class="sphx-glr-backref-module-scipy-stats sphx-glr-backref-type-py-data" href="https://docs.scipy.org/doc/scipy/reference/generated/scipy.stats.t.html#scipy.stats.t" title="scipy.stats.t"><span class="n">t</span></a><span class="o">.</span><span class="n">sf</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">t_stat_uncorrected</span><span class="p">),</span> <span class="n">df</span><span class="p">)</span>
 
 <span class="nb">print</span><span class="p">(</span>
-    <span class="sa">f</span><span class="s2">&quot;Uncorrected t-value: </span><span class="si">{</span><span class="n">t_stat_uncorrected</span><span class="si">:</span><span class="s2">.3f</span><span class="si">}</span><span class="se">\n</span><span class="s2">&quot;</span>
-    <span class="sa">f</span><span class="s2">&quot;Uncorrected p-value: </span><span class="si">{</span><span class="n">p_val_uncorrected</span><span class="si">:</span><span class="s2">.3f</span><span class="si">}</span><span class="s2">&quot;</span>
+    <span class="sa">f</span><span class="s2">"Uncorrected t-value: </span><span class="si">{</span><span class="n">t_stat_uncorrected</span><span class="si">:</span><span class="s2">.3f</span><span class="si">}</span><span class="se">\n</span><span class="s2">"</span>
+    <span class="sa">f</span><span class="s2">"Uncorrected p-value: </span><span class="si">{</span><span class="n">p_val_uncorrected</span><span class="si">:</span><span class="s2">.3f</span><span class="si">}</span><span class="s2">"</span>
 <span class="p">)</span>
 </pre></div>
 </div>
@@ -1828,24 +1602,24 @@ differences.</p>
 Bayesian approach as well.</p>
 <p>Let’s compute and plot the posterior:</p>
 <div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="c1"># initialize random variable</span>
-<span class="n">t_post</span> <span class="o">=</span> <a href="https://docs.scipy.org/doc/scipy/reference/generated/scipy.stats.t.html#scipy.stats.t" title="scipy.stats.t" class="sphx-glr-backref-module-scipy-stats sphx-glr-backref-type-py-data"><span class="n">t</span></a><span class="p">(</span>
-    <span class="n">df</span><span class="p">,</span> <span class="n">loc</span><span class="o">=</span><a href="https://numpy.org/doc/stable/reference/generated/numpy.mean.html#numpy.mean" title="numpy.mean" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-function"><span class="n">np</span><span class="o">.</span><span class="n">mean</span></a><span class="p">(</span><span class="n">differences</span><span class="p">),</span> <span class="n">scale</span><span class="o">=</span><span class="n">corrected_std</span><span class="p">(</span><span class="n">differences</span><span class="p">,</span> <span class="n">n_train</span><span class="p">,</span> <span class="n">n_test</span><span class="p">)</span>
+<span class="n">t_post</span> <span class="o">=</span> <a class="sphx-glr-backref-module-scipy-stats sphx-glr-backref-type-py-data" href="https://docs.scipy.org/doc/scipy/reference/generated/scipy.stats.t.html#scipy.stats.t" title="scipy.stats.t"><span class="n">t</span></a><span class="p">(</span>
+    <span class="n">df</span><span class="p">,</span> <span class="n">loc</span><span class="o">=</span><a class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-function" href="https://numpy.org/doc/stable/reference/generated/numpy.mean.html#numpy.mean" title="numpy.mean"><span class="n">np</span><span class="o">.</span><span class="n">mean</span></a><span class="p">(</span><span class="n">differences</span><span class="p">),</span> <span class="n">scale</span><span class="o">=</span><span class="n">corrected_std</span><span class="p">(</span><span class="n">differences</span><span class="p">,</span> <span class="n">n_train</span><span class="p">,</span> <span class="n">n_test</span><span class="p">)</span>
 <span class="p">)</span>
 </pre></div>
 </div>
 <p>Let’s plot the posterior distribution:</p>
-<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">x</span> <span class="o">=</span> <a href="https://numpy.org/doc/stable/reference/generated/numpy.linspace.html#numpy.linspace" title="numpy.linspace" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-function"><span class="n">np</span><span class="o">.</span><span class="n">linspace</span></a><span class="p">(</span><span class="n">t_post</span><span class="o">.</span><span class="n">ppf</span><span class="p">(</span><span class="mf">0.001</span><span class="p">),</span> <span class="n">t_post</span><span class="o">.</span><span class="n">ppf</span><span class="p">(</span><span class="mf">0.999</span><span class="p">),</span> <span class="mi">100</span><span class="p">)</span>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">x</span> <span class="o">=</span> <a class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-function" href="https://numpy.org/doc/stable/reference/generated/numpy.linspace.html#numpy.linspace" title="numpy.linspace"><span class="n">np</span><span class="o">.</span><span class="n">linspace</span></a><span class="p">(</span><span class="n">t_post</span><span class="o">.</span><span class="n">ppf</span><span class="p">(</span><span class="mf">0.001</span><span class="p">),</span> <span class="n">t_post</span><span class="o">.</span><span class="n">ppf</span><span class="p">(</span><span class="mf">0.999</span><span class="p">),</span> <span class="mi">100</span><span class="p">)</span>
 
-<a href="https://matplotlib.org/stable/api/_as_gen/matplotlib.pyplot.plot.html#matplotlib.pyplot.plot" title="matplotlib.pyplot.plot" class="sphx-glr-backref-module-matplotlib-pyplot sphx-glr-backref-type-py-function"><span class="n">plt</span><span class="o">.</span><span class="n">plot</span></a><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">t_post</span><span class="o">.</span><span class="n">pdf</span><span class="p">(</span><span class="n">x</span><span class="p">))</span>
-<a href="https://matplotlib.org/stable/api/_as_gen/matplotlib.pyplot.xticks.html#matplotlib.pyplot.xticks" title="matplotlib.pyplot.xticks" class="sphx-glr-backref-module-matplotlib-pyplot sphx-glr-backref-type-py-function"><span class="n">plt</span><span class="o">.</span><span class="n">xticks</span></a><span class="p">(</span><a href="https://numpy.org/doc/stable/reference/generated/numpy.arange.html#numpy.arange" title="numpy.arange" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-function"><span class="n">np</span><span class="o">.</span><span class="n">arange</span></a><span class="p">(</span><span class="o">-</span><span class="mf">0.04</span><span class="p">,</span> <span class="mf">0.06</span><span class="p">,</span> <span class="mf">0.01</span><span class="p">))</span>
-<a href="https://matplotlib.org/stable/api/_as_gen/matplotlib.pyplot.fill_between.html#matplotlib.pyplot.fill_between" title="matplotlib.pyplot.fill_between" class="sphx-glr-backref-module-matplotlib-pyplot sphx-glr-backref-type-py-function"><span class="n">plt</span><span class="o">.</span><span class="n">fill_between</span></a><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">t_post</span><span class="o">.</span><span class="n">pdf</span><span class="p">(</span><span class="n">x</span><span class="p">),</span> <span class="mi">0</span><span class="p">,</span> <span class="n">facecolor</span><span class="o">=</span><span class="s2">&quot;blue&quot;</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.2</span><span class="p">)</span>
-<a href="https://matplotlib.org/stable/api/_as_gen/matplotlib.pyplot.ylabel.html#matplotlib.pyplot.ylabel" title="matplotlib.pyplot.ylabel" class="sphx-glr-backref-module-matplotlib-pyplot sphx-glr-backref-type-py-function"><span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span></a><span class="p">(</span><span class="s2">&quot;Probability density&quot;</span><span class="p">)</span>
-<a href="https://matplotlib.org/stable/api/_as_gen/matplotlib.pyplot.xlabel.html#matplotlib.pyplot.xlabel" title="matplotlib.pyplot.xlabel" class="sphx-glr-backref-module-matplotlib-pyplot sphx-glr-backref-type-py-function"><span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span></a><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;Mean difference ($\mu$)&quot;</span><span class="p">)</span>
-<a href="https://matplotlib.org/stable/api/_as_gen/matplotlib.pyplot.title.html#matplotlib.pyplot.title" title="matplotlib.pyplot.title" class="sphx-glr-backref-module-matplotlib-pyplot sphx-glr-backref-type-py-function"><span class="n">plt</span><span class="o">.</span><span class="n">title</span></a><span class="p">(</span><span class="s2">&quot;Posterior distribution&quot;</span><span class="p">)</span>
-<a href="https://matplotlib.org/stable/api/_as_gen/matplotlib.pyplot.show.html#matplotlib.pyplot.show" title="matplotlib.pyplot.show" class="sphx-glr-backref-module-matplotlib-pyplot sphx-glr-backref-type-py-function"><span class="n">plt</span><span class="o">.</span><span class="n">show</span></a><span class="p">()</span>
+<a class="sphx-glr-backref-module-matplotlib-pyplot sphx-glr-backref-type-py-function" href="https://matplotlib.org/stable/api/_as_gen/matplotlib.pyplot.plot.html#matplotlib.pyplot.plot" title="matplotlib.pyplot.plot"><span class="n">plt</span><span class="o">.</span><span class="n">plot</span></a><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">t_post</span><span class="o">.</span><span class="n">pdf</span><span class="p">(</span><span class="n">x</span><span class="p">))</span>
+<a class="sphx-glr-backref-module-matplotlib-pyplot sphx-glr-backref-type-py-function" href="https://matplotlib.org/stable/api/_as_gen/matplotlib.pyplot.xticks.html#matplotlib.pyplot.xticks" title="matplotlib.pyplot.xticks"><span class="n">plt</span><span class="o">.</span><span class="n">xticks</span></a><span class="p">(</span><a class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-function" href="https://numpy.org/doc/stable/reference/generated/numpy.arange.html#numpy.arange" title="numpy.arange"><span class="n">np</span><span class="o">.</span><span class="n">arange</span></a><span class="p">(</span><span class="o">-</span><span class="mf">0.04</span><span class="p">,</span> <span class="mf">0.06</span><span class="p">,</span> <span class="mf">0.01</span><span class="p">))</span>
+<a class="sphx-glr-backref-module-matplotlib-pyplot sphx-glr-backref-type-py-function" href="https://matplotlib.org/stable/api/_as_gen/matplotlib.pyplot.fill_between.html#matplotlib.pyplot.fill_between" title="matplotlib.pyplot.fill_between"><span class="n">plt</span><span class="o">.</span><span class="n">fill_between</span></a><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">t_post</span><span class="o">.</span><span class="n">pdf</span><span class="p">(</span><span class="n">x</span><span class="p">),</span> <span class="mi">0</span><span class="p">,</span> <span class="n">facecolor</span><span class="o">=</span><span class="s2">"blue"</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.2</span><span class="p">)</span>
+<a class="sphx-glr-backref-module-matplotlib-pyplot sphx-glr-backref-type-py-function" href="https://matplotlib.org/stable/api/_as_gen/matplotlib.pyplot.ylabel.html#matplotlib.pyplot.ylabel" title="matplotlib.pyplot.ylabel"><span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span></a><span class="p">(</span><span class="s2">"Probability density"</span><span class="p">)</span>
+<a class="sphx-glr-backref-module-matplotlib-pyplot sphx-glr-backref-type-py-function" href="https://matplotlib.org/stable/api/_as_gen/matplotlib.pyplot.xlabel.html#matplotlib.pyplot.xlabel" title="matplotlib.pyplot.xlabel"><span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span></a><span class="p">(</span><span class="sa">r</span><span class="s2">"Mean difference ($\mu$)"</span><span class="p">)</span>
+<a class="sphx-glr-backref-module-matplotlib-pyplot sphx-glr-backref-type-py-function" href="https://matplotlib.org/stable/api/_as_gen/matplotlib.pyplot.title.html#matplotlib.pyplot.title" title="matplotlib.pyplot.title"><span class="n">plt</span><span class="o">.</span><span class="n">title</span></a><span class="p">(</span><span class="s2">"Posterior distribution"</span><span class="p">)</span>
+<a class="sphx-glr-backref-module-matplotlib-pyplot sphx-glr-backref-type-py-function" href="https://matplotlib.org/stable/api/_as_gen/matplotlib.pyplot.show.html#matplotlib.pyplot.show" title="matplotlib.pyplot.show"><span class="n">plt</span><span class="o">.</span><span class="n">show</span></a><span class="p">()</span>
 </pre></div>
 </div>
-<img src="../../_images/sphx_glr_plot_grid_search_stats_003.png" srcset="../../_images/sphx_glr_plot_grid_search_stats_003.png" alt="Posterior distribution" class = "sphx-glr-single-img"/><p>We can calculate the probability that the first model is better than the
+<img alt="Posterior distribution" class="sphx-glr-single-img" src="../../_images/sphx_glr_plot_grid_search_stats_003.png" srcset="../../_images/sphx_glr_plot_grid_search_stats_003.png"/><p>We can calculate the probability that the first model is better than the
 second by computing the area under the curve of the posterior distribution
 from zero to infinity. And also the reverse: we can calculate the probability
 that the second model is better than the first by computing the area under
@@ -1853,12 +1627,12 @@ the curve from minus infinity to zero.</p>
 <div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">better_prob</span> <span class="o">=</span> <span class="mi">1</span> <span class="o">-</span> <span class="n">t_post</span><span class="o">.</span><span class="n">cdf</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
 
 <span class="nb">print</span><span class="p">(</span>
-    <span class="sa">f</span><span class="s2">&quot;Probability of </span><span class="si">{</span><span class="n">model_scores</span><span class="o">.</span><span class="n">index</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="si">}</span><span class="s2"> being more accurate than &quot;</span>
-    <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">model_scores</span><span class="o">.</span><span class="n">index</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">better_prob</span><span class="si">:</span><span class="s2">.3f</span><span class="si">}</span><span class="s2">&quot;</span>
+    <span class="sa">f</span><span class="s2">"Probability of </span><span class="si">{</span><span class="n">model_scores</span><span class="o">.</span><span class="n">index</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="si">}</span><span class="s2"> being more accurate than "</span>
+    <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">model_scores</span><span class="o">.</span><span class="n">index</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">better_prob</span><span class="si">:</span><span class="s2">.3f</span><span class="si">}</span><span class="s2">"</span>
 <span class="p">)</span>
 <span class="nb">print</span><span class="p">(</span>
-    <span class="sa">f</span><span class="s2">&quot;Probability of </span><span class="si">{</span><span class="n">model_scores</span><span class="o">.</span><span class="n">index</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="si">}</span><span class="s2"> being more accurate than &quot;</span>
-    <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">model_scores</span><span class="o">.</span><span class="n">index</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="mi">1</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">better_prob</span><span class="si">:</span><span class="s2">.3f</span><span class="si">}</span><span class="s2">&quot;</span>
+    <span class="sa">f</span><span class="s2">"Probability of </span><span class="si">{</span><span class="n">model_scores</span><span class="o">.</span><span class="n">index</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="si">}</span><span class="s2"> being more accurate than "</span>
+    <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">model_scores</span><span class="o">.</span><span class="n">index</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="mi">1</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">better_prob</span><span class="si">:</span><span class="s2">.3f</span><span class="si">}</span><span class="s2">"</span>
 <span class="p">)</span>
 </pre></div>
 </div>
@@ -1892,8 +1666,8 @@ interval:</p>
 <span class="n">rope_prob</span> <span class="o">=</span> <span class="n">t_post</span><span class="o">.</span><span class="n">cdf</span><span class="p">(</span><span class="n">rope_interval</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span> <span class="o">-</span> <span class="n">t_post</span><span class="o">.</span><span class="n">cdf</span><span class="p">(</span><span class="n">rope_interval</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
 
 <span class="nb">print</span><span class="p">(</span>
-    <span class="sa">f</span><span class="s2">&quot;Probability of </span><span class="si">{</span><span class="n">model_scores</span><span class="o">.</span><span class="n">index</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="si">}</span><span class="s2"> and </span><span class="si">{</span><span class="n">model_scores</span><span class="o">.</span><span class="n">index</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="si">}</span><span class="s2"> &quot;</span>
-    <span class="sa">f</span><span class="s2">&quot;being practically equivalent: </span><span class="si">{</span><span class="n">rope_prob</span><span class="si">:</span><span class="s2">.3f</span><span class="si">}</span><span class="s2">&quot;</span>
+    <span class="sa">f</span><span class="s2">"Probability of </span><span class="si">{</span><span class="n">model_scores</span><span class="o">.</span><span class="n">index</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="si">}</span><span class="s2"> and </span><span class="si">{</span><span class="n">model_scores</span><span class="o">.</span><span class="n">index</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="si">}</span><span class="s2"> "</span>
+    <span class="sa">f</span><span class="s2">"being practically equivalent: </span><span class="si">{</span><span class="n">rope_prob</span><span class="si">:</span><span class="s2">.3f</span><span class="si">}</span><span class="s2">"</span>
 <span class="p">)</span>
 </pre></div>
 </div>
@@ -1901,19 +1675,19 @@ interval:</p>
 </pre></div>
 </div>
 <p>We can plot how the posterior is distributed over the ROPE interval:</p>
-<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">x_rope</span> <span class="o">=</span> <a href="https://numpy.org/doc/stable/reference/generated/numpy.linspace.html#numpy.linspace" title="numpy.linspace" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-function"><span class="n">np</span><span class="o">.</span><span class="n">linspace</span></a><span class="p">(</span><span class="n">rope_interval</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">rope_interval</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="mi">100</span><span class="p">)</span>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">x_rope</span> <span class="o">=</span> <a class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-function" href="https://numpy.org/doc/stable/reference/generated/numpy.linspace.html#numpy.linspace" title="numpy.linspace"><span class="n">np</span><span class="o">.</span><span class="n">linspace</span></a><span class="p">(</span><span class="n">rope_interval</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">rope_interval</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="mi">100</span><span class="p">)</span>
 
-<a href="https://matplotlib.org/stable/api/_as_gen/matplotlib.pyplot.plot.html#matplotlib.pyplot.plot" title="matplotlib.pyplot.plot" class="sphx-glr-backref-module-matplotlib-pyplot sphx-glr-backref-type-py-function"><span class="n">plt</span><span class="o">.</span><span class="n">plot</span></a><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">t_post</span><span class="o">.</span><span class="n">pdf</span><span class="p">(</span><span class="n">x</span><span class="p">))</span>
-<a href="https://matplotlib.org/stable/api/_as_gen/matplotlib.pyplot.xticks.html#matplotlib.pyplot.xticks" title="matplotlib.pyplot.xticks" class="sphx-glr-backref-module-matplotlib-pyplot sphx-glr-backref-type-py-function"><span class="n">plt</span><span class="o">.</span><span class="n">xticks</span></a><span class="p">(</span><a href="https://numpy.org/doc/stable/reference/generated/numpy.arange.html#numpy.arange" title="numpy.arange" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-function"><span class="n">np</span><span class="o">.</span><span class="n">arange</span></a><span class="p">(</span><span class="o">-</span><span class="mf">0.04</span><span class="p">,</span> <span class="mf">0.06</span><span class="p">,</span> <span class="mf">0.01</span><span class="p">))</span>
-<a href="https://matplotlib.org/stable/api/_as_gen/matplotlib.pyplot.vlines.html#matplotlib.pyplot.vlines" title="matplotlib.pyplot.vlines" class="sphx-glr-backref-module-matplotlib-pyplot sphx-glr-backref-type-py-function"><span class="n">plt</span><span class="o">.</span><span class="n">vlines</span></a><span class="p">([</span><span class="o">-</span><span class="mf">0.01</span><span class="p">,</span> <span class="mf">0.01</span><span class="p">],</span> <span class="n">ymin</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">ymax</span><span class="o">=</span><span class="p">(</span><a href="https://numpy.org/doc/stable/reference/generated/numpy.max.html#numpy.max" title="numpy.max" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-function"><span class="n">np</span><span class="o">.</span><span class="n">max</span></a><span class="p">(</span><span class="n">t_post</span><span class="o">.</span><span class="n">pdf</span><span class="p">(</span><span class="n">x</span><span class="p">))</span> <span class="o">+</span> <span class="mi">1</span><span class="p">))</span>
-<a href="https://matplotlib.org/stable/api/_as_gen/matplotlib.pyplot.fill_between.html#matplotlib.pyplot.fill_between" title="matplotlib.pyplot.fill_between" class="sphx-glr-backref-module-matplotlib-pyplot sphx-glr-backref-type-py-function"><span class="n">plt</span><span class="o">.</span><span class="n">fill_between</span></a><span class="p">(</span><span class="n">x_rope</span><span class="p">,</span> <span class="n">t_post</span><span class="o">.</span><span class="n">pdf</span><span class="p">(</span><span class="n">x_rope</span><span class="p">),</span> <span class="mi">0</span><span class="p">,</span> <span class="n">facecolor</span><span class="o">=</span><span class="s2">&quot;blue&quot;</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.2</span><span class="p">)</span>
-<a href="https://matplotlib.org/stable/api/_as_gen/matplotlib.pyplot.ylabel.html#matplotlib.pyplot.ylabel" title="matplotlib.pyplot.ylabel" class="sphx-glr-backref-module-matplotlib-pyplot sphx-glr-backref-type-py-function"><span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span></a><span class="p">(</span><span class="s2">&quot;Probability density&quot;</span><span class="p">)</span>
-<a href="https://matplotlib.org/stable/api/_as_gen/matplotlib.pyplot.xlabel.html#matplotlib.pyplot.xlabel" title="matplotlib.pyplot.xlabel" class="sphx-glr-backref-module-matplotlib-pyplot sphx-glr-backref-type-py-function"><span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span></a><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;Mean difference ($\mu$)&quot;</span><span class="p">)</span>
-<a href="https://matplotlib.org/stable/api/_as_gen/matplotlib.pyplot.title.html#matplotlib.pyplot.title" title="matplotlib.pyplot.title" class="sphx-glr-backref-module-matplotlib-pyplot sphx-glr-backref-type-py-function"><span class="n">plt</span><span class="o">.</span><span class="n">title</span></a><span class="p">(</span><span class="s2">&quot;Posterior distribution under the ROPE&quot;</span><span class="p">)</span>
-<a href="https://matplotlib.org/stable/api/_as_gen/matplotlib.pyplot.show.html#matplotlib.pyplot.show" title="matplotlib.pyplot.show" class="sphx-glr-backref-module-matplotlib-pyplot sphx-glr-backref-type-py-function"><span class="n">plt</span><span class="o">.</span><span class="n">show</span></a><span class="p">()</span>
+<a class="sphx-glr-backref-module-matplotlib-pyplot sphx-glr-backref-type-py-function" href="https://matplotlib.org/stable/api/_as_gen/matplotlib.pyplot.plot.html#matplotlib.pyplot.plot" title="matplotlib.pyplot.plot"><span class="n">plt</span><span class="o">.</span><span class="n">plot</span></a><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">t_post</span><span class="o">.</span><span class="n">pdf</span><span class="p">(</span><span class="n">x</span><span class="p">))</span>
+<a class="sphx-glr-backref-module-matplotlib-pyplot sphx-glr-backref-type-py-function" href="https://matplotlib.org/stable/api/_as_gen/matplotlib.pyplot.xticks.html#matplotlib.pyplot.xticks" title="matplotlib.pyplot.xticks"><span class="n">plt</span><span class="o">.</span><span class="n">xticks</span></a><span class="p">(</span><a class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-function" href="https://numpy.org/doc/stable/reference/generated/numpy.arange.html#numpy.arange" title="numpy.arange"><span class="n">np</span><span class="o">.</span><span class="n">arange</span></a><span class="p">(</span><span class="o">-</span><span class="mf">0.04</span><span class="p">,</span> <span class="mf">0.06</span><span class="p">,</span> <span class="mf">0.01</span><span class="p">))</span>
+<a class="sphx-glr-backref-module-matplotlib-pyplot sphx-glr-backref-type-py-function" href="https://matplotlib.org/stable/api/_as_gen/matplotlib.pyplot.vlines.html#matplotlib.pyplot.vlines" title="matplotlib.pyplot.vlines"><span class="n">plt</span><span class="o">.</span><span class="n">vlines</span></a><span class="p">([</span><span class="o">-</span><span class="mf">0.01</span><span class="p">,</span> <span class="mf">0.01</span><span class="p">],</span> <span class="n">ymin</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">ymax</span><span class="o">=</span><span class="p">(</span><a class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-function" href="https://numpy.org/doc/stable/reference/generated/numpy.max.html#numpy.max" title="numpy.max"><span class="n">np</span><span class="o">.</span><span class="n">max</span></a><span class="p">(</span><span class="n">t_post</span><span class="o">.</span><span class="n">pdf</span><span class="p">(</span><span class="n">x</span><span class="p">))</span> <span class="o">+</span> <span class="mi">1</span><span class="p">))</span>
+<a class="sphx-glr-backref-module-matplotlib-pyplot sphx-glr-backref-type-py-function" href="https://matplotlib.org/stable/api/_as_gen/matplotlib.pyplot.fill_between.html#matplotlib.pyplot.fill_between" title="matplotlib.pyplot.fill_between"><span class="n">plt</span><span class="o">.</span><span class="n">fill_between</span></a><span class="p">(</span><span class="n">x_rope</span><span class="p">,</span> <span class="n">t_post</span><span class="o">.</span><span class="n">pdf</span><span class="p">(</span><span class="n">x_rope</span><span class="p">),</span> <span class="mi">0</span><span class="p">,</span> <span class="n">facecolor</span><span class="o">=</span><span class="s2">"blue"</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.2</span><span class="p">)</span>
+<a class="sphx-glr-backref-module-matplotlib-pyplot sphx-glr-backref-type-py-function" href="https://matplotlib.org/stable/api/_as_gen/matplotlib.pyplot.ylabel.html#matplotlib.pyplot.ylabel" title="matplotlib.pyplot.ylabel"><span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span></a><span class="p">(</span><span class="s2">"Probability density"</span><span class="p">)</span>
+<a class="sphx-glr-backref-module-matplotlib-pyplot sphx-glr-backref-type-py-function" href="https://matplotlib.org/stable/api/_as_gen/matplotlib.pyplot.xlabel.html#matplotlib.pyplot.xlabel" title="matplotlib.pyplot.xlabel"><span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span></a><span class="p">(</span><span class="sa">r</span><span class="s2">"Mean difference ($\mu$)"</span><span class="p">)</span>
+<a class="sphx-glr-backref-module-matplotlib-pyplot sphx-glr-backref-type-py-function" href="https://matplotlib.org/stable/api/_as_gen/matplotlib.pyplot.title.html#matplotlib.pyplot.title" title="matplotlib.pyplot.title"><span class="n">plt</span><span class="o">.</span><span class="n">title</span></a><span class="p">(</span><span class="s2">"Posterior distribution under the ROPE"</span><span class="p">)</span>
+<a class="sphx-glr-backref-module-matplotlib-pyplot sphx-glr-backref-type-py-function" href="https://matplotlib.org/stable/api/_as_gen/matplotlib.pyplot.show.html#matplotlib.pyplot.show" title="matplotlib.pyplot.show"><span class="n">plt</span><span class="o">.</span><span class="n">show</span></a><span class="p">()</span>
 </pre></div>
 </div>
-<img src="../../_images/sphx_glr_plot_grid_search_stats_004.png" srcset="../../_images/sphx_glr_plot_grid_search_stats_004.png" alt="Posterior distribution under the ROPE" class = "sphx-glr-single-img"/><p>As suggested in <a class="footnote-reference brackets" href="#id13" id="id8" role="doc-noteref"><span class="fn-bracket">[</span>4<span class="fn-bracket">]</span></a>, we can further interpret these probabilities using the
+<img alt="Posterior distribution under the ROPE" class="sphx-glr-single-img" src="../../_images/sphx_glr_plot_grid_search_stats_004.png" srcset="../../_images/sphx_glr_plot_grid_search_stats_004.png"/><p>As suggested in <a class="footnote-reference brackets" href="#id13" id="id8" role="doc-noteref"><span class="fn-bracket">[</span>4<span class="fn-bracket">]</span></a>, we can further interpret these probabilities using the
 same criteria as the frequentist approach: is the probability of falling
 inside the ROPE bigger than 95% (alpha value of 5%)?  In that case we can
 conclude that both models are practically equivalent.</p>
@@ -1933,15 +1707,15 @@ between x and y.</p>
     <span class="n">cred_interval</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">t_post</span><span class="o">.</span><span class="n">interval</span><span class="p">(</span><span class="n">interval</span><span class="p">))</span>
     <span class="n">cred_intervals</span><span class="o">.</span><span class="n">append</span><span class="p">([</span><span class="n">interval</span><span class="p">,</span> <span class="n">cred_interval</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">cred_interval</span><span class="p">[</span><span class="mi">1</span><span class="p">]])</span>
 
-<span class="n">cred_int_df</span> <span class="o">=</span> <a href="https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.DataFrame.html#pandas.DataFrame" title="pandas.DataFrame" class="sphx-glr-backref-module-pandas sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span></a><span class="p">(</span>
-    <span class="n">cred_intervals</span><span class="p">,</span> <span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;interval&quot;</span><span class="p">,</span> <span class="s2">&quot;lower value&quot;</span><span class="p">,</span> <span class="s2">&quot;upper value&quot;</span><span class="p">]</span>
-<span class="p">)</span><span class="o">.</span><span class="n">set_index</span><span class="p">(</span><span class="s2">&quot;interval&quot;</span><span class="p">)</span>
+<span class="n">cred_int_df</span> <span class="o">=</span> <a class="sphx-glr-backref-module-pandas sphx-glr-backref-type-py-class sphx-glr-backref-instance" href="https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.DataFrame.html#pandas.DataFrame" title="pandas.DataFrame"><span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span></a><span class="p">(</span>
+    <span class="n">cred_intervals</span><span class="p">,</span> <span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="s2">"interval"</span><span class="p">,</span> <span class="s2">"lower value"</span><span class="p">,</span> <span class="s2">"upper value"</span><span class="p">]</span>
+<span class="p">)</span><span class="o">.</span><span class="n">set_index</span><span class="p">(</span><span class="s2">"interval"</span><span class="p">)</span>
 <span class="n">cred_int_df</span>
 </pre></div>
 </div>
 <div class="output_subarea output_html rendered_html output_result">
 <div>
-<style scoped>
+<style scoped="">
     .dataframe tbody tr th:only-of-type {
         vertical-align: middle;
     }
@@ -1955,40 +1729,40 @@ between x and y.</p>
     }
 </style>
 <table border="1" class="dataframe">
-  <thead>
-    <tr style="text-align: right;">
-      <th></th>
-      <th>lower value</th>
-      <th>upper value</th>
-    </tr>
-    <tr>
-      <th>interval</th>
-      <th></th>
-      <th></th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <th>0.50</th>
-      <td>0.000977</td>
-      <td>0.019023</td>
-    </tr>
-    <tr>
-      <th>0.75</th>
-      <td>-0.005422</td>
-      <td>0.025422</td>
-    </tr>
-    <tr>
-      <th>0.95</th>
-      <td>-0.016445</td>
-      <td>0.036445</td>
-    </tr>
-  </tbody>
+<thead>
+<tr style="text-align: right;">
+<th></th>
+<th>lower value</th>
+<th>upper value</th>
+</tr>
+<tr>
+<th>interval</th>
+<th></th>
+<th></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<th>0.50</th>
+<td>0.000977</td>
+<td>0.019023</td>
+</tr>
+<tr>
+<th>0.75</th>
+<td>-0.005422</td>
+<td>0.025422</td>
+</tr>
+<tr>
+<th>0.95</th>
+<td>-0.016445</td>
+<td>0.036445</td>
+</tr>
+</tbody>
 </table>
 </div>
 </div>
-<br />
-<br /><p>As shown in the table, there is a 50% probability that the true mean
+<br/>
+<br/><p>As shown in the table, there is a 50% probability that the true mean
 difference between models will be between 0.000977 and 0.019023, 70%
 probability that it will be between -0.005422 and 0.025422, and 95%
 probability that it will be between -0.016445   and 0.036445.</p>
@@ -2005,15 +1779,15 @@ is to apply a <a class="reference external" href="https://en.wikipedia.org/wiki/
 computed by multiplying the p-value by the number of comparisons we are
 testing.</p>
 <p>Let’s compare the performance of the models using the corrected t-test:</p>
-<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">itertools</span> <span class="kn">import</span> <a href="https://docs.python.org/3/library/itertools.html#itertools.combinations" title="itertools.combinations" class="sphx-glr-backref-module-itertools sphx-glr-backref-type-py-function"><span class="n">combinations</span></a>
-<span class="kn">from</span> <span class="nn">math</span> <span class="kn">import</span> <a href="https://docs.python.org/3/library/math.html#math.factorial" title="math.factorial" class="sphx-glr-backref-module-math sphx-glr-backref-type-py-function"><span class="n">factorial</span></a>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">itertools</span> <span class="kn">import</span> <a class="sphx-glr-backref-module-itertools sphx-glr-backref-type-py-function" href="https://docs.python.org/3/library/itertools.html#itertools.combinations" title="itertools.combinations"><span class="n">combinations</span></a>
+<span class="kn">from</span> <span class="nn">math</span> <span class="kn">import</span> <a class="sphx-glr-backref-module-math sphx-glr-backref-type-py-function" href="https://docs.python.org/3/library/math.html#math.factorial" title="math.factorial"><span class="n">factorial</span></a>
 
-<span class="n">n_comparisons</span> <span class="o">=</span> <a href="https://docs.python.org/3/library/math.html#math.factorial" title="math.factorial" class="sphx-glr-backref-module-math sphx-glr-backref-type-py-function"><span class="n">factorial</span></a><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">model_scores</span><span class="p">))</span> <span class="o">/</span> <span class="p">(</span>
-    <a href="https://docs.python.org/3/library/math.html#math.factorial" title="math.factorial" class="sphx-glr-backref-module-math sphx-glr-backref-type-py-function"><span class="n">factorial</span></a><span class="p">(</span><span class="mi">2</span><span class="p">)</span> <span class="o">*</span> <a href="https://docs.python.org/3/library/math.html#math.factorial" title="math.factorial" class="sphx-glr-backref-module-math sphx-glr-backref-type-py-function"><span class="n">factorial</span></a><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">model_scores</span><span class="p">)</span> <span class="o">-</span> <span class="mi">2</span><span class="p">)</span>
+<span class="n">n_comparisons</span> <span class="o">=</span> <a class="sphx-glr-backref-module-math sphx-glr-backref-type-py-function" href="https://docs.python.org/3/library/math.html#math.factorial" title="math.factorial"><span class="n">factorial</span></a><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">model_scores</span><span class="p">))</span> <span class="o">/</span> <span class="p">(</span>
+    <a class="sphx-glr-backref-module-math sphx-glr-backref-type-py-function" href="https://docs.python.org/3/library/math.html#math.factorial" title="math.factorial"><span class="n">factorial</span></a><span class="p">(</span><span class="mi">2</span><span class="p">)</span> <span class="o">*</span> <a class="sphx-glr-backref-module-math sphx-glr-backref-type-py-function" href="https://docs.python.org/3/library/math.html#math.factorial" title="math.factorial"><span class="n">factorial</span></a><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">model_scores</span><span class="p">)</span> <span class="o">-</span> <span class="mi">2</span><span class="p">)</span>
 <span class="p">)</span>
 <span class="n">pairwise_t_test</span> <span class="o">=</span> <span class="p">[]</span>
 
-<span class="k">for</span> <span class="n">model_i</span><span class="p">,</span> <span class="n">model_k</span> <span class="ow">in</span> <a href="https://docs.python.org/3/library/itertools.html#itertools.combinations" title="itertools.combinations" class="sphx-glr-backref-module-itertools sphx-glr-backref-type-py-function"><span class="n">combinations</span></a><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">model_scores</span><span class="p">)),</span> <span class="mi">2</span><span class="p">):</span>
+<span class="k">for</span> <span class="n">model_i</span><span class="p">,</span> <span class="n">model_k</span> <span class="ow">in</span> <a class="sphx-glr-backref-module-itertools sphx-glr-backref-type-py-function" href="https://docs.python.org/3/library/itertools.html#itertools.combinations" title="itertools.combinations"><span class="n">combinations</span></a><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">model_scores</span><span class="p">)),</span> <span class="mi">2</span><span class="p">):</span>
     <span class="n">model_i_scores</span> <span class="o">=</span> <span class="n">model_scores</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="n">model_i</span><span class="p">]</span><span class="o">.</span><span class="n">values</span>
     <span class="n">model_k_scores</span> <span class="o">=</span> <span class="n">model_scores</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="n">model_k</span><span class="p">]</span><span class="o">.</span><span class="n">values</span>
     <span class="n">differences</span> <span class="o">=</span> <span class="n">model_i_scores</span> <span class="o">-</span> <span class="n">model_k_scores</span>
@@ -2025,15 +1799,15 @@ testing.</p>
         <span class="p">[</span><span class="n">model_scores</span><span class="o">.</span><span class="n">index</span><span class="p">[</span><span class="n">model_i</span><span class="p">],</span> <span class="n">model_scores</span><span class="o">.</span><span class="n">index</span><span class="p">[</span><span class="n">model_k</span><span class="p">],</span> <span class="n">t_stat</span><span class="p">,</span> <span class="n">p_val</span><span class="p">]</span>
     <span class="p">)</span>
 
-<span class="n">pairwise_comp_df</span> <span class="o">=</span> <a href="https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.DataFrame.html#pandas.DataFrame" title="pandas.DataFrame" class="sphx-glr-backref-module-pandas sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span></a><span class="p">(</span>
-    <span class="n">pairwise_t_test</span><span class="p">,</span> <span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;model_1&quot;</span><span class="p">,</span> <span class="s2">&quot;model_2&quot;</span><span class="p">,</span> <span class="s2">&quot;t_stat&quot;</span><span class="p">,</span> <span class="s2">&quot;p_val&quot;</span><span class="p">]</span>
+<span class="n">pairwise_comp_df</span> <span class="o">=</span> <a class="sphx-glr-backref-module-pandas sphx-glr-backref-type-py-class sphx-glr-backref-instance" href="https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.DataFrame.html#pandas.DataFrame" title="pandas.DataFrame"><span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span></a><span class="p">(</span>
+    <span class="n">pairwise_t_test</span><span class="p">,</span> <span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="s2">"model_1"</span><span class="p">,</span> <span class="s2">"model_2"</span><span class="p">,</span> <span class="s2">"t_stat"</span><span class="p">,</span> <span class="s2">"p_val"</span><span class="p">]</span>
 <span class="p">)</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span>
 <span class="n">pairwise_comp_df</span>
 </pre></div>
 </div>
 <div class="output_subarea output_html rendered_html output_result">
 <div>
-<style scoped>
+<style scoped="">
     .dataframe tbody tr th:only-of-type {
         vertical-align: middle;
     }
@@ -2047,64 +1821,64 @@ testing.</p>
     }
 </style>
 <table border="1" class="dataframe">
-  <thead>
-    <tr style="text-align: right;">
-      <th></th>
-      <th>model_1</th>
-      <th>model_2</th>
-      <th>t_stat</th>
-      <th>p_val</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <th>0</th>
-      <td>rbf</td>
-      <td>linear</td>
-      <td>0.750</td>
-      <td>1.000</td>
-    </tr>
-    <tr>
-      <th>1</th>
-      <td>rbf</td>
-      <td>3_poly</td>
-      <td>1.657</td>
-      <td>0.302</td>
-    </tr>
-    <tr>
-      <th>2</th>
-      <td>rbf</td>
-      <td>2_poly</td>
-      <td>4.565</td>
-      <td>0.000</td>
-    </tr>
-    <tr>
-      <th>3</th>
-      <td>linear</td>
-      <td>3_poly</td>
-      <td>1.111</td>
-      <td>0.807</td>
-    </tr>
-    <tr>
-      <th>4</th>
-      <td>linear</td>
-      <td>2_poly</td>
-      <td>4.276</td>
-      <td>0.000</td>
-    </tr>
-    <tr>
-      <th>5</th>
-      <td>3_poly</td>
-      <td>2_poly</td>
-      <td>3.851</td>
-      <td>0.001</td>
-    </tr>
-  </tbody>
+<thead>
+<tr style="text-align: right;">
+<th></th>
+<th>model_1</th>
+<th>model_2</th>
+<th>t_stat</th>
+<th>p_val</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<th>0</th>
+<td>rbf</td>
+<td>linear</td>
+<td>0.750</td>
+<td>1.000</td>
+</tr>
+<tr>
+<th>1</th>
+<td>rbf</td>
+<td>3_poly</td>
+<td>1.657</td>
+<td>0.302</td>
+</tr>
+<tr>
+<th>2</th>
+<td>rbf</td>
+<td>2_poly</td>
+<td>4.565</td>
+<td>0.000</td>
+</tr>
+<tr>
+<th>3</th>
+<td>linear</td>
+<td>3_poly</td>
+<td>1.111</td>
+<td>0.807</td>
+</tr>
+<tr>
+<th>4</th>
+<td>linear</td>
+<td>2_poly</td>
+<td>4.276</td>
+<td>0.000</td>
+</tr>
+<tr>
+<th>5</th>
+<td>3_poly</td>
+<td>2_poly</td>
+<td>3.851</td>
+<td>0.001</td>
+</tr>
+</tbody>
 </table>
 </div>
 </div>
-<br />
-<br /><p>We observe that after correcting for multiple comparisons, the only model
+<br/>
+<br/><p>We observe that after correcting for multiple comparisons, the only model
 that significantly differs from the others is <code class="docutils literal notranslate"><span class="pre">'2_poly'</span></code>.
 <code class="docutils literal notranslate"><span class="pre">'rbf'</span></code>, the model ranked first by
 <a class="reference internal" href="../../modules/generated/sklearn.model_selection.GridSearchCV.html#sklearn.model_selection.GridSearchCV" title="sklearn.model_selection.GridSearchCV"><code class="xref py py-class docutils literal notranslate"><span class="pre">GridSearchCV</span></code></a>, does not significantly
@@ -2118,12 +1892,12 @@ correct for multiple comparisons (for reasons why see <a class="footnote-referen
 section:</p>
 <div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">pairwise_bayesian</span> <span class="o">=</span> <span class="p">[]</span>
 
-<span class="k">for</span> <span class="n">model_i</span><span class="p">,</span> <span class="n">model_k</span> <span class="ow">in</span> <a href="https://docs.python.org/3/library/itertools.html#itertools.combinations" title="itertools.combinations" class="sphx-glr-backref-module-itertools sphx-glr-backref-type-py-function"><span class="n">combinations</span></a><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">model_scores</span><span class="p">)),</span> <span class="mi">2</span><span class="p">):</span>
+<span class="k">for</span> <span class="n">model_i</span><span class="p">,</span> <span class="n">model_k</span> <span class="ow">in</span> <a class="sphx-glr-backref-module-itertools sphx-glr-backref-type-py-function" href="https://docs.python.org/3/library/itertools.html#itertools.combinations" title="itertools.combinations"><span class="n">combinations</span></a><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">model_scores</span><span class="p">)),</span> <span class="mi">2</span><span class="p">):</span>
     <span class="n">model_i_scores</span> <span class="o">=</span> <span class="n">model_scores</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="n">model_i</span><span class="p">]</span><span class="o">.</span><span class="n">values</span>
     <span class="n">model_k_scores</span> <span class="o">=</span> <span class="n">model_scores</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="n">model_k</span><span class="p">]</span><span class="o">.</span><span class="n">values</span>
     <span class="n">differences</span> <span class="o">=</span> <span class="n">model_i_scores</span> <span class="o">-</span> <span class="n">model_k_scores</span>
-    <span class="n">t_post</span> <span class="o">=</span> <a href="https://docs.scipy.org/doc/scipy/reference/generated/scipy.stats.t.html#scipy.stats.t" title="scipy.stats.t" class="sphx-glr-backref-module-scipy-stats sphx-glr-backref-type-py-data"><span class="n">t</span></a><span class="p">(</span>
-        <span class="n">df</span><span class="p">,</span> <span class="n">loc</span><span class="o">=</span><a href="https://numpy.org/doc/stable/reference/generated/numpy.mean.html#numpy.mean" title="numpy.mean" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-function"><span class="n">np</span><span class="o">.</span><span class="n">mean</span></a><span class="p">(</span><span class="n">differences</span><span class="p">),</span> <span class="n">scale</span><span class="o">=</span><span class="n">corrected_std</span><span class="p">(</span><span class="n">differences</span><span class="p">,</span> <span class="n">n_train</span><span class="p">,</span> <span class="n">n_test</span><span class="p">)</span>
+    <span class="n">t_post</span> <span class="o">=</span> <a class="sphx-glr-backref-module-scipy-stats sphx-glr-backref-type-py-data" href="https://docs.scipy.org/doc/scipy/reference/generated/scipy.stats.t.html#scipy.stats.t" title="scipy.stats.t"><span class="n">t</span></a><span class="p">(</span>
+        <span class="n">df</span><span class="p">,</span> <span class="n">loc</span><span class="o">=</span><a class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-function" href="https://numpy.org/doc/stable/reference/generated/numpy.mean.html#numpy.mean" title="numpy.mean"><span class="n">np</span><span class="o">.</span><span class="n">mean</span></a><span class="p">(</span><span class="n">differences</span><span class="p">),</span> <span class="n">scale</span><span class="o">=</span><span class="n">corrected_std</span><span class="p">(</span><span class="n">differences</span><span class="p">,</span> <span class="n">n_train</span><span class="p">,</span> <span class="n">n_test</span><span class="p">)</span>
     <span class="p">)</span>
     <span class="n">worse_prob</span> <span class="o">=</span> <span class="n">t_post</span><span class="o">.</span><span class="n">cdf</span><span class="p">(</span><span class="n">rope_interval</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
     <span class="n">better_prob</span> <span class="o">=</span> <span class="mi">1</span> <span class="o">-</span> <span class="n">t_post</span><span class="o">.</span><span class="n">cdf</span><span class="p">(</span><span class="n">rope_interval</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
@@ -2131,8 +1905,8 @@ section:</p>
 
     <span class="n">pairwise_bayesian</span><span class="o">.</span><span class="n">append</span><span class="p">([</span><span class="n">worse_prob</span><span class="p">,</span> <span class="n">better_prob</span><span class="p">,</span> <span class="n">rope_prob</span><span class="p">])</span>
 
-<span class="n">pairwise_bayesian_df</span> <span class="o">=</span> <a href="https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.DataFrame.html#pandas.DataFrame" title="pandas.DataFrame" class="sphx-glr-backref-module-pandas sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span></a><span class="p">(</span>
-    <span class="n">pairwise_bayesian</span><span class="p">,</span> <span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;worse_prob&quot;</span><span class="p">,</span> <span class="s2">&quot;better_prob&quot;</span><span class="p">,</span> <span class="s2">&quot;rope_prob&quot;</span><span class="p">]</span>
+<span class="n">pairwise_bayesian_df</span> <span class="o">=</span> <a class="sphx-glr-backref-module-pandas sphx-glr-backref-type-py-class sphx-glr-backref-instance" href="https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.DataFrame.html#pandas.DataFrame" title="pandas.DataFrame"><span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span></a><span class="p">(</span>
+    <span class="n">pairwise_bayesian</span><span class="p">,</span> <span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="s2">"worse_prob"</span><span class="p">,</span> <span class="s2">"better_prob"</span><span class="p">,</span> <span class="s2">"rope_prob"</span><span class="p">]</span>
 <span class="p">)</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span>
 
 <span class="n">pairwise_comp_df</span> <span class="o">=</span> <span class="n">pairwise_comp_df</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">pairwise_bayesian_df</span><span class="p">)</span>
@@ -2141,7 +1915,7 @@ section:</p>
 </div>
 <div class="output_subarea output_html rendered_html output_result">
 <div>
-<style scoped>
+<style scoped="">
     .dataframe tbody tr th:only-of-type {
         vertical-align: middle;
     }
@@ -2155,85 +1929,85 @@ section:</p>
     }
 </style>
 <table border="1" class="dataframe">
-  <thead>
-    <tr style="text-align: right;">
-      <th></th>
-      <th>model_1</th>
-      <th>model_2</th>
-      <th>t_stat</th>
-      <th>p_val</th>
-      <th>worse_prob</th>
-      <th>better_prob</th>
-      <th>rope_prob</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <th>0</th>
-      <td>rbf</td>
-      <td>linear</td>
-      <td>0.750</td>
-      <td>1.000</td>
-      <td>0.068</td>
-      <td>0.500</td>
-      <td>0.432</td>
-    </tr>
-    <tr>
-      <th>1</th>
-      <td>rbf</td>
-      <td>3_poly</td>
-      <td>1.657</td>
-      <td>0.302</td>
-      <td>0.018</td>
-      <td>0.882</td>
-      <td>0.100</td>
-    </tr>
-    <tr>
-      <th>2</th>
-      <td>rbf</td>
-      <td>2_poly</td>
-      <td>4.565</td>
-      <td>0.000</td>
-      <td>0.000</td>
-      <td>1.000</td>
-      <td>0.000</td>
-    </tr>
-    <tr>
-      <th>3</th>
-      <td>linear</td>
-      <td>3_poly</td>
-      <td>1.111</td>
-      <td>0.807</td>
-      <td>0.063</td>
-      <td>0.750</td>
-      <td>0.187</td>
-    </tr>
-    <tr>
-      <th>4</th>
-      <td>linear</td>
-      <td>2_poly</td>
-      <td>4.276</td>
-      <td>0.000</td>
-      <td>0.000</td>
-      <td>1.000</td>
-      <td>0.000</td>
-    </tr>
-    <tr>
-      <th>5</th>
-      <td>3_poly</td>
-      <td>2_poly</td>
-      <td>3.851</td>
-      <td>0.001</td>
-      <td>0.000</td>
-      <td>1.000</td>
-      <td>0.000</td>
-    </tr>
-  </tbody>
+<thead>
+<tr style="text-align: right;">
+<th></th>
+<th>model_1</th>
+<th>model_2</th>
+<th>t_stat</th>
+<th>p_val</th>
+<th>worse_prob</th>
+<th>better_prob</th>
+<th>rope_prob</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<th>0</th>
+<td>rbf</td>
+<td>linear</td>
+<td>0.750</td>
+<td>1.000</td>
+<td>0.068</td>
+<td>0.500</td>
+<td>0.432</td>
+</tr>
+<tr>
+<th>1</th>
+<td>rbf</td>
+<td>3_poly</td>
+<td>1.657</td>
+<td>0.302</td>
+<td>0.018</td>
+<td>0.882</td>
+<td>0.100</td>
+</tr>
+<tr>
+<th>2</th>
+<td>rbf</td>
+<td>2_poly</td>
+<td>4.565</td>
+<td>0.000</td>
+<td>0.000</td>
+<td>1.000</td>
+<td>0.000</td>
+</tr>
+<tr>
+<th>3</th>
+<td>linear</td>
+<td>3_poly</td>
+<td>1.111</td>
+<td>0.807</td>
+<td>0.063</td>
+<td>0.750</td>
+<td>0.187</td>
+</tr>
+<tr>
+<th>4</th>
+<td>linear</td>
+<td>2_poly</td>
+<td>4.276</td>
+<td>0.000</td>
+<td>0.000</td>
+<td>1.000</td>
+<td>0.000</td>
+</tr>
+<tr>
+<th>5</th>
+<td>3_poly</td>
+<td>2_poly</td>
+<td>3.851</td>
+<td>0.001</td>
+<td>0.000</td>
+<td>1.000</td>
+<td>0.000</td>
+</tr>
+</tbody>
 </table>
 </div>
 </div>
-<br />
-<br /><p>Using the Bayesian approach we can compute the probability that a model
+<br/>
+<br/><p>Using the Bayesian approach we can compute the probability that a model
 performs better, worse or practically equivalent to another.</p>
 <p>Results show that the model ranked first by
 <a class="reference internal" href="../../modules/generated/sklearn.model_selection.GridSearchCV.html#sklearn.model_selection.GridSearchCV" title="sklearn.model_selection.GridSearchCV"><code class="xref py py-class docutils literal notranslate"><span class="pre">GridSearchCV</span></code></a> <code class="docutils literal notranslate"><span class="pre">'rbf'</span></code>, has approximately a
@@ -2270,26 +2044,26 @@ correction is needed when using the frequentist approach.</p></li>
 <p class="topic-title">References</p>
 <aside class="footnote-list brackets">
 <aside class="footnote brackets" id="id10" role="doc-footnote">
-<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id1">1</a><span class="fn-bracket">]</span></span>
+<span class="label"><span class="fn-bracket">[</span><a href="#id1" role="doc-backlink">1</a><span class="fn-bracket">]</span></span>
 <p>Dietterich, T. G. (1998). <a class="reference external" href="http://web.cs.iastate.edu/~jtian/cs573/Papers/Dietterich-98.pdf">Approximate statistical tests for
 comparing supervised classification learning algorithms</a>.
 Neural computation, 10(7).</p>
 </aside>
 <aside class="footnote brackets" id="id11" role="doc-footnote">
-<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id3">2</a><span class="fn-bracket">]</span></span>
+<span class="label"><span class="fn-bracket">[</span><a href="#id3" role="doc-backlink">2</a><span class="fn-bracket">]</span></span>
 <p>Nadeau, C., &amp; Bengio, Y. (2000). <a class="reference external" href="https://papers.nips.cc/paper/1661-inference-for-the-generalization-error.pdf">Inference for the generalization
 error</a>.
 In Advances in neural information processing systems.</p>
 </aside>
 <aside class="footnote brackets" id="id12" role="doc-footnote">
-<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id4">3</a><span class="fn-bracket">]</span></span>
+<span class="label"><span class="fn-bracket">[</span><a href="#id4" role="doc-backlink">3</a><span class="fn-bracket">]</span></span>
 <p>Bouckaert, R. R., &amp; Frank, E. (2004). <a class="reference external" href="https://www.cms.waikato.ac.nz/~ml/publications/2004/bouckaert-frank.pdf">Evaluating the replicability
 of significance tests for comparing learning algorithms</a>.
 In Pacific-Asia Conference on Knowledge Discovery and Data Mining.</p>
 </aside>
 <aside class="footnote brackets" id="id13" role="doc-footnote">
 <span class="label"><span class="fn-bracket">[</span>4<span class="fn-bracket">]</span></span>
-<span class="backrefs">(<a role="doc-backlink" href="#id5">1</a>,<a role="doc-backlink" href="#id6">2</a>,<a role="doc-backlink" href="#id7">3</a>,<a role="doc-backlink" href="#id8">4</a>,<a role="doc-backlink" href="#id9">5</a>)</span>
+<span class="backrefs">(<a href="#id5" role="doc-backlink">1</a>,<a href="#id6" role="doc-backlink">2</a>,<a href="#id7" role="doc-backlink">3</a>,<a href="#id8" role="doc-backlink">4</a>,<a href="#id9" role="doc-backlink">5</a>)</span>
 <p>Benavoli, A., Corani, G., Demšar, J., &amp; Zaffalon, M. (2017). <a class="reference external" href="http://www.jmlr.org/papers/volume18/16-305/16-305.pdf">Time
 for a change: a tutorial for comparing multiple classifiers through
 Bayesian analysis</a>.
@@ -2297,97 +2071,60 @@ The Journal of Machine Learning Research, 18(1). See the Python
 library that accompanies this paper <a class="reference external" href="https://github.com/janezd/baycomp">here</a>.</p>
 </aside>
 <aside class="footnote brackets" id="id14" role="doc-footnote">
-<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id2">5</a><span class="fn-bracket">]</span></span>
+<span class="label"><span class="fn-bracket">[</span><a href="#id2" role="doc-backlink">5</a><span class="fn-bracket">]</span></span>
 <p>Diebold, F.X. &amp; Mariano R.S. (1995). <a class="reference external" href="http://www.est.uc3m.es/esp/nueva_docencia/comp_col_get/lade/tecnicas_prediccion/Practicas0708/Comparing%20Predictive%20Accuracy%20(Dielbold).pdf">Comparing predictive accuracy</a>
 Journal of Business &amp; economic statistics, 20(1), 134-144.</p>
 </aside>
 </aside>
 </aside>
-<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> (0 minutes 1.646 seconds)</p>
-<div class="sphx-glr-footer sphx-glr-footer-example docutils container" id="sphx-glr-download-auto-examples-model-selection-plot-grid-search-stats-py">
-<div class="binder-badge docutils container">
-<a class="reference external image-reference" href="https://mybinder.org/v2/gh/scikit-learn/scikit-learn/main?urlpath=lab/tree/notebooks/auto_examples/model_selection/plot_grid_search_stats.ipynb"><img alt="Launch binder" src="../../_images/binder_badge_logo22.svg" width="150px" /></a>
-</div>
-<div class="lite-badge docutils container">
-<a class="reference external image-reference" href="../../lite/lab/?path=auto_examples/model_selection/plot_grid_search_stats.ipynb"><img alt="Launch JupyterLite" src="../../_images/jupyterlite_badge_logo22.svg" width="150px" /></a>
-</div>
-<div class="sphx-glr-download sphx-glr-download-jupyter docutils container">
-<p><a class="reference download internal" download="" href="../../_downloads/2402de18d671ce5087e3760b2540184f/plot_grid_search_stats.ipynb"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Jupyter</span> <span class="pre">notebook:</span> <span class="pre">plot_grid_search_stats.ipynb</span></code></a></p>
-</div>
-<div class="sphx-glr-download sphx-glr-download-python docutils container">
-<p><a class="reference download internal" download="" href="../../_downloads/efb3df90d4ec295fa0dafe6c8b46211b/plot_grid_search_stats.py"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Python</span> <span class="pre">source</span> <span class="pre">code:</span> <span class="pre">plot_grid_search_stats.py</span></code></a></p>
-</div>
-</div>
+<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> (0 minutes 1.515 seconds)</p>
+
 <p class="rubric">Related examples</p>
-<div class="sphx-glr-thumbnails"><div class="sphx-glr-thumbcontainer" tooltip="This example demonstrates the use of permutation_test_score to evaluate the significance of a c..."><img alt="" src="../../_images/sphx_glr_plot_permutation_tests_for_classification_thumb.png" />
+<div class="sphx-glr-thumbnails"><div class="sphx-glr-thumbcontainer" tooltip="This example demonstrates the use of permutation_test_score to evaluate the significance of a c..."><img alt="" src="../../_images/sphx_glr_plot_permutation_tests_for_classification_thumb.png"/>
 <p><a class="reference internal" href="plot_permutation_tests_for_classification.html#sphx-glr-auto-examples-model-selection-plot-permutation-tests-for-classification-py"><span class="std std-ref">Test with permutations the significance of a classification score</span></a></p>
-  <div class="sphx-glr-thumbnail-title">Test with permutations the significance of a classification score</div>
-</div><div class="sphx-glr-thumbcontainer" tooltip="Well calibrated classifiers are probabilistic classifiers for which the output of predict_proba..."><img alt="" src="../../_images/sphx_glr_plot_compare_calibration_thumb.png" />
+<div class="sphx-glr-thumbnail-title">Test with permutations the significance of a classification score</div>
+</div><div class="sphx-glr-thumbcontainer" tooltip="Well calibrated classifiers are probabilistic classifiers for which the output of predict_proba..."><img alt="" src="../../_images/sphx_glr_plot_compare_calibration_thumb.png"/>
 <p><a class="reference internal" href="../calibration/plot_compare_calibration.html#sphx-glr-auto-examples-calibration-plot-compare-calibration-py"><span class="std std-ref">Comparison of Calibration of Classifiers</span></a></p>
-  <div class="sphx-glr-thumbnail-title">Comparison of Calibration of Classifiers</div>
-</div><div class="sphx-glr-thumbcontainer" tooltip="This example demonstrates how pandas-engineered lagged features can be used for time series for..."><img alt="" src="../../_images/sphx_glr_plot_time_series_lagged_features_thumb.png" />
+<div class="sphx-glr-thumbnail-title">Comparison of Calibration of Classifiers</div>
+</div><div class="sphx-glr-thumbcontainer" tooltip="This example demonstrates how pandas-engineered lagged features can be used for time series for..."><img alt="" src="../../_images/sphx_glr_plot_time_series_lagged_features_thumb.png"/>
 <p><a class="reference internal" href="../applications/plot_time_series_lagged_features.html#sphx-glr-auto-examples-applications-plot-time-series-lagged-features-py"><span class="std std-ref">Lagged features for time series forecasting</span></a></p>
-  <div class="sphx-glr-thumbnail-title">Lagged features for time series forecasting</div>
-</div><div class="sphx-glr-thumbcontainer" tooltip="This example illustrates the effect of the parameters gamma and C of the Radial Basis Function ..."><img alt="" src="../../_images/sphx_glr_plot_rbf_parameters_thumb.png" />
+<div class="sphx-glr-thumbnail-title">Lagged features for time series forecasting</div>
+</div><div class="sphx-glr-thumbcontainer" tooltip="This example illustrates the effect of the parameters gamma and C of the Radial Basis Function ..."><img alt="" src="../../_images/sphx_glr_plot_rbf_parameters_thumb.png"/>
 <p><a class="reference internal" href="../svm/plot_rbf_parameters.html#sphx-glr-auto-examples-svm-plot-rbf-parameters-py"><span class="std std-ref">RBF SVM parameters</span></a></p>
-  <div class="sphx-glr-thumbnail-title">RBF SVM parameters</div>
-</div><div class="sphx-glr-thumbcontainer" tooltip="In linear models, the target value is modeled as a linear combination of the features (see the ..."><img alt="" src="../../_images/sphx_glr_plot_linear_model_coefficient_interpretation_thumb.png" />
-<p><a class="reference internal" href="../inspection/plot_linear_model_coefficient_interpretation.html#sphx-glr-auto-examples-inspection-plot-linear-model-coefficient-interpretation-py"><span class="std std-ref">Common pitfalls in the interpretation of coefficients of linear models</span></a></p>
-  <div class="sphx-glr-thumbnail-title">Common pitfalls in the interpretation of coefficients of linear models</div>
+<div class="sphx-glr-thumbnail-title">RBF SVM parameters</div>
 </div></div><p class="sphx-glr-signature"><a class="reference external" href="https://sphinx-gallery.github.io">Gallery generated by Sphinx-Gallery</a></p>
 </section>
 </section>
-
-
-                </article>
-              
-              
-              
-                <footer class="bd-footer-article">
-                  <div class="footer-article-items footer-article__inner">
-  
-    <div class="footer-article-item">
+</article>
+<footer class="bd-footer-article">
+<div class="footer-article-items footer-article__inner">
+<div class="footer-article-item">
 <div class="prev-next-area">
-    <a class="left-prev"
-       href="plot_grid_search_text_feature_extraction.html"
-       title="previous page">
-      <i class="fa-solid fa-angle-left"></i>
-      <div class="prev-next-info">
-        <p class="prev-next-subtitle">previous</p>
-        <p class="prev-next-title">Sample pipeline for text feature extraction and evaluation</p>
-      </div>
-    </a>
-    <a class="right-next"
-       href="plot_successive_halving_iterations.html"
-       title="next page">
-      <div class="prev-next-info">
-        <p class="prev-next-subtitle">next</p>
-        <p class="prev-next-title">Successive Halving Iterations</p>
-      </div>
-      <i class="fa-solid fa-angle-right"></i>
-    </a>
-</div></div>
-  
+<a class="left-prev" href="plot_grid_search_text_feature_extraction.html" title="previous page">
+<i class="fa-solid fa-angle-left"></i>
+<div class="prev-next-info">
+<p class="prev-next-subtitle">previous</p>
+<p class="prev-next-title">Sample pipeline for text feature extraction and evaluation</p>
 </div>
-                </footer>
-              
-              
-              
-            </div>
-            
-            
-              
-                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
-
-
-  <div class="sidebar-secondary-item">
-<div
-    id="pst-page-navigation-heading-2"
-    class="page-toc tocsection onthispage">
-    <i class="fa-solid fa-list"></i> On this page
+</a>
+<a class="right-next" href="plot_successive_halving_iterations.html" title="next page">
+<div class="prev-next-info">
+<p class="prev-next-subtitle">next</p>
+<p class="prev-next-title">Successive Halving Iterations</p>
+</div>
+<i class="fa-solid fa-angle-right"></i>
+</a>
+</div></div>
+</div>
+</footer>
+</div>
+<div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+<div class="sidebar-secondary-item">
+<div class="page-toc tocsection onthispage" id="pst-page-navigation-heading-2">
+<i class="fa-solid fa-list"></i> On this page
   </div>
-  <nav class="bd-toc-nav page-toc" aria-labelledby="pst-page-navigation-heading-2">
-    <ul class="visible nav section-nav flex-column">
+<nav aria-labelledby="pst-page-navigation-heading-2" class="bd-toc-nav page-toc">
+<ul class="visible nav section-nav flex-column">
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#comparing-two-models-frequentist-approach">Comparing two models: frequentist approach</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#comparing-two-models-bayesian-approach">Comparing two models: Bayesian approach</a><ul class="nav section-nav flex-column">
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#region-of-practical-equivalence">Region of Practical Equivalence</a></li>
@@ -2397,55 +2134,31 @@ Journal of Business &amp; economic statistics, 20(1), 134-144.</p>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#pairwise-comparison-of-all-models-bayesian-approach">Pairwise comparison of all models: Bayesian approach</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#take-home-messages">Take-home messages</a></li>
 </ul>
-  </nav></div>
+</nav></div>
 
-  <div class="sidebar-secondary-item">
-
-  <div class="tocsection sourcelink">
-    <a href="../../_sources/auto_examples/model_selection/plot_grid_search_stats.rst.txt">
-      <i class="fa-solid fa-file-lines"></i> Show Source
-    </a>
-  </div>
+<div class="sidebar-secondary-item"><div title="plot_grid_search_stats.py"><a download="" href="../../_downloads/efb3df90d4ec295fa0dafe6c8b46211b/plot_grid_search_stats.py"><i class="fa-solid fa-download"></i> Download source code</a></div><div title="plot_grid_search_stats.ipynb"><a download="" href="../../_downloads/2402de18d671ce5087e3760b2540184f/plot_grid_search_stats.ipynb"><i class="fa-solid fa-download"></i> Download Jupyter notebook</a></div></div><div class="sidebar-secondary-item"><div><a href="../../lite/lab/?path=auto_examples/model_selection/plot_grid_search_stats.ipynb"><img alt="Launch JupyterLite" height="20" src="../../_images/jupyterlite_badge_logo22.svg"/></a></div><div><a href="https://mybinder.org/v2/gh/scikit-learn/scikit-learn/main?urlpath=lab/tree/notebooks/auto_examples/model_selection/plot_grid_search_stats.ipynb"><img alt="Launch binder" height="20" src="../../_images/binder_badge_logo22.svg"/></a></div></div></div></div>
 </div>
-
-</div></div>
-              
-            
-          </div>
-          <footer class="bd-footer-content">
-            
-          </footer>
-        
-      </main>
-    </div>
-  </div>
-  
-  <!-- Scripts loaded after <body> so the DOM is not blocked -->
-  <script src="../../_static/scripts/bootstrap.js?digest=8d27b9dea8ad943066ae"></script>
+<footer class="bd-footer-content">
+</footer>
+</main>
+</div>
+</div>
+<!-- Scripts loaded after <body> so the DOM is not blocked -->
+<script src="../../_static/scripts/bootstrap.js?digest=8d27b9dea8ad943066ae"></script>
 <script src="../../_static/scripts/pydata-sphinx-theme.js?digest=8d27b9dea8ad943066ae"></script>
-
-  <footer class="bd-footer">
+<footer class="bd-footer">
 <div class="bd-footer__inner bd-page-width">
-  
-    <div class="footer-items__start">
-      
-        <div class="footer-item">
-
-  <p class="copyright">
+<div class="footer-items__start">
+<div class="footer-item">
+<p class="copyright">
     
       © Copyright 2007 - 2024, scikit-learn developers (BSD License).
       <br/>
-    
-  </p>
+</p>
 </div>
-      
-    </div>
-  
-  
-  
 </div>
-
-  </footer>
+</div>
+</footer>
     <script src="https://scikit-learn.org/versionwarning.js"></script>
-  </body>
+</body>
 </html>

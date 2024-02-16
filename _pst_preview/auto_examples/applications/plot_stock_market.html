@@ -1,309 +1,205 @@
 
 <!DOCTYPE html>
 
-
-<html lang="en" data-content_root="../../" >
-
-  <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
-<meta property="og:title" content="Visualizing the stock market structure" />
-<meta property="og:type" content="website" />
-<meta property="og:url" content="https://scikit-learn/stable/auto_examples/applications/plot_stock_market.html" />
-<meta property="og:site_name" content="scikit-learn" />
-<meta property="og:description" content="This example employs several unsupervised learning techniques to extract the stock market structure from variations in historical quotes. The quantity that we use is the daily variation in quote pr..." />
-<meta property="og:image" content="https://scikit-learn.org/stable/_static/scikit-learn-logo-small.png" />
-<meta property="og:image:alt" content="scikit-learn" />
-<meta name="description" content="This example employs several unsupervised learning techniques to extract the stock market structure from variations in historical quotes. The quantity that we use is the daily variation in quote pr..." />
-
-    <title>Visualizing the stock market structure &#8212; scikit-learn 1.5.dev0 documentation</title>
-  
-  
-  
-  <script data-cfasync="false">
+<html data-content_root="../../" lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/><meta content="width=device-width, initial-scale=1" name="viewport"/>
+<meta content="Visualizing the stock market structure" property="og:title"/>
+<meta content="website" property="og:type"/>
+<meta content="https://scikit-learn/stable/auto_examples/applications/plot_stock_market.html" property="og:url"/>
+<meta content="scikit-learn" property="og:site_name"/>
+<meta content="This example employs several unsupervised learning techniques to extract the stock market structure from variations in historical quotes. The quantity that we use is the daily variation in quote pr..." property="og:description"/>
+<meta content="https://scikit-learn.org/stable/_static/scikit-learn-logo-small.png" property="og:image"/>
+<meta content="scikit-learn" property="og:image:alt"/>
+<meta content="This example employs several unsupervised learning techniques to extract the stock market structure from variations in historical quotes. The quantity that we use is the daily variation in quote pr..." name="description"/>
+<title>Visualizing the stock market structure — scikit-learn 1.5.dev0 documentation</title>
+<script data-cfasync="false">
     document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
     document.documentElement.dataset.theme = localStorage.getItem("theme") || "light";
   </script>
-  
-  <!-- Loaded before other Sphinx assets -->
-  <link href="../../_static/styles/theme.css?digest=8d27b9dea8ad943066ae" rel="stylesheet" />
-<link href="../../_static/styles/bootstrap.css?digest=8d27b9dea8ad943066ae" rel="stylesheet" />
-<link href="../../_static/styles/pydata-sphinx-theme.css?digest=8d27b9dea8ad943066ae" rel="stylesheet" />
-
-  
-  <link href="../../_static/vendor/fontawesome/6.5.1/css/all.min.css?digest=8d27b9dea8ad943066ae" rel="stylesheet" />
-  <link rel="preload" as="font" type="font/woff2" crossorigin href="../../_static/vendor/fontawesome/6.5.1/webfonts/fa-solid-900.woff2" />
-<link rel="preload" as="font" type="font/woff2" crossorigin href="../../_static/vendor/fontawesome/6.5.1/webfonts/fa-brands-400.woff2" />
-<link rel="preload" as="font" type="font/woff2" crossorigin href="../../_static/vendor/fontawesome/6.5.1/webfonts/fa-regular-400.woff2" />
-
-    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=a746c00c" />
-    <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
-    <link rel="stylesheet" type="text/css" href="../../_static/plot_directive.css" />
-    <link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Vibur" />
-    <link rel="stylesheet" type="text/css" href="../../_static/jupyterlite_sphinx.css?v=f996933d" />
-    <link rel="stylesheet" type="text/css" href="../../_static/sg_gallery.css?v=61a4c737" />
-    <link rel="stylesheet" type="text/css" href="../../_static/sg_gallery-binder.css?v=f4aeca0c" />
-    <link rel="stylesheet" type="text/css" href="../../_static/sg_gallery-dataframe.css?v=2082cf3c" />
-    <link rel="stylesheet" type="text/css" href="../../_static/sg_gallery-rendered-html.css?v=1277b6f3" />
-    <link rel="stylesheet" type="text/css" href="../../_static/design-style.1e8bd061cd6da7fc9cf755528e8ffc24.min.css?v=0a3b3ea7" />
-    <link rel="stylesheet" type="text/css" href="../../_static/styles/colors.css?v=d5680186" />
-    <link rel="stylesheet" type="text/css" href="../../_static/styles/custom.css?v=3e2fb91a" />
-  
-  <!-- Pre-loaded scripts that we'll load fully later -->
-  <link rel="preload" as="script" href="../../_static/scripts/bootstrap.js?digest=8d27b9dea8ad943066ae" />
-<link rel="preload" as="script" href="../../_static/scripts/pydata-sphinx-theme.js?digest=8d27b9dea8ad943066ae" />
-  <script src="../../_static/vendor/fontawesome/6.5.1/js/all.min.js?digest=8d27b9dea8ad943066ae"></script>
-
-    <script src="../../_static/documentation_options.js?v=a2c36881"></script>
-    <script src="../../_static/doctools.js?v=888ff710"></script>
-    <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
-    <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
-    <script src="../../_static/copybutton.js?v=97f0b27d"></script>
-    <script src="../../_static/jupyterlite_sphinx.js?v=f25406b8"></script>
-    <script src="../../_static/design-tabs.js?v=36754332"></script>
-    <script data-domain="scikit-learn.org" defer="defer" src="https://views.scientific-python.org/js/script.js"></script>
-    <script>DOCUMENTATION_OPTIONS.pagename = 'auto_examples/applications/plot_stock_market';</script>
-    <script>
+<!-- Loaded before other Sphinx assets -->
+<link href="../../_static/styles/theme.css?digest=8d27b9dea8ad943066ae" rel="stylesheet"/>
+<link href="../../_static/styles/bootstrap.css?digest=8d27b9dea8ad943066ae" rel="stylesheet"/>
+<link href="../../_static/styles/pydata-sphinx-theme.css?digest=8d27b9dea8ad943066ae" rel="stylesheet"/>
+<link href="../../_static/vendor/fontawesome/6.5.1/css/all.min.css?digest=8d27b9dea8ad943066ae" rel="stylesheet"/>
+<link as="font" crossorigin="" href="../../_static/vendor/fontawesome/6.5.1/webfonts/fa-solid-900.woff2" rel="preload" type="font/woff2"/>
+<link as="font" crossorigin="" href="../../_static/vendor/fontawesome/6.5.1/webfonts/fa-brands-400.woff2" rel="preload" type="font/woff2"/>
+<link as="font" crossorigin="" href="../../_static/vendor/fontawesome/6.5.1/webfonts/fa-regular-400.woff2" rel="preload" type="font/woff2"/>
+<link href="../../_static/pygments.css?v=a746c00c" rel="stylesheet" type="text/css"/>
+<link href="../../_static/copybutton.css?v=76b2166b" rel="stylesheet" type="text/css"/>
+<link href="../../_static/plot_directive.css" rel="stylesheet" type="text/css"/>
+<link href="https://fonts.googleapis.com/css?family=Vibur" rel="stylesheet" type="text/css"/>
+<link href="../../_static/jupyterlite_sphinx.css?v=f996933d" rel="stylesheet" type="text/css"/>
+<link href="../../_static/sg_gallery.css?v=61a4c737" rel="stylesheet" type="text/css"/>
+<link href="../../_static/sg_gallery-binder.css?v=f4aeca0c" rel="stylesheet" type="text/css"/>
+<link href="../../_static/sg_gallery-dataframe.css?v=2082cf3c" rel="stylesheet" type="text/css"/>
+<link href="../../_static/sg_gallery-rendered-html.css?v=1277b6f3" rel="stylesheet" type="text/css"/>
+<link href="../../_static/design-style.1e8bd061cd6da7fc9cf755528e8ffc24.min.css?v=0a3b3ea7" rel="stylesheet" type="text/css"/>
+<link href="../../_static/styles/colors.css?v=d5680186" rel="stylesheet" type="text/css"/>
+<link href="../../_static/styles/custom.css?v=3e2fb91a" rel="stylesheet" type="text/css"/>
+<!-- Pre-loaded scripts that we'll load fully later -->
+<link as="script" href="../../_static/scripts/bootstrap.js?digest=8d27b9dea8ad943066ae" rel="preload"/>
+<link as="script" href="../../_static/scripts/pydata-sphinx-theme.js?digest=8d27b9dea8ad943066ae" rel="preload"/>
+<script src="../../_static/vendor/fontawesome/6.5.1/js/all.min.js?digest=8d27b9dea8ad943066ae"></script>
+<script src="../../_static/documentation_options.js?v=a2c36881"></script>
+<script src="../../_static/doctools.js?v=888ff710"></script>
+<script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+<script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
+<script src="../../_static/copybutton.js?v=97f0b27d"></script>
+<script src="../../_static/jupyterlite_sphinx.js?v=f25406b8"></script>
+<script src="../../_static/design-tabs.js?v=36754332"></script>
+<script data-domain="scikit-learn.org" defer="defer" src="https://views.scientific-python.org/js/script.js"></script>
+<script>DOCUMENTATION_OPTIONS.pagename = 'auto_examples/applications/plot_stock_market';</script>
+<script>
         DOCUMENTATION_OPTIONS.theme_version = '0.15.2';
         DOCUMENTATION_OPTIONS.theme_switcher_json_url = 'https://charlie-xiao.github.io/assets/json/sklearn-versions-test.json';
         DOCUMENTATION_OPTIONS.theme_switcher_version_match = '1.5.dev0';
         DOCUMENTATION_OPTIONS.show_version_warning_banner = true;
         </script>
-    <script src="../../_static/scripts/details-permalink.js?v=b0ed9290"></script>
-    <link rel="icon" href="../../_static/favicon.ico"/>
-    <link rel="author" title="About these documents" href="../../about.html" />
-    <link rel="search" title="Search" href="../../search.html" />
-    <link rel="next" title="Wikipedia principal eigenvector" href="wikipedia_principal_eigenvector.html" />
-    <link rel="prev" title="Topic extraction with Non-negative Matrix Factorization and Latent Dirichlet Allocation" href="plot_topics_extraction_with_nmf_lda.html" />
-  <meta name="viewport" content="width=device-width, initial-scale=1"/>
-  <meta name="docsearch:language" content="en"/>
-  </head>
-  
-  
-  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
-
-  
-  
-  <a id="pst-skip-link" class="skip-link" href="#main-content">Skip to main content</a>
-  
-  <div id="pst-scroll-pixel-helper"></div>
-  
-  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
-    <i class="fa-solid fa-arrow-up"></i>
+<script src="../../_static/scripts/details-permalink.js?v=b0ed9290"></script>
+<link href="../../_static/favicon.ico" rel="icon"/>
+<link href="../../about.html" rel="author" title="About these documents"/>
+<link href="../../search.html" rel="search" title="Search"/>
+<link href="wikipedia_principal_eigenvector.html" rel="next" title="Wikipedia principal eigenvector"/>
+<link href="plot_topics_extraction_with_nmf_lda.html" rel="prev" title="Topic extraction with Non-negative Matrix Factorization and Latent Dirichlet Allocation"/>
+<meta content="width=device-width, initial-scale=1" name="viewport"/>
+<meta content="en" name="docsearch:language"/>
+</head>
+<body data-bs-root-margin="0px 0px -60%" data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-default-mode="" data-offset="180">
+<a class="skip-link" href="#main-content" id="pst-skip-link">Skip to main content</a>
+<div id="pst-scroll-pixel-helper"></div>
+<button class="btn rounded-pill" id="pst-back-to-top" type="button">
+<i class="fa-solid fa-arrow-up"></i>
     Back to top
   </button>
-
-  
-  <input type="checkbox"
-          class="sidebar-toggle"
-          name="__primary"
-          id="__primary"/>
-  <label class="overlay overlay-primary" for="__primary"></label>
-  
-  <input type="checkbox"
-          class="sidebar-toggle"
-          name="__secondary"
-          id="__secondary"/>
-  <label class="overlay overlay-secondary" for="__secondary"></label>
-  
-  <div class="search-button__wrapper">
-    <div class="search-button__overlay"></div>
-    <div class="search-button__search-container">
-<form class="bd-search d-flex align-items-center"
-      action="../../search.html"
-      method="get">
-  <i class="fa-solid fa-magnifying-glass"></i>
-  <input type="search"
-         class="form-control"
-         name="q"
-         id="search-input"
-         placeholder="Search the docs ..."
-         aria-label="Search the docs ..."
-         autocomplete="off"
-         autocorrect="off"
-         autocapitalize="off"
-         spellcheck="false"/>
-  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+<input class="sidebar-toggle" id="__primary" name="__primary" type="checkbox"/>
+<label class="overlay overlay-primary" for="__primary"></label>
+<input class="sidebar-toggle" id="__secondary" name="__secondary" type="checkbox"/>
+<label class="overlay overlay-secondary" for="__secondary"></label>
+<div class="search-button__wrapper">
+<div class="search-button__overlay"></div>
+<div class="search-button__search-container">
+<form action="../../search.html" class="bd-search d-flex align-items-center" method="get">
+<i class="fa-solid fa-magnifying-glass"></i>
+<input aria-label="Search the docs ..." autocapitalize="off" autocomplete="off" autocorrect="off" class="form-control" id="search-input" name="q" placeholder="Search the docs ..." spellcheck="false" type="search"/>
+<span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
 </form></div>
-  </div>
-  
-    <header class="bd-header navbar navbar-expand-lg bd-navbar">
+</div>
+<header class="bd-header navbar navbar-expand-lg bd-navbar">
 <div class="bd-header__inner bd-page-width">
-  <label class="sidebar-toggle primary-toggle" for="__primary">
-    <span class="fa-solid fa-bars"></span>
-  </label>
-  
-  
-  <div class=" navbar-header-items__start">
-    
-      <div class="navbar-item">
-
-  
-
+<label class="sidebar-toggle primary-toggle" for="__primary">
+<span class="fa-solid fa-bars"></span>
+</label>
+<div class="navbar-header-items__start">
+<div class="navbar-item">
 <a class="navbar-brand logo" href="../../index.html">
-  
-  
-  
-  
-  
-    
-    
-      
-    
-    
-    <img src="../../_static/scikit-learn-logo-small.png" class="logo__image only-light" alt="scikit-learn homepage"/>
-    <script>document.write(`<img src="../../_static/scikit-learn-logo-small.png" class="logo__image only-dark" alt="scikit-learn homepage"/>`);</script>
-  
-  
+<img alt="scikit-learn homepage" class="logo__image only-light" src="../../_static/scikit-learn-logo-small.png"/>
+<script>document.write(`<img src="../../_static/scikit-learn-logo-small.png" class="logo__image only-dark" alt="scikit-learn homepage"/>`);</script>
 </a></div>
-    
-  </div>
-  
-  <div class=" navbar-header-items">
-    
-    <div class="me-auto navbar-header-items__center">
-      
-        <div class="navbar-item">
+</div>
+<div class="navbar-header-items">
+<div class="me-auto navbar-header-items__center">
+<div class="navbar-item">
 <nav class="navbar-nav">
-  <ul class="bd-navbar-elements navbar-nav">
-    
-                    <li class="nav-item">
-                      <a class="nav-link nav-internal" href="../../install.html">
+<ul class="bd-navbar-elements navbar-nav">
+<li class="nav-item">
+<a class="nav-link nav-internal" href="../../install.html">
                         Install
                       </a>
-                    </li>
-                
-
-                    <li class="nav-item">
-                      <a class="nav-link nav-internal" href="../../user_guide.html">
+</li>
+<li class="nav-item">
+<a class="nav-link nav-internal" href="../../user_guide.html">
                         User Guide
                       </a>
-                    </li>
-                
-
-                    <li class="nav-item">
-                      <a class="nav-link nav-internal" href="../../modules/classes.html">
+</li>
+<li class="nav-item">
+<a class="nav-link nav-internal" href="../../modules/classes.html">
                         API
                       </a>
-                    </li>
-                
-
-                    <li class="nav-item current active">
-                      <a class="nav-link nav-internal" href="../index.html">
+</li>
+<li class="nav-item current active">
+<a class="nav-link nav-internal" href="../index.html">
                         Examples
                       </a>
-                    </li>
-                
-
-                    <li class="nav-item">
-                      <a class="nav-link nav-external" href="https://blog.scikit-learn.org/">
+</li>
+<li class="nav-item">
+<a class="nav-link nav-external" href="https://blog.scikit-learn.org/">
                         Community
                       </a>
-                    </li>
-                
-            <li class="nav-item dropdown">
-                <button class="btn dropdown-toggle nav-item" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-controls="pst-nav-more-links">
+</li>
+<li class="nav-item dropdown">
+<button aria-controls="pst-nav-more-links" aria-expanded="false" class="btn dropdown-toggle nav-item" data-bs-toggle="dropdown" type="button">
                     More
                 </button>
-                <ul id="pst-nav-more-links" class="dropdown-menu">
-                    
-                    <li class="nav-item">
-                      <a class="nav-link dropdown-item nav-internal" href="../../getting_started.html">
+<ul class="dropdown-menu" id="pst-nav-more-links">
+<li class="nav-item">
+<a class="nav-link dropdown-item nav-internal" href="../../getting_started.html">
                         Getting Started
                       </a>
-                    </li>
-                
-
-                    <li class="nav-item">
-                      <a class="nav-link dropdown-item nav-internal" href="../../tutorial/index.html">
+</li>
+<li class="nav-item">
+<a class="nav-link dropdown-item nav-internal" href="../../tutorial/index.html">
                         Tutorials
                       </a>
-                    </li>
-                
-
-                    <li class="nav-item">
-                      <a class="nav-link dropdown-item nav-internal" href="../../whats_new.html">
+</li>
+<li class="nav-item">
+<a class="nav-link dropdown-item nav-internal" href="../../whats_new.html">
                         Release History
                       </a>
-                    </li>
-                
-
-                    <li class="nav-item">
-                      <a class="nav-link dropdown-item nav-internal" href="../../glossary.html">
+</li>
+<li class="nav-item">
+<a class="nav-link dropdown-item nav-internal" href="../../glossary.html">
                         Glossary
                       </a>
-                    </li>
-                
-
-                    <li class="nav-item">
-                      <a class="nav-link dropdown-item nav-internal" href="../../developers/index.html">
+</li>
+<li class="nav-item">
+<a class="nav-link dropdown-item nav-internal" href="../../developers/index.html">
                         Development
                       </a>
-                    </li>
-                
-
-                    <li class="nav-item">
-                      <a class="nav-link dropdown-item nav-internal" href="../../faq.html">
+</li>
+<li class="nav-item">
+<a class="nav-link dropdown-item nav-internal" href="../../faq.html">
                         FAQ
                       </a>
-                    </li>
-                
-
-                    <li class="nav-item">
-                      <a class="nav-link dropdown-item nav-internal" href="../../support.html">
+</li>
+<li class="nav-item">
+<a class="nav-link dropdown-item nav-internal" href="../../support.html">
                         Support
                       </a>
-                    </li>
-                
-
-                    <li class="nav-item">
-                      <a class="nav-link dropdown-item nav-internal" href="../../related_projects.html">
+</li>
+<li class="nav-item">
+<a class="nav-link dropdown-item nav-internal" href="../../related_projects.html">
                         Related Projects
                       </a>
-                    </li>
-                
-
-                    <li class="nav-item">
-                      <a class="nav-link dropdown-item nav-internal" href="../../roadmap.html">
+</li>
+<li class="nav-item">
+<a class="nav-link dropdown-item nav-internal" href="../../roadmap.html">
                         Roadmap
                       </a>
-                    </li>
-                
-
-                    <li class="nav-item">
-                      <a class="nav-link dropdown-item nav-internal" href="../../governance.html">
+</li>
+<li class="nav-item">
+<a class="nav-link dropdown-item nav-internal" href="../../governance.html">
                         Governance
                       </a>
-                    </li>
-                
-
-                    <li class="nav-item">
-                      <a class="nav-link dropdown-item nav-internal" href="../../about.html">
+</li>
+<li class="nav-item">
+<a class="nav-link dropdown-item nav-internal" href="../../about.html">
                         About us
                       </a>
-                    </li>
-                
-
-                    <li class="nav-item">
-                      <a class="nav-link dropdown-item nav-external" href="https://scikit-learn.org/dev/versions.html">
+</li>
+<li class="nav-item">
+<a class="nav-link dropdown-item nav-external" href="https://scikit-learn.org/dev/versions.html">
                         Other Versions and Download
                       </a>
-                    </li>
-                
-                </ul>
-            </li>
-            
-  </ul>
+</li>
+</ul>
+</li>
+</ul>
 </nav></div>
-      
-    </div>
-    
-    
-    <div class="navbar-header-items__end">
-      
-        <div class="navbar-item navbar-persistent--container">
-          
-
+</div>
+<div class="navbar-header-items__end">
+<div class="navbar-item navbar-persistent--container">
 <script>
 document.write(`
   <button class="btn btn-sm navbar-btn search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
@@ -311,11 +207,8 @@ document.write(`
   </button>
 `);
 </script>
-        </div>
-      
-      
-        <div class="navbar-item">
-
+</div>
+<div class="navbar-item">
 <script>
 document.write(`
   <button class="btn btn-sm navbar-btn theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
@@ -325,24 +218,13 @@ document.write(`
   </button>
 `);
 </script></div>
-      
-        <div class="navbar-item"><ul class="navbar-icon-links navbar-nav"
-    aria-label="Icon Links">
-        <li class="nav-item">
-          
-          
-          
-          
-          
-          
-          
-          
-          <a href="https://github.com/scikit-learn/scikit-learn" title="GitHub" class="nav-link" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><span><i class="fa-brands fa-square-github fa-lg" aria-hidden="true"></i></span>
-            <span class="sr-only">GitHub</span></a>
-        </li>
+<div class="navbar-item"><ul aria-label="Icon Links" class="navbar-icon-links navbar-nav">
+<li class="nav-item">
+<a class="nav-link" data-bs-placement="bottom" data-bs-toggle="tooltip" href="https://github.com/scikit-learn/scikit-learn" rel="noopener" target="_blank" title="GitHub"><span><i aria-hidden="true" class="fa-brands fa-square-github fa-lg"></i></span>
+<span class="sr-only">GitHub</span></a>
+</li>
 </ul></div>
-      
-        <div class="navbar-item">
+<div class="navbar-item">
 <script>
 document.write(`
   <div class="version-switcher__container dropdown">
@@ -365,14 +247,9 @@ document.write(`
   </div>
 `);
 </script></div>
-      
-    </div>
-    
-  </div>
-  
-  
-    <div class="navbar-persistent--mobile">
-
+</div>
+</div>
+<div class="navbar-persistent--mobile">
 <script>
 document.write(`
   <button class="btn btn-sm navbar-btn search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
@@ -380,174 +257,117 @@ document.write(`
   </button>
 `);
 </script>
-    </div>
-  
-
-  
-    <label class="sidebar-toggle secondary-toggle" for="__secondary" tabindex="0">
-      <span class="fa-solid fa-outdent"></span>
-    </label>
-  
 </div>
-
-    </header>
-  
-
-  <div class="bd-container">
-    <div class="bd-container__inner bd-page-width">
-      
-      
-      
-      <div class="bd-sidebar-primary bd-sidebar">
-        
-
-  
-  <div class="sidebar-header-items sidebar-primary__section">
-    
-    
-      <div class="sidebar-header-items__center">
-        
-          <div class="navbar-item">
+<label class="sidebar-toggle secondary-toggle" for="__secondary" tabindex="0">
+<span class="fa-solid fa-outdent"></span>
+</label>
+</div>
+</header>
+<div class="bd-container">
+<div class="bd-container__inner bd-page-width">
+<div class="bd-sidebar-primary bd-sidebar">
+<div class="sidebar-header-items sidebar-primary__section">
+<div class="sidebar-header-items__center">
+<div class="navbar-item">
 <nav class="navbar-nav">
-  <ul class="bd-navbar-elements navbar-nav">
-    
-                    <li class="nav-item">
-                      <a class="nav-link nav-internal" href="../../install.html">
+<ul class="bd-navbar-elements navbar-nav">
+<li class="nav-item">
+<a class="nav-link nav-internal" href="../../install.html">
                         Install
                       </a>
-                    </li>
-                
-
-                    <li class="nav-item">
-                      <a class="nav-link nav-internal" href="../../user_guide.html">
+</li>
+<li class="nav-item">
+<a class="nav-link nav-internal" href="../../user_guide.html">
                         User Guide
                       </a>
-                    </li>
-                
-
-                    <li class="nav-item">
-                      <a class="nav-link nav-internal" href="../../modules/classes.html">
+</li>
+<li class="nav-item">
+<a class="nav-link nav-internal" href="../../modules/classes.html">
                         API
                       </a>
-                    </li>
-                
-
-                    <li class="nav-item current active">
-                      <a class="nav-link nav-internal" href="../index.html">
+</li>
+<li class="nav-item current active">
+<a class="nav-link nav-internal" href="../index.html">
                         Examples
                       </a>
-                    </li>
-                
-
-                    <li class="nav-item">
-                      <a class="nav-link nav-external" href="https://blog.scikit-learn.org/">
+</li>
+<li class="nav-item">
+<a class="nav-link nav-external" href="https://blog.scikit-learn.org/">
                         Community
                       </a>
-                    </li>
-                
-            <li class="nav-item dropdown">
-                <button class="btn dropdown-toggle nav-item" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-controls="pst-nav-more-links-2">
+</li>
+<li class="nav-item dropdown">
+<button aria-controls="pst-nav-more-links-2" aria-expanded="false" class="btn dropdown-toggle nav-item" data-bs-toggle="dropdown" type="button">
                     More
                 </button>
-                <ul id="pst-nav-more-links-2" class="dropdown-menu">
-                    
-                    <li class="nav-item">
-                      <a class="nav-link dropdown-item nav-internal" href="../../getting_started.html">
+<ul class="dropdown-menu" id="pst-nav-more-links-2">
+<li class="nav-item">
+<a class="nav-link dropdown-item nav-internal" href="../../getting_started.html">
                         Getting Started
                       </a>
-                    </li>
-                
-
-                    <li class="nav-item">
-                      <a class="nav-link dropdown-item nav-internal" href="../../tutorial/index.html">
+</li>
+<li class="nav-item">
+<a class="nav-link dropdown-item nav-internal" href="../../tutorial/index.html">
                         Tutorials
                       </a>
-                    </li>
-                
-
-                    <li class="nav-item">
-                      <a class="nav-link dropdown-item nav-internal" href="../../whats_new.html">
+</li>
+<li class="nav-item">
+<a class="nav-link dropdown-item nav-internal" href="../../whats_new.html">
                         Release History
                       </a>
-                    </li>
-                
-
-                    <li class="nav-item">
-                      <a class="nav-link dropdown-item nav-internal" href="../../glossary.html">
+</li>
+<li class="nav-item">
+<a class="nav-link dropdown-item nav-internal" href="../../glossary.html">
                         Glossary
                       </a>
-                    </li>
-                
-
-                    <li class="nav-item">
-                      <a class="nav-link dropdown-item nav-internal" href="../../developers/index.html">
+</li>
+<li class="nav-item">
+<a class="nav-link dropdown-item nav-internal" href="../../developers/index.html">
                         Development
                       </a>
-                    </li>
-                
-
-                    <li class="nav-item">
-                      <a class="nav-link dropdown-item nav-internal" href="../../faq.html">
+</li>
+<li class="nav-item">
+<a class="nav-link dropdown-item nav-internal" href="../../faq.html">
                         FAQ
                       </a>
-                    </li>
-                
-
-                    <li class="nav-item">
-                      <a class="nav-link dropdown-item nav-internal" href="../../support.html">
+</li>
+<li class="nav-item">
+<a class="nav-link dropdown-item nav-internal" href="../../support.html">
                         Support
                       </a>
-                    </li>
-                
-
-                    <li class="nav-item">
-                      <a class="nav-link dropdown-item nav-internal" href="../../related_projects.html">
+</li>
+<li class="nav-item">
+<a class="nav-link dropdown-item nav-internal" href="../../related_projects.html">
                         Related Projects
                       </a>
-                    </li>
-                
-
-                    <li class="nav-item">
-                      <a class="nav-link dropdown-item nav-internal" href="../../roadmap.html">
+</li>
+<li class="nav-item">
+<a class="nav-link dropdown-item nav-internal" href="../../roadmap.html">
                         Roadmap
                       </a>
-                    </li>
-                
-
-                    <li class="nav-item">
-                      <a class="nav-link dropdown-item nav-internal" href="../../governance.html">
+</li>
+<li class="nav-item">
+<a class="nav-link dropdown-item nav-internal" href="../../governance.html">
                         Governance
                       </a>
-                    </li>
-                
-
-                    <li class="nav-item">
-                      <a class="nav-link dropdown-item nav-internal" href="../../about.html">
+</li>
+<li class="nav-item">
+<a class="nav-link dropdown-item nav-internal" href="../../about.html">
                         About us
                       </a>
-                    </li>
-                
-
-                    <li class="nav-item">
-                      <a class="nav-link dropdown-item nav-external" href="https://scikit-learn.org/dev/versions.html">
+</li>
+<li class="nav-item">
+<a class="nav-link dropdown-item nav-external" href="https://scikit-learn.org/dev/versions.html">
                         Other Versions and Download
                       </a>
-                    </li>
-                
-                </ul>
-            </li>
-            
-  </ul>
+</li>
+</ul>
+</li>
+</ul>
 </nav></div>
-        
-      </div>
-    
-    
-    
-      <div class="sidebar-header-items__end">
-        
-          <div class="navbar-item">
-
+</div>
+<div class="sidebar-header-items__end">
+<div class="navbar-item">
 <script>
 document.write(`
   <button class="btn btn-sm navbar-btn theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
@@ -557,24 +377,13 @@ document.write(`
   </button>
 `);
 </script></div>
-        
-          <div class="navbar-item"><ul class="navbar-icon-links navbar-nav"
-    aria-label="Icon Links">
-        <li class="nav-item">
-          
-          
-          
-          
-          
-          
-          
-          
-          <a href="https://github.com/scikit-learn/scikit-learn" title="GitHub" class="nav-link" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><span><i class="fa-brands fa-square-github fa-lg" aria-hidden="true"></i></span>
-            <span class="sr-only">GitHub</span></a>
-        </li>
+<div class="navbar-item"><ul aria-label="Icon Links" class="navbar-icon-links navbar-nav">
+<li class="nav-item">
+<a class="nav-link" data-bs-placement="bottom" data-bs-toggle="tooltip" href="https://github.com/scikit-learn/scikit-learn" rel="noopener" target="_blank" title="GitHub"><span><i aria-hidden="true" class="fa-brands fa-square-github fa-lg"></i></span>
+<span class="sr-only">GitHub</span></a>
+</li>
 </ul></div>
-        
-          <div class="navbar-item">
+<div class="navbar-item">
 <script>
 document.write(`
   <div class="version-switcher__container dropdown">
@@ -597,17 +406,13 @@ document.write(`
   </div>
 `);
 </script></div>
-        
-      </div>
-    
-  </div>
-  
-    <div class="sidebar-primary-items__start sidebar-primary__section">
-        <div class="sidebar-primary-item">
-<nav class="bd-docs-nav bd-links"
-     aria-label="Section Navigation">
-  <p class="bd-links__title" role="heading" aria-level="1">Section Navigation</p>
-  <div class="bd-toc-item navbar-nav"><ul class="current nav bd-sidenav">
+</div>
+</div>
+<div class="sidebar-primary-items__start sidebar-primary__section">
+<div class="sidebar-primary-item">
+<nav aria-label="Section Navigation" class="bd-docs-nav bd-links">
+<p aria-level="1" class="bd-links__title" role="heading">Section Navigation</p>
+<div class="bd-toc-item navbar-nav"><ul class="current nav bd-sidenav">
 <li class="toctree-l1 has-children"><a class="reference internal" href="../release_highlights/index.html">Release Highlights</a><input class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-1"><i class="fa-solid fa-chevron-down"></i></label><ul>
 <li class="toctree-l2"><a class="reference internal" href="../release_highlights/plot_release_highlights_1_4_0.html">Release Highlights for scikit-learn 1.4</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../release_highlights/plot_release_highlights_1_3_0.html">Release Highlights for scikit-learn 1.3</a></li>
@@ -1001,68 +806,37 @@ document.write(`
 </ul>
 </div>
 </nav></div>
-    </div>
-  
-  
-  <div class="sidebar-primary-items__end sidebar-primary__section">
-  </div>
-  
-  <div id="rtd-footer-container"></div>
-
-
-      </div>
-      
-      <main id="main-content" class="bd-main">
-        
-        
-          <div class="bd-content">
-            <div class="bd-article-container">
-              
-              <div class="bd-header-article">
+</div>
+<div class="sidebar-primary-items__end sidebar-primary__section">
+</div>
+<div id="rtd-footer-container"></div>
+</div>
+<main class="bd-main" id="main-content">
+<div class="bd-content">
+<div class="bd-article-container">
+<div class="bd-header-article">
 <div class="header-article-items header-article__inner">
-  
-    <div class="header-article-items__start">
-      
-        <div class="header-article-item">
-
-
-
+<div class="header-article-items__start">
+<div class="header-article-item">
 <nav aria-label="Breadcrumb">
-  <ul class="bd-breadcrumbs">
-    
-    <li class="breadcrumb-item breadcrumb-home">
-      <a href="../../index.html" class="nav-link" aria-label="Home">
-        <i class="fa-solid fa-home"></i>
-      </a>
-    </li>
-    
-    <li class="breadcrumb-item"><a href="../index.html" class="nav-link">Examples</a></li>
-    
-    
-    <li class="breadcrumb-item"><a href="index.html" class="nav-link">Examples based on real world datasets</a></li>
-    
-    <li class="breadcrumb-item active" aria-current="page">Visualizing...</li>
-  </ul>
+<ul class="bd-breadcrumbs">
+<li class="breadcrumb-item breadcrumb-home">
+<a aria-label="Home" class="nav-link" href="../../index.html">
+<i class="fa-solid fa-home"></i>
+</a>
+</li>
+<li class="breadcrumb-item"><a class="nav-link" href="../index.html">Examples</a></li>
+<li class="breadcrumb-item"><a class="nav-link" href="index.html">Examples based on real world datasets</a></li>
+<li aria-current="page" class="breadcrumb-item active">Visualizing...</li>
+</ul>
 </nav>
 </div>
-      
-    </div>
-  
-  
 </div>
 </div>
-              
-              
-              
-                
+</div>
 <div id="searchbox"></div>
-                <article class="bd-article">
-                  
-  <div class="sphx-glr-download-link-note admonition note">
-<p class="admonition-title">Note</p>
-<p><a class="reference internal" href="#sphx-glr-download-auto-examples-applications-plot-stock-market-py"><span class="std std-ref">Go to the end</span></a>
-to download the full example code or to run this example in your browser via JupyterLite or Binder</p>
-</div>
+<article class="bd-article">
+
 <section class="sphx-glr-example-title" id="visualizing-the-stock-market-structure">
 <span id="sphx-glr-auto-examples-applications-plot-stock-market-py"></span><h1>Visualizing the stock market structure<a class="headerlink" href="#visualizing-the-stock-market-structure" title="Link to this heading">#</a></h1>
 <p>This example employs several unsupervised learning techniques to extract
@@ -1086,140 +860,140 @@ historical data can be obtained from APIs like the
 <span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
 
 <span class="n">symbol_dict</span> <span class="o">=</span> <span class="p">{</span>
-    <span class="s2">&quot;TOT&quot;</span><span class="p">:</span> <span class="s2">&quot;Total&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;XOM&quot;</span><span class="p">:</span> <span class="s2">&quot;Exxon&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;CVX&quot;</span><span class="p">:</span> <span class="s2">&quot;Chevron&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;COP&quot;</span><span class="p">:</span> <span class="s2">&quot;ConocoPhillips&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;VLO&quot;</span><span class="p">:</span> <span class="s2">&quot;Valero Energy&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;MSFT&quot;</span><span class="p">:</span> <span class="s2">&quot;Microsoft&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;IBM&quot;</span><span class="p">:</span> <span class="s2">&quot;IBM&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;TWX&quot;</span><span class="p">:</span> <span class="s2">&quot;Time Warner&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;CMCSA&quot;</span><span class="p">:</span> <span class="s2">&quot;Comcast&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;CVC&quot;</span><span class="p">:</span> <span class="s2">&quot;Cablevision&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;YHOO&quot;</span><span class="p">:</span> <span class="s2">&quot;Yahoo&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;DELL&quot;</span><span class="p">:</span> <span class="s2">&quot;Dell&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;HPQ&quot;</span><span class="p">:</span> <span class="s2">&quot;HP&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;AMZN&quot;</span><span class="p">:</span> <span class="s2">&quot;Amazon&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;TM&quot;</span><span class="p">:</span> <span class="s2">&quot;Toyota&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;CAJ&quot;</span><span class="p">:</span> <span class="s2">&quot;Canon&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;SNE&quot;</span><span class="p">:</span> <span class="s2">&quot;Sony&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;F&quot;</span><span class="p">:</span> <span class="s2">&quot;Ford&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;HMC&quot;</span><span class="p">:</span> <span class="s2">&quot;Honda&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;NAV&quot;</span><span class="p">:</span> <span class="s2">&quot;Navistar&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;NOC&quot;</span><span class="p">:</span> <span class="s2">&quot;Northrop Grumman&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;BA&quot;</span><span class="p">:</span> <span class="s2">&quot;Boeing&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;KO&quot;</span><span class="p">:</span> <span class="s2">&quot;Coca Cola&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;MMM&quot;</span><span class="p">:</span> <span class="s2">&quot;3M&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;MCD&quot;</span><span class="p">:</span> <span class="s2">&quot;McDonald&#39;s&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;PEP&quot;</span><span class="p">:</span> <span class="s2">&quot;Pepsi&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;K&quot;</span><span class="p">:</span> <span class="s2">&quot;Kellogg&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;UN&quot;</span><span class="p">:</span> <span class="s2">&quot;Unilever&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;MAR&quot;</span><span class="p">:</span> <span class="s2">&quot;Marriott&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;PG&quot;</span><span class="p">:</span> <span class="s2">&quot;Procter Gamble&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;CL&quot;</span><span class="p">:</span> <span class="s2">&quot;Colgate-Palmolive&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;GE&quot;</span><span class="p">:</span> <span class="s2">&quot;General Electrics&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;WFC&quot;</span><span class="p">:</span> <span class="s2">&quot;Wells Fargo&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;JPM&quot;</span><span class="p">:</span> <span class="s2">&quot;JPMorgan Chase&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;AIG&quot;</span><span class="p">:</span> <span class="s2">&quot;AIG&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;AXP&quot;</span><span class="p">:</span> <span class="s2">&quot;American express&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;BAC&quot;</span><span class="p">:</span> <span class="s2">&quot;Bank of America&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;GS&quot;</span><span class="p">:</span> <span class="s2">&quot;Goldman Sachs&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;AAPL&quot;</span><span class="p">:</span> <span class="s2">&quot;Apple&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;SAP&quot;</span><span class="p">:</span> <span class="s2">&quot;SAP&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;CSCO&quot;</span><span class="p">:</span> <span class="s2">&quot;Cisco&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;TXN&quot;</span><span class="p">:</span> <span class="s2">&quot;Texas Instruments&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;XRX&quot;</span><span class="p">:</span> <span class="s2">&quot;Xerox&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;WMT&quot;</span><span class="p">:</span> <span class="s2">&quot;Wal-Mart&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;HD&quot;</span><span class="p">:</span> <span class="s2">&quot;Home Depot&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;GSK&quot;</span><span class="p">:</span> <span class="s2">&quot;GlaxoSmithKline&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;PFE&quot;</span><span class="p">:</span> <span class="s2">&quot;Pfizer&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;SNY&quot;</span><span class="p">:</span> <span class="s2">&quot;Sanofi-Aventis&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;NVS&quot;</span><span class="p">:</span> <span class="s2">&quot;Novartis&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;KMB&quot;</span><span class="p">:</span> <span class="s2">&quot;Kimberly-Clark&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;R&quot;</span><span class="p">:</span> <span class="s2">&quot;Ryder&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;GD&quot;</span><span class="p">:</span> <span class="s2">&quot;General Dynamics&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;RTN&quot;</span><span class="p">:</span> <span class="s2">&quot;Raytheon&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;CVS&quot;</span><span class="p">:</span> <span class="s2">&quot;CVS&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;CAT&quot;</span><span class="p">:</span> <span class="s2">&quot;Caterpillar&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;DD&quot;</span><span class="p">:</span> <span class="s2">&quot;DuPont de Nemours&quot;</span><span class="p">,</span>
+    <span class="s2">"TOT"</span><span class="p">:</span> <span class="s2">"Total"</span><span class="p">,</span>
+    <span class="s2">"XOM"</span><span class="p">:</span> <span class="s2">"Exxon"</span><span class="p">,</span>
+    <span class="s2">"CVX"</span><span class="p">:</span> <span class="s2">"Chevron"</span><span class="p">,</span>
+    <span class="s2">"COP"</span><span class="p">:</span> <span class="s2">"ConocoPhillips"</span><span class="p">,</span>
+    <span class="s2">"VLO"</span><span class="p">:</span> <span class="s2">"Valero Energy"</span><span class="p">,</span>
+    <span class="s2">"MSFT"</span><span class="p">:</span> <span class="s2">"Microsoft"</span><span class="p">,</span>
+    <span class="s2">"IBM"</span><span class="p">:</span> <span class="s2">"IBM"</span><span class="p">,</span>
+    <span class="s2">"TWX"</span><span class="p">:</span> <span class="s2">"Time Warner"</span><span class="p">,</span>
+    <span class="s2">"CMCSA"</span><span class="p">:</span> <span class="s2">"Comcast"</span><span class="p">,</span>
+    <span class="s2">"CVC"</span><span class="p">:</span> <span class="s2">"Cablevision"</span><span class="p">,</span>
+    <span class="s2">"YHOO"</span><span class="p">:</span> <span class="s2">"Yahoo"</span><span class="p">,</span>
+    <span class="s2">"DELL"</span><span class="p">:</span> <span class="s2">"Dell"</span><span class="p">,</span>
+    <span class="s2">"HPQ"</span><span class="p">:</span> <span class="s2">"HP"</span><span class="p">,</span>
+    <span class="s2">"AMZN"</span><span class="p">:</span> <span class="s2">"Amazon"</span><span class="p">,</span>
+    <span class="s2">"TM"</span><span class="p">:</span> <span class="s2">"Toyota"</span><span class="p">,</span>
+    <span class="s2">"CAJ"</span><span class="p">:</span> <span class="s2">"Canon"</span><span class="p">,</span>
+    <span class="s2">"SNE"</span><span class="p">:</span> <span class="s2">"Sony"</span><span class="p">,</span>
+    <span class="s2">"F"</span><span class="p">:</span> <span class="s2">"Ford"</span><span class="p">,</span>
+    <span class="s2">"HMC"</span><span class="p">:</span> <span class="s2">"Honda"</span><span class="p">,</span>
+    <span class="s2">"NAV"</span><span class="p">:</span> <span class="s2">"Navistar"</span><span class="p">,</span>
+    <span class="s2">"NOC"</span><span class="p">:</span> <span class="s2">"Northrop Grumman"</span><span class="p">,</span>
+    <span class="s2">"BA"</span><span class="p">:</span> <span class="s2">"Boeing"</span><span class="p">,</span>
+    <span class="s2">"KO"</span><span class="p">:</span> <span class="s2">"Coca Cola"</span><span class="p">,</span>
+    <span class="s2">"MMM"</span><span class="p">:</span> <span class="s2">"3M"</span><span class="p">,</span>
+    <span class="s2">"MCD"</span><span class="p">:</span> <span class="s2">"McDonald's"</span><span class="p">,</span>
+    <span class="s2">"PEP"</span><span class="p">:</span> <span class="s2">"Pepsi"</span><span class="p">,</span>
+    <span class="s2">"K"</span><span class="p">:</span> <span class="s2">"Kellogg"</span><span class="p">,</span>
+    <span class="s2">"UN"</span><span class="p">:</span> <span class="s2">"Unilever"</span><span class="p">,</span>
+    <span class="s2">"MAR"</span><span class="p">:</span> <span class="s2">"Marriott"</span><span class="p">,</span>
+    <span class="s2">"PG"</span><span class="p">:</span> <span class="s2">"Procter Gamble"</span><span class="p">,</span>
+    <span class="s2">"CL"</span><span class="p">:</span> <span class="s2">"Colgate-Palmolive"</span><span class="p">,</span>
+    <span class="s2">"GE"</span><span class="p">:</span> <span class="s2">"General Electrics"</span><span class="p">,</span>
+    <span class="s2">"WFC"</span><span class="p">:</span> <span class="s2">"Wells Fargo"</span><span class="p">,</span>
+    <span class="s2">"JPM"</span><span class="p">:</span> <span class="s2">"JPMorgan Chase"</span><span class="p">,</span>
+    <span class="s2">"AIG"</span><span class="p">:</span> <span class="s2">"AIG"</span><span class="p">,</span>
+    <span class="s2">"AXP"</span><span class="p">:</span> <span class="s2">"American express"</span><span class="p">,</span>
+    <span class="s2">"BAC"</span><span class="p">:</span> <span class="s2">"Bank of America"</span><span class="p">,</span>
+    <span class="s2">"GS"</span><span class="p">:</span> <span class="s2">"Goldman Sachs"</span><span class="p">,</span>
+    <span class="s2">"AAPL"</span><span class="p">:</span> <span class="s2">"Apple"</span><span class="p">,</span>
+    <span class="s2">"SAP"</span><span class="p">:</span> <span class="s2">"SAP"</span><span class="p">,</span>
+    <span class="s2">"CSCO"</span><span class="p">:</span> <span class="s2">"Cisco"</span><span class="p">,</span>
+    <span class="s2">"TXN"</span><span class="p">:</span> <span class="s2">"Texas Instruments"</span><span class="p">,</span>
+    <span class="s2">"XRX"</span><span class="p">:</span> <span class="s2">"Xerox"</span><span class="p">,</span>
+    <span class="s2">"WMT"</span><span class="p">:</span> <span class="s2">"Wal-Mart"</span><span class="p">,</span>
+    <span class="s2">"HD"</span><span class="p">:</span> <span class="s2">"Home Depot"</span><span class="p">,</span>
+    <span class="s2">"GSK"</span><span class="p">:</span> <span class="s2">"GlaxoSmithKline"</span><span class="p">,</span>
+    <span class="s2">"PFE"</span><span class="p">:</span> <span class="s2">"Pfizer"</span><span class="p">,</span>
+    <span class="s2">"SNY"</span><span class="p">:</span> <span class="s2">"Sanofi-Aventis"</span><span class="p">,</span>
+    <span class="s2">"NVS"</span><span class="p">:</span> <span class="s2">"Novartis"</span><span class="p">,</span>
+    <span class="s2">"KMB"</span><span class="p">:</span> <span class="s2">"Kimberly-Clark"</span><span class="p">,</span>
+    <span class="s2">"R"</span><span class="p">:</span> <span class="s2">"Ryder"</span><span class="p">,</span>
+    <span class="s2">"GD"</span><span class="p">:</span> <span class="s2">"General Dynamics"</span><span class="p">,</span>
+    <span class="s2">"RTN"</span><span class="p">:</span> <span class="s2">"Raytheon"</span><span class="p">,</span>
+    <span class="s2">"CVS"</span><span class="p">:</span> <span class="s2">"CVS"</span><span class="p">,</span>
+    <span class="s2">"CAT"</span><span class="p">:</span> <span class="s2">"Caterpillar"</span><span class="p">,</span>
+    <span class="s2">"DD"</span><span class="p">:</span> <span class="s2">"DuPont de Nemours"</span><span class="p">,</span>
 <span class="p">}</span>
 
 
-<span class="n">symbols</span><span class="p">,</span> <span class="n">names</span> <span class="o">=</span> <a href="https://numpy.org/doc/stable/reference/generated/numpy.array.html#numpy.array" title="numpy.array" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-function"><span class="n">np</span><span class="o">.</span><span class="n">array</span></a><span class="p">(</span><span class="nb">sorted</span><span class="p">(</span><span class="n">symbol_dict</span><span class="o">.</span><span class="n">items</span><span class="p">()))</span><span class="o">.</span><span class="n">T</span>
+<span class="n">symbols</span><span class="p">,</span> <span class="n">names</span> <span class="o">=</span> <a class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-function" href="https://numpy.org/doc/stable/reference/generated/numpy.array.html#numpy.array" title="numpy.array"><span class="n">np</span><span class="o">.</span><span class="n">array</span></a><span class="p">(</span><span class="nb">sorted</span><span class="p">(</span><span class="n">symbol_dict</span><span class="o">.</span><span class="n">items</span><span class="p">()))</span><span class="o">.</span><span class="n">T</span>
 
 <span class="n">quotes</span> <span class="o">=</span> <span class="p">[]</span>
 
 <span class="k">for</span> <span class="n">symbol</span> <span class="ow">in</span> <span class="n">symbols</span><span class="p">:</span>
-    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Fetching quote history for </span><span class="si">%r</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="n">symbol</span><span class="p">,</span> <span class="n">file</span><span class="o">=</span><a href="https://docs.python.org/3/library/sys.html#sys.stderr" title="sys.stderr" class="sphx-glr-backref-module-sys sphx-glr-backref-type-py-data"><span class="n">sys</span><span class="o">.</span><span class="n">stderr</span></a><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">"Fetching quote history for </span><span class="si">%r</span><span class="s2">"</span> <span class="o">%</span> <span class="n">symbol</span><span class="p">,</span> <span class="n">file</span><span class="o">=</span><a class="sphx-glr-backref-module-sys sphx-glr-backref-type-py-data" href="https://docs.python.org/3/library/sys.html#sys.stderr" title="sys.stderr"><span class="n">sys</span><span class="o">.</span><span class="n">stderr</span></a><span class="p">)</span>
     <span class="n">url</span> <span class="o">=</span> <span class="p">(</span>
-        <span class="s2">&quot;https://raw.githubusercontent.com/scikit-learn/examples-data/&quot;</span>
-        <span class="s2">&quot;master/financial-data/</span><span class="si">{}</span><span class="s2">.csv&quot;</span>
+        <span class="s2">"https://raw.githubusercontent.com/scikit-learn/examples-data/"</span>
+        <span class="s2">"master/financial-data/</span><span class="si">{}</span><span class="s2">.csv"</span>
     <span class="p">)</span>
-    <span class="n">quotes</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><a href="https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.read_csv.html#pandas.read_csv" title="pandas.read_csv" class="sphx-glr-backref-module-pandas sphx-glr-backref-type-py-function"><span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span></a><span class="p">(</span><span class="n">url</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">symbol</span><span class="p">)))</span>
+    <span class="n">quotes</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><a class="sphx-glr-backref-module-pandas sphx-glr-backref-type-py-function" href="https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.read_csv.html#pandas.read_csv" title="pandas.read_csv"><span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span></a><span class="p">(</span><span class="n">url</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">symbol</span><span class="p">)))</span>
 
-<span class="n">close_prices</span> <span class="o">=</span> <a href="https://numpy.org/doc/stable/reference/generated/numpy.vstack.html#numpy.vstack" title="numpy.vstack" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-function"><span class="n">np</span><span class="o">.</span><span class="n">vstack</span></a><span class="p">([</span><span class="n">q</span><span class="p">[</span><span class="s2">&quot;close&quot;</span><span class="p">]</span> <span class="k">for</span> <span class="n">q</span> <span class="ow">in</span> <span class="n">quotes</span><span class="p">])</span>
-<span class="n">open_prices</span> <span class="o">=</span> <a href="https://numpy.org/doc/stable/reference/generated/numpy.vstack.html#numpy.vstack" title="numpy.vstack" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-function"><span class="n">np</span><span class="o">.</span><span class="n">vstack</span></a><span class="p">([</span><span class="n">q</span><span class="p">[</span><span class="s2">&quot;open&quot;</span><span class="p">]</span> <span class="k">for</span> <span class="n">q</span> <span class="ow">in</span> <span class="n">quotes</span><span class="p">])</span>
+<span class="n">close_prices</span> <span class="o">=</span> <a class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-function" href="https://numpy.org/doc/stable/reference/generated/numpy.vstack.html#numpy.vstack" title="numpy.vstack"><span class="n">np</span><span class="o">.</span><span class="n">vstack</span></a><span class="p">([</span><span class="n">q</span><span class="p">[</span><span class="s2">"close"</span><span class="p">]</span> <span class="k">for</span> <span class="n">q</span> <span class="ow">in</span> <span class="n">quotes</span><span class="p">])</span>
+<span class="n">open_prices</span> <span class="o">=</span> <a class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-function" href="https://numpy.org/doc/stable/reference/generated/numpy.vstack.html#numpy.vstack" title="numpy.vstack"><span class="n">np</span><span class="o">.</span><span class="n">vstack</span></a><span class="p">([</span><span class="n">q</span><span class="p">[</span><span class="s2">"open"</span><span class="p">]</span> <span class="k">for</span> <span class="n">q</span> <span class="ow">in</span> <span class="n">quotes</span><span class="p">])</span>
 
 <span class="c1"># The daily variations of the quotes are what carry the most information</span>
 <span class="n">variation</span> <span class="o">=</span> <span class="n">close_prices</span> <span class="o">-</span> <span class="n">open_prices</span>
 </pre></div>
 </div>
-<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>Fetching quote history for &#39;AAPL&#39;
-Fetching quote history for &#39;AIG&#39;
-Fetching quote history for &#39;AMZN&#39;
-Fetching quote history for &#39;AXP&#39;
-Fetching quote history for &#39;BA&#39;
-Fetching quote history for &#39;BAC&#39;
-Fetching quote history for &#39;CAJ&#39;
-Fetching quote history for &#39;CAT&#39;
-Fetching quote history for &#39;CL&#39;
-Fetching quote history for &#39;CMCSA&#39;
-Fetching quote history for &#39;COP&#39;
-Fetching quote history for &#39;CSCO&#39;
-Fetching quote history for &#39;CVC&#39;
-Fetching quote history for &#39;CVS&#39;
-Fetching quote history for &#39;CVX&#39;
-Fetching quote history for &#39;DD&#39;
-Fetching quote history for &#39;DELL&#39;
-Fetching quote history for &#39;F&#39;
-Fetching quote history for &#39;GD&#39;
-Fetching quote history for &#39;GE&#39;
-Fetching quote history for &#39;GS&#39;
-Fetching quote history for &#39;GSK&#39;
-Fetching quote history for &#39;HD&#39;
-Fetching quote history for &#39;HMC&#39;
-Fetching quote history for &#39;HPQ&#39;
-Fetching quote history for &#39;IBM&#39;
-Fetching quote history for &#39;JPM&#39;
-Fetching quote history for &#39;K&#39;
-Fetching quote history for &#39;KMB&#39;
-Fetching quote history for &#39;KO&#39;
-Fetching quote history for &#39;MAR&#39;
-Fetching quote history for &#39;MCD&#39;
-Fetching quote history for &#39;MMM&#39;
-Fetching quote history for &#39;MSFT&#39;
-Fetching quote history for &#39;NAV&#39;
-Fetching quote history for &#39;NOC&#39;
-Fetching quote history for &#39;NVS&#39;
-Fetching quote history for &#39;PEP&#39;
-Fetching quote history for &#39;PFE&#39;
-Fetching quote history for &#39;PG&#39;
-Fetching quote history for &#39;R&#39;
-Fetching quote history for &#39;RTN&#39;
-Fetching quote history for &#39;SAP&#39;
-Fetching quote history for &#39;SNE&#39;
-Fetching quote history for &#39;SNY&#39;
-Fetching quote history for &#39;TM&#39;
-Fetching quote history for &#39;TOT&#39;
-Fetching quote history for &#39;TWX&#39;
-Fetching quote history for &#39;TXN&#39;
-Fetching quote history for &#39;UN&#39;
-Fetching quote history for &#39;VLO&#39;
-Fetching quote history for &#39;WFC&#39;
-Fetching quote history for &#39;WMT&#39;
-Fetching quote history for &#39;XOM&#39;
-Fetching quote history for &#39;XRX&#39;
-Fetching quote history for &#39;YHOO&#39;
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>Fetching quote history for 'AAPL'
+Fetching quote history for 'AIG'
+Fetching quote history for 'AMZN'
+Fetching quote history for 'AXP'
+Fetching quote history for 'BA'
+Fetching quote history for 'BAC'
+Fetching quote history for 'CAJ'
+Fetching quote history for 'CAT'
+Fetching quote history for 'CL'
+Fetching quote history for 'CMCSA'
+Fetching quote history for 'COP'
+Fetching quote history for 'CSCO'
+Fetching quote history for 'CVC'
+Fetching quote history for 'CVS'
+Fetching quote history for 'CVX'
+Fetching quote history for 'DD'
+Fetching quote history for 'DELL'
+Fetching quote history for 'F'
+Fetching quote history for 'GD'
+Fetching quote history for 'GE'
+Fetching quote history for 'GS'
+Fetching quote history for 'GSK'
+Fetching quote history for 'HD'
+Fetching quote history for 'HMC'
+Fetching quote history for 'HPQ'
+Fetching quote history for 'IBM'
+Fetching quote history for 'JPM'
+Fetching quote history for 'K'
+Fetching quote history for 'KMB'
+Fetching quote history for 'KO'
+Fetching quote history for 'MAR'
+Fetching quote history for 'MCD'
+Fetching quote history for 'MMM'
+Fetching quote history for 'MSFT'
+Fetching quote history for 'NAV'
+Fetching quote history for 'NOC'
+Fetching quote history for 'NVS'
+Fetching quote history for 'PEP'
+Fetching quote history for 'PFE'
+Fetching quote history for 'PG'
+Fetching quote history for 'R'
+Fetching quote history for 'RTN'
+Fetching quote history for 'SAP'
+Fetching quote history for 'SNE'
+Fetching quote history for 'SNY'
+Fetching quote history for 'TM'
+Fetching quote history for 'TOT'
+Fetching quote history for 'TWX'
+Fetching quote history for 'TXN'
+Fetching quote history for 'UN'
+Fetching quote history for 'VLO'
+Fetching quote history for 'WFC'
+Fetching quote history for 'WMT'
+Fetching quote history for 'XOM'
+Fetching quote history for 'XRX'
+Fetching quote history for 'YHOO'
 </pre></div>
 </div>
 </section>
@@ -1232,8 +1006,8 @@ symbol, the symbols that it is connected to are those useful to explain
 its fluctuations.</p>
 <div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">sklearn</span> <span class="kn">import</span> <span class="n">covariance</span>
 
-<span class="n">alphas</span> <span class="o">=</span> <a href="https://numpy.org/doc/stable/reference/generated/numpy.logspace.html#numpy.logspace" title="numpy.logspace" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-function"><span class="n">np</span><span class="o">.</span><span class="n">logspace</span></a><span class="p">(</span><span class="o">-</span><span class="mf">1.5</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">num</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
-<span class="n">edge_model</span> <span class="o">=</span> <a href="../../modules/generated/sklearn.covariance.GraphicalLassoCV.html#sklearn.covariance.GraphicalLassoCV" title="sklearn.covariance.GraphicalLassoCV" class="sphx-glr-backref-module-sklearn-covariance sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">covariance</span><span class="o">.</span><span class="n">GraphicalLassoCV</span></a><span class="p">(</span><span class="n">alphas</span><span class="o">=</span><span class="n">alphas</span><span class="p">)</span>
+<span class="n">alphas</span> <span class="o">=</span> <a class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-function" href="https://numpy.org/doc/stable/reference/generated/numpy.logspace.html#numpy.logspace" title="numpy.logspace"><span class="n">np</span><span class="o">.</span><span class="n">logspace</span></a><span class="p">(</span><span class="o">-</span><span class="mf">1.5</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">num</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
+<span class="n">edge_model</span> <span class="o">=</span> <a class="sphx-glr-backref-module-sklearn-covariance sphx-glr-backref-type-py-class sphx-glr-backref-instance" href="../../modules/generated/sklearn.covariance.GraphicalLassoCV.html#sklearn.covariance.GraphicalLassoCV" title="sklearn.covariance.GraphicalLassoCV"><span class="n">covariance</span><span class="o">.</span><span class="n">GraphicalLassoCV</span></a><span class="p">(</span><span class="n">alphas</span><span class="o">=</span><span class="n">alphas</span><span class="p">)</span>
 
 <span class="c1"># standardize the time series: using correlations rather than covariance</span>
 <span class="c1"># former is more efficient for structure recovery</span>
@@ -1647,12 +1421,12 @@ div.sk-label-container:hover .sk-estimator-doc-link.fitted:hover,
   /* fitted */
   background-color: var(--sklearn-color-fitted-level-3);
 }
-</style><div id="sk-container-id-26" class="sk-top-container"><div class="sk-text-repr-fallback"><pre>GraphicalLassoCV(alphas=array([ 0.03162278,  0.05994843,  0.11364637,  0.21544347,  0.40842387,
-        0.77426368,  1.46779927,  2.7825594 ,  5.27499706, 10.        ]))</pre><b>In a Jupyter environment, please rerun this cell to show the HTML representation or trust the notebook. <br />On GitHub, the HTML representation is unable to render, please try loading this page with nbviewer.org.</b></div><div class="sk-container" hidden><div class="sk-item"><div class="sk-estimator fitted sk-toggleable"><input class="sk-toggleable__control sk-hidden--visually" id="sk-estimator-id-105" type="checkbox" checked><label for="sk-estimator-id-105" class="sk-toggleable__label fitted sk-toggleable__label-arrow fitted">&nbsp;&nbsp;GraphicalLassoCV<a class="sk-estimator-doc-link fitted" rel="noreferrer" target="_blank" href="https://scikit-learn.org/dev/modules/generated/sklearn.covariance.GraphicalLassoCV.html">?<span>Documentation for GraphicalLassoCV</span></a><span class="sk-estimator-doc-link fitted">i<span>Fitted</span></span></label><div class="sk-toggleable__content fitted"><pre>GraphicalLassoCV(alphas=array([ 0.03162278,  0.05994843,  0.11364637,  0.21544347,  0.40842387,
+</style><div class="sk-top-container" id="sk-container-id-26"><div class="sk-text-repr-fallback"><pre>GraphicalLassoCV(alphas=array([ 0.03162278,  0.05994843,  0.11364637,  0.21544347,  0.40842387,
+        0.77426368,  1.46779927,  2.7825594 ,  5.27499706, 10.        ]))</pre><b>In a Jupyter environment, please rerun this cell to show the HTML representation or trust the notebook. <br/>On GitHub, the HTML representation is unable to render, please try loading this page with nbviewer.org.</b></div><div class="sk-container" hidden=""><div class="sk-item"><div class="sk-estimator fitted sk-toggleable"><input checked="" class="sk-toggleable__control sk-hidden--visually" id="sk-estimator-id-105" type="checkbox"/><label class="sk-toggleable__label fitted sk-toggleable__label-arrow fitted" for="sk-estimator-id-105">  GraphicalLassoCV<a class="sk-estimator-doc-link fitted" href="https://scikit-learn.org/dev/modules/generated/sklearn.covariance.GraphicalLassoCV.html" rel="noreferrer" target="_blank">?<span>Documentation for GraphicalLassoCV</span></a><span class="sk-estimator-doc-link fitted">i<span>Fitted</span></span></label><div class="sk-toggleable__content fitted"><pre>GraphicalLassoCV(alphas=array([ 0.03162278,  0.05994843,  0.11364637,  0.21544347,  0.40842387,
         0.77426368,  1.46779927,  2.7825594 ,  5.27499706, 10.        ]))</pre></div> </div></div></div></div>
 </div>
-<br />
-<br /></section>
+<br/>
+<br/></section>
 <section id="clustering-using-affinity-propagation">
 <h2>Clustering using affinity propagation<a class="headerlink" href="#clustering-using-affinity-propagation" title="Link to this heading">#</a></h2>
 <p>We use clustering to group together quotes that behave similarly. Here,
@@ -1667,11 +1441,11 @@ be considered as having a similar impact at the level of the full stock
 market.</p>
 <div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">sklearn</span> <span class="kn">import</span> <span class="n">cluster</span>
 
-<span class="n">_</span><span class="p">,</span> <span class="n">labels</span> <span class="o">=</span> <a href="../../modules/generated/sklearn.cluster.affinity_propagation.html#sklearn.cluster.affinity_propagation" title="sklearn.cluster.affinity_propagation" class="sphx-glr-backref-module-sklearn-cluster sphx-glr-backref-type-py-function"><span class="n">cluster</span><span class="o">.</span><span class="n">affinity_propagation</span></a><span class="p">(</span><span class="n">edge_model</span><span class="o">.</span><span class="n">covariance_</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+<span class="n">_</span><span class="p">,</span> <span class="n">labels</span> <span class="o">=</span> <a class="sphx-glr-backref-module-sklearn-cluster sphx-glr-backref-type-py-function" href="../../modules/generated/sklearn.cluster.affinity_propagation.html#sklearn.cluster.affinity_propagation" title="sklearn.cluster.affinity_propagation"><span class="n">cluster</span><span class="o">.</span><span class="n">affinity_propagation</span></a><span class="p">(</span><span class="n">edge_model</span><span class="o">.</span><span class="n">covariance_</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
 <span class="n">n_labels</span> <span class="o">=</span> <span class="n">labels</span><span class="o">.</span><span class="n">max</span><span class="p">()</span>
 
 <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n_labels</span> <span class="o">+</span> <span class="mi">1</span><span class="p">):</span>
-    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Cluster </span><span class="si">{</span><span class="n">i</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="s1">&#39;, &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">names</span><span class="p">[</span><span class="n">labels</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="n">i</span><span class="p">])</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Cluster </span><span class="si">{</span><span class="n">i</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="s1">', '</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">names</span><span class="p">[</span><span class="n">labels</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="n">i</span><span class="p">])</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
 </pre></div>
 </div>
 <div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>Cluster 1: Apple, Amazon, Yahoo
@@ -1679,7 +1453,7 @@ Cluster 2: Comcast, Cablevision, Time Warner
 Cluster 3: ConocoPhillips, Chevron, Total, Valero Energy, Exxon
 Cluster 4: Cisco, Dell, HP, IBM, Microsoft, SAP, Texas Instruments
 Cluster 5: Boeing, General Dynamics, Northrop Grumman, Raytheon
-Cluster 6: AIG, American express, Bank of America, Caterpillar, CVS, DuPont de Nemours, Ford, General Electrics, Goldman Sachs, Home Depot, JPMorgan Chase, Marriott, McDonald&#39;s, 3M, Ryder, Wells Fargo, Wal-Mart
+Cluster 6: AIG, American express, Bank of America, Caterpillar, CVS, DuPont de Nemours, Ford, General Electrics, Goldman Sachs, Home Depot, JPMorgan Chase, Marriott, McDonald's, 3M, Ryder, Wells Fargo, Wal-Mart
 Cluster 7: GlaxoSmithKline, Novartis, Pfizer, Sanofi-Aventis, Unilever
 Cluster 8: Kellogg, Coca Cola, Pepsi
 Cluster 9: Colgate-Palmolive, Kimberly-Clark, Procter Gamble
@@ -1700,8 +1474,8 @@ number of neighbors to capture the large-scale structure.</p>
 
 <span class="kn">from</span> <span class="nn">sklearn</span> <span class="kn">import</span> <span class="n">manifold</span>
 
-<span class="n">node_position_model</span> <span class="o">=</span> <a href="../../modules/generated/sklearn.manifold.LocallyLinearEmbedding.html#sklearn.manifold.LocallyLinearEmbedding" title="sklearn.manifold.LocallyLinearEmbedding" class="sphx-glr-backref-module-sklearn-manifold sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">manifold</span><span class="o">.</span><span class="n">LocallyLinearEmbedding</span></a><span class="p">(</span>
-    <span class="n">n_components</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">eigen_solver</span><span class="o">=</span><span class="s2">&quot;dense&quot;</span><span class="p">,</span> <span class="n">n_neighbors</span><span class="o">=</span><span class="mi">6</span>
+<span class="n">node_position_model</span> <span class="o">=</span> <a class="sphx-glr-backref-module-sklearn-manifold sphx-glr-backref-type-py-class sphx-glr-backref-instance" href="../../modules/generated/sklearn.manifold.LocallyLinearEmbedding.html#sklearn.manifold.LocallyLinearEmbedding" title="sklearn.manifold.LocallyLinearEmbedding"><span class="n">manifold</span><span class="o">.</span><span class="n">LocallyLinearEmbedding</span></a><span class="p">(</span>
+    <span class="n">n_components</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">eigen_solver</span><span class="o">=</span><span class="s2">"dense"</span><span class="p">,</span> <span class="n">n_neighbors</span><span class="o">=</span><span class="mi">6</span>
 <span class="p">)</span>
 
 <span class="n">embedding</span> <span class="o">=</span> <span class="n">node_position_model</span><span class="o">.</span><span class="n">fit_transform</span><span class="p">(</span><span class="n">X</span><span class="o">.</span><span class="n">T</span><span class="p">)</span><span class="o">.</span><span class="n">T</span>
@@ -1723,34 +1497,34 @@ is to position the labels minimizing overlap. For this we use an
 heuristic based on the direction of the nearest neighbor along each
 axis.</p>
 <div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
-<span class="kn">from</span> <span class="nn">matplotlib.collections</span> <span class="kn">import</span> <a href="https://matplotlib.org/stable/api/collections_api.html#matplotlib.collections.LineCollection" title="matplotlib.collections.LineCollection" class="sphx-glr-backref-module-matplotlib-collections sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">LineCollection</span></a>
+<span class="kn">from</span> <span class="nn">matplotlib.collections</span> <span class="kn">import</span> <a class="sphx-glr-backref-module-matplotlib-collections sphx-glr-backref-type-py-class sphx-glr-backref-instance" href="https://matplotlib.org/stable/api/collections_api.html#matplotlib.collections.LineCollection" title="matplotlib.collections.LineCollection"><span class="n">LineCollection</span></a>
 
-<a href="https://matplotlib.org/stable/api/_as_gen/matplotlib.pyplot.figure.html#matplotlib.pyplot.figure" title="matplotlib.pyplot.figure" class="sphx-glr-backref-module-matplotlib-pyplot sphx-glr-backref-type-py-function"><span class="n">plt</span><span class="o">.</span><span class="n">figure</span></a><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">facecolor</span><span class="o">=</span><span class="s2">&quot;w&quot;</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">8</span><span class="p">))</span>
-<a href="https://matplotlib.org/stable/api/_as_gen/matplotlib.pyplot.clf.html#matplotlib.pyplot.clf" title="matplotlib.pyplot.clf" class="sphx-glr-backref-module-matplotlib-pyplot sphx-glr-backref-type-py-function"><span class="n">plt</span><span class="o">.</span><span class="n">clf</span></a><span class="p">()</span>
-<span class="n">ax</span> <span class="o">=</span> <a href="https://matplotlib.org/stable/api/_as_gen/matplotlib.pyplot.axes.html#matplotlib.pyplot.axes" title="matplotlib.pyplot.axes" class="sphx-glr-backref-module-matplotlib-pyplot sphx-glr-backref-type-py-function"><span class="n">plt</span><span class="o">.</span><span class="n">axes</span></a><span class="p">([</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">])</span>
-<a href="https://matplotlib.org/stable/api/_as_gen/matplotlib.pyplot.axis.html#matplotlib.pyplot.axis" title="matplotlib.pyplot.axis" class="sphx-glr-backref-module-matplotlib-pyplot sphx-glr-backref-type-py-function"><span class="n">plt</span><span class="o">.</span><span class="n">axis</span></a><span class="p">(</span><span class="s2">&quot;off&quot;</span><span class="p">)</span>
+<a class="sphx-glr-backref-module-matplotlib-pyplot sphx-glr-backref-type-py-function" href="https://matplotlib.org/stable/api/_as_gen/matplotlib.pyplot.figure.html#matplotlib.pyplot.figure" title="matplotlib.pyplot.figure"><span class="n">plt</span><span class="o">.</span><span class="n">figure</span></a><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">facecolor</span><span class="o">=</span><span class="s2">"w"</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">8</span><span class="p">))</span>
+<a class="sphx-glr-backref-module-matplotlib-pyplot sphx-glr-backref-type-py-function" href="https://matplotlib.org/stable/api/_as_gen/matplotlib.pyplot.clf.html#matplotlib.pyplot.clf" title="matplotlib.pyplot.clf"><span class="n">plt</span><span class="o">.</span><span class="n">clf</span></a><span class="p">()</span>
+<span class="n">ax</span> <span class="o">=</span> <a class="sphx-glr-backref-module-matplotlib-pyplot sphx-glr-backref-type-py-function" href="https://matplotlib.org/stable/api/_as_gen/matplotlib.pyplot.axes.html#matplotlib.pyplot.axes" title="matplotlib.pyplot.axes"><span class="n">plt</span><span class="o">.</span><span class="n">axes</span></a><span class="p">([</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">])</span>
+<a class="sphx-glr-backref-module-matplotlib-pyplot sphx-glr-backref-type-py-function" href="https://matplotlib.org/stable/api/_as_gen/matplotlib.pyplot.axis.html#matplotlib.pyplot.axis" title="matplotlib.pyplot.axis"><span class="n">plt</span><span class="o">.</span><span class="n">axis</span></a><span class="p">(</span><span class="s2">"off"</span><span class="p">)</span>
 
 <span class="c1"># Plot the graph of partial correlations</span>
 <span class="n">partial_correlations</span> <span class="o">=</span> <span class="n">edge_model</span><span class="o">.</span><span class="n">precision_</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
-<span class="n">d</span> <span class="o">=</span> <span class="mi">1</span> <span class="o">/</span> <a href="https://numpy.org/doc/stable/reference/generated/numpy.sqrt.html#numpy.sqrt" title="numpy.sqrt" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-data"><span class="n">np</span><span class="o">.</span><span class="n">sqrt</span></a><span class="p">(</span><a href="https://numpy.org/doc/stable/reference/generated/numpy.diag.html#numpy.diag" title="numpy.diag" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-function"><span class="n">np</span><span class="o">.</span><span class="n">diag</span></a><span class="p">(</span><span class="n">partial_correlations</span><span class="p">))</span>
+<span class="n">d</span> <span class="o">=</span> <span class="mi">1</span> <span class="o">/</span> <a class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-data" href="https://numpy.org/doc/stable/reference/generated/numpy.sqrt.html#numpy.sqrt" title="numpy.sqrt"><span class="n">np</span><span class="o">.</span><span class="n">sqrt</span></a><span class="p">(</span><a class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-function" href="https://numpy.org/doc/stable/reference/generated/numpy.diag.html#numpy.diag" title="numpy.diag"><span class="n">np</span><span class="o">.</span><span class="n">diag</span></a><span class="p">(</span><span class="n">partial_correlations</span><span class="p">))</span>
 <span class="n">partial_correlations</span> <span class="o">*=</span> <span class="n">d</span>
-<span class="n">partial_correlations</span> <span class="o">*=</span> <span class="n">d</span><span class="p">[:,</span> <a href="https://numpy.org/doc/stable/reference/constants.html#numpy.newaxis" title="numpy.newaxis" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-data"><span class="n">np</span><span class="o">.</span><span class="n">newaxis</span></a><span class="p">]</span>
-<span class="n">non_zero</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><a href="https://numpy.org/doc/stable/reference/generated/numpy.triu.html#numpy.triu" title="numpy.triu" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-function"><span class="n">np</span><span class="o">.</span><span class="n">triu</span></a><span class="p">(</span><span class="n">partial_correlations</span><span class="p">,</span> <span class="n">k</span><span class="o">=</span><span class="mi">1</span><span class="p">))</span> <span class="o">&gt;</span> <span class="mf">0.02</span>
+<span class="n">partial_correlations</span> <span class="o">*=</span> <span class="n">d</span><span class="p">[:,</span> <a class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-data" href="https://numpy.org/doc/stable/reference/constants.html#numpy.newaxis" title="numpy.newaxis"><span class="n">np</span><span class="o">.</span><span class="n">newaxis</span></a><span class="p">]</span>
+<span class="n">non_zero</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><a class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-function" href="https://numpy.org/doc/stable/reference/generated/numpy.triu.html#numpy.triu" title="numpy.triu"><span class="n">np</span><span class="o">.</span><span class="n">triu</span></a><span class="p">(</span><span class="n">partial_correlations</span><span class="p">,</span> <span class="n">k</span><span class="o">=</span><span class="mi">1</span><span class="p">))</span> <span class="o">&gt;</span> <span class="mf">0.02</span>
 
 <span class="c1"># Plot the nodes using the coordinates of our embedding</span>
-<a href="https://matplotlib.org/stable/api/_as_gen/matplotlib.pyplot.scatter.html#matplotlib.pyplot.scatter" title="matplotlib.pyplot.scatter" class="sphx-glr-backref-module-matplotlib-pyplot sphx-glr-backref-type-py-function"><span class="n">plt</span><span class="o">.</span><span class="n">scatter</span></a><span class="p">(</span>
+<a class="sphx-glr-backref-module-matplotlib-pyplot sphx-glr-backref-type-py-function" href="https://matplotlib.org/stable/api/_as_gen/matplotlib.pyplot.scatter.html#matplotlib.pyplot.scatter" title="matplotlib.pyplot.scatter"><span class="n">plt</span><span class="o">.</span><span class="n">scatter</span></a><span class="p">(</span>
     <span class="n">embedding</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">embedding</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">s</span><span class="o">=</span><span class="mi">100</span> <span class="o">*</span> <span class="n">d</span><span class="o">**</span><span class="mi">2</span><span class="p">,</span> <span class="n">c</span><span class="o">=</span><span class="n">labels</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="n">plt</span><span class="o">.</span><span class="n">cm</span><span class="o">.</span><span class="n">nipy_spectral</span>
 <span class="p">)</span>
 
 <span class="c1"># Plot the edges</span>
-<span class="n">start_idx</span><span class="p">,</span> <span class="n">end_idx</span> <span class="o">=</span> <a href="https://numpy.org/doc/stable/reference/generated/numpy.where.html#numpy.where" title="numpy.where" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-function"><span class="n">np</span><span class="o">.</span><span class="n">where</span></a><span class="p">(</span><span class="n">non_zero</span><span class="p">)</span>
+<span class="n">start_idx</span><span class="p">,</span> <span class="n">end_idx</span> <span class="o">=</span> <a class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-function" href="https://numpy.org/doc/stable/reference/generated/numpy.where.html#numpy.where" title="numpy.where"><span class="n">np</span><span class="o">.</span><span class="n">where</span></a><span class="p">(</span><span class="n">non_zero</span><span class="p">)</span>
 <span class="c1"># a sequence of (*line0*, *line1*, *line2*), where::</span>
 <span class="c1">#            linen = (x0, y0), (x1, y1), ... (xm, ym)</span>
 <span class="n">segments</span> <span class="o">=</span> <span class="p">[</span>
     <span class="p">[</span><span class="n">embedding</span><span class="p">[:,</span> <span class="n">start</span><span class="p">],</span> <span class="n">embedding</span><span class="p">[:,</span> <span class="n">stop</span><span class="p">]]</span> <span class="k">for</span> <span class="n">start</span><span class="p">,</span> <span class="n">stop</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">start_idx</span><span class="p">,</span> <span class="n">end_idx</span><span class="p">)</span>
 <span class="p">]</span>
 <span class="n">values</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">partial_correlations</span><span class="p">[</span><span class="n">non_zero</span><span class="p">])</span>
-<span class="n">lc</span> <span class="o">=</span> <a href="https://matplotlib.org/stable/api/collections_api.html#matplotlib.collections.LineCollection" title="matplotlib.collections.LineCollection" class="sphx-glr-backref-module-matplotlib-collections sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">LineCollection</span></a><span class="p">(</span>
+<span class="n">lc</span> <span class="o">=</span> <a class="sphx-glr-backref-module-matplotlib-collections sphx-glr-backref-type-py-class sphx-glr-backref-instance" href="https://matplotlib.org/stable/api/collections_api.html#matplotlib.collections.LineCollection" title="matplotlib.collections.LineCollection"><span class="n">LineCollection</span></a><span class="p">(</span>
     <span class="n">segments</span><span class="p">,</span> <span class="n">zorder</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="n">plt</span><span class="o">.</span><span class="n">cm</span><span class="o">.</span><span class="n">hot_r</span><span class="p">,</span> <span class="n">norm</span><span class="o">=</span><span class="n">plt</span><span class="o">.</span><span class="n">Normalize</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mf">0.7</span> <span class="o">*</span> <span class="n">values</span><span class="o">.</span><span class="n">max</span><span class="p">())</span>
 <span class="p">)</span>
 <span class="n">lc</span><span class="o">.</span><span class="n">set_array</span><span class="p">(</span><span class="n">values</span><span class="p">)</span>
@@ -1764,21 +1538,21 @@ axis.</p>
     <span class="n">dx</span><span class="p">[</span><span class="n">index</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span>
     <span class="n">dy</span> <span class="o">=</span> <span class="n">y</span> <span class="o">-</span> <span class="n">embedding</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
     <span class="n">dy</span><span class="p">[</span><span class="n">index</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span>
-    <span class="n">this_dx</span> <span class="o">=</span> <span class="n">dx</span><span class="p">[</span><a href="https://numpy.org/doc/stable/reference/generated/numpy.argmin.html#numpy.argmin" title="numpy.argmin" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-function"><span class="n">np</span><span class="o">.</span><span class="n">argmin</span></a><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">dy</span><span class="p">))]</span>
-    <span class="n">this_dy</span> <span class="o">=</span> <span class="n">dy</span><span class="p">[</span><a href="https://numpy.org/doc/stable/reference/generated/numpy.argmin.html#numpy.argmin" title="numpy.argmin" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-function"><span class="n">np</span><span class="o">.</span><span class="n">argmin</span></a><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">dx</span><span class="p">))]</span>
+    <span class="n">this_dx</span> <span class="o">=</span> <span class="n">dx</span><span class="p">[</span><a class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-function" href="https://numpy.org/doc/stable/reference/generated/numpy.argmin.html#numpy.argmin" title="numpy.argmin"><span class="n">np</span><span class="o">.</span><span class="n">argmin</span></a><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">dy</span><span class="p">))]</span>
+    <span class="n">this_dy</span> <span class="o">=</span> <span class="n">dy</span><span class="p">[</span><a class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-function" href="https://numpy.org/doc/stable/reference/generated/numpy.argmin.html#numpy.argmin" title="numpy.argmin"><span class="n">np</span><span class="o">.</span><span class="n">argmin</span></a><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">dx</span><span class="p">))]</span>
     <span class="k">if</span> <span class="n">this_dx</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
-        <span class="n">horizontalalignment</span> <span class="o">=</span> <span class="s2">&quot;left&quot;</span>
+        <span class="n">horizontalalignment</span> <span class="o">=</span> <span class="s2">"left"</span>
         <span class="n">x</span> <span class="o">=</span> <span class="n">x</span> <span class="o">+</span> <span class="mf">0.002</span>
     <span class="k">else</span><span class="p">:</span>
-        <span class="n">horizontalalignment</span> <span class="o">=</span> <span class="s2">&quot;right&quot;</span>
+        <span class="n">horizontalalignment</span> <span class="o">=</span> <span class="s2">"right"</span>
         <span class="n">x</span> <span class="o">=</span> <span class="n">x</span> <span class="o">-</span> <span class="mf">0.002</span>
     <span class="k">if</span> <span class="n">this_dy</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
-        <span class="n">verticalalignment</span> <span class="o">=</span> <span class="s2">&quot;bottom&quot;</span>
+        <span class="n">verticalalignment</span> <span class="o">=</span> <span class="s2">"bottom"</span>
         <span class="n">y</span> <span class="o">=</span> <span class="n">y</span> <span class="o">+</span> <span class="mf">0.002</span>
     <span class="k">else</span><span class="p">:</span>
-        <span class="n">verticalalignment</span> <span class="o">=</span> <span class="s2">&quot;top&quot;</span>
+        <span class="n">verticalalignment</span> <span class="o">=</span> <span class="s2">"top"</span>
         <span class="n">y</span> <span class="o">=</span> <span class="n">y</span> <span class="o">-</span> <span class="mf">0.002</span>
-    <a href="https://matplotlib.org/stable/api/_as_gen/matplotlib.pyplot.text.html#matplotlib.pyplot.text" title="matplotlib.pyplot.text" class="sphx-glr-backref-module-matplotlib-pyplot sphx-glr-backref-type-py-function"><span class="n">plt</span><span class="o">.</span><span class="n">text</span></a><span class="p">(</span>
+    <a class="sphx-glr-backref-module-matplotlib-pyplot sphx-glr-backref-type-py-function" href="https://matplotlib.org/stable/api/_as_gen/matplotlib.pyplot.text.html#matplotlib.pyplot.text" title="matplotlib.pyplot.text"><span class="n">plt</span><span class="o">.</span><span class="n">text</span></a><span class="p">(</span>
         <span class="n">x</span><span class="p">,</span>
         <span class="n">y</span><span class="p">,</span>
         <span class="n">name</span><span class="p">,</span>
@@ -1786,164 +1560,103 @@ axis.</p>
         <span class="n">horizontalalignment</span><span class="o">=</span><span class="n">horizontalalignment</span><span class="p">,</span>
         <span class="n">verticalalignment</span><span class="o">=</span><span class="n">verticalalignment</span><span class="p">,</span>
         <span class="n">bbox</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span>
-            <span class="n">facecolor</span><span class="o">=</span><span class="s2">&quot;w&quot;</span><span class="p">,</span>
+            <span class="n">facecolor</span><span class="o">=</span><span class="s2">"w"</span><span class="p">,</span>
             <span class="n">edgecolor</span><span class="o">=</span><span class="n">plt</span><span class="o">.</span><span class="n">cm</span><span class="o">.</span><span class="n">nipy_spectral</span><span class="p">(</span><span class="n">label</span> <span class="o">/</span> <span class="nb">float</span><span class="p">(</span><span class="n">n_labels</span><span class="p">)),</span>
             <span class="n">alpha</span><span class="o">=</span><span class="mf">0.6</span><span class="p">,</span>
         <span class="p">),</span>
     <span class="p">)</span>
 
-<a href="https://matplotlib.org/stable/api/_as_gen/matplotlib.pyplot.xlim.html#matplotlib.pyplot.xlim" title="matplotlib.pyplot.xlim" class="sphx-glr-backref-module-matplotlib-pyplot sphx-glr-backref-type-py-function"><span class="n">plt</span><span class="o">.</span><span class="n">xlim</span></a><span class="p">(</span>
-    <span class="n">embedding</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">min</span><span class="p">()</span> <span class="o">-</span> <span class="mf">0.15</span> <span class="o">*</span> <a href="https://numpy.org/doc/stable/reference/generated/numpy.ptp.html#numpy.ptp" title="numpy.ptp" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-function"><span class="n">np</span><span class="o">.</span><span class="n">ptp</span></a><span class="p">(</span><span class="n">embedding</span><span class="p">[</span><span class="mi">0</span><span class="p">]),</span>
-    <span class="n">embedding</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">max</span><span class="p">()</span> <span class="o">+</span> <span class="mf">0.10</span> <span class="o">*</span> <a href="https://numpy.org/doc/stable/reference/generated/numpy.ptp.html#numpy.ptp" title="numpy.ptp" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-function"><span class="n">np</span><span class="o">.</span><span class="n">ptp</span></a><span class="p">(</span><span class="n">embedding</span><span class="p">[</span><span class="mi">0</span><span class="p">]),</span>
+<a class="sphx-glr-backref-module-matplotlib-pyplot sphx-glr-backref-type-py-function" href="https://matplotlib.org/stable/api/_as_gen/matplotlib.pyplot.xlim.html#matplotlib.pyplot.xlim" title="matplotlib.pyplot.xlim"><span class="n">plt</span><span class="o">.</span><span class="n">xlim</span></a><span class="p">(</span>
+    <span class="n">embedding</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">min</span><span class="p">()</span> <span class="o">-</span> <span class="mf">0.15</span> <span class="o">*</span> <a class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-function" href="https://numpy.org/doc/stable/reference/generated/numpy.ptp.html#numpy.ptp" title="numpy.ptp"><span class="n">np</span><span class="o">.</span><span class="n">ptp</span></a><span class="p">(</span><span class="n">embedding</span><span class="p">[</span><span class="mi">0</span><span class="p">]),</span>
+    <span class="n">embedding</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">max</span><span class="p">()</span> <span class="o">+</span> <span class="mf">0.10</span> <span class="o">*</span> <a class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-function" href="https://numpy.org/doc/stable/reference/generated/numpy.ptp.html#numpy.ptp" title="numpy.ptp"><span class="n">np</span><span class="o">.</span><span class="n">ptp</span></a><span class="p">(</span><span class="n">embedding</span><span class="p">[</span><span class="mi">0</span><span class="p">]),</span>
 <span class="p">)</span>
-<a href="https://matplotlib.org/stable/api/_as_gen/matplotlib.pyplot.ylim.html#matplotlib.pyplot.ylim" title="matplotlib.pyplot.ylim" class="sphx-glr-backref-module-matplotlib-pyplot sphx-glr-backref-type-py-function"><span class="n">plt</span><span class="o">.</span><span class="n">ylim</span></a><span class="p">(</span>
-    <span class="n">embedding</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">min</span><span class="p">()</span> <span class="o">-</span> <span class="mf">0.03</span> <span class="o">*</span> <a href="https://numpy.org/doc/stable/reference/generated/numpy.ptp.html#numpy.ptp" title="numpy.ptp" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-function"><span class="n">np</span><span class="o">.</span><span class="n">ptp</span></a><span class="p">(</span><span class="n">embedding</span><span class="p">[</span><span class="mi">1</span><span class="p">]),</span>
-    <span class="n">embedding</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">max</span><span class="p">()</span> <span class="o">+</span> <span class="mf">0.03</span> <span class="o">*</span> <a href="https://numpy.org/doc/stable/reference/generated/numpy.ptp.html#numpy.ptp" title="numpy.ptp" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-function"><span class="n">np</span><span class="o">.</span><span class="n">ptp</span></a><span class="p">(</span><span class="n">embedding</span><span class="p">[</span><span class="mi">1</span><span class="p">]),</span>
+<a class="sphx-glr-backref-module-matplotlib-pyplot sphx-glr-backref-type-py-function" href="https://matplotlib.org/stable/api/_as_gen/matplotlib.pyplot.ylim.html#matplotlib.pyplot.ylim" title="matplotlib.pyplot.ylim"><span class="n">plt</span><span class="o">.</span><span class="n">ylim</span></a><span class="p">(</span>
+    <span class="n">embedding</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">min</span><span class="p">()</span> <span class="o">-</span> <span class="mf">0.03</span> <span class="o">*</span> <a class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-function" href="https://numpy.org/doc/stable/reference/generated/numpy.ptp.html#numpy.ptp" title="numpy.ptp"><span class="n">np</span><span class="o">.</span><span class="n">ptp</span></a><span class="p">(</span><span class="n">embedding</span><span class="p">[</span><span class="mi">1</span><span class="p">]),</span>
+    <span class="n">embedding</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">max</span><span class="p">()</span> <span class="o">+</span> <span class="mf">0.03</span> <span class="o">*</span> <a class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-function" href="https://numpy.org/doc/stable/reference/generated/numpy.ptp.html#numpy.ptp" title="numpy.ptp"><span class="n">np</span><span class="o">.</span><span class="n">ptp</span></a><span class="p">(</span><span class="n">embedding</span><span class="p">[</span><span class="mi">1</span><span class="p">]),</span>
 <span class="p">)</span>
 
-<a href="https://matplotlib.org/stable/api/_as_gen/matplotlib.pyplot.show.html#matplotlib.pyplot.show" title="matplotlib.pyplot.show" class="sphx-glr-backref-module-matplotlib-pyplot sphx-glr-backref-type-py-function"><span class="n">plt</span><span class="o">.</span><span class="n">show</span></a><span class="p">()</span>
+<a class="sphx-glr-backref-module-matplotlib-pyplot sphx-glr-backref-type-py-function" href="https://matplotlib.org/stable/api/_as_gen/matplotlib.pyplot.show.html#matplotlib.pyplot.show" title="matplotlib.pyplot.show"><span class="n">plt</span><span class="o">.</span><span class="n">show</span></a><span class="p">()</span>
 </pre></div>
 </div>
-<img src="../../_images/sphx_glr_plot_stock_market_001.png" srcset="../../_images/sphx_glr_plot_stock_market_001.png" alt="plot stock market" class = "sphx-glr-single-img"/><p class="sphx-glr-timing"><strong>Total running time of the script:</strong> (0 minutes 6.502 seconds)</p>
-<div class="sphx-glr-footer sphx-glr-footer-example docutils container" id="sphx-glr-download-auto-examples-applications-plot-stock-market-py">
-<div class="binder-badge docutils container">
-<a class="reference external image-reference" href="https://mybinder.org/v2/gh/scikit-learn/scikit-learn/main?urlpath=lab/tree/notebooks/auto_examples/applications/plot_stock_market.ipynb"><img alt="Launch binder" src="../../_images/binder_badge_logo.svg" width="150px" /></a>
-</div>
-<div class="lite-badge docutils container">
-<a class="reference external image-reference" href="../../lite/lab/?path=auto_examples/applications/plot_stock_market.ipynb"><img alt="Launch JupyterLite" src="../../_images/jupyterlite_badge_logo.svg" width="150px" /></a>
-</div>
-<div class="sphx-glr-download sphx-glr-download-jupyter docutils container">
-<p><a class="reference download internal" download="" href="../../_downloads/2840d928d4f93cd381486b35c2031752/plot_stock_market.ipynb"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Jupyter</span> <span class="pre">notebook:</span> <span class="pre">plot_stock_market.ipynb</span></code></a></p>
-</div>
-<div class="sphx-glr-download sphx-glr-download-python docutils container">
-<p><a class="reference download internal" download="" href="../../_downloads/70af03f765a8f15d7c1d63e836e68590/plot_stock_market.py"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Python</span> <span class="pre">source</span> <span class="pre">code:</span> <span class="pre">plot_stock_market.py</span></code></a></p>
-</div>
-</div>
+<img alt="plot stock market" class="sphx-glr-single-img" src="../../_images/sphx_glr_plot_stock_market_001.png" srcset="../../_images/sphx_glr_plot_stock_market_001.png"/><p class="sphx-glr-timing"><strong>Total running time of the script:</strong> (0 minutes 5.896 seconds)</p>
+
 <p class="rubric">Related examples</p>
-<div class="sphx-glr-thumbnails"><div class="sphx-glr-thumbcontainer" tooltip="We illustrate various embedding techniques on the digits dataset."><img alt="" src="../../_images/sphx_glr_plot_lle_digits_thumb.png" />
+<div class="sphx-glr-thumbnails"><div class="sphx-glr-thumbcontainer" tooltip="We illustrate various embedding techniques on the digits dataset."><img alt="" src="../../_images/sphx_glr_plot_lle_digits_thumb.png"/>
 <p><a class="reference internal" href="../manifold/plot_lle_digits.html#sphx-glr-auto-examples-manifold-plot-lle-digits-py"><span class="std std-ref">Manifold learning on handwritten digits: Locally Linear Embedding, Isomap…</span></a></p>
-  <div class="sphx-glr-thumbnail-title">Manifold learning on handwritten digits: Locally Linear Embedding, Isomap...</div>
-</div><div class="sphx-glr-thumbcontainer" tooltip="An illustration of dimensionality reduction on the S-curve dataset with various manifold learni..."><img alt="" src="../../_images/sphx_glr_plot_compare_methods_thumb.png" />
+<div class="sphx-glr-thumbnail-title">Manifold learning on handwritten digits: Locally Linear Embedding, Isomap...</div>
+</div><div class="sphx-glr-thumbcontainer" tooltip="An illustration of dimensionality reduction on the S-curve dataset with various manifold learni..."><img alt="" src="../../_images/sphx_glr_plot_compare_methods_thumb.png"/>
 <p><a class="reference internal" href="../manifold/plot_compare_methods.html#sphx-glr-auto-examples-manifold-plot-compare-methods-py"><span class="std std-ref">Comparison of Manifold Learning methods</span></a></p>
-  <div class="sphx-glr-thumbnail-title">Comparison of Manifold Learning methods</div>
-</div><div class="sphx-glr-thumbcontainer" tooltip="An illustration of various linkage option for agglomerative clustering on a 2D embedding of the..."><img alt="" src="../../_images/sphx_glr_plot_digits_linkage_thumb.png" />
+<div class="sphx-glr-thumbnail-title">Comparison of Manifold Learning methods</div>
+</div><div class="sphx-glr-thumbcontainer" tooltip="An illustration of various linkage option for agglomerative clustering on a 2D embedding of the..."><img alt="" src="../../_images/sphx_glr_plot_digits_linkage_thumb.png"/>
 <p><a class="reference internal" href="../cluster/plot_digits_linkage.html#sphx-glr-auto-examples-cluster-plot-digits-linkage-py"><span class="std std-ref">Various Agglomerative Clustering on a 2D embedding of digits</span></a></p>
-  <div class="sphx-glr-thumbnail-title">Various Agglomerative Clustering on a 2D embedding of digits</div>
-</div><div class="sphx-glr-thumbcontainer" tooltip="This example uses spectral_clustering on a graph created from voxel-to-voxel difference on an i..."><img alt="" src="../../_images/sphx_glr_plot_coin_segmentation_thumb.png" />
+<div class="sphx-glr-thumbnail-title">Various Agglomerative Clustering on a 2D embedding of digits</div>
+</div><div class="sphx-glr-thumbcontainer" tooltip="This example uses spectral_clustering on a graph created from voxel-to-voxel difference on an i..."><img alt="" src="../../_images/sphx_glr_plot_coin_segmentation_thumb.png"/>
 <p><a class="reference internal" href="../cluster/plot_coin_segmentation.html#sphx-glr-auto-examples-cluster-plot-coin-segmentation-py"><span class="std std-ref">Segmenting the picture of greek coins in regions</span></a></p>
-  <div class="sphx-glr-thumbnail-title">Segmenting the picture of greek coins in regions</div>
-</div><div class="sphx-glr-thumbcontainer" tooltip="Transform your features into a higher dimensional, sparse space. Then train a linear model on t..."><img alt="" src="../../_images/sphx_glr_plot_feature_transformation_thumb.png" />
-<p><a class="reference internal" href="../ensemble/plot_feature_transformation.html#sphx-glr-auto-examples-ensemble-plot-feature-transformation-py"><span class="std std-ref">Feature transformations with ensembles of trees</span></a></p>
-  <div class="sphx-glr-thumbnail-title">Feature transformations with ensembles of trees</div>
+<div class="sphx-glr-thumbnail-title">Segmenting the picture of greek coins in regions</div>
 </div></div><p class="sphx-glr-signature"><a class="reference external" href="https://sphinx-gallery.github.io">Gallery generated by Sphinx-Gallery</a></p>
 </section>
 </section>
-
-
-                </article>
-              
-              
-              
-                <footer class="bd-footer-article">
-                  <div class="footer-article-items footer-article__inner">
-  
-    <div class="footer-article-item">
+</article>
+<footer class="bd-footer-article">
+<div class="footer-article-items footer-article__inner">
+<div class="footer-article-item">
 <div class="prev-next-area">
-    <a class="left-prev"
-       href="plot_topics_extraction_with_nmf_lda.html"
-       title="previous page">
-      <i class="fa-solid fa-angle-left"></i>
-      <div class="prev-next-info">
-        <p class="prev-next-subtitle">previous</p>
-        <p class="prev-next-title">Topic extraction with Non-negative Matrix Factorization and Latent Dirichlet Allocation</p>
-      </div>
-    </a>
-    <a class="right-next"
-       href="wikipedia_principal_eigenvector.html"
-       title="next page">
-      <div class="prev-next-info">
-        <p class="prev-next-subtitle">next</p>
-        <p class="prev-next-title">Wikipedia principal eigenvector</p>
-      </div>
-      <i class="fa-solid fa-angle-right"></i>
-    </a>
-</div></div>
-  
+<a class="left-prev" href="plot_topics_extraction_with_nmf_lda.html" title="previous page">
+<i class="fa-solid fa-angle-left"></i>
+<div class="prev-next-info">
+<p class="prev-next-subtitle">previous</p>
+<p class="prev-next-title">Topic extraction with Non-negative Matrix Factorization and Latent Dirichlet Allocation</p>
 </div>
-                </footer>
-              
-              
-              
-            </div>
-            
-            
-              
-                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
-
-
-  <div class="sidebar-secondary-item">
-<div
-    id="pst-page-navigation-heading-2"
-    class="page-toc tocsection onthispage">
-    <i class="fa-solid fa-list"></i> On this page
+</a>
+<a class="right-next" href="wikipedia_principal_eigenvector.html" title="next page">
+<div class="prev-next-info">
+<p class="prev-next-subtitle">next</p>
+<p class="prev-next-title">Wikipedia principal eigenvector</p>
+</div>
+<i class="fa-solid fa-angle-right"></i>
+</a>
+</div></div>
+</div>
+</footer>
+</div>
+<div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+<div class="sidebar-secondary-item">
+<div class="page-toc tocsection onthispage" id="pst-page-navigation-heading-2">
+<i class="fa-solid fa-list"></i> On this page
   </div>
-  <nav class="bd-toc-nav page-toc" aria-labelledby="pst-page-navigation-heading-2">
-    <ul class="visible nav section-nav flex-column">
+<nav aria-labelledby="pst-page-navigation-heading-2" class="bd-toc-nav page-toc">
+<ul class="visible nav section-nav flex-column">
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#retrieve-the-data-from-internet">Retrieve the data from Internet</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#learning-a-graph-structure">Learning a graph structure</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#clustering-using-affinity-propagation">Clustering using affinity propagation</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#embedding-in-2d-space">Embedding in 2D space</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#visualization">Visualization</a></li>
 </ul>
-  </nav></div>
+</nav></div>
 
-  <div class="sidebar-secondary-item">
-
-  <div class="tocsection sourcelink">
-    <a href="../../_sources/auto_examples/applications/plot_stock_market.rst.txt">
-      <i class="fa-solid fa-file-lines"></i> Show Source
-    </a>
-  </div>
+<div class="sidebar-secondary-item"><div title="plot_stock_market.py"><a download="" href="../../_downloads/70af03f765a8f15d7c1d63e836e68590/plot_stock_market.py"><i class="fa-solid fa-download"></i> Download source code</a></div><div title="plot_stock_market.ipynb"><a download="" href="../../_downloads/2840d928d4f93cd381486b35c2031752/plot_stock_market.ipynb"><i class="fa-solid fa-download"></i> Download Jupyter notebook</a></div></div><div class="sidebar-secondary-item"><div><a href="../../lite/lab/?path=auto_examples/applications/plot_stock_market.ipynb"><img alt="Launch JupyterLite" height="20" src="../../_images/jupyterlite_badge_logo.svg"/></a></div><div><a href="https://mybinder.org/v2/gh/scikit-learn/scikit-learn/main?urlpath=lab/tree/notebooks/auto_examples/applications/plot_stock_market.ipynb"><img alt="Launch binder" height="20" src="../../_images/binder_badge_logo.svg"/></a></div></div></div></div>
 </div>
-
-</div></div>
-              
-            
-          </div>
-          <footer class="bd-footer-content">
-            
-          </footer>
-        
-      </main>
-    </div>
-  </div>
-  
-  <!-- Scripts loaded after <body> so the DOM is not blocked -->
-  <script src="../../_static/scripts/bootstrap.js?digest=8d27b9dea8ad943066ae"></script>
+<footer class="bd-footer-content">
+</footer>
+</main>
+</div>
+</div>
+<!-- Scripts loaded after <body> so the DOM is not blocked -->
+<script src="../../_static/scripts/bootstrap.js?digest=8d27b9dea8ad943066ae"></script>
 <script src="../../_static/scripts/pydata-sphinx-theme.js?digest=8d27b9dea8ad943066ae"></script>
-
-  <footer class="bd-footer">
+<footer class="bd-footer">
 <div class="bd-footer__inner bd-page-width">
-  
-    <div class="footer-items__start">
-      
-        <div class="footer-item">
-
-  <p class="copyright">
+<div class="footer-items__start">
+<div class="footer-item">
+<p class="copyright">
     
       © Copyright 2007 - 2024, scikit-learn developers (BSD License).
       <br/>
-    
-  </p>
+</p>
 </div>
-      
-    </div>
-  
-  
-  
 </div>
-
-  </footer>
+</div>
+</footer>
     <script src="https://scikit-learn.org/versionwarning.js"></script>
-  </body>
+</body>
 </html>
