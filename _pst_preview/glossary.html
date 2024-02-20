@@ -896,7 +896,25 @@ provided, it refers to the NumPy dtype. If an arbitrary precision is
 used, the documentation will refer to dtype <code class="docutils literal notranslate"><span class="pre">integer</span></code> or <code class="docutils literal notranslate"><span class="pre">floating</span></code>.
 Note that in this case, the precision can be platform dependent.
 The <code class="docutils literal notranslate"><span class="pre">numeric</span></code> dtype refers to accepting both <code class="docutils literal notranslate"><span class="pre">integer</span></code> and <code class="docutils literal notranslate"><span class="pre">floating</span></code>.</p>
-<p>TODO: Mention efficiency and precision issues; casting policy.</p>
+<p>When it comes to choosing between 64-bit dtype (i.e. <code class="docutils literal notranslate"><span class="pre">np.float64</span></code> and
+<code class="docutils literal notranslate"><span class="pre">np.int64</span></code>) and 32-bit dtype (i.e. <code class="docutils literal notranslate"><span class="pre">np.float32</span></code> and <code class="docutils literal notranslate"><span class="pre">np.int32</span></code>), it
+boils down to a trade-off between efficiency and precision. The 64-bit
+types offer more accurate results due to their lower floating-point
+error, but demand more computational resources, resulting in slower
+operations and increased memory usage. In contrast, 32-bit types
+promise enhanced operation speed and reduced memory consumption, but
+introduce a larger floating-point error. The efficiency improvement are
+dependent on lower level optimization such as like vectorization,
+single instruction multiple dispatch (SIMD), or cache optimization but
+crucially on the compatibility of the algorithm in use.</p>
+<p>Specifically, the choice of precision should account for whether the
+employed algorithm can effectively leverage <code class="docutils literal notranslate"><span class="pre">np.float32</span></code>. Some
+algorithms, especially certain minimization methods, are exclusively
+coded for <code class="docutils literal notranslate"><span class="pre">np.float64</span></code>, meaning that even if <code class="docutils literal notranslate"><span class="pre">np.float32</span></code> is passed, it
+triggers an automatic conversion back to <code class="docutils literal notranslate"><span class="pre">np.float64</span></code>. This not only
+negates the intended computational savings but also introduces
+additional overhead, making operations with <code class="docutils literal notranslate"><span class="pre">np.float32</span></code> unexpectedly
+slower and more memory-intensive due to this extra conversion step.</p>
 </dd>
 <dt id="term-duck-typing">duck typing<a class="headerlink" href="#term-duck-typing" title="Link to this term">#</a></dt><dd><p>We try to apply <a class="reference external" href="https://en.wikipedia.org/wiki/Duck_typing">duck typing</a> to determine how to
 handle some input values (e.g. checking whether a given estimator is
