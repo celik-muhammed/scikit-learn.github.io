@@ -207,8 +207,10 @@ to download the full example code or to run this example in your browser via Jup
 <p>This example compares two outlier detection algorithms, namely
 <a class="reference internal" href="../../modules/outlier_detection.html#local-outlier-factor"><span class="std std-ref">Local Outlier Factor</span></a> (LOF) and <a class="reference internal" href="../../modules/outlier_detection.html#isolation-forest"><span class="std std-ref">Isolation Forest</span></a> (IForest), on
 real-world datasets available in <a class="reference internal" href="../../modules/classes.html#module-sklearn.datasets" title="sklearn.datasets"><code class="xref py py-class docutils literal notranslate"><span class="pre">sklearn.datasets</span></code></a>. The goal is to show
-that different algorithms perform well on different datasets.</p>
-<p>The algorithms are trained in an outlier detection context:</p>
+that different algorithms perform well on different datasets and contrast their
+training speed and sensitivity to hyperparameters.</p>
+<p>The algorithms are trained (without labels) on the whole dataset assumed to
+contain outliers.</p>
 <p>1. The ROC curves are computed using knowledge of the ground-truth labels
 and displayed using <a class="reference internal" href="../../modules/generated/sklearn.metrics.RocCurveDisplay.html#sklearn.metrics.RocCurveDisplay" title="sklearn.metrics.RocCurveDisplay"><code class="xref py py-class docutils literal notranslate"><span class="pre">RocCurveDisplay</span></code></a>.</p>
 <ol class="arabic simple" start="2">
@@ -340,8 +342,8 @@ selecting all the normal data and an anomaly proportion of around 3%.</p>
     <span class="n">y_pred</span><span class="p">[</span><span class="n">model_name</span><span class="p">][</span><span class="s2">&quot;KDDCup99 - SA&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">fit_predict</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">X</span><span class="p">)</span>
 </pre></div>
 </div>
-<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>Duration for LOF: 1.86 s
-Duration for IForest: 0.26 s
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>Duration for LOF: 2.10 s
+Duration for IForest: 0.32 s
 </pre></div>
 </div>
 </section>
@@ -380,8 +382,8 @@ samples encoded with label 2 and outliers as those with label 4.</p>
     <span class="n">y_pred</span><span class="p">[</span><span class="n">model_name</span><span class="p">][</span><span class="s2">&quot;forestcover&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">fit_predict</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">X</span><span class="p">)</span>
 </pre></div>
 </div>
-<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>Duration for LOF: 1.89 s
-Duration for IForest: 0.20 s
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>Duration for LOF: 2.07 s
+Duration for IForest: 0.24 s
 </pre></div>
 </div>
 </section>
@@ -440,8 +442,8 @@ a list made by hand.</p>
     <span class="n">y_pred</span><span class="p">[</span><span class="n">model_name</span><span class="p">][</span><span class="s2">&quot;ames_housing&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">fit_predict</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">X</span><span class="p">)</span>
 </pre></div>
 </div>
-<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>Duration for LOF: 0.87 s
-Duration for IForest: 0.21 s
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>Duration for LOF: 1.02 s
+Duration for IForest: 0.26 s
 </pre></div>
 </div>
 </section>
@@ -474,8 +476,8 @@ which are binary encoded and some are continuous.</p>
     <span class="n">y_pred</span><span class="p">[</span><span class="n">model_name</span><span class="p">][</span><span class="s2">&quot;cardiotocography&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">fit_predict</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">X</span><span class="p">)</span>
 </pre></div>
 </div>
-<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>Duration for LOF: 0.06 s
-Duration for IForest: 0.13 s
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>Duration for LOF: 0.07 s
+Duration for IForest: 0.16 s
 </pre></div>
 </div>
 </section>
@@ -517,6 +519,11 @@ inliers.</p>
 similarly in terms of ROC AUC for the forestcover and cardiotocography
 datasets. The score for IForest is slightly better for the SA dataset and LOF
 performs considerably better on the Ames housing dataset than IForest.</p>
+<p>Recall however that Isolation Forest tends to train much faster than LOF on
+datasets with a large number of samples. LOF needs to compute pairwise
+distances to find nearest neighbors, which has a quadratic complexity with respect
+to the number of observations. This can make this method prohibitive on large
+datasets.</p>
 </section>
 <section id="ablation-study">
 <h2>Ablation study<a class="headerlink" href="#ablation-study" title="Link to this heading">¶</a></h2>
@@ -643,7 +650,7 @@ respective documentation for more details.</p>
 <a href="https://matplotlib.org/stable/api/_as_gen/matplotlib.pyplot.show.html#matplotlib.pyplot.show" title="matplotlib.pyplot.show" class="sphx-glr-backref-module-matplotlib-pyplot sphx-glr-backref-type-py-function"><span class="n">plt</span><span class="o">.</span><span class="n">show</span></a><span class="p">()</span>
 </pre></div>
 </div>
-<img src="../../_images/sphx_glr_plot_outlier_detection_bench_005.png" srcset="../../_images/sphx_glr_plot_outlier_detection_bench_005.png" alt="Fixed n_neighbors with varying preprocessing on cardiotocography dataset" class = "sphx-glr-single-img"/><p class="sphx-glr-timing"><strong>Total running time of the script:</strong> (0 minutes 45.452 seconds)</p>
+<img src="../../_images/sphx_glr_plot_outlier_detection_bench_005.png" srcset="../../_images/sphx_glr_plot_outlier_detection_bench_005.png" alt="Fixed n_neighbors with varying preprocessing on cardiotocography dataset" class = "sphx-glr-single-img"/><p class="sphx-glr-timing"><strong>Total running time of the script:</strong> (0 minutes 51.154 seconds)</p>
 <div class="sphx-glr-footer sphx-glr-footer-example docutils container" id="sphx-glr-download-auto-examples-miscellaneous-plot-outlier-detection-bench-py">
 <div class="binder-badge docutils container">
 <a class="reference external image-reference" href="https://mybinder.org/v2/gh/scikit-learn/scikit-learn/main?urlpath=lab/tree/notebooks/auto_examples/miscellaneous/plot_outlier_detection_bench.ipynb"><img alt="Launch binder" src="../../_images/binder_badge_logo20.svg" width="150px" /></a>
