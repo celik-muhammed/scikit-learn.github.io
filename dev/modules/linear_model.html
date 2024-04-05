@@ -1076,11 +1076,14 @@ the probability of the positive class <span class="math notranslate nohighlight"
 class logistic regression with regularization term <span class="math notranslate nohighlight">\(r(w)\)</span> minimizes the
 following cost function:</p>
 <div class="math notranslate nohighlight" id="regularized-logistic-loss">
-<span id="equation-regularized-logistic-loss"></span><span class="eqno">(1)<a class="headerlink" href="#regularized-logistic-loss" title="Link to this equation">¶</a></span>\[\min_{w} C \sum_{i=1}^n s_i \left(-y_i \log(\hat{p}(X_i)) - (1 - y_i) \log(1 - \hat{p}(X_i))\right) + r(w),\]</div>
+<span id="equation-regularized-logistic-loss"></span><span class="eqno">(1)<a class="headerlink" href="#regularized-logistic-loss" title="Link to this equation">¶</a></span>\[\min_{w} \frac{1}{S}\sum_{i=1}^n s_i
+\left(-y_i \log(\hat{p}(X_i)) - (1 - y_i) \log(1 - \hat{p}(X_i))\right)
++ \frac{r(w)}{S C}\,,\]</div>
 <p>where <span class="math notranslate nohighlight">\({s_i}\)</span> corresponds to the weights assigned by the user to a
 specific training sample (the vector <span class="math notranslate nohighlight">\(s\)</span> is formed by element-wise
-multiplication of the class weights and sample weights).</p>
-<p>We currently provide four choices for the regularization term  <span class="math notranslate nohighlight">\(r(w)\)</span>  via
+multiplication of the class weights and sample weights),
+and the sum <span class="math notranslate nohighlight">\(S = \sum_{i=1}^n s_i\)</span>.</p>
+<p>We currently provide four choices for the regularization term  <span class="math notranslate nohighlight">\(r(w)\)</span> via
 the <code class="docutils literal notranslate"><span class="pre">penalty</span></code> argument:</p>
 <table class="docutils align-default">
 <thead>
@@ -1143,9 +1146,13 @@ a matrix of coefficients <span class="math notranslate nohighlight">\(W\)</span>
 \[\hat{p}_k(X_i) = \frac{\exp(X_i W_k + W_{0, k})}{\sum_{l=0}^{K-1} \exp(X_i W_l + W_{0, l})}.\]</div>
 <p>The objective for the optimization becomes</p>
 <div class="math notranslate nohighlight">
-\[\min_W -C \sum_{i=1}^n \sum_{k=0}^{K-1} [y_i = k] \log(\hat{p}_k(X_i)) + r(W).\]</div>
+\[\min_W -\frac{1}{S}\sum_{i=1}^n \sum_{k=0}^{K-1} s_{ik} [y_i = k] \log(\hat{p}_k(X_i))
++ \frac{r(W)}{S C}\,.\]</div>
 <p>Where <span class="math notranslate nohighlight">\([P]\)</span> represents the Iverson bracket which evaluates to <span class="math notranslate nohighlight">\(0\)</span>
-if <span class="math notranslate nohighlight">\(P\)</span> is false, otherwise it evaluates to <span class="math notranslate nohighlight">\(1\)</span>. We currently provide four choices
+if <span class="math notranslate nohighlight">\(P\)</span> is false, otherwise it evaluates to <span class="math notranslate nohighlight">\(1\)</span>.</p>
+<p>Again, <span class="math notranslate nohighlight">\(s_{ik}\)</span> are the weights assigned by the user (multiplication of sample
+weights and class weights) with their sum <span class="math notranslate nohighlight">\(S = \sum_{i=1}^n \sum_{k=0}^{K-1} s_{ik}\)</span>.</p>
+<p>We currently provide four choices
 for the regularization term <span class="math notranslate nohighlight">\(r(W)\)</span> via the <code class="docutils literal notranslate"><span class="pre">penalty</span></code> argument, where <span class="math notranslate nohighlight">\(m\)</span>
 is the number of features:</p>
 <table class="docutils align-default">
