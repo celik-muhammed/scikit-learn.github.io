@@ -1238,7 +1238,7 @@ div.sk-label-container:hover .sk-estimator-doc-link.fitted:hover,
     <span class="nb">print</span><span class="p">(</span><span class="n">e</span><span class="p">)</span>
 </pre></div>
 </div>
-<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>MetaClassifier.fit got unexpected argument(s) {&#39;test&#39;}, which are not requested metadata in any object.
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>MetaClassifier.fit got unexpected argument(s) {&#39;test&#39;}, which are not routed to any object.
 </pre></div>
 </div>
 <p>And if we pass a metadata which is not explicitly requested:</p>
@@ -1249,7 +1249,7 @@ div.sk-label-container:hover .sk-estimator-doc-link.fitted:hover,
 </pre></div>
 </div>
 <div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>Received sample_weight of length = 100 in ExampleClassifier.
-[groups] are passed but are not explicitly set as requested or not for ExampleClassifier.predict
+[groups] are passed but are not explicitly set as requested or not requested for ExampleClassifier.predict, which is used within MetaClassifier.predict. Call `ExampleClassifier.set_predict_request({metadata}=True/False)` for each metadata you want to request/ignore.
 </pre></div>
 </div>
 <p>Also, if we explicitly set it as not requested, but it is provided:</p>
@@ -1265,7 +1265,7 @@ div.sk-label-container:hover .sk-estimator-doc-link.fitted:hover,
 </pre></div>
 </div>
 <div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>Received sample_weight of length = 100 in ExampleClassifier.
-MetaClassifier.predict got unexpected argument(s) {&#39;groups&#39;}, which are not requested metadata in any object.
+MetaClassifier.predict got unexpected argument(s) {&#39;groups&#39;}, which are not routed to any object.
 </pre></div>
 </div>
 <p>Another concept to introduce is <strong>aliased metadata</strong>. This is when an estimator
@@ -1703,7 +1703,7 @@ alias and <code class="docutils literal notranslate"><span class="pre">sample_we
     <span class="nb">print</span><span class="p">(</span><span class="n">e</span><span class="p">)</span>
 </pre></div>
 </div>
-<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>MetaClassifier.fit got unexpected argument(s) {&#39;sample_weight&#39;}, which are not requested metadata in any object.
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>MetaClassifier.fit got unexpected argument(s) {&#39;sample_weight&#39;}, which are not routed to any object.
 </pre></div>
 </div>
 <p>This leads us to the <code class="docutils literal notranslate"><span class="pre">get_metadata_routing</span></code>. The way routing works in
@@ -2610,6 +2610,10 @@ following pattern can be used to warn the users about it.</p>
 Support for sample_weight has recently been added to this class. To maintain backward compatibility, it is ignored now. You can set the request value to False to silence this warning, or to True to consume and use the metadata.
 </pre></div>
 </div>
+<p>In the end, we disable the configuration flag for metadata routing:</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><a href="../../modules/generated/sklearn.set_config.html#sklearn.set_config" title="sklearn.set_config" class="sphx-glr-backref-module-sklearn sphx-glr-backref-type-py-function"><span class="n">set_config</span></a><span class="p">(</span><span class="n">enable_metadata_routing</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+</pre></div>
+</div>
 </section>
 <section id="third-party-development-and-scikit-learn-dependency">
 <h2>Third Party Development and scikit-learn Dependency<a class="headerlink" href="#third-party-development-and-scikit-learn-dependency" title="Link to this heading">¶</a></h2>
@@ -2628,7 +2632,7 @@ explicitly defined in the method’s signature, as opposed to being
 <li><p>you do not route any metadata to the underlying objects, i.e. you’re not a
 <em>router</em>.</p></li>
 </ul>
-<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> (0 minutes 0.046 seconds)</p>
+<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> (0 minutes 0.047 seconds)</p>
 <div class="sphx-glr-footer sphx-glr-footer-example docutils container" id="sphx-glr-download-auto-examples-miscellaneous-plot-metadata-routing-py">
 <div class="binder-badge docutils container">
 <a class="reference external image-reference" href="https://mybinder.org/v2/gh/scikit-learn/scikit-learn/main?urlpath=lab/tree/notebooks/auto_examples/miscellaneous/plot_metadata_routing.ipynb"><img alt="Launch binder" src="../../_images/binder_badge_logo20.svg" width="150px" /></a>
