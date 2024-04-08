@@ -183,7 +183,6 @@
 <li><a class="reference internal" href="#support-for-array-api">Support for Array API</a></li>
 <li><a class="reference internal" href="#support-for-building-with-meson">Support for building with Meson</a></li>
 <li><a class="reference internal" href="#metadata-routing">Metadata Routing</a></li>
-<li><a class="reference internal" href="#id1">Metadata Routing</a></li>
 <li><a class="reference internal" href="#changelog">Changelog</a><ul>
 <li><a class="reference internal" href="#sklearn-cluster"><code class="xref py py-mod docutils literal notranslate"><span class="pre">sklearn.cluster</span></code></a></li>
 <li><a class="reference internal" href="#sklearn-compose"><code class="xref py py-mod docutils literal notranslate"><span class="pre">sklearn.compose</span></code></a></li>
@@ -198,8 +197,10 @@
 <li><a class="reference internal" href="#sklearn-linear-model"><code class="xref py py-mod docutils literal notranslate"><span class="pre">sklearn.linear_model</span></code></a></li>
 <li><a class="reference internal" href="#sklearn-manifold"><code class="xref py py-mod docutils literal notranslate"><span class="pre">sklearn.manifold</span></code></a></li>
 <li><a class="reference internal" href="#sklearn-metrics"><code class="xref py py-mod docutils literal notranslate"><span class="pre">sklearn.metrics</span></code></a></li>
+<li><a class="reference internal" href="#sklearn-mixture"><code class="xref py py-mod docutils literal notranslate"><span class="pre">sklearn.mixture</span></code></a></li>
 <li><a class="reference internal" href="#sklearn-model-selection"><code class="xref py py-mod docutils literal notranslate"><span class="pre">sklearn.model_selection</span></code></a></li>
 <li><a class="reference internal" href="#sklearn-multioutput"><code class="xref py py-mod docutils literal notranslate"><span class="pre">sklearn.multioutput</span></code></a></li>
+<li><a class="reference internal" href="#sklearn-neighbors"><code class="xref py py-mod docutils literal notranslate"><span class="pre">sklearn.neighbors</span></code></a></li>
 <li><a class="reference internal" href="#sklearn-pipeline"><code class="xref py py-mod docutils literal notranslate"><span class="pre">sklearn.pipeline</span></code></a></li>
 <li><a class="reference internal" href="#sklearn-preprocessing"><code class="xref py py-mod docutils literal notranslate"><span class="pre">sklearn.preprocessing</span></code></a></li>
 <li><a class="reference internal" href="#sklearn-tree"><code class="xref py py-mod docutils literal notranslate"><span class="pre">sklearn.tree</span></code></a></li>
@@ -282,14 +283,6 @@ via their <code class="docutils literal notranslate"><span class="pre">fit</span
 their <code class="docutils literal notranslate"><span class="pre">fit</span></code> method and route metadata to the underlying
 <a class="reference internal" href="../modules/generated/sklearn.model_selection.GridSearchCV.html#sklearn.model_selection.GridSearchCV" title="sklearn.model_selection.GridSearchCV"><code class="xref py py-class docutils literal notranslate"><span class="pre">model_selection.GridSearchCV</span></code></a> object or the underlying scorer.
 <a class="reference external" href="https://github.com/scikit-learn/scikit-learn/pull/27560">#27560</a> by <a class="reference external" href="https://github.com/OmarManzoor">Omar Salman</a>.</p></li>
-</ul>
-</section>
-<section id="id1">
-<h3>Metadata Routing<a class="headerlink" href="#id1" title="Link to this heading">¶</a></h3>
-<p>The following models now support metadata routing in one or more or their
-methods. Refer to the <a class="reference internal" href="../metadata_routing.html#metadata-routing"><span class="std std-ref">Metadata Routing User Guide</span></a> for
-more details.</p>
-<ul class="simple">
 <li><p><span class="raw-html"><span class="badge badge-success">Feature</span></span>  <a class="reference internal" href="../modules/generated/sklearn.linear_model.RANSACRegressor.html#sklearn.linear_model.RANSACRegressor" title="sklearn.linear_model.RANSACRegressor"><code class="xref py py-class docutils literal notranslate"><span class="pre">linear_model.RANSACRegressor</span></code></a> now supports metadata routing
 in its <code class="docutils literal notranslate"><span class="pre">fit</span></code>, <code class="docutils literal notranslate"><span class="pre">score</span></code> and <code class="docutils literal notranslate"><span class="pre">predict</span></code> methods and route metadata to its
 underlying estimator’s’ <code class="docutils literal notranslate"><span class="pre">fit</span></code>, <code class="docutils literal notranslate"><span class="pre">score</span></code> and <code class="docutils literal notranslate"><span class="pre">predict</span></code> methods.
@@ -302,6 +295,12 @@ underlying estimator’s’ <code class="docutils literal notranslate"><span cla
 <code class="docutils literal notranslate"><span class="pre">fit</span></code> and <code class="docutils literal notranslate"><span class="pre">fit_transform</span></code> methods and route metadata to the underlying
 transformers’ <code class="docutils literal notranslate"><span class="pre">fit</span></code> and <code class="docutils literal notranslate"><span class="pre">fit_transform</span></code>. <a class="reference external" href="https://github.com/scikit-learn/scikit-learn/pull/28205">#28205</a> by <a class="reference external" href="https://github.com/StefanieSenger">Stefanie
 Senger</a>.</p></li>
+<li><p><span class="raw-html"><span class="badge badge-danger">Fix</span></span>  Fix an issue when resolving default routing requests set via class
+attributes.
+<a class="reference external" href="https://github.com/scikit-learn/scikit-learn/pull/28435">#28435</a> by <a class="reference external" href="https://github.com/adrinjalali">Adrin Jalali</a>.</p></li>
+<li><p><span class="raw-html"><span class="badge badge-danger">Fix</span></span>  Fix an issue when <code class="docutils literal notranslate"><span class="pre">set_{method}_request</span></code> methods are used as unbound
+methods, which can happen if one tries to decorate them.
+<a class="reference external" href="https://github.com/scikit-learn/scikit-learn/pull/28651">#28651</a> by <a class="reference external" href="https://github.com/adrinjalali">Adrin Jalali</a>.</p></li>
 </ul>
 </section>
 <section id="changelog">
@@ -467,12 +466,27 @@ and <code class="docutils literal notranslate"><span class="pre">from_prediction
 <a class="reference external" href="https://github.com/scikit-learn/scikit-learn/pull/28051">#28051</a> by <a class="reference external" href="https://github.com/pidefrem">Pierre de Fréminville</a>.</p></li>
 <li><p><span class="raw-html"><span class="badge badge-success">Feature</span></span>  <a class="reference internal" href="../modules/generated/sklearn.metrics.check_scoring.html#sklearn.metrics.check_scoring" title="sklearn.metrics.check_scoring"><code class="xref py py-func docutils literal notranslate"><span class="pre">sklearn.metrics.check_scoring</span></code></a> now returns a multi-metric scorer
 when <code class="docutils literal notranslate"><span class="pre">scoring</span></code> as a <code class="docutils literal notranslate"><span class="pre">dict</span></code>, <code class="docutils literal notranslate"><span class="pre">set</span></code>, <code class="docutils literal notranslate"><span class="pre">tuple</span></code>, or <code class="docutils literal notranslate"><span class="pre">list</span></code>. <a class="reference external" href="https://github.com/scikit-learn/scikit-learn/pull/28360">#28360</a> by <a class="reference external" href="https://github.com/thomasjpfan">Thomas Fan</a>.</p></li>
+<li><p><span class="raw-html"><span class="badge badge-danger">Fix</span></span> <a class="reference internal" href="../modules/generated/sklearn.metrics.classification_report.html#sklearn.metrics.classification_report" title="sklearn.metrics.classification_report"><code class="xref py py-class docutils literal notranslate"><span class="pre">metrics.classification_report</span></code></a> now shows only accuracy and not
+micro-average when input is a subset of labels.
+<a class="reference external" href="https://github.com/scikit-learn/scikit-learn/pull/28399">#28399</a> by <a class="reference external" href="https://github.com/vjoshi253">Vineet Joshi</a>.</p></li>
+<li><p><span class="raw-html"><span class="badge badge-danger">Fix</span></span>  Fix OpenBLAS 0.3.26 dead-lock on Windows in pairwise distances
+computation. This is likely to affect neighbor-based algorithms.
+<a class="reference external" href="https://github.com/scikit-learn/scikit-learn/pull/28692">#28692</a> by <a class="reference external" href="https://github.com/lesteve">Loïc Estève</a>.</p></li>
 <li><p><span class="raw-html"><span class="badge badge-warning">API Change</span></span>  <a class="reference internal" href="../modules/generated/sklearn.metrics.precision_recall_curve.html#sklearn.metrics.precision_recall_curve" title="sklearn.metrics.precision_recall_curve"><code class="xref py py-func docutils literal notranslate"><span class="pre">metrics.precision_recall_curve</span></code></a> deprecated the keyword argument <code class="docutils literal notranslate"><span class="pre">probas_pred</span></code>
 in favor of <code class="docutils literal notranslate"><span class="pre">y_score</span></code>. <code class="docutils literal notranslate"><span class="pre">probas_pred</span></code> will be removed in version 1.7.
 <a class="reference external" href="https://github.com/scikit-learn/scikit-learn/pull/28092">#28092</a> by <a class="reference external" href="https://github.com/adam2392">Adam Li</a>.</p></li>
 <li><p><span class="raw-html"><span class="badge badge-warning">API Change</span></span>  <a class="reference internal" href="../modules/generated/sklearn.metrics.brier_score_loss.html#sklearn.metrics.brier_score_loss" title="sklearn.metrics.brier_score_loss"><code class="xref py py-func docutils literal notranslate"><span class="pre">metrics.brier_score_loss</span></code></a> deprecated the keyword argument <code class="docutils literal notranslate"><span class="pre">y_prob</span></code>
 in favor of <code class="docutils literal notranslate"><span class="pre">y_proba</span></code>. <code class="docutils literal notranslate"><span class="pre">y_prob</span></code> will be removed in version 1.7.
 <a class="reference external" href="https://github.com/scikit-learn/scikit-learn/pull/28092">#28092</a> by <a class="reference external" href="https://github.com/adam2392">Adam Li</a>.</p></li>
+</ul>
+</section>
+<section id="sklearn-mixture">
+<h4><a class="reference internal" href="../modules/classes.html#module-sklearn.mixture" title="sklearn.mixture"><code class="xref py py-mod docutils literal notranslate"><span class="pre">sklearn.mixture</span></code></a><a class="headerlink" href="#sklearn-mixture" title="Link to this heading">¶</a></h4>
+<ul class="simple">
+<li><p><span class="raw-html"><span class="badge badge-danger">Fix</span></span>  The <code class="docutils literal notranslate"><span class="pre">converged_</span></code> attribute of <a class="reference internal" href="../modules/generated/sklearn.mixture.GaussianMixture.html#sklearn.mixture.GaussianMixture" title="sklearn.mixture.GaussianMixture"><code class="xref py py-class docutils literal notranslate"><span class="pre">mixture.GaussianMixture</span></code></a> and
+<a class="reference internal" href="../modules/generated/sklearn.mixture.BayesianGaussianMixture.html#sklearn.mixture.BayesianGaussianMixture" title="sklearn.mixture.BayesianGaussianMixture"><code class="xref py py-class docutils literal notranslate"><span class="pre">mixture.BayesianGaussianMixture</span></code></a> now reflects the convergence status of
+the best fit whereas it was previously <code class="docutils literal notranslate"><span class="pre">True</span></code> if any of the fits converged.
+<a class="reference external" href="https://github.com/scikit-learn/scikit-learn/pull/26837">#26837</a> by <a class="reference external" href="https://github.com/krstopro">Krsto Proroković</a>.</p></li>
 </ul>
 </section>
 <section id="sklearn-model-selection">
@@ -492,8 +506,16 @@ implementations of the Array API like CuPY.
 <section id="sklearn-multioutput">
 <h4><a class="reference internal" href="../modules/classes.html#module-sklearn.multioutput" title="sklearn.multioutput"><code class="xref py py-mod docutils literal notranslate"><span class="pre">sklearn.multioutput</span></code></a><a class="headerlink" href="#sklearn-multioutput" title="Link to this heading">¶</a></h4>
 <ul class="simple">
-<li><p><span class="raw-html"><span class="badge badge-info">Enhancement</span></span>  <code class="docutils literal notranslate"><span class="pre">chain_method</span></code> parameter added to <code class="docutils literal notranslate"><span class="pre">:class:``multioutput.ClassifierChain</span></code>.
+<li><p><span class="raw-html"><span class="badge badge-info">Enhancement</span></span>  <code class="docutils literal notranslate"><span class="pre">chain_method</span></code> parameter added to <code class="docutils literal notranslate"><span class="pre">:class:`multioutput.ClassifierChain</span></code>.
 <a class="reference external" href="https://github.com/scikit-learn/scikit-learn/pull/27700">#27700</a> by <a class="reference external" href="https://github.com/lucyleeow">Lucy Liu</a>.</p></li>
+</ul>
+</section>
+<section id="sklearn-neighbors">
+<h4><a class="reference internal" href="../modules/classes.html#module-sklearn.neighbors" title="sklearn.neighbors"><code class="xref py py-mod docutils literal notranslate"><span class="pre">sklearn.neighbors</span></code></a><a class="headerlink" href="#sklearn-neighbors" title="Link to this heading">¶</a></h4>
+<ul class="simple">
+<li><p><span class="raw-html"><span class="badge badge-danger">Fix</span></span>  Fixes <a class="reference internal" href="../modules/generated/sklearn.neighbors.NeighborhoodComponentsAnalysis.html#sklearn.neighbors.NeighborhoodComponentsAnalysis" title="sklearn.neighbors.NeighborhoodComponentsAnalysis"><code class="xref py py-class docutils literal notranslate"><span class="pre">neighbors.NeighborhoodComponentsAnalysis</span></code></a> such that
+<code class="docutils literal notranslate"><span class="pre">get_feature_names_out</span></code> returns the correct number of feature names.
+<a class="reference external" href="https://github.com/scikit-learn/scikit-learn/pull/28306">#28306</a> by <a class="reference external" href="https://github.com/brendanlu">Brendan Lu</a>.</p></li>
 </ul>
 </section>
 <section id="sklearn-pipeline">
@@ -532,6 +554,9 @@ given the split condition.
 <a class="reference external" href="https://github.com/scikit-learn/scikit-learn/pull/28768">#28768</a> by <a class="reference external" href="https://github.com/jeremiedbb">Jérémie du Boisberranger</a>.</p></li>
 <li><p><span class="raw-html"><span class="badge badge-warning">API Change</span></span>  <code class="xref py py-func docutils literal notranslate"><span class="pre">utils.tosequence</span></code> is deprecated and will be removed in version 1.7.
 <a class="reference external" href="https://github.com/scikit-learn/scikit-learn/pull/28763">#28763</a> by <a class="reference external" href="https://github.com/jeremiedbb">Jérémie du Boisberranger</a>.</p></li>
+<li><p><span class="raw-html"><span class="badge badge-danger">Fix</span></span>  <a class="reference internal" href="../modules/generated/sklearn.utils._safe_indexing.html#sklearn.utils._safe_indexing" title="sklearn.utils._safe_indexing"><code class="xref py py-func docutils literal notranslate"><span class="pre">_safe_indexing</span></code></a> now works correctly for polars DataFrame when
+<code class="docutils literal notranslate"><span class="pre">axis=0</span></code> and supports indexing polars Series.
+<a class="reference external" href="https://github.com/scikit-learn/scikit-learn/pull/28521">#28521</a> by <a class="reference external" href="https://github.com/Charlie-XIAO">Yao Xiao</a>.</p></li>
 </ul>
 <p class="rubric">Code and documentation contributors</p>
 <p>Thanks to everyone who has contributed to the maintenance and improvement of
