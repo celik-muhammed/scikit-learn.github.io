@@ -143,7 +143,7 @@ to define the 8 gray values to sub-sample. The simplest strategy is to define
 them equally spaced, which correspond to setting `strategy="uniform"`. From
 the previous histogram, we know that this strategy is certainly not optimal.
 
-.. GENERATED FROM PYTHON SOURCE LINES 75-100
+.. GENERATED FROM PYTHON SOURCE LINES 75-99
 
 .. code-block:: Python
 
@@ -156,7 +156,6 @@ the previous histogram, we know that this strategy is certainly not optimal.
         encode="ordinal",
         strategy="uniform",
         random_state=0,
-        subsample=200_000,
     )
     compressed_raccoon_uniform = encoder.fit_transform(raccoon_face.reshape(-1, 1)).reshape(
         raccoon_face.shape
@@ -184,7 +183,7 @@ the previous histogram, we know that this strategy is certainly not optimal.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 101-108
+.. GENERATED FROM PYTHON SOURCE LINES 100-107
 
 Qualitatively, we can spot some small regions where we see the effect of the
 compression (e.g. leaves on the bottom right corner). But after all, the resulting
@@ -194,7 +193,7 @@ We observe that the distribution of pixels values have been mapped to 8
 different values. We can check the correspondence between such values and the
 original pixel values.
 
-.. GENERATED FROM PYTHON SOURCE LINES 108-113
+.. GENERATED FROM PYTHON SOURCE LINES 107-112
 
 .. code-block:: Python
 
@@ -217,7 +216,7 @@ original pixel values.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 114-121
+.. GENERATED FROM PYTHON SOURCE LINES 113-120
 
 .. code-block:: Python
 
@@ -240,7 +239,7 @@ original pixel values.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 122-127
+.. GENERATED FROM PYTHON SOURCE LINES 121-126
 
 As previously stated, the uniform sampling strategy is not optimal. Notice for
 instance that the pixels mapped to the value 7 will encode a rather small
@@ -248,7 +247,7 @@ amount of information, whereas the mapped value 3 will represent a large
 amount of counts. We can instead use a clustering strategy such as k-means to
 find a more optimal mapping.
 
-.. GENERATED FROM PYTHON SOURCE LINES 127-149
+.. GENERATED FROM PYTHON SOURCE LINES 126-147
 
 .. code-block:: Python
 
@@ -258,7 +257,6 @@ find a more optimal mapping.
         encode="ordinal",
         strategy="kmeans",
         random_state=0,
-        subsample=200_000,
     )
     compressed_raccoon_kmeans = encoder.fit_transform(raccoon_face.reshape(-1, 1)).reshape(
         raccoon_face.shape
@@ -286,7 +284,7 @@ find a more optimal mapping.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 150-154
+.. GENERATED FROM PYTHON SOURCE LINES 148-152
 
 .. code-block:: Python
 
@@ -308,7 +306,7 @@ find a more optimal mapping.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 155-162
+.. GENERATED FROM PYTHON SOURCE LINES 153-160
 
 .. code-block:: Python
 
@@ -331,7 +329,7 @@ find a more optimal mapping.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 163-171
+.. GENERATED FROM PYTHON SOURCE LINES 161-169
 
 The counts in the bins are now more balanced and their centers are no longer
 equally spaced. Note that we could enforce the same number of pixels per bin
@@ -342,7 +340,7 @@ Memory footprint
 
 We previously stated that we should save 8 times less memory. Let's verify it.
 
-.. GENERATED FROM PYTHON SOURCE LINES 171-175
+.. GENERATED FROM PYTHON SOURCE LINES 169-173
 
 .. code-block:: Python
 
@@ -364,14 +362,14 @@ We previously stated that we should save 8 times less memory. Let's verify it.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 176-180
+.. GENERATED FROM PYTHON SOURCE LINES 174-178
 
 It is quite surprising to see that our compressed image is taking x8 more
 memory than the original image. This is indeed the opposite of what we
 expected. The reason is mainly due to the type of data used to encode the
 image.
 
-.. GENERATED FROM PYTHON SOURCE LINES 180-183
+.. GENERATED FROM PYTHON SOURCE LINES 178-181
 
 .. code-block:: Python
 
@@ -391,7 +389,7 @@ image.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 184-194
+.. GENERATED FROM PYTHON SOURCE LINES 182-192
 
 Indeed, the output of the :class:`~sklearn.preprocessing.KBinsDiscretizer` is
 an array of 64-bit float. It means that it takes x8 more memory. However, we
@@ -407,7 +405,7 @@ a 64-bit float representation.
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** (0 minutes 2.180 seconds)
+   **Total running time of the script:** (0 minutes 2.213 seconds)
 
 
 .. _sphx_glr_download_auto_examples_cluster_plot_face_compress.py:
