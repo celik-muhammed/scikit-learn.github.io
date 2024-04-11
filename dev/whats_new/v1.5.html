@@ -245,6 +245,12 @@ more efficient for dense arrays but the fitted quantiles and the results of
 <code class="docutils literal notranslate"><span class="pre">transform</span></code> may be slightly different than before (keeping the same statistical
 properties).
 <a class="reference external" href="https://github.com/scikit-learn/scikit-learn/pull/27344">#27344</a> by <a class="reference external" href="https://github.com/xuefeng-xu">Xuefeng Xu</a>.</p></li>
+<li><p><span class="raw-html"><span class="badge badge-info">Enhancement</span></span>  <a class="reference internal" href="../modules/generated/sklearn.decomposition.PCA.html#sklearn.decomposition.PCA" title="sklearn.decomposition.PCA"><code class="xref py py-class docutils literal notranslate"><span class="pre">decomposition.PCA</span></code></a>, <a class="reference internal" href="../modules/generated/sklearn.decomposition.SparsePCA.html#sklearn.decomposition.SparsePCA" title="sklearn.decomposition.SparsePCA"><code class="xref py py-class docutils literal notranslate"><span class="pre">decomposition.SparsePCA</span></code></a>
+and <a class="reference internal" href="../modules/generated/sklearn.decomposition.TruncatedSVD.html#sklearn.decomposition.TruncatedSVD" title="sklearn.decomposition.TruncatedSVD"><code class="xref py py-class docutils literal notranslate"><span class="pre">decomposition.TruncatedSVD</span></code></a> now set the sign of the <code class="docutils literal notranslate"><span class="pre">components_</span></code>
+attribute based on the component values instead of using the transformed data
+as reference. This change is needed to be able to offer consistent component
+signs across all <code class="docutils literal notranslate"><span class="pre">PCA</span></code> solvers, including the new
+<code class="docutils literal notranslate"><span class="pre">svd_solver=&quot;covariance_eigh&quot;</span></code> option introduced in this release.</p></li>
 </ul>
 </section>
 <section id="support-for-array-api">
@@ -361,9 +367,29 @@ By default, the functions will retry up to 3 times in case of network failures.
 <section id="sklearn-decomposition">
 <h4><a class="reference internal" href="../modules/classes.html#module-sklearn.decomposition" title="sklearn.decomposition"><code class="xref py py-mod docutils literal notranslate"><span class="pre">sklearn.decomposition</span></code></a><a class="headerlink" href="#sklearn-decomposition" title="Link to this heading">¶</a></h4>
 <ul class="simple">
+<li><p><span class="raw-html"><span class="badge badge-info">Efficiency</span></span>  <a class="reference internal" href="../modules/generated/sklearn.decomposition.PCA.html#sklearn.decomposition.PCA" title="sklearn.decomposition.PCA"><code class="xref py py-class docutils literal notranslate"><span class="pre">decomposition.PCA</span></code></a> with <code class="docutils literal notranslate"><span class="pre">svd_solver=&quot;full&quot;</span></code> now assigns
+a contiguous <code class="docutils literal notranslate"><span class="pre">components_</span></code> attribute instead of an non-contiguous slice of
+the singular vectors. When <code class="docutils literal notranslate"><span class="pre">n_components</span> <span class="pre">&lt;&lt;</span> <span class="pre">n_features</span></code>, this can save some
+memory and, more importantly, help speed-up subsequent calls to the <code class="docutils literal notranslate"><span class="pre">transform</span></code>
+method by more than an order of magnitude by leveraging cache locality of
+BLAS GEMM on contiguous arrays.
+<a class="reference external" href="https://github.com/scikit-learn/scikit-learn/pull/27491">#27491</a> by <a class="reference external" href="https://github.com/ogrisel">Olivier Grisel</a>.</p></li>
 <li><p><span class="raw-html"><span class="badge badge-info">Enhancement</span></span>  <a class="reference internal" href="../modules/generated/sklearn.decomposition.PCA.html#sklearn.decomposition.PCA" title="sklearn.decomposition.PCA"><code class="xref py py-class docutils literal notranslate"><span class="pre">PCA</span></code></a> now automatically selects the ARPACK solver
 for sparse inputs when <code class="docutils literal notranslate"><span class="pre">svd_solver=&quot;auto&quot;</span></code> instead of raising an error.
 <a class="reference external" href="https://github.com/scikit-learn/scikit-learn/pull/28498">#28498</a> by <a class="reference external" href="https://github.com/lamdang2k">Thanh Lam Dang</a>.</p></li>
+<li><p><span class="raw-html"><span class="badge badge-info">Enhancement</span></span>  <a class="reference internal" href="../modules/generated/sklearn.decomposition.PCA.html#sklearn.decomposition.PCA" title="sklearn.decomposition.PCA"><code class="xref py py-class docutils literal notranslate"><span class="pre">decomposition.PCA</span></code></a> now supports a new solver option
+named <code class="docutils literal notranslate"><span class="pre">svd_solver=&quot;covariance_eigh&quot;</span></code> which offers an order of magnitude
+speed-up and reduced memory usage for datasets with a large number of data
+points and a small number of features (say, <code class="docutils literal notranslate"><span class="pre">n_samples</span> <span class="pre">&gt;&gt;</span> <span class="pre">1000</span> <span class="pre">&gt;</span>
+<span class="pre">n_features</span></code>). The <code class="docutils literal notranslate"><span class="pre">svd_solver=&quot;auto&quot;</span></code> option has been updated to use the new
+solver automatically for such datasets. This solver also accepts sparse input
+data.
+<a class="reference external" href="https://github.com/scikit-learn/scikit-learn/pull/27491">#27491</a> by <a class="reference external" href="https://github.com/ogrisel">Olivier Grisel</a>.</p></li>
+<li><p><span class="raw-html"><span class="badge badge-danger">Fix</span></span>  <a class="reference internal" href="../modules/generated/sklearn.decomposition.PCA.html#sklearn.decomposition.PCA" title="sklearn.decomposition.PCA"><code class="xref py py-class docutils literal notranslate"><span class="pre">decomposition.PCA</span></code></a> fit with <code class="docutils literal notranslate"><span class="pre">svd_solver=&quot;arpack&quot;</span></code>,
+<code class="docutils literal notranslate"><span class="pre">whiten=True</span></code> and a value for <code class="docutils literal notranslate"><span class="pre">n_components</span></code> that is larger than the rank of
+the training set, no longer returns infinite values when transforming
+hold-out data.
+<a class="reference external" href="https://github.com/scikit-learn/scikit-learn/pull/27491">#27491</a> by <a class="reference external" href="https://github.com/ogrisel">Olivier Grisel</a>.</p></li>
 </ul>
 </section>
 <section id="sklearn-dummy">
