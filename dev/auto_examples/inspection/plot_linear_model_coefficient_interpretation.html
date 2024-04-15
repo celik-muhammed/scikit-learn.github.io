@@ -182,6 +182,7 @@
 <li><a class="reference internal" href="#the-machine-learning-pipeline">The machine-learning pipeline</a></li>
 <li><a class="reference internal" href="#processing-the-dataset">Processing the dataset</a></li>
 <li><a class="reference internal" href="#interpreting-coefficients-scale-matters">Interpreting coefficients: scale matters</a></li>
+<li><a class="reference internal" href="#interpreting-coefficients-being-cautious-about-causality">Interpreting coefficients: being cautious about causality</a></li>
 <li><a class="reference internal" href="#checking-the-variability-of-the-coefficients">Checking the variability of the coefficients</a></li>
 <li><a class="reference internal" href="#the-problem-of-correlated-variables">The problem of correlated variables</a></li>
 <li><a class="reference internal" href="#preprocessing-numerical-variables">Preprocessing numerical variables</a></li>
@@ -237,13 +238,14 @@ various features such as experience, age, or education.</p>
 <li><p><a class="reference internal" href="#the-machine-learning-pipeline" id="id2">The machine-learning pipeline</a></p></li>
 <li><p><a class="reference internal" href="#processing-the-dataset" id="id3">Processing the dataset</a></p></li>
 <li><p><a class="reference internal" href="#interpreting-coefficients-scale-matters" id="id4">Interpreting coefficients: scale matters</a></p></li>
-<li><p><a class="reference internal" href="#checking-the-variability-of-the-coefficients" id="id5">Checking the variability of the coefficients</a></p></li>
-<li><p><a class="reference internal" href="#the-problem-of-correlated-variables" id="id6">The problem of correlated variables</a></p></li>
-<li><p><a class="reference internal" href="#preprocessing-numerical-variables" id="id7">Preprocessing numerical variables</a></p></li>
-<li><p><a class="reference internal" href="#linear-models-with-regularization" id="id8">Linear models with regularization</a></p></li>
-<li><p><a class="reference internal" href="#linear-models-with-sparse-coefficients" id="id9">Linear models with sparse coefficients</a></p></li>
-<li><p><a class="reference internal" href="#wrong-causal-interpretation" id="id10">Wrong causal interpretation</a></p></li>
-<li><p><a class="reference internal" href="#lessons-learned" id="id11">Lessons learned</a></p></li>
+<li><p><a class="reference internal" href="#interpreting-coefficients-being-cautious-about-causality" id="id5">Interpreting coefficients: being cautious about causality</a></p></li>
+<li><p><a class="reference internal" href="#checking-the-variability-of-the-coefficients" id="id6">Checking the variability of the coefficients</a></p></li>
+<li><p><a class="reference internal" href="#the-problem-of-correlated-variables" id="id7">The problem of correlated variables</a></p></li>
+<li><p><a class="reference internal" href="#preprocessing-numerical-variables" id="id8">Preprocessing numerical variables</a></p></li>
+<li><p><a class="reference internal" href="#linear-models-with-regularization" id="id9">Linear models with regularization</a></p></li>
+<li><p><a class="reference internal" href="#linear-models-with-sparse-coefficients" id="id10">Linear models with sparse coefficients</a></p></li>
+<li><p><a class="reference internal" href="#wrong-causal-interpretation" id="id11">Wrong causal interpretation</a></p></li>
+<li><p><a class="reference internal" href="#lessons-learned" id="id12">Lessons learned</a></p></li>
 </ul>
 </nav>
 <div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
@@ -1335,8 +1337,32 @@ other features remain constant.
 Also, AGE, EXPERIENCE and EDUCATION are the three variables that most
 influence the model.</p>
 </section>
+<section id="interpreting-coefficients-being-cautious-about-causality">
+<h2><a class="toc-backref" href="#id5" role="doc-backlink">Interpreting coefficients: being cautious about causality</a><a class="headerlink" href="#interpreting-coefficients-being-cautious-about-causality" title="Link to this heading">¶</a></h2>
+<p>Linear models are a great tool for measuring statistical association, but we
+should be cautious when making statements about causality, after all
+correlation doesn’t always imply causation. This is particularly difficult in
+the social sciences because the variables we observe only function as proxies
+for the underlying causal process.</p>
+<p>In our particular case we can think of the EDUCATION of an individual as a
+proxy for their professional aptitude, the real variable we’re interested in
+but can’t observe. We’d certainly like to think that staying in school for
+longer would increase technical competency, but it’s also quite possible that
+causality goes the other way too. That is, those who are technically
+competent tend to stay in school for longer.</p>
+<p>An employer is unlikely to care which case it is (or if it’s a mix of both),
+as long as they remain convinced that a person with more EDUCATION is better
+suited for the job, they will be happy to pay out a higher WAGE.</p>
+<p>This confounding of effects becomes problematic when thinking about some
+form of intervention e.g. government subsidies of university degrees or
+promotional material encouraging individuals to take up higher education.
+The usefulness of these measures could end up being overstated, especially if
+the degree of confounding is strong. Our model predicts a <span class="math notranslate nohighlight">\(0.054699\)</span>
+increase in hourly wage for each year of education. The actual causal effect
+might be lower because of this confounding.</p>
+</section>
 <section id="checking-the-variability-of-the-coefficients">
-<h2><a class="toc-backref" href="#id5" role="doc-backlink">Checking the variability of the coefficients</a><a class="headerlink" href="#checking-the-variability-of-the-coefficients" title="Link to this heading">¶</a></h2>
+<h2><a class="toc-backref" href="#id6" role="doc-backlink">Checking the variability of the coefficients</a><a class="headerlink" href="#checking-the-variability-of-the-coefficients" title="Link to this heading">¶</a></h2>
 <p>We can check the coefficient variability through cross-validation:
 it is a form of data perturbation (related to
 <a class="reference external" href="https://en.wikipedia.org/wiki/Resampling_(statistics)">resampling</a>).</p>
@@ -1376,7 +1402,7 @@ with caution.</p>
 </div>
 <img src="../../_images/sphx_glr_plot_linear_model_coefficient_interpretation_006.png" srcset="../../_images/sphx_glr_plot_linear_model_coefficient_interpretation_006.png" alt="Ridge model, small regularization, Coefficient importance and its variability" class = "sphx-glr-single-img"/></section>
 <section id="the-problem-of-correlated-variables">
-<h2><a class="toc-backref" href="#id6" role="doc-backlink">The problem of correlated variables</a><a class="headerlink" href="#the-problem-of-correlated-variables" title="Link to this heading">¶</a></h2>
+<h2><a class="toc-backref" href="#id7" role="doc-backlink">The problem of correlated variables</a><a class="headerlink" href="#the-problem-of-correlated-variables" title="Link to this heading">¶</a></h2>
 <p>The AGE and EXPERIENCE coefficients are affected by strong variability which
 might be due to the collinearity between the 2 features: as AGE and
 EXPERIENCE vary together in the data, their effect is difficult to tease
@@ -1432,7 +1458,7 @@ variability. EXPERIENCE remains important for all models trained during
 cross-validation.</p>
 </section>
 <section id="preprocessing-numerical-variables">
-<span id="scaling-num"></span><h2><a class="toc-backref" href="#id7" role="doc-backlink">Preprocessing numerical variables</a><a class="headerlink" href="#preprocessing-numerical-variables" title="Link to this heading">¶</a></h2>
+<span id="scaling-num"></span><h2><a class="toc-backref" href="#id8" role="doc-backlink">Preprocessing numerical variables</a><a class="headerlink" href="#preprocessing-numerical-variables" title="Link to this heading">¶</a></h2>
 <p>As said above (see “<a class="reference internal" href="#the-pipeline"><span class="std std-ref">The machine-learning pipeline</span></a>”), we could also choose to scale
 numerical values before training the model.
 This can be useful when we apply a similar amount of regularization to all of them
@@ -1961,7 +1987,7 @@ done in the preprocessing step of the pipeline.</p>
 <img src="../../_images/sphx_glr_plot_linear_model_coefficient_interpretation_011.png" srcset="../../_images/sphx_glr_plot_linear_model_coefficient_interpretation_011.png" alt="Coefficient variability" class = "sphx-glr-single-img"/><p>The result is quite similar to the non-normalized case.</p>
 </section>
 <section id="linear-models-with-regularization">
-<h2><a class="toc-backref" href="#id8" role="doc-backlink">Linear models with regularization</a><a class="headerlink" href="#linear-models-with-regularization" title="Link to this heading">¶</a></h2>
+<h2><a class="toc-backref" href="#id9" role="doc-backlink">Linear models with regularization</a><a class="headerlink" href="#linear-models-with-regularization" title="Link to this heading">¶</a></h2>
 <p>In machine-learning practice, ridge regression is more often used with
 non-negligible regularization.</p>
 <p>Above, we limited this regularization to a very little amount. Regularization
@@ -2509,7 +2535,7 @@ the <a class="reference internal" href="#covariation"><span class="std std-ref">
 </div>
 <img src="../../_images/sphx_glr_plot_linear_model_coefficient_interpretation_014.png" srcset="../../_images/sphx_glr_plot_linear_model_coefficient_interpretation_014.png" alt="Co-variations of coefficients for AGE and EXPERIENCE across folds" class = "sphx-glr-single-img"/></section>
 <section id="linear-models-with-sparse-coefficients">
-<h2><a class="toc-backref" href="#id9" role="doc-backlink">Linear models with sparse coefficients</a><a class="headerlink" href="#linear-models-with-sparse-coefficients" title="Link to this heading">¶</a></h2>
+<h2><a class="toc-backref" href="#id10" role="doc-backlink">Linear models with sparse coefficients</a><a class="headerlink" href="#linear-models-with-sparse-coefficients" title="Link to this heading">¶</a></h2>
 <p>Another possibility to take into account correlated variables in the dataset,
 is to estimate sparse coefficients. In some way we already did it manually
 when we dropped the AGE column in a previous ridge estimation.</p>
@@ -2605,7 +2631,7 @@ caution.</p>
 depending of the fold.</p>
 </section>
 <section id="wrong-causal-interpretation">
-<h2><a class="toc-backref" href="#id10" role="doc-backlink">Wrong causal interpretation</a><a class="headerlink" href="#wrong-causal-interpretation" title="Link to this heading">¶</a></h2>
+<h2><a class="toc-backref" href="#id11" role="doc-backlink">Wrong causal interpretation</a><a class="headerlink" href="#wrong-causal-interpretation" title="Link to this heading">¶</a></h2>
 <p>Policy makers might want to know the effect of education on wage to assess
 whether or not a certain policy designed to entice people to pursue more
 education would make economic sense. While Machine Learning models are great
@@ -2625,11 +2651,14 @@ coefficient, thereby exaggerating the effect of education on wages.</p>
 for a simulated case of ability OVB.</p>
 </section>
 <section id="lessons-learned">
-<h2><a class="toc-backref" href="#id11" role="doc-backlink">Lessons learned</a><a class="headerlink" href="#lessons-learned" title="Link to this heading">¶</a></h2>
+<h2><a class="toc-backref" href="#id12" role="doc-backlink">Lessons learned</a><a class="headerlink" href="#lessons-learned" title="Link to this heading">¶</a></h2>
 <ul class="simple">
 <li><p>Coefficients must be scaled to the same unit of measure to retrieve
 feature importance. Scaling them with the standard-deviation of the
 feature is a useful proxy.</p></li>
+<li><p>Interpreting causality is difficult when there are confounding effects. If
+the relationship between two variables is also affected by something
+unobserved, we should be careful when making conclusions about causality.</p></li>
 <li><p>Coefficients in multivariate linear models represent the dependency
 between a given feature and the target, <strong>conditional</strong> on the other
 features.</p></li>
@@ -2644,7 +2673,7 @@ to be biased by unobserved confounders.</p></li>
 <li><p>Inspection tools may not necessarily provide insights on the true
 data generating process.</p></li>
 </ul>
-<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> (0 minutes 13.670 seconds)</p>
+<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> (0 minutes 14.382 seconds)</p>
 <div class="sphx-glr-footer sphx-glr-footer-example docutils container" id="sphx-glr-download-auto-examples-inspection-plot-linear-model-coefficient-interpretation-py">
 <div class="binder-badge docutils container">
 <a class="reference external image-reference" href="https://mybinder.org/v2/gh/scikit-learn/scikit-learn/main?urlpath=lab/tree/notebooks/auto_examples/inspection/plot_linear_model_coefficient_interpretation.ipynb"><img alt="Launch binder" src="../../_images/binder_badge_logo16.svg" width="150px" /></a>
@@ -2663,12 +2692,12 @@ data generating process.</p></li>
 <div class="sphx-glr-thumbnails"><div class="sphx-glr-thumbcontainer" tooltip="A model that overfits learns the training data too well, capturing both the underlying patterns..."><img alt="" src="../../_images/sphx_glr_plot_ridge_coeffs_thumb.png" />
 <p><a class="reference internal" href="../linear_model/plot_ridge_coeffs.html#sphx-glr-auto-examples-linear-model-plot-ridge-coeffs-py"><span class="std std-ref">Ridge coefficients as a function of the L2 Regularization</span></a></p>
   <div class="sphx-glr-thumbnail-title">Ridge coefficients as a function of the L2 Regularization</div>
-</div><div class="sphx-glr-thumbcontainer" tooltip="Shows the effect of collinearity in the coefficients of an estimator."><img alt="" src="../../_images/sphx_glr_plot_ridge_path_thumb.png" />
-<p><a class="reference internal" href="../linear_model/plot_ridge_path.html#sphx-glr-auto-examples-linear-model-plot-ridge-path-py"><span class="std std-ref">Plot Ridge coefficients as a function of the regularization</span></a></p>
-  <div class="sphx-glr-thumbnail-title">Plot Ridge coefficients as a function of the regularization</div>
 </div><div class="sphx-glr-thumbcontainer" tooltip="Machine Learning models are great for measuring statistical associations. Unfortunately, unless..."><img alt="" src="../../_images/sphx_glr_plot_causal_interpretation_thumb.png" />
 <p><a class="reference internal" href="plot_causal_interpretation.html#sphx-glr-auto-examples-inspection-plot-causal-interpretation-py"><span class="std std-ref">Failure of Machine Learning to infer causal effects</span></a></p>
   <div class="sphx-glr-thumbnail-title">Failure of Machine Learning to infer causal effects</div>
+</div><div class="sphx-glr-thumbcontainer" tooltip="Shows the effect of collinearity in the coefficients of an estimator."><img alt="" src="../../_images/sphx_glr_plot_ridge_path_thumb.png" />
+<p><a class="reference internal" href="../linear_model/plot_ridge_path.html#sphx-glr-auto-examples-linear-model-plot-ridge-path-py"><span class="std std-ref">Plot Ridge coefficients as a function of the regularization</span></a></p>
+  <div class="sphx-glr-thumbnail-title">Plot Ridge coefficients as a function of the regularization</div>
 </div><div class="sphx-glr-thumbcontainer" tooltip="This notebook introduces different strategies to leverage time-related features for a bike shar..."><img alt="" src="../../_images/sphx_glr_plot_cyclical_feature_engineering_thumb.png" />
 <p><a class="reference internal" href="../applications/plot_cyclical_feature_engineering.html#sphx-glr-auto-examples-applications-plot-cyclical-feature-engineering-py"><span class="std std-ref">Time-related feature engineering</span></a></p>
   <div class="sphx-glr-thumbnail-title">Time-related feature engineering</div>

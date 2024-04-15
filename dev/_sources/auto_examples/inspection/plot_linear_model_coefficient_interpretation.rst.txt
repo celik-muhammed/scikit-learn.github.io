@@ -1406,7 +1406,7 @@ coefficient on the output, all else being equal.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 292-319
+.. GENERATED FROM PYTHON SOURCE LINES 292-347
 
 Now that the coefficients have been scaled, we can safely compare them.
 
@@ -1425,6 +1425,34 @@ other features remain constant.
 Also, AGE, EXPERIENCE and EDUCATION are the three variables that most
 influence the model.
 
+Interpreting coefficients: being cautious about causality
+---------------------------------------------------------
+
+Linear models are a great tool for measuring statistical association, but we
+should be cautious when making statements about causality, after all
+correlation doesn't always imply causation. This is particularly difficult in
+the social sciences because the variables we observe only function as proxies
+for the underlying causal process.
+
+In our particular case we can think of the EDUCATION of an individual as a
+proxy for their professional aptitude, the real variable we're interested in
+but can't observe. We'd certainly like to think that staying in school for
+longer would increase technical competency, but it's also quite possible that
+causality goes the other way too. That is, those who are technically
+competent tend to stay in school for longer.
+
+An employer is unlikely to care which case it is (or if it's a mix of both),
+as long as they remain convinced that a person with more EDUCATION is better
+suited for the job, they will be happy to pay out a higher WAGE.
+
+This confounding of effects becomes problematic when thinking about some
+form of intervention e.g. government subsidies of university degrees or
+promotional material encouraging individuals to take up higher education.
+The usefulness of these measures could end up being overstated, especially if
+the degree of confounding is strong. Our model predicts a :math:`0.054699`
+increase in hourly wage for each year of education. The actual causal effect
+might be lower because of this confounding.
+
 Checking the variability of the coefficients
 --------------------------------------------
 
@@ -1436,7 +1464,7 @@ If coefficients vary significantly when changing the input dataset
 their robustness is not guaranteed, and they should probably be interpreted
 with caution.
 
-.. GENERATED FROM PYTHON SOURCE LINES 319-340
+.. GENERATED FROM PYTHON SOURCE LINES 347-368
 
 .. code-block:: Python
 
@@ -1468,7 +1496,7 @@ with caution.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 341-350
+.. GENERATED FROM PYTHON SOURCE LINES 369-378
 
 .. code-block:: Python
 
@@ -1493,7 +1521,7 @@ with caution.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 351-363
+.. GENERATED FROM PYTHON SOURCE LINES 379-391
 
 The problem of correlated variables
 -----------------------------------
@@ -1508,7 +1536,7 @@ EXPERIENCE coefficient.
 
 .. _covariation:
 
-.. GENERATED FROM PYTHON SOURCE LINES 363-372
+.. GENERATED FROM PYTHON SOURCE LINES 391-400
 
 .. code-block:: Python
 
@@ -1533,7 +1561,7 @@ EXPERIENCE coefficient.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 373-378
+.. GENERATED FROM PYTHON SOURCE LINES 401-406
 
 Two regions are populated: when the EXPERIENCE coefficient is
 positive the AGE one is negative and vice-versa.
@@ -1541,7 +1569,7 @@ positive the AGE one is negative and vice-versa.
 To go further we remove one of the 2 features and check what is the impact
 on the model stability.
 
-.. GENERATED FROM PYTHON SOURCE LINES 378-399
+.. GENERATED FROM PYTHON SOURCE LINES 406-427
 
 .. code-block:: Python
 
@@ -1573,7 +1601,7 @@ on the model stability.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 400-409
+.. GENERATED FROM PYTHON SOURCE LINES 428-437
 
 .. code-block:: Python
 
@@ -1598,7 +1626,7 @@ on the model stability.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 410-425
+.. GENERATED FROM PYTHON SOURCE LINES 438-453
 
 The estimation of the EXPERIENCE coefficient now shows a much reduced
 variability. EXPERIENCE remains important for all models trained during
@@ -1616,7 +1644,7 @@ in the ridge.
 The preprocessor is redefined in order to subtract the mean and scale
 variables to unit variance.
 
-.. GENERATED FROM PYTHON SOURCE LINES 425-433
+.. GENERATED FROM PYTHON SOURCE LINES 453-461
 
 .. code-block:: Python
 
@@ -1635,11 +1663,11 @@ variables to unit variance.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 434-435
+.. GENERATED FROM PYTHON SOURCE LINES 462-463
 
 The model will stay unchanged.
 
-.. GENERATED FROM PYTHON SOURCE LINES 435-444
+.. GENERATED FROM PYTHON SOURCE LINES 463-472
 
 .. code-block:: Python
 
@@ -2101,13 +2129,13 @@ The model will stay unchanged.
     <br />
     <br />
 
-.. GENERATED FROM PYTHON SOURCE LINES 445-448
+.. GENERATED FROM PYTHON SOURCE LINES 473-476
 
 Again, we check the performance of the computed
 model using, for example, the median absolute error of the model and the R
 squared coefficient.
 
-.. GENERATED FROM PYTHON SOURCE LINES 448-467
+.. GENERATED FROM PYTHON SOURCE LINES 476-495
 
 .. code-block:: Python
 
@@ -2142,12 +2170,12 @@ squared coefficient.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 468-470
+.. GENERATED FROM PYTHON SOURCE LINES 496-498
 
 For the coefficient analysis, scaling is not needed this time because it
 was performed during the preprocessing step.
 
-.. GENERATED FROM PYTHON SOURCE LINES 470-482
+.. GENERATED FROM PYTHON SOURCE LINES 498-510
 
 .. code-block:: Python
 
@@ -2175,14 +2203,14 @@ was performed during the preprocessing step.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 483-487
+.. GENERATED FROM PYTHON SOURCE LINES 511-515
 
 We now inspect the coefficients across several cross-validation folds. As in
 the above example, we do not need to scale the coefficients by the std. dev.
 of the feature values since this scaling was already
 done in the preprocessing step of the pipeline.
 
-.. GENERATED FROM PYTHON SOURCE LINES 487-500
+.. GENERATED FROM PYTHON SOURCE LINES 515-528
 
 .. code-block:: Python
 
@@ -2206,7 +2234,7 @@ done in the preprocessing step of the pipeline.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 501-508
+.. GENERATED FROM PYTHON SOURCE LINES 529-536
 
 .. code-block:: Python
 
@@ -2229,7 +2257,7 @@ done in the preprocessing step of the pipeline.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 509-522
+.. GENERATED FROM PYTHON SOURCE LINES 537-550
 
 The result is quite similar to the non-normalized case.
 
@@ -2245,7 +2273,7 @@ estimates. :class:`~sklearn.linear_model.RidgeCV` applies cross validation
 in order to determine which value of the regularization parameter (`alpha`)
 is best suited for prediction.
 
-.. GENERATED FROM PYTHON SOURCE LINES 522-536
+.. GENERATED FROM PYTHON SOURCE LINES 550-564
 
 .. code-block:: Python
 
@@ -2722,11 +2750,11 @@ is best suited for prediction.
     <br />
     <br />
 
-.. GENERATED FROM PYTHON SOURCE LINES 537-538
+.. GENERATED FROM PYTHON SOURCE LINES 565-566
 
 First we check which value of :math:`\alpha` has been selected.
 
-.. GENERATED FROM PYTHON SOURCE LINES 538-541
+.. GENERATED FROM PYTHON SOURCE LINES 566-569
 
 .. code-block:: Python
 
@@ -2746,11 +2774,11 @@ First we check which value of :math:`\alpha` has been selected.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 542-543
+.. GENERATED FROM PYTHON SOURCE LINES 570-571
 
 Then we check the quality of the predictions.
 
-.. GENERATED FROM PYTHON SOURCE LINES 543-561
+.. GENERATED FROM PYTHON SOURCE LINES 571-589
 
 .. code-block:: Python
 
@@ -2784,12 +2812,12 @@ Then we check the quality of the predictions.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 562-564
+.. GENERATED FROM PYTHON SOURCE LINES 590-592
 
 The ability to reproduce the data of the regularized model is similar to
 the one of the non-regularized model.
 
-.. GENERATED FROM PYTHON SOURCE LINES 564-576
+.. GENERATED FROM PYTHON SOURCE LINES 592-604
 
 .. code-block:: Python
 
@@ -2817,7 +2845,7 @@ the one of the non-regularized model.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 577-590
+.. GENERATED FROM PYTHON SOURCE LINES 605-618
 
 The coefficients are significantly different.
 AGE and EXPERIENCE coefficients are both positive but they now have less
@@ -2833,7 +2861,7 @@ increased stability is visible from the plot, obtained from data
 perturbations, in a cross-validation. This plot can be compared with
 the :ref:`previous one<covariation>`.
 
-.. GENERATED FROM PYTHON SOURCE LINES 590-603
+.. GENERATED FROM PYTHON SOURCE LINES 618-631
 
 .. code-block:: Python
 
@@ -2857,7 +2885,7 @@ the :ref:`previous one<covariation>`.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 604-612
+.. GENERATED FROM PYTHON SOURCE LINES 632-640
 
 .. code-block:: Python
 
@@ -2881,7 +2909,7 @@ the :ref:`previous one<covariation>`.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 613-624
+.. GENERATED FROM PYTHON SOURCE LINES 641-652
 
 Linear models with sparse coefficients
 --------------------------------------
@@ -2895,7 +2923,7 @@ coefficients. :class:`~sklearn.linear_model.LassoCV` applies cross
 validation in order to determine which value of the regularization parameter
 (`alpha`) is best suited for the model estimation.
 
-.. GENERATED FROM PYTHON SOURCE LINES 624-639
+.. GENERATED FROM PYTHON SOURCE LINES 652-667
 
 .. code-block:: Python
 
@@ -2921,11 +2949,11 @@ validation in order to determine which value of the regularization parameter
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 640-641
+.. GENERATED FROM PYTHON SOURCE LINES 668-669
 
 First we verify which value of :math:`\alpha` has been selected.
 
-.. GENERATED FROM PYTHON SOURCE LINES 641-644
+.. GENERATED FROM PYTHON SOURCE LINES 669-672
 
 .. code-block:: Python
 
@@ -2945,11 +2973,11 @@ First we verify which value of :math:`\alpha` has been selected.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 645-646
+.. GENERATED FROM PYTHON SOURCE LINES 673-674
 
 Then we check the quality of the predictions.
 
-.. GENERATED FROM PYTHON SOURCE LINES 646-665
+.. GENERATED FROM PYTHON SOURCE LINES 674-693
 
 .. code-block:: Python
 
@@ -2984,11 +3012,11 @@ Then we check the quality of the predictions.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 666-667
+.. GENERATED FROM PYTHON SOURCE LINES 694-695
 
 For our dataset, again the model is not very predictive.
 
-.. GENERATED FROM PYTHON SOURCE LINES 667-678
+.. GENERATED FROM PYTHON SOURCE LINES 695-706
 
 .. code-block:: Python
 
@@ -3015,7 +3043,7 @@ For our dataset, again the model is not very predictive.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 679-690
+.. GENERATED FROM PYTHON SOURCE LINES 707-718
 
 A Lasso model identifies the correlation between
 AGE and EXPERIENCE and suppresses one of them for the sake of the prediction.
@@ -3029,7 +3057,7 @@ caution.
 
 Indeed, we can check the variability of the coefficients across folds.
 
-.. GENERATED FROM PYTHON SOURCE LINES 690-702
+.. GENERATED FROM PYTHON SOURCE LINES 718-730
 
 .. code-block:: Python
 
@@ -3052,7 +3080,7 @@ Indeed, we can check the variability of the coefficients across folds.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 703-710
+.. GENERATED FROM PYTHON SOURCE LINES 731-738
 
 .. code-block:: Python
 
@@ -3075,7 +3103,7 @@ Indeed, we can check the variability of the coefficients across folds.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 711-758
+.. GENERATED FROM PYTHON SOURCE LINES 739-789
 
 We observe that the AGE and EXPERIENCE coefficients are varying a lot
 depending of the fold.
@@ -3111,6 +3139,9 @@ Lessons learned
 * Coefficients must be scaled to the same unit of measure to retrieve
   feature importance. Scaling them with the standard-deviation of the
   feature is a useful proxy.
+* Interpreting causality is difficult when there are confounding effects. If
+  the relationship between two variables is also affected by something
+  unobserved, we should be careful when making conclusions about causality.
 * Coefficients in multivariate linear models represent the dependency
   between a given feature and the target, **conditional** on the other
   features.
@@ -3128,7 +3159,7 @@ Lessons learned
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** (0 minutes 13.670 seconds)
+   **Total running time of the script:** (0 minutes 14.382 seconds)
 
 
 .. _sphx_glr_download_auto_examples_inspection_plot_linear_model_coefficient_interpretation.py:
