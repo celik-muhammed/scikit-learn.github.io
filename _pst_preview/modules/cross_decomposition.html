@@ -47,7 +47,7 @@
     <link rel="stylesheet" type="text/css" href="../_static/sg_gallery-rendered-html.css?v=1277b6f3" />
     <link rel="stylesheet" type="text/css" href="../_static/design-style.1e8bd061cd6da7fc9cf755528e8ffc24.min.css?v=0a3b3ea7" />
     <link rel="stylesheet" type="text/css" href="../_static/styles/colors.css?v=cc94ab7d" />
-    <link rel="stylesheet" type="text/css" href="../_static/styles/custom.css?v=ea928030" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/custom.css?v=70beb781" />
   
   <!-- Pre-loaded scripts that we'll load fully later -->
   <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=8d27b9dea8ad943066ae" />
@@ -70,7 +70,7 @@
         DOCUMENTATION_OPTIONS.theme_switcher_version_match = '1.5.dev0';
         DOCUMENTATION_OPTIONS.show_version_warning_banner = true;
         </script>
-    <script src="../_static/scripts/details-permalink.js?v=b0ed9290"></script>
+    <script src="../_static/scripts/dropdown.js?v=12d599f8"></script>
     <script src="../_static/scripts/version-switcher.js?v=a6dd8357"></script>
     <link rel="icon" href="../_static/favicon.ico"/>
     <link rel="author" title="About these documents" href="../about.html" />
@@ -805,45 +805,43 @@ the projections of the training data <span class="math notranslate nohighlight">
 <span class="math notranslate nohighlight">\(C\)</span> and only retain the singular vectors with the biggest singular
 values, or by directly computing the singular vectors using the power method (cf section 11.3 in <a class="footnote-reference brackets" href="#id6" id="id4" role="doc-noteref"><span class="fn-bracket">[</span>1<span class="fn-bracket">]</span></a>),
 which corresponds to the <code class="docutils literal notranslate"><span class="pre">'nipals'</span></code> option of the <code class="docutils literal notranslate"><span class="pre">algorithm</span></code> parameter.</p>
-<p><details id="summary-anchor">
-<summary class="btn btn-light">
-<strong>Transforming data</strong>
-<span class="tooltiptext">Click for more details</span>
-<a class="headerlink" href="#summary-anchor" title="Permalink to this heading">¶</a>
-</summary>
-<div class="card"></p>
-<p>To transform <span class="math notranslate nohighlight">\(X\)</span> into <span class="math notranslate nohighlight">\(\bar{X}\)</span>, we need to find a projection
+<details class="sd-sphinx-override sd-dropdown sd-card sd-mb-3" id="transforming-data">
+<summary class="sd-summary-title sd-card-header">
+Transforming data<a class="headerlink" href="#transforming-data" title="Link to this dropdown">#</a><div class="sd-summary-down docutils">
+<svg version="1.1" width="1.5em" height="1.5em" class="sd-octicon sd-octicon-chevron-down" viewBox="0 0 24 24" aria-hidden="true"><path fill-rule="evenodd" d="M5.22 8.72a.75.75 0 000 1.06l6.25 6.25a.75.75 0 001.06 0l6.25-6.25a.75.75 0 00-1.06-1.06L12 14.44 6.28 8.72a.75.75 0 00-1.06 0z"></path></svg></div>
+<div class="sd-summary-up docutils">
+<svg version="1.1" width="1.5em" height="1.5em" class="sd-octicon sd-octicon-chevron-up" viewBox="0 0 24 24" aria-hidden="true"><path fill-rule="evenodd" d="M18.78 15.28a.75.75 0 000-1.06l-6.25-6.25a.75.75 0 00-1.06 0l-6.25 6.25a.75.75 0 101.06 1.06L12 9.56l5.72 5.72a.75.75 0 001.06 0z"></path></svg></div>
+</summary><div class="sd-summary-content sd-card-body docutils">
+<p class="sd-card-text">To transform <span class="math notranslate nohighlight">\(X\)</span> into <span class="math notranslate nohighlight">\(\bar{X}\)</span>, we need to find a projection
 matrix <span class="math notranslate nohighlight">\(P\)</span> such that <span class="math notranslate nohighlight">\(\bar{X} = XP\)</span>. We know that for the
 training data, <span class="math notranslate nohighlight">\(\Xi = XP\)</span>, and <span class="math notranslate nohighlight">\(X = \Xi \Gamma^T\)</span>. Setting
 <span class="math notranslate nohighlight">\(P = U(\Gamma^T U)^{-1}\)</span> where <span class="math notranslate nohighlight">\(U\)</span> is the matrix with the
 <span class="math notranslate nohighlight">\(u_k\)</span> in the columns, we have <span class="math notranslate nohighlight">\(XP = X U(\Gamma^T U)^{-1} = \Xi
 (\Gamma^T U) (\Gamma^T U)^{-1} = \Xi\)</span> as desired. The rotation matrix
 <span class="math notranslate nohighlight">\(P\)</span> can be accessed from the <code class="docutils literal notranslate"><span class="pre">x_rotations_</span></code> attribute.</p>
-<p>Similarly, <span class="math notranslate nohighlight">\(Y\)</span> can be transformed using the rotation matrix
-<span class="math notranslate nohighlight">\(V(\Delta^T V)^{-1}\)</span>, accessed via the <code class="docutils literal notranslate"><span class="pre">y_rotations_</span></code> attribute.
+<p class="sd-card-text">Similarly, <span class="math notranslate nohighlight">\(Y\)</span> can be transformed using the rotation matrix
+<span class="math notranslate nohighlight">\(V(\Delta^T V)^{-1}\)</span>, accessed via the <code class="docutils literal notranslate"><span class="pre">y_rotations_</span></code> attribute.</p>
 </div>
-</details></p>
-<p><details id="summary-anchor">
-<summary class="btn btn-light">
-<strong>Predicting the targets Y</strong>
-<span class="tooltiptext">Click for more details</span>
-<a class="headerlink" href="#summary-anchor" title="Permalink to this heading">¶</a>
-</summary>
-<div class="card"></p>
-<p>To predict the targets of some data <span class="math notranslate nohighlight">\(X\)</span>, we are looking for a
+</details><details class="sd-sphinx-override sd-dropdown sd-card sd-mb-3" id="predicting-the-targets-y">
+<summary class="sd-summary-title sd-card-header">
+Predicting the targets <code class="docutils literal notranslate"><span class="pre">Y</span></code><a class="headerlink" href="#predicting-the-targets-y" title="Link to this dropdown">#</a><div class="sd-summary-down docutils">
+<svg version="1.1" width="1.5em" height="1.5em" class="sd-octicon sd-octicon-chevron-down" viewBox="0 0 24 24" aria-hidden="true"><path fill-rule="evenodd" d="M5.22 8.72a.75.75 0 000 1.06l6.25 6.25a.75.75 0 001.06 0l6.25-6.25a.75.75 0 00-1.06-1.06L12 14.44 6.28 8.72a.75.75 0 00-1.06 0z"></path></svg></div>
+<div class="sd-summary-up docutils">
+<svg version="1.1" width="1.5em" height="1.5em" class="sd-octicon sd-octicon-chevron-up" viewBox="0 0 24 24" aria-hidden="true"><path fill-rule="evenodd" d="M18.78 15.28a.75.75 0 000-1.06l-6.25-6.25a.75.75 0 00-1.06 0l-6.25 6.25a.75.75 0 101.06 1.06L12 9.56l5.72 5.72a.75.75 0 001.06 0z"></path></svg></div>
+</summary><div class="sd-summary-content sd-card-body docutils">
+<p class="sd-card-text">To predict the targets of some data <span class="math notranslate nohighlight">\(X\)</span>, we are looking for a
 coefficient matrix <span class="math notranslate nohighlight">\(\beta \in R^{d \times t}\)</span> such that <span class="math notranslate nohighlight">\(Y =
 X\beta\)</span>.</p>
-<p>The idea is to try to predict the transformed targets <span class="math notranslate nohighlight">\(\Omega\)</span> as a
+<p class="sd-card-text">The idea is to try to predict the transformed targets <span class="math notranslate nohighlight">\(\Omega\)</span> as a
 function of the transformed samples <span class="math notranslate nohighlight">\(\Xi\)</span>, by computing <span class="math notranslate nohighlight">\(\alpha
 \in \mathbb{R}\)</span> such that <span class="math notranslate nohighlight">\(\Omega = \alpha \Xi\)</span>.</p>
-<p>Then, we have <span class="math notranslate nohighlight">\(Y = \Omega \Delta^T = \alpha \Xi \Delta^T\)</span>, and since
+<p class="sd-card-text">Then, we have <span class="math notranslate nohighlight">\(Y = \Omega \Delta^T = \alpha \Xi \Delta^T\)</span>, and since
 <span class="math notranslate nohighlight">\(\Xi\)</span> is the transformed training data we have that <span class="math notranslate nohighlight">\(Y = X \alpha
 P \Delta^T\)</span>, and as a result the coefficient matrix <span class="math notranslate nohighlight">\(\beta = \alpha P
 \Delta^T\)</span>.</p>
-<p><span class="math notranslate nohighlight">\(\beta\)</span> can be accessed through the <code class="docutils literal notranslate"><span class="pre">coef_</span></code> attribute.</p>
-<p></div>
-</details></p>
-</section>
+<p class="sd-card-text"><span class="math notranslate nohighlight">\(\beta\)</span> can be accessed through the <code class="docutils literal notranslate"><span class="pre">coef_</span></code> attribute.</p>
+</div>
+</details></section>
 <section id="plssvd">
 <h2><span class="section-number">1.8.2. </span>PLSSVD<a class="headerlink" href="#plssvd" title="Link to this heading">#</a></h2>
 <p><a class="reference internal" href="generated/sklearn.cross_decomposition.PLSSVD.html#sklearn.cross_decomposition.PLSSVD" title="sklearn.cross_decomposition.PLSSVD"><code class="xref py py-class docutils literal notranslate"><span class="pre">PLSSVD</span></code></a> is a simplified version of <a class="reference internal" href="generated/sklearn.cross_decomposition.PLSCanonical.html#sklearn.cross_decomposition.PLSCanonical" title="sklearn.cross_decomposition.PLSCanonical"><code class="xref py py-class docutils literal notranslate"><span class="pre">PLSCanonical</span></code></a>
@@ -891,33 +889,21 @@ Details can be found in section 10 of <a class="footnote-reference brackets" hre
 <p>Since <a class="reference internal" href="generated/sklearn.cross_decomposition.CCA.html#sklearn.cross_decomposition.CCA" title="sklearn.cross_decomposition.CCA"><code class="xref py py-class docutils literal notranslate"><span class="pre">CCA</span></code></a> involves the inversion of <span class="math notranslate nohighlight">\(X_k^TX_k\)</span> and
 <span class="math notranslate nohighlight">\(Y_k^TY_k\)</span>, this estimator can be unstable if the number of features or
 targets is greater than the number of samples.</p>
-<p><details id="summary-anchor">
-<summary class="btn btn-light">
-<strong>Reference</strong>
-<span class="tooltiptext">Click for more details</span>
-<a class="headerlink" href="#summary-anchor" title="Permalink to this heading">¶</a>
-</summary>
-<div class="card"></p>
-<blockquote>
-<div><aside class="footnote-list brackets">
+<p class="rubric">References</p>
+<aside class="footnote-list brackets">
 <aside class="footnote brackets" id="id6" role="doc-footnote">
 <span class="label"><span class="fn-bracket">[</span>1<span class="fn-bracket">]</span></span>
 <span class="backrefs">(<a role="doc-backlink" href="#id2">1</a>,<a role="doc-backlink" href="#id3">2</a>,<a role="doc-backlink" href="#id4">3</a>,<a role="doc-backlink" href="#id5">4</a>)</span>
-<p><a class="reference external" href="https://stat.uw.edu/sites/default/files/files/reports/2000/tr371.pdf">A survey of Partial Least Squares (PLS) methods, with emphasis on
-the two-block case</a>
+<p><a class="reference external" href="https://stat.uw.edu/sites/default/files/files/reports/2000/tr371.pdf">A survey of Partial Least Squares (PLS) methods, with emphasis on the two-block
+case</a>,
 JA Wegelin</p>
 </aside>
 </aside>
-</div></blockquote>
-<p></div>
-</details></p>
-<aside class="topic">
-<p class="topic-title">Examples:</p>
+<p class="rubric">Examples</p>
 <ul class="simple">
 <li><p><a class="reference internal" href="../auto_examples/cross_decomposition/plot_compare_cross_decomposition.html#sphx-glr-auto-examples-cross-decomposition-plot-compare-cross-decomposition-py"><span class="std std-ref">Compare cross decomposition methods</span></a></p></li>
 <li><p><a class="reference internal" href="../auto_examples/cross_decomposition/plot_pcr_vs_pls.html#sphx-glr-auto-examples-cross-decomposition-plot-pcr-vs-pls-py"><span class="std std-ref">Principal Component Regression vs Partial Least Squares Regression</span></a></p></li>
 </ul>
-</aside>
 </section>
 </section>
 

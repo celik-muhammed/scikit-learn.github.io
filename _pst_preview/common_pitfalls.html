@@ -47,7 +47,7 @@
     <link rel="stylesheet" type="text/css" href="_static/sg_gallery-rendered-html.css?v=1277b6f3" />
     <link rel="stylesheet" type="text/css" href="_static/design-style.1e8bd061cd6da7fc9cf755528e8ffc24.min.css?v=0a3b3ea7" />
     <link rel="stylesheet" type="text/css" href="_static/styles/colors.css?v=cc94ab7d" />
-    <link rel="stylesheet" type="text/css" href="_static/styles/custom.css?v=ea928030" />
+    <link rel="stylesheet" type="text/css" href="_static/styles/custom.css?v=70beb781" />
   
   <!-- Pre-loaded scripts that we'll load fully later -->
   <link rel="preload" as="script" href="_static/scripts/bootstrap.js?digest=8d27b9dea8ad943066ae" />
@@ -69,7 +69,7 @@
         DOCUMENTATION_OPTIONS.theme_switcher_version_match = '1.5.dev0';
         DOCUMENTATION_OPTIONS.show_version_warning_banner = true;
         </script>
-    <script src="_static/scripts/details-permalink.js?v=b0ed9290"></script>
+    <script src="_static/scripts/dropdown.js?v=12d599f8"></script>
     <script src="_static/scripts/version-switcher.js?v=a6dd8357"></script>
     <link rel="icon" href="_static/favicon.ico"/>
     <link rel="author" title="About these documents" href="about.html" />
@@ -1107,14 +1107,14 @@ the splits. Also, whether we pass an integer or an instance to
 illustration purpose: what matters is what we pass to the
 <a class="reference internal" href="modules/generated/sklearn.ensemble.RandomForestClassifier.html#sklearn.ensemble.RandomForestClassifier" title="sklearn.ensemble.RandomForestClassifier"><code class="xref py py-class docutils literal notranslate"><span class="pre">RandomForestClassifier</span></code></a> estimator.</p>
 </div>
-<p><details id="summary-anchor">
-<summary class="btn btn-light">
-<strong>Cloning</strong>
-<span class="tooltiptext">Click for more details</span>
-<a class="headerlink" href="#summary-anchor" title="Permalink to this heading">¶</a>
-</summary>
-<div class="card"></p>
-<p>Another subtle side effect of passing <code class="docutils literal notranslate"><span class="pre">RandomState</span></code> instances is how
+<details class="sd-sphinx-override sd-dropdown sd-card sd-mb-3" id="cloning">
+<summary class="sd-summary-title sd-card-header">
+Cloning<a class="headerlink" href="#cloning" title="Link to this dropdown">#</a><div class="sd-summary-down docutils">
+<svg version="1.1" width="1.5em" height="1.5em" class="sd-octicon sd-octicon-chevron-down" viewBox="0 0 24 24" aria-hidden="true"><path fill-rule="evenodd" d="M5.22 8.72a.75.75 0 000 1.06l6.25 6.25a.75.75 0 001.06 0l6.25-6.25a.75.75 0 00-1.06-1.06L12 14.44 6.28 8.72a.75.75 0 00-1.06 0z"></path></svg></div>
+<div class="sd-summary-up docutils">
+<svg version="1.1" width="1.5em" height="1.5em" class="sd-octicon sd-octicon-chevron-up" viewBox="0 0 24 24" aria-hidden="true"><path fill-rule="evenodd" d="M18.78 15.28a.75.75 0 000-1.06l-6.25-6.25a.75.75 0 00-1.06 0l-6.25 6.25a.75.75 0 101.06 1.06L12 9.56l5.72 5.72a.75.75 0 001.06 0z"></path></svg></div>
+</summary><div class="sd-summary-content sd-card-body docutils">
+<p class="sd-card-text">Another subtle side effect of passing <code class="docutils literal notranslate"><span class="pre">RandomState</span></code> instances is how
 <a class="reference internal" href="modules/generated/sklearn.base.clone.html#sklearn.base.clone" title="sklearn.base.clone"><code class="xref py py-func docutils literal notranslate"><span class="pre">clone</span></code></a> will work:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">sklearn</span> <span class="kn">import</span> <span class="n">clone</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">sklearn.ensemble</span> <span class="kn">import</span> <span class="n">RandomForestClassifier</span>
@@ -1125,7 +1125,7 @@ illustration purpose: what matters is what we pass to the
 <span class="gp">&gt;&gt;&gt; </span><span class="n">b</span> <span class="o">=</span> <span class="n">clone</span><span class="p">(</span><span class="n">a</span><span class="p">)</span>
 </pre></div>
 </div>
-<p>Since a <code class="docutils literal notranslate"><span class="pre">RandomState</span></code> instance was passed to <code class="docutils literal notranslate"><span class="pre">a</span></code>, <code class="docutils literal notranslate"><span class="pre">a</span></code> and <code class="docutils literal notranslate"><span class="pre">b</span></code> are not clones
+<p class="sd-card-text">Since a <code class="docutils literal notranslate"><span class="pre">RandomState</span></code> instance was passed to <code class="docutils literal notranslate"><span class="pre">a</span></code>, <code class="docutils literal notranslate"><span class="pre">a</span></code> and <code class="docutils literal notranslate"><span class="pre">b</span></code> are not clones
 in the strict sense, but rather clones in the statistical sense: <code class="docutils literal notranslate"><span class="pre">a</span></code> and <code class="docutils literal notranslate"><span class="pre">b</span></code>
 will still be different models, even when calling <code class="docutils literal notranslate"><span class="pre">fit(X,</span> <span class="pre">y)</span></code> on the same
 data. Moreover, <code class="docutils literal notranslate"><span class="pre">a</span></code> and <code class="docutils literal notranslate"><span class="pre">b</span></code> will influence each-other since they share the
@@ -1133,11 +1133,11 @@ same internal RNG: calling <code class="docutils literal notranslate"><span clas
 <code class="docutils literal notranslate"><span class="pre">b.fit</span></code> will consume <code class="docutils literal notranslate"><span class="pre">a</span></code>’s RNG, since they are the same. This bit is true for
 any estimators that share a <code class="docutils literal notranslate"><span class="pre">random_state</span></code> parameter; it is not specific to
 clones.</p>
-<p>If an integer were passed, <code class="docutils literal notranslate"><span class="pre">a</span></code> and <code class="docutils literal notranslate"><span class="pre">b</span></code> would be exact clones and they would not
+<p class="sd-card-text">If an integer were passed, <code class="docutils literal notranslate"><span class="pre">a</span></code> and <code class="docutils literal notranslate"><span class="pre">b</span></code> would be exact clones and they would not
 influence each other.</p>
 <div class="admonition warning">
 <p class="admonition-title">Warning</p>
-<p>Even though <a class="reference internal" href="modules/generated/sklearn.base.clone.html#sklearn.base.clone" title="sklearn.base.clone"><code class="xref py py-func docutils literal notranslate"><span class="pre">clone</span></code></a> is rarely used in user code, it is
+<p class="sd-card-text">Even though <a class="reference internal" href="modules/generated/sklearn.base.clone.html#sklearn.base.clone" title="sklearn.base.clone"><code class="xref py py-func docutils literal notranslate"><span class="pre">clone</span></code></a> is rarely used in user code, it is
 called pervasively throughout scikit-learn codebase: in particular, most
 meta-estimators that accept non-fitted estimators call
 <a class="reference internal" href="modules/generated/sklearn.base.clone.html#sklearn.base.clone" title="sklearn.base.clone"><code class="xref py py-func docutils literal notranslate"><span class="pre">clone</span></code></a> internally
@@ -1145,9 +1145,8 @@ meta-estimators that accept non-fitted estimators call
 <a class="reference internal" href="modules/generated/sklearn.ensemble.StackingClassifier.html#sklearn.ensemble.StackingClassifier" title="sklearn.ensemble.StackingClassifier"><code class="xref py py-class docutils literal notranslate"><span class="pre">StackingClassifier</span></code></a>,
 <a class="reference internal" href="modules/generated/sklearn.calibration.CalibratedClassifierCV.html#sklearn.calibration.CalibratedClassifierCV" title="sklearn.calibration.CalibratedClassifierCV"><code class="xref py py-class docutils literal notranslate"><span class="pre">CalibratedClassifierCV</span></code></a>, etc.).</p>
 </div>
-<p></div>
-</details></p>
-</section>
+</div>
+</details></section>
 <section id="id3">
 <h4><span class="section-number">10.3.2.2. </span>CV splitters<a class="headerlink" href="#id3" title="Link to this heading">#</a></h4>
 <p>When passed a <code class="docutils literal notranslate"><span class="pre">RandomState</span></code> instance, CV splitters yield different splits

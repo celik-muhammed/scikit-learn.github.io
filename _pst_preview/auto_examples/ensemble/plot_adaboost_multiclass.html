@@ -37,7 +37,7 @@
 <link href="../../_static/sg_gallery-rendered-html.css?v=1277b6f3" rel="stylesheet" type="text/css"/>
 <link href="../../_static/design-style.1e8bd061cd6da7fc9cf755528e8ffc24.min.css?v=0a3b3ea7" rel="stylesheet" type="text/css"/>
 <link href="../../_static/styles/colors.css?v=cc94ab7d" rel="stylesheet" type="text/css"/>
-<link href="../../_static/styles/custom.css?v=ea928030" rel="stylesheet" type="text/css"/>
+<link href="../../_static/styles/custom.css?v=70beb781" rel="stylesheet" type="text/css"/>
 <!-- Pre-loaded scripts that we'll load fully later -->
 <link as="script" href="../../_static/scripts/bootstrap.js?digest=8d27b9dea8ad943066ae" rel="preload"/>
 <link as="script" href="../../_static/scripts/pydata-sphinx-theme.js?digest=8d27b9dea8ad943066ae" rel="preload"/>
@@ -58,7 +58,7 @@
         DOCUMENTATION_OPTIONS.theme_switcher_version_match = '1.5.dev0';
         DOCUMENTATION_OPTIONS.show_version_warning_banner = true;
         </script>
-<script src="../../_static/scripts/details-permalink.js?v=b0ed9290"></script>
+<script src="../../_static/scripts/dropdown.js?v=12d599f8"></script>
 <script src="../../_static/scripts/version-switcher.js?v=a6dd8357"></script>
 <link href="../../_static/favicon.ico" rel="icon"/>
 <link href="../../about.html" rel="author" title="About these documents"/>
@@ -844,14 +844,12 @@ Samples with higher weights have a greater chance of being selected multiple
 times in the new data set, while samples with lower weights are less likely to
 be selected. This ensures that subsequent iterations of the algorithm focus on
 the difficult-to-classify samples.</p>
-<aside class="topic">
-<p class="topic-title">References:</p>
+<p class="rubric">References</p>
 <aside class="footnote-list brackets">
 <aside class="footnote brackets" id="id2" role="doc-footnote">
 <span class="label"><span class="fn-bracket">[</span><a href="#id1" role="doc-backlink">1</a><span class="fn-bracket">]</span></span>
 <p><a class="reference external" href="https://doi.org/10.4310/SII.2009.v2.n3.a8">J. Zhu, H. Zou, S. Rosset, T. Hastie, “Multi-class adaboost.”
 Statistics and its Interface 2.3 (2009): 349-360.</a></p>
-</aside>
 </aside>
 </aside>
 <div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Noel Dawe &lt;noel.dawe@gmail.com&gt;</span>
@@ -1055,20 +1053,22 @@ means that our additive model will trust more a weak learner that makes
 smaller errors (on the training set) by increasing its impact on the final
 decision. Indeed, this exactly is the formulation of updating the base
 estimators’ weights after each iteration in AdaBoost.</p>
-<p><details id="summary-anchor">
-<summary class="btn btn-light"> Mathematical details <span class="tooltiptext">Click for more details</span>
-<a class="headerlink" href="#summary-anchor" title="Permalink to this heading">¶</a>
-</summary>
-<div class="card"></div></details></p>
-<p>The weight associated with a weak learner trained at the stage <span class="math notranslate nohighlight">\(m\)</span> is
+<details class="sd-sphinx-override sd-dropdown sd-card sd-mb-3" id="mathematical-details">
+<summary class="sd-summary-title sd-card-header">
+Mathematical details<a class="headerlink" href="#mathematical-details" title="Link to this dropdown">#</a><div class="sd-summary-down docutils">
+<svg aria-hidden="true" class="sd-octicon sd-octicon-chevron-down" height="1.5em" version="1.1" viewbox="0 0 24 24" width="1.5em"><path d="M5.22 8.72a.75.75 0 000 1.06l6.25 6.25a.75.75 0 001.06 0l6.25-6.25a.75.75 0 00-1.06-1.06L12 14.44 6.28 8.72a.75.75 0 00-1.06 0z" fill-rule="evenodd"></path></svg></div>
+<div class="sd-summary-up docutils">
+<svg aria-hidden="true" class="sd-octicon sd-octicon-chevron-up" height="1.5em" version="1.1" viewbox="0 0 24 24" width="1.5em"><path d="M18.78 15.28a.75.75 0 000-1.06l-6.25-6.25a.75.75 0 00-1.06 0l-6.25 6.25a.75.75 0 101.06 1.06L12 9.56l5.72 5.72a.75.75 0 001.06 0z" fill-rule="evenodd"></path></svg></div>
+</summary><div class="sd-summary-content sd-card-body docutils">
+<p class="sd-card-text">The weight associated with a weak learner trained at the stage <span class="math notranslate nohighlight">\(m\)</span> is
 inversely associated with its misclassification error such that:</p>
 <div class="math notranslate nohighlight">
 \[\alpha^{(m)} = \log \frac{1 - err^{(m)}}{err^{(m)}} + \log (K - 1),\]</div>
-<p>where <span class="math notranslate nohighlight">\(\alpha^{(m)}\)</span> and <span class="math notranslate nohighlight">\(err^{(m)}\)</span> are the weight and the error
+<p class="sd-card-text">where <span class="math notranslate nohighlight">\(\alpha^{(m)}\)</span> and <span class="math notranslate nohighlight">\(err^{(m)}\)</span> are the weight and the error
 of the <span class="math notranslate nohighlight">\(m\)</span> th weak learner, respectively, and <span class="math notranslate nohighlight">\(K\)</span> is the number of
-classes in our classification problem. </p></section></section></section></article></div>
-
-<p>Another interesting observation boils down to the fact that the first weak
+classes in our classification problem.</p>
+</div>
+</details><p>Another interesting observation boils down to the fact that the first weak
 learners of the model make fewer errors than later weak learners of the
 boosting chain.</p>
 <p>The intuition behind this observation is the following: due to the sample
@@ -1076,7 +1076,7 @@ reweighting, later classifiers are forced to try to classify more difficult or
 noisy samples and to ignore already well classified samples. Therefore, the
 overall error on the training set will increase. That’s why the weak learner’s
 weights are built to counter-balance the worse performing weak learners.</p>
-<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> (0 minutes 4.344 seconds)</p>
+<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> (0 minutes 4.235 seconds)</p>
 
 <p class="rubric">Related examples</p>
 <div class="sphx-glr-thumbnails"><div class="sphx-glr-thumbcontainer" tooltip="A decision tree is boosted using the AdaBoost.R2 [1]_ algorithm on a 1D sinusoidal dataset with..."><img alt="" src="../../_images/sphx_glr_plot_adaboost_regression_thumb.png"/>
@@ -1092,10 +1092,10 @@ weights are built to counter-balance the worse performing weak learners.</p>
 <p><a class="reference internal" href="plot_gradient_boosting_regression.html#sphx-glr-auto-examples-ensemble-plot-gradient-boosting-regression-py"><span class="std std-ref">Gradient Boosting regression</span></a></p>
 <div class="sphx-glr-thumbnail-title">Gradient Boosting regression</div>
 </div></div><p class="sphx-glr-signature"><a class="reference external" href="https://sphinx-gallery.github.io">Gallery generated by Sphinx-Gallery</a></p>
-
-
-
-
+</section>
+</section>
+</section>
+</article>
 <footer class="bd-footer-article">
 <div class="footer-article-items footer-article__inner">
 <div class="footer-article-item">
@@ -1136,12 +1136,12 @@ weights are built to counter-balance the worse performing weak learners.</p>
 </nav></div>
 
 <div class="sidebar-secondary-item"><div title="plot_adaboost_multiclass.py"><a download="" href="../../_downloads/4e46f015ab8300f262e6e8775bcdcf8a/plot_adaboost_multiclass.py"><i class="fa-solid fa-download"></i> Download source code</a></div><div title="plot_adaboost_multiclass.ipynb"><a download="" href="../../_downloads/607c99671400a5055ef516d1aabd00c1/plot_adaboost_multiclass.ipynb"><i class="fa-solid fa-download"></i> Download Jupyter notebook</a></div></div><div class="sidebar-secondary-item"><div><a href="../../lite/lab/?path=auto_examples/ensemble/plot_adaboost_multiclass.ipynb"><img alt="Launch JupyterLite" height="20" src="../../_images/jupyterlite_badge_logo11.svg"/></a></div><div><a href="https://mybinder.org/v2/gh/scikit-learn/scikit-learn/main?urlpath=lab/tree/notebooks/auto_examples/ensemble/plot_adaboost_multiclass.ipynb"><img alt="Launch binder" height="20" src="../../_images/binder_badge_logo11.svg"/></a></div></div></div></div>
-</main></div>
+</div>
 <footer class="bd-footer-content">
 </footer>
-
+</main>
 </div>
-
+</div>
 <!-- Scripts loaded after <body> so the DOM is not blocked -->
 <script src="../../_static/scripts/bootstrap.js?digest=8d27b9dea8ad943066ae"></script>
 <script src="../../_static/scripts/pydata-sphinx-theme.js?digest=8d27b9dea8ad943066ae"></script>
