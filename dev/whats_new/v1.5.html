@@ -179,6 +179,7 @@
               <ul>
 <li><a class="reference internal" href="#">Version 1.5</a><ul>
 <li><a class="reference internal" href="#version-1-5-0">Version 1.5.0</a><ul>
+<li><a class="reference internal" href="#security">Security</a></li>
 <li><a class="reference internal" href="#changed-models">Changed models</a></li>
 <li><a class="reference internal" href="#support-for-array-api">Support for Array API</a></li>
 <li><a class="reference internal" href="#support-for-building-with-meson">Support for building with Meson</a></li>
@@ -238,6 +239,25 @@ future; or a feature will be removed in the future.</p></li>
 <section id="version-1-5-0">
 <span id="changes-1-5"></span><h2>Version 1.5.0<a class="headerlink" href="#version-1-5-0" title="Link to this heading">¶</a></h2>
 <p><strong>In Development</strong></p>
+<section id="security">
+<h3>Security<a class="headerlink" href="#security" title="Link to this heading">¶</a></h3>
+<ul>
+<li><p><span class="raw-html"><span class="badge badge-danger">Fix</span></span>  <a class="reference internal" href="../modules/generated/sklearn.feature_extraction.text.CountVectorizer.html#sklearn.feature_extraction.text.CountVectorizer" title="sklearn.feature_extraction.text.CountVectorizer"><code class="xref py py-class docutils literal notranslate"><span class="pre">feature_extraction.text.CountVectorizer</span></code></a> and
+<a class="reference internal" href="../modules/generated/sklearn.feature_extraction.text.TfidfVectorizer.html#sklearn.feature_extraction.text.TfidfVectorizer" title="sklearn.feature_extraction.text.TfidfVectorizer"><code class="xref py py-class docutils literal notranslate"><span class="pre">feature_extraction.text.TfidfVectorizer</span></code></a> no longer store discarded
+tokens from the training set in their <code class="docutils literal notranslate"><span class="pre">stop_words_</span></code> attribute. This attribute
+would hold too frequent (above <code class="docutils literal notranslate"><span class="pre">max_df</span></code>) but also too rare tokens (below
+<code class="docutils literal notranslate"><span class="pre">min_df</span></code>). This fixes a potential security issue (data leak) if the discarded
+rare tokens hold sensitive information from the training set without the
+model developer’s knowledge.</p>
+<p>Note: users of those classes are encouraged to either retrain their pipelines
+with the new scikit-learn version or to manually clear the <code class="docutils literal notranslate"><span class="pre">stop_words_</span></code>
+attribute from previously trained instances of those transformers. This
+attribute was designed only for model inspection purposes and has no impact
+on the behavior of the transformers.
+<a class="reference external" href="https://github.com/scikit-learn/scikit-learn/pull/28823">#28823</a> by <a class="reference external" href="https://github.com/ogrisel">Olivier Grisel</a>.</p>
+</li>
+</ul>
+</section>
 <section id="changed-models">
 <h3>Changed models<a class="headerlink" href="#changed-models" title="Link to this heading">¶</a></h3>
 <ul class="simple">
