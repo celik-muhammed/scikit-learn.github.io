@@ -11,10 +11,10 @@
 <meta property="og:type" content="website" />
 <meta property="og:url" content="https://scikit-learn/stable/auto_examples/miscellaneous/plot_metadata_routing.html" />
 <meta property="og:site_name" content="scikit-learn" />
-<meta property="og:description" content="This document shows how you can use the metadata routing mechanism in scikit-learn to route metadata through meta-estimators to the estimators consuming them. To better understand the rest of the d..." />
+<meta property="og:description" content="This document shows how you can use the metadata routing mechanism in scikit-learn to route metadata to the estimators, scorers, and CV splitters consuming them. To better understand the following ..." />
 <meta property="og:image" content="https://scikit-learn.org/stable/_static/scikit-learn-logo-small.png" />
 <meta property="og:image:alt" content="scikit-learn" />
-<meta name="description" content="This document shows how you can use the metadata routing mechanism in scikit-learn to route metadata through meta-estimators to the estimators consuming them. To better understand the rest of the d..." />
+<meta name="description" content="This document shows how you can use the metadata routing mechanism in scikit-learn to route metadata to the estimators, scorers, and CV splitters consuming them. To better understand the following ..." />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
@@ -178,8 +178,9 @@
             <div class="sk-sidebar-toc">
               <ul>
 <li><a class="reference internal" href="#">Metadata Routing</a><ul>
-<li><a class="reference internal" href="#estimators">Estimators</a></li>
-<li><a class="reference internal" href="#router-and-consumer">Router and Consumer</a></li>
+<li><a class="reference internal" href="#consuming-estimator">Consuming Estimator</a></li>
+<li><a class="reference internal" href="#routing-meta-estimator">Routing Meta-Estimator</a></li>
+<li><a class="reference internal" href="#consuming-and-routing-meta-estimator">Consuming and routing Meta-Estimator</a></li>
 <li><a class="reference internal" href="#simple-pipeline">Simple Pipeline</a></li>
 <li><a class="reference internal" href="#deprecation-default-value-change">Deprecation / Default Value Change</a></li>
 <li><a class="reference internal" href="#third-party-development-and-scikit-learn-dependency">Third Party Development and scikit-learn Dependency</a></li>
@@ -200,17 +201,20 @@ to download the full example code or to run this example in your browser via Jup
 </div>
 <section class="sphx-glr-example-title" id="metadata-routing">
 <span id="sphx-glr-auto-examples-miscellaneous-plot-metadata-routing-py"></span><h1>Metadata Routing<a class="headerlink" href="#metadata-routing" title="Link to this heading">¶</a></h1>
-<p>This document shows how you can use the <a class="reference internal" href="../../metadata_routing.html#metadata-routing"><span class="std std-ref">metadata routing mechanism</span></a> in scikit-learn to route metadata through meta-estimators
-to the estimators consuming them. To better understand the rest of the
-document, we need to introduce two concepts: routers and consumers. A router is
-an object, in most cases a meta-estimator, which forwards given data and
-metadata to other objects and estimators. A consumer, on the other hand, is an
-object which accepts and uses a certain given metadata. For instance, an
-estimator taking into account <code class="docutils literal notranslate"><span class="pre">sample_weight</span></code> in its <a class="reference internal" href="../../glossary.html#term-fit"><span class="xref std std-term">fit</span></a> method is a
-consumer of <code class="docutils literal notranslate"><span class="pre">sample_weight</span></code>. It is possible for an object to be both a router
-and a consumer. For instance, a meta-estimator may take into account
-<code class="docutils literal notranslate"><span class="pre">sample_weight</span></code> in certain calculations, but it may also route it to the
-underlying estimator.</p>
+<p>This document shows how you can use the <a class="reference internal" href="../../metadata_routing.html#metadata-routing"><span class="std std-ref">metadata routing mechanism</span></a> in scikit-learn to route metadata to the estimators,
+scorers, and CV splitters consuming them.</p>
+<p>To better understand the following document, we need to introduce two concepts:
+routers and consumers. A router is an object which forwards some given data and
+metadata to other objects. In most cases, a router is a <a class="reference internal" href="../../glossary.html#term-meta-estimator"><span class="xref std std-term">meta-estimator</span></a>,
+i.e. an estimator which takes another estimator as a parameter. A function such
+as <a class="reference internal" href="../../modules/generated/sklearn.model_selection.cross_validate.html#sklearn.model_selection.cross_validate" title="sklearn.model_selection.cross_validate"><code class="xref py py-func docutils literal notranslate"><span class="pre">sklearn.model_selection.cross_validate</span></code></a> which takes an estimator as a
+parameter and forwards data and metadata, is also a router.</p>
+<p>A consumer, on the other hand, is an object which accepts and uses some given
+metadata. For instance, an estimator taking into account <code class="docutils literal notranslate"><span class="pre">sample_weight</span></code> in
+its <a class="reference internal" href="../../glossary.html#term-fit"><span class="xref std std-term">fit</span></a> method is a consumer of <code class="docutils literal notranslate"><span class="pre">sample_weight</span></code>.</p>
+<p>It is possible for an object to be both a router and a consumer. For instance,
+a meta-estimator may take into account <code class="docutils literal notranslate"><span class="pre">sample_weight</span></code> in certain
+calculations, but it may also route it to the underlying estimator.</p>
 <p>First a few imports and some random data for the rest of the script.</p>
 <div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">warnings</span>
 <span class="kn">from</span> <span class="nn">pprint</span> <span class="kn">import</span> <a href="https://docs.python.org/3/library/pprint.html#pprint.pprint" title="pprint.pprint" class="sphx-glr-backref-module-pprint sphx-glr-backref-type-py-function"><span class="n">pprint</span></a>
@@ -245,11 +249,11 @@ underlying estimator.</p>
 <span class="n">my_other_weights</span> <span class="o">=</span> <span class="n">rng</span><span class="o">.</span><span class="n">rand</span><span class="p">(</span><span class="n">n_samples</span><span class="p">)</span>
 </pre></div>
 </div>
-<p>This feature is only available if explicitly enabled:</p>
+<p>Metadata routing is only available if explicitly enabled:</p>
 <div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><a href="../../modules/generated/sklearn.set_config.html#sklearn.set_config" title="sklearn.set_config" class="sphx-glr-backref-module-sklearn sphx-glr-backref-type-py-function"><span class="n">set_config</span></a><span class="p">(</span><span class="n">enable_metadata_routing</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 </pre></div>
 </div>
-<p>This utility function is a dummy to check if a metadata is passed.</p>
+<p>This utility function is a dummy to check if a metadata is passed:</p>
 <div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">check_metadata</span><span class="p">(</span><span class="n">obj</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
     <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
         <span class="k">if</span> <span class="n">value</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
@@ -260,13 +264,13 @@ underlying estimator.</p>
             <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">key</span><span class="si">}</span><span class="s2"> is None in </span><span class="si">{</span><span class="n">obj</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="si">}</span><span class="s2">.&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
-<p>A utility function to nicely print the routing information of an object</p>
+<p>A utility function to nicely print the routing information of an object:</p>
 <div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">print_routing</span><span class="p">(</span><span class="n">obj</span><span class="p">):</span>
     <a href="https://docs.python.org/3/library/pprint.html#pprint.pprint" title="pprint.pprint" class="sphx-glr-backref-module-pprint sphx-glr-backref-type-py-function"><span class="n">pprint</span></a><span class="p">(</span><span class="n">obj</span><span class="o">.</span><span class="n">get_metadata_routing</span><span class="p">()</span><span class="o">.</span><span class="n">_serialize</span><span class="p">())</span>
 </pre></div>
 </div>
-<section id="estimators">
-<h2>Estimators<a class="headerlink" href="#estimators" title="Link to this heading">¶</a></h2>
+<section id="consuming-estimator">
+<h2>Consuming Estimator<a class="headerlink" href="#consuming-estimator" title="Link to this heading">¶</a></h2>
 <p>Here we demonstrate how an estimator can expose the required API to support
 metadata routing as a consumer. Imagine a simple classifier accepting
 <code class="docutils literal notranslate"><span class="pre">sample_weight</span></code> as a metadata on its <code class="docutils literal notranslate"><span class="pre">fit</span></code> and <code class="docutils literal notranslate"><span class="pre">groups</span></code> in its
@@ -302,11 +306,11 @@ now three methods exposed by the above class: <code class="docutils literal notr
 </pre></div>
 </div>
 <p>The above output means that <code class="docutils literal notranslate"><span class="pre">sample_weight</span></code> and <code class="docutils literal notranslate"><span class="pre">groups</span></code> are not
-requested, but if a router is given those metadata, it should raise an error,
-since the user has not explicitly set whether they are required or not. The
-same is true for <code class="docutils literal notranslate"><span class="pre">sample_weight</span></code> in the <code class="docutils literal notranslate"><span class="pre">score</span></code> method, which is
-inherited from <a class="reference internal" href="../../modules/generated/sklearn.base.ClassifierMixin.html#sklearn.base.ClassifierMixin" title="sklearn.base.ClassifierMixin"><code class="xref py py-class docutils literal notranslate"><span class="pre">ClassifierMixin</span></code></a>. In order to explicitly set
-request values for those metadata, we can use these methods:</p>
+requested by <code class="docutils literal notranslate"><span class="pre">ExampleClassifier</span></code>, and if a router is given those metadata, it
+should raise an error, since the user has not explicitly set whether they are
+required or not. The same is true for <code class="docutils literal notranslate"><span class="pre">sample_weight</span></code> in the <code class="docutils literal notranslate"><span class="pre">score</span></code>
+method, which is inherited from <a class="reference internal" href="../../modules/generated/sklearn.base.ClassifierMixin.html#sklearn.base.ClassifierMixin" title="sklearn.base.ClassifierMixin"><code class="xref py py-class docutils literal notranslate"><span class="pre">ClassifierMixin</span></code></a>. In order to
+explicitly set request values for those metadata, we can use these methods:</p>
 <div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">est</span> <span class="o">=</span> <span class="p">(</span>
     <span class="n">ExampleClassifier</span><span class="p">()</span>
     <span class="o">.</span><span class="n">set_fit_request</span><span class="p">(</span><span class="n">sample_weight</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
@@ -323,7 +327,7 @@ request values for those metadata, we can use these methods:</p>
 </div>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
-<p>Please note that as long as the above estimator is not used in another
+<p>Please note that as long as the above estimator is not used in a
 meta-estimator, the user does not need to set any requests for the
 metadata and the set values are ignored, since a consumer does not
 validate or route given metadata. A simple usage of the above estimator
@@ -340,8 +344,12 @@ Received groups of length = 100 in ExampleClassifier.
 array([1., 1., 1.])
 </pre></div>
 </div>
-<p>Now let’s have a meta-estimator, which doesn’t do much other than routing the
-metadata.</p>
+</section>
+<section id="routing-meta-estimator">
+<h2>Routing Meta-Estimator<a class="headerlink" href="#routing-meta-estimator" title="Link to this heading">¶</a></h2>
+<p>Now, we show how to design a meta-estimator to be a router. As a simplified
+example, here is a meta-estimator, which doesn’t do much other than routing
+the metadata.</p>
 <div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">MetaClassifier</span><span class="p">(</span><a href="../../modules/generated/sklearn.base.MetaEstimatorMixin.html#sklearn.base.MetaEstimatorMixin" title="sklearn.base.MetaEstimatorMixin" class="sphx-glr-backref-module-sklearn-base sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">MetaEstimatorMixin</span></a><span class="p">,</span> <a href="../../modules/generated/sklearn.base.ClassifierMixin.html#sklearn.base.ClassifierMixin" title="sklearn.base.ClassifierMixin" class="sphx-glr-backref-module-sklearn-base sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">ClassifierMixin</span></a><span class="p">,</span> <a href="../../modules/generated/sklearn.base.BaseEstimator.html#sklearn.base.BaseEstimator" title="sklearn.base.BaseEstimator" class="sphx-glr-backref-module-sklearn-base sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">BaseEstimator</span></a><span class="p">):</span>
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">estimator</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">estimator</span> <span class="o">=</span> <span class="n">estimator</span>
@@ -349,35 +357,43 @@ metadata.</p>
     <span class="k">def</span> <span class="nf">get_metadata_routing</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="c1"># This method defines the routing for this meta-estimator.</span>
         <span class="c1"># In order to do so, a `MetadataRouter` instance is created, and the</span>
-        <span class="c1"># right routing is added to it. More explanations follow.</span>
+        <span class="c1"># routing is added to it. More explanations follow below.</span>
         <span class="n">router</span> <span class="o">=</span> <a href="../../modules/generated/sklearn.utils.metadata_routing.MetadataRouter.html#sklearn.utils.metadata_routing.MetadataRouter" title="sklearn.utils.metadata_routing.MetadataRouter" class="sphx-glr-backref-module-sklearn-utils-metadata_routing sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">MetadataRouter</span></a><span class="p">(</span><span class="n">owner</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="p">)</span><span class="o">.</span><span class="n">add</span><span class="p">(</span>
-            <span class="n">estimator</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">estimator</span><span class="p">,</span> <span class="n">method_mapping</span><span class="o">=</span><span class="s2">&quot;one-to-one&quot;</span>
+            <span class="n">estimator</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">estimator</span><span class="p">,</span>
+            <span class="n">method_mapping</span><span class="o">=</span><a href="../../modules/generated/sklearn.utils.metadata_routing.MethodMapping.html#sklearn.utils.metadata_routing.MethodMapping" title="sklearn.utils.metadata_routing.MethodMapping" class="sphx-glr-backref-module-sklearn-utils-metadata_routing sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">MethodMapping</span></a><span class="p">()</span>
+            <span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">callee</span><span class="o">=</span><span class="s2">&quot;fit&quot;</span><span class="p">,</span> <span class="n">caller</span><span class="o">=</span><span class="s2">&quot;fit&quot;</span><span class="p">)</span>
+            <span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">callee</span><span class="o">=</span><span class="s2">&quot;predict&quot;</span><span class="p">,</span> <span class="n">caller</span><span class="o">=</span><span class="s2">&quot;predict&quot;</span><span class="p">)</span>
+            <span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">callee</span><span class="o">=</span><span class="s2">&quot;score&quot;</span><span class="p">,</span> <span class="n">caller</span><span class="o">=</span><span class="s2">&quot;score&quot;</span><span class="p">),</span>
         <span class="p">)</span>
         <span class="k">return</span> <span class="n">router</span>
 
     <span class="k">def</span> <span class="nf">fit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="o">**</span><span class="n">fit_params</span><span class="p">):</span>
-        <span class="c1"># meta-estimators are responsible for validating the given metadata.</span>
-        <span class="c1"># `get_routing_for_object` is a safe way to construct a</span>
-        <span class="c1"># `MetadataRouter` or a `MetadataRequest` from the given object.</span>
+        <span class="c1"># `get_routing_for_object` returns a copy of the `MetadataRouter`</span>
+        <span class="c1"># constructed by the above `get_metadata_routing` method, that is</span>
+        <span class="c1"># internally called.</span>
         <span class="n">request_router</span> <span class="o">=</span> <a href="../../modules/generated/sklearn.utils.metadata_routing.get_routing_for_object.html#sklearn.utils.metadata_routing.get_routing_for_object" title="sklearn.utils.metadata_routing.get_routing_for_object" class="sphx-glr-backref-module-sklearn-utils-metadata_routing sphx-glr-backref-type-py-function"><span class="n">get_routing_for_object</span></a><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+        <span class="c1"># Meta-estimators are responsible for validating the given metadata.</span>
+        <span class="c1"># `method` refers to the parent&#39;s method, i.e. `fit` in this example.</span>
         <span class="n">request_router</span><span class="o">.</span><span class="n">validate_metadata</span><span class="p">(</span><span class="n">params</span><span class="o">=</span><span class="n">fit_params</span><span class="p">,</span> <span class="n">method</span><span class="o">=</span><span class="s2">&quot;fit&quot;</span><span class="p">)</span>
-        <span class="c1"># we can use provided utility methods to map the given metadata to what</span>
-        <span class="c1"># is required by the underlying estimator. Here `method` refers to the</span>
-        <span class="c1"># parent&#39;s method, i.e. `fit` in this example.</span>
+        <span class="c1"># `MetadataRouter.route_params` maps the given metadata to the metadata</span>
+        <span class="c1"># required by the underlying estimator based on the routing information</span>
+        <span class="c1"># defined by the MetadataRouter. The output of type `Bunch` has a key</span>
+        <span class="c1"># for each consuming object and those hold keys for their consuming</span>
+        <span class="c1"># methods, which then contain key for the metadata which should be</span>
+        <span class="c1"># routed to them.</span>
         <span class="n">routed_params</span> <span class="o">=</span> <span class="n">request_router</span><span class="o">.</span><span class="n">route_params</span><span class="p">(</span><span class="n">params</span><span class="o">=</span><span class="n">fit_params</span><span class="p">,</span> <span class="n">caller</span><span class="o">=</span><span class="s2">&quot;fit&quot;</span><span class="p">)</span>
 
-        <span class="c1"># the output has a key for each object&#39;s method which is used here,</span>
-        <span class="c1"># i.e. parent&#39;s `fit` method, containing the metadata which should be</span>
-        <span class="c1"># routed to them, based on the information provided in</span>
-        <span class="c1"># `get_metadata_routing`.</span>
+        <span class="c1"># A sub-estimator is fitted and its classes are attributed to the</span>
+        <span class="c1"># meta-estimator.</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">estimator_</span> <span class="o">=</span> <span class="n">clone</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">estimator</span><span class="p">)</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="o">**</span><span class="n">routed_params</span><span class="o">.</span><span class="n">estimator</span><span class="o">.</span><span class="n">fit</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">classes_</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">estimator_</span><span class="o">.</span><span class="n">classes_</span>
         <span class="k">return</span> <span class="bp">self</span>
 
     <span class="k">def</span> <span class="nf">predict</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="o">**</span><span class="n">predict_params</span><span class="p">):</span>
         <a href="../../modules/generated/sklearn.utils.validation.check_is_fitted.html#sklearn.utils.validation.check_is_fitted" title="sklearn.utils.validation.check_is_fitted" class="sphx-glr-backref-module-sklearn-utils-validation sphx-glr-backref-type-py-function"><span class="n">check_is_fitted</span></a><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
-        <span class="c1"># same as in `fit`, we validate the given metadata</span>
+        <span class="c1"># As in `fit`, we get a copy of the object&#39;s MetadataRouter,</span>
         <span class="n">request_router</span> <span class="o">=</span> <a href="../../modules/generated/sklearn.utils.metadata_routing.get_routing_for_object.html#sklearn.utils.metadata_routing.get_routing_for_object" title="sklearn.utils.metadata_routing.get_routing_for_object" class="sphx-glr-backref-module-sklearn-utils-metadata_routing sphx-glr-backref-type-py-function"><span class="n">get_routing_for_object</span></a><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+        <span class="c1"># then we validate the given metadata,</span>
         <span class="n">request_router</span><span class="o">.</span><span class="n">validate_metadata</span><span class="p">(</span><span class="n">params</span><span class="o">=</span><span class="n">predict_params</span><span class="p">,</span> <span class="n">method</span><span class="o">=</span><span class="s2">&quot;predict&quot;</span><span class="p">)</span>
         <span class="c1"># and then prepare the input to the underlying `predict` method.</span>
         <span class="n">routed_params</span> <span class="o">=</span> <span class="n">request_router</span><span class="o">.</span><span class="n">route_params</span><span class="p">(</span>
@@ -387,20 +403,23 @@ metadata.</p>
 </pre></div>
 </div>
 <p>Let’s break down different parts of the above code.</p>
-<p>First, the <a class="reference internal" href="../../modules/generated/sklearn.utils.metadata_routing.get_routing_for_object.html#sklearn.utils.metadata_routing.get_routing_for_object" title="sklearn.utils.metadata_routing.get_routing_for_object"><code class="xref py py-meth docutils literal notranslate"><span class="pre">get_routing_for_object</span></code></a> takes an
-estimator (<code class="docutils literal notranslate"><span class="pre">self</span></code>) and returns a
-<a class="reference internal" href="../../modules/generated/sklearn.utils.metadata_routing.MetadataRouter.html#sklearn.utils.metadata_routing.MetadataRouter" title="sklearn.utils.metadata_routing.MetadataRouter"><code class="xref py py-class docutils literal notranslate"><span class="pre">MetadataRouter</span></code></a> or a
-<a class="reference internal" href="../../modules/generated/sklearn.utils.metadata_routing.MetadataRequest.html#sklearn.utils.metadata_routing.MetadataRequest" title="sklearn.utils.metadata_routing.MetadataRequest"><code class="xref py py-class docutils literal notranslate"><span class="pre">MetadataRequest</span></code></a> based on the output of the
-estimator’s <code class="docutils literal notranslate"><span class="pre">get_metadata_routing</span></code> method.</p>
+<p>First, the <a class="reference internal" href="../../modules/generated/sklearn.utils.metadata_routing.get_routing_for_object.html#sklearn.utils.metadata_routing.get_routing_for_object" title="sklearn.utils.metadata_routing.get_routing_for_object"><code class="xref py py-meth docutils literal notranslate"><span class="pre">get_routing_for_object</span></code></a> takes our
+meta-estimator (<code class="docutils literal notranslate"><span class="pre">self</span></code>) and returns a
+<a class="reference internal" href="../../modules/generated/sklearn.utils.metadata_routing.MetadataRouter.html#sklearn.utils.metadata_routing.MetadataRouter" title="sklearn.utils.metadata_routing.MetadataRouter"><code class="xref py py-class docutils literal notranslate"><span class="pre">MetadataRouter</span></code></a> or, a
+<a class="reference internal" href="../../modules/generated/sklearn.utils.metadata_routing.MetadataRequest.html#sklearn.utils.metadata_routing.MetadataRequest" title="sklearn.utils.metadata_routing.MetadataRequest"><code class="xref py py-class docutils literal notranslate"><span class="pre">MetadataRequest</span></code></a> if the object is a consumer,
+based on the output of the estimator’s <code class="docutils literal notranslate"><span class="pre">get_metadata_routing</span></code> method.</p>
 <p>Then in each method, we use the <code class="docutils literal notranslate"><span class="pre">route_params</span></code> method to construct a
 dictionary of the form <code class="docutils literal notranslate"><span class="pre">{&quot;object_name&quot;:</span> <span class="pre">{&quot;method_name&quot;:</span> <span class="pre">{&quot;metadata&quot;:</span>
 <span class="pre">value}}}</span></code> to pass to the underlying estimator’s method. The <code class="docutils literal notranslate"><span class="pre">object_name</span></code>
 (<code class="docutils literal notranslate"><span class="pre">estimator</span></code> in the above <code class="docutils literal notranslate"><span class="pre">routed_params.estimator.fit</span></code> example) is the
 same as the one added in the <code class="docutils literal notranslate"><span class="pre">get_metadata_routing</span></code>. <code class="docutils literal notranslate"><span class="pre">validate_metadata</span></code>
-makes sure all given metadata are requested to avoid silent bugs. Now, we
-illustrate the different behaviors and notably the type of errors raised:</p>
-<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">est</span> <span class="o">=</span> <span class="n">MetaClassifier</span><span class="p">(</span><span class="n">estimator</span><span class="o">=</span><span class="n">ExampleClassifier</span><span class="p">()</span><span class="o">.</span><span class="n">set_fit_request</span><span class="p">(</span><span class="n">sample_weight</span><span class="o">=</span><span class="kc">True</span><span class="p">))</span>
-<span class="n">est</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">sample_weight</span><span class="o">=</span><span class="n">my_weights</span><span class="p">)</span>
+makes sure all given metadata are requested to avoid silent bugs.</p>
+<p>Next, we illustrate the different behaviors and notably the type of errors
+raised.</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">meta_est</span> <span class="o">=</span> <span class="n">MetaClassifier</span><span class="p">(</span>
+    <span class="n">estimator</span><span class="o">=</span><span class="n">ExampleClassifier</span><span class="p">()</span><span class="o">.</span><span class="n">set_fit_request</span><span class="p">(</span><span class="n">sample_weight</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="p">)</span>
+<span class="n">meta_est</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">sample_weight</span><span class="o">=</span><span class="n">my_weights</span><span class="p">)</span>
 </pre></div>
 </div>
 <div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>Received sample_weight of length = 100 in ExampleClassifier.
@@ -814,10 +833,11 @@ div.sk-label-container:hover .sk-estimator-doc-link.fitted:hover,
 </style><div id="sk-container-id-48" class="sk-top-container"><div class="sk-text-repr-fallback"><pre>MetaClassifier(estimator=ExampleClassifier())</pre><b>In a Jupyter environment, please rerun this cell to show the HTML representation or trust the notebook. <br />On GitHub, the HTML representation is unable to render, please try loading this page with nbviewer.org.</b></div><div class="sk-container" hidden><div class="sk-item sk-dashed-wrapped"><div class="sk-label-container"><div class="sk-label fitted sk-toggleable"><input class="sk-toggleable__control sk-hidden--visually" id="sk-estimator-id-212" type="checkbox" ><label for="sk-estimator-id-212" class="sk-toggleable__label fitted sk-toggleable__label-arrow fitted">&nbsp;MetaClassifier<span class="sk-estimator-doc-link fitted">i<span>Fitted</span></span></label><div class="sk-toggleable__content fitted"><pre>MetaClassifier(estimator=ExampleClassifier())</pre></div> </div></div><div class="sk-parallel"><div class="sk-parallel-item"><div class="sk-item"><div class="sk-label-container"><div class="sk-label fitted sk-toggleable"><input class="sk-toggleable__control sk-hidden--visually" id="sk-estimator-id-213" type="checkbox" ><label for="sk-estimator-id-213" class="sk-toggleable__label fitted sk-toggleable__label-arrow fitted">estimator: ExampleClassifier</label><div class="sk-toggleable__content fitted"><pre>ExampleClassifier()</pre></div> </div></div><div class="sk-serial"><div class="sk-item"><div class="sk-estimator fitted sk-toggleable"><input class="sk-toggleable__control sk-hidden--visually" id="sk-estimator-id-214" type="checkbox" ><label for="sk-estimator-id-214" class="sk-toggleable__label fitted sk-toggleable__label-arrow fitted">ExampleClassifier</label><div class="sk-toggleable__content fitted"><pre>ExampleClassifier()</pre></div> </div></div></div></div></div></div></div></div></div>
 </div>
 <br />
-<br /><p>Note that the above example checks that <code class="docutils literal notranslate"><span class="pre">sample_weight</span></code> is correctly passed
-to <code class="docutils literal notranslate"><span class="pre">ExampleClassifier</span></code>, or else it would print that <code class="docutils literal notranslate"><span class="pre">sample_weight</span></code> is
-<code class="docutils literal notranslate"><span class="pre">None</span></code>:</p>
-<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">est</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
+<br /><p>Note that the above example is calling our utility function
+<code class="docutils literal notranslate"><span class="pre">check_metadata()</span></code> via the <code class="docutils literal notranslate"><span class="pre">ExampleClassifier</span></code>. It checks that
+<code class="docutils literal notranslate"><span class="pre">sample_weight</span></code> is correctly passed to it. If it is not, like in the
+following example, it would print that <code class="docutils literal notranslate"><span class="pre">sample_weight</span></code> is <code class="docutils literal notranslate"><span class="pre">None</span></code>:</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">meta_est</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
 </pre></div>
 </div>
 <div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>sample_weight is None in ExampleClassifier.
@@ -1233,7 +1253,7 @@ div.sk-label-container:hover .sk-estimator-doc-link.fitted:hover,
 <br />
 <br /><p>If we pass an unknown metadata, an error is raised:</p>
 <div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="k">try</span><span class="p">:</span>
-    <span class="n">est</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">test</span><span class="o">=</span><span class="n">my_weights</span><span class="p">)</span>
+    <span class="n">meta_est</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">test</span><span class="o">=</span><span class="n">my_weights</span><span class="p">)</span>
 <span class="k">except</span> <span class="ne">TypeError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
     <span class="nb">print</span><span class="p">(</span><span class="n">e</span><span class="p">)</span>
 </pre></div>
@@ -1243,7 +1263,7 @@ div.sk-label-container:hover .sk-estimator-doc-link.fitted:hover,
 </div>
 <p>And if we pass a metadata which is not explicitly requested:</p>
 <div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="k">try</span><span class="p">:</span>
-    <span class="n">est</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">sample_weight</span><span class="o">=</span><span class="n">my_weights</span><span class="p">)</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">groups</span><span class="o">=</span><span class="n">my_groups</span><span class="p">)</span>
+    <span class="n">meta_est</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">sample_weight</span><span class="o">=</span><span class="n">my_weights</span><span class="p">)</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">groups</span><span class="o">=</span><span class="n">my_groups</span><span class="p">)</span>
 <span class="k">except</span> <span class="ne">ValueError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
     <span class="nb">print</span><span class="p">(</span><span class="n">e</span><span class="p">)</span>
 </pre></div>
@@ -1253,13 +1273,13 @@ div.sk-label-container:hover .sk-estimator-doc-link.fitted:hover,
 </pre></div>
 </div>
 <p>Also, if we explicitly set it as not requested, but it is provided:</p>
-<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">est</span> <span class="o">=</span> <span class="n">MetaClassifier</span><span class="p">(</span>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">meta_est</span> <span class="o">=</span> <span class="n">MetaClassifier</span><span class="p">(</span>
     <span class="n">estimator</span><span class="o">=</span><span class="n">ExampleClassifier</span><span class="p">()</span>
     <span class="o">.</span><span class="n">set_fit_request</span><span class="p">(</span><span class="n">sample_weight</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
     <span class="o">.</span><span class="n">set_predict_request</span><span class="p">(</span><span class="n">groups</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
 <span class="p">)</span>
 <span class="k">try</span><span class="p">:</span>
-    <span class="n">est</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">sample_weight</span><span class="o">=</span><span class="n">my_weights</span><span class="p">)</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">X</span><span class="p">[:</span><span class="mi">3</span><span class="p">,</span> <span class="p">:],</span> <span class="n">groups</span><span class="o">=</span><span class="n">my_groups</span><span class="p">)</span>
+    <span class="n">meta_est</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">sample_weight</span><span class="o">=</span><span class="n">my_weights</span><span class="p">)</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">X</span><span class="p">[:</span><span class="mi">3</span><span class="p">,</span> <span class="p">:],</span> <span class="n">groups</span><span class="o">=</span><span class="n">my_groups</span><span class="p">)</span>
 <span class="k">except</span> <span class="ne">TypeError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
     <span class="nb">print</span><span class="p">(</span><span class="n">e</span><span class="p">)</span>
 </pre></div>
@@ -1268,20 +1288,20 @@ div.sk-label-container:hover .sk-estimator-doc-link.fitted:hover,
 MetaClassifier.predict got unexpected argument(s) {&#39;groups&#39;}, which are not routed to any object.
 </pre></div>
 </div>
-<p>Another concept to introduce is <strong>aliased metadata</strong>. This is when an estimator
-requests a metadata with a different name than the default value. For
-instance, in a setting where there are two estimators in a pipeline, one
-could request <code class="docutils literal notranslate"><span class="pre">sample_weight1</span></code> and the other <code class="docutils literal notranslate"><span class="pre">sample_weight2</span></code>. Note that
-this doesn’t change what the estimator expects, it only tells the
-meta-estimator how to map the provided metadata to what’s required. Here’s an
-example, where we pass <code class="docutils literal notranslate"><span class="pre">aliased_sample_weight</span></code> to the meta-estimator, but
-the meta-estimator understands that <code class="docutils literal notranslate"><span class="pre">aliased_sample_weight</span></code> is an alias for
-<code class="docutils literal notranslate"><span class="pre">sample_weight</span></code>, and passes it as <code class="docutils literal notranslate"><span class="pre">sample_weight</span></code> to the underlying
-estimator:</p>
-<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">est</span> <span class="o">=</span> <span class="n">MetaClassifier</span><span class="p">(</span>
+<p>Another concept to introduce is <strong>aliased metadata</strong>. This is when an
+estimator requests a metadata with a different variable name than the default
+variable name. For instance, in a setting where there are two estimators in a
+pipeline, one could request <code class="docutils literal notranslate"><span class="pre">sample_weight1</span></code> and the other
+<code class="docutils literal notranslate"><span class="pre">sample_weight2</span></code>. Note that this doesn’t change what the estimator expects,
+it only tells the meta-estimator how to map the provided metadata to what is
+required. Here’s an example, where we pass <code class="docutils literal notranslate"><span class="pre">aliased_sample_weight</span></code> to the
+meta-estimator, but the meta-estimator understands that
+<code class="docutils literal notranslate"><span class="pre">aliased_sample_weight</span></code> is an alias for <code class="docutils literal notranslate"><span class="pre">sample_weight</span></code>, and passes it as
+<code class="docutils literal notranslate"><span class="pre">sample_weight</span></code> to the underlying estimator:</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">meta_est</span> <span class="o">=</span> <span class="n">MetaClassifier</span><span class="p">(</span>
     <span class="n">estimator</span><span class="o">=</span><span class="n">ExampleClassifier</span><span class="p">()</span><span class="o">.</span><span class="n">set_fit_request</span><span class="p">(</span><span class="n">sample_weight</span><span class="o">=</span><span class="s2">&quot;aliased_sample_weight&quot;</span><span class="p">)</span>
 <span class="p">)</span>
-<span class="n">est</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">aliased_sample_weight</span><span class="o">=</span><span class="n">my_weights</span><span class="p">)</span>
+<span class="n">meta_est</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">aliased_sample_weight</span><span class="o">=</span><span class="n">my_weights</span><span class="p">)</span>
 </pre></div>
 </div>
 <div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>Received sample_weight of length = 100 in ExampleClassifier.
@@ -1695,10 +1715,10 @@ div.sk-label-container:hover .sk-estimator-doc-link.fitted:hover,
 </style><div id="sk-container-id-50" class="sk-top-container"><div class="sk-text-repr-fallback"><pre>MetaClassifier(estimator=ExampleClassifier())</pre><b>In a Jupyter environment, please rerun this cell to show the HTML representation or trust the notebook. <br />On GitHub, the HTML representation is unable to render, please try loading this page with nbviewer.org.</b></div><div class="sk-container" hidden><div class="sk-item sk-dashed-wrapped"><div class="sk-label-container"><div class="sk-label fitted sk-toggleable"><input class="sk-toggleable__control sk-hidden--visually" id="sk-estimator-id-218" type="checkbox" ><label for="sk-estimator-id-218" class="sk-toggleable__label fitted sk-toggleable__label-arrow fitted">&nbsp;MetaClassifier<span class="sk-estimator-doc-link fitted">i<span>Fitted</span></span></label><div class="sk-toggleable__content fitted"><pre>MetaClassifier(estimator=ExampleClassifier())</pre></div> </div></div><div class="sk-parallel"><div class="sk-parallel-item"><div class="sk-item"><div class="sk-label-container"><div class="sk-label fitted sk-toggleable"><input class="sk-toggleable__control sk-hidden--visually" id="sk-estimator-id-219" type="checkbox" ><label for="sk-estimator-id-219" class="sk-toggleable__label fitted sk-toggleable__label-arrow fitted">estimator: ExampleClassifier</label><div class="sk-toggleable__content fitted"><pre>ExampleClassifier()</pre></div> </div></div><div class="sk-serial"><div class="sk-item"><div class="sk-estimator fitted sk-toggleable"><input class="sk-toggleable__control sk-hidden--visually" id="sk-estimator-id-220" type="checkbox" ><label for="sk-estimator-id-220" class="sk-toggleable__label fitted sk-toggleable__label-arrow fitted">ExampleClassifier</label><div class="sk-toggleable__content fitted"><pre>ExampleClassifier()</pre></div> </div></div></div></div></div></div></div></div></div>
 </div>
 <br />
-<br /><p>And passing <code class="docutils literal notranslate"><span class="pre">sample_weight</span></code> here will fail since it is requested with an
+<br /><p>Passing <code class="docutils literal notranslate"><span class="pre">sample_weight</span></code> here will fail since it is requested with an
 alias and <code class="docutils literal notranslate"><span class="pre">sample_weight</span></code> with that name is not requested:</p>
 <div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="k">try</span><span class="p">:</span>
-    <span class="n">est</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">sample_weight</span><span class="o">=</span><span class="n">my_weights</span><span class="p">)</span>
+    <span class="n">meta_est</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">sample_weight</span><span class="o">=</span><span class="n">my_weights</span><span class="p">)</span>
 <span class="k">except</span> <span class="ne">TypeError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
     <span class="nb">print</span><span class="p">(</span><span class="n">e</span><span class="p">)</span>
 </pre></div>
@@ -1715,26 +1735,12 @@ representation of a <a class="reference internal" href="../../modules/generated/
 the complete tree of requested metadata by all nested objects and their
 corresponding method routings, i.e. which method of a sub-estimator is used
 in which method of a meta-estimator:</p>
-<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">print_routing</span><span class="p">(</span><span class="n">est</span><span class="p">)</span>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">print_routing</span><span class="p">(</span><span class="n">meta_est</span><span class="p">)</span>
 </pre></div>
 </div>
 <div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>{&#39;estimator&#39;: {&#39;mapping&#39;: [{&#39;callee&#39;: &#39;fit&#39;, &#39;caller&#39;: &#39;fit&#39;},
-                           {&#39;callee&#39;: &#39;partial_fit&#39;, &#39;caller&#39;: &#39;partial_fit&#39;},
                            {&#39;callee&#39;: &#39;predict&#39;, &#39;caller&#39;: &#39;predict&#39;},
-                           {&#39;callee&#39;: &#39;predict_proba&#39;,
-                            &#39;caller&#39;: &#39;predict_proba&#39;},
-                           {&#39;callee&#39;: &#39;predict_log_proba&#39;,
-                            &#39;caller&#39;: &#39;predict_log_proba&#39;},
-                           {&#39;callee&#39;: &#39;decision_function&#39;,
-                            &#39;caller&#39;: &#39;decision_function&#39;},
-                           {&#39;callee&#39;: &#39;score&#39;, &#39;caller&#39;: &#39;score&#39;},
-                           {&#39;callee&#39;: &#39;split&#39;, &#39;caller&#39;: &#39;split&#39;},
-                           {&#39;callee&#39;: &#39;transform&#39;, &#39;caller&#39;: &#39;transform&#39;},
-                           {&#39;callee&#39;: &#39;inverse_transform&#39;,
-                            &#39;caller&#39;: &#39;inverse_transform&#39;},
-                           {&#39;callee&#39;: &#39;fit_transform&#39;,
-                            &#39;caller&#39;: &#39;fit_transform&#39;},
-                           {&#39;callee&#39;: &#39;fit_predict&#39;, &#39;caller&#39;: &#39;fit_predict&#39;}],
+                           {&#39;callee&#39;: &#39;score&#39;, &#39;caller&#39;: &#39;score&#39;}],
                &#39;router&#39;: {&#39;fit&#39;: {&#39;sample_weight&#39;: &#39;aliased_sample_weight&#39;},
                           &#39;predict&#39;: {&#39;groups&#39;: None},
                           &#39;score&#39;: {&#39;sample_weight&#39;: None}}}}
@@ -1744,36 +1750,40 @@ in which method of a meta-estimator:</p>
 <code class="docutils literal notranslate"><span class="pre">&quot;sample_weight&quot;</span></code> with <code class="docutils literal notranslate"><span class="pre">&quot;aliased_sample_weight&quot;</span></code> as the alias. The
 <code class="docutils literal notranslate"><span class="pre">~utils.metadata_routing.MetadataRouter</span></code> class enables us to easily create
 the routing object which would create the output we need for our
-<code class="docutils literal notranslate"><span class="pre">get_metadata_routing</span></code>. In the above implementation,
-<code class="docutils literal notranslate"><span class="pre">mapping=&quot;one-to-one&quot;</span></code> means there is a one to one mapping between
-sub-estimator’s methods and meta-estimator’s ones, i.e. <code class="docutils literal notranslate"><span class="pre">fit</span></code> used in
-<code class="docutils literal notranslate"><span class="pre">fit</span></code> and so on. In order to understand how aliases work in
-meta-estimators, imagine our meta-estimator inside another one:</p>
-<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">meta_est</span> <span class="o">=</span> <span class="n">MetaClassifier</span><span class="p">(</span><span class="n">estimator</span><span class="o">=</span><span class="n">est</span><span class="p">)</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">aliased_sample_weight</span><span class="o">=</span><span class="n">my_weights</span><span class="p">)</span>
+<code class="docutils literal notranslate"><span class="pre">get_metadata_routing</span></code>.</p>
+<p>In order to understand how aliases work in meta-estimators, imagine our
+meta-estimator inside another one:</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">meta_meta_est</span> <span class="o">=</span> <span class="n">MetaClassifier</span><span class="p">(</span><span class="n">estimator</span><span class="o">=</span><span class="n">meta_est</span><span class="p">)</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span>
+    <span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">aliased_sample_weight</span><span class="o">=</span><span class="n">my_weights</span>
+<span class="p">)</span>
 </pre></div>
 </div>
 <div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>Received sample_weight of length = 100 in ExampleClassifier.
 </pre></div>
 </div>
-<p>In the above example, this is how each <code class="docutils literal notranslate"><span class="pre">fit</span></code> method will call the
-sub-estimator’s <code class="docutils literal notranslate"><span class="pre">fit</span></code>:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span> <span class="n">meta_est</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">aliased_sample_weight</span><span class="o">=</span><span class="n">my_weights</span><span class="p">):</span>
-     <span class="o">...</span>  <span class="c1"># this estimator (est), expects aliased_sample_weight as seen above</span>
-     <span class="bp">self</span><span class="o">.</span><span class="n">estimator_</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">aliased_sample_weight</span><span class="o">=</span><span class="n">aliased_sample_weight</span><span class="p">):</span>
-         <span class="o">...</span>  <span class="c1"># now est passes aliased_sample_weight&#39;s value as sample_weight,</span>
-              <span class="c1"># which is expected by the sub-estimator</span>
-         <span class="bp">self</span><span class="o">.</span><span class="n">estimator_</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">sample_weight</span><span class="o">=</span><span class="n">aliased_sample_weight</span><span class="p">)</span>
-<span class="o">...</span>
+<p>In the above example, this is how the <code class="docutils literal notranslate"><span class="pre">fit</span></code> method of <code class="docutils literal notranslate"><span class="pre">meta_meta_est</span></code>
+will call their sub-estimator’s <code class="docutils literal notranslate"><span class="pre">fit</span></code> methods:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># user feeds `my_weights` as `aliased_sample_weight` into `meta_meta_est`:</span>
+<span class="n">meta_meta_est</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">aliased_sample_weight</span><span class="o">=</span><span class="n">my_weights</span><span class="p">):</span>
+    <span class="o">...</span>
+
+    <span class="c1"># the first sub-estimator (`meta_est`) expects `aliased_sample_weight`</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">estimator_</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">aliased_sample_weight</span><span class="o">=</span><span class="n">aliased_sample_weight</span><span class="p">):</span>
+        <span class="o">...</span>
+
+        <span class="c1"># the second sub-estimator (`est`) expects `sample_weight`</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">estimator_</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">sample_weight</span><span class="o">=</span><span class="n">aliased_sample_weight</span><span class="p">):</span>
+            <span class="o">...</span>
 </pre></div>
 </div>
 </section>
-<section id="router-and-consumer">
-<h2>Router and Consumer<a class="headerlink" href="#router-and-consumer" title="Link to this heading">¶</a></h2>
-<p>To show how a slightly more complex case would work, consider a case
-where a meta-estimator uses some metadata, but it also routes them to an
-underlying estimator. In this case, this meta-estimator is a consumer and a
-router at the same time. This is how we can implement one, and it is very
-similar to what we had before, with a few tweaks.</p>
+<section id="consuming-and-routing-meta-estimator">
+<h2>Consuming and routing Meta-Estimator<a class="headerlink" href="#consuming-and-routing-meta-estimator" title="Link to this heading">¶</a></h2>
+<p>For a slightly more complex example, consider a meta-estimator that routes
+metadata to an underlying estimator as before, but it also uses some metadata
+in its own methods. This meta-estimator is a consumer and a router at the
+same time. Implementing one is very similar to what we had before, but with a
+few tweaks.</p>
 <div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">RouterConsumerClassifier</span><span class="p">(</span><a href="../../modules/generated/sklearn.base.MetaEstimatorMixin.html#sklearn.base.MetaEstimatorMixin" title="sklearn.base.MetaEstimatorMixin" class="sphx-glr-backref-module-sklearn-base sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">MetaEstimatorMixin</span></a><span class="p">,</span> <a href="../../modules/generated/sklearn.base.ClassifierMixin.html#sklearn.base.ClassifierMixin" title="sklearn.base.ClassifierMixin" class="sphx-glr-backref-module-sklearn-base sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">ClassifierMixin</span></a><span class="p">,</span> <a href="../../modules/generated/sklearn.base.BaseEstimator.html#sklearn.base.BaseEstimator" title="sklearn.base.BaseEstimator" class="sphx-glr-backref-module-sklearn-base sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">BaseEstimator</span></a><span class="p">):</span>
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">estimator</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">estimator</span> <span class="o">=</span> <span class="n">estimator</span>
@@ -1781,46 +1791,58 @@ similar to what we had before, with a few tweaks.</p>
     <span class="k">def</span> <span class="nf">get_metadata_routing</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="n">router</span> <span class="o">=</span> <span class="p">(</span>
             <a href="../../modules/generated/sklearn.utils.metadata_routing.MetadataRouter.html#sklearn.utils.metadata_routing.MetadataRouter" title="sklearn.utils.metadata_routing.MetadataRouter" class="sphx-glr-backref-module-sklearn-utils-metadata_routing sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">MetadataRouter</span></a><span class="p">(</span><span class="n">owner</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="p">)</span>
+            <span class="c1"># defining metadata routing request values for usage in the meta-estimator</span>
             <span class="o">.</span><span class="n">add_self_request</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
-            <span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">estimator</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">estimator</span><span class="p">,</span> <span class="n">method_mapping</span><span class="o">=</span><span class="s2">&quot;one-to-one&quot;</span><span class="p">)</span>
+            <span class="c1"># defining metadata routing request values for usage in the sub-estimator</span>
+            <span class="o">.</span><span class="n">add</span><span class="p">(</span>
+                <span class="n">estimator</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">estimator</span><span class="p">,</span>
+                <span class="n">method_mapping</span><span class="o">=</span><a href="../../modules/generated/sklearn.utils.metadata_routing.MethodMapping.html#sklearn.utils.metadata_routing.MethodMapping" title="sklearn.utils.metadata_routing.MethodMapping" class="sphx-glr-backref-module-sklearn-utils-metadata_routing sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">MethodMapping</span></a><span class="p">()</span>
+                <span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">callee</span><span class="o">=</span><span class="s2">&quot;fit&quot;</span><span class="p">,</span> <span class="n">caller</span><span class="o">=</span><span class="s2">&quot;fit&quot;</span><span class="p">)</span>
+                <span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">callee</span><span class="o">=</span><span class="s2">&quot;predict&quot;</span><span class="p">,</span> <span class="n">caller</span><span class="o">=</span><span class="s2">&quot;predict&quot;</span><span class="p">)</span>
+                <span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">callee</span><span class="o">=</span><span class="s2">&quot;score&quot;</span><span class="p">,</span> <span class="n">caller</span><span class="o">=</span><span class="s2">&quot;score&quot;</span><span class="p">),</span>
+            <span class="p">)</span>
         <span class="p">)</span>
         <span class="k">return</span> <span class="n">router</span>
 
+    <span class="c1"># Since `sample_weight` is used and consumed here, it should be defined as</span>
+    <span class="c1"># an explicit argument in the method&#39;s signature. All other metadata which</span>
+    <span class="c1"># are only routed, will be passed as `**fit_params`:</span>
     <span class="k">def</span> <span class="nf">fit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">sample_weight</span><span class="p">,</span> <span class="o">**</span><span class="n">fit_params</span><span class="p">):</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">estimator</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;estimator cannot be None!&quot;</span><span class="p">)</span>
 
         <span class="n">check_metadata</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">sample_weight</span><span class="o">=</span><span class="n">sample_weight</span><span class="p">)</span>
 
+        <span class="c1"># We add `sample_weight` to the `fit_params` dictionary.</span>
         <span class="k">if</span> <span class="n">sample_weight</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">fit_params</span><span class="p">[</span><span class="s2">&quot;sample_weight&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">sample_weight</span>
 
-        <span class="c1"># meta-estimators are responsible for validating the given metadata</span>
         <span class="n">request_router</span> <span class="o">=</span> <a href="../../modules/generated/sklearn.utils.metadata_routing.get_routing_for_object.html#sklearn.utils.metadata_routing.get_routing_for_object" title="sklearn.utils.metadata_routing.get_routing_for_object" class="sphx-glr-backref-module-sklearn-utils-metadata_routing sphx-glr-backref-type-py-function"><span class="n">get_routing_for_object</span></a><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
         <span class="n">request_router</span><span class="o">.</span><span class="n">validate_metadata</span><span class="p">(</span><span class="n">params</span><span class="o">=</span><span class="n">fit_params</span><span class="p">,</span> <span class="n">method</span><span class="o">=</span><span class="s2">&quot;fit&quot;</span><span class="p">)</span>
-        <span class="c1"># we can use provided utility methods to map the given metadata to what</span>
-        <span class="c1"># is required by the underlying estimator</span>
-        <span class="n">params</span> <span class="o">=</span> <span class="n">request_router</span><span class="o">.</span><span class="n">route_params</span><span class="p">(</span><span class="n">params</span><span class="o">=</span><span class="n">fit_params</span><span class="p">,</span> <span class="n">caller</span><span class="o">=</span><span class="s2">&quot;fit&quot;</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">estimator_</span> <span class="o">=</span> <span class="n">clone</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">estimator</span><span class="p">)</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="o">**</span><span class="n">params</span><span class="o">.</span><span class="n">estimator</span><span class="o">.</span><span class="n">fit</span><span class="p">)</span>
+        <span class="n">routed_params</span> <span class="o">=</span> <span class="n">request_router</span><span class="o">.</span><span class="n">route_params</span><span class="p">(</span><span class="n">params</span><span class="o">=</span><span class="n">fit_params</span><span class="p">,</span> <span class="n">caller</span><span class="o">=</span><span class="s2">&quot;fit&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">estimator_</span> <span class="o">=</span> <span class="n">clone</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">estimator</span><span class="p">)</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="o">**</span><span class="n">routed_params</span><span class="o">.</span><span class="n">estimator</span><span class="o">.</span><span class="n">fit</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">classes_</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">estimator_</span><span class="o">.</span><span class="n">classes_</span>
         <span class="k">return</span> <span class="bp">self</span>
 
     <span class="k">def</span> <span class="nf">predict</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="o">**</span><span class="n">predict_params</span><span class="p">):</span>
         <a href="../../modules/generated/sklearn.utils.validation.check_is_fitted.html#sklearn.utils.validation.check_is_fitted" title="sklearn.utils.validation.check_is_fitted" class="sphx-glr-backref-module-sklearn-utils-validation sphx-glr-backref-type-py-function"><span class="n">check_is_fitted</span></a><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
-        <span class="c1"># same as in ``fit``, we validate the given metadata</span>
+        <span class="c1"># As in `fit`, we get a copy of the object&#39;s MetadataRouter,</span>
         <span class="n">request_router</span> <span class="o">=</span> <a href="../../modules/generated/sklearn.utils.metadata_routing.get_routing_for_object.html#sklearn.utils.metadata_routing.get_routing_for_object" title="sklearn.utils.metadata_routing.get_routing_for_object" class="sphx-glr-backref-module-sklearn-utils-metadata_routing sphx-glr-backref-type-py-function"><span class="n">get_routing_for_object</span></a><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+        <span class="c1"># we validate the given metadata,</span>
         <span class="n">request_router</span><span class="o">.</span><span class="n">validate_metadata</span><span class="p">(</span><span class="n">params</span><span class="o">=</span><span class="n">predict_params</span><span class="p">,</span> <span class="n">method</span><span class="o">=</span><span class="s2">&quot;predict&quot;</span><span class="p">)</span>
         <span class="c1"># and then prepare the input to the underlying ``predict`` method.</span>
-        <span class="n">params</span> <span class="o">=</span> <span class="n">request_router</span><span class="o">.</span><span class="n">route_params</span><span class="p">(</span><span class="n">params</span><span class="o">=</span><span class="n">predict_params</span><span class="p">,</span> <span class="n">caller</span><span class="o">=</span><span class="s2">&quot;predict&quot;</span><span class="p">)</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">estimator_</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="o">**</span><span class="n">params</span><span class="o">.</span><span class="n">estimator</span><span class="o">.</span><span class="n">predict</span><span class="p">)</span>
+        <span class="n">routed_params</span> <span class="o">=</span> <span class="n">request_router</span><span class="o">.</span><span class="n">route_params</span><span class="p">(</span>
+            <span class="n">params</span><span class="o">=</span><span class="n">predict_params</span><span class="p">,</span> <span class="n">caller</span><span class="o">=</span><span class="s2">&quot;predict&quot;</span>
+        <span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">estimator_</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="o">**</span><span class="n">routed_params</span><span class="o">.</span><span class="n">estimator</span><span class="o">.</span><span class="n">predict</span><span class="p">)</span>
 </pre></div>
 </div>
-<p>The key parts where the above estimator differs from our previous
+<p>The key parts where the above meta-estimator differs from our previous
 meta-estimator is accepting <code class="docutils literal notranslate"><span class="pre">sample_weight</span></code> explicitly in <code class="docutils literal notranslate"><span class="pre">fit</span></code> and
-including it in <code class="docutils literal notranslate"><span class="pre">fit_params</span></code>. Making <code class="docutils literal notranslate"><span class="pre">sample_weight</span></code> an explicit argument
-makes sure <code class="docutils literal notranslate"><span class="pre">set_fit_request(sample_weight=...)</span></code> is present for this class.
-In a sense, this means the estimator is both a consumer, as well as a router
-of <code class="docutils literal notranslate"><span class="pre">sample_weight</span></code>.</p>
+including it in <code class="docutils literal notranslate"><span class="pre">fit_params</span></code>. Since <code class="docutils literal notranslate"><span class="pre">sample_weight</span></code> is an explicit
+argument, we can be sure that <code class="docutils literal notranslate"><span class="pre">set_fit_request(sample_weight=...)</span></code> is
+present for this method. The meta-estimator is both a consumer, as well as a
+router of <code class="docutils literal notranslate"><span class="pre">sample_weight</span></code>.</p>
 <p>In <code class="docutils literal notranslate"><span class="pre">get_metadata_routing</span></code>, we add <code class="docutils literal notranslate"><span class="pre">self</span></code> to the routing using
 <code class="docutils literal notranslate"><span class="pre">add_self_request</span></code> to indicate this estimator is consuming
 <code class="docutils literal notranslate"><span class="pre">sample_weight</span></code> as well as being a router; which also adds a
@@ -1829,62 +1851,34 @@ look at some examples:</p>
 <ul class="simple">
 <li><p>No metadata requested</p></li>
 </ul>
-<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">est</span> <span class="o">=</span> <span class="n">RouterConsumerClassifier</span><span class="p">(</span><span class="n">estimator</span><span class="o">=</span><span class="n">ExampleClassifier</span><span class="p">())</span>
-<span class="n">print_routing</span><span class="p">(</span><span class="n">est</span><span class="p">)</span>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">meta_est</span> <span class="o">=</span> <span class="n">RouterConsumerClassifier</span><span class="p">(</span><span class="n">estimator</span><span class="o">=</span><span class="n">ExampleClassifier</span><span class="p">())</span>
+<span class="n">print_routing</span><span class="p">(</span><span class="n">meta_est</span><span class="p">)</span>
 </pre></div>
 </div>
 <div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>{&#39;$self_request&#39;: {&#39;fit&#39;: {&#39;sample_weight&#39;: None},
                    &#39;score&#39;: {&#39;sample_weight&#39;: None}},
  &#39;estimator&#39;: {&#39;mapping&#39;: [{&#39;callee&#39;: &#39;fit&#39;, &#39;caller&#39;: &#39;fit&#39;},
-                           {&#39;callee&#39;: &#39;partial_fit&#39;, &#39;caller&#39;: &#39;partial_fit&#39;},
                            {&#39;callee&#39;: &#39;predict&#39;, &#39;caller&#39;: &#39;predict&#39;},
-                           {&#39;callee&#39;: &#39;predict_proba&#39;,
-                            &#39;caller&#39;: &#39;predict_proba&#39;},
-                           {&#39;callee&#39;: &#39;predict_log_proba&#39;,
-                            &#39;caller&#39;: &#39;predict_log_proba&#39;},
-                           {&#39;callee&#39;: &#39;decision_function&#39;,
-                            &#39;caller&#39;: &#39;decision_function&#39;},
-                           {&#39;callee&#39;: &#39;score&#39;, &#39;caller&#39;: &#39;score&#39;},
-                           {&#39;callee&#39;: &#39;split&#39;, &#39;caller&#39;: &#39;split&#39;},
-                           {&#39;callee&#39;: &#39;transform&#39;, &#39;caller&#39;: &#39;transform&#39;},
-                           {&#39;callee&#39;: &#39;inverse_transform&#39;,
-                            &#39;caller&#39;: &#39;inverse_transform&#39;},
-                           {&#39;callee&#39;: &#39;fit_transform&#39;,
-                            &#39;caller&#39;: &#39;fit_transform&#39;},
-                           {&#39;callee&#39;: &#39;fit_predict&#39;, &#39;caller&#39;: &#39;fit_predict&#39;}],
+                           {&#39;callee&#39;: &#39;score&#39;, &#39;caller&#39;: &#39;score&#39;}],
                &#39;router&#39;: {&#39;fit&#39;: {&#39;sample_weight&#39;: None},
                           &#39;predict&#39;: {&#39;groups&#39;: None},
                           &#39;score&#39;: {&#39;sample_weight&#39;: None}}}}
 </pre></div>
 </div>
 <ul class="simple">
-<li><p><code class="docutils literal notranslate"><span class="pre">sample_weight</span></code> requested by underlying estimator</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">sample_weight</span></code> requested by sub-estimator</p></li>
 </ul>
-<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">est</span> <span class="o">=</span> <span class="n">RouterConsumerClassifier</span><span class="p">(</span>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">meta_est</span> <span class="o">=</span> <span class="n">RouterConsumerClassifier</span><span class="p">(</span>
     <span class="n">estimator</span><span class="o">=</span><span class="n">ExampleClassifier</span><span class="p">()</span><span class="o">.</span><span class="n">set_fit_request</span><span class="p">(</span><span class="n">sample_weight</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 <span class="p">)</span>
-<span class="n">print_routing</span><span class="p">(</span><span class="n">est</span><span class="p">)</span>
+<span class="n">print_routing</span><span class="p">(</span><span class="n">meta_est</span><span class="p">)</span>
 </pre></div>
 </div>
 <div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>{&#39;$self_request&#39;: {&#39;fit&#39;: {&#39;sample_weight&#39;: None},
                    &#39;score&#39;: {&#39;sample_weight&#39;: None}},
  &#39;estimator&#39;: {&#39;mapping&#39;: [{&#39;callee&#39;: &#39;fit&#39;, &#39;caller&#39;: &#39;fit&#39;},
-                           {&#39;callee&#39;: &#39;partial_fit&#39;, &#39;caller&#39;: &#39;partial_fit&#39;},
                            {&#39;callee&#39;: &#39;predict&#39;, &#39;caller&#39;: &#39;predict&#39;},
-                           {&#39;callee&#39;: &#39;predict_proba&#39;,
-                            &#39;caller&#39;: &#39;predict_proba&#39;},
-                           {&#39;callee&#39;: &#39;predict_log_proba&#39;,
-                            &#39;caller&#39;: &#39;predict_log_proba&#39;},
-                           {&#39;callee&#39;: &#39;decision_function&#39;,
-                            &#39;caller&#39;: &#39;decision_function&#39;},
-                           {&#39;callee&#39;: &#39;score&#39;, &#39;caller&#39;: &#39;score&#39;},
-                           {&#39;callee&#39;: &#39;split&#39;, &#39;caller&#39;: &#39;split&#39;},
-                           {&#39;callee&#39;: &#39;transform&#39;, &#39;caller&#39;: &#39;transform&#39;},
-                           {&#39;callee&#39;: &#39;inverse_transform&#39;,
-                            &#39;caller&#39;: &#39;inverse_transform&#39;},
-                           {&#39;callee&#39;: &#39;fit_transform&#39;,
-                            &#39;caller&#39;: &#39;fit_transform&#39;},
-                           {&#39;callee&#39;: &#39;fit_predict&#39;, &#39;caller&#39;: &#39;fit_predict&#39;}],
+                           {&#39;callee&#39;: &#39;score&#39;, &#39;caller&#39;: &#39;score&#39;}],
                &#39;router&#39;: {&#39;fit&#39;: {&#39;sample_weight&#39;: True},
                           &#39;predict&#39;: {&#39;groups&#39;: None},
                           &#39;score&#39;: {&#39;sample_weight&#39;: None}}}}
@@ -1893,31 +1887,17 @@ look at some examples:</p>
 <ul class="simple">
 <li><p><code class="docutils literal notranslate"><span class="pre">sample_weight</span></code> requested by meta-estimator</p></li>
 </ul>
-<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">est</span> <span class="o">=</span> <span class="n">RouterConsumerClassifier</span><span class="p">(</span><span class="n">estimator</span><span class="o">=</span><span class="n">ExampleClassifier</span><span class="p">())</span><span class="o">.</span><span class="n">set_fit_request</span><span class="p">(</span>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">meta_est</span> <span class="o">=</span> <span class="n">RouterConsumerClassifier</span><span class="p">(</span><span class="n">estimator</span><span class="o">=</span><span class="n">ExampleClassifier</span><span class="p">())</span><span class="o">.</span><span class="n">set_fit_request</span><span class="p">(</span>
     <span class="n">sample_weight</span><span class="o">=</span><span class="kc">True</span>
 <span class="p">)</span>
-<span class="n">print_routing</span><span class="p">(</span><span class="n">est</span><span class="p">)</span>
+<span class="n">print_routing</span><span class="p">(</span><span class="n">meta_est</span><span class="p">)</span>
 </pre></div>
 </div>
 <div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>{&#39;$self_request&#39;: {&#39;fit&#39;: {&#39;sample_weight&#39;: True},
                    &#39;score&#39;: {&#39;sample_weight&#39;: None}},
  &#39;estimator&#39;: {&#39;mapping&#39;: [{&#39;callee&#39;: &#39;fit&#39;, &#39;caller&#39;: &#39;fit&#39;},
-                           {&#39;callee&#39;: &#39;partial_fit&#39;, &#39;caller&#39;: &#39;partial_fit&#39;},
                            {&#39;callee&#39;: &#39;predict&#39;, &#39;caller&#39;: &#39;predict&#39;},
-                           {&#39;callee&#39;: &#39;predict_proba&#39;,
-                            &#39;caller&#39;: &#39;predict_proba&#39;},
-                           {&#39;callee&#39;: &#39;predict_log_proba&#39;,
-                            &#39;caller&#39;: &#39;predict_log_proba&#39;},
-                           {&#39;callee&#39;: &#39;decision_function&#39;,
-                            &#39;caller&#39;: &#39;decision_function&#39;},
-                           {&#39;callee&#39;: &#39;score&#39;, &#39;caller&#39;: &#39;score&#39;},
-                           {&#39;callee&#39;: &#39;split&#39;, &#39;caller&#39;: &#39;split&#39;},
-                           {&#39;callee&#39;: &#39;transform&#39;, &#39;caller&#39;: &#39;transform&#39;},
-                           {&#39;callee&#39;: &#39;inverse_transform&#39;,
-                            &#39;caller&#39;: &#39;inverse_transform&#39;},
-                           {&#39;callee&#39;: &#39;fit_transform&#39;,
-                            &#39;caller&#39;: &#39;fit_transform&#39;},
-                           {&#39;callee&#39;: &#39;fit_predict&#39;, &#39;caller&#39;: &#39;fit_predict&#39;}],
+                           {&#39;callee&#39;: &#39;score&#39;, &#39;caller&#39;: &#39;score&#39;}],
                &#39;router&#39;: {&#39;fit&#39;: {&#39;sample_weight&#39;: None},
                           &#39;predict&#39;: {&#39;groups&#39;: None},
                           &#39;score&#39;: {&#39;sample_weight&#39;: None}}}}
@@ -1925,41 +1905,29 @@ look at some examples:</p>
 </div>
 <p>Note the difference in the requested metadata representations above.</p>
 <ul class="simple">
-<li><p>We can also alias the metadata to pass different values to them:</p></li>
+<li><p>We can also alias the metadata to pass different values to the fit methods
+of the meta- and the sub-estimator:</p></li>
 </ul>
-<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">est</span> <span class="o">=</span> <span class="n">RouterConsumerClassifier</span><span class="p">(</span>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">meta_est</span> <span class="o">=</span> <span class="n">RouterConsumerClassifier</span><span class="p">(</span>
     <span class="n">estimator</span><span class="o">=</span><span class="n">ExampleClassifier</span><span class="p">()</span><span class="o">.</span><span class="n">set_fit_request</span><span class="p">(</span><span class="n">sample_weight</span><span class="o">=</span><span class="s2">&quot;clf_sample_weight&quot;</span><span class="p">),</span>
 <span class="p">)</span><span class="o">.</span><span class="n">set_fit_request</span><span class="p">(</span><span class="n">sample_weight</span><span class="o">=</span><span class="s2">&quot;meta_clf_sample_weight&quot;</span><span class="p">)</span>
-<span class="n">print_routing</span><span class="p">(</span><span class="n">est</span><span class="p">)</span>
+<span class="n">print_routing</span><span class="p">(</span><span class="n">meta_est</span><span class="p">)</span>
 </pre></div>
 </div>
 <div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>{&#39;$self_request&#39;: {&#39;fit&#39;: {&#39;sample_weight&#39;: &#39;meta_clf_sample_weight&#39;},
                    &#39;score&#39;: {&#39;sample_weight&#39;: None}},
  &#39;estimator&#39;: {&#39;mapping&#39;: [{&#39;callee&#39;: &#39;fit&#39;, &#39;caller&#39;: &#39;fit&#39;},
-                           {&#39;callee&#39;: &#39;partial_fit&#39;, &#39;caller&#39;: &#39;partial_fit&#39;},
                            {&#39;callee&#39;: &#39;predict&#39;, &#39;caller&#39;: &#39;predict&#39;},
-                           {&#39;callee&#39;: &#39;predict_proba&#39;,
-                            &#39;caller&#39;: &#39;predict_proba&#39;},
-                           {&#39;callee&#39;: &#39;predict_log_proba&#39;,
-                            &#39;caller&#39;: &#39;predict_log_proba&#39;},
-                           {&#39;callee&#39;: &#39;decision_function&#39;,
-                            &#39;caller&#39;: &#39;decision_function&#39;},
-                           {&#39;callee&#39;: &#39;score&#39;, &#39;caller&#39;: &#39;score&#39;},
-                           {&#39;callee&#39;: &#39;split&#39;, &#39;caller&#39;: &#39;split&#39;},
-                           {&#39;callee&#39;: &#39;transform&#39;, &#39;caller&#39;: &#39;transform&#39;},
-                           {&#39;callee&#39;: &#39;inverse_transform&#39;,
-                            &#39;caller&#39;: &#39;inverse_transform&#39;},
-                           {&#39;callee&#39;: &#39;fit_transform&#39;,
-                            &#39;caller&#39;: &#39;fit_transform&#39;},
-                           {&#39;callee&#39;: &#39;fit_predict&#39;, &#39;caller&#39;: &#39;fit_predict&#39;}],
+                           {&#39;callee&#39;: &#39;score&#39;, &#39;caller&#39;: &#39;score&#39;}],
                &#39;router&#39;: {&#39;fit&#39;: {&#39;sample_weight&#39;: &#39;clf_sample_weight&#39;},
                           &#39;predict&#39;: {&#39;groups&#39;: None},
                           &#39;score&#39;: {&#39;sample_weight&#39;: None}}}}
 </pre></div>
 </div>
 <p>However, <code class="docutils literal notranslate"><span class="pre">fit</span></code> of the meta-estimator only needs the alias for the
-sub-estimator, since it doesn’t validate and route its own required metadata:</p>
-<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">est</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">sample_weight</span><span class="o">=</span><span class="n">my_weights</span><span class="p">,</span> <span class="n">clf_sample_weight</span><span class="o">=</span><span class="n">my_other_weights</span><span class="p">)</span>
+sub-estimator and addresses their own sample weight as <code class="docutils literal notranslate"><span class="pre">sample_weight</span></code>, since
+it doesn’t validate and route its own required metadata:</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">meta_est</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">sample_weight</span><span class="o">=</span><span class="n">my_weights</span><span class="p">,</span> <span class="n">clf_sample_weight</span><span class="o">=</span><span class="n">my_other_weights</span><span class="p">)</span>
 </pre></div>
 </div>
 <div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>Received sample_weight of length = 100 in RouterConsumerClassifier.
@@ -2375,50 +2343,40 @@ div.sk-label-container:hover .sk-estimator-doc-link.fitted:hover,
 </div>
 <br />
 <br /><ul class="simple">
-<li><p>Alias only on the sub-estimator. This is useful if we don’t want the
-meta-estimator to use the metadata, and we only want the metadata to be used
-by the sub-estimator.</p></li>
+<li><p>Alias only on the sub-estimator:</p></li>
 </ul>
-<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">est</span> <span class="o">=</span> <span class="n">RouterConsumerClassifier</span><span class="p">(</span>
+<p>This is useful when we don’t want the meta-estimator to use the metadata, but
+the sub-estimator should.</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">meta_est</span> <span class="o">=</span> <span class="n">RouterConsumerClassifier</span><span class="p">(</span>
     <span class="n">estimator</span><span class="o">=</span><span class="n">ExampleClassifier</span><span class="p">()</span><span class="o">.</span><span class="n">set_fit_request</span><span class="p">(</span><span class="n">sample_weight</span><span class="o">=</span><span class="s2">&quot;aliased_sample_weight&quot;</span><span class="p">)</span>
-<span class="p">)</span><span class="o">.</span><span class="n">set_fit_request</span><span class="p">(</span><span class="n">sample_weight</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-<span class="n">print_routing</span><span class="p">(</span><span class="n">est</span><span class="p">)</span>
+<span class="p">)</span>
+<span class="n">print_routing</span><span class="p">(</span><span class="n">meta_est</span><span class="p">)</span>
 </pre></div>
 </div>
-<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>{&#39;$self_request&#39;: {&#39;fit&#39;: {&#39;sample_weight&#39;: True},
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>{&#39;$self_request&#39;: {&#39;fit&#39;: {&#39;sample_weight&#39;: None},
                    &#39;score&#39;: {&#39;sample_weight&#39;: None}},
  &#39;estimator&#39;: {&#39;mapping&#39;: [{&#39;callee&#39;: &#39;fit&#39;, &#39;caller&#39;: &#39;fit&#39;},
-                           {&#39;callee&#39;: &#39;partial_fit&#39;, &#39;caller&#39;: &#39;partial_fit&#39;},
                            {&#39;callee&#39;: &#39;predict&#39;, &#39;caller&#39;: &#39;predict&#39;},
-                           {&#39;callee&#39;: &#39;predict_proba&#39;,
-                            &#39;caller&#39;: &#39;predict_proba&#39;},
-                           {&#39;callee&#39;: &#39;predict_log_proba&#39;,
-                            &#39;caller&#39;: &#39;predict_log_proba&#39;},
-                           {&#39;callee&#39;: &#39;decision_function&#39;,
-                            &#39;caller&#39;: &#39;decision_function&#39;},
-                           {&#39;callee&#39;: &#39;score&#39;, &#39;caller&#39;: &#39;score&#39;},
-                           {&#39;callee&#39;: &#39;split&#39;, &#39;caller&#39;: &#39;split&#39;},
-                           {&#39;callee&#39;: &#39;transform&#39;, &#39;caller&#39;: &#39;transform&#39;},
-                           {&#39;callee&#39;: &#39;inverse_transform&#39;,
-                            &#39;caller&#39;: &#39;inverse_transform&#39;},
-                           {&#39;callee&#39;: &#39;fit_transform&#39;,
-                            &#39;caller&#39;: &#39;fit_transform&#39;},
-                           {&#39;callee&#39;: &#39;fit_predict&#39;, &#39;caller&#39;: &#39;fit_predict&#39;}],
+                           {&#39;callee&#39;: &#39;score&#39;, &#39;caller&#39;: &#39;score&#39;}],
                &#39;router&#39;: {&#39;fit&#39;: {&#39;sample_weight&#39;: &#39;aliased_sample_weight&#39;},
                           &#39;predict&#39;: {&#39;groups&#39;: None},
                           &#39;score&#39;: {&#39;sample_weight&#39;: None}}}}
 </pre></div>
 </div>
+<p>The meta-estimator cannot use <code class="docutils literal notranslate"><span class="pre">aliased_sample_weight</span></code>, because it expects
+it passed as <code class="docutils literal notranslate"><span class="pre">sample_weight</span></code>. This would apply even if
+<code class="docutils literal notranslate"><span class="pre">set_fit_request(sample_weight=True)</span></code> was set on it.</p>
 </section>
 <section id="simple-pipeline">
 <h2>Simple Pipeline<a class="headerlink" href="#simple-pipeline" title="Link to this heading">¶</a></h2>
-<p>A slightly more complicated use-case is a meta-estimator which does something
-similar to the <a class="reference internal" href="../../modules/generated/sklearn.pipeline.Pipeline.html#sklearn.pipeline.Pipeline" title="sklearn.pipeline.Pipeline"><code class="xref py py-class docutils literal notranslate"><span class="pre">Pipeline</span></code></a>. Here is a meta-estimator, which
-accepts a transformer and a classifier, and applies the transformer before
-running the classifier.</p>
+<p>A slightly more complicated use-case is a meta-estimator resembling a
+<a class="reference internal" href="../../modules/generated/sklearn.pipeline.Pipeline.html#sklearn.pipeline.Pipeline" title="sklearn.pipeline.Pipeline"><code class="xref py py-class docutils literal notranslate"><span class="pre">Pipeline</span></code></a>. Here is a meta-estimator, which accepts a
+transformer and a classifier. When calling its <code class="docutils literal notranslate"><span class="pre">fit</span></code> method, it applies the
+transformer’s <code class="docutils literal notranslate"><span class="pre">fit</span></code> and <code class="docutils literal notranslate"><span class="pre">transform</span></code> before running the classifier on the
+transformed data. Upon <code class="docutils literal notranslate"><span class="pre">predict</span></code>, it applies the transformer’s <code class="docutils literal notranslate"><span class="pre">transform</span></code>
+before predicting with the classifier’s <code class="docutils literal notranslate"><span class="pre">predict</span></code> method on the transformed
+new data.</p>
 <div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">SimplePipeline</span><span class="p">(</span><a href="../../modules/generated/sklearn.base.ClassifierMixin.html#sklearn.base.ClassifierMixin" title="sklearn.base.ClassifierMixin" class="sphx-glr-backref-module-sklearn-base sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">ClassifierMixin</span></a><span class="p">,</span> <a href="../../modules/generated/sklearn.base.BaseEstimator.html#sklearn.base.BaseEstimator" title="sklearn.base.BaseEstimator" class="sphx-glr-backref-module-sklearn-base sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">BaseEstimator</span></a><span class="p">):</span>
-    <span class="n">_required_parameters</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;estimator&quot;</span><span class="p">]</span>
-
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">transformer</span><span class="p">,</span> <span class="n">classifier</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">transformer</span> <span class="o">=</span> <span class="n">transformer</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">classifier</span> <span class="o">=</span> <span class="n">classifier</span>
@@ -2426,46 +2384,64 @@ running the classifier.</p>
     <span class="k">def</span> <span class="nf">get_metadata_routing</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="n">router</span> <span class="o">=</span> <span class="p">(</span>
             <a href="../../modules/generated/sklearn.utils.metadata_routing.MetadataRouter.html#sklearn.utils.metadata_routing.MetadataRouter" title="sklearn.utils.metadata_routing.MetadataRouter" class="sphx-glr-backref-module-sklearn-utils-metadata_routing sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">MetadataRouter</span></a><span class="p">(</span><span class="n">owner</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="p">)</span>
+            <span class="c1"># We add the routing for the transformer.</span>
             <span class="o">.</span><span class="n">add</span><span class="p">(</span>
                 <span class="n">transformer</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">transformer</span><span class="p">,</span>
                 <span class="n">method_mapping</span><span class="o">=</span><a href="../../modules/generated/sklearn.utils.metadata_routing.MethodMapping.html#sklearn.utils.metadata_routing.MethodMapping" title="sklearn.utils.metadata_routing.MethodMapping" class="sphx-glr-backref-module-sklearn-utils-metadata_routing sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">MethodMapping</span></a><span class="p">()</span>
+                <span class="c1"># The metadata is routed such that it retraces how</span>
+                <span class="c1"># `SimplePipeline` internally calls the transformer&#39;s `fit` and</span>
+                <span class="c1"># `transform` methods in its own methods (`fit` and `predict`).</span>
                 <span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">callee</span><span class="o">=</span><span class="s2">&quot;fit&quot;</span><span class="p">,</span> <span class="n">caller</span><span class="o">=</span><span class="s2">&quot;fit&quot;</span><span class="p">)</span>
                 <span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">callee</span><span class="o">=</span><span class="s2">&quot;transform&quot;</span><span class="p">,</span> <span class="n">caller</span><span class="o">=</span><span class="s2">&quot;fit&quot;</span><span class="p">)</span>
                 <span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">callee</span><span class="o">=</span><span class="s2">&quot;transform&quot;</span><span class="p">,</span> <span class="n">caller</span><span class="o">=</span><span class="s2">&quot;predict&quot;</span><span class="p">),</span>
             <span class="p">)</span>
-            <span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">classifier</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">classifier</span><span class="p">,</span> <span class="n">method_mapping</span><span class="o">=</span><span class="s2">&quot;one-to-one&quot;</span><span class="p">)</span>
+            <span class="c1"># We add the routing for the classifier.</span>
+            <span class="o">.</span><span class="n">add</span><span class="p">(</span>
+                <span class="n">classifier</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">classifier</span><span class="p">,</span>
+                <span class="n">method_mapping</span><span class="o">=</span><a href="../../modules/generated/sklearn.utils.metadata_routing.MethodMapping.html#sklearn.utils.metadata_routing.MethodMapping" title="sklearn.utils.metadata_routing.MethodMapping" class="sphx-glr-backref-module-sklearn-utils-metadata_routing sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">MethodMapping</span></a><span class="p">()</span>
+                <span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">callee</span><span class="o">=</span><span class="s2">&quot;fit&quot;</span><span class="p">,</span> <span class="n">caller</span><span class="o">=</span><span class="s2">&quot;fit&quot;</span><span class="p">)</span>
+                <span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">callee</span><span class="o">=</span><span class="s2">&quot;predict&quot;</span><span class="p">,</span> <span class="n">caller</span><span class="o">=</span><span class="s2">&quot;predict&quot;</span><span class="p">),</span>
+            <span class="p">)</span>
         <span class="p">)</span>
         <span class="k">return</span> <span class="n">router</span>
 
     <span class="k">def</span> <span class="nf">fit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="o">**</span><span class="n">fit_params</span><span class="p">):</span>
-        <span class="n">params</span> <span class="o">=</span> <a href="../../modules/generated/sklearn.utils.metadata_routing.process_routing.html#sklearn.utils.metadata_routing.process_routing" title="sklearn.utils.metadata_routing.process_routing" class="sphx-glr-backref-module-sklearn-utils-metadata_routing sphx-glr-backref-type-py-function"><span class="n">process_routing</span></a><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s2">&quot;fit&quot;</span><span class="p">,</span> <span class="o">**</span><span class="n">fit_params</span><span class="p">)</span>
+        <span class="n">routed_params</span> <span class="o">=</span> <a href="../../modules/generated/sklearn.utils.metadata_routing.process_routing.html#sklearn.utils.metadata_routing.process_routing" title="sklearn.utils.metadata_routing.process_routing" class="sphx-glr-backref-module-sklearn-utils-metadata_routing sphx-glr-backref-type-py-function"><span class="n">process_routing</span></a><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s2">&quot;fit&quot;</span><span class="p">,</span> <span class="o">**</span><span class="n">fit_params</span><span class="p">)</span>
 
-        <span class="bp">self</span><span class="o">.</span><span class="n">transformer_</span> <span class="o">=</span> <span class="n">clone</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">transformer</span><span class="p">)</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="o">**</span><span class="n">params</span><span class="o">.</span><span class="n">transformer</span><span class="o">.</span><span class="n">fit</span><span class="p">)</span>
-        <span class="n">X_transformed</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">transformer_</span><span class="o">.</span><span class="n">transform</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="o">**</span><span class="n">params</span><span class="o">.</span><span class="n">transformer</span><span class="o">.</span><span class="n">transform</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">transformer_</span> <span class="o">=</span> <span class="n">clone</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">transformer</span><span class="p">)</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span>
+            <span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="o">**</span><span class="n">routed_params</span><span class="o">.</span><span class="n">transformer</span><span class="o">.</span><span class="n">fit</span>
+        <span class="p">)</span>
+        <span class="n">X_transformed</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">transformer_</span><span class="o">.</span><span class="n">transform</span><span class="p">(</span>
+            <span class="n">X</span><span class="p">,</span> <span class="o">**</span><span class="n">routed_params</span><span class="o">.</span><span class="n">transformer</span><span class="o">.</span><span class="n">transform</span>
+        <span class="p">)</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">classifier_</span> <span class="o">=</span> <span class="n">clone</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">classifier</span><span class="p">)</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span>
-            <span class="n">X_transformed</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="o">**</span><span class="n">params</span><span class="o">.</span><span class="n">classifier</span><span class="o">.</span><span class="n">fit</span>
+            <span class="n">X_transformed</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="o">**</span><span class="n">routed_params</span><span class="o">.</span><span class="n">classifier</span><span class="o">.</span><span class="n">fit</span>
         <span class="p">)</span>
         <span class="k">return</span> <span class="bp">self</span>
 
     <span class="k">def</span> <span class="nf">predict</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="o">**</span><span class="n">predict_params</span><span class="p">):</span>
-        <span class="n">params</span> <span class="o">=</span> <a href="../../modules/generated/sklearn.utils.metadata_routing.process_routing.html#sklearn.utils.metadata_routing.process_routing" title="sklearn.utils.metadata_routing.process_routing" class="sphx-glr-backref-module-sklearn-utils-metadata_routing sphx-glr-backref-type-py-function"><span class="n">process_routing</span></a><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s2">&quot;predict&quot;</span><span class="p">,</span> <span class="o">**</span><span class="n">predict_params</span><span class="p">)</span>
+        <span class="n">routed_params</span> <span class="o">=</span> <a href="../../modules/generated/sklearn.utils.metadata_routing.process_routing.html#sklearn.utils.metadata_routing.process_routing" title="sklearn.utils.metadata_routing.process_routing" class="sphx-glr-backref-module-sklearn-utils-metadata_routing sphx-glr-backref-type-py-function"><span class="n">process_routing</span></a><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s2">&quot;predict&quot;</span><span class="p">,</span> <span class="o">**</span><span class="n">predict_params</span><span class="p">)</span>
 
-        <span class="n">X_transformed</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">transformer_</span><span class="o">.</span><span class="n">transform</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="o">**</span><span class="n">params</span><span class="o">.</span><span class="n">transformer</span><span class="o">.</span><span class="n">transform</span><span class="p">)</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">classifier_</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">X_transformed</span><span class="p">,</span> <span class="o">**</span><span class="n">params</span><span class="o">.</span><span class="n">classifier</span><span class="o">.</span><span class="n">predict</span><span class="p">)</span>
+        <span class="n">X_transformed</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">transformer_</span><span class="o">.</span><span class="n">transform</span><span class="p">(</span>
+            <span class="n">X</span><span class="p">,</span> <span class="o">**</span><span class="n">routed_params</span><span class="o">.</span><span class="n">transformer</span><span class="o">.</span><span class="n">transform</span>
+        <span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">classifier_</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span>
+            <span class="n">X_transformed</span><span class="p">,</span> <span class="o">**</span><span class="n">routed_params</span><span class="o">.</span><span class="n">classifier</span><span class="o">.</span><span class="n">predict</span>
+        <span class="p">)</span>
 </pre></div>
 </div>
-<p>Note the usage of <a class="reference internal" href="../../modules/generated/sklearn.utils.metadata_routing.MethodMapping.html#sklearn.utils.metadata_routing.MethodMapping" title="sklearn.utils.metadata_routing.MethodMapping"><code class="xref py py-class docutils literal notranslate"><span class="pre">MethodMapping</span></code></a> to declare
-which methods of the child estimator (callee) are used in which methods of
-the meta estimator (caller). As you can see, we use the transformer’s
-<code class="docutils literal notranslate"><span class="pre">transform</span></code> and <code class="docutils literal notranslate"><span class="pre">fit</span></code> methods in <code class="docutils literal notranslate"><span class="pre">fit</span></code>, and its <code class="docutils literal notranslate"><span class="pre">transform</span></code> method in
-<code class="docutils literal notranslate"><span class="pre">predict</span></code>, and that’s what you see implemented in the routing structure of
-the pipeline class.</p>
+<p>Note the usage of <a class="reference internal" href="../../modules/generated/sklearn.utils.metadata_routing.MethodMapping.html#sklearn.utils.metadata_routing.MethodMapping" title="sklearn.utils.metadata_routing.MethodMapping"><code class="xref py py-class docutils literal notranslate"><span class="pre">MethodMapping</span></code></a> to
+declare which methods of the child estimator (callee) are used in which
+methods of the meta estimator (caller). As you can see, <code class="docutils literal notranslate"><span class="pre">SimplePipeline</span></code> uses
+the transformer’s <code class="docutils literal notranslate"><span class="pre">transform</span></code> and <code class="docutils literal notranslate"><span class="pre">fit</span></code> methods in <code class="docutils literal notranslate"><span class="pre">fit</span></code>, and its
+<code class="docutils literal notranslate"><span class="pre">transform</span></code> method in <code class="docutils literal notranslate"><span class="pre">predict</span></code>, and that’s what you see implemented in
+the routing structure of the pipeline class.</p>
 <p>Another difference in the above example with the previous ones is the usage
 of <a class="reference internal" href="../../modules/generated/sklearn.utils.metadata_routing.process_routing.html#sklearn.utils.metadata_routing.process_routing" title="sklearn.utils.metadata_routing.process_routing"><code class="xref py py-func docutils literal notranslate"><span class="pre">process_routing</span></code></a>, which processes the input
-parameters, does the required validation, and returns the <code class="docutils literal notranslate"><span class="pre">params</span></code> which we
-had created in previous examples. This reduces the boilerplate code a
-developer needs to write in each meta-estimator’s method. Developers are
+parameters, does the required validation, and returns the <code class="docutils literal notranslate"><span class="pre">routed_params</span></code>
+which we had created in previous examples. This reduces the boilerplate code
+a developer needs to write in each meta-estimator’s method. Developers are
 strongly recommended to use this function unless there is a good reason
 against it.</p>
 <p>In order to test the above pipeline, let’s add an example transformer.</p>
@@ -2488,13 +2464,13 @@ required if <code class="docutils literal notranslate"><span class="pre">transfo
 implementation in <a class="reference internal" href="../../modules/generated/sklearn.base.TransformerMixin.html#sklearn.base.TransformerMixin" title="sklearn.base.TransformerMixin"><code class="xref py py-class docutils literal notranslate"><span class="pre">TransformerMixin</span></code></a> doesn’t pass metadata to
 <code class="docutils literal notranslate"><span class="pre">transform</span></code>.</p>
 <p>Now we can test our pipeline, and see if metadata is correctly passed around.
-This example uses our simple pipeline, and our transformer, and our
-consumer+router estimator which uses our simple classifier.</p>
-<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">est</span> <span class="o">=</span> <span class="n">SimplePipeline</span><span class="p">(</span>
+This example uses our <code class="docutils literal notranslate"><span class="pre">SimplePipeline</span></code>, our <code class="docutils literal notranslate"><span class="pre">ExampleTransformer</span></code>, and our
+<code class="docutils literal notranslate"><span class="pre">RouterConsumerClassifier</span></code> which uses our <code class="docutils literal notranslate"><span class="pre">ExampleClassifier</span></code>.</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">pipe</span> <span class="o">=</span> <span class="n">SimplePipeline</span><span class="p">(</span>
     <span class="n">transformer</span><span class="o">=</span><span class="n">ExampleTransformer</span><span class="p">()</span>
-    <span class="c1"># we transformer&#39;s fit to receive sample_weight</span>
+    <span class="c1"># we set transformer&#39;s fit to receive sample_weight</span>
     <span class="o">.</span><span class="n">set_fit_request</span><span class="p">(</span><span class="n">sample_weight</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-    <span class="c1"># we want transformer&#39;s transform to receive groups</span>
+    <span class="c1"># we set transformer&#39;s transform to receive groups</span>
     <span class="o">.</span><span class="n">set_transform_request</span><span class="p">(</span><span class="n">groups</span><span class="o">=</span><span class="kc">True</span><span class="p">),</span>
     <span class="n">classifier</span><span class="o">=</span><span class="n">RouterConsumerClassifier</span><span class="p">(</span>
         <span class="n">estimator</span><span class="o">=</span><span class="n">ExampleClassifier</span><span class="p">()</span>
@@ -2502,12 +2478,11 @@ consumer+router estimator which uses our simple classifier.</p>
         <span class="o">.</span><span class="n">set_fit_request</span><span class="p">(</span><span class="n">sample_weight</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
         <span class="c1"># but not groups in predict</span>
         <span class="o">.</span><span class="n">set_predict_request</span><span class="p">(</span><span class="n">groups</span><span class="o">=</span><span class="kc">False</span><span class="p">),</span>
-    <span class="p">)</span><span class="o">.</span><span class="n">set_fit_request</span><span class="p">(</span>
-        <span class="c1"># and we want the meta-estimator to receive sample_weight as well</span>
-        <span class="n">sample_weight</span><span class="o">=</span><span class="kc">True</span>
-    <span class="p">),</span>
+    <span class="p">)</span>
+    <span class="c1"># and we want the meta-estimator to receive sample_weight as well</span>
+    <span class="o">.</span><span class="n">set_fit_request</span><span class="p">(</span><span class="n">sample_weight</span><span class="o">=</span><span class="kc">True</span><span class="p">),</span>
 <span class="p">)</span>
-<span class="n">est</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">sample_weight</span><span class="o">=</span><span class="n">my_weights</span><span class="p">,</span> <span class="n">groups</span><span class="o">=</span><span class="n">my_groups</span><span class="p">)</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span>
+<span class="n">pipe</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">sample_weight</span><span class="o">=</span><span class="n">my_weights</span><span class="p">,</span> <span class="n">groups</span><span class="o">=</span><span class="n">my_groups</span><span class="p">)</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span>
     <span class="n">X</span><span class="p">[:</span><span class="mi">3</span><span class="p">],</span> <span class="n">groups</span><span class="o">=</span><span class="n">my_groups</span>
 <span class="p">)</span>
 </pre></div>
@@ -2535,17 +2510,19 @@ let users know the behavior is changed from previous versions.</p>
         <span class="bp">self</span><span class="o">.</span><span class="n">estimator</span> <span class="o">=</span> <span class="n">estimator</span>
 
     <span class="k">def</span> <span class="nf">fit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="o">**</span><span class="n">fit_params</span><span class="p">):</span>
-        <span class="n">params</span> <span class="o">=</span> <a href="../../modules/generated/sklearn.utils.metadata_routing.process_routing.html#sklearn.utils.metadata_routing.process_routing" title="sklearn.utils.metadata_routing.process_routing" class="sphx-glr-backref-module-sklearn-utils-metadata_routing sphx-glr-backref-type-py-function"><span class="n">process_routing</span></a><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s2">&quot;fit&quot;</span><span class="p">,</span> <span class="o">**</span><span class="n">fit_params</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">estimator_</span> <span class="o">=</span> <span class="n">clone</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">estimator</span><span class="p">)</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="o">**</span><span class="n">params</span><span class="o">.</span><span class="n">estimator</span><span class="o">.</span><span class="n">fit</span><span class="p">)</span>
+        <span class="n">routed_params</span> <span class="o">=</span> <a href="../../modules/generated/sklearn.utils.metadata_routing.process_routing.html#sklearn.utils.metadata_routing.process_routing" title="sklearn.utils.metadata_routing.process_routing" class="sphx-glr-backref-module-sklearn-utils-metadata_routing sphx-glr-backref-type-py-function"><span class="n">process_routing</span></a><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s2">&quot;fit&quot;</span><span class="p">,</span> <span class="o">**</span><span class="n">fit_params</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">estimator_</span> <span class="o">=</span> <span class="n">clone</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">estimator</span><span class="p">)</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="o">**</span><span class="n">routed_params</span><span class="o">.</span><span class="n">estimator</span><span class="o">.</span><span class="n">fit</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">get_metadata_routing</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="n">router</span> <span class="o">=</span> <a href="../../modules/generated/sklearn.utils.metadata_routing.MetadataRouter.html#sklearn.utils.metadata_routing.MetadataRouter" title="sklearn.utils.metadata_routing.MetadataRouter" class="sphx-glr-backref-module-sklearn-utils-metadata_routing sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">MetadataRouter</span></a><span class="p">(</span><span class="n">owner</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="p">)</span><span class="o">.</span><span class="n">add</span><span class="p">(</span>
-            <span class="n">estimator</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">estimator</span><span class="p">,</span> <span class="n">method_mapping</span><span class="o">=</span><span class="s2">&quot;one-to-one&quot;</span>
+            <span class="n">estimator</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">estimator</span><span class="p">,</span>
+            <span class="n">method_mapping</span><span class="o">=</span><a href="../../modules/generated/sklearn.utils.metadata_routing.MethodMapping.html#sklearn.utils.metadata_routing.MethodMapping" title="sklearn.utils.metadata_routing.MethodMapping" class="sphx-glr-backref-module-sklearn-utils-metadata_routing sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">MethodMapping</span></a><span class="p">()</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">callee</span><span class="o">=</span><span class="s2">&quot;fit&quot;</span><span class="p">,</span> <span class="n">caller</span><span class="o">=</span><span class="s2">&quot;fit&quot;</span><span class="p">),</span>
         <span class="p">)</span>
         <span class="k">return</span> <span class="n">router</span>
 </pre></div>
 </div>
-<p>As explained above, this is now a valid usage:</p>
+<p>As explained above, this is a valid usage if <code class="docutils literal notranslate"><span class="pre">my_weights</span></code> aren’t supposed
+to be passed as <code class="docutils literal notranslate"><span class="pre">sample_weight</span></code> to <code class="docutils literal notranslate"><span class="pre">MetaRegressor</span></code>:</p>
 <div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">reg</span> <span class="o">=</span> <span class="n">MetaRegressor</span><span class="p">(</span><span class="n">estimator</span><span class="o">=</span><a href="../../modules/generated/sklearn.linear_model.LinearRegression.html#sklearn.linear_model.LinearRegression" title="sklearn.linear_model.LinearRegression" class="sphx-glr-backref-module-sklearn-linear_model sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">LinearRegression</span></a><span class="p">()</span><span class="o">.</span><span class="n">set_fit_request</span><span class="p">(</span><span class="n">sample_weight</span><span class="o">=</span><span class="kc">True</span><span class="p">))</span>
 <span class="n">reg</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">sample_weight</span><span class="o">=</span><span class="n">my_weights</span><span class="p">)</span>
 </pre></div>
@@ -2553,28 +2530,35 @@ let users know the behavior is changed from previous versions.</p>
 <p>Now imagine we further develop <code class="docutils literal notranslate"><span class="pre">MetaRegressor</span></code> and it now also <em>consumes</em>
 <code class="docutils literal notranslate"><span class="pre">sample_weight</span></code>:</p>
 <div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">WeightedMetaRegressor</span><span class="p">(</span><a href="../../modules/generated/sklearn.base.MetaEstimatorMixin.html#sklearn.base.MetaEstimatorMixin" title="sklearn.base.MetaEstimatorMixin" class="sphx-glr-backref-module-sklearn-base sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">MetaEstimatorMixin</span></a><span class="p">,</span> <a href="../../modules/generated/sklearn.base.RegressorMixin.html#sklearn.base.RegressorMixin" title="sklearn.base.RegressorMixin" class="sphx-glr-backref-module-sklearn-base sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">RegressorMixin</span></a><span class="p">,</span> <a href="../../modules/generated/sklearn.base.BaseEstimator.html#sklearn.base.BaseEstimator" title="sklearn.base.BaseEstimator" class="sphx-glr-backref-module-sklearn-base sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">BaseEstimator</span></a><span class="p">):</span>
+    <span class="c1"># show warning to remind user to explicitly set the value with</span>
+    <span class="c1"># `.set_{method}_request(sample_weight={boolean})`</span>
     <span class="n">__metadata_request__fit</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;sample_weight&quot;</span><span class="p">:</span> <span class="n">metadata_routing</span><span class="o">.</span><span class="n">WARN</span><span class="p">}</span>
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">estimator</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">estimator</span> <span class="o">=</span> <span class="n">estimator</span>
 
     <span class="k">def</span> <span class="nf">fit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">sample_weight</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">fit_params</span><span class="p">):</span>
-        <span class="n">params</span> <span class="o">=</span> <a href="../../modules/generated/sklearn.utils.metadata_routing.process_routing.html#sklearn.utils.metadata_routing.process_routing" title="sklearn.utils.metadata_routing.process_routing" class="sphx-glr-backref-module-sklearn-utils-metadata_routing sphx-glr-backref-type-py-function"><span class="n">process_routing</span></a><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s2">&quot;fit&quot;</span><span class="p">,</span> <span class="n">sample_weight</span><span class="o">=</span><span class="n">sample_weight</span><span class="p">,</span> <span class="o">**</span><span class="n">fit_params</span><span class="p">)</span>
+        <span class="n">routed_params</span> <span class="o">=</span> <a href="../../modules/generated/sklearn.utils.metadata_routing.process_routing.html#sklearn.utils.metadata_routing.process_routing" title="sklearn.utils.metadata_routing.process_routing" class="sphx-glr-backref-module-sklearn-utils-metadata_routing sphx-glr-backref-type-py-function"><span class="n">process_routing</span></a><span class="p">(</span>
+            <span class="bp">self</span><span class="p">,</span> <span class="s2">&quot;fit&quot;</span><span class="p">,</span> <span class="n">sample_weight</span><span class="o">=</span><span class="n">sample_weight</span><span class="p">,</span> <span class="o">**</span><span class="n">fit_params</span>
+        <span class="p">)</span>
         <span class="n">check_metadata</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">sample_weight</span><span class="o">=</span><span class="n">sample_weight</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">estimator_</span> <span class="o">=</span> <span class="n">clone</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">estimator</span><span class="p">)</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="o">**</span><span class="n">params</span><span class="o">.</span><span class="n">estimator</span><span class="o">.</span><span class="n">fit</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">estimator_</span> <span class="o">=</span> <span class="n">clone</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">estimator</span><span class="p">)</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="o">**</span><span class="n">routed_params</span><span class="o">.</span><span class="n">estimator</span><span class="o">.</span><span class="n">fit</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">get_metadata_routing</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="n">router</span> <span class="o">=</span> <span class="p">(</span>
             <a href="../../modules/generated/sklearn.utils.metadata_routing.MetadataRouter.html#sklearn.utils.metadata_routing.MetadataRouter" title="sklearn.utils.metadata_routing.MetadataRouter" class="sphx-glr-backref-module-sklearn-utils-metadata_routing sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">MetadataRouter</span></a><span class="p">(</span><span class="n">owner</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="p">)</span>
             <span class="o">.</span><span class="n">add_self_request</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
-            <span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">estimator</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">estimator</span><span class="p">,</span> <span class="n">method_mapping</span><span class="o">=</span><span class="s2">&quot;one-to-one&quot;</span><span class="p">)</span>
+            <span class="o">.</span><span class="n">add</span><span class="p">(</span>
+                <span class="n">estimator</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">estimator</span><span class="p">,</span>
+                <span class="n">method_mapping</span><span class="o">=</span><a href="../../modules/generated/sklearn.utils.metadata_routing.MethodMapping.html#sklearn.utils.metadata_routing.MethodMapping" title="sklearn.utils.metadata_routing.MethodMapping" class="sphx-glr-backref-module-sklearn-utils-metadata_routing sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">MethodMapping</span></a><span class="p">()</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">callee</span><span class="o">=</span><span class="s2">&quot;fit&quot;</span><span class="p">,</span> <span class="n">caller</span><span class="o">=</span><span class="s2">&quot;fit&quot;</span><span class="p">),</span>
+            <span class="p">)</span>
         <span class="p">)</span>
         <span class="k">return</span> <span class="n">router</span>
 </pre></div>
 </div>
-<p>The above implementation is almost no different than <code class="docutils literal notranslate"><span class="pre">MetaRegressor</span></code>, and
+<p>The above implementation is almost the same as <code class="docutils literal notranslate"><span class="pre">MetaRegressor</span></code>, and
 because of the default request value defined in <code class="docutils literal notranslate"><span class="pre">__metadata_request__fit</span></code>
-there is a warning raised.</p>
+there is a warning raised when fitted.</p>
 <div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="k">with</span> <a href="https://docs.python.org/3/library/warnings.html#warnings.catch_warnings" title="warnings.catch_warnings" class="sphx-glr-backref-module-warnings sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">warnings</span><span class="o">.</span><span class="n">catch_warnings</span></a><span class="p">(</span><span class="n">record</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span> <span class="k">as</span> <span class="n">record</span><span class="p">:</span>
     <span class="n">WeightedMetaRegressor</span><span class="p">(</span>
         <span class="n">estimator</span><span class="o">=</span><a href="../../modules/generated/sklearn.linear_model.LinearRegression.html#sklearn.linear_model.LinearRegression" title="sklearn.linear_model.LinearRegression" class="sphx-glr-backref-module-sklearn-linear_model sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">LinearRegression</span></a><span class="p">()</span><span class="o">.</span><span class="n">set_fit_request</span><span class="p">(</span><span class="n">sample_weight</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
@@ -2584,10 +2568,10 @@ there is a warning raised.</p>
 </pre></div>
 </div>
 <div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>Received sample_weight of length = 100 in WeightedMetaRegressor.
-Support for sample_weight has recently been added to this class. To maintain backward compatibility, it is ignored now. You can set the request value to False to silence this warning, or to True to consume and use the metadata.
+Support for sample_weight has recently been added to this class. To maintain backward compatibility, it is ignored now. Using `set_fit_request(sample_weight={True, False})` on this method of the class, you can set the request value to False to silence this warning, or to True to consume and use the metadata.
 </pre></div>
 </div>
-<p>When an estimator supports a metadata which wasn’t supported before, the
+<p>When an estimator consumes a metadata which it didn’t consume before, the
 following pattern can be used to warn the users about it.</p>
 <div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">ExampleRegressor</span><span class="p">(</span><a href="../../modules/generated/sklearn.base.RegressorMixin.html#sklearn.base.RegressorMixin" title="sklearn.base.RegressorMixin" class="sphx-glr-backref-module-sklearn-base sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">RegressorMixin</span></a><span class="p">,</span> <a href="../../modules/generated/sklearn.base.BaseEstimator.html#sklearn.base.BaseEstimator" title="sklearn.base.BaseEstimator" class="sphx-glr-backref-module-sklearn-base sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">BaseEstimator</span></a><span class="p">):</span>
     <span class="n">__metadata_request__fit</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;sample_weight&quot;</span><span class="p">:</span> <span class="n">metadata_routing</span><span class="o">.</span><span class="n">WARN</span><span class="p">}</span>
@@ -2607,7 +2591,7 @@ following pattern can be used to warn the users about it.</p>
 </pre></div>
 </div>
 <div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>sample_weight is None in ExampleRegressor.
-Support for sample_weight has recently been added to this class. To maintain backward compatibility, it is ignored now. You can set the request value to False to silence this warning, or to True to consume and use the metadata.
+Support for sample_weight has recently been added to this class. To maintain backward compatibility, it is ignored now. Using `set_fit_request(sample_weight={True, False})` on this method of the class, you can set the request value to False to silence this warning, or to True to consume and use the metadata.
 </pre></div>
 </div>
 <p>In the end, we disable the configuration flag for metadata routing:</p>
@@ -2622,17 +2606,17 @@ Support for sample_weight has recently been added to this class. To maintain bac
 <a class="reference internal" href="../../modules/generated/sklearn.utils.metadata_routing.MetadataRouter.html#sklearn.utils.metadata_routing.MetadataRouter" title="sklearn.utils.metadata_routing.MetadataRouter"><code class="xref py py-class docutils literal notranslate"><span class="pre">MetadataRouter</span></code></a>. It is strongly not advised,
 but possible to vendor the tools related to metadata-routing if you strictly
 want to have a scikit-learn compatible estimator, without depending on the
-scikit-learn package. If the following conditions are met, you do NOT need to
-modify your code at all:</p>
+scikit-learn package. If all of the following conditions are met, you do NOT
+need to modify your code at all:</p>
 <ul class="simple">
 <li><p>your estimator inherits from <a class="reference internal" href="../../modules/generated/sklearn.base.BaseEstimator.html#sklearn.base.BaseEstimator" title="sklearn.base.BaseEstimator"><code class="xref py py-class docutils literal notranslate"><span class="pre">BaseEstimator</span></code></a></p></li>
 <li><p>the parameters consumed by your estimator’s methods, e.g. <code class="docutils literal notranslate"><span class="pre">fit</span></code>, are
 explicitly defined in the method’s signature, as opposed to being
 <code class="docutils literal notranslate"><span class="pre">*args</span></code> or <code class="docutils literal notranslate"><span class="pre">*kwargs</span></code>.</p></li>
-<li><p>you do not route any metadata to the underlying objects, i.e. you’re not a
-<em>router</em>.</p></li>
+<li><p>your estimator does not route any metadata to the underlying objects, i.e.
+it’s not a <em>router</em>.</p></li>
 </ul>
-<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> (0 minutes 0.053 seconds)</p>
+<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> (0 minutes 0.045 seconds)</p>
 <div class="sphx-glr-footer sphx-glr-footer-example docutils container" id="sphx-glr-download-auto-examples-miscellaneous-plot-metadata-routing-py">
 <div class="binder-badge docutils container">
 <a class="reference external image-reference" href="https://mybinder.org/v2/gh/scikit-learn/scikit-learn/main?urlpath=lab/tree/notebooks/auto_examples/miscellaneous/plot_metadata_routing.ipynb"><img alt="Launch binder" src="../../_images/binder_badge_logo20.svg" width="150px" /></a>
