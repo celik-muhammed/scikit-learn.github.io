@@ -181,7 +181,10 @@
 <li><a class="reference internal" href="#tips-for-developing-with-cython-in-scikit-learn">Tips for developing with Cython in scikit-learn</a><ul>
 <li><a class="reference internal" href="#tips-to-ease-development">Tips to ease development</a></li>
 <li><a class="reference internal" href="#tips-for-performance">Tips for performance</a></li>
-<li><a class="reference internal" href="#using-openmp">Using OpenMP</a></li>
+<li><a class="reference internal" href="#using-openmp">Using OpenMP</a><ul>
+<li><a class="reference internal" href="#types">Types</a></li>
+</ul>
+</li>
 </ul>
 </li>
 </ul>
@@ -309,6 +312,17 @@ must be <code class="docutils literal notranslate"><span class="pre">cimported</
 </div>
 <p>The parallel loop, <code class="docutils literal notranslate"><span class="pre">prange</span></code>, is already protected by cython and can be used directly
 from <code class="docutils literal notranslate"><span class="pre">cython.parallel</span></code>.</p>
+<section id="types">
+<h4>Types<a class="headerlink" href="#types" title="Link to this heading">¶</a></h4>
+<p>Cython code requires to use explicit types. This is one of the reasons you get a
+performance boost. In order to avoid code duplication, we have a central place
+for the most used types in
+<a class="reference external" href="https://github.com/scikit-learn/scikit-learn/blob/main/sklearn/utils/_typedefs.pyd">sklearn/utils/_typedefs.pyd</a>.
+Ideally you start by having a look there and <code class="docutils literal notranslate"><span class="pre">cimport</span></code> types you need, for example</p>
+<div class="highlight-cython notranslate"><div class="highlight"><pre><span></span><span class="k">from</span> <span class="nn">sklear.utils._typedefs</span> <span class="k">cimport</span> <span class="n">float32</span><span class="p">,</span> <span class="n">float64</span>
+</pre></div>
+</div>
+</section>
 </section>
 </section>
 </section>
