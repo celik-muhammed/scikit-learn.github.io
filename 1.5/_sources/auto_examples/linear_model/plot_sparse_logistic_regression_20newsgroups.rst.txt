@@ -37,7 +37,7 @@ A more traditional (and possibly better) way to predict on a sparse subset of
 input features would be to use univariate feature selection followed by a
 traditional (l2-penalised) logistic regression model.
 
-.. GENERATED FROM PYTHON SOURCE LINES 22-126
+.. GENERATED FROM PYTHON SOURCE LINES 22-132
 
 
 
@@ -71,8 +71,8 @@ traditional (l2-penalised) logistic regression model.
      0.06686804 0.21443888 0.11528972 0.2075215  0.10914094 0.11144673
      0.13988486 0.09684337 0.26286057 0.11682692 0.55800226 0.17370318
      0.11452112 0.14603365]
-    Run time (5 epochs) for model multinomial:1.05
-    Example run in 5.188 s
+    Run time (5 epochs) for model multinomial:1.03
+    Example run in 5.199 s
 
 
 
@@ -96,6 +96,7 @@ traditional (l2-penalised) logistic regression model.
     from sklearn.exceptions import ConvergenceWarning
     from sklearn.linear_model import LogisticRegression
     from sklearn.model_selection import train_test_split
+    from sklearn.multiclass import OneVsRestClassifier
 
     warnings.filterwarnings("ignore", category=ConvergenceWarning, module="sklearn")
     t0 = timeit.default_timer()
@@ -140,20 +141,25 @@ traditional (l2-penalised) logistic regression model.
                 "[model=%s, solver=%s] Number of epochs: %s"
                 % (model_params["name"], solver, this_max_iter)
             )
-            lr = LogisticRegression(
+            clf = LogisticRegression(
                 solver=solver,
-                multi_class=model,
                 penalty="l1",
                 max_iter=this_max_iter,
                 random_state=42,
             )
+            if model == "ovr":
+                clf = OneVsRestClassifier(clf)
             t1 = timeit.default_timer()
-            lr.fit(X_train, y_train)
+            clf.fit(X_train, y_train)
             train_time = timeit.default_timer() - t1
 
-            y_pred = lr.predict(X_test)
+            y_pred = clf.predict(X_test)
             accuracy = np.sum(y_pred == y_test) / y_test.shape[0]
-            density = np.mean(lr.coef_ != 0, axis=1) * 100
+            if model == "ovr":
+                coef = np.concatenate([est.coef_ for est in clf.estimators_])
+            else:
+                coef = clf.coef_
+            density = np.mean(coef != 0, axis=1) * 100
             accuracies.append(accuracy)
             densities.append(density)
             times.append(train_time)
@@ -191,7 +197,7 @@ traditional (l2-penalised) logistic regression model.
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** (0 minutes 5.255 seconds)
+   **Total running time of the script:** (0 minutes 5.266 seconds)
 
 
 .. _sphx_glr_download_auto_examples_linear_model_plot_sparse_logistic_regression_20newsgroups.py:
