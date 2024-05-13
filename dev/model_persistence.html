@@ -11,10 +11,10 @@
 <meta property="og:type" content="website" />
 <meta property="og:url" content="https://scikit-learn/stable/model_persistence.html" />
 <meta property="og:site_name" content="scikit-learn" />
-<meta property="og:description" content="After training a scikit-learn model, it is desirable to have a way to persist the model for future use without having to retrain. This can be accomplished using pickle, joblib, skops, ONNX, or PMML..." />
+<meta property="og:description" content="After training a scikit-learn model, it is desirable to have a way to persist the model for future use without having to retrain. Based on your use-case, there are a few different ways to persist a..." />
 <meta property="og:image" content="https://scikit-learn.org/stable/_static/scikit-learn-logo-small.png" />
 <meta property="og:image:alt" content="scikit-learn" />
-<meta name="description" content="After training a scikit-learn model, it is desirable to have a way to persist the model for future use without having to retrain. This can be accomplished using pickle, joblib, skops, ONNX, or PMML..." />
+<meta name="description" content="After training a scikit-learn model, it is desirable to have a way to persist the model for future use without having to retrain. Based on your use-case, there are a few different ways to persist a..." />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
@@ -267,127 +267,253 @@
   <section id="model-persistence">
 <span id="id1"></span><h1><span class="section-number">9. </span>Model persistence<a class="headerlink" href="#model-persistence" title="Link to this heading">¶</a></h1>
 <p>After training a scikit-learn model, it is desirable to have a way to persist
-the model for future use without having to retrain. This can be accomplished
-using <a class="reference external" href="https://docs.python.org/3/library/pickle.html">pickle</a>, <a class="reference external" href="https://joblib.readthedocs.io/en/stable/">joblib</a>, <a class="reference external" href="https://skops.readthedocs.io/en/stable/">skops</a>, <a class="reference external" href="https://onnx.ai/">ONNX</a>,
-or <a class="reference external" href="https://dmg.org/pmml/v4-4-1/GeneralStructure.html">PMML</a>. In most cases
-<code class="docutils literal notranslate"><span class="pre">pickle</span></code> can be used to persist a trained scikit-learn model. Once all
-transitive scikit-learn dependencies have been pinned, the trained model can
-then be loaded and executed under conditions similar to those in which it was
-originally pinned. The following sections will give you some hints on how to
-persist a scikit-learn model and will provide details on what each alternative
-can offer.</p>
+the model for future use without having to retrain. Based on your use-case,
+there are a few different ways to persist a scikit-learn model, and here we
+help you decide which one suits you best. In order to make a decision, you need
+to answer the following questions:</p>
+<ol class="arabic simple">
+<li><p>Do you need the Python object after persistence, or do you only need to
+persist in order to serve the model and get predictions out of it?</p></li>
+</ol>
+<p>If you only need to serve the model and no further investigation on the Python
+object itself is required, then <a class="reference internal" href="#onnx-persistence"><span class="std std-ref">ONNX</span></a> might be the
+best fit for you. Note that not all models are supported by ONNX.</p>
+<p>In case ONNX is not suitable for your use-case, the next question is:</p>
+<ol class="arabic simple" start="2">
+<li><p>Do you absolutely trust the source of the model, or are there any security
+concerns regarding where the persisted model comes from?</p></li>
+</ol>
+<p>If you have security concerns, then you should consider using <a class="reference internal" href="#skops-persistence"><span class="std std-ref">skops.io</span></a> which gives you back the Python object, but unlike
+<code class="docutils literal notranslate"><span class="pre">pickle</span></code> based persistence solutions, loading the persisted model doesn’t
+automatically allow arbitrary code execution. Note that this requires manual
+investigation of the persisted file, which <a class="reference external" href="https://skops.readthedocs.io/en/stable/modules/classes.html#module-skops.io" title="(in skops)"><code class="xref py py-mod docutils literal notranslate"><span class="pre">skops.io</span></code></a> allows you to do.</p>
+<p>The other solutions assume you absolutely trust the source of the file to be
+loaded, as they are all susceptible to arbitrary code execution upon loading
+the persisted file since they all use the pickle protocol under the hood.</p>
+<ol class="arabic simple" start="3">
+<li><p>Do you care about the performance of loading the model, and sharing it
+between processes where a memory mapped object on disk is beneficial?</p></li>
+</ol>
+<p>If yes, then you can consider using <a class="reference internal" href="#pickle-persistence"><span class="std std-ref">joblib</span></a>. If this
+is not a major concern for you, then you can use the built-in <a class="reference external" href="https://docs.python.org/3/library/pickle.html#module-pickle" title="(in Python v3.12)"><code class="xref py py-mod docutils literal notranslate"><span class="pre">pickle</span></code></a>
+module.</p>
+<ol class="arabic simple" start="4">
+<li><p>Did you try <a class="reference external" href="https://docs.python.org/3/library/pickle.html#module-pickle" title="(in Python v3.12)"><code class="xref py py-mod docutils literal notranslate"><span class="pre">pickle</span></code></a> or <a class="reference external" href="https://joblib.readthedocs.io/en/latest/index.html#module-joblib" title="(in joblib v1.5.dev0)"><code class="xref py py-mod docutils literal notranslate"><span class="pre">joblib</span></code></a> and found that the model cannot
+be persisted? It can happen for instance when you have user defined
+functions in your model.</p></li>
+</ol>
+<p>If yes, then you can use <a class="reference external" href="https://github.com/cloudpipe/cloudpickle">cloudpickle</a> which can serialize certain objects
+which cannot be serialized by <a class="reference external" href="https://docs.python.org/3/library/pickle.html#module-pickle" title="(in Python v3.12)"><code class="xref py py-mod docutils literal notranslate"><span class="pre">pickle</span></code></a> or <a class="reference external" href="https://joblib.readthedocs.io/en/latest/index.html#module-joblib" title="(in joblib v1.5.dev0)"><code class="xref py py-mod docutils literal notranslate"><span class="pre">joblib</span></code></a>.</p>
 <section id="workflow-overview">
 <h2><span class="section-number">9.1. </span>Workflow Overview<a class="headerlink" href="#workflow-overview" title="Link to this heading">¶</a></h2>
-<p>In this section we present a general workflow on how to persist a
-scikit-learn model. We will demonstrate this with a simple example using
-Python’s built-in persistence module, namely <a class="reference external" href="https://docs.python.org/3/library/pickle.html">pickle</a>.</p>
-<section id="storing-the-model-in-an-artifact">
-<h3><span class="section-number">9.1.1. </span>Storing the model in an artifact<a class="headerlink" href="#storing-the-model-in-an-artifact" title="Link to this heading">¶</a></h3>
-<p>Once the model training process in completed, the trained model can be stored
-as an artifact with the help of <code class="docutils literal notranslate"><span class="pre">pickle</span></code>. The model can be saved using the
-process of serialization, where the Python object hierarchy is converted into
-a byte stream. We can persist a trained model in the following manner:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">sklearn</span> <span class="kn">import</span> <span class="n">svm</span>
+<p>In a typical workflow, the first step is to train the model using scikit-learn
+and scikit-learn compatible libraries. Note that support for scikit-learn and
+third party estimators varies across the different persistence methods.</p>
+<section id="train-and-persist-the-model">
+<h3><span class="section-number">9.1.1. </span>Train and Persist the Model<a class="headerlink" href="#train-and-persist-the-model" title="Link to this heading">¶</a></h3>
+<p>Creating an appropriate model depends on your use-case. As an example, here we
+train a <a class="reference internal" href="modules/generated/sklearn.ensemble.HistGradientBoostingClassifier.html#sklearn.ensemble.HistGradientBoostingClassifier" title="sklearn.ensemble.HistGradientBoostingClassifier"><code class="xref py py-class docutils literal notranslate"><span class="pre">sklearn.ensemble.HistGradientBoostingClassifier</span></code></a> on the iris
+dataset:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">sklearn</span> <span class="kn">import</span> <span class="n">ensemble</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">sklearn</span> <span class="kn">import</span> <span class="n">datasets</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">pickle</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">clf</span> <span class="o">=</span> <span class="n">svm</span><span class="o">.</span><span class="n">SVC</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">clf</span> <span class="o">=</span> <span class="n">ensemble</span><span class="o">.</span><span class="n">HistGradientBoostingClassifier</span><span class="p">()</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">X</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="n">datasets</span><span class="o">.</span><span class="n">load_iris</span><span class="p">(</span><span class="n">return_X_y</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">clf</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
-<span class="go">SVC()</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">s</span> <span class="o">=</span> <span class="n">pickle</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">clf</span><span class="p">)</span>
+<span class="go">HistGradientBoostingClassifier()</span>
 </pre></div>
 </div>
+<p>Once the model is trained, you can persist it using your desired method, and
+then you can load the model in a separate environment and get predictions from
+it given input data. Here there are two major paths depending on how you
+persist and plan to serve the model:</p>
+<ul class="simple">
+<li><p><a class="reference internal" href="#onnx-persistence"><span class="std std-ref">ONNX</span></a>: You need an <code class="docutils literal notranslate"><span class="pre">ONNX</span></code> runtime and an environment
+with appropriate dependencies installed to load the model and use the runtime
+to get predictions. This environment can be minimal and does not necessarily
+even require <code class="docutils literal notranslate"><span class="pre">python</span></code> to be installed.</p></li>
+<li><p><a class="reference external" href="https://skops.readthedocs.io/en/stable/modules/classes.html#module-skops.io" title="(in skops)"><code class="xref py py-mod docutils literal notranslate"><span class="pre">skops.io</span></code></a>, <a class="reference external" href="https://docs.python.org/3/library/pickle.html#module-pickle" title="(in Python v3.12)"><code class="xref py py-mod docutils literal notranslate"><span class="pre">pickle</span></code></a>, <a class="reference external" href="https://joblib.readthedocs.io/en/latest/index.html#module-joblib" title="(in joblib v1.5.dev0)"><code class="xref py py-mod docutils literal notranslate"><span class="pre">joblib</span></code></a>, <a class="reference external" href="https://github.com/cloudpipe/cloudpickle">cloudpickle</a>: You need a
+Python environment with the appropriate dependencies installed to load the
+model and get predictions from it. This environment should have the same
+<strong>packages</strong> and the same <strong>versions</strong> as the environment where the model was
+trained. Note that none of these methods support loading a model trained with
+a different version of scikit-learn, and possibly different versions of other
+dependencies such as <code class="docutils literal notranslate"><span class="pre">numpy</span></code> and <code class="docutils literal notranslate"><span class="pre">scipy</span></code>. Another concern would be running
+the persisted model on a different hardware, and in most cases you should be
+able to load your persisted model on a different hardware.</p></li>
+</ul>
 </section>
+</section>
+<section id="onnx">
+<span id="onnx-persistence"></span><h2><span class="section-number">9.2. </span>ONNX<a class="headerlink" href="#onnx" title="Link to this heading">¶</a></h2>
+<p><code class="docutils literal notranslate"><span class="pre">ONNX</span></code>, or <a class="reference external" href="https://onnx.ai/">Open Neural Network Exchange</a> format is best
+suitable in use-cases where one needs to persist the model and then use the
+persisted artifact to get predictions without the need to load the Python
+object itself. It is also useful in cases where the serving environment needs
+to be lean and minimal, since the <code class="docutils literal notranslate"><span class="pre">ONNX</span></code> runtime does not require <code class="docutils literal notranslate"><span class="pre">python</span></code>.</p>
+<p><code class="docutils literal notranslate"><span class="pre">ONNX</span></code> is a binary serialization of the model. It has been developed to improve
+the usability of the interoperable representation of data models. It aims to
+facilitate the conversion of the data models between different machine learning
+frameworks, and to improve their portability on different computing
+architectures. More details are available from the <a class="reference external" href="https://onnx.ai/get-started.html">ONNX tutorial</a>. To convert scikit-learn model to <code class="docutils literal notranslate"><span class="pre">ONNX</span></code>
+<a class="reference external" href="http://onnx.ai/sklearn-onnx/">sklearn-onnx</a> has been developed. However,
+not all scikit-learn models are supported, and it is limited to the core
+scikit-learn and does not support most third party estimators. One can write a
+custom converter for third party or custom estimators, but the documentation to
+do that is sparse and it might be challenging to do so.</p>
+<p><details id="summary-anchor">
+<summary class="btn btn-light">
+<strong>Using ONNX</strong>
+<span class="tooltiptext">Click for more details</span>
+<a class="headerlink" href="#summary-anchor" title="Permalink to this heading">¶</a>
+</summary>
+<div class="card"></p>
+<p>To convert the model to <code class="docutils literal notranslate"><span class="pre">ONNX</span></code> format, you need to give the converter some
+information about the input as well, about which you can read more <a class="reference external" href="http://onnx.ai/sklearn-onnx/index.html">here</a>:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">skl2onnx</span> <span class="kn">import</span> <span class="n">to_onnx</span>
+<span class="n">onx</span> <span class="o">=</span> <span class="n">to_onnx</span><span class="p">(</span><span class="n">clf</span><span class="p">,</span> <span class="n">X</span><span class="p">[:</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">numpy</span><span class="o">.</span><span class="n">float32</span><span class="p">),</span> <span class="n">target_opset</span><span class="o">=</span><span class="mi">12</span><span class="p">)</span>
+<span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="s2">&quot;filename.onnx&quot;</span><span class="p">,</span> <span class="s2">&quot;wb&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+    <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">onx</span><span class="o">.</span><span class="n">SerializeToString</span><span class="p">())</span>
+</pre></div>
+</div>
+<p>You can load the model in Python and use the <code class="docutils literal notranslate"><span class="pre">ONNX</span></code> runtime to get
+predictions:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">onnxruntime</span> <span class="kn">import</span> <span class="n">InferenceSession</span>
+<span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="s2">&quot;filename.onnx&quot;</span><span class="p">,</span> <span class="s2">&quot;rb&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+    <span class="n">onx</span> <span class="o">=</span> <span class="n">f</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>
+<span class="n">sess</span> <span class="o">=</span> <span class="n">InferenceSession</span><span class="p">(</span><span class="n">onx</span><span class="p">,</span> <span class="n">providers</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;CPUExecutionProvider&quot;</span><span class="p">])</span>
+<span class="n">pred_ort</span> <span class="o">=</span> <span class="n">sess</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="p">{</span><span class="s2">&quot;X&quot;</span><span class="p">:</span> <span class="n">X_test</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">numpy</span><span class="o">.</span><span class="n">float32</span><span class="p">)})[</span><span class="mi">0</span><span class="p">]</span>
+</pre></div>
+</div>
+<p></div>
+</details></p>
+</section>
+<section id="skops-io">
+<span id="skops-persistence"></span><h2><span class="section-number">9.3. </span><code class="docutils literal notranslate"><span class="pre">skops.io</span></code><a class="headerlink" href="#skops-io" title="Link to this heading">¶</a></h2>
+<p><a class="reference external" href="https://skops.readthedocs.io/en/stable/modules/classes.html#module-skops.io" title="(in skops)"><code class="xref py py-mod docutils literal notranslate"><span class="pre">skops.io</span></code></a> avoids using <a class="reference external" href="https://docs.python.org/3/library/pickle.html#module-pickle" title="(in Python v3.12)"><code class="xref py py-mod docutils literal notranslate"><span class="pre">pickle</span></code></a> and only loads files which have types
+and references to functions which are trusted either by default or by the user.
+Therefore it provides a more secure format than <a class="reference external" href="https://docs.python.org/3/library/pickle.html#module-pickle" title="(in Python v3.12)"><code class="xref py py-mod docutils literal notranslate"><span class="pre">pickle</span></code></a>, <a class="reference external" href="https://joblib.readthedocs.io/en/latest/index.html#module-joblib" title="(in joblib v1.5.dev0)"><code class="xref py py-mod docutils literal notranslate"><span class="pre">joblib</span></code></a>,
+and <a class="reference external" href="https://github.com/cloudpipe/cloudpickle">cloudpickle</a>.</p>
+<p><details id="summary-anchor">
+<summary class="btn btn-light">
+<strong>Using skops</strong>
+<span class="tooltiptext">Click for more details</span>
+<a class="headerlink" href="#summary-anchor" title="Permalink to this heading">¶</a>
+</summary>
+<div class="card"></p>
+<p>The API is very similar to <a class="reference external" href="https://docs.python.org/3/library/pickle.html#module-pickle" title="(in Python v3.12)"><code class="xref py py-mod docutils literal notranslate"><span class="pre">pickle</span></code></a>, and you can persist your models as
+explained in the <a class="reference external" href="https://skops.readthedocs.io/en/stable/persistence.html">documentation</a> using
+<a class="reference external" href="https://skops.readthedocs.io/en/stable/modules/classes.html#skops.io.dump" title="(in skops)"><code class="xref py py-func docutils literal notranslate"><span class="pre">skops.io.dump</span></code></a> and <a class="reference external" href="https://skops.readthedocs.io/en/stable/modules/classes.html#skops.io.dumps" title="(in skops)"><code class="xref py py-func docutils literal notranslate"><span class="pre">skops.io.dumps</span></code></a>:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">skops.io</span> <span class="k">as</span> <span class="nn">sio</span>
+<span class="n">obj</span> <span class="o">=</span> <span class="n">sio</span><span class="o">.</span><span class="n">dump</span><span class="p">(</span><span class="n">clf</span><span class="p">,</span> <span class="s2">&quot;filename.skops&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>And you can load them back using <a class="reference external" href="https://skops.readthedocs.io/en/stable/modules/classes.html#skops.io.load" title="(in skops)"><code class="xref py py-func docutils literal notranslate"><span class="pre">skops.io.load</span></code></a> and
+<a class="reference external" href="https://skops.readthedocs.io/en/stable/modules/classes.html#skops.io.loads" title="(in skops)"><code class="xref py py-func docutils literal notranslate"><span class="pre">skops.io.loads</span></code></a>. However, you need to specify the types which are
+trusted by you. You can get existing unknown types in a dumped object / file
+using <a class="reference external" href="https://skops.readthedocs.io/en/stable/modules/classes.html#skops.io.get_untrusted_types" title="(in skops)"><code class="xref py py-func docutils literal notranslate"><span class="pre">skops.io.get_untrusted_types</span></code></a>, and after checking its contents,
+pass it to the load function:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">unknown_types</span> <span class="o">=</span> <span class="n">sio</span><span class="o">.</span><span class="n">get_untrusted_types</span><span class="p">(</span><span class="n">file</span><span class="o">=</span><span class="s2">&quot;filename.skops&quot;</span><span class="p">)</span>
+<span class="c1"># investigate the contents of unknown_types, and only load if you trust</span>
+<span class="c1"># everything you see.</span>
+<span class="n">clf</span> <span class="o">=</span> <span class="n">sio</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="s2">&quot;filename.skops&quot;</span><span class="p">,</span> <span class="n">trusted</span><span class="o">=</span><span class="n">unknown_types</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Please report issues and feature requests related to this format on the <a class="reference external" href="https://github.com/skops-dev/skops/issues">skops
+issue tracker</a>.</p>
+<p></div>
+</details></p>
+</section>
+<section id="pickle-joblib-and-cloudpickle">
+<span id="pickle-persistence"></span><h2><span class="section-number">9.4. </span><code class="docutils literal notranslate"><span class="pre">pickle</span></code>, <code class="docutils literal notranslate"><span class="pre">joblib</span></code>, and <code class="docutils literal notranslate"><span class="pre">cloudpickle</span></code><a class="headerlink" href="#pickle-joblib-and-cloudpickle" title="Link to this heading">¶</a></h2>
+<p>These three modules / packages, use the <code class="docutils literal notranslate"><span class="pre">pickle</span></code> protocol under the hood, but
+come with slight variations:</p>
+<ul class="simple">
+<li><p><a class="reference external" href="https://docs.python.org/3/library/pickle.html#module-pickle" title="(in Python v3.12)"><code class="xref py py-mod docutils literal notranslate"><span class="pre">pickle</span></code></a> is a module from the Python Standard Library. It can serialize
+and  deserialize any Python object, including custom Python classes and
+objects.</p></li>
+<li><p><a class="reference external" href="https://joblib.readthedocs.io/en/latest/index.html#module-joblib" title="(in joblib v1.5.dev0)"><code class="xref py py-mod docutils literal notranslate"><span class="pre">joblib</span></code></a> is more efficient than <code class="docutils literal notranslate"><span class="pre">pickle</span></code> when working with large machine
+learning models or large numpy arrays.</p></li>
+<li><p><a class="reference external" href="https://github.com/cloudpipe/cloudpickle">cloudpickle</a> can serialize certain objects which cannot be serialized by
+<a class="reference external" href="https://docs.python.org/3/library/pickle.html#module-pickle" title="(in Python v3.12)"><code class="xref py py-mod docutils literal notranslate"><span class="pre">pickle</span></code></a> or <a class="reference external" href="https://joblib.readthedocs.io/en/latest/index.html#module-joblib" title="(in joblib v1.5.dev0)"><code class="xref py py-mod docutils literal notranslate"><span class="pre">joblib</span></code></a>, such as user defined functions and lambda
+functions. This can happen for instance, when using a
+<a class="reference internal" href="modules/generated/sklearn.preprocessing.FunctionTransformer.html#sklearn.preprocessing.FunctionTransformer" title="sklearn.preprocessing.FunctionTransformer"><code class="xref py py-class docutils literal notranslate"><span class="pre">FunctionTransformer</span></code></a> and using a custom
+function to transform the data.</p></li>
+</ul>
+<p><details id="summary-anchor">
+<summary class="btn btn-light">
+<strong>Using</strong> <code class="docutils literal notranslate"><span class="pre">pickle</span></code>, <code class="docutils literal notranslate"><span class="pre">joblib</span></code>, <strong>or</strong> <code class="docutils literal notranslate"><span class="pre">cloudpickle</span></code>
+<span class="tooltiptext">Click for more details</span>
+<a class="headerlink" href="#summary-anchor" title="Permalink to this heading">¶</a>
+</summary>
+<div class="card"></p>
+<p>Depending on your use-case, you can choose one of these three methods to
+persist and load your scikit-learn model, and they all follow the same API:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># Here you can replace pickle with joblib or cloudpickle</span>
+<span class="kn">from</span> <span class="nn">pickle</span> <span class="kn">import</span> <span class="n">dump</span>
+<span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="s1">&#39;filename.pkl&#39;</span><span class="p">,</span> <span class="s1">&#39;wb&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span> <span class="n">dump</span><span class="p">(</span><span class="n">clf</span><span class="p">,</span> <span class="n">f</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>And later when needed, you can load the same object from the persisted file:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># Here you can replace pickle with joblib or cloudpickle</span>
+<span class="kn">from</span> <span class="nn">pickle</span> <span class="kn">import</span> <span class="n">load</span>
+<span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="s1">&#39;filename.pkl&#39;</span><span class="p">,</span> <span class="s1">&#39;rb&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span> <span class="n">clf</span> <span class="o">=</span> <span class="n">load</span><span class="p">(</span><span class="n">f</span><span class="p">)</span>
+</pre></div>
+</div>
+<p></div>
+</details></p>
+</section>
+<section id="security-maintainability-limitations">
+<span id="persistence-limitations"></span><h2><span class="section-number">9.5. </span>Security &amp; Maintainability Limitations<a class="headerlink" href="#security-maintainability-limitations" title="Link to this heading">¶</a></h2>
+<p><a class="reference external" href="https://docs.python.org/3/library/pickle.html#module-pickle" title="(in Python v3.12)"><code class="xref py py-mod docutils literal notranslate"><span class="pre">pickle</span></code></a> (and <a class="reference external" href="https://joblib.readthedocs.io/en/latest/index.html#module-joblib" title="(in joblib v1.5.dev0)"><code class="xref py py-mod docutils literal notranslate"><span class="pre">joblib</span></code></a> and <code class="xref py py-mod docutils literal notranslate"><span class="pre">clouldpickle</span></code> by extension), has
+many documented security vulnerabilities and should only be used if the
+artifact, i.e. the pickle-file, is coming from a trusted and verified source.</p>
+<p>Also note that arbitrary computations can be represented using the <code class="docutils literal notranslate"><span class="pre">ONNX</span></code>
+format, and therefore a sandbox used to serve models using <code class="docutils literal notranslate"><span class="pre">ONNX</span></code> also needs to
+safeguard against computational and memory exploits.</p>
+<p>Also note that there are no supported ways to load a model trained with a
+different version of scikit-learn. While using <a class="reference external" href="https://skops.readthedocs.io/en/stable/modules/classes.html#module-skops.io" title="(in skops)"><code class="xref py py-mod docutils literal notranslate"><span class="pre">skops.io</span></code></a>, <a class="reference external" href="https://joblib.readthedocs.io/en/latest/index.html#module-joblib" title="(in joblib v1.5.dev0)"><code class="xref py py-mod docutils literal notranslate"><span class="pre">joblib</span></code></a>,
+<a class="reference external" href="https://docs.python.org/3/library/pickle.html#module-pickle" title="(in Python v3.12)"><code class="xref py py-mod docutils literal notranslate"><span class="pre">pickle</span></code></a>, or <a class="reference external" href="https://github.com/cloudpipe/cloudpickle">cloudpickle</a>, models saved using one version of
+scikit-learn might load in other versions, however, this is entirely
+unsupported and inadvisable. It should also be kept in mind that operations
+performed on such data could give different and unexpected results, or even
+crash your Python process.</p>
+<p>In order to rebuild a similar model with future versions of scikit-learn,
+additional metadata should be saved along the pickled model:</p>
+<ul class="simple">
+<li><p>The training data, e.g. a reference to an immutable snapshot</p></li>
+<li><p>The Python source code used to generate the model</p></li>
+<li><p>The versions of scikit-learn and its dependencies</p></li>
+<li><p>The cross validation score obtained on the training data</p></li>
+</ul>
+<p>This should make it possible to check that the cross-validation score is in the
+same range as before.</p>
+<p>Aside for a few exceptions, persisted models should be portable across
+operating systems and hardware architectures assuming the same versions of
+dependencies and Python are used. If you encounter an estimator that is not
+portable, please open an issue on GitHub. Persisted models are often deployed
+in production using containers like Docker, in order to freeze the environment
+and dependencies.</p>
+<p>If you want to know more about these issues, please refer to these talks:</p>
+<ul class="simple">
+<li><p><a class="reference external" href="https://www.youtube.com/watch?v=9w_H5OSTO9A">Adrin Jalali: Let’s exploit pickle, and skops to the rescue! | PyData
+Amsterdam 2023</a>.</p></li>
+<li><p><a class="reference external" href="https://pyvideo.org/video/2566/pickles-are-for-delis-not-software">Alex Gaynor: Pickles are for Delis, not Software - PyCon 2014</a>.</p></li>
+</ul>
 <section id="replicating-the-training-environment-in-production">
-<h3><span class="section-number">9.1.2. </span>Replicating the training environment in production<a class="headerlink" href="#replicating-the-training-environment-in-production" title="Link to this heading">¶</a></h3>
-<p>The versions of the dependencies used may differ from training to production.
-This may result in unexpected behaviour and errors while using the trained
-model. To prevent such situations it is recommended to use the same
+<span id="serving-environment"></span><h3><span class="section-number">9.5.1. </span>Replicating the training environment in production<a class="headerlink" href="#replicating-the-training-environment-in-production" title="Link to this heading">¶</a></h3>
+<p>If the versions of the dependencies used may differ from training to
+production, it may result in unexpected behaviour and errors while using the
+trained model. To prevent such situations it is recommended to use the same
 dependencies and versions in both the training and production environment.
-These transitive dependencies can be pinned with the help of <code class="docutils literal notranslate"><span class="pre">pip</span></code>, <code class="docutils literal notranslate"><span class="pre">conda</span></code>,
-<code class="docutils literal notranslate"><span class="pre">poetry</span></code>, <code class="docutils literal notranslate"><span class="pre">conda-lock</span></code>, <code class="docutils literal notranslate"><span class="pre">pixi</span></code>, etc.</p>
-<div class="admonition note">
-<p class="admonition-title">Note</p>
-<p>To execute a pickled scikit-learn model in a reproducible environment it is
-advisable to pin all transitive scikit-learn dependencies. This prevents
-any incompatibility issues that may arise while trying to load the pickled
-model. You can read more about persisting models with <code class="docutils literal notranslate"><span class="pre">pickle</span></code> over
-<a class="reference internal" href="#persisting-models-with-pickle"><span class="std std-ref">here</span></a>.</p>
-</div>
-</section>
-<section id="loading-the-model-artifact">
-<h3><span class="section-number">9.1.3. </span>Loading the model artifact<a class="headerlink" href="#loading-the-model-artifact" title="Link to this heading">¶</a></h3>
-<p>The saved scikit-learn model can be loaded using <code class="docutils literal notranslate"><span class="pre">pickle</span></code> for future use
-without having to re-train the entire model from scratch. The saved model
-artifact can be unpickled by converting the byte stream into an object
-hierarchy. This can be done with the help of <code class="docutils literal notranslate"><span class="pre">pickle</span></code> as follows:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">clf2</span> <span class="o">=</span> <span class="n">pickle</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">s</span><span class="p">)</span> 
-<span class="gp">&gt;&gt;&gt; </span><span class="n">clf2</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">X</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="mi">1</span><span class="p">])</span> 
-<span class="go">array([0])</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">y</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> 
-<span class="go">0</span>
-</pre></div>
-</div>
-</section>
-<section id="serving-the-model-artifact">
-<h3><span class="section-number">9.1.4. </span>Serving the model artifact<a class="headerlink" href="#serving-the-model-artifact" title="Link to this heading">¶</a></h3>
-<p>The last step after training a scikit-learn model is serving the model.
-Once the trained model is successfully loaded it can be served to manage
-different prediction requests. This can involve deploying the model as a
-web service using containerization, or other model deployment strategies,
-according to the specifications. In the next sections, we will explore
-different approaches to persist a trained scikit-learn model.</p>
-</section>
-</section>
-<section id="persisting-models-with-pickle">
-<span id="id3"></span><h2><span class="section-number">9.2. </span>Persisting models with pickle<a class="headerlink" href="#persisting-models-with-pickle" title="Link to this heading">¶</a></h2>
-<p>As demonstrated in the previous section, <code class="docutils literal notranslate"><span class="pre">pickle</span></code> uses serialization and
-deserialization to persist scikit-learn models. Instead of using <code class="docutils literal notranslate"><span class="pre">dumps</span></code> and
-<code class="docutils literal notranslate"><span class="pre">loads</span></code>, <code class="docutils literal notranslate"><span class="pre">dump</span></code> and <code class="docutils literal notranslate"><span class="pre">load</span></code> can also be used in the following way:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">sklearn.tree</span> <span class="kn">import</span> <span class="n">DecisionTreeClassifier</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">sklearn</span> <span class="kn">import</span> <span class="n">datasets</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">clf</span> <span class="o">=</span> <span class="n">DecisionTreeClassifier</span><span class="p">()</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">X</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="n">datasets</span><span class="o">.</span><span class="n">load_iris</span><span class="p">(</span><span class="n">return_X_y</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">clf</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
-<span class="go">DecisionTreeClassifier()</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">pickle</span> <span class="kn">import</span> <span class="n">dump</span><span class="p">,</span> <span class="n">load</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="s1">&#39;filename.pkl&#39;</span><span class="p">,</span> <span class="s1">&#39;wb&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span> <span class="n">dump</span><span class="p">(</span><span class="n">clf</span><span class="p">,</span> <span class="n">f</span><span class="p">)</span> 
-<span class="gp">&gt;&gt;&gt; </span><span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="s1">&#39;filename.pkl&#39;</span><span class="p">,</span> <span class="s1">&#39;rb&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span> <span class="n">clf2</span> <span class="o">=</span> <span class="n">load</span><span class="p">(</span><span class="n">f</span><span class="p">)</span> 
-<span class="gp">&gt;&gt;&gt; </span><span class="n">clf2</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">X</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="mi">1</span><span class="p">])</span> 
-<span class="go">array([0])</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">y</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
-<span class="go">0</span>
-</pre></div>
-</div>
-<p>For applications that involve writing and loading the serialized object to or
-from a file, <code class="docutils literal notranslate"><span class="pre">dump</span></code> and <code class="docutils literal notranslate"><span class="pre">load</span></code> can be used instead of <code class="docutils literal notranslate"><span class="pre">dumps</span></code> and <code class="docutils literal notranslate"><span class="pre">loads</span></code>. When
-file operations are not required the pickled representation of the object can
-be returned as a bytes object with the help of the <code class="docutils literal notranslate"><span class="pre">dumps</span></code> function. The
-reconstituted object hierarchy of the pickled data can then be returned using
-the <code class="docutils literal notranslate"><span class="pre">loads</span></code> function.</p>
-</section>
-<section id="persisting-models-with-joblib">
-<h2><span class="section-number">9.3. </span>Persisting models with joblib<a class="headerlink" href="#persisting-models-with-joblib" title="Link to this heading">¶</a></h2>
-<p>In the specific case of scikit-learn, it may be better to use joblib’s
-replacement of pickle (<code class="docutils literal notranslate"><span class="pre">dump</span></code> &amp; <code class="docutils literal notranslate"><span class="pre">load</span></code>), which is more efficient on
-objects that carry large numpy arrays internally as is often the case for
-fitted scikit-learn estimators, but can only pickle to the disk and not to a
-string:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">joblib</span> <span class="kn">import</span> <span class="n">dump</span><span class="p">,</span> <span class="n">load</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">dump</span><span class="p">(</span><span class="n">clf</span><span class="p">,</span> <span class="s1">&#39;filename.joblib&#39;</span><span class="p">)</span> 
-</pre></div>
-</div>
-<p>Later you can load back the pickled model (possibly in another Python process)
-with:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">clf</span> <span class="o">=</span> <span class="n">load</span><span class="p">(</span><span class="s1">&#39;filename.joblib&#39;</span><span class="p">)</span> 
-</pre></div>
-</div>
-<div class="admonition note">
-<p class="admonition-title">Note</p>
-<p><code class="docutils literal notranslate"><span class="pre">dump</span></code> and <code class="docutils literal notranslate"><span class="pre">load</span></code> functions also accept file-like object
-instead of filenames. More information on data persistence with Joblib is
-available <a class="reference external" href="https://joblib.readthedocs.io/en/latest/persistence.html">here</a>.</p>
-</div>
+These transitive dependencies can be pinned with the help of package management
+tools like <code class="docutils literal notranslate"><span class="pre">pip</span></code>, <code class="docutils literal notranslate"><span class="pre">mamba</span></code>, <code class="docutils literal notranslate"><span class="pre">conda</span></code>, <code class="docutils literal notranslate"><span class="pre">poetry</span></code>, <code class="docutils literal notranslate"><span class="pre">conda-lock</span></code>, <code class="docutils literal notranslate"><span class="pre">pixi</span></code>, etc.</p>
+<p>It is not always possible to load an model trained with older versions of the
+scikit-learn library and its dependencies in an updated software environment.
+Instead, you might need to retrain the model with the new versions of the all
+the libraries. So when training a model, it is important to record the training
+recipe (e.g. a Python script) and training set information, and metadata about
+all the dependencies to be able to automatically reconstruct the same training
+environment for the updated software.</p>
 <p><details id="summary-anchor">
 <summary class="btn btn-light">
 <strong>InconsistentVersionWarning</strong>
@@ -395,7 +521,7 @@ available <a class="reference external" href="https://joblib.readthedocs.io/en/l
 <a class="headerlink" href="#summary-anchor" title="Permalink to this heading">¶</a>
 </summary>
 <div class="card"></p>
-<p>When an estimator is unpickled with a scikit-learn version that is inconsistent
+<p>When an estimator is loaded with a scikit-learn version that is inconsistent
 with the version the estimator was pickled with, a
 <a class="reference internal" href="modules/generated/sklearn.exceptions.InconsistentVersionWarning.html#sklearn.exceptions.InconsistentVersionWarning" title="sklearn.exceptions.InconsistentVersionWarning"><code class="xref py py-class docutils literal notranslate"><span class="pre">InconsistentVersionWarning</span></code></a> is raised. This warning
 can be caught to obtain the original version the estimator was pickled with:</p>
@@ -411,124 +537,44 @@ can be caught to obtain the original version the estimator was pickled with:</p>
 <p></div>
 </details></p>
 </section>
-<section id="security-maintainability-limitations-for-pickle-and-joblib">
-<span id="persistence-limitations"></span><h2><span class="section-number">9.4. </span>Security &amp; maintainability limitations for pickle and joblib<a class="headerlink" href="#security-maintainability-limitations-for-pickle-and-joblib" title="Link to this heading">¶</a></h2>
-<p>pickle (and joblib by extension), has some issues regarding maintainability
-and security. Because of this,</p>
-<ul class="simple">
-<li><p>Never unpickle untrusted data as it could lead to malicious code being
-executed upon loading.</p></li>
-<li><p>While models saved using one version of scikit-learn might load in
-other versions, this is entirely unsupported and inadvisable. It should
-also be kept in mind that operations performed on such data could give
-different and unexpected results.</p></li>
-</ul>
-<p>In order to rebuild a similar model with future versions of scikit-learn,
-additional metadata should be saved along the pickled model:</p>
-<ul class="simple">
-<li><p>The training data, e.g. a reference to an immutable snapshot</p></li>
-<li><p>The python source code used to generate the model</p></li>
-<li><p>The versions of scikit-learn and its dependencies</p></li>
-<li><p>The cross validation score obtained on the training data</p></li>
-</ul>
-<p>This should make it possible to check that the cross-validation score is in the
-same range as before.</p>
-<p>Aside for a few exceptions, pickled models should be portable across
-architectures assuming the same versions of dependencies and Python are used.
-If you encounter an estimator that is not portable please open an issue on
-GitHub. Pickled models are often deployed in production using containers, like
-Docker, in order to freeze the environment and dependencies.</p>
-<p>If you want to know more about these issues and explore other possible
-serialization methods, please refer to this
-<a class="reference external" href="https://pyvideo.org/video/2566/pickles-are-for-delis-not-software">talk by Alex Gaynor</a>.</p>
+<section id="serving-the-model-artifact">
+<h3><span class="section-number">9.5.2. </span>Serving the model artifact<a class="headerlink" href="#serving-the-model-artifact" title="Link to this heading">¶</a></h3>
+<p>The last step after training a scikit-learn model is serving the model.
+Once the trained model is successfully loaded, it can be served to manage
+different prediction requests. This can involve deploying the model as a
+web service using containerization, or other model deployment strategies,
+according to the specifications.</p>
 </section>
-<section id="persisting-models-with-a-more-secure-format-using-skops">
-<h2><span class="section-number">9.5. </span>Persisting models with a more secure format using skops<a class="headerlink" href="#persisting-models-with-a-more-secure-format-using-skops" title="Link to this heading">¶</a></h2>
-<p><a class="reference external" href="https://skops.readthedocs.io/en/stable/">skops</a> provides a more secure
-format via the <a class="reference external" href="https://skops.readthedocs.io/en/stable/modules/classes.html#module-skops.io" title="(in skops)"><code class="xref py py-mod docutils literal notranslate"><span class="pre">skops.io</span></code></a> module. It avoids using <a class="reference external" href="https://docs.python.org/3/library/pickle.html#module-pickle" title="(in Python v3.12)"><code class="xref py py-mod docutils literal notranslate"><span class="pre">pickle</span></code></a> and only
-loads files which have types and references to functions which are trusted
-either by default or by the user.</p>
-<p><details id="summary-anchor">
-<summary class="btn btn-light">
-<strong>Using skops</strong>
-<span class="tooltiptext">Click for more details</span>
-<a class="headerlink" href="#summary-anchor" title="Permalink to this heading">¶</a>
-</summary>
-<div class="card"></p>
-<p>The API is very similar to <code class="docutils literal notranslate"><span class="pre">pickle</span></code>, and
-you can persist your models as explain in the <a class="reference external" href="https://skops.readthedocs.io/en/stable/persistence.html">docs</a> using
-<a class="reference external" href="https://skops.readthedocs.io/en/stable/modules/classes.html#skops.io.dump" title="(in skops)"><code class="xref py py-func docutils literal notranslate"><span class="pre">skops.io.dump</span></code></a> and <a class="reference external" href="https://skops.readthedocs.io/en/stable/modules/classes.html#skops.io.dumps" title="(in skops)"><code class="xref py py-func docutils literal notranslate"><span class="pre">skops.io.dumps</span></code></a>:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">skops.io</span> <span class="k">as</span> <span class="nn">sio</span>
-<span class="n">obj</span> <span class="o">=</span> <span class="n">sio</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">clf</span><span class="p">)</span>
-</pre></div>
-</div>
-<p>And you can load them back using <a class="reference external" href="https://skops.readthedocs.io/en/stable/modules/classes.html#skops.io.load" title="(in skops)"><code class="xref py py-func docutils literal notranslate"><span class="pre">skops.io.load</span></code></a> and
-<a class="reference external" href="https://skops.readthedocs.io/en/stable/modules/classes.html#skops.io.loads" title="(in skops)"><code class="xref py py-func docutils literal notranslate"><span class="pre">skops.io.loads</span></code></a>. However, you need to specify the types which are
-trusted by you. You can get existing unknown types in a dumped object / file
-using <a class="reference external" href="https://skops.readthedocs.io/en/stable/modules/classes.html#skops.io.get_untrusted_types" title="(in skops)"><code class="xref py py-func docutils literal notranslate"><span class="pre">skops.io.get_untrusted_types</span></code></a>, and after checking its contents,
-pass it to the load function:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">unknown_types</span> <span class="o">=</span> <span class="n">sio</span><span class="o">.</span><span class="n">get_untrusted_types</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="n">obj</span><span class="p">)</span>
-<span class="n">clf</span> <span class="o">=</span> <span class="n">sio</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">obj</span><span class="p">,</span> <span class="n">trusted</span><span class="o">=</span><span class="n">unknown_types</span><span class="p">)</span>
-</pre></div>
-</div>
-<p>If you trust the source of the file / object, you can pass <code class="docutils literal notranslate"><span class="pre">trusted=True</span></code>:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">clf</span> <span class="o">=</span> <span class="n">sio</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">obj</span><span class="p">,</span> <span class="n">trusted</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-</pre></div>
-</div>
-<p>Please report issues and feature requests related to this format on the <a class="reference external" href="https://github.com/skops-dev/skops/issues">skops
-issue tracker</a>.</p>
-<p></div>
-</details></p>
 </section>
-<section id="persisting-models-with-interoperable-formats">
-<h2><span class="section-number">9.6. </span>Persisting models with interoperable formats<a class="headerlink" href="#persisting-models-with-interoperable-formats" title="Link to this heading">¶</a></h2>
-<p>For reproducibility and quality control needs, when different architectures
-and environments should be taken into account, exporting the model in
-<a class="reference external" href="https://onnx.ai/">Open Neural Network
-Exchange</a> format or <a class="reference external" href="https://dmg.org/pmml/v4-4-1/GeneralStructure.html">Predictive Model Markup Language
-(PMML)</a> format
-might be a better approach than using <code class="docutils literal notranslate"><span class="pre">pickle</span></code> alone.
-These are helpful where you may want to use your model for prediction in a
-different environment from where the model was trained.</p>
-<p>ONNX is a binary serialization of the model. It has been developed to improve
-the usability of the interoperable representation of data models.
-It aims to facilitate the conversion of the data
-models between different machine learning frameworks, and to improve their
-portability on different computing architectures. More details are available
-from the <a class="reference external" href="https://onnx.ai/get-started.html">ONNX tutorial</a>.
-To convert scikit-learn model to ONNX a specific tool <a class="reference external" href="http://onnx.ai/sklearn-onnx/">sklearn-onnx</a> has been developed.</p>
-<p>PMML is an implementation of the <a class="reference external" href="https://en.wikipedia.org/wiki/XML">XML</a> document standard
-defined to represent data models together with the data used to generate them.
-Being human and machine readable,
-PMML is a good option for model validation on different platforms and
-long term archiving. On the other hand, as XML in general, its verbosity does
-not help in production when performance is critical.
-To convert scikit-learn model to PMML you can use for example <a class="reference external" href="https://github.com/jpmml/sklearn2pmml">sklearn2pmml</a> distributed under the Affero GPLv3
-license.</p>
-</section>
-<section id="summarizing-the-keypoints">
-<h2><span class="section-number">9.7. </span>Summarizing the keypoints<a class="headerlink" href="#summarizing-the-keypoints" title="Link to this heading">¶</a></h2>
-<p>Based on the different approaches for model persistence, the keypoints for each
-approach can be summarized as follows:</p>
+<section id="summarizing-the-key-points">
+<h2><span class="section-number">9.6. </span>Summarizing the key points<a class="headerlink" href="#summarizing-the-key-points" title="Link to this heading">¶</a></h2>
+<p>Based on the different approaches for model persistence, the key points for
+each approach can be summarized as follows:</p>
 <ul class="simple">
-<li><p><code class="docutils literal notranslate"><span class="pre">pickle</span></code>: It is native to Python and any Python object can be serialized and
-deserialized using <code class="docutils literal notranslate"><span class="pre">pickle</span></code>, including custom Python classes and objects.
-While <code class="docutils literal notranslate"><span class="pre">pickle</span></code> can be used to easily save and load scikit-learn models,
-unpickling of untrusted data might lead to security issues.</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">joblib</span></code>: Efficient storage and memory mapping techniques make it faster
-when working with large machine learning models or large numpy arrays. However,
-it may trigger the execution of malicious code while loading untrusted data.</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">skops</span></code>: Trained scikit-learn models can be easily shared and put into
-production using <code class="docutils literal notranslate"><span class="pre">skops</span></code>. It is more secure compared to alternate approaches
-as it allows users to load data from trusted sources. It however, does not
-allow for persistence of arbitrary Python code.</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">ONNX</span></code>: It provides a uniform format for persisting any machine learning
-or deep learning model (other than scikit-learn) and is useful
-for model inference. It can however, result in compatibility issues with
+<li><p><code class="docutils literal notranslate"><span class="pre">ONNX</span></code>: It provides a uniform format for persisting any machine learning or
+deep learning model (other than scikit-learn) and is useful for model
+inference (predictions). It can however, result in compatibility issues with
 different frameworks.</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">PMML</span></code>: Platform independent format that can be used to persist models
-and reduce the risk of vendor lock-ins. The complexity and verbosity of
-this format might make it harder to use for larger models.</p></li>
+<li><p><a class="reference external" href="https://skops.readthedocs.io/en/stable/modules/classes.html#module-skops.io" title="(in skops)"><code class="xref py py-mod docutils literal notranslate"><span class="pre">skops.io</span></code></a>: Trained scikit-learn models can be easily shared and put
+into production using <a class="reference external" href="https://skops.readthedocs.io/en/stable/modules/classes.html#module-skops.io" title="(in skops)"><code class="xref py py-mod docutils literal notranslate"><span class="pre">skops.io</span></code></a>. It is more secure compared to
+alternate approaches based on <a class="reference external" href="https://docs.python.org/3/library/pickle.html#module-pickle" title="(in Python v3.12)"><code class="xref py py-mod docutils literal notranslate"><span class="pre">pickle</span></code></a> because it does not load
+arbitrary code unless explicitly asked for by the user.</p></li>
+<li><p><a class="reference external" href="https://joblib.readthedocs.io/en/latest/index.html#module-joblib" title="(in joblib v1.5.dev0)"><code class="xref py py-mod docutils literal notranslate"><span class="pre">joblib</span></code></a>: Efficient memory mapping techniques make it faster when using
+the same persisted model in multiple Python processes. It also gives easy
+shortcuts to compress and decompress the persisted object without the need
+for extra code. However, it may trigger the execution of malicious code while
+untrusted data as any other pickle-based persistence mechanism.</p></li>
+<li><p><a class="reference external" href="https://docs.python.org/3/library/pickle.html#module-pickle" title="(in Python v3.12)"><code class="xref py py-mod docutils literal notranslate"><span class="pre">pickle</span></code></a>: It is native to Python and any Python object can be serialized
+and deserialized using <a class="reference external" href="https://docs.python.org/3/library/pickle.html#module-pickle" title="(in Python v3.12)"><code class="xref py py-mod docutils literal notranslate"><span class="pre">pickle</span></code></a>, including custom Python classes and
+objects. While <a class="reference external" href="https://docs.python.org/3/library/pickle.html#module-pickle" title="(in Python v3.12)"><code class="xref py py-mod docutils literal notranslate"><span class="pre">pickle</span></code></a> can be used to easily save and load scikit-learn
+models, it may trigger the execution of malicious code while loading
+untrusted data.</p></li>
+<li><p><a class="reference external" href="https://github.com/cloudpipe/cloudpickle">cloudpickle</a>: It is slower than <a class="reference external" href="https://docs.python.org/3/library/pickle.html#module-pickle" title="(in Python v3.12)"><code class="xref py py-mod docutils literal notranslate"><span class="pre">pickle</span></code></a> and <a class="reference external" href="https://joblib.readthedocs.io/en/latest/index.html#module-joblib" title="(in joblib v1.5.dev0)"><code class="xref py py-mod docutils literal notranslate"><span class="pre">joblib</span></code></a>, and is
+more insecure than <a class="reference external" href="https://docs.python.org/3/library/pickle.html#module-pickle" title="(in Python v3.12)"><code class="xref py py-mod docutils literal notranslate"><span class="pre">pickle</span></code></a> and <a class="reference external" href="https://joblib.readthedocs.io/en/latest/index.html#module-joblib" title="(in joblib v1.5.dev0)"><code class="xref py py-mod docutils literal notranslate"><span class="pre">joblib</span></code></a> since it can serialize
+arbitrary code. However, in certain cases it might be a last resort to
+persist certain models. Note that this is discouraged by <a class="reference external" href="https://github.com/cloudpipe/cloudpickle">cloudpickle</a>
+itself since there are no forward compatibility guarantees and you might need
+the same version of <a class="reference external" href="https://github.com/cloudpipe/cloudpickle">cloudpickle</a> to load the persisted model.</p></li>
 </ul>
 </section>
 </section>
