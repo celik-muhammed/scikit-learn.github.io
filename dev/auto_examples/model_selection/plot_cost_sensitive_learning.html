@@ -1599,7 +1599,7 @@ fraudulent transactions.</p>
 <span class="n">_</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <a href="https://matplotlib.org/stable/api/_as_gen/matplotlib.pyplot.subplots.html#matplotlib.pyplot.subplots" title="matplotlib.pyplot.subplots" class="sphx-glr-backref-module-matplotlib-pyplot sphx-glr-backref-type-py-function"><span class="n">plt</span><span class="o">.</span><span class="n">subplots</span></a><span class="p">()</span>
 <span class="n">ax</span><span class="o">.</span><span class="n">hist</span><span class="p">(</span><span class="n">amount_fraud</span><span class="p">,</span> <span class="n">bins</span><span class="o">=</span><span class="mi">100</span><span class="p">)</span>
 <span class="n">ax</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s2">&quot;Amount of fraud transaction&quot;</span><span class="p">)</span>
-<span class="n">_</span> <span class="o">=</span> <span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s2">&quot;Amount ($)&quot;</span><span class="p">)</span>
+<span class="n">_</span> <span class="o">=</span> <span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s2">&quot;Amount (€)&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
 <img src="../../_images/sphx_glr_plot_cost_sensitive_learning_005.png" srcset="../../_images/sphx_glr_plot_cost_sensitive_learning_005.png" alt="Amount of fraud transaction" class = "sphx-glr-single-img"/></section>
@@ -1611,8 +1611,8 @@ a gain of 2% of the amount of the transaction. However, accepting a fraudulent
 transaction result in a loss of the amount of the transaction. As stated in <a class="footnote-reference brackets" href="#id3" id="id10" role="doc-noteref"><span class="fn-bracket">[</span>2<span class="fn-bracket">]</span></a>, the
 gain and loss related to refusals (of fraudulent and legitimate transactions) are not
 trivial to define. Here, we define that a refusal of a legitimate transaction is
-estimated to a loss of $5 while the refusal of a fraudulent transaction is estimated
-to a gain of $50 dollars and the amount of the transaction. Therefore, we define the
+estimated to a loss of 5€ while the refusal of a fraudulent transaction is estimated
+to a gain of 50€ and the amount of the transaction. Therefore, we define the
 following function to compute the total benefit of a given decision:</p>
 <div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">business_metric</span><span class="p">(</span><span class="n">y_true</span><span class="p">,</span> <span class="n">y_pred</span><span class="p">,</span> <span class="n">amount</span><span class="p">):</span>
     <span class="n">mask_true_positive</span> <span class="o">=</span> <span class="p">(</span><span class="n">y_true</span> <span class="o">==</span> <span class="mi">1</span><span class="p">)</span> <span class="o">&amp;</span> <span class="p">(</span><span class="n">y_pred</span> <span class="o">==</span> <span class="mi">1</span><span class="p">)</span>
@@ -1664,28 +1664,28 @@ metadata to the scorer. So let’s create this variable.</p>
 <span class="n">benefit_cost</span> <span class="o">=</span> <span class="n">business_scorer</span><span class="p">(</span>
     <span class="n">easy_going_classifier</span><span class="p">,</span> <span class="n">data_test</span><span class="p">,</span> <span class="n">target_test</span><span class="p">,</span> <span class="n">amount</span><span class="o">=</span><span class="n">amount_test</span>
 <span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Benefit/cost of our easy-going classifier: $</span><span class="si">{</span><span class="n">benefit_cost</span><span class="si">:</span><span class="s2">,.2f</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Benefit/cost of our easy-going classifier: </span><span class="si">{</span><span class="n">benefit_cost</span><span class="si">:</span><span class="s2">,.2f</span><span class="si">}</span><span class="s2">€&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
-<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>Benefit/cost of our easy-going classifier: $221,445.07
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>Benefit/cost of our easy-going classifier: 221,445.07€
 </pre></div>
 </div>
 <p>A classifier that predict all transactions as legitimate would create a profit of
-around $220,000. We make the same evaluation for a classifier that predicts all
+around 220,000.€ We make the same evaluation for a classifier that predicts all
 transactions as fraudulent.</p>
 <div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">intolerant_classifier</span> <span class="o">=</span> <a href="../../modules/generated/sklearn.dummy.DummyClassifier.html#sklearn.dummy.DummyClassifier" title="sklearn.dummy.DummyClassifier" class="sphx-glr-backref-module-sklearn-dummy sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">DummyClassifier</span></a><span class="p">(</span><span class="n">strategy</span><span class="o">=</span><span class="s2">&quot;constant&quot;</span><span class="p">,</span> <span class="n">constant</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
 <span class="n">intolerant_classifier</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">data_train</span><span class="p">,</span> <span class="n">target_train</span><span class="p">)</span>
 <span class="n">benefit_cost</span> <span class="o">=</span> <span class="n">business_scorer</span><span class="p">(</span>
     <span class="n">intolerant_classifier</span><span class="p">,</span> <span class="n">data_test</span><span class="p">,</span> <span class="n">target_test</span><span class="p">,</span> <span class="n">amount</span><span class="o">=</span><span class="n">amount_test</span>
 <span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Benefit/cost of our intolerant classifier: $</span><span class="si">{</span><span class="n">benefit_cost</span><span class="si">:</span><span class="s2">,.2f</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Benefit/cost of our intolerant classifier: </span><span class="si">{</span><span class="n">benefit_cost</span><span class="si">:</span><span class="s2">,.2f</span><span class="si">}</span><span class="s2">€&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
-<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>Benefit/cost of our intolerant classifier: $-668,903.24
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>Benefit/cost of our intolerant classifier: -668,903.24€
 </pre></div>
 </div>
-<p>Such a classifier create a loss of around $670,000. A predictive model should allow
-us to make a profit larger than $220,000. It is interesting to compare this business
+<p>Such a classifier create a loss of around 670,000.€ A predictive model should allow
+us to make a profit larger than 220,000.€ It is interesting to compare this business
 metric with another “standard” statistical metric such as the balanced accuracy.</p>
 <div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">sklearn.metrics</span> <span class="kn">import</span> <a href="../../modules/generated/sklearn.metrics.get_scorer.html#sklearn.metrics.get_scorer" title="sklearn.metrics.get_scorer" class="sphx-glr-backref-module-sklearn-metrics sphx-glr-backref-type-py-function"><span class="n">get_scorer</span></a>
 
@@ -1723,7 +1723,7 @@ decision threshold.</p>
 
 <span class="nb">print</span><span class="p">(</span>
     <span class="s2">&quot;Benefit/cost of our logistic regression: &quot;</span>
-    <span class="sa">f</span><span class="s2">&quot;$</span><span class="si">{</span><span class="n">business_scorer</span><span class="p">(</span><span class="n">model</span><span class="p">,</span><span class="w"> </span><span class="n">data_test</span><span class="p">,</span><span class="w"> </span><span class="n">target_test</span><span class="p">,</span><span class="w"> </span><span class="n">amount</span><span class="o">=</span><span class="n">amount_test</span><span class="p">)</span><span class="si">:</span><span class="s2">,.2f</span><span class="si">}</span><span class="s2">&quot;</span>
+    <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">business_scorer</span><span class="p">(</span><span class="n">model</span><span class="p">,</span><span class="w"> </span><span class="n">data_test</span><span class="p">,</span><span class="w"> </span><span class="n">target_test</span><span class="p">,</span><span class="w"> </span><span class="n">amount</span><span class="o">=</span><span class="n">amount_test</span><span class="p">)</span><span class="si">:</span><span class="s2">,.2f</span><span class="si">}</span><span class="s2">€&quot;</span>
 <span class="p">)</span>
 <span class="nb">print</span><span class="p">(</span>
     <span class="s2">&quot;Balanced accuracy of our logistic regression: &quot;</span>
@@ -1731,7 +1731,7 @@ decision threshold.</p>
 <span class="p">)</span>
 </pre></div>
 </div>
-<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>Benefit/cost of our logistic regression: $260,787.21
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>Benefit/cost of our logistic regression: 260,787.21€
 Balanced accuracy of our logistic regression: 0.815
 </pre></div>
 </div>
@@ -2183,7 +2183,7 @@ div.sk-label-container:hover .sk-estimator-doc-link.fitted:hover,
 <br />
 <br /><div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="nb">print</span><span class="p">(</span>
     <span class="s2">&quot;Benefit/cost of our logistic regression: &quot;</span>
-    <span class="sa">f</span><span class="s2">&quot;$</span><span class="si">{</span><span class="n">business_scorer</span><span class="p">(</span><span class="n">tuned_model</span><span class="p">,</span><span class="w"> </span><span class="n">data_test</span><span class="p">,</span><span class="w"> </span><span class="n">target_test</span><span class="p">,</span><span class="w"> </span><span class="n">amount</span><span class="o">=</span><span class="n">amount_test</span><span class="p">)</span><span class="si">:</span><span class="s2">,.2f</span><span class="si">}</span><span class="s2">&quot;</span>
+    <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">business_scorer</span><span class="p">(</span><span class="n">tuned_model</span><span class="p">,</span><span class="w"> </span><span class="n">data_test</span><span class="p">,</span><span class="w"> </span><span class="n">target_test</span><span class="p">,</span><span class="w"> </span><span class="n">amount</span><span class="o">=</span><span class="n">amount_test</span><span class="p">)</span><span class="si">:</span><span class="s2">,.2f</span><span class="si">}</span><span class="s2">€&quot;</span>
 <span class="p">)</span>
 <span class="nb">print</span><span class="p">(</span>
     <span class="s2">&quot;Balanced accuracy of our logistic regression: &quot;</span>
@@ -2191,7 +2191,7 @@ div.sk-label-container:hover .sk-estimator-doc-link.fitted:hover,
 <span class="p">)</span>
 </pre></div>
 </div>
-<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>Benefit/cost of our logistic regression: $268,847.31
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>Benefit/cost of our logistic regression: 268,847.31€
 Balanced accuracy of our logistic regression: 0.898
 </pre></div>
 </div>
@@ -2229,20 +2229,20 @@ new model and check that it gives the same results.</p>
 <div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">business_score</span> <span class="o">=</span> <span class="n">business_scorer</span><span class="p">(</span>
     <span class="n">model_fixed_threshold</span><span class="p">,</span> <span class="n">data_test</span><span class="p">,</span> <span class="n">target_test</span><span class="p">,</span> <span class="n">amount</span><span class="o">=</span><span class="n">amount_test</span>
 <span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Benefit/cost of our logistic regression: $</span><span class="si">{</span><span class="n">business_score</span><span class="si">:</span><span class="s2">,.2f</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Benefit/cost of our logistic regression: </span><span class="si">{</span><span class="n">business_score</span><span class="si">:</span><span class="s2">,.2f</span><span class="si">}</span><span class="s2">€&quot;</span><span class="p">)</span>
 <span class="nb">print</span><span class="p">(</span>
     <span class="s2">&quot;Balanced accuracy of our logistic regression: &quot;</span>
     <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">balanced_accuracy_scorer</span><span class="p">(</span><span class="n">model_fixed_threshold</span><span class="p">,</span><span class="w"> </span><span class="n">data_test</span><span class="p">,</span><span class="w"> </span><span class="n">target_test</span><span class="p">)</span><span class="si">:</span><span class="s2">.3f</span><span class="si">}</span><span class="s2">&quot;</span>
 <span class="p">)</span>
 </pre></div>
 </div>
-<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>Benefit/cost of our logistic regression: $268,847.31
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>Benefit/cost of our logistic regression: 268,847.31€
 Balanced accuracy of our logistic regression: 0.898
 </pre></div>
 </div>
 <p>We observe that we obtained the exact same results but the fitting process was much
 faster since we did not perform any search.</p>
-<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> (0 minutes 45.925 seconds)</p>
+<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> (0 minutes 41.874 seconds)</p>
 <div class="sphx-glr-footer sphx-glr-footer-example docutils container" id="sphx-glr-download-auto-examples-model-selection-plot-cost-sensitive-learning-py">
 <div class="binder-badge docutils container">
 <a class="reference external image-reference" href="https://mybinder.org/v2/gh/scikit-learn/scikit-learn/main?urlpath=lab/tree/notebooks/auto_examples/model_selection/plot_cost_sensitive_learning.ipynb"><img alt="Launch binder" src="../../_images/binder_badge_logo22.svg" width="150px" /></a>
