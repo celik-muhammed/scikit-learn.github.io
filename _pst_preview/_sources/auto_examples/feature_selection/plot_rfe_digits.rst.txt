@@ -11,7 +11,7 @@
         :class: sphx-glr-download-link-note
 
         :ref:`Go to the end <sphx_glr_download_auto_examples_feature_selection_plot_rfe_digits.py>`
-        to download the full example code or to run this example in your browser via JupyterLite or Binder
+        to download the full example code. or to run this example in your browser via JupyterLite or Binder
 
 .. rst-class:: sphx-glr-example-title
 
@@ -22,25 +22,20 @@
 Recursive feature elimination
 =============================
 
-A recursive feature elimination example showing the relevance of pixels in
-a digit classification task.
+This example demonstrates how Recursive Feature Elimination
+(:class:`~sklearn.feature_selection.RFE`) can be used to determine the
+importance of individual pixels for classifying handwritten digits.
+:class:`~sklearn.feature_selection.RFE` recursively removes the least
+significant features, assigning ranks based on their importance, where higher
+`ranking_` values denote lower importance. The ranking is visualized using both
+shades of blue and pixel annotations for clarity. As expected, pixels positioned
+at the center of the image tend to be more predictive than those near the edges.
 
 .. note::
 
     See also :ref:`sphx_glr_auto_examples_feature_selection_plot_rfe_with_cross_validation.py`
 
-.. GENERATED FROM PYTHON SOURCE LINES 14-37
-
-
-
-.. image-sg:: /auto_examples/feature_selection/images/sphx_glr_plot_rfe_digits_001.png
-   :alt: Ranking of pixels with RFE
-   :srcset: /auto_examples/feature_selection/images/sphx_glr_plot_rfe_digits_001.png
-   :class: sphx-glr-single-img
-
-
-
-
+.. GENERATED FROM PYTHON SOURCE LINES 20-55
 
 .. code-block:: Python
 
@@ -49,29 +44,36 @@ a digit classification task.
 
     from sklearn.datasets import load_digits
     from sklearn.feature_selection import RFE
-    from sklearn.svm import SVC
+    from sklearn.linear_model import LogisticRegression
+    from sklearn.pipeline import Pipeline
+    from sklearn.preprocessing import MinMaxScaler
 
     # Load the digits dataset
     digits = load_digits()
     X = digits.images.reshape((len(digits.images), -1))
     y = digits.target
 
-    # Create the RFE object and rank each pixel
-    svc = SVC(kernel="linear", C=1)
-    rfe = RFE(estimator=svc, n_features_to_select=1, step=1)
-    rfe.fit(X, y)
-    ranking = rfe.ranking_.reshape(digits.images[0].shape)
+    pipe = Pipeline(
+        [
+            ("scaler", MinMaxScaler()),
+            ("rfe", RFE(estimator=LogisticRegression(), n_features_to_select=1, step=1)),
+        ]
+    )
+
+    pipe.fit(X, y)
+    ranking = pipe.named_steps["rfe"].ranking_.reshape(digits.images[0].shape)
 
     # Plot pixel ranking
     plt.matshow(ranking, cmap=plt.cm.Blues)
+
+    # Add annotations for pixel numbers
+    for i in range(ranking.shape[0]):
+        for j in range(ranking.shape[1]):
+            plt.text(j, i, str(ranking[i, j]), ha="center", va="center", color="black")
+
     plt.colorbar()
-    plt.title("Ranking of pixels with RFE")
+    plt.title("Ranking of pixels with RFE\n(Logistic Regression)")
     plt.show()
-
-
-.. rst-class:: sphx-glr-timing
-
-   **Total running time of the script:** (0 minutes 3.396 seconds)
 
 
 .. _sphx_glr_download_auto_examples_feature_selection_plot_rfe_digits.py:

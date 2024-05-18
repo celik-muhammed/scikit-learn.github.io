@@ -13,7 +13,7 @@
 <meta content="https://scikit-learn.org/stable/_static/scikit-learn-logo-small.png" property="og:image"/>
 <meta content="scikit-learn" property="og:image:alt"/>
 <meta content="This example illustrates differences between a kernel ridge regression and a Gaussian process regression. Both kernel ridge regression and Gaussian process regression are using a so-called “kernel ..." name="description"/>
-<title>Comparison of kernel ridge and Gaussian process regression — scikit-learn 1.5.dev0 documentation</title>
+<title>Comparison of kernel ridge and Gaussian process regression — scikit-learn 1.6.dev0 documentation</title>
 <script data-cfasync="false">
     document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
     document.documentElement.dataset.theme = localStorage.getItem("theme") || "light";
@@ -42,8 +42,8 @@
 <link as="script" href="../../_static/scripts/bootstrap.js?digest=8d27b9dea8ad943066ae" rel="preload"/>
 <link as="script" href="../../_static/scripts/pydata-sphinx-theme.js?digest=8d27b9dea8ad943066ae" rel="preload"/>
 <script src="../../_static/vendor/fontawesome/6.5.1/js/all.min.js?digest=8d27b9dea8ad943066ae"></script>
-<script src="../../_static/documentation_options.js?v=a2c36881"></script>
-<script src="../../_static/doctools.js?v=888ff710"></script>
+<script src="../../_static/documentation_options.js?v=d875d36e"></script>
+<script src="../../_static/doctools.js?v=9a2dae69"></script>
 <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
 <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
 <script src="../../_static/copybutton.js?v=97f0b27d"></script>
@@ -54,8 +54,8 @@
 <script>DOCUMENTATION_OPTIONS.pagename = 'auto_examples/gaussian_process/plot_compare_gpr_krr';</script>
 <script>
         DOCUMENTATION_OPTIONS.theme_version = '0.15.2';
-        DOCUMENTATION_OPTIONS.theme_switcher_json_url = 'https://scikit-learn.org/_pst_preview/versions.json';
-        DOCUMENTATION_OPTIONS.theme_switcher_version_match = '1.5.dev0';
+        DOCUMENTATION_OPTIONS.theme_switcher_json_url = 'https://scikit-learn.org/_pst_preview/_static/versions.json';
+        DOCUMENTATION_OPTIONS.theme_switcher_version_match = '1.6.dev0';
         DOCUMENTATION_OPTIONS.show_version_warning_banner = true;
         </script>
 <script src="../../_static/scripts/dropdown.js?v=12d599f8"></script>
@@ -550,7 +550,6 @@ document.write(`
 <li class="toctree-l2"><a class="reference internal" href="../applications/plot_face_recognition.html">Faces recognition example using eigenfaces and SVMs</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../applications/plot_digits_denoising.html">Image denoising using kernel PCA</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../applications/plot_time_series_lagged_features.html">Lagged features for time series forecasting</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../applications/svm_gui.html">Libsvm GUI</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../applications/plot_model_complexity_influence.html">Model Complexity Influence</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../applications/plot_out_of_core_classification.html">Out-of-core classification of text documents</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../applications/plot_outlier_detection_wine.html">Outlier detection on a real data set</a></li>
@@ -695,6 +694,8 @@ document.write(`
 <li class="toctree-l2"><a class="reference internal" href="../model_selection/plot_cv_predict.html">Plotting Cross-Validated Predictions</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../model_selection/plot_learning_curve.html">Plotting Learning Curves and Checking Models’ Scalability</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../model_selection/plot_validation_curve.html">Plotting Validation Curves</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../model_selection/plot_tuned_decision_threshold.html">Post-hoc tuning the cut-off point of decision function</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../model_selection/plot_cost_sensitive_learning.html">Post-tuning the decision threshold for cost-sensitive learning</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../model_selection/plot_precision_recall.html">Precision-Recall</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../model_selection/plot_roc_crossval.html">Receiver Operating Characteristic (ROC) with cross validation</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../model_selection/plot_grid_search_text_feature_extraction.html">Sample pipeline for text feature extraction and evaluation</a></li>
@@ -897,7 +898,7 @@ process. However, we will add some challenges:</p>
 <span class="p">)</span>
 </pre></div>
 </div>
-<img alt="Illustration of the true generative process and  noisy measurements available during training" class="sphx-glr-single-img" src="../../_images/sphx_glr_plot_compare_gpr_krr_001.png" srcset="../../_images/sphx_glr_plot_compare_gpr_krr_001.png"/></section>
+</section>
 <section id="limitations-of-a-simple-linear-model">
 <h2>Limitations of a simple linear model<a class="headerlink" href="#limitations-of-a-simple-linear-model" title="Link to this heading">#</a></h2>
 <p>First, we would like to highlight the limitations of a linear model given
@@ -921,7 +922,7 @@ predictions of this model on our dataset.</p>
 <span class="n">_</span> <span class="o">=</span> <a class="sphx-glr-backref-module-matplotlib-pyplot sphx-glr-backref-type-py-function" href="https://matplotlib.org/stable/api/_as_gen/matplotlib.pyplot.title.html#matplotlib.pyplot.title" title="matplotlib.pyplot.title"><span class="n">plt</span><span class="o">.</span><span class="n">title</span></a><span class="p">(</span><span class="s2">"Limitation of a linear model such as ridge"</span><span class="p">)</span>
 </pre></div>
 </div>
-<img alt="Limitation of a linear model such as ridge" class="sphx-glr-single-img" src="../../_images/sphx_glr_plot_compare_gpr_krr_002.png" srcset="../../_images/sphx_glr_plot_compare_gpr_krr_002.png"/><p>Such a ridge regressor underfits data since it is not expressive enough.</p>
+<p>Such a ridge regressor underfits data since it is not expressive enough.</p>
 </section>
 <section id="kernel-methods-kernel-ridge-and-gaussian-process">
 <h2>Kernel methods: kernel ridge and Gaussian process<a class="headerlink" href="#kernel-methods-kernel-ridge-and-gaussian-process" title="Link to this heading">#</a></h2>
@@ -956,9 +957,6 @@ between samples in the higher dimensional feature space is computed using the
 <span class="p">)</span>
 </pre></div>
 </div>
-<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>Fitting KernelRidge with default kernel: 0.001 seconds
-</pre></div>
-</div>
 <div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><a class="sphx-glr-backref-module-matplotlib-pyplot sphx-glr-backref-type-py-function" href="https://matplotlib.org/stable/api/_as_gen/matplotlib.pyplot.plot.html#matplotlib.pyplot.plot" title="matplotlib.pyplot.plot"><span class="n">plt</span><span class="o">.</span><span class="n">plot</span></a><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">target</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">"True signal"</span><span class="p">,</span> <span class="n">linewidth</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">linestyle</span><span class="o">=</span><span class="s2">"dashed"</span><span class="p">)</span>
 <a class="sphx-glr-backref-module-matplotlib-pyplot sphx-glr-backref-type-py-function" href="https://matplotlib.org/stable/api/_as_gen/matplotlib.pyplot.scatter.html#matplotlib.pyplot.scatter" title="matplotlib.pyplot.scatter"><span class="n">plt</span><span class="o">.</span><span class="n">scatter</span></a><span class="p">(</span>
     <span class="n">training_data</span><span class="p">,</span>
@@ -982,12 +980,9 @@ between samples in the higher dimensional feature space is computed using the
 <span class="p">)</span>
 </pre></div>
 </div>
-<img alt="Kernel ridge regression with an exponential sine squared  kernel using default hyperparameters" class="sphx-glr-single-img" src="../../_images/sphx_glr_plot_compare_gpr_krr_003.png" srcset="../../_images/sphx_glr_plot_compare_gpr_krr_003.png"/><p>This fitted model is not accurate. Indeed, we did not set the parameters of
+<p>This fitted model is not accurate. Indeed, we did not set the parameters of
 the kernel and instead used the default ones. We can inspect them.</p>
 <div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">kernel_ridge</span><span class="o">.</span><span class="n">kernel</span>
-</pre></div>
-</div>
-<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>ExpSineSquared(length_scale=1, periodicity=1)
 </pre></div>
 </div>
 <p>Our kernel has two parameters: the length-scale and the periodicity. For our
@@ -1019,16 +1014,10 @@ parameter and the kernel parameters.</p>
 <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Time for KernelRidge fitting: </span><span class="si">{</span><a class="sphx-glr-backref-module-time sphx-glr-backref-type-py-function" href="https://docs.python.org/3/library/time.html#time.time" title="time.time"><span class="n">time</span><span class="o">.</span><span class="n">time</span></a><span class="p">()</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">start_time</span><span class="si">:</span><span class="s2">.3f</span><span class="si">}</span><span class="s2"> seconds"</span><span class="p">)</span>
 </pre></div>
 </div>
-<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>Time for KernelRidge fitting: 3.513 seconds
-</pre></div>
-</div>
 <p>Fitting the model is now more computationally expensive since we have to try
 several combinations of hyperparameters. We can have a look at the
 hyperparameters found to get some intuitions.</p>
 <div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">kernel_ridge_tuned</span><span class="o">.</span><span class="n">best_params_</span>
-</pre></div>
-</div>
-<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>{'alpha': 1.9915849773450223, 'kernel__length_scale': 0.7986499491396727, 'kernel__periodicity': 6.607275806426107}
 </pre></div>
 </div>
 <p>Looking at the best parameters, we see that they are different from the
@@ -1037,9 +1026,6 @@ defaults. We also see that the periodicity is closer to the expected value:
 <div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">start_time</span> <span class="o">=</span> <a class="sphx-glr-backref-module-time sphx-glr-backref-type-py-function" href="https://docs.python.org/3/library/time.html#time.time" title="time.time"><span class="n">time</span><span class="o">.</span><span class="n">time</span></a><span class="p">()</span>
 <span class="n">predictions_kr</span> <span class="o">=</span> <span class="n">kernel_ridge_tuned</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
 <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Time for KernelRidge predict: </span><span class="si">{</span><a class="sphx-glr-backref-module-time sphx-glr-backref-type-py-function" href="https://docs.python.org/3/library/time.html#time.time" title="time.time"><span class="n">time</span><span class="o">.</span><span class="n">time</span></a><span class="p">()</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">start_time</span><span class="si">:</span><span class="s2">.3f</span><span class="si">}</span><span class="s2"> seconds"</span><span class="p">)</span>
-</pre></div>
-</div>
-<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>Time for KernelRidge predict: 0.001 seconds
 </pre></div>
 </div>
 <div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><a class="sphx-glr-backref-module-matplotlib-pyplot sphx-glr-backref-type-py-function" href="https://matplotlib.org/stable/api/_as_gen/matplotlib.pyplot.plot.html#matplotlib.pyplot.plot" title="matplotlib.pyplot.plot"><span class="n">plt</span><span class="o">.</span><span class="n">plot</span></a><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">target</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">"True signal"</span><span class="p">,</span> <span class="n">linewidth</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">linestyle</span><span class="o">=</span><span class="s2">"dashed"</span><span class="p">)</span>
@@ -1065,7 +1051,7 @@ defaults. We also see that the periodicity is closer to the expected value:
 <span class="p">)</span>
 </pre></div>
 </div>
-<img alt="Kernel ridge regression with an exponential sine squared  kernel using tuned hyperparameters" class="sphx-glr-single-img" src="../../_images/sphx_glr_plot_compare_gpr_krr_004.png" srcset="../../_images/sphx_glr_plot_compare_gpr_krr_004.png"/><p>We get a much more accurate model. We still observe some errors mainly due to
+<p>We get a much more accurate model. We still observe some errors mainly due to
 the noise added to the dataset.</p>
 </section>
 <section id="gaussian-process-regression">
@@ -1092,16 +1078,10 @@ estimate the noise in the dataset.</p>
 <span class="p">)</span>
 </pre></div>
 </div>
-<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>Time for GaussianProcessRegressor fitting: 0.031 seconds
-</pre></div>
-</div>
 <p>The computation cost of training a Gaussian process is much less than the
 kernel ridge that uses a randomized search. We can check the parameters of
 the kernels that we computed.</p>
 <div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">gaussian_process</span><span class="o">.</span><span class="n">kernel_</span>
-</pre></div>
-</div>
-<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>0.675**2 * ExpSineSquared(length_scale=1.34, periodicity=6.57) + WhiteKernel(noise_level=0.182)
 </pre></div>
 </div>
 <p>Indeed, we see that the parameters have been optimized. Looking at the
@@ -1116,9 +1096,6 @@ our model.</p>
 <span class="nb">print</span><span class="p">(</span>
     <span class="sa">f</span><span class="s2">"Time for GaussianProcessRegressor predict: </span><span class="si">{</span><a class="sphx-glr-backref-module-time sphx-glr-backref-type-py-function" href="https://docs.python.org/3/library/time.html#time.time" title="time.time"><span class="n">time</span><span class="o">.</span><span class="n">time</span></a><span class="p">()</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">start_time</span><span class="si">:</span><span class="s2">.3f</span><span class="si">}</span><span class="s2"> seconds"</span>
 <span class="p">)</span>
-</pre></div>
-</div>
-<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>Time for GaussianProcessRegressor predict: 0.002 seconds
 </pre></div>
 </div>
 <div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><a class="sphx-glr-backref-module-matplotlib-pyplot sphx-glr-backref-type-py-function" href="https://matplotlib.org/stable/api/_as_gen/matplotlib.pyplot.plot.html#matplotlib.pyplot.plot" title="matplotlib.pyplot.plot"><span class="n">plt</span><span class="o">.</span><span class="n">plot</span></a><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">target</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">"True signal"</span><span class="p">,</span> <span class="n">linewidth</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">linestyle</span><span class="o">=</span><span class="s2">"dashed"</span><span class="p">)</span>
@@ -1157,7 +1134,7 @@ our model.</p>
 <span class="n">_</span> <span class="o">=</span> <a class="sphx-glr-backref-module-matplotlib-pyplot sphx-glr-backref-type-py-function" href="https://matplotlib.org/stable/api/_as_gen/matplotlib.pyplot.title.html#matplotlib.pyplot.title" title="matplotlib.pyplot.title"><span class="n">plt</span><span class="o">.</span><span class="n">title</span></a><span class="p">(</span><span class="s2">"Comparison between kernel ridge and gaussian process regressor"</span><span class="p">)</span>
 </pre></div>
 </div>
-<img alt="Comparison between kernel ridge and gaussian process regressor" class="sphx-glr-single-img" src="../../_images/sphx_glr_plot_compare_gpr_krr_005.png" srcset="../../_images/sphx_glr_plot_compare_gpr_krr_005.png"/><p>We observe that the results of the kernel ridge and the Gaussian process
+<p>We observe that the results of the kernel ridge and the Gaussian process
 regressor are close. However, the Gaussian process regressor also provide
 an uncertainty information that is not available with a kernel ridge.
 Due to the probabilistic formulation of the target functions, the
@@ -1227,12 +1204,11 @@ kernel.</p>
 <span class="n">_</span> <span class="o">=</span> <a class="sphx-glr-backref-module-matplotlib-pyplot sphx-glr-backref-type-py-function" href="https://matplotlib.org/stable/api/_as_gen/matplotlib.pyplot.title.html#matplotlib.pyplot.title" title="matplotlib.pyplot.title"><span class="n">plt</span><span class="o">.</span><span class="n">title</span></a><span class="p">(</span><span class="s2">"Effect of using a radial basis function kernel"</span><span class="p">)</span>
 </pre></div>
 </div>
-<img alt="Effect of using a radial basis function kernel" class="sphx-glr-single-img" src="../../_images/sphx_glr_plot_compare_gpr_krr_006.png" srcset="../../_images/sphx_glr_plot_compare_gpr_krr_006.png"/><p>The effect of using a radial basis function kernel will attenuate the
+<p>The effect of using a radial basis function kernel will attenuate the
 periodicity effect once that no sample are available in the training.
 As testing samples get further away from the training ones, predictions
 are converging towards their mean and their standard deviation
 also increases.</p>
-<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> (0 minutes 4.135 seconds)</p>
 
 <p class="rubric">Related examples</p>
 <div class="sphx-glr-thumbnails"><div class="sphx-glr-thumbcontainer" tooltip="A simple one-dimensional regression example computed in two different ways:"><img alt="" src="../../_images/sphx_glr_plot_gpr_noisy_targets_thumb.png"/>

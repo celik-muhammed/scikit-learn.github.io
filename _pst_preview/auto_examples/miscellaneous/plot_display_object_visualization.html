@@ -13,7 +13,7 @@
 <meta content="https://scikit-learn.org/stable/_static/scikit-learn-logo-small.png" property="og:image"/>
 <meta content="scikit-learn" property="og:image:alt"/>
 <meta content="In this example, we will construct display objects, ConfusionMatrixDisplay, RocCurveDisplay, and PrecisionRecallDisplay directly from their respective metrics. This is an alternative to using their..." name="description"/>
-<title>Visualizations with Display Objects — scikit-learn 1.5.dev0 documentation</title>
+<title>Visualizations with Display Objects — scikit-learn 1.6.dev0 documentation</title>
 <script data-cfasync="false">
     document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
     document.documentElement.dataset.theme = localStorage.getItem("theme") || "light";
@@ -42,8 +42,8 @@
 <link as="script" href="../../_static/scripts/bootstrap.js?digest=8d27b9dea8ad943066ae" rel="preload"/>
 <link as="script" href="../../_static/scripts/pydata-sphinx-theme.js?digest=8d27b9dea8ad943066ae" rel="preload"/>
 <script src="../../_static/vendor/fontawesome/6.5.1/js/all.min.js?digest=8d27b9dea8ad943066ae"></script>
-<script src="../../_static/documentation_options.js?v=a2c36881"></script>
-<script src="../../_static/doctools.js?v=888ff710"></script>
+<script src="../../_static/documentation_options.js?v=d875d36e"></script>
+<script src="../../_static/doctools.js?v=9a2dae69"></script>
 <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
 <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
 <script src="../../_static/copybutton.js?v=97f0b27d"></script>
@@ -53,8 +53,8 @@
 <script>DOCUMENTATION_OPTIONS.pagename = 'auto_examples/miscellaneous/plot_display_object_visualization';</script>
 <script>
         DOCUMENTATION_OPTIONS.theme_version = '0.15.2';
-        DOCUMENTATION_OPTIONS.theme_switcher_json_url = 'https://scikit-learn.org/_pst_preview/versions.json';
-        DOCUMENTATION_OPTIONS.theme_switcher_version_match = '1.5.dev0';
+        DOCUMENTATION_OPTIONS.theme_switcher_json_url = 'https://scikit-learn.org/_pst_preview/_static/versions.json';
+        DOCUMENTATION_OPTIONS.theme_switcher_version_match = '1.6.dev0';
         DOCUMENTATION_OPTIONS.show_version_warning_banner = true;
         </script>
 <script src="../../_static/scripts/dropdown.js?v=12d599f8"></script>
@@ -549,7 +549,6 @@ document.write(`
 <li class="toctree-l2"><a class="reference internal" href="../applications/plot_face_recognition.html">Faces recognition example using eigenfaces and SVMs</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../applications/plot_digits_denoising.html">Image denoising using kernel PCA</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../applications/plot_time_series_lagged_features.html">Lagged features for time series forecasting</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../applications/svm_gui.html">Libsvm GUI</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../applications/plot_model_complexity_influence.html">Model Complexity Influence</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../applications/plot_out_of_core_classification.html">Out-of-core classification of text documents</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../applications/plot_outlier_detection_wine.html">Outlier detection on a real data set</a></li>
@@ -694,6 +693,8 @@ document.write(`
 <li class="toctree-l2"><a class="reference internal" href="../model_selection/plot_cv_predict.html">Plotting Cross-Validated Predictions</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../model_selection/plot_learning_curve.html">Plotting Learning Curves and Checking Models’ Scalability</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../model_selection/plot_validation_curve.html">Plotting Validation Curves</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../model_selection/plot_tuned_decision_threshold.html">Post-hoc tuning the cut-off point of decision function</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../model_selection/plot_cost_sensitive_learning.html">Post-tuning the decision threshold for cost-sensitive learning</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../model_selection/plot_precision_recall.html">Precision-Recall</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../model_selection/plot_roc_crossval.html">Receiver Operating Characteristic (ROC) with cross validation</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../model_selection/plot_grid_search_text_feature_extraction.html">Sample pipeline for text feature extraction and evaluation</a></li>
@@ -858,417 +859,7 @@ fitted with the train dataset.</p>
 <span class="n">clf</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X_train</span><span class="p">,</span> <span class="n">y_train</span><span class="p">)</span>
 </pre></div>
 </div>
-<div class="output_subarea output_html rendered_html output_result">
-<style>#sk-container-id-53 {
-  /* Definition of color scheme common for light and dark mode */
-  --sklearn-color-text: black;
-  --sklearn-color-line: gray;
-  /* Definition of color scheme for unfitted estimators */
-  --sklearn-color-unfitted-level-0: #fff5e6;
-  --sklearn-color-unfitted-level-1: #f6e4d2;
-  --sklearn-color-unfitted-level-2: #ffe0b3;
-  --sklearn-color-unfitted-level-3: chocolate;
-  /* Definition of color scheme for fitted estimators */
-  --sklearn-color-fitted-level-0: #f0f8ff;
-  --sklearn-color-fitted-level-1: #d4ebff;
-  --sklearn-color-fitted-level-2: #b3dbfd;
-  --sklearn-color-fitted-level-3: cornflowerblue;
-
-  /* Specific color for light theme */
-  --sklearn-color-text-on-default-background: var(--sg-text-color, var(--theme-code-foreground, var(--jp-content-font-color1, black)));
-  --sklearn-color-background: var(--sg-background-color, var(--theme-background, var(--jp-layout-color0, white)));
-  --sklearn-color-border-box: var(--sg-text-color, var(--theme-code-foreground, var(--jp-content-font-color1, black)));
-  --sklearn-color-icon: #696969;
-
-  @media (prefers-color-scheme: dark) {
-    /* Redefinition of color scheme for dark theme */
-    --sklearn-color-text-on-default-background: var(--sg-text-color, var(--theme-code-foreground, var(--jp-content-font-color1, white)));
-    --sklearn-color-background: var(--sg-background-color, var(--theme-background, var(--jp-layout-color0, #111)));
-    --sklearn-color-border-box: var(--sg-text-color, var(--theme-code-foreground, var(--jp-content-font-color1, white)));
-    --sklearn-color-icon: #878787;
-  }
-}
-
-#sk-container-id-53 {
-  color: var(--sklearn-color-text);
-}
-
-#sk-container-id-53 pre {
-  padding: 0;
-}
-
-#sk-container-id-53 input.sk-hidden--visually {
-  border: 0;
-  clip: rect(1px 1px 1px 1px);
-  clip: rect(1px, 1px, 1px, 1px);
-  height: 1px;
-  margin: -1px;
-  overflow: hidden;
-  padding: 0;
-  position: absolute;
-  width: 1px;
-}
-
-#sk-container-id-53 div.sk-dashed-wrapped {
-  border: 1px dashed var(--sklearn-color-line);
-  margin: 0 0.4em 0.5em 0.4em;
-  box-sizing: border-box;
-  padding-bottom: 0.4em;
-  background-color: var(--sklearn-color-background);
-}
-
-#sk-container-id-53 div.sk-container {
-  /* jupyter's `normalize.less` sets `[hidden] { display: none; }`
-     but bootstrap.min.css set `[hidden] { display: none !important; }`
-     so we also need the `!important` here to be able to override the
-     default hidden behavior on the sphinx rendered scikit-learn.org.
-     See: https://github.com/scikit-learn/scikit-learn/issues/21755 */
-  display: inline-block !important;
-  position: relative;
-}
-
-#sk-container-id-53 div.sk-text-repr-fallback {
-  display: none;
-}
-
-div.sk-parallel-item,
-div.sk-serial,
-div.sk-item {
-  /* draw centered vertical line to link estimators */
-  background-image: linear-gradient(var(--sklearn-color-text-on-default-background), var(--sklearn-color-text-on-default-background));
-  background-size: 2px 100%;
-  background-repeat: no-repeat;
-  background-position: center center;
-}
-
-/* Parallel-specific style estimator block */
-
-#sk-container-id-53 div.sk-parallel-item::after {
-  content: "";
-  width: 100%;
-  border-bottom: 2px solid var(--sklearn-color-text-on-default-background);
-  flex-grow: 1;
-}
-
-#sk-container-id-53 div.sk-parallel {
-  display: flex;
-  align-items: stretch;
-  justify-content: center;
-  background-color: var(--sklearn-color-background);
-  position: relative;
-}
-
-#sk-container-id-53 div.sk-parallel-item {
-  display: flex;
-  flex-direction: column;
-}
-
-#sk-container-id-53 div.sk-parallel-item:first-child::after {
-  align-self: flex-end;
-  width: 50%;
-}
-
-#sk-container-id-53 div.sk-parallel-item:last-child::after {
-  align-self: flex-start;
-  width: 50%;
-}
-
-#sk-container-id-53 div.sk-parallel-item:only-child::after {
-  width: 0;
-}
-
-/* Serial-specific style estimator block */
-
-#sk-container-id-53 div.sk-serial {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  background-color: var(--sklearn-color-background);
-  padding-right: 1em;
-  padding-left: 1em;
-}
-
-
-/* Toggleable style: style used for estimator/Pipeline/ColumnTransformer box that is
-clickable and can be expanded/collapsed.
-- Pipeline and ColumnTransformer use this feature and define the default style
-- Estimators will overwrite some part of the style using the `sk-estimator` class
-*/
-
-/* Pipeline and ColumnTransformer style (default) */
-
-#sk-container-id-53 div.sk-toggleable {
-  /* Default theme specific background. It is overwritten whether we have a
-  specific estimator or a Pipeline/ColumnTransformer */
-  background-color: var(--sklearn-color-background);
-}
-
-/* Toggleable label */
-#sk-container-id-53 label.sk-toggleable__label {
-  cursor: pointer;
-  display: block;
-  width: 100%;
-  margin-bottom: 0;
-  padding: 0.5em;
-  box-sizing: border-box;
-  text-align: center;
-}
-
-#sk-container-id-53 label.sk-toggleable__label-arrow:before {
-  /* Arrow on the left of the label */
-  content: "▸";
-  float: left;
-  margin-right: 0.25em;
-  color: var(--sklearn-color-icon);
-}
-
-#sk-container-id-53 label.sk-toggleable__label-arrow:hover:before {
-  color: var(--sklearn-color-text);
-}
-
-/* Toggleable content - dropdown */
-
-#sk-container-id-53 div.sk-toggleable__content {
-  max-height: 0;
-  max-width: 0;
-  overflow: hidden;
-  text-align: left;
-  /* unfitted */
-  background-color: var(--sklearn-color-unfitted-level-0);
-}
-
-#sk-container-id-53 div.sk-toggleable__content.fitted {
-  /* fitted */
-  background-color: var(--sklearn-color-fitted-level-0);
-}
-
-#sk-container-id-53 div.sk-toggleable__content pre {
-  margin: 0.2em;
-  border-radius: 0.25em;
-  color: var(--sklearn-color-text);
-  /* unfitted */
-  background-color: var(--sklearn-color-unfitted-level-0);
-}
-
-#sk-container-id-53 div.sk-toggleable__content.fitted pre {
-  /* unfitted */
-  background-color: var(--sklearn-color-fitted-level-0);
-}
-
-#sk-container-id-53 input.sk-toggleable__control:checked~div.sk-toggleable__content {
-  /* Expand drop-down */
-  max-height: 200px;
-  max-width: 100%;
-  overflow: auto;
-}
-
-#sk-container-id-53 input.sk-toggleable__control:checked~label.sk-toggleable__label-arrow:before {
-  content: "▾";
-}
-
-/* Pipeline/ColumnTransformer-specific style */
-
-#sk-container-id-53 div.sk-label input.sk-toggleable__control:checked~label.sk-toggleable__label {
-  color: var(--sklearn-color-text);
-  background-color: var(--sklearn-color-unfitted-level-2);
-}
-
-#sk-container-id-53 div.sk-label.fitted input.sk-toggleable__control:checked~label.sk-toggleable__label {
-  background-color: var(--sklearn-color-fitted-level-2);
-}
-
-/* Estimator-specific style */
-
-/* Colorize estimator box */
-#sk-container-id-53 div.sk-estimator input.sk-toggleable__control:checked~label.sk-toggleable__label {
-  /* unfitted */
-  background-color: var(--sklearn-color-unfitted-level-2);
-}
-
-#sk-container-id-53 div.sk-estimator.fitted input.sk-toggleable__control:checked~label.sk-toggleable__label {
-  /* fitted */
-  background-color: var(--sklearn-color-fitted-level-2);
-}
-
-#sk-container-id-53 div.sk-label label.sk-toggleable__label,
-#sk-container-id-53 div.sk-label label {
-  /* The background is the default theme color */
-  color: var(--sklearn-color-text-on-default-background);
-}
-
-/* On hover, darken the color of the background */
-#sk-container-id-53 div.sk-label:hover label.sk-toggleable__label {
-  color: var(--sklearn-color-text);
-  background-color: var(--sklearn-color-unfitted-level-2);
-}
-
-/* Label box, darken color on hover, fitted */
-#sk-container-id-53 div.sk-label.fitted:hover label.sk-toggleable__label.fitted {
-  color: var(--sklearn-color-text);
-  background-color: var(--sklearn-color-fitted-level-2);
-}
-
-/* Estimator label */
-
-#sk-container-id-53 div.sk-label label {
-  font-family: monospace;
-  font-weight: bold;
-  display: inline-block;
-  line-height: 1.2em;
-}
-
-#sk-container-id-53 div.sk-label-container {
-  text-align: center;
-}
-
-/* Estimator-specific */
-#sk-container-id-53 div.sk-estimator {
-  font-family: monospace;
-  border: 1px dotted var(--sklearn-color-border-box);
-  border-radius: 0.25em;
-  box-sizing: border-box;
-  margin-bottom: 0.5em;
-  /* unfitted */
-  background-color: var(--sklearn-color-unfitted-level-0);
-}
-
-#sk-container-id-53 div.sk-estimator.fitted {
-  /* fitted */
-  background-color: var(--sklearn-color-fitted-level-0);
-}
-
-/* on hover */
-#sk-container-id-53 div.sk-estimator:hover {
-  /* unfitted */
-  background-color: var(--sklearn-color-unfitted-level-2);
-}
-
-#sk-container-id-53 div.sk-estimator.fitted:hover {
-  /* fitted */
-  background-color: var(--sklearn-color-fitted-level-2);
-}
-
-/* Specification for estimator info (e.g. "i" and "?") */
-
-/* Common style for "i" and "?" */
-
-.sk-estimator-doc-link,
-a:link.sk-estimator-doc-link,
-a:visited.sk-estimator-doc-link {
-  float: right;
-  font-size: smaller;
-  line-height: 1em;
-  font-family: monospace;
-  background-color: var(--sklearn-color-background);
-  border-radius: 1em;
-  height: 1em;
-  width: 1em;
-  text-decoration: none !important;
-  margin-left: 1ex;
-  /* unfitted */
-  border: var(--sklearn-color-unfitted-level-1) 1pt solid;
-  color: var(--sklearn-color-unfitted-level-1);
-}
-
-.sk-estimator-doc-link.fitted,
-a:link.sk-estimator-doc-link.fitted,
-a:visited.sk-estimator-doc-link.fitted {
-  /* fitted */
-  border: var(--sklearn-color-fitted-level-1) 1pt solid;
-  color: var(--sklearn-color-fitted-level-1);
-}
-
-/* On hover */
-div.sk-estimator:hover .sk-estimator-doc-link:hover,
-.sk-estimator-doc-link:hover,
-div.sk-label-container:hover .sk-estimator-doc-link:hover,
-.sk-estimator-doc-link:hover {
-  /* unfitted */
-  background-color: var(--sklearn-color-unfitted-level-3);
-  color: var(--sklearn-color-background);
-  text-decoration: none;
-}
-
-div.sk-estimator.fitted:hover .sk-estimator-doc-link.fitted:hover,
-.sk-estimator-doc-link.fitted:hover,
-div.sk-label-container:hover .sk-estimator-doc-link.fitted:hover,
-.sk-estimator-doc-link.fitted:hover {
-  /* fitted */
-  background-color: var(--sklearn-color-fitted-level-3);
-  color: var(--sklearn-color-background);
-  text-decoration: none;
-}
-
-/* Span, style for the box shown on hovering the info icon */
-.sk-estimator-doc-link span {
-  display: none;
-  z-index: 9999;
-  position: relative;
-  font-weight: normal;
-  right: .2ex;
-  padding: .5ex;
-  margin: .5ex;
-  width: min-content;
-  min-width: 20ex;
-  max-width: 50ex;
-  color: var(--sklearn-color-text);
-  box-shadow: 2pt 2pt 4pt #999;
-  /* unfitted */
-  background: var(--sklearn-color-unfitted-level-0);
-  border: .5pt solid var(--sklearn-color-unfitted-level-3);
-}
-
-.sk-estimator-doc-link.fitted span {
-  /* fitted */
-  background: var(--sklearn-color-fitted-level-0);
-  border: var(--sklearn-color-fitted-level-3);
-}
-
-.sk-estimator-doc-link:hover span {
-  display: block;
-}
-
-/* "?"-specific style due to the `<a>` HTML tag */
-
-#sk-container-id-53 a.estimator_doc_link {
-  float: right;
-  font-size: 1rem;
-  line-height: 1em;
-  font-family: monospace;
-  background-color: var(--sklearn-color-background);
-  border-radius: 1rem;
-  height: 1rem;
-  width: 1rem;
-  text-decoration: none;
-  /* unfitted */
-  color: var(--sklearn-color-unfitted-level-1);
-  border: var(--sklearn-color-unfitted-level-1) 1pt solid;
-}
-
-#sk-container-id-53 a.estimator_doc_link.fitted {
-  /* fitted */
-  border: var(--sklearn-color-fitted-level-1) 1pt solid;
-  color: var(--sklearn-color-fitted-level-1);
-}
-
-/* On hover */
-#sk-container-id-53 a.estimator_doc_link:hover {
-  /* unfitted */
-  background-color: var(--sklearn-color-unfitted-level-3);
-  color: var(--sklearn-color-background);
-  text-decoration: none;
-}
-
-#sk-container-id-53 a.estimator_doc_link.fitted:hover {
-  /* fitted */
-  background-color: var(--sklearn-color-fitted-level-3);
-}
-</style><div class="sk-top-container" id="sk-container-id-53"><div class="sk-text-repr-fallback"><pre>Pipeline(steps=[('standardscaler', StandardScaler()),
-                ('logisticregression', LogisticRegression(random_state=0))])</pre><b>In a Jupyter environment, please rerun this cell to show the HTML representation or trust the notebook. <br/>On GitHub, the HTML representation is unable to render, please try loading this page with nbviewer.org.</b></div><div class="sk-container" hidden=""><div class="sk-item sk-dashed-wrapped"><div class="sk-label-container"><div class="sk-label fitted sk-toggleable"><input class="sk-toggleable__control sk-hidden--visually" id="sk-estimator-id-225" type="checkbox"/><label class="sk-toggleable__label fitted sk-toggleable__label-arrow fitted" for="sk-estimator-id-225">  Pipeline<a class="sk-estimator-doc-link fitted" href="https://scikit-learn.org/dev/modules/generated/sklearn.pipeline.Pipeline.html" rel="noreferrer" target="_blank">?<span>Documentation for Pipeline</span></a><span class="sk-estimator-doc-link fitted">i<span>Fitted</span></span></label><div class="sk-toggleable__content fitted"><pre>Pipeline(steps=[('standardscaler', StandardScaler()),
-                ('logisticregression', LogisticRegression(random_state=0))])</pre></div> </div></div><div class="sk-serial"><div class="sk-item"><div class="sk-estimator fitted sk-toggleable"><input class="sk-toggleable__control sk-hidden--visually" id="sk-estimator-id-226" type="checkbox"/><label class="sk-toggleable__label fitted sk-toggleable__label-arrow fitted" for="sk-estimator-id-226"> StandardScaler<a class="sk-estimator-doc-link fitted" href="https://scikit-learn.org/dev/modules/generated/sklearn.preprocessing.StandardScaler.html" rel="noreferrer" target="_blank">?<span>Documentation for StandardScaler</span></a></label><div class="sk-toggleable__content fitted"><pre>StandardScaler()</pre></div> </div></div><div class="sk-item"><div class="sk-estimator fitted sk-toggleable"><input class="sk-toggleable__control sk-hidden--visually" id="sk-estimator-id-227" type="checkbox"/><label class="sk-toggleable__label fitted sk-toggleable__label-arrow fitted" for="sk-estimator-id-227"> LogisticRegression<a class="sk-estimator-doc-link fitted" href="https://scikit-learn.org/dev/modules/generated/sklearn.linear_model.LogisticRegression.html" rel="noreferrer" target="_blank">?<span>Documentation for LogisticRegression</span></a></label><div class="sk-toggleable__content fitted"><pre>LogisticRegression(random_state=0)</pre></div> </div></div></div></div></div></div>
-</div>
-<br/>
-<br/><section id="create-confusionmatrixdisplay">
+<section id="create-confusionmatrixdisplay">
 <h3>Create <a class="reference internal" href="../../modules/generated/sklearn.metrics.ConfusionMatrixDisplay.html#sklearn.metrics.ConfusionMatrixDisplay" title="sklearn.metrics.ConfusionMatrixDisplay"><code class="xref py py-class docutils literal notranslate"><span class="pre">ConfusionMatrixDisplay</span></code></a><a class="headerlink" href="#create-confusionmatrixdisplay" title="Link to this heading">#</a></h3>
 <blockquote>
 <div><p>With the fitted model, we compute the predictions of the model on the test
@@ -1283,7 +874,7 @@ is plotted with the <a class="reference internal" href="../../modules/generated/
 <span class="n">cm_display</span> <span class="o">=</span> <a class="sphx-glr-backref-module-sklearn-metrics sphx-glr-backref-type-py-class sphx-glr-backref-instance" href="../../modules/generated/sklearn.metrics.ConfusionMatrixDisplay.html#sklearn.metrics.ConfusionMatrixDisplay" title="sklearn.metrics.ConfusionMatrixDisplay"><span class="n">ConfusionMatrixDisplay</span></a><span class="p">(</span><span class="n">cm</span><span class="p">)</span><span class="o">.</span><span class="n">plot</span><span class="p">()</span>
 </pre></div>
 </div>
-<img alt="plot display object visualization" class="sphx-glr-single-img" src="../../_images/sphx_glr_plot_display_object_visualization_001.png" srcset="../../_images/sphx_glr_plot_display_object_visualization_001.png"/></section>
+</section>
 <section id="create-roccurvedisplay">
 <h3>Create <a class="reference internal" href="../../modules/generated/sklearn.metrics.RocCurveDisplay.html#sklearn.metrics.RocCurveDisplay" title="sklearn.metrics.RocCurveDisplay"><code class="xref py py-class docutils literal notranslate"><span class="pre">RocCurveDisplay</span></code></a><a class="headerlink" href="#create-roccurvedisplay" title="Link to this heading">#</a></h3>
 <blockquote>
@@ -1299,7 +890,7 @@ a decision function, we will use it to plot the roc curve:</p>
 <span class="n">roc_display</span> <span class="o">=</span> <a class="sphx-glr-backref-module-sklearn-metrics sphx-glr-backref-type-py-class sphx-glr-backref-instance" href="../../modules/generated/sklearn.metrics.RocCurveDisplay.html#sklearn.metrics.RocCurveDisplay" title="sklearn.metrics.RocCurveDisplay"><span class="n">RocCurveDisplay</span></a><span class="p">(</span><span class="n">fpr</span><span class="o">=</span><span class="n">fpr</span><span class="p">,</span> <span class="n">tpr</span><span class="o">=</span><span class="n">tpr</span><span class="p">)</span><span class="o">.</span><span class="n">plot</span><span class="p">()</span>
 </pre></div>
 </div>
-<img alt="plot display object visualization" class="sphx-glr-single-img" src="../../_images/sphx_glr_plot_display_object_visualization_002.png" srcset="../../_images/sphx_glr_plot_display_object_visualization_002.png"/></section>
+</section>
 <section id="create-precisionrecalldisplay">
 <h3>Create <a class="reference internal" href="../../modules/generated/sklearn.metrics.PrecisionRecallDisplay.html#sklearn.metrics.PrecisionRecallDisplay" title="sklearn.metrics.PrecisionRecallDisplay"><code class="xref py py-class docutils literal notranslate"><span class="pre">PrecisionRecallDisplay</span></code></a><a class="headerlink" href="#create-precisionrecalldisplay" title="Link to this heading">#</a></h3>
 <blockquote>
@@ -1312,7 +903,7 @@ the prevision sections.</p>
 <span class="n">pr_display</span> <span class="o">=</span> <a class="sphx-glr-backref-module-sklearn-metrics sphx-glr-backref-type-py-class sphx-glr-backref-instance" href="../../modules/generated/sklearn.metrics.PrecisionRecallDisplay.html#sklearn.metrics.PrecisionRecallDisplay" title="sklearn.metrics.PrecisionRecallDisplay"><span class="n">PrecisionRecallDisplay</span></a><span class="p">(</span><span class="n">precision</span><span class="o">=</span><span class="n">prec</span><span class="p">,</span> <span class="n">recall</span><span class="o">=</span><span class="n">recall</span><span class="p">)</span><span class="o">.</span><span class="n">plot</span><span class="p">()</span>
 </pre></div>
 </div>
-<img alt="plot display object visualization" class="sphx-glr-single-img" src="../../_images/sphx_glr_plot_display_object_visualization_003.png" srcset="../../_images/sphx_glr_plot_display_object_visualization_003.png"/></section>
+</section>
 <section id="combining-the-display-objects-into-a-single-plot">
 <h3>Combining the display objects into a single plot<a class="headerlink" href="#combining-the-display-objects-into-a-single-plot" title="Link to this heading">#</a></h3>
 <blockquote>
@@ -1330,7 +921,6 @@ row.</p>
 <a class="sphx-glr-backref-module-matplotlib-pyplot sphx-glr-backref-type-py-function" href="https://matplotlib.org/stable/api/_as_gen/matplotlib.pyplot.show.html#matplotlib.pyplot.show" title="matplotlib.pyplot.show"><span class="n">plt</span><span class="o">.</span><span class="n">show</span></a><span class="p">()</span>
 </pre></div>
 </div>
-<img alt="plot display object visualization" class="sphx-glr-single-img" src="../../_images/sphx_glr_plot_display_object_visualization_004.png" srcset="../../_images/sphx_glr_plot_display_object_visualization_004.png"/><p class="sphx-glr-timing"><strong>Total running time of the script:</strong> (0 minutes 1.648 seconds)</p>
 
 <p class="rubric">Related examples</p>
 <div class="sphx-glr-thumbnails"><div class="sphx-glr-thumbcontainer" tooltip="Example of Precision-Recall metric to evaluate classifier output quality."><img alt="" src="../../_images/sphx_glr_plot_precision_recall_thumb.png"/>
@@ -1342,9 +932,9 @@ row.</p>
 </div><div class="sphx-glr-thumbcontainer" tooltip="This example describes the use of the Receiver Operating Characteristic (ROC) metric to evaluat..."><img alt="" src="../../_images/sphx_glr_plot_roc_thumb.png"/>
 <p><a class="reference internal" href="../model_selection/plot_roc.html#sphx-glr-auto-examples-model-selection-plot-roc-py"><span class="std std-ref">Multiclass Receiver Operating Characteristic (ROC)</span></a></p>
 <div class="sphx-glr-thumbnail-title">Multiclass Receiver Operating Characteristic (ROC)</div>
-</div><div class="sphx-glr-thumbcontainer" tooltip="This example presents how to estimate and visualize the variance of the Receiver Operating Char..."><img alt="" src="../../_images/sphx_glr_plot_roc_crossval_thumb.png"/>
-<p><a class="reference internal" href="../model_selection/plot_roc_crossval.html#sphx-glr-auto-examples-model-selection-plot-roc-crossval-py"><span class="std std-ref">Receiver Operating Characteristic (ROC) with cross validation</span></a></p>
-<div class="sphx-glr-thumbnail-title">Receiver Operating Characteristic (ROC) with cross validation</div>
+</div><div class="sphx-glr-thumbcontainer" tooltip="Once a classifier is trained, the output of the predict method outputs class label predictions ..."><img alt="" src="../../_images/sphx_glr_plot_cost_sensitive_learning_thumb.png"/>
+<p><a class="reference internal" href="../model_selection/plot_cost_sensitive_learning.html#sphx-glr-auto-examples-model-selection-plot-cost-sensitive-learning-py"><span class="std std-ref">Post-tuning the decision threshold for cost-sensitive learning</span></a></p>
+<div class="sphx-glr-thumbnail-title">Post-tuning the decision threshold for cost-sensitive learning</div>
 </div></div><p class="sphx-glr-signature"><a class="reference external" href="https://sphinx-gallery.github.io">Gallery generated by Sphinx-Gallery</a></p>
 </section>
 </section>

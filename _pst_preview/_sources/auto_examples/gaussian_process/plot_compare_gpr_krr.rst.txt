@@ -11,7 +11,7 @@
         :class: sphx-glr-download-link-note
 
         :ref:`Go to the end <sphx_glr_download_auto_examples_gaussian_process_plot_compare_gpr_krr.py>`
-        to download the full example code or to run this example in your browser via JupyterLite or Binder
+        to download the full example code. or to run this example in your browser via JupyterLite or Binder
 
 .. rst-class:: sphx-glr-example-title
 
@@ -53,12 +53,6 @@ tuning the kernel hyperparameters.
     # License: BSD 3 clause
 
 
-
-
-
-
-
-
 .. GENERATED FROM PYTHON SOURCE LINES 33-39
 
 Generating a dataset
@@ -79,12 +73,6 @@ vector and compute its sine. Note that the period of this sine is thus
     target = np.sin(data).ravel()
 
 
-
-
-
-
-
-
 .. GENERATED FROM PYTHON SOURCE LINES 46-51
 
 Now, we can imagine a scenario where we get observations from this true
@@ -102,12 +90,6 @@ process. However, we will add some challenges:
     training_noisy_target = target[training_sample_indices] + 0.5 * rng.randn(
         len(training_sample_indices)
     )
-
-
-
-
-
-
 
 
 .. GENERATED FROM PYTHON SOURCE LINES 58-59
@@ -134,17 +116,6 @@ Let's plot the true signal and the noisy measurements available for training.
         "Illustration of the true generative process and \n"
         "noisy measurements available during training"
     )
-
-
-
-
-.. image-sg:: /auto_examples/gaussian_process/images/sphx_glr_plot_compare_gpr_krr_001.png
-   :alt: Illustration of the true generative process and  noisy measurements available during training
-   :srcset: /auto_examples/gaussian_process/images/sphx_glr_plot_compare_gpr_krr_001.png
-   :class: sphx-glr-single-img
-
-
-
 
 
 .. GENERATED FROM PYTHON SOURCE LINES 77-83
@@ -176,17 +147,6 @@ predictions of this model on our dataset.
     plt.xlabel("data")
     plt.ylabel("target")
     _ = plt.title("Limitation of a linear model such as ridge")
-
-
-
-
-.. image-sg:: /auto_examples/gaussian_process/images/sphx_glr_plot_compare_gpr_krr_002.png
-   :alt: Limitation of a linear model such as ridge
-   :srcset: /auto_examples/gaussian_process/images/sphx_glr_plot_compare_gpr_krr_002.png
-   :class: sphx-glr-single-img
-
-
-
 
 
 .. GENERATED FROM PYTHON SOURCE LINES 101-127
@@ -236,18 +196,6 @@ Thus, let's use such a :class:`~sklearn.kernel_ridge.KernelRidge`.
     )
 
 
-
-
-
-.. rst-class:: sphx-glr-script-out
-
- .. code-block:: none
-
-    Fitting KernelRidge with default kernel: 0.001 seconds
-
-
-
-
 .. GENERATED FROM PYTHON SOURCE LINES 141-163
 
 .. code-block:: Python
@@ -275,17 +223,6 @@ Thus, let's use such a :class:`~sklearn.kernel_ridge.KernelRidge`.
     )
 
 
-
-
-.. image-sg:: /auto_examples/gaussian_process/images/sphx_glr_plot_compare_gpr_krr_003.png
-   :alt: Kernel ridge regression with an exponential sine squared  kernel using default hyperparameters
-   :srcset: /auto_examples/gaussian_process/images/sphx_glr_plot_compare_gpr_krr_003.png
-   :class: sphx-glr-single-img
-
-
-
-
-
 .. GENERATED FROM PYTHON SOURCE LINES 164-166
 
 This fitted model is not accurate. Indeed, we did not set the parameters of
@@ -296,18 +233,6 @@ the kernel and instead used the default ones. We can inspect them.
 .. code-block:: Python
 
     kernel_ridge.kernel
-
-
-
-
-
-.. rst-class:: sphx-glr-script-out
-
- .. code-block:: none
-
-
-    ExpSineSquared(length_scale=1, periodicity=1)
-
 
 
 .. GENERATED FROM PYTHON SOURCE LINES 169-178
@@ -346,18 +271,6 @@ parameter and the kernel parameters.
     print(f"Time for KernelRidge fitting: {time.time() - start_time:.3f} seconds")
 
 
-
-
-
-.. rst-class:: sphx-glr-script-out
-
- .. code-block:: none
-
-    Time for KernelRidge fitting: 3.513 seconds
-
-
-
-
 .. GENERATED FROM PYTHON SOURCE LINES 200-203
 
 Fitting the model is now more computationally expensive since we have to try
@@ -369,18 +282,6 @@ hyperparameters found to get some intuitions.
 .. code-block:: Python
 
     kernel_ridge_tuned.best_params_
-
-
-
-
-
-.. rst-class:: sphx-glr-script-out
-
- .. code-block:: none
-
-
-    {'alpha': 1.9915849773450223, 'kernel__length_scale': 0.7986499491396727, 'kernel__periodicity': 6.607275806426107}
-
 
 
 .. GENERATED FROM PYTHON SOURCE LINES 206-209
@@ -396,18 +297,6 @@ defaults. We also see that the periodicity is closer to the expected value:
     start_time = time.time()
     predictions_kr = kernel_ridge_tuned.predict(data)
     print(f"Time for KernelRidge predict: {time.time() - start_time:.3f} seconds")
-
-
-
-
-
-.. rst-class:: sphx-glr-script-out
-
- .. code-block:: none
-
-    Time for KernelRidge predict: 0.001 seconds
-
-
 
 
 .. GENERATED FROM PYTHON SOURCE LINES 214-236
@@ -435,17 +324,6 @@ defaults. We also see that the periodicity is closer to the expected value:
         "Kernel ridge regression with an exponential sine squared\n "
         "kernel using tuned hyperparameters"
     )
-
-
-
-
-.. image-sg:: /auto_examples/gaussian_process/images/sphx_glr_plot_compare_gpr_krr_004.png
-   :alt: Kernel ridge regression with an exponential sine squared  kernel using tuned hyperparameters
-   :srcset: /auto_examples/gaussian_process/images/sphx_glr_plot_compare_gpr_krr_004.png
-   :class: sphx-glr-single-img
-
-
-
 
 
 .. GENERATED FROM PYTHON SOURCE LINES 237-251
@@ -483,18 +361,6 @@ estimate the noise in the dataset.
     )
 
 
-
-
-
-.. rst-class:: sphx-glr-script-out
-
- .. code-block:: none
-
-    Time for GaussianProcessRegressor fitting: 0.031 seconds
-
-
-
-
 .. GENERATED FROM PYTHON SOURCE LINES 265-268
 
 The computation cost of training a Gaussian process is much less than the
@@ -506,18 +372,6 @@ the kernels that we computed.
 .. code-block:: Python
 
     gaussian_process.kernel_
-
-
-
-
-
-.. rst-class:: sphx-glr-script-out
-
- .. code-block:: none
-
-
-    0.675**2 * ExpSineSquared(length_scale=1.34, periodicity=6.57) + WhiteKernel(noise_level=0.182)
-
 
 
 .. GENERATED FROM PYTHON SOURCE LINES 271-275
@@ -539,18 +393,6 @@ our model.
     print(
         f"Time for GaussianProcessRegressor predict: {time.time() - start_time:.3f} seconds"
     )
-
-
-
-
-
-.. rst-class:: sphx-glr-script-out
-
- .. code-block:: none
-
-    Time for GaussianProcessRegressor predict: 0.002 seconds
-
-
 
 
 .. GENERATED FROM PYTHON SOURCE LINES 285-320
@@ -591,17 +433,6 @@ our model.
     plt.xlabel("data")
     plt.ylabel("target")
     _ = plt.title("Comparison between kernel ridge and gaussian process regressor")
-
-
-
-
-.. image-sg:: /auto_examples/gaussian_process/images/sphx_glr_plot_compare_gpr_krr_005.png
-   :alt: Comparison between kernel ridge and gaussian process regressor
-   :srcset: /auto_examples/gaussian_process/images/sphx_glr_plot_compare_gpr_krr_005.png
-   :class: sphx-glr-single-img
-
-
-
 
 
 .. GENERATED FROM PYTHON SOURCE LINES 321-344
@@ -647,12 +478,6 @@ kernel.
     )
 
 
-
-
-
-
-
-
 .. GENERATED FROM PYTHON SOURCE LINES 357-392
 
 .. code-block:: Python
@@ -693,17 +518,6 @@ kernel.
     _ = plt.title("Effect of using a radial basis function kernel")
 
 
-
-
-.. image-sg:: /auto_examples/gaussian_process/images/sphx_glr_plot_compare_gpr_krr_006.png
-   :alt: Effect of using a radial basis function kernel
-   :srcset: /auto_examples/gaussian_process/images/sphx_glr_plot_compare_gpr_krr_006.png
-   :class: sphx-glr-single-img
-
-
-
-
-
 .. GENERATED FROM PYTHON SOURCE LINES 393-398
 
 The effect of using a radial basis function kernel will attenuate the
@@ -711,11 +525,6 @@ periodicity effect once that no sample are available in the training.
 As testing samples get further away from the training ones, predictions
 are converging towards their mean and their standard deviation
 also increases.
-
-
-.. rst-class:: sphx-glr-timing
-
-   **Total running time of the script:** (0 minutes 4.135 seconds)
 
 
 .. _sphx_glr_download_auto_examples_gaussian_process_plot_compare_gpr_krr.py:

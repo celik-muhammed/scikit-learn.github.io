@@ -13,7 +13,7 @@
 <meta content="https://scikit-learn.org/stable/_static/scikit-learn-logo-small.png" property="og:image"/>
 <meta content="scikit-learn" property="og:image:alt"/>
 <meta content="This example illustrates how quantile regression can predict non-trivial conditional quantiles. The left figure shows the case when the error distribution is normal, but has non-constant variance, ..." name="description"/>
-<title>Quantile regression — scikit-learn 1.5.dev0 documentation</title>
+<title>Quantile regression — scikit-learn 1.6.dev0 documentation</title>
 <script data-cfasync="false">
     document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
     document.documentElement.dataset.theme = localStorage.getItem("theme") || "light";
@@ -42,8 +42,8 @@
 <link as="script" href="../../_static/scripts/bootstrap.js?digest=8d27b9dea8ad943066ae" rel="preload"/>
 <link as="script" href="../../_static/scripts/pydata-sphinx-theme.js?digest=8d27b9dea8ad943066ae" rel="preload"/>
 <script src="../../_static/vendor/fontawesome/6.5.1/js/all.min.js?digest=8d27b9dea8ad943066ae"></script>
-<script src="../../_static/documentation_options.js?v=a2c36881"></script>
-<script src="../../_static/doctools.js?v=888ff710"></script>
+<script src="../../_static/documentation_options.js?v=d875d36e"></script>
+<script src="../../_static/doctools.js?v=9a2dae69"></script>
 <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
 <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
 <script src="../../_static/copybutton.js?v=97f0b27d"></script>
@@ -53,8 +53,8 @@
 <script>DOCUMENTATION_OPTIONS.pagename = 'auto_examples/linear_model/plot_quantile_regression';</script>
 <script>
         DOCUMENTATION_OPTIONS.theme_version = '0.15.2';
-        DOCUMENTATION_OPTIONS.theme_switcher_json_url = 'https://scikit-learn.org/_pst_preview/versions.json';
-        DOCUMENTATION_OPTIONS.theme_switcher_version_match = '1.5.dev0';
+        DOCUMENTATION_OPTIONS.theme_switcher_json_url = 'https://scikit-learn.org/_pst_preview/_static/versions.json';
+        DOCUMENTATION_OPTIONS.theme_switcher_version_match = '1.6.dev0';
         DOCUMENTATION_OPTIONS.show_version_warning_banner = true;
         </script>
 <script src="../../_static/scripts/dropdown.js?v=12d599f8"></script>
@@ -549,7 +549,6 @@ document.write(`
 <li class="toctree-l2"><a class="reference internal" href="../applications/plot_face_recognition.html">Faces recognition example using eigenfaces and SVMs</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../applications/plot_digits_denoising.html">Image denoising using kernel PCA</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../applications/plot_time_series_lagged_features.html">Lagged features for time series forecasting</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../applications/svm_gui.html">Libsvm GUI</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../applications/plot_model_complexity_influence.html">Model Complexity Influence</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../applications/plot_out_of_core_classification.html">Out-of-core classification of text documents</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../applications/plot_outlier_detection_wine.html">Outlier detection on a real data set</a></li>
@@ -694,6 +693,8 @@ document.write(`
 <li class="toctree-l2"><a class="reference internal" href="../model_selection/plot_cv_predict.html">Plotting Cross-Validated Predictions</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../model_selection/plot_learning_curve.html">Plotting Learning Curves and Checking Models’ Scalability</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../model_selection/plot_validation_curve.html">Plotting Validation Curves</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../model_selection/plot_tuned_decision_threshold.html">Post-hoc tuning the cut-off point of decision function</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../model_selection/plot_cost_sensitive_learning.html">Post-tuning the decision threshold for cost-sensitive learning</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../model_selection/plot_precision_recall.html">Precision-Recall</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../model_selection/plot_roc_crossval.html">Receiver Operating Characteristic (ROC) with cross validation</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../model_selection/plot_grid_search_text_feature_extraction.html">Sample pipeline for text feature extraction and evaluation</a></li>
@@ -1072,14 +1073,16 @@ equal.</p>
 <span class="n">y_pred_lr</span> <span class="o">=</span> <span class="n">linear_regression</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y_pareto</span><span class="p">)</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">X</span><span class="p">)</span>
 <span class="n">y_pred_qr</span> <span class="o">=</span> <span class="n">quantile_regression</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y_pareto</span><span class="p">)</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">X</span><span class="p">)</span>
 
-<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"""Training error (in-sample performance)</span>
+<span class="nb">print</span><span class="p">(</span>
+    <span class="sa">f</span><span class="s2">"""Training error (in-sample performance)</span>
 <span class="s2">    </span><span class="si">{</span><span class="n">linear_regression</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="si">}</span><span class="s2">:</span>
 <span class="s2">    MAE = </span><span class="si">{</span><a class="sphx-glr-backref-module-sklearn-metrics sphx-glr-backref-type-py-function" href="../../modules/generated/sklearn.metrics.mean_absolute_error.html#sklearn.metrics.mean_absolute_error" title="sklearn.metrics.mean_absolute_error"><span class="n">mean_absolute_error</span></a><span class="p">(</span><span class="n">y_pareto</span><span class="p">,</span><span class="w"> </span><span class="n">y_pred_lr</span><span class="p">)</span><span class="si">:</span><span class="s2">.3f</span><span class="si">}</span>
 <span class="s2">    MSE = </span><span class="si">{</span><a class="sphx-glr-backref-module-sklearn-metrics sphx-glr-backref-type-py-function" href="../../modules/generated/sklearn.metrics.mean_squared_error.html#sklearn.metrics.mean_squared_error" title="sklearn.metrics.mean_squared_error"><span class="n">mean_squared_error</span></a><span class="p">(</span><span class="n">y_pareto</span><span class="p">,</span><span class="w"> </span><span class="n">y_pred_lr</span><span class="p">)</span><span class="si">:</span><span class="s2">.3f</span><span class="si">}</span>
 <span class="s2">    </span><span class="si">{</span><span class="n">quantile_regression</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="si">}</span><span class="s2">:</span>
 <span class="s2">    MAE = </span><span class="si">{</span><a class="sphx-glr-backref-module-sklearn-metrics sphx-glr-backref-type-py-function" href="../../modules/generated/sklearn.metrics.mean_absolute_error.html#sklearn.metrics.mean_absolute_error" title="sklearn.metrics.mean_absolute_error"><span class="n">mean_absolute_error</span></a><span class="p">(</span><span class="n">y_pareto</span><span class="p">,</span><span class="w"> </span><span class="n">y_pred_qr</span><span class="p">)</span><span class="si">:</span><span class="s2">.3f</span><span class="si">}</span>
 <span class="s2">    MSE = </span><span class="si">{</span><a class="sphx-glr-backref-module-sklearn-metrics sphx-glr-backref-type-py-function" href="../../modules/generated/sklearn.metrics.mean_squared_error.html#sklearn.metrics.mean_squared_error" title="sklearn.metrics.mean_squared_error"><span class="n">mean_squared_error</span></a><span class="p">(</span><span class="n">y_pareto</span><span class="p">,</span><span class="w"> </span><span class="n">y_pred_qr</span><span class="p">)</span><span class="si">:</span><span class="s2">.3f</span><span class="si">}</span>
-<span class="s2">    """</span><span class="p">)</span>
+<span class="s2">    """</span>
+<span class="p">)</span>
 </pre></div>
 </div>
 <div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>Training error (in-sample performance)
@@ -1117,14 +1120,16 @@ cross-validation.</p>
     <span class="n">cv</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span>
     <span class="n">scoring</span><span class="o">=</span><span class="p">[</span><span class="s2">"neg_mean_absolute_error"</span><span class="p">,</span> <span class="s2">"neg_mean_squared_error"</span><span class="p">],</span>
 <span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"""Test error (cross-validated performance)</span>
+<span class="nb">print</span><span class="p">(</span>
+    <span class="sa">f</span><span class="s2">"""Test error (cross-validated performance)</span>
 <span class="s2">    </span><span class="si">{</span><span class="n">linear_regression</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="si">}</span><span class="s2">:</span>
 <span class="s2">    MAE = </span><span class="si">{</span><span class="o">-</span><span class="n">cv_results_lr</span><span class="p">[</span><span class="s2">"test_neg_mean_absolute_error"</span><span class="p">]</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span><span class="si">:</span><span class="s2">.3f</span><span class="si">}</span>
 <span class="s2">    MSE = </span><span class="si">{</span><span class="o">-</span><span class="n">cv_results_lr</span><span class="p">[</span><span class="s2">"test_neg_mean_squared_error"</span><span class="p">]</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span><span class="si">:</span><span class="s2">.3f</span><span class="si">}</span>
 <span class="s2">    </span><span class="si">{</span><span class="n">quantile_regression</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="si">}</span><span class="s2">:</span>
 <span class="s2">    MAE = </span><span class="si">{</span><span class="o">-</span><span class="n">cv_results_qr</span><span class="p">[</span><span class="s2">"test_neg_mean_absolute_error"</span><span class="p">]</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span><span class="si">:</span><span class="s2">.3f</span><span class="si">}</span>
 <span class="s2">    MSE = </span><span class="si">{</span><span class="o">-</span><span class="n">cv_results_qr</span><span class="p">[</span><span class="s2">"test_neg_mean_squared_error"</span><span class="p">]</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span><span class="si">:</span><span class="s2">.3f</span><span class="si">}</span>
-<span class="s2">    """</span><span class="p">)</span>
+<span class="s2">    """</span>
+<span class="p">)</span>
 </pre></div>
 </div>
 <div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>Test error (cross-validated performance)
@@ -1137,7 +1142,7 @@ cross-validation.</p>
 </pre></div>
 </div>
 <p>We reach similar conclusions on the out-of-sample evaluation.</p>
-<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> (0 minutes 0.548 seconds)</p>
+<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> (0 minutes 0.535 seconds)</p>
 
 <p class="rubric">Related examples</p>
 <div class="sphx-glr-thumbnails"><div class="sphx-glr-thumbcontainer" tooltip="This example shows how quantile regression can be used to create prediction intervals. See sphx..."><img alt="" src="../../_images/sphx_glr_plot_gradient_boosting_quantile_thumb.png"/>
@@ -1146,7 +1151,7 @@ cross-validation.</p>
 </div><div class="sphx-glr-thumbcontainer" tooltip="We are pleased to announce the release of scikit-learn 1.1! Many bug fixes and improvements wer..."><img alt="" src="../../_images/sphx_glr_plot_release_highlights_1_1_0_thumb.png"/>
 <p><a class="reference internal" href="../release_highlights/plot_release_highlights_1_1_0.html#sphx-glr-auto-examples-release-highlights-plot-release-highlights-1-1-0-py"><span class="std std-ref">Release Highlights for scikit-learn 1.1</span></a></p>
 <div class="sphx-glr-thumbnail-title">Release Highlights for scikit-learn 1.1</div>
-</div><div class="sphx-glr-thumbcontainer" tooltip="This example demonstrates how pandas-engineered lagged features can be used for time series for..."><img alt="" src="../../_images/sphx_glr_plot_time_series_lagged_features_thumb.png"/>
+</div><div class="sphx-glr-thumbcontainer" tooltip="This example demonstrates how Polars-engineered lagged features can be used for time series for..."><img alt="" src="../../_images/sphx_glr_plot_time_series_lagged_features_thumb.png"/>
 <p><a class="reference internal" href="../applications/plot_time_series_lagged_features.html#sphx-glr-auto-examples-applications-plot-time-series-lagged-features-py"><span class="std std-ref">Lagged features for time series forecasting</span></a></p>
 <div class="sphx-glr-thumbnail-title">Lagged features for time series forecasting</div>
 </div><div class="sphx-glr-thumbcontainer" tooltip="This example is meant to illustrate situations where k-means produces unintuitive and possibly ..."><img alt="" src="../../_images/sphx_glr_plot_kmeans_assumptions_thumb.png"/>

@@ -16,7 +16,7 @@
 <meta property="og:image:alt" content="scikit-learn" />
 <meta name="description" content="Partial dependence plots (PDP) and individual conditional expectation (ICE) plots can be used to visualize and analyze interaction between the target response 1 and a set of input features of inter..." />
 
-    <title>4.1. Partial Dependence and Individual Conditional Expectation plots &#8212; scikit-learn 1.5.dev0 documentation</title>
+    <title>4.1. Partial Dependence and Individual Conditional Expectation plots &#8212; scikit-learn 1.6.dev0 documentation</title>
   
   
   
@@ -54,8 +54,8 @@
 <link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=8d27b9dea8ad943066ae" />
   <script src="../_static/vendor/fontawesome/6.5.1/js/all.min.js?digest=8d27b9dea8ad943066ae"></script>
 
-    <script src="../_static/documentation_options.js?v=a2c36881"></script>
-    <script src="../_static/doctools.js?v=888ff710"></script>
+    <script src="../_static/documentation_options.js?v=d875d36e"></script>
+    <script src="../_static/doctools.js?v=9a2dae69"></script>
     <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
     <script src="../_static/copybutton.js?v=97f0b27d"></script>
@@ -66,8 +66,8 @@
     <script>DOCUMENTATION_OPTIONS.pagename = 'modules/partial_dependence';</script>
     <script>
         DOCUMENTATION_OPTIONS.theme_version = '0.15.2';
-        DOCUMENTATION_OPTIONS.theme_switcher_json_url = 'https://scikit-learn.org/_pst_preview/versions.json';
-        DOCUMENTATION_OPTIONS.theme_switcher_version_match = '1.5.dev0';
+        DOCUMENTATION_OPTIONS.theme_switcher_json_url = 'https://scikit-learn.org/_pst_preview/_static/versions.json';
+        DOCUMENTATION_OPTIONS.theme_switcher_version_match = '1.6.dev0';
         DOCUMENTATION_OPTIONS.show_version_warning_banner = true;
         </script>
     <script src="../_static/scripts/dropdown.js?v=12d599f8"></script>
@@ -631,8 +631,9 @@ document.write(`
 <li class="toctree-l1 has-children"><a class="reference internal" href="../model_selection.html">3. Model selection and evaluation</a><input class="toctree-checkbox" id="toctree-checkbox-3" name="toctree-checkbox-3" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-3"><i class="fa-solid fa-chevron-down"></i></label><ul>
 <li class="toctree-l2"><a class="reference internal" href="cross_validation.html">3.1. Cross-validation: evaluating estimator performance</a></li>
 <li class="toctree-l2"><a class="reference internal" href="grid_search.html">3.2. Tuning the hyper-parameters of an estimator</a></li>
-<li class="toctree-l2"><a class="reference internal" href="model_evaluation.html">3.3. Metrics and scoring: quantifying the quality of predictions</a></li>
-<li class="toctree-l2"><a class="reference internal" href="learning_curve.html">3.4. Validation curves: plotting scores to evaluate models</a></li>
+<li class="toctree-l2"><a class="reference internal" href="classification_threshold.html">3.3. Tuning the decision threshold for class prediction</a></li>
+<li class="toctree-l2"><a class="reference internal" href="model_evaluation.html">3.4. Metrics and scoring: quantifying the quality of predictions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="learning_curve.html">3.5. Validation curves: plotting scores to evaluate models</a></li>
 </ul>
 </li>
 <li class="toctree-l1 current active has-children"><a class="reference internal" href="../inspection.html">4. Inspection</a><input checked="" class="toctree-checkbox" id="toctree-checkbox-4" name="toctree-checkbox-4" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-4"><i class="fa-solid fa-chevron-down"></i></label><ul class="current">
@@ -755,7 +756,8 @@ are usually chosen among the most important features.</p>
 the bike sharing dataset, with a
 <a class="reference internal" href="generated/sklearn.ensemble.HistGradientBoostingRegressor.html#sklearn.ensemble.HistGradientBoostingRegressor" title="sklearn.ensemble.HistGradientBoostingRegressor"><code class="xref py py-class docutils literal notranslate"><span class="pre">HistGradientBoostingRegressor</span></code></a>:</p>
 <figure class="align-center">
-<a class="reference external image-reference" href="../auto_examples/inspection/plot_partial_dependence.html"><img alt="../_images/sphx_glr_plot_partial_dependence_006.png" src="../_images/sphx_glr_plot_partial_dependence_006.png" style="width: 700.0px; height: 280.0px;" /></a>
+<a class="reference external image-reference" href="../auto_examples/inspection/plot_partial_dependence.html"><img alt="../_images/sphx_glr_plot_partial_dependence_006.png" src="../_images/sphx_glr_plot_partial_dependence_006.png" style="width: 700.0px; height: 280.0px;" />
+</a>
 </figure>
 <p>One-way PDPs tell us about the interaction between the target response and an input
 feature of interest (e.g. linear, non-linear). The left plot in the above figure
@@ -823,7 +825,7 @@ the plots, you can use the
 <span class="gp">&gt;&gt;&gt; </span><span class="n">results</span> <span class="o">=</span> <span class="n">partial_dependence</span><span class="p">(</span><span class="n">clf</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="p">[</span><span class="mi">0</span><span class="p">])</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">results</span><span class="p">[</span><span class="s2">&quot;average&quot;</span><span class="p">]</span>
 <span class="go">array([[ 2.466...,  2.466..., ...</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">results</span><span class="p">[</span><span class="s2">&quot;values&quot;</span><span class="p">]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">results</span><span class="p">[</span><span class="s2">&quot;grid_values&quot;</span><span class="p">]</span>
 <span class="go">[array([-1.624..., -1.592..., ...</span>
 </pre></div>
 </div>
@@ -847,7 +849,8 @@ supported for ICE plots.</p>
 with a <a class="reference internal" href="generated/sklearn.ensemble.HistGradientBoostingRegressor.html#sklearn.ensemble.HistGradientBoostingRegressor" title="sklearn.ensemble.HistGradientBoostingRegressor"><code class="xref py py-class docutils literal notranslate"><span class="pre">HistGradientBoostingRegressor</span></code></a>:.
 The figures plot the corresponding PD line overlaid on ICE lines.</p>
 <figure class="align-center">
-<a class="reference external image-reference" href="../auto_examples/inspection/plot_partial_dependence.html"><img alt="../_images/sphx_glr_plot_partial_dependence_004.png" src="../_images/sphx_glr_plot_partial_dependence_004.png" style="width: 420.0px; height: 280.0px;" /></a>
+<a class="reference external image-reference" href="../auto_examples/inspection/plot_partial_dependence.html"><img alt="../_images/sphx_glr_plot_partial_dependence_004.png" src="../_images/sphx_glr_plot_partial_dependence_004.png" style="width: 420.0px; height: 280.0px;" />
+</a>
 </figure>
 <p>While the PDPs are good at showing the average effect of the target features,
 they can obscure a heterogeneous relationship created by interactions.

@@ -16,7 +16,7 @@
 <meta property="og:image:alt" content="scikit-learn" />
 <meta name="description" content="Whether you are proposing an estimator for inclusion in scikit-learn, developing a separate package compatible with scikit-learn, or implementing custom components for your own projects, this chapt..." />
 
-    <title>Developing scikit-learn estimators &#8212; scikit-learn 1.5.dev0 documentation</title>
+    <title>Developing scikit-learn estimators &#8212; scikit-learn 1.6.dev0 documentation</title>
   
   
   
@@ -54,8 +54,8 @@
 <link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=8d27b9dea8ad943066ae" />
   <script src="../_static/vendor/fontawesome/6.5.1/js/all.min.js?digest=8d27b9dea8ad943066ae"></script>
 
-    <script src="../_static/documentation_options.js?v=a2c36881"></script>
-    <script src="../_static/doctools.js?v=888ff710"></script>
+    <script src="../_static/documentation_options.js?v=d875d36e"></script>
+    <script src="../_static/doctools.js?v=9a2dae69"></script>
     <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
     <script src="../_static/copybutton.js?v=97f0b27d"></script>
@@ -65,8 +65,8 @@
     <script>DOCUMENTATION_OPTIONS.pagename = 'developers/develop';</script>
     <script>
         DOCUMENTATION_OPTIONS.theme_version = '0.15.2';
-        DOCUMENTATION_OPTIONS.theme_switcher_json_url = 'https://scikit-learn.org/_pst_preview/versions.json';
-        DOCUMENTATION_OPTIONS.theme_switcher_version_match = '1.5.dev0';
+        DOCUMENTATION_OPTIONS.theme_switcher_json_url = 'https://scikit-learn.org/_pst_preview/_static/versions.json';
+        DOCUMENTATION_OPTIONS.theme_switcher_version_match = '1.6.dev0';
         DOCUMENTATION_OPTIONS.show_version_warning_banner = true;
         </script>
     <script src="../_static/scripts/dropdown.js?v=12d599f8"></script>
@@ -922,12 +922,15 @@ and optionally the mixin classes in <code class="docutils literal notranslate"><
 For example, below is a custom classifier, with more examples included
 in the scikit-learn-contrib
 <a class="reference external" href="https://github.com/scikit-learn-contrib/project-template/blob/master/skltemplate/_template.py">project template</a>.</p>
+<p>It is particularly important to notice that mixins should be “on the left” while
+the <code class="docutils literal notranslate"><span class="pre">BaseEstimator</span></code> should be “on the right” in the inheritance list for proper
+MRO.</p>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">sklearn.base</span> <span class="kn">import</span> <span class="n">BaseEstimator</span><span class="p">,</span> <span class="n">ClassifierMixin</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">sklearn.utils.validation</span> <span class="kn">import</span> <span class="n">check_X_y</span><span class="p">,</span> <span class="n">check_array</span><span class="p">,</span> <span class="n">check_is_fitted</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">sklearn.utils.multiclass</span> <span class="kn">import</span> <span class="n">unique_labels</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">sklearn.metrics</span> <span class="kn">import</span> <span class="n">euclidean_distances</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="k">class</span> <span class="nc">TemplateClassifier</span><span class="p">(</span><span class="n">BaseEstimator</span><span class="p">,</span> <span class="n">ClassifierMixin</span><span class="p">):</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">class</span> <span class="nc">TemplateClassifier</span><span class="p">(</span><span class="n">ClassifierMixin</span><span class="p">,</span> <span class="n">BaseEstimator</span><span class="p">):</span>
 <span class="gp">...</span>
 <span class="gp">... </span>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">demo_param</span><span class="o">=</span><span class="s1">&#39;demo&#39;</span><span class="p">):</span>
 <span class="gp">... </span>        <span class="bp">self</span><span class="o">.</span><span class="n">demo_param</span> <span class="o">=</span> <span class="n">demo_param</span>
@@ -988,7 +991,7 @@ estimator:</p>
 <span class="go">subestimator__intercept_scaling -&gt; 1</span>
 <span class="go">subestimator__l1_ratio -&gt; None</span>
 <span class="go">subestimator__max_iter -&gt; 100</span>
-<span class="go">subestimator__multi_class -&gt; auto</span>
+<span class="go">subestimator__multi_class -&gt; deprecated</span>
 <span class="go">subestimator__n_jobs -&gt; None</span>
 <span class="go">subestimator__penalty -&gt; l2</span>
 <span class="go">subestimator__random_state -&gt; None</span>

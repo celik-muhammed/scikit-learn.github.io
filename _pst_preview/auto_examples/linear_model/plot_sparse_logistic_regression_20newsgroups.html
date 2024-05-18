@@ -13,7 +13,7 @@
 <meta content="https://scikit-learn.org/stable/_static/scikit-learn-logo-small.png" property="og:image"/>
 <meta content="scikit-learn" property="og:image:alt"/>
 <meta content="Comparison of multinomial logistic L1 vs one-versus-rest L1 logistic regression to classify documents from the newgroups20 dataset. Multinomial logistic regression yields more accurate results and ..." name="description"/>
-<title>Multiclass sparse logistic regression on 20newgroups — scikit-learn 1.5.dev0 documentation</title>
+<title>Multiclass sparse logistic regression on 20newgroups — scikit-learn 1.6.dev0 documentation</title>
 <script data-cfasync="false">
     document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
     document.documentElement.dataset.theme = localStorage.getItem("theme") || "light";
@@ -42,8 +42,8 @@
 <link as="script" href="../../_static/scripts/bootstrap.js?digest=8d27b9dea8ad943066ae" rel="preload"/>
 <link as="script" href="../../_static/scripts/pydata-sphinx-theme.js?digest=8d27b9dea8ad943066ae" rel="preload"/>
 <script src="../../_static/vendor/fontawesome/6.5.1/js/all.min.js?digest=8d27b9dea8ad943066ae"></script>
-<script src="../../_static/documentation_options.js?v=a2c36881"></script>
-<script src="../../_static/doctools.js?v=888ff710"></script>
+<script src="../../_static/documentation_options.js?v=d875d36e"></script>
+<script src="../../_static/doctools.js?v=9a2dae69"></script>
 <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
 <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
 <script src="../../_static/copybutton.js?v=97f0b27d"></script>
@@ -53,8 +53,8 @@
 <script>DOCUMENTATION_OPTIONS.pagename = 'auto_examples/linear_model/plot_sparse_logistic_regression_20newsgroups';</script>
 <script>
         DOCUMENTATION_OPTIONS.theme_version = '0.15.2';
-        DOCUMENTATION_OPTIONS.theme_switcher_json_url = 'https://scikit-learn.org/_pst_preview/versions.json';
-        DOCUMENTATION_OPTIONS.theme_switcher_version_match = '1.5.dev0';
+        DOCUMENTATION_OPTIONS.theme_switcher_json_url = 'https://scikit-learn.org/_pst_preview/_static/versions.json';
+        DOCUMENTATION_OPTIONS.theme_switcher_version_match = '1.6.dev0';
         DOCUMENTATION_OPTIONS.show_version_warning_banner = true;
         </script>
 <script src="../../_static/scripts/dropdown.js?v=12d599f8"></script>
@@ -549,7 +549,6 @@ document.write(`
 <li class="toctree-l2"><a class="reference internal" href="../applications/plot_face_recognition.html">Faces recognition example using eigenfaces and SVMs</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../applications/plot_digits_denoising.html">Image denoising using kernel PCA</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../applications/plot_time_series_lagged_features.html">Lagged features for time series forecasting</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../applications/svm_gui.html">Libsvm GUI</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../applications/plot_model_complexity_influence.html">Model Complexity Influence</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../applications/plot_out_of_core_classification.html">Out-of-core classification of text documents</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../applications/plot_outlier_detection_wine.html">Outlier detection on a real data set</a></li>
@@ -694,6 +693,8 @@ document.write(`
 <li class="toctree-l2"><a class="reference internal" href="../model_selection/plot_cv_predict.html">Plotting Cross-Validated Predictions</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../model_selection/plot_learning_curve.html">Plotting Learning Curves and Checking Models’ Scalability</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../model_selection/plot_validation_curve.html">Plotting Validation Curves</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../model_selection/plot_tuned_decision_threshold.html">Post-hoc tuning the cut-off point of decision function</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../model_selection/plot_cost_sensitive_learning.html">Post-tuning the decision threshold for cost-sensitive learning</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../model_selection/plot_precision_recall.html">Precision-Recall</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../model_selection/plot_roc_crossval.html">Receiver Operating Characteristic (ROC) with cross validation</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../model_selection/plot_grid_search_text_feature_extraction.html">Sample pipeline for text feature extraction and evaluation</a></li>
@@ -843,33 +844,6 @@ instead.</p>
 <p>A more traditional (and possibly better) way to predict on a sparse subset of
 input features would be to use univariate feature selection followed by a
 traditional (l2-penalised) logistic regression model.</p>
-<img alt="Multinomial vs One-vs-Rest Logistic L1 Dataset 20newsgroups" class="sphx-glr-single-img" src="../../_images/sphx_glr_plot_sparse_logistic_regression_20newsgroups_001.png" srcset="../../_images/sphx_glr_plot_sparse_logistic_regression_20newsgroups_001.png"/><div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>Dataset 20newsgroup, train_samples=4500, n_features=130107, n_classes=20
-[model=One versus Rest, solver=saga] Number of epochs: 1
-[model=One versus Rest, solver=saga] Number of epochs: 2
-[model=One versus Rest, solver=saga] Number of epochs: 3
-Test accuracy for model ovr: 0.5960
-% non-zero coefficients for model ovr, per class:
- [0.26593496 0.43348936 0.26362917 0.31973683 0.37815029 0.2928359
- 0.27054655 0.62717609 0.19522393 0.30897646 0.34586917 0.28207552
- 0.34125758 0.29898468 0.34279478 0.59489497 0.38353048 0.35278655
- 0.19829832 0.14603365]
-Run time (3 epochs) for model ovr:1.32
-[model=Multinomial, solver=saga] Number of epochs: 1
-[model=Multinomial, solver=saga] Number of epochs: 2
-[model=Multinomial, solver=saga] Number of epochs: 5
-Test accuracy for model multinomial: 0.6440
-% non-zero coefficients for model multinomial, per class:
- [0.36047253 0.1268187  0.10606655 0.17985197 0.5395559  0.07993421
- 0.06686804 0.21443888 0.11528972 0.2075215  0.10914094 0.11144673
- 0.13988486 0.09684337 0.26286057 0.11682692 0.55800226 0.17370318
- 0.11452112 0.14603365]
-Run time (5 epochs) for model multinomial:1.12
-Example run in 5.408 s
-</pre></div>
-</div>
-<div class="line-block">
-<div class="line"><br/></div>
-</div>
 <div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Author: Arthur Mensch</span>
 
 <span class="kn">import</span> <span class="nn">timeit</span>
@@ -882,6 +856,7 @@ Example run in 5.408 s
 <span class="kn">from</span> <span class="nn">sklearn.exceptions</span> <span class="kn">import</span> <a class="sphx-glr-backref-module-sklearn-exceptions sphx-glr-backref-type-py-exception" href="../../modules/generated/sklearn.exceptions.ConvergenceWarning.html#sklearn.exceptions.ConvergenceWarning" title="sklearn.exceptions.ConvergenceWarning"><span class="n">ConvergenceWarning</span></a>
 <span class="kn">from</span> <span class="nn">sklearn.linear_model</span> <span class="kn">import</span> <a class="sphx-glr-backref-module-sklearn-linear_model sphx-glr-backref-type-py-class sphx-glr-backref-instance" href="../../modules/generated/sklearn.linear_model.LogisticRegression.html#sklearn.linear_model.LogisticRegression" title="sklearn.linear_model.LogisticRegression"><span class="n">LogisticRegression</span></a>
 <span class="kn">from</span> <span class="nn">sklearn.model_selection</span> <span class="kn">import</span> <a class="sphx-glr-backref-module-sklearn-model_selection sphx-glr-backref-type-py-function" href="../../modules/generated/sklearn.model_selection.train_test_split.html#sklearn.model_selection.train_test_split" title="sklearn.model_selection.train_test_split"><span class="n">train_test_split</span></a>
+<span class="kn">from</span> <span class="nn">sklearn.multiclass</span> <span class="kn">import</span> <a class="sphx-glr-backref-module-sklearn-multiclass sphx-glr-backref-type-py-class sphx-glr-backref-instance" href="../../modules/generated/sklearn.multiclass.OneVsRestClassifier.html#sklearn.multiclass.OneVsRestClassifier" title="sklearn.multiclass.OneVsRestClassifier"><span class="n">OneVsRestClassifier</span></a>
 
 <a class="sphx-glr-backref-module-warnings sphx-glr-backref-type-py-function" href="https://docs.python.org/3/library/warnings.html#warnings.filterwarnings" title="warnings.filterwarnings"><span class="n">warnings</span><span class="o">.</span><span class="n">filterwarnings</span></a><span class="p">(</span><span class="s2">"ignore"</span><span class="p">,</span> <span class="n">category</span><span class="o">=</span><a class="sphx-glr-backref-module-sklearn-exceptions sphx-glr-backref-type-py-exception" href="../../modules/generated/sklearn.exceptions.ConvergenceWarning.html#sklearn.exceptions.ConvergenceWarning" title="sklearn.exceptions.ConvergenceWarning"><span class="n">ConvergenceWarning</span></a><span class="p">,</span> <span class="n">module</span><span class="o">=</span><span class="s2">"sklearn"</span><span class="p">)</span>
 <span class="n">t0</span> <span class="o">=</span> <a class="sphx-glr-backref-module-timeit sphx-glr-backref-type-py-function" href="https://docs.python.org/3/library/timeit.html#timeit.default_timer" title="timeit.default_timer"><span class="n">timeit</span><span class="o">.</span><span class="n">default_timer</span></a><span class="p">()</span>
@@ -926,20 +901,25 @@ Example run in 5.408 s
             <span class="s2">"[model=</span><span class="si">%s</span><span class="s2">, solver=</span><span class="si">%s</span><span class="s2">] Number of epochs: </span><span class="si">%s</span><span class="s2">"</span>
             <span class="o">%</span> <span class="p">(</span><span class="n">model_params</span><span class="p">[</span><span class="s2">"name"</span><span class="p">],</span> <span class="n">solver</span><span class="p">,</span> <span class="n">this_max_iter</span><span class="p">)</span>
         <span class="p">)</span>
-        <span class="n">lr</span> <span class="o">=</span> <a class="sphx-glr-backref-module-sklearn-linear_model sphx-glr-backref-type-py-class sphx-glr-backref-instance" href="../../modules/generated/sklearn.linear_model.LogisticRegression.html#sklearn.linear_model.LogisticRegression" title="sklearn.linear_model.LogisticRegression"><span class="n">LogisticRegression</span></a><span class="p">(</span>
+        <span class="n">clf</span> <span class="o">=</span> <a class="sphx-glr-backref-module-sklearn-linear_model sphx-glr-backref-type-py-class sphx-glr-backref-instance" href="../../modules/generated/sklearn.linear_model.LogisticRegression.html#sklearn.linear_model.LogisticRegression" title="sklearn.linear_model.LogisticRegression"><span class="n">LogisticRegression</span></a><span class="p">(</span>
             <span class="n">solver</span><span class="o">=</span><span class="n">solver</span><span class="p">,</span>
-            <span class="n">multi_class</span><span class="o">=</span><span class="n">model</span><span class="p">,</span>
             <span class="n">penalty</span><span class="o">=</span><span class="s2">"l1"</span><span class="p">,</span>
             <span class="n">max_iter</span><span class="o">=</span><span class="n">this_max_iter</span><span class="p">,</span>
             <span class="n">random_state</span><span class="o">=</span><span class="mi">42</span><span class="p">,</span>
         <span class="p">)</span>
+        <span class="k">if</span> <span class="n">model</span> <span class="o">==</span> <span class="s2">"ovr"</span><span class="p">:</span>
+            <span class="n">clf</span> <span class="o">=</span> <a class="sphx-glr-backref-module-sklearn-multiclass sphx-glr-backref-type-py-class sphx-glr-backref-instance" href="../../modules/generated/sklearn.multiclass.OneVsRestClassifier.html#sklearn.multiclass.OneVsRestClassifier" title="sklearn.multiclass.OneVsRestClassifier"><span class="n">OneVsRestClassifier</span></a><span class="p">(</span><span class="n">clf</span><span class="p">)</span>
         <span class="n">t1</span> <span class="o">=</span> <a class="sphx-glr-backref-module-timeit sphx-glr-backref-type-py-function" href="https://docs.python.org/3/library/timeit.html#timeit.default_timer" title="timeit.default_timer"><span class="n">timeit</span><span class="o">.</span><span class="n">default_timer</span></a><span class="p">()</span>
-        <span class="n">lr</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X_train</span><span class="p">,</span> <span class="n">y_train</span><span class="p">)</span>
+        <span class="n">clf</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X_train</span><span class="p">,</span> <span class="n">y_train</span><span class="p">)</span>
         <span class="n">train_time</span> <span class="o">=</span> <a class="sphx-glr-backref-module-timeit sphx-glr-backref-type-py-function" href="https://docs.python.org/3/library/timeit.html#timeit.default_timer" title="timeit.default_timer"><span class="n">timeit</span><span class="o">.</span><span class="n">default_timer</span></a><span class="p">()</span> <span class="o">-</span> <span class="n">t1</span>
 
-        <span class="n">y_pred</span> <span class="o">=</span> <span class="n">lr</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">X_test</span><span class="p">)</span>
+        <span class="n">y_pred</span> <span class="o">=</span> <span class="n">clf</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">X_test</span><span class="p">)</span>
         <span class="n">accuracy</span> <span class="o">=</span> <a class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-function" href="https://numpy.org/doc/stable/reference/generated/numpy.sum.html#numpy.sum" title="numpy.sum"><span class="n">np</span><span class="o">.</span><span class="n">sum</span></a><span class="p">(</span><span class="n">y_pred</span> <span class="o">==</span> <span class="n">y_test</span><span class="p">)</span> <span class="o">/</span> <span class="n">y_test</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
-        <span class="n">density</span> <span class="o">=</span> <a class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-function" href="https://numpy.org/doc/stable/reference/generated/numpy.mean.html#numpy.mean" title="numpy.mean"><span class="n">np</span><span class="o">.</span><span class="n">mean</span></a><span class="p">(</span><span class="n">lr</span><span class="o">.</span><span class="n">coef_</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span> <span class="o">*</span> <span class="mi">100</span>
+        <span class="k">if</span> <span class="n">model</span> <span class="o">==</span> <span class="s2">"ovr"</span><span class="p">:</span>
+            <span class="n">coef</span> <span class="o">=</span> <a class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-function" href="https://numpy.org/doc/stable/reference/generated/numpy.concatenate.html#numpy.concatenate" title="numpy.concatenate"><span class="n">np</span><span class="o">.</span><span class="n">concatenate</span></a><span class="p">([</span><span class="n">est</span><span class="o">.</span><span class="n">coef_</span> <span class="k">for</span> <span class="n">est</span> <span class="ow">in</span> <span class="n">clf</span><span class="o">.</span><span class="n">estimators_</span><span class="p">])</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">coef</span> <span class="o">=</span> <span class="n">clf</span><span class="o">.</span><span class="n">coef_</span>
+        <span class="n">density</span> <span class="o">=</span> <a class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-function" href="https://numpy.org/doc/stable/reference/generated/numpy.mean.html#numpy.mean" title="numpy.mean"><span class="n">np</span><span class="o">.</span><span class="n">mean</span></a><span class="p">(</span><span class="n">coef</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span> <span class="o">*</span> <span class="mi">100</span>
         <span class="n">accuracies</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">accuracy</span><span class="p">)</span>
         <span class="n">densities</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">density</span><span class="p">)</span>
         <span class="n">times</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">train_time</span><span class="p">)</span>
@@ -975,18 +955,17 @@ Example run in 5.408 s
 <a class="sphx-glr-backref-module-matplotlib-pyplot sphx-glr-backref-type-py-function" href="https://matplotlib.org/stable/api/_as_gen/matplotlib.pyplot.show.html#matplotlib.pyplot.show" title="matplotlib.pyplot.show"><span class="n">plt</span><span class="o">.</span><span class="n">show</span></a><span class="p">()</span>
 </pre></div>
 </div>
-<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> (0 minutes 5.476 seconds)</p>
 
 <p class="rubric">Related examples</p>
-<div class="sphx-glr-thumbnails"><div class="sphx-glr-thumbcontainer" tooltip="Plot the classification probability for different classifiers. We use a 3 class dataset, and we..."><img alt="" src="../../_images/sphx_glr_plot_classification_probability_thumb.png"/>
-<p><a class="reference internal" href="../classification/plot_classification_probability.html#sphx-glr-auto-examples-classification-plot-classification-probability-py"><span class="std std-ref">Plot classification probability</span></a></p>
-<div class="sphx-glr-thumbnail-title">Plot classification probability</div>
-</div><div class="sphx-glr-thumbcontainer" tooltip="Here we fit a multinomial logistic regression with L1 penalty on a subset of the MNIST digits c..."><img alt="" src="../../_images/sphx_glr_plot_sparse_logistic_regression_mnist_thumb.png"/>
+<div class="sphx-glr-thumbnails"><div class="sphx-glr-thumbcontainer" tooltip="Here we fit a multinomial logistic regression with L1 penalty on a subset of the MNIST digits c..."><img alt="" src="../../_images/sphx_glr_plot_sparse_logistic_regression_mnist_thumb.png"/>
 <p><a class="reference internal" href="plot_sparse_logistic_regression_mnist.html#sphx-glr-auto-examples-linear-model-plot-sparse-logistic-regression-mnist-py"><span class="std std-ref">MNIST classification using multinomial logistic + L1</span></a></p>
 <div class="sphx-glr-thumbnail-title">MNIST classification using multinomial logistic + L1</div>
-</div><div class="sphx-glr-thumbcontainer" tooltip="For greyscale image data where pixel values can be interpreted as degrees of blackness on a whi..."><img alt="" src="../../_images/sphx_glr_plot_rbm_logistic_classification_thumb.png"/>
-<p><a class="reference internal" href="../neural_networks/plot_rbm_logistic_classification.html#sphx-glr-auto-examples-neural-networks-plot-rbm-logistic-classification-py"><span class="std std-ref">Restricted Boltzmann Machine features for digit classification</span></a></p>
-<div class="sphx-glr-thumbnail-title">Restricted Boltzmann Machine features for digit classification</div>
+</div><div class="sphx-glr-thumbcontainer" tooltip="Plot the classification probability for different classifiers. We use a 3 class dataset, and we..."><img alt="" src="../../_images/sphx_glr_plot_classification_probability_thumb.png"/>
+<p><a class="reference internal" href="../classification/plot_classification_probability.html#sphx-glr-auto-examples-classification-plot-classification-probability-py"><span class="std std-ref">Plot classification probability</span></a></p>
+<div class="sphx-glr-thumbnail-title">Plot classification probability</div>
+</div><div class="sphx-glr-thumbcontainer" tooltip="Plot decision surface of multinomial and One-vs-Rest Logistic Regression. The hyperplanes corre..."><img alt="" src="../../_images/sphx_glr_plot_logistic_multinomial_thumb.png"/>
+<p><a class="reference internal" href="plot_logistic_multinomial.html#sphx-glr-auto-examples-linear-model-plot-logistic-multinomial-py"><span class="std std-ref">Plot multinomial and One-vs-Rest Logistic Regression</span></a></p>
+<div class="sphx-glr-thumbnail-title">Plot multinomial and One-vs-Rest Logistic Regression</div>
 </div><div class="sphx-glr-thumbcontainer" tooltip="Comparison of the sparsity (percentage of zero coefficients) of solutions when L1, L2 and Elast..."><img alt="" src="../../_images/sphx_glr_plot_logistic_l1_l2_sparsity_thumb.png"/>
 <p><a class="reference internal" href="plot_logistic_l1_l2_sparsity.html#sphx-glr-auto-examples-linear-model-plot-logistic-l1-l2-sparsity-py"><span class="std std-ref">L1 Penalty and Sparsity in Logistic Regression</span></a></p>
 <div class="sphx-glr-thumbnail-title">L1 Penalty and Sparsity in Logistic Regression</div>

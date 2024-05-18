@@ -16,7 +16,7 @@
 <meta property="og:image:alt" content="Grid Search Workflow" />
 <meta name="description" content="Learning the parameters of a prediction function and testing it on the same data is a methodological mistake: a model that would just repeat the labels of the samples that it has just seen would ha..." />
 
-    <title>3.1. Cross-validation: evaluating estimator performance &#8212; scikit-learn 1.5.dev0 documentation</title>
+    <title>3.1. Cross-validation: evaluating estimator performance &#8212; scikit-learn 1.6.dev0 documentation</title>
   
   
   
@@ -54,8 +54,8 @@
 <link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=8d27b9dea8ad943066ae" />
   <script src="../_static/vendor/fontawesome/6.5.1/js/all.min.js?digest=8d27b9dea8ad943066ae"></script>
 
-    <script src="../_static/documentation_options.js?v=a2c36881"></script>
-    <script src="../_static/doctools.js?v=888ff710"></script>
+    <script src="../_static/documentation_options.js?v=d875d36e"></script>
+    <script src="../_static/doctools.js?v=9a2dae69"></script>
     <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
     <script src="../_static/copybutton.js?v=97f0b27d"></script>
@@ -66,8 +66,8 @@
     <script>DOCUMENTATION_OPTIONS.pagename = 'modules/cross_validation';</script>
     <script>
         DOCUMENTATION_OPTIONS.theme_version = '0.15.2';
-        DOCUMENTATION_OPTIONS.theme_switcher_json_url = 'https://scikit-learn.org/_pst_preview/versions.json';
-        DOCUMENTATION_OPTIONS.theme_switcher_version_match = '1.5.dev0';
+        DOCUMENTATION_OPTIONS.theme_switcher_json_url = 'https://scikit-learn.org/_pst_preview/_static/versions.json';
+        DOCUMENTATION_OPTIONS.theme_switcher_version_match = '1.6.dev0';
         DOCUMENTATION_OPTIONS.show_version_warning_banner = true;
         </script>
     <script src="../_static/scripts/dropdown.js?v=12d599f8"></script>
@@ -631,8 +631,9 @@ document.write(`
 <li class="toctree-l1 current active has-children"><a class="reference internal" href="../model_selection.html">3. Model selection and evaluation</a><input checked="" class="toctree-checkbox" id="toctree-checkbox-3" name="toctree-checkbox-3" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-3"><i class="fa-solid fa-chevron-down"></i></label><ul class="current">
 <li class="toctree-l2 current active"><a class="current reference internal" href="#">3.1. Cross-validation: evaluating estimator performance</a></li>
 <li class="toctree-l2"><a class="reference internal" href="grid_search.html">3.2. Tuning the hyper-parameters of an estimator</a></li>
-<li class="toctree-l2"><a class="reference internal" href="model_evaluation.html">3.3. Metrics and scoring: quantifying the quality of predictions</a></li>
-<li class="toctree-l2"><a class="reference internal" href="learning_curve.html">3.4. Validation curves: plotting scores to evaluate models</a></li>
+<li class="toctree-l2"><a class="reference internal" href="classification_threshold.html">3.3. Tuning the decision threshold for class prediction</a></li>
+<li class="toctree-l2"><a class="reference internal" href="model_evaluation.html">3.4. Metrics and scoring: quantifying the quality of predictions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="learning_curve.html">3.5. Validation curves: plotting scores to evaluate models</a></li>
 </ul>
 </li>
 <li class="toctree-l1 has-children"><a class="reference internal" href="../inspection.html">4. Inspection</a><input class="toctree-checkbox" id="toctree-checkbox-4" name="toctree-checkbox-4" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-4"><i class="fa-solid fa-chevron-down"></i></label><ul>
@@ -749,7 +750,8 @@ machine learning usually starts out experimentally.
 Here is a flowchart of typical cross validation workflow in model training.
 The best parameters can be determined by
 <a class="reference internal" href="grid_search.html#grid-search"><span class="std std-ref">grid search</span></a> techniques.</p>
-<a class="reference internal image-reference" href="../_images/grid_search_workflow.png"><img alt="Grid Search Workflow" class="align-center" src="../_images/grid_search_workflow.png" style="width: 400px; height: 240px;" /></a>
+<a class="reference internal image-reference" href="../_images/grid_search_workflow.png"><img alt="Grid Search Workflow" class="align-center" src="../_images/grid_search_workflow.png" style="width: 400px; height: 240px;" />
+</a>
 <p>In scikit-learn a random split into training and test sets
 can be quickly computed with the <a class="reference internal" href="generated/sklearn.model_selection.train_test_split.html#sklearn.model_selection.train_test_split" title="sklearn.model_selection.train_test_split"><code class="xref py py-func docutils literal notranslate"><span class="pre">train_test_split</span></code></a> helper function.
 Let’s load the iris data set to fit a linear support vector machine on it:</p>
@@ -817,7 +819,8 @@ but does not waste too much data
 (as is the case when fixing an arbitrary validation set),
 which is a major advantage in problems such as inverse inference
 where the number of samples is very small.</p>
-<a class="reference internal image-reference" href="../_images/grid_search_cross_validation.png"><img alt="A depiction of a 5 fold cross validation on a training set, while holding out a test set." class="align-center" src="../_images/grid_search_cross_validation.png" style="width: 500px; height: 300px;" /></a>
+<a class="reference internal image-reference" href="../_images/grid_search_cross_validation.png"><img alt="A depiction of a 5 fold cross validation on a training set, while holding out a test set." class="align-center" src="../_images/grid_search_cross_validation.png" style="width: 500px; height: 300px;" />
+</a>
 <section id="computing-cross-validated-metrics">
 <h2><span class="section-number">3.1.1. </span>Computing cross-validated metrics<a class="headerlink" href="#computing-cross-validated-metrics" title="Link to this heading">#</a></h2>
 <p>The simplest way to use cross-validation is to call the
@@ -1048,7 +1051,8 @@ learned using <span class="math notranslate nohighlight">\(k - 1\)</span> folds,
 <p>Here is a visualization of the cross-validation behavior. Note that
 <a class="reference internal" href="generated/sklearn.model_selection.KFold.html#sklearn.model_selection.KFold" title="sklearn.model_selection.KFold"><code class="xref py py-class docutils literal notranslate"><span class="pre">KFold</span></code></a> is not affected by classes or groups.</p>
 <figure class="align-center">
-<a class="reference external image-reference" href="../auto_examples/model_selection/plot_cv_indices.html"><img alt="../_images/sphx_glr_plot_cv_indices_006.png" src="../_images/sphx_glr_plot_cv_indices_006.png" style="width: 450.0px; height: 225.0px;" /></a>
+<a class="reference external image-reference" href="../auto_examples/model_selection/plot_cv_indices.html"><img alt="../_images/sphx_glr_plot_cv_indices_006.png" src="../_images/sphx_glr_plot_cv_indices_006.png" style="width: 450.0px; height: 225.0px;" />
+</a>
 </figure>
 <p>Each fold is constituted by two arrays: the first one is related to the
 <em>training set</em>, and the second one to the <em>test set</em>.
@@ -1183,7 +1187,8 @@ generator.</p>
 <p>Here is a visualization of the cross-validation behavior. Note that
 <a class="reference internal" href="generated/sklearn.model_selection.ShuffleSplit.html#sklearn.model_selection.ShuffleSplit" title="sklearn.model_selection.ShuffleSplit"><code class="xref py py-class docutils literal notranslate"><span class="pre">ShuffleSplit</span></code></a> is not affected by classes or groups.</p>
 <figure class="align-center">
-<a class="reference external image-reference" href="../auto_examples/model_selection/plot_cv_indices.html"><img alt="../_images/sphx_glr_plot_cv_indices_008.png" src="../_images/sphx_glr_plot_cv_indices_008.png" style="width: 450.0px; height: 225.0px;" /></a>
+<a class="reference external image-reference" href="../auto_examples/model_selection/plot_cv_indices.html"><img alt="../_images/sphx_glr_plot_cv_indices_008.png" src="../_images/sphx_glr_plot_cv_indices_008.png" style="width: 450.0px; height: 225.0px;" />
+</a>
 </figure>
 <p><a class="reference internal" href="generated/sklearn.model_selection.ShuffleSplit.html#sklearn.model_selection.ShuffleSplit" title="sklearn.model_selection.ShuffleSplit"><code class="xref py py-class docutils literal notranslate"><span class="pre">ShuffleSplit</span></code></a> is thus a good alternative to <a class="reference internal" href="generated/sklearn.model_selection.KFold.html#sklearn.model_selection.KFold" title="sklearn.model_selection.KFold"><code class="xref py py-class docutils literal notranslate"><span class="pre">KFold</span></code></a> cross
 validation that allows a finer control on the number of iterations and
@@ -1229,7 +1234,8 @@ two unbalanced classes.  We show the number of samples in each class and compare
 (approximately 1 / 10) in both train and test dataset.</p>
 <p>Here is a visualization of the cross-validation behavior.</p>
 <figure class="align-center">
-<a class="reference external image-reference" href="../auto_examples/model_selection/plot_cv_indices.html"><img alt="../_images/sphx_glr_plot_cv_indices_009.png" src="../_images/sphx_glr_plot_cv_indices_009.png" style="width: 450.0px; height: 225.0px;" /></a>
+<a class="reference external image-reference" href="../auto_examples/model_selection/plot_cv_indices.html"><img alt="../_images/sphx_glr_plot_cv_indices_009.png" src="../_images/sphx_glr_plot_cv_indices_009.png" style="width: 450.0px; height: 225.0px;" />
+</a>
 </figure>
 <p><a class="reference internal" href="generated/sklearn.model_selection.RepeatedStratifiedKFold.html#sklearn.model_selection.RepeatedStratifiedKFold" title="sklearn.model_selection.RepeatedStratifiedKFold"><code class="xref py py-class docutils literal notranslate"><span class="pre">RepeatedStratifiedKFold</span></code></a> can be used to repeat Stratified K-Fold n times
 with different randomization in each repetition.</p>
@@ -1241,7 +1247,8 @@ stratified splits, <em>i.e</em> which creates splits by preserving the same
 percentage for each target class as in the complete set.</p>
 <p>Here is a visualization of the cross-validation behavior.</p>
 <figure class="align-center">
-<a class="reference external image-reference" href="../auto_examples/model_selection/plot_cv_indices.html"><img alt="../_images/sphx_glr_plot_cv_indices_012.png" src="../_images/sphx_glr_plot_cv_indices_012.png" style="width: 450.0px; height: 225.0px;" /></a>
+<a class="reference external image-reference" href="../auto_examples/model_selection/plot_cv_indices.html"><img alt="../_images/sphx_glr_plot_cv_indices_012.png" src="../_images/sphx_glr_plot_cv_indices_012.png" style="width: 450.0px; height: 225.0px;" />
+</a>
 </figure>
 </section>
 </section>
@@ -1298,7 +1305,8 @@ size due to the imbalance in the data. If class proportions must be balanced
 across folds, <a class="reference internal" href="generated/sklearn.model_selection.StratifiedGroupKFold.html#sklearn.model_selection.StratifiedGroupKFold" title="sklearn.model_selection.StratifiedGroupKFold"><code class="xref py py-class docutils literal notranslate"><span class="pre">StratifiedGroupKFold</span></code></a> is a better option.</p>
 <p>Here is a visualization of the cross-validation behavior.</p>
 <figure class="align-center">
-<a class="reference external image-reference" href="../auto_examples/model_selection/plot_cv_indices.html"><img alt="../_images/sphx_glr_plot_cv_indices_007.png" src="../_images/sphx_glr_plot_cv_indices_007.png" style="width: 450.0px; height: 225.0px;" /></a>
+<a class="reference external image-reference" href="../auto_examples/model_selection/plot_cv_indices.html"><img alt="../_images/sphx_glr_plot_cv_indices_007.png" src="../_images/sphx_glr_plot_cv_indices_007.png" style="width: 450.0px; height: 225.0px;" />
+</a>
 </figure>
 <p>Similar to <a class="reference internal" href="generated/sklearn.model_selection.KFold.html#sklearn.model_selection.KFold" title="sklearn.model_selection.KFold"><code class="xref py py-class docutils literal notranslate"><span class="pre">KFold</span></code></a>, the test sets from <a class="reference internal" href="generated/sklearn.model_selection.GroupKFold.html#sklearn.model_selection.GroupKFold" title="sklearn.model_selection.GroupKFold"><code class="xref py py-class docutils literal notranslate"><span class="pre">GroupKFold</span></code></a> will form a
 complete partition of all the data. Unlike <a class="reference internal" href="generated/sklearn.model_selection.KFold.html#sklearn.model_selection.KFold" title="sklearn.model_selection.KFold"><code class="xref py py-class docutils literal notranslate"><span class="pre">KFold</span></code></a>, <a class="reference internal" href="generated/sklearn.model_selection.GroupKFold.html#sklearn.model_selection.GroupKFold" title="sklearn.model_selection.GroupKFold"><code class="xref py py-class docutils literal notranslate"><span class="pre">GroupKFold</span></code></a>
@@ -1356,7 +1364,8 @@ distribution of classes in each group, using <a class="reference internal" href=
 </div>
 </details><p>Here is a visualization of cross-validation behavior for uneven groups:</p>
 <figure class="align-center">
-<a class="reference external image-reference" href="../auto_examples/model_selection/plot_cv_indices.html"><img alt="../_images/sphx_glr_plot_cv_indices_005.png" src="../_images/sphx_glr_plot_cv_indices_005.png" style="width: 450.0px; height: 225.0px;" /></a>
+<a class="reference external image-reference" href="../auto_examples/model_selection/plot_cv_indices.html"><img alt="../_images/sphx_glr_plot_cv_indices_005.png" src="../_images/sphx_glr_plot_cv_indices_005.png" style="width: 450.0px; height: 225.0px;" />
+</a>
 </figure>
 </section>
 <section id="leave-one-group-out">
@@ -1434,7 +1443,8 @@ there is no guaranteed relationship between successive test sets.</p>
 </div>
 <p>Here is a visualization of the cross-validation behavior.</p>
 <figure class="align-center">
-<a class="reference external image-reference" href="../auto_examples/model_selection/plot_cv_indices.html"><img alt="../_images/sphx_glr_plot_cv_indices_011.png" src="../_images/sphx_glr_plot_cv_indices_011.png" style="width: 450.0px; height: 225.0px;" /></a>
+<a class="reference external image-reference" href="../auto_examples/model_selection/plot_cv_indices.html"><img alt="../_images/sphx_glr_plot_cv_indices_011.png" src="../_images/sphx_glr_plot_cv_indices_011.png" style="width: 450.0px; height: 225.0px;" />
+</a>
 </figure>
 <p>This class is useful when the behavior of <a class="reference internal" href="generated/sklearn.model_selection.LeavePGroupsOut.html#sklearn.model_selection.LeavePGroupsOut" title="sklearn.model_selection.LeavePGroupsOut"><code class="xref py py-class docutils literal notranslate"><span class="pre">LeavePGroupsOut</span></code></a> is
 desired, but the number of groups is large enough that generating all
@@ -1511,7 +1521,8 @@ that are observed at fixed time intervals.</p>
 </div>
 <p>Here is a visualization of the cross-validation behavior.</p>
 <figure class="align-center">
-<a class="reference external image-reference" href="../auto_examples/model_selection/plot_cv_indices.html"><img alt="../_images/sphx_glr_plot_cv_indices_013.png" src="../_images/sphx_glr_plot_cv_indices_013.png" style="width: 450.0px; height: 225.0px;" /></a>
+<a class="reference external image-reference" href="../auto_examples/model_selection/plot_cv_indices.html"><img alt="../_images/sphx_glr_plot_cv_indices_013.png" src="../_images/sphx_glr_plot_cv_indices_013.png" style="width: 450.0px; height: 225.0px;" />
+</a>
 </figure>
 </section>
 </section>

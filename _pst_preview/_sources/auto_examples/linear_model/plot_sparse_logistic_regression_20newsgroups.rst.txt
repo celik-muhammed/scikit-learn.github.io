@@ -11,7 +11,7 @@
         :class: sphx-glr-download-link-note
 
         :ref:`Go to the end <sphx_glr_download_auto_examples_linear_model_plot_sparse_logistic_regression_20newsgroups.py>`
-        to download the full example code or to run this example in your browser via JupyterLite or Binder
+        to download the full example code. or to run this example in your browser via JupyterLite or Binder
 
 .. rst-class:: sphx-glr-example-title
 
@@ -37,49 +37,7 @@ A more traditional (and possibly better) way to predict on a sparse subset of
 input features would be to use univariate feature selection followed by a
 traditional (l2-penalised) logistic regression model.
 
-.. GENERATED FROM PYTHON SOURCE LINES 22-126
-
-
-
-.. image-sg:: /auto_examples/linear_model/images/sphx_glr_plot_sparse_logistic_regression_20newsgroups_001.png
-   :alt: Multinomial vs One-vs-Rest Logistic L1 Dataset 20newsgroups
-   :srcset: /auto_examples/linear_model/images/sphx_glr_plot_sparse_logistic_regression_20newsgroups_001.png
-   :class: sphx-glr-single-img
-
-
-.. rst-class:: sphx-glr-script-out
-
- .. code-block:: none
-
-    Dataset 20newsgroup, train_samples=4500, n_features=130107, n_classes=20
-    [model=One versus Rest, solver=saga] Number of epochs: 1
-    [model=One versus Rest, solver=saga] Number of epochs: 2
-    [model=One versus Rest, solver=saga] Number of epochs: 3
-    Test accuracy for model ovr: 0.5960
-    % non-zero coefficients for model ovr, per class:
-     [0.26593496 0.43348936 0.26362917 0.31973683 0.37815029 0.2928359
-     0.27054655 0.62717609 0.19522393 0.30897646 0.34586917 0.28207552
-     0.34125758 0.29898468 0.34279478 0.59489497 0.38353048 0.35278655
-     0.19829832 0.14603365]
-    Run time (3 epochs) for model ovr:1.32
-    [model=Multinomial, solver=saga] Number of epochs: 1
-    [model=Multinomial, solver=saga] Number of epochs: 2
-    [model=Multinomial, solver=saga] Number of epochs: 5
-    Test accuracy for model multinomial: 0.6440
-    % non-zero coefficients for model multinomial, per class:
-     [0.36047253 0.1268187  0.10606655 0.17985197 0.5395559  0.07993421
-     0.06686804 0.21443888 0.11528972 0.2075215  0.10914094 0.11144673
-     0.13988486 0.09684337 0.26286057 0.11682692 0.55800226 0.17370318
-     0.11452112 0.14603365]
-    Run time (5 epochs) for model multinomial:1.12
-    Example run in 5.408 s
-
-
-
-
-
-
-|
+.. GENERATED FROM PYTHON SOURCE LINES 22-132
 
 .. code-block:: Python
 
@@ -96,6 +54,7 @@ traditional (l2-penalised) logistic regression model.
     from sklearn.exceptions import ConvergenceWarning
     from sklearn.linear_model import LogisticRegression
     from sklearn.model_selection import train_test_split
+    from sklearn.multiclass import OneVsRestClassifier
 
     warnings.filterwarnings("ignore", category=ConvergenceWarning, module="sklearn")
     t0 = timeit.default_timer()
@@ -140,20 +99,25 @@ traditional (l2-penalised) logistic regression model.
                 "[model=%s, solver=%s] Number of epochs: %s"
                 % (model_params["name"], solver, this_max_iter)
             )
-            lr = LogisticRegression(
+            clf = LogisticRegression(
                 solver=solver,
-                multi_class=model,
                 penalty="l1",
                 max_iter=this_max_iter,
                 random_state=42,
             )
+            if model == "ovr":
+                clf = OneVsRestClassifier(clf)
             t1 = timeit.default_timer()
-            lr.fit(X_train, y_train)
+            clf.fit(X_train, y_train)
             train_time = timeit.default_timer() - t1
 
-            y_pred = lr.predict(X_test)
+            y_pred = clf.predict(X_test)
             accuracy = np.sum(y_pred == y_test) / y_test.shape[0]
-            density = np.mean(lr.coef_ != 0, axis=1) * 100
+            if model == "ovr":
+                coef = np.concatenate([est.coef_ for est in clf.estimators_])
+            else:
+                coef = clf.coef_
+            density = np.mean(coef != 0, axis=1) * 100
             accuracies.append(accuracy)
             densities.append(density)
             times.append(train_time)
@@ -187,11 +151,6 @@ traditional (l2-penalised) logistic regression model.
     run_time = timeit.default_timer() - t0
     print("Example run in %.3f s" % run_time)
     plt.show()
-
-
-.. rst-class:: sphx-glr-timing
-
-   **Total running time of the script:** (0 minutes 5.476 seconds)
 
 
 .. _sphx_glr_download_auto_examples_linear_model_plot_sparse_logistic_regression_20newsgroups.py:

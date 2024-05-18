@@ -13,7 +13,7 @@
 <meta content="https://scikit-learn.org/stable/_static/scikit-learn-logo-small.png" property="og:image"/>
 <meta content="scikit-learn" property="og:image:alt"/>
 <meta content="This is an example showing how scikit-learn can be used to classify documents by topics using a Bag of Words approach. This example uses a Tf-idf-weighted document-term sparse matrix to encode the ..." name="description"/>
-<title>Classification of text documents using sparse features — scikit-learn 1.5.dev0 documentation</title>
+<title>Classification of text documents using sparse features — scikit-learn 1.6.dev0 documentation</title>
 <script data-cfasync="false">
     document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
     document.documentElement.dataset.theme = localStorage.getItem("theme") || "light";
@@ -42,8 +42,8 @@
 <link as="script" href="../../_static/scripts/bootstrap.js?digest=8d27b9dea8ad943066ae" rel="preload"/>
 <link as="script" href="../../_static/scripts/pydata-sphinx-theme.js?digest=8d27b9dea8ad943066ae" rel="preload"/>
 <script src="../../_static/vendor/fontawesome/6.5.1/js/all.min.js?digest=8d27b9dea8ad943066ae"></script>
-<script src="../../_static/documentation_options.js?v=a2c36881"></script>
-<script src="../../_static/doctools.js?v=888ff710"></script>
+<script src="../../_static/documentation_options.js?v=d875d36e"></script>
+<script src="../../_static/doctools.js?v=9a2dae69"></script>
 <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
 <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
 <script src="../../_static/copybutton.js?v=97f0b27d"></script>
@@ -53,8 +53,8 @@
 <script>DOCUMENTATION_OPTIONS.pagename = 'auto_examples/text/plot_document_classification_20newsgroups';</script>
 <script>
         DOCUMENTATION_OPTIONS.theme_version = '0.15.2';
-        DOCUMENTATION_OPTIONS.theme_switcher_json_url = 'https://scikit-learn.org/_pst_preview/versions.json';
-        DOCUMENTATION_OPTIONS.theme_switcher_version_match = '1.5.dev0';
+        DOCUMENTATION_OPTIONS.theme_switcher_json_url = 'https://scikit-learn.org/_pst_preview/_static/versions.json';
+        DOCUMENTATION_OPTIONS.theme_switcher_version_match = '1.6.dev0';
         DOCUMENTATION_OPTIONS.show_version_warning_banner = true;
         </script>
 <script src="../../_static/scripts/dropdown.js?v=12d599f8"></script>
@@ -549,7 +549,6 @@ document.write(`
 <li class="toctree-l2"><a class="reference internal" href="../applications/plot_face_recognition.html">Faces recognition example using eigenfaces and SVMs</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../applications/plot_digits_denoising.html">Image denoising using kernel PCA</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../applications/plot_time_series_lagged_features.html">Lagged features for time series forecasting</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../applications/svm_gui.html">Libsvm GUI</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../applications/plot_model_complexity_influence.html">Model Complexity Influence</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../applications/plot_out_of_core_classification.html">Out-of-core classification of text documents</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../applications/plot_outlier_detection_wine.html">Outlier detection on a real data set</a></li>
@@ -694,6 +693,8 @@ document.write(`
 <li class="toctree-l2"><a class="reference internal" href="../model_selection/plot_cv_predict.html">Plotting Cross-Validated Predictions</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../model_selection/plot_learning_curve.html">Plotting Learning Curves and Checking Models’ Scalability</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../model_selection/plot_validation_curve.html">Plotting Validation Curves</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../model_selection/plot_tuned_decision_threshold.html">Post-hoc tuning the cut-off point of decision function</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../model_selection/plot_cost_sensitive_learning.html">Post-tuning the decision threshold for cost-sensitive learning</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../model_selection/plot_precision_recall.html">Precision-Recall</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../model_selection/plot_roc_crossval.html">Receiver Operating Characteristic (ROC) with cross validation</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../model_selection/plot_grid_search_text_feature_extraction.html">Sample pipeline for text feature extraction and evaluation</a></li>
@@ -955,15 +956,6 @@ metadata stripping.</p>
 <span class="p">)</span>
 </pre></div>
 </div>
-<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>2034 documents - 3.98MB (training set)
-1353 documents - 2.87MB (test set)
-4 categories
-vectorize training done in 0.369s at 10.786MB/s
-n_samples: 2034, n_features: 7831
-vectorize testing done in 0.232s at 12.337MB/s
-n_samples: 1353, n_features: 7831
-</pre></div>
-</div>
 <p>Our first model is an instance of the
 <a class="reference internal" href="../../modules/generated/sklearn.linear_model.RidgeClassifier.html#sklearn.linear_model.RidgeClassifier" title="sklearn.linear_model.RidgeClassifier"><code class="xref py py-class docutils literal notranslate"><span class="pre">RidgeClassifier</span></code></a> class. This is a linear
 classification model that uses the mean squared error on {-1, 1} encoded
@@ -994,7 +986,7 @@ in the classification errors.</p>
 <span class="p">)</span>
 </pre></div>
 </div>
-<img alt="Confusion Matrix for RidgeClassifier on the original documents" class="sphx-glr-single-img" src="../../_images/sphx_glr_plot_document_classification_20newsgroups_001.png" srcset="../../_images/sphx_glr_plot_document_classification_20newsgroups_001.png"/><p>The confusion matrix highlights that documents of the <code class="docutils literal notranslate"><span class="pre">alt.atheism</span></code> class are
+<p>The confusion matrix highlights that documents of the <code class="docutils literal notranslate"><span class="pre">alt.atheism</span></code> class are
 often confused with documents with the class <code class="docutils literal notranslate"><span class="pre">talk.religion.misc</span></code> class and
 vice-versa which is expected since the topics are semantically related.</p>
 <p>We also observe that some documents of the <code class="docutils literal notranslate"><span class="pre">sci.space</span></code> class can be misclassified as
@@ -1055,15 +1047,6 @@ by looking at the words with the highest average feature effects:</p>
 <span class="n">_</span> <span class="o">=</span> <span class="n">plot_feature_effects</span><span class="p">()</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s2">"Average feature effect on the original data"</span><span class="p">)</span>
 </pre></div>
 </div>
-<img alt="Average feature effect on the original data" class="sphx-glr-single-img" src="../../_images/sphx_glr_plot_document_classification_20newsgroups_002.png" srcset="../../_images/sphx_glr_plot_document_classification_20newsgroups_002.png"/><div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>top 5 keywords per class:
-  alt.atheism comp.graphics sci.space talk.religion.misc
-0       keith      graphics     space          christian
-1         god    university      nasa                com
-2    atheists        thanks     orbit                god
-3      people          does      moon           morality
-4     caltech         image    access             people
-</pre></div>
-</div>
 <p>We can observe that the most predictive words are often strongly positively
 associated with a single class and negatively associated with all the other
 classes. Most of those positive associations are quite easy to interpret.
@@ -1083,108 +1066,6 @@ of the sender of previous emails in the discussion as can be seen below:</p>
     <span class="k">if</span> <span class="s2">"caltech"</span> <span class="ow">in</span> <span class="n">doc</span><span class="p">:</span>
         <span class="nb">print</span><span class="p">(</span><span class="n">doc</span><span class="p">)</span>
         <span class="k">break</span>
-</pre></div>
-</div>
-<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>From: livesey@solntze.wpd.sgi.com (Jon Livesey)
-Subject: Re: Morality? (was Re: &lt;Political Atheists?)
-Organization: sgi
-Lines: 93
-Distribution: world
-NNTP-Posting-Host: solntze.wpd.sgi.com
-
-In article &lt;1qlettINN8oi@gap.caltech.edu&gt;, keith@cco.caltech.edu (Keith Allan Schneider) writes:
-|&gt; livesey@solntze.wpd.sgi.com (Jon Livesey) writes:
-|&gt;
-|&gt; &gt;&gt;&gt;Explain to me
-|&gt; &gt;&gt;&gt;how instinctive acts can be moral acts, and I am happy to listen.
-|&gt; &gt;&gt;For example, if it were instinctive not to murder...
-|&gt; &gt;
-|&gt; &gt;Then not murdering would have no moral significance, since there
-|&gt; &gt;would be nothing voluntary about it.
-|&gt;
-|&gt; See, there you go again, saying that a moral act is only significant
-|&gt; if it is "voluntary."  Why do you think this?
-
-If you force me to do something, am I morally responsible for it?
-
-|&gt;
-|&gt; And anyway, humans have the ability to disregard some of their instincts.
-
-Well, make up your mind.    Is it to be "instinctive not to murder"
-or not?
-
-|&gt;
-|&gt; &gt;&gt;So, only intelligent beings can be moral, even if the bahavior of other
-|&gt; &gt;&gt;beings mimics theirs?
-|&gt; &gt;
-|&gt; &gt;You are starting to get the point.  Mimicry is not necessarily the
-|&gt; &gt;same as the action being imitated.  A Parrot saying "Pretty Polly"
-|&gt; &gt;isn't necessarily commenting on the pulchritude of Polly.
-|&gt;
-|&gt; You are attaching too many things to the term "moral," I think.
-|&gt; Let's try this:  is it "good" that animals of the same species
-|&gt; don't kill each other.  Or, do you think this is right?
-
-It's not even correct.    Animals of the same species do kill
-one another.
-
-|&gt;
-|&gt; Or do you think that animals are machines, and that nothing they do
-|&gt; is either right nor wrong?
-
-Sigh.   I wonder how many times we have been round this loop.
-
-I think that instinctive bahaviour has no moral significance.
-I am quite prepared to believe that higher animals, such as
-primates, have the beginnings of a moral sense, since they seem
-to exhibit self-awareness.
-
-|&gt;
-|&gt;
-|&gt; &gt;&gt;Animals of the same species could kill each other arbitarily, but
-|&gt; &gt;&gt;they don't.
-|&gt; &gt;
-|&gt; &gt;They do.  I and other posters have given you many examples of exactly
-|&gt; &gt;this, but you seem to have a very short memory.
-|&gt;
-|&gt; Those weren't arbitrary killings.  They were slayings related to some
-|&gt; sort of mating ritual or whatnot.
-
-So what?     Are you trying to say that some killing in animals
-has a moral significance and some does not?   Is this your
-natural morality&gt;
-
-
-|&gt;
-|&gt; &gt;&gt;Are you trying to say that this isn't an act of morality because
-|&gt; &gt;&gt;most animals aren't intelligent enough to think like we do?
-|&gt; &gt;
-|&gt; &gt;I'm saying:
-|&gt; &gt;    "There must be the possibility that the organism - it's not
-|&gt; &gt;    just people we are talking about - can consider alternatives."
-|&gt; &gt;
-|&gt; &gt;It's right there in the posting you are replying to.
-|&gt;
-|&gt; Yes it was, but I still don't understand your distinctions.  What
-|&gt; do you mean by "consider?"  Can a small child be moral?  How about
-|&gt; a gorilla?  A dolphin?  A platypus?  Where is the line drawn?  Does
-|&gt; the being need to be self aware?
-
-Are you blind?   What do you think that this sentence means?
-
-        "There must be the possibility that the organism - it's not
-        just people we are talking about - can consider alternatives."
-
-What would that imply?
-
-|&gt;
-|&gt; What *do* you call the mechanism which seems to prevent animals of
-|&gt; the same species from (arbitrarily) killing each other?  Don't
-|&gt; you find the fact that they don't at all significant?
-
-I find the fact that they do to be significant.
-
-jon.
 </pre></div>
 </div>
 <p>Such headers, signature footers (and quoted metadata from previous messages)
@@ -1223,20 +1104,11 @@ rely too much on this kind of metadata to make its decisions:</p>
 <span class="p">)</span>
 </pre></div>
 </div>
-<img alt="Confusion Matrix for RidgeClassifier on filtered documents" class="sphx-glr-single-img" src="../../_images/sphx_glr_plot_document_classification_20newsgroups_003.png" srcset="../../_images/sphx_glr_plot_document_classification_20newsgroups_003.png"/><p>By looking at the confusion matrix, it is more evident that the scores of the
+<p>By looking at the confusion matrix, it is more evident that the scores of the
 model trained with metadata were over-optimistic. The classification problem
 without access to the metadata is less accurate but more representative of the
 intended text classification problem.</p>
 <div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">_</span> <span class="o">=</span> <span class="n">plot_feature_effects</span><span class="p">()</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s2">"Average feature effects on filtered documents"</span><span class="p">)</span>
-</pre></div>
-</div>
-<img alt="Average feature effects on filtered documents" class="sphx-glr-single-img" src="../../_images/sphx_glr_plot_document_classification_20newsgroups_004.png" srcset="../../_images/sphx_glr_plot_document_classification_20newsgroups_004.png"/><div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>top 5 keywords per class:
-  alt.atheism comp.graphics sci.space talk.religion.misc
-0         don      graphics     space                god
-1      people          file      like          christian
-2         say        thanks      nasa              jesus
-3    religion         image     orbit         christians
-4        post          does    launch              wrong
 </pre></div>
 </div>
 <p>In the next section we keep the dataset without metadata to compare several
@@ -1325,91 +1197,6 @@ for a demo on how such tuning can be done.</p>
     <span class="n">results</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">benchmark</span><span class="p">(</span><span class="n">clf</span><span class="p">,</span> <span class="n">name</span><span class="p">))</span>
 </pre></div>
 </div>
-<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>================================================================================
-Logistic Regression
-________________________________________________________________________________
-Training:
-LogisticRegression(C=5, max_iter=1000)
-train time: 0.171s
-test time:  0.000597s
-accuracy:   0.772
-dimensionality: 5316
-density: 1.0
-
-
-================================================================================
-Ridge Classifier
-________________________________________________________________________________
-Training:
-RidgeClassifier(solver='sparse_cg')
-train time: 0.0314s
-test time:  0.000633s
-accuracy:   0.76
-dimensionality: 5316
-density: 1.0
-
-
-================================================================================
-kNN
-________________________________________________________________________________
-Training:
-KNeighborsClassifier(n_neighbors=100)
-train time: 0.000931s
-test time:  0.0895s
-accuracy:   0.753
-
-================================================================================
-Random Forest
-________________________________________________________________________________
-Training:
-RandomForestClassifier()
-train time: 1.63s
-test time:  0.052s
-accuracy:   0.704
-
-================================================================================
-Linear SVC
-________________________________________________________________________________
-Training:
-LinearSVC(C=0.1, dual=False)
-train time: 0.0312s
-test time:  0.00066s
-accuracy:   0.752
-dimensionality: 5316
-density: 1.0
-
-
-================================================================================
-log-loss SGD
-________________________________________________________________________________
-Training:
-SGDClassifier(early_stopping=True, loss='log_loss', n_iter_no_change=3)
-train time: 0.0272s
-test time:  0.000623s
-accuracy:   0.762
-dimensionality: 5316
-density: 1.0
-
-
-================================================================================
-NearestCentroid
-________________________________________________________________________________
-Training:
-NearestCentroid()
-train time: 0.00264s
-test time:  0.00137s
-accuracy:   0.748
-
-================================================================================
-Complement naive Bayes
-________________________________________________________________________________
-Training:
-ComplementNB(alpha=0.1)
-train time: 0.00198s
-test time:  0.000452s
-accuracy:   0.779
-</pre></div>
-</div>
 </section>
 <section id="plot-accuracy-training-and-test-time-of-each-classifier">
 <h2>Plot accuracy, training and test time of each classifier<a class="headerlink" href="#plot-accuracy-training-and-test-time-of-each-classifier" title="Link to this heading">#</a></h2>
@@ -1445,10 +1232,6 @@ training and testing time of each classifier.</p>
     <span class="n">ax2</span><span class="o">.</span><span class="n">annotate</span><span class="p">(</span><span class="n">txt</span><span class="p">,</span> <span class="p">(</span><span class="n">score</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">test_time</span><span class="p">[</span><span class="n">i</span><span class="p">]))</span>
 </pre></div>
 </div>
-<ul class="sphx-glr-horizontal">
-<li><img alt="Score-training time trade-off" class="sphx-glr-multi-img" src="../../_images/sphx_glr_plot_document_classification_20newsgroups_005.png" srcset="../../_images/sphx_glr_plot_document_classification_20newsgroups_005.png"/></li>
-<li><img alt="Score-test time trade-off" class="sphx-glr-multi-img" src="../../_images/sphx_glr_plot_document_classification_20newsgroups_006.png" srcset="../../_images/sphx_glr_plot_document_classification_20newsgroups_006.png"/></li>
-</ul>
 <p>The naive Bayes model has the best trade-off between score and
 training/testing time, while Random Forest is both slow to train, expensive to
 predict and has a comparatively bad accuracy. This is expected: for
@@ -1469,7 +1252,6 @@ document in the training set, which is computationally expensive. Furthermore,
 the “curse of dimensionality” harms the ability of this model to yield
 competitive accuracy in the high dimensional feature space of text
 classification problems.</p>
-<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> (0 minutes 6.552 seconds)</p>
 
 <p class="rubric">Related examples</p>
 <div class="sphx-glr-thumbnails"><div class="sphx-glr-thumbcontainer" tooltip="The dataset used in this example is 20newsgroups_dataset which will be automatically downloaded..."><img alt="" src="../../_images/sphx_glr_plot_grid_search_text_feature_extraction_thumb.png"/>

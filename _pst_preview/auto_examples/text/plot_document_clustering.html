@@ -13,7 +13,7 @@
 <meta content="https://scikit-learn.org/stable/_static/scikit-learn-logo-small.png" property="og:image"/>
 <meta content="scikit-learn" property="og:image:alt"/>
 <meta content="This is an example showing how the scikit-learn API can be used to cluster documents by topics using a Bag of Words approach. Two algorithms are demonstrated, namely KMeans and its more scalable va..." name="description"/>
-<title>Clustering text documents using k-means — scikit-learn 1.5.dev0 documentation</title>
+<title>Clustering text documents using k-means — scikit-learn 1.6.dev0 documentation</title>
 <script data-cfasync="false">
     document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
     document.documentElement.dataset.theme = localStorage.getItem("theme") || "light";
@@ -42,8 +42,8 @@
 <link as="script" href="../../_static/scripts/bootstrap.js?digest=8d27b9dea8ad943066ae" rel="preload"/>
 <link as="script" href="../../_static/scripts/pydata-sphinx-theme.js?digest=8d27b9dea8ad943066ae" rel="preload"/>
 <script src="../../_static/vendor/fontawesome/6.5.1/js/all.min.js?digest=8d27b9dea8ad943066ae"></script>
-<script src="../../_static/documentation_options.js?v=a2c36881"></script>
-<script src="../../_static/doctools.js?v=888ff710"></script>
+<script src="../../_static/documentation_options.js?v=d875d36e"></script>
+<script src="../../_static/doctools.js?v=9a2dae69"></script>
 <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
 <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
 <script src="../../_static/copybutton.js?v=97f0b27d"></script>
@@ -53,8 +53,8 @@
 <script>DOCUMENTATION_OPTIONS.pagename = 'auto_examples/text/plot_document_clustering';</script>
 <script>
         DOCUMENTATION_OPTIONS.theme_version = '0.15.2';
-        DOCUMENTATION_OPTIONS.theme_switcher_json_url = 'https://scikit-learn.org/_pst_preview/versions.json';
-        DOCUMENTATION_OPTIONS.theme_switcher_version_match = '1.5.dev0';
+        DOCUMENTATION_OPTIONS.theme_switcher_json_url = 'https://scikit-learn.org/_pst_preview/_static/versions.json';
+        DOCUMENTATION_OPTIONS.theme_switcher_version_match = '1.6.dev0';
         DOCUMENTATION_OPTIONS.show_version_warning_banner = true;
         </script>
 <script src="../../_static/scripts/dropdown.js?v=12d599f8"></script>
@@ -549,7 +549,6 @@ document.write(`
 <li class="toctree-l2"><a class="reference internal" href="../applications/plot_face_recognition.html">Faces recognition example using eigenfaces and SVMs</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../applications/plot_digits_denoising.html">Image denoising using kernel PCA</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../applications/plot_time_series_lagged_features.html">Lagged features for time series forecasting</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../applications/svm_gui.html">Libsvm GUI</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../applications/plot_model_complexity_influence.html">Model Complexity Influence</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../applications/plot_out_of_core_classification.html">Out-of-core classification of text documents</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../applications/plot_outlier_detection_wine.html">Outlier detection on a real data set</a></li>
@@ -694,6 +693,8 @@ document.write(`
 <li class="toctree-l2"><a class="reference internal" href="../model_selection/plot_cv_predict.html">Plotting Cross-Validated Predictions</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../model_selection/plot_learning_curve.html">Plotting Learning Curves and Checking Models’ Scalability</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../model_selection/plot_validation_curve.html">Plotting Validation Curves</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../model_selection/plot_tuned_decision_threshold.html">Post-hoc tuning the cut-off point of decision function</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../model_selection/plot_cost_sensitive_learning.html">Post-tuning the decision threshold for cost-sensitive learning</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../model_selection/plot_precision_recall.html">Precision-Recall</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../model_selection/plot_roc_crossval.html">Receiver Operating Characteristic (ROC) with cross validation</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../model_selection/plot_grid_search_text_feature_extraction.html">Sample pipeline for text feature extraction and evaluation</a></li>
@@ -889,9 +890,6 @@ strip those features and have a more sensible clustering problem.</p>
 <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">dataset</span><span class="o">.</span><span class="n">data</span><span class="p">)</span><span class="si">}</span><span class="s2"> documents - </span><span class="si">{</span><span class="n">true_k</span><span class="si">}</span><span class="s2"> categories"</span><span class="p">)</span>
 </pre></div>
 </div>
-<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>3387 documents - 4 categories
-</pre></div>
-</div>
 </section>
 <section id="quantifying-the-quality-of-clustering-results">
 <h2>Quantifying the quality of clustering results<a class="headerlink" href="#quantifying-the-quality-of-clustering-results" title="Link to this heading">#</a></h2>
@@ -1005,19 +1003,12 @@ IDF normalization as provided by
 <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"n_samples: </span><span class="si">{</span><span class="n">X_tfidf</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="si">}</span><span class="s2">, n_features: </span><span class="si">{</span><span class="n">X_tfidf</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
 </pre></div>
 </div>
-<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>vectorization done in 0.420 s
-n_samples: 3387, n_features: 7929
-</pre></div>
-</div>
 <p>After ignoring terms that appear in more than 50% of the documents (as set by
 <code class="docutils literal notranslate"><span class="pre">max_df=0.5</span></code>) and terms that are not present in at least 5 documents (set by
 <code class="docutils literal notranslate"><span class="pre">min_df=5</span></code>), the resulting number of unique terms <code class="docutils literal notranslate"><span class="pre">n_features</span></code> is around
 8,000. We can additionally quantify the sparsity of the <code class="docutils literal notranslate"><span class="pre">X_tfidf</span></code> matrix as
 the fraction of non-zero entries divided by the total number of elements.</p>
 <div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">X_tfidf</span><span class="o">.</span><span class="n">nnz</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><a class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-function" href="https://numpy.org/doc/stable/reference/generated/numpy.prod.html#numpy.prod" title="numpy.prod"><span class="n">np</span><span class="o">.</span><span class="n">prod</span></a><span class="p">(</span><span class="n">X_tfidf</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span><span class="si">:</span><span class="s2">.3f</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
-</pre></div>
-</div>
-<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>0.007
 </pre></div>
 </div>
 <p>We find that around 0.7% of the entries of the <code class="docutils literal notranslate"><span class="pre">X_tfidf</span></code> matrix are non-zero.</p>
@@ -1051,15 +1042,6 @@ to highly imbalanced clusters, depending on the random initialization:</p>
 <span class="p">)</span>
 </pre></div>
 </div>
-<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>Number of elements assigned to each cluster: [1638  993  309  447]
-Number of elements assigned to each cluster: [1689  638  480  580]
-Number of elements assigned to each cluster: [   1    1    1 3384]
-Number of elements assigned to each cluster: [1887  311  332  857]
-Number of elements assigned to each cluster: [ 291  673 1771  652]
-
-True number of documents in each category according to the class labels: [799 973 987 628]
-</pre></div>
-</div>
 <p>To avoid this problem, one possibility is to increase the number of runs with
 independent random initiations <code class="docutils literal notranslate"><span class="pre">n_init</span></code>. In such case the clustering with the
 best inertia (objective function of k-means) is chosen.</p>
@@ -1070,14 +1052,6 @@ best inertia (objective function of k-means) is chosen.</p>
 <span class="p">)</span>
 
 <span class="n">fit_and_evaluate</span><span class="p">(</span><span class="n">kmeans</span><span class="p">,</span> <span class="n">X_tfidf</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s2">"KMeans</span><span class="se">\n</span><span class="s2">on tf-idf vectors"</span><span class="p">)</span>
-</pre></div>
-</div>
-<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>clustering done in 0.20 ± 0.03 s
-Homogeneity: 0.354 ± 0.011
-Completeness: 0.403 ± 0.005
-V-measure: 0.377 ± 0.008
-Adjusted Rand-Index: 0.211 ± 0.016
-Silhouette Coefficient: 0.007 ± 0.000
 </pre></div>
 </div>
 <p>All those clustering evaluation metrics have a maximum value of 1.0 (for a
@@ -1112,10 +1086,6 @@ the information retrieval and text mining literature.</p>
 <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Explained variance of the SVD step: </span><span class="si">{</span><span class="n">explained_variance</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="mi">100</span><span class="si">:</span><span class="s2">.1f</span><span class="si">}</span><span class="s2">%"</span><span class="p">)</span>
 </pre></div>
 </div>
-<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>LSA done in 0.363 s
-Explained variance of the SVD step: 18.4%
-</pre></div>
-</div>
 <p>Using a single initialization means the processing time will be reduced for
 both <a class="reference internal" href="../../modules/generated/sklearn.cluster.KMeans.html#sklearn.cluster.KMeans" title="sklearn.cluster.KMeans"><code class="xref py py-class docutils literal notranslate"><span class="pre">KMeans</span></code></a> and
 <a class="reference internal" href="../../modules/generated/sklearn.cluster.MiniBatchKMeans.html#sklearn.cluster.MiniBatchKMeans" title="sklearn.cluster.MiniBatchKMeans"><code class="xref py py-class docutils literal notranslate"><span class="pre">MiniBatchKMeans</span></code></a>.</p>
@@ -1126,14 +1096,6 @@ both <a class="reference internal" href="../../modules/generated/sklearn.cluster
 <span class="p">)</span>
 
 <span class="n">fit_and_evaluate</span><span class="p">(</span><span class="n">kmeans</span><span class="p">,</span> <span class="n">X_lsa</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s2">"KMeans</span><span class="se">\n</span><span class="s2">with LSA on tf-idf vectors"</span><span class="p">)</span>
-</pre></div>
-</div>
-<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>clustering done in 0.02 ± 0.00 s
-Homogeneity: 0.403 ± 0.001
-Completeness: 0.436 ± 0.015
-V-measure: 0.419 ± 0.007
-Adjusted Rand-Index: 0.310 ± 0.015
-Silhouette Coefficient: 0.029 ± 0.001
 </pre></div>
 </div>
 <p>We can observe that clustering on the LSA representation of the document is
@@ -1157,14 +1119,6 @@ clustering evaluation metrics have improved. We repeat the experiment with
 <span class="p">)</span>
 </pre></div>
 </div>
-<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>clustering done in 0.02 ± 0.00 s
-Homogeneity: 0.342 ± 0.093
-Completeness: 0.371 ± 0.051
-V-measure: 0.353 ± 0.077
-Adjusted Rand-Index: 0.297 ± 0.124
-Silhouette Coefficient: 0.028 ± 0.005
-</pre></div>
-</div>
 </section>
 <section id="top-terms-per-cluster">
 <h3>Top terms per cluster<a class="headerlink" href="#top-terms-per-cluster" title="Link to this heading">#</a></h3>
@@ -1182,12 +1136,6 @@ for a comparison with the most predictive words <strong>for each target class</s
     <span class="k">for</span> <span class="n">ind</span> <span class="ow">in</span> <span class="n">order_centroids</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="p">:</span><span class="mi">10</span><span class="p">]:</span>
         <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">terms</span><span class="p">[</span><span class="n">ind</span><span class="p">]</span><span class="si">}</span><span class="s2"> "</span><span class="p">,</span> <span class="n">end</span><span class="o">=</span><span class="s2">""</span><span class="p">)</span>
     <span class="nb">print</span><span class="p">()</span>
-</pre></div>
-</div>
-<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>Cluster 0: just think don know like time ve say does good
-Cluster 1: space launch orbit shuttle nasa earth moon like mission just
-Cluster 2: god people jesus believe bible don say christian think religion
-Cluster 3: thanks graphics image program file files know help looking does
 </pre></div>
 </div>
 </section>
@@ -1215,9 +1163,6 @@ the hashed vector space.</p>
 <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"vectorization done in </span><span class="si">{</span><a class="sphx-glr-backref-module-time sphx-glr-backref-type-py-function" href="https://docs.python.org/3/library/time.html#time.time" title="time.time"><span class="n">time</span></a><span class="p">()</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">t0</span><span class="si">:</span><span class="s2">.3f</span><span class="si">}</span><span class="s2"> s"</span><span class="p">)</span>
 </pre></div>
 </div>
-<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>vectorization done in 1.610 s
-</pre></div>
-</div>
 <p>One can observe that the LSA step takes a relatively long time to fit,
 especially with hashed vectors. The reason is that a hashed space is typically
 large (set to <code class="docutils literal notranslate"><span class="pre">n_features=50_000</span></code> in this example). One can try lowering the
@@ -1229,27 +1174,11 @@ hashed-lsa-reduced data:</p>
 <div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">fit_and_evaluate</span><span class="p">(</span><span class="n">kmeans</span><span class="p">,</span> <span class="n">X_hashed_lsa</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s2">"KMeans</span><span class="se">\n</span><span class="s2">with LSA on hashed vectors"</span><span class="p">)</span>
 </pre></div>
 </div>
-<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>clustering done in 0.02 ± 0.01 s
-Homogeneity: 0.393 ± 0.011
-Completeness: 0.441 ± 0.018
-V-measure: 0.415 ± 0.014
-Adjusted Rand-Index: 0.326 ± 0.013
-Silhouette Coefficient: 0.030 ± 0.001
-</pre></div>
-</div>
 <div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">fit_and_evaluate</span><span class="p">(</span>
     <span class="n">minibatch_kmeans</span><span class="p">,</span>
     <span class="n">X_hashed_lsa</span><span class="p">,</span>
     <span class="n">name</span><span class="o">=</span><span class="s2">"MiniBatchKMeans</span><span class="se">\n</span><span class="s2">with LSA on hashed vectors"</span><span class="p">,</span>
 <span class="p">)</span>
-</pre></div>
-</div>
-<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>clustering done in 0.02 ± 0.00 s
-Homogeneity: 0.351 ± 0.044
-Completeness: 0.360 ± 0.034
-V-measure: 0.355 ± 0.039
-Adjusted Rand-Index: 0.317 ± 0.037
-Silhouette Coefficient: 0.024 ± 0.004
 </pre></div>
 </div>
 <p>Both methods lead to good results that are similar to running the same models
@@ -1278,7 +1207,7 @@ on the traditional LSA vectors (without hashing).</p>
 <a class="sphx-glr-backref-module-matplotlib-pyplot sphx-glr-backref-type-py-function" href="https://matplotlib.org/stable/api/_as_gen/matplotlib.pyplot.tight_layout.html#matplotlib.pyplot.tight_layout" title="matplotlib.pyplot.tight_layout"><span class="n">plt</span><span class="o">.</span><span class="n">tight_layout</span></a><span class="p">()</span>
 </pre></div>
 </div>
-<img alt="plot document clustering" class="sphx-glr-single-img" src="../../_images/sphx_glr_plot_document_clustering_001.png" srcset="../../_images/sphx_glr_plot_document_clustering_001.png"/><p><a class="reference internal" href="../../modules/generated/sklearn.cluster.KMeans.html#sklearn.cluster.KMeans" title="sklearn.cluster.KMeans"><code class="xref py py-class docutils literal notranslate"><span class="pre">KMeans</span></code></a> and <a class="reference internal" href="../../modules/generated/sklearn.cluster.MiniBatchKMeans.html#sklearn.cluster.MiniBatchKMeans" title="sklearn.cluster.MiniBatchKMeans"><code class="xref py py-class docutils literal notranslate"><span class="pre">MiniBatchKMeans</span></code></a>
+<p><a class="reference internal" href="../../modules/generated/sklearn.cluster.KMeans.html#sklearn.cluster.KMeans" title="sklearn.cluster.KMeans"><code class="xref py py-class docutils literal notranslate"><span class="pre">KMeans</span></code></a> and <a class="reference internal" href="../../modules/generated/sklearn.cluster.MiniBatchKMeans.html#sklearn.cluster.MiniBatchKMeans" title="sklearn.cluster.MiniBatchKMeans"><code class="xref py py-class docutils literal notranslate"><span class="pre">MiniBatchKMeans</span></code></a>
 suffer from the phenomenon called the <a class="reference external" href="https://en.wikipedia.org/wiki/Curse_of_dimensionality">Curse of Dimensionality</a> for high dimensional
 datasets such as text data. That is the reason why the overall scores improve
 when using LSA. Using LSA reduced data also improves the stability and
@@ -1308,21 +1237,20 @@ is less stable than <a class="reference internal" href="../../modules/generated/
 dataset. It is more interesting to use when the number of samples is much
 bigger, but it can come at the expense of a small degradation in clustering
 quality compared to the traditional k-means algorithm.</p>
-<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> (0 minutes 7.322 seconds)</p>
 
 <p class="rubric">Related examples</p>
 <div class="sphx-glr-thumbnails"><div class="sphx-glr-thumbcontainer" tooltip="In this example we compare the various initialization strategies for K-means in terms of runtim..."><img alt="" src="../../_images/sphx_glr_plot_kmeans_digits_thumb.png"/>
 <p><a class="reference internal" href="../cluster/plot_kmeans_digits.html#sphx-glr-auto-examples-cluster-plot-kmeans-digits-py"><span class="std std-ref">A demo of K-Means clustering on the handwritten digits data</span></a></p>
 <div class="sphx-glr-thumbnail-title">A demo of K-Means clustering on the handwritten digits data</div>
-</div><div class="sphx-glr-thumbcontainer" tooltip="This example demonstrates the Spectral Co-clustering algorithm on the twenty newsgroups dataset..."><img alt="" src="../../_images/sphx_glr_plot_bicluster_newsgroups_thumb.png"/>
-<p><a class="reference internal" href="../bicluster/plot_bicluster_newsgroups.html#sphx-glr-auto-examples-bicluster-plot-bicluster-newsgroups-py"><span class="std std-ref">Biclustering documents with the Spectral Co-clustering algorithm</span></a></p>
-<div class="sphx-glr-thumbnail-title">Biclustering documents with the Spectral Co-clustering algorithm</div>
 </div><div class="sphx-glr-thumbcontainer" tooltip="We want to compare the performance of the MiniBatchKMeans and KMeans: the MiniBatchKMeans is fa..."><img alt="" src="../../_images/sphx_glr_plot_mini_batch_kmeans_thumb.png"/>
 <p><a class="reference internal" href="../cluster/plot_mini_batch_kmeans.html#sphx-glr-auto-examples-cluster-plot-mini-batch-kmeans-py"><span class="std std-ref">Comparison of the K-Means and MiniBatchKMeans clustering algorithms</span></a></p>
 <div class="sphx-glr-thumbnail-title">Comparison of the K-Means and MiniBatchKMeans clustering algorithms</div>
 </div><div class="sphx-glr-thumbcontainer" tooltip='- a first experiment with fixed "ground truth labels" (and therefore fixed   number of classes)...'><img alt="" src="../../_images/sphx_glr_plot_adjusted_for_chance_measures_thumb.png"/>
 <p><a class="reference internal" href="../cluster/plot_adjusted_for_chance_measures.html#sphx-glr-auto-examples-cluster-plot-adjusted-for-chance-measures-py"><span class="std std-ref">Adjustment for chance in clustering performance evaluation</span></a></p>
 <div class="sphx-glr-thumbnail-title">Adjustment for chance in clustering performance evaluation</div>
+</div><div class="sphx-glr-thumbcontainer" tooltip="This example demonstrates the Spectral Co-clustering algorithm on the twenty newsgroups dataset..."><img alt="" src="../../_images/sphx_glr_plot_bicluster_newsgroups_thumb.png"/>
+<p><a class="reference internal" href="../bicluster/plot_bicluster_newsgroups.html#sphx-glr-auto-examples-bicluster-plot-bicluster-newsgroups-py"><span class="std std-ref">Biclustering documents with the Spectral Co-clustering algorithm</span></a></p>
+<div class="sphx-glr-thumbnail-title">Biclustering documents with the Spectral Co-clustering algorithm</div>
 </div></div><p class="sphx-glr-signature"><a class="reference external" href="https://sphinx-gallery.github.io">Gallery generated by Sphinx-Gallery</a></p>
 </section>
 </section>

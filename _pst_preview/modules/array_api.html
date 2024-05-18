@@ -16,7 +16,7 @@
 <meta property="og:image:alt" content="scikit-learn" />
 <meta name="description" content="The Array API specification defines a standard API for all array manipulation libraries with a NumPy-like API. Scikit-learn’s Array API support requires array-api-compat to be installed. Some sciki..." />
 
-    <title>11.1. Array API support (experimental) &#8212; scikit-learn 1.5.dev0 documentation</title>
+    <title>11.1. Array API support (experimental) &#8212; scikit-learn 1.6.dev0 documentation</title>
   
   
   
@@ -54,8 +54,8 @@
 <link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=8d27b9dea8ad943066ae" />
   <script src="../_static/vendor/fontawesome/6.5.1/js/all.min.js?digest=8d27b9dea8ad943066ae"></script>
 
-    <script src="../_static/documentation_options.js?v=a2c36881"></script>
-    <script src="../_static/doctools.js?v=888ff710"></script>
+    <script src="../_static/documentation_options.js?v=d875d36e"></script>
+    <script src="../_static/doctools.js?v=9a2dae69"></script>
     <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
     <script src="../_static/copybutton.js?v=97f0b27d"></script>
@@ -65,8 +65,8 @@
     <script>DOCUMENTATION_OPTIONS.pagename = 'modules/array_api';</script>
     <script>
         DOCUMENTATION_OPTIONS.theme_version = '0.15.2';
-        DOCUMENTATION_OPTIONS.theme_switcher_json_url = 'https://scikit-learn.org/_pst_preview/versions.json';
-        DOCUMENTATION_OPTIONS.theme_switcher_version_match = '1.5.dev0';
+        DOCUMENTATION_OPTIONS.theme_switcher_json_url = 'https://scikit-learn.org/_pst_preview/_static/versions.json';
+        DOCUMENTATION_OPTIONS.theme_switcher_version_match = '1.6.dev0';
         DOCUMENTATION_OPTIONS.show_version_warning_banner = true;
         </script>
     <script src="../_static/scripts/dropdown.js?v=12d599f8"></script>
@@ -630,8 +630,9 @@ document.write(`
 <li class="toctree-l1 has-children"><a class="reference internal" href="../model_selection.html">3. Model selection and evaluation</a><input class="toctree-checkbox" id="toctree-checkbox-3" name="toctree-checkbox-3" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-3"><i class="fa-solid fa-chevron-down"></i></label><ul>
 <li class="toctree-l2"><a class="reference internal" href="cross_validation.html">3.1. Cross-validation: evaluating estimator performance</a></li>
 <li class="toctree-l2"><a class="reference internal" href="grid_search.html">3.2. Tuning the hyper-parameters of an estimator</a></li>
-<li class="toctree-l2"><a class="reference internal" href="model_evaluation.html">3.3. Metrics and scoring: quantifying the quality of predictions</a></li>
-<li class="toctree-l2"><a class="reference internal" href="learning_curve.html">3.4. Validation curves: plotting scores to evaluate models</a></li>
+<li class="toctree-l2"><a class="reference internal" href="classification_threshold.html">3.3. Tuning the decision threshold for class prediction</a></li>
+<li class="toctree-l2"><a class="reference internal" href="model_evaluation.html">3.4. Metrics and scoring: quantifying the quality of predictions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="learning_curve.html">3.5. Validation curves: plotting scores to evaluate models</a></li>
 </ul>
 </li>
 <li class="toctree-l1 has-children"><a class="reference internal" href="../inspection.html">4. Inspection</a><input class="toctree-checkbox" id="toctree-checkbox-4" name="toctree-checkbox-4" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-4"><i class="fa-solid fa-chevron-down"></i></label><ul>
@@ -746,7 +747,7 @@ instead of relying on NumPy.</p>
 explicitly as explained in the following.</p>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
-<p>Currently, only <code class="docutils literal notranslate"><span class="pre">cupy.array_api</span></code>, <code class="docutils literal notranslate"><span class="pre">numpy.array_api</span></code>, <code class="docutils literal notranslate"><span class="pre">cupy</span></code>, and <code class="docutils literal notranslate"><span class="pre">PyTorch</span></code>
+<p>Currently, only <code class="docutils literal notranslate"><span class="pre">cupy.array_api</span></code>, <code class="docutils literal notranslate"><span class="pre">array-api-strict</span></code>, <code class="docutils literal notranslate"><span class="pre">cupy</span></code>, and <code class="docutils literal notranslate"><span class="pre">PyTorch</span></code>
 are known to work with scikit-learn’s estimators.</p>
 </div>
 <section id="example-usage">
@@ -811,6 +812,7 @@ the tensors directly:</p>
 <ul class="simple">
 <li><p><a class="reference internal" href="generated/sklearn.decomposition.PCA.html#sklearn.decomposition.PCA" title="sklearn.decomposition.PCA"><code class="xref py py-class docutils literal notranslate"><span class="pre">decomposition.PCA</span></code></a> (with <code class="docutils literal notranslate"><span class="pre">svd_solver=&quot;full&quot;</span></code>,
 <code class="docutils literal notranslate"><span class="pre">svd_solver=&quot;randomized&quot;</span></code> and <code class="docutils literal notranslate"><span class="pre">power_iteration_normalizer=&quot;QR&quot;</span></code>)</p></li>
+<li><p><a class="reference internal" href="generated/sklearn.linear_model.Ridge.html#sklearn.linear_model.Ridge" title="sklearn.linear_model.Ridge"><code class="xref py py-class docutils literal notranslate"><span class="pre">linear_model.Ridge</span></code></a> (with <code class="docutils literal notranslate"><span class="pre">solver=&quot;svd&quot;</span></code>)</p></li>
 <li><p><a class="reference internal" href="generated/sklearn.discriminant_analysis.LinearDiscriminantAnalysis.html#sklearn.discriminant_analysis.LinearDiscriminantAnalysis" title="sklearn.discriminant_analysis.LinearDiscriminantAnalysis"><code class="xref py py-class docutils literal notranslate"><span class="pre">discriminant_analysis.LinearDiscriminantAnalysis</span></code></a> (with <code class="docutils literal notranslate"><span class="pre">solver=&quot;svd&quot;</span></code>)</p></li>
 <li><p><a class="reference internal" href="generated/sklearn.preprocessing.KernelCenterer.html#sklearn.preprocessing.KernelCenterer" title="sklearn.preprocessing.KernelCenterer"><code class="xref py py-class docutils literal notranslate"><span class="pre">preprocessing.KernelCenterer</span></code></a></p></li>
 <li><p><a class="reference internal" href="generated/sklearn.preprocessing.MaxAbsScaler.html#sklearn.preprocessing.MaxAbsScaler" title="sklearn.preprocessing.MaxAbsScaler"><code class="xref py py-class docutils literal notranslate"><span class="pre">preprocessing.MaxAbsScaler</span></code></a></p></li>
@@ -822,6 +824,10 @@ the tensors directly:</p>
 <h3><span class="section-number">11.1.2.2. </span>Metrics<a class="headerlink" href="#metrics" title="Link to this heading">#</a></h3>
 <ul class="simple">
 <li><p><a class="reference internal" href="generated/sklearn.metrics.accuracy_score.html#sklearn.metrics.accuracy_score" title="sklearn.metrics.accuracy_score"><code class="xref py py-func docutils literal notranslate"><span class="pre">sklearn.metrics.accuracy_score</span></code></a></p></li>
+<li><p><a class="reference internal" href="generated/sklearn.metrics.mean_absolute_error.html#sklearn.metrics.mean_absolute_error" title="sklearn.metrics.mean_absolute_error"><code class="xref py py-func docutils literal notranslate"><span class="pre">sklearn.metrics.mean_absolute_error</span></code></a></p></li>
+<li><p><a class="reference internal" href="generated/sklearn.metrics.mean_tweedie_deviance.html#sklearn.metrics.mean_tweedie_deviance" title="sklearn.metrics.mean_tweedie_deviance"><code class="xref py py-func docutils literal notranslate"><span class="pre">sklearn.metrics.mean_tweedie_deviance</span></code></a></p></li>
+<li><p><code class="xref py py-func docutils literal notranslate"><span class="pre">sklearn.metrics.pairwise.cosine_similarity`</span></code></p></li>
+<li><p><a class="reference internal" href="generated/sklearn.metrics.r2_score.html#sklearn.metrics.r2_score" title="sklearn.metrics.r2_score"><code class="xref py py-func docutils literal notranslate"><span class="pre">sklearn.metrics.r2_score</span></code></a></p></li>
 <li><p><a class="reference internal" href="generated/sklearn.metrics.zero_one_loss.html#sklearn.metrics.zero_one_loss" title="sklearn.metrics.zero_one_loss"><code class="xref py py-func docutils literal notranslate"><span class="pre">sklearn.metrics.zero_one_loss</span></code></a></p></li>
 </ul>
 </section>
@@ -831,6 +837,19 @@ the tensors directly:</p>
 <li><p><a class="reference internal" href="generated/sklearn.model_selection.train_test_split.html#sklearn.model_selection.train_test_split" title="sklearn.model_selection.train_test_split"><code class="xref py py-func docutils literal notranslate"><span class="pre">model_selection.train_test_split</span></code></a></p></li>
 </ul>
 <p>Coverage is expected to grow over time. Please follow the dedicated <a class="reference external" href="https://github.com/scikit-learn/scikit-learn/issues/22352">meta-issue on GitHub</a> to track progress.</p>
+</section>
+<section id="type-of-return-values-and-fitted-attributes">
+<h3><span class="section-number">11.1.2.4. </span>Type of return values and fitted attributes<a class="headerlink" href="#type-of-return-values-and-fitted-attributes" title="Link to this heading">#</a></h3>
+<p>When calling functions or methods with Array API compatible inputs, the
+convention is to return array values of the same array container type and
+device as the input data.</p>
+<p>Similarly, when an estimator is fitted with Array API compatible inputs, the
+fitted attributes will be arrays from the same library as the input and stored
+on the same device. The <code class="docutils literal notranslate"><span class="pre">predict</span></code> and <code class="docutils literal notranslate"><span class="pre">transform</span></code> method subsequently expect
+inputs from the same array library and device as the data passed to the <code class="docutils literal notranslate"><span class="pre">fit</span></code>
+method.</p>
+<p>Note however that scoring functions that return scalar values return Python
+scalars (typically a <code class="docutils literal notranslate"><span class="pre">float</span></code> instance) instead of an array scalar value.</p>
 </section>
 </section>
 <section id="common-estimator-checks">
@@ -928,6 +947,7 @@ computational speed is not necessarily better than with the CPU device.</p>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#estimators">11.1.2.1. Estimators</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#metrics">11.1.2.2. Metrics</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#tools">11.1.2.3. Tools</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#type-of-return-values-and-fitted-attributes">11.1.2.4. Type of return values and fitted attributes</a></li>
 </ul>
 </li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#common-estimator-checks">11.1.3. Common estimator checks</a><ul class="nav section-nav flex-column">

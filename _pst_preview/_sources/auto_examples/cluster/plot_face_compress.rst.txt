@@ -11,7 +11,7 @@
         :class: sphx-glr-download-link-note
 
         :ref:`Go to the end <sphx_glr_download_auto_examples_cluster_plot_face_compress.py>`
-        to download the full example code or to run this example in your browser via JupyterLite or Binder
+        to download the full example code. or to run this example in your browser via JupyterLite or Binder
 
 .. rst-class:: sphx-glr-example-title
 
@@ -33,12 +33,6 @@ to perform vector quantization on a set of toy image, the raccoon face.
     # Authors: Gael Varoquaux
     #          Jaques Grobler
     # License: BSD 3 clause
-
-
-
-
-
-
 
 
 .. GENERATED FROM PYTHON SOURCE LINES 15-25
@@ -70,20 +64,6 @@ requires the package `pooch` to be installed.
     print(f"The number of bytes taken in RAM is {raccoon_face.nbytes}")
 
 
-
-
-
-.. rst-class:: sphx-glr-script-out
-
- .. code-block:: none
-
-    The dimension of the image is (768, 1024)
-    The data used to encode the image is of type uint8
-    The number of bytes taken in RAM is 786432
-
-
-
-
 .. GENERATED FROM PYTHON SOURCE LINES 37-44
 
 Thus the image is a 2D array of 768 pixels in height and 1024 pixels in width. Each
@@ -112,17 +92,6 @@ shades of gray, at most. We can check the distribution of these values.
     _ = fig.suptitle("Original image of a raccoon face")
 
 
-
-
-.. image-sg:: /auto_examples/cluster/images/sphx_glr_plot_face_compress_001.png
-   :alt: Original image of a raccoon face, Rendering of the image, Distribution of the pixel values
-   :srcset: /auto_examples/cluster/images/sphx_glr_plot_face_compress_001.png
-   :class: sphx-glr-single-img
-
-
-
-
-
 .. GENERATED FROM PYTHON SOURCE LINES 58-75
 
 Compression via vector quantization
@@ -143,7 +112,7 @@ to define the 8 gray values to sub-sample. The simplest strategy is to define
 them equally spaced, which correspond to setting `strategy="uniform"`. From
 the previous histogram, we know that this strategy is certainly not optimal.
 
-.. GENERATED FROM PYTHON SOURCE LINES 75-100
+.. GENERATED FROM PYTHON SOURCE LINES 75-99
 
 .. code-block:: Python
 
@@ -156,7 +125,6 @@ the previous histogram, we know that this strategy is certainly not optimal.
         encode="ordinal",
         strategy="uniform",
         random_state=0,
-        subsample=200_000,
     )
     compressed_raccoon_uniform = encoder.fit_transform(raccoon_face.reshape(-1, 1)).reshape(
         raccoon_face.shape
@@ -173,18 +141,7 @@ the previous histogram, we know that this strategy is certainly not optimal.
     _ = fig.suptitle("Raccoon face compressed using 3 bits and a uniform strategy")
 
 
-
-
-.. image-sg:: /auto_examples/cluster/images/sphx_glr_plot_face_compress_002.png
-   :alt: Raccoon face compressed using 3 bits and a uniform strategy, Rendering of the image, Sub-sampled distribution of the pixel values
-   :srcset: /auto_examples/cluster/images/sphx_glr_plot_face_compress_002.png
-   :class: sphx-glr-single-img
-
-
-
-
-
-.. GENERATED FROM PYTHON SOURCE LINES 101-108
+.. GENERATED FROM PYTHON SOURCE LINES 100-107
 
 Qualitatively, we can spot some small regions where we see the effect of the
 compression (e.g. leaves on the bottom right corner). But after all, the resulting
@@ -194,7 +151,7 @@ We observe that the distribution of pixels values have been mapped to 8
 different values. We can check the correspondence between such values and the
 original pixel values.
 
-.. GENERATED FROM PYTHON SOURCE LINES 108-113
+.. GENERATED FROM PYTHON SOURCE LINES 107-112
 
 .. code-block:: Python
 
@@ -204,20 +161,7 @@ original pixel values.
     bin_center
 
 
-
-
-
-.. rst-class:: sphx-glr-script-out
-
- .. code-block:: none
-
-
-    array([ 15.625,  46.875,  78.125, 109.375, 140.625, 171.875, 203.125,
-           234.375])
-
-
-
-.. GENERATED FROM PYTHON SOURCE LINES 114-121
+.. GENERATED FROM PYTHON SOURCE LINES 113-120
 
 .. code-block:: Python
 
@@ -229,18 +173,7 @@ original pixel values.
         ax.text(center - 10, ax.get_ybound()[1] + 100, f"{center:.1f}", color=color)
 
 
-
-
-.. image-sg:: /auto_examples/cluster/images/sphx_glr_plot_face_compress_003.png
-   :alt: plot face compress
-   :srcset: /auto_examples/cluster/images/sphx_glr_plot_face_compress_003.png
-   :class: sphx-glr-single-img
-
-
-
-
-
-.. GENERATED FROM PYTHON SOURCE LINES 122-127
+.. GENERATED FROM PYTHON SOURCE LINES 121-126
 
 As previously stated, the uniform sampling strategy is not optimal. Notice for
 instance that the pixels mapped to the value 7 will encode a rather small
@@ -248,7 +181,7 @@ amount of information, whereas the mapped value 3 will represent a large
 amount of counts. We can instead use a clustering strategy such as k-means to
 find a more optimal mapping.
 
-.. GENERATED FROM PYTHON SOURCE LINES 127-149
+.. GENERATED FROM PYTHON SOURCE LINES 126-147
 
 .. code-block:: Python
 
@@ -258,7 +191,6 @@ find a more optimal mapping.
         encode="ordinal",
         strategy="kmeans",
         random_state=0,
-        subsample=200_000,
     )
     compressed_raccoon_kmeans = encoder.fit_transform(raccoon_face.reshape(-1, 1)).reshape(
         raccoon_face.shape
@@ -275,18 +207,7 @@ find a more optimal mapping.
     _ = fig.suptitle("Raccoon face compressed using 3 bits and a K-means strategy")
 
 
-
-
-.. image-sg:: /auto_examples/cluster/images/sphx_glr_plot_face_compress_004.png
-   :alt: Raccoon face compressed using 3 bits and a K-means strategy, Rendering of the image, Distribution of the pixel values
-   :srcset: /auto_examples/cluster/images/sphx_glr_plot_face_compress_004.png
-   :class: sphx-glr-single-img
-
-
-
-
-
-.. GENERATED FROM PYTHON SOURCE LINES 150-154
+.. GENERATED FROM PYTHON SOURCE LINES 148-152
 
 .. code-block:: Python
 
@@ -295,20 +216,7 @@ find a more optimal mapping.
     bin_center
 
 
-
-
-
-.. rst-class:: sphx-glr-script-out
-
- .. code-block:: none
-
-
-    array([ 18.90885631,  53.34346583,  82.64447187, 109.28225276,
-           134.70763101, 159.78681467, 185.17226834, 224.02069427])
-
-
-
-.. GENERATED FROM PYTHON SOURCE LINES 155-162
+.. GENERATED FROM PYTHON SOURCE LINES 153-160
 
 .. code-block:: Python
 
@@ -320,18 +228,7 @@ find a more optimal mapping.
         ax.text(center - 10, ax.get_ybound()[1] + 100, f"{center:.1f}", color=color)
 
 
-
-
-.. image-sg:: /auto_examples/cluster/images/sphx_glr_plot_face_compress_005.png
-   :alt: plot face compress
-   :srcset: /auto_examples/cluster/images/sphx_glr_plot_face_compress_005.png
-   :class: sphx-glr-single-img
-
-
-
-
-
-.. GENERATED FROM PYTHON SOURCE LINES 163-171
+.. GENERATED FROM PYTHON SOURCE LINES 161-169
 
 The counts in the bins are now more balanced and their centers are no longer
 equally spaced. Note that we could enforce the same number of pixels per bin
@@ -342,7 +239,7 @@ Memory footprint
 
 We previously stated that we should save 8 times less memory. Let's verify it.
 
-.. GENERATED FROM PYTHON SOURCE LINES 171-175
+.. GENERATED FROM PYTHON SOURCE LINES 169-173
 
 .. code-block:: Python
 
@@ -351,27 +248,14 @@ We previously stated that we should save 8 times less memory. Let's verify it.
     print(f"Compression ratio: {compressed_raccoon_kmeans.nbytes / raccoon_face.nbytes}")
 
 
-
-
-
-.. rst-class:: sphx-glr-script-out
-
- .. code-block:: none
-
-    The number of bytes taken in RAM is 6291456
-    Compression ratio: 8.0
-
-
-
-
-.. GENERATED FROM PYTHON SOURCE LINES 176-180
+.. GENERATED FROM PYTHON SOURCE LINES 174-178
 
 It is quite surprising to see that our compressed image is taking x8 more
 memory than the original image. This is indeed the opposite of what we
 expected. The reason is mainly due to the type of data used to encode the
 image.
 
-.. GENERATED FROM PYTHON SOURCE LINES 180-183
+.. GENERATED FROM PYTHON SOURCE LINES 178-181
 
 .. code-block:: Python
 
@@ -379,19 +263,7 @@ image.
     print(f"Type of the compressed image: {compressed_raccoon_kmeans.dtype}")
 
 
-
-
-
-.. rst-class:: sphx-glr-script-out
-
- .. code-block:: none
-
-    Type of the compressed image: float64
-
-
-
-
-.. GENERATED FROM PYTHON SOURCE LINES 184-194
+.. GENERATED FROM PYTHON SOURCE LINES 182-192
 
 Indeed, the output of the :class:`~sklearn.preprocessing.KBinsDiscretizer` is
 an array of 64-bit float. It means that it takes x8 more memory. However, we
@@ -403,11 +275,6 @@ the 8-bit unsigned integer representation as well.
 
 In practice, observing a memory gain would require the original image to be in
 a 64-bit float representation.
-
-
-.. rst-class:: sphx-glr-timing
-
-   **Total running time of the script:** (0 minutes 2.285 seconds)
 
 
 .. _sphx_glr_download_auto_examples_cluster_plot_face_compress.py:

@@ -13,7 +13,7 @@
 <meta content="https://scikit-learn.org/stable/_static/scikit-learn-logo-small.png" property="og:image"/>
 <meta content="scikit-learn" property="og:image:alt"/>
 <meta content="This example shows how one can use KBinsDiscretizer to perform vector quantization on a set of toy image, the raccoon face. Original image: We start by loading the raccoon face image from SciPy. We..." name="description"/>
-<title>Vector Quantization Example — scikit-learn 1.5.dev0 documentation</title>
+<title>Vector Quantization Example — scikit-learn 1.6.dev0 documentation</title>
 <script data-cfasync="false">
     document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
     document.documentElement.dataset.theme = localStorage.getItem("theme") || "light";
@@ -42,8 +42,8 @@
 <link as="script" href="../../_static/scripts/bootstrap.js?digest=8d27b9dea8ad943066ae" rel="preload"/>
 <link as="script" href="../../_static/scripts/pydata-sphinx-theme.js?digest=8d27b9dea8ad943066ae" rel="preload"/>
 <script src="../../_static/vendor/fontawesome/6.5.1/js/all.min.js?digest=8d27b9dea8ad943066ae"></script>
-<script src="../../_static/documentation_options.js?v=a2c36881"></script>
-<script src="../../_static/doctools.js?v=888ff710"></script>
+<script src="../../_static/documentation_options.js?v=d875d36e"></script>
+<script src="../../_static/doctools.js?v=9a2dae69"></script>
 <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
 <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
 <script src="../../_static/copybutton.js?v=97f0b27d"></script>
@@ -53,8 +53,8 @@
 <script>DOCUMENTATION_OPTIONS.pagename = 'auto_examples/cluster/plot_face_compress';</script>
 <script>
         DOCUMENTATION_OPTIONS.theme_version = '0.15.2';
-        DOCUMENTATION_OPTIONS.theme_switcher_json_url = 'https://scikit-learn.org/_pst_preview/versions.json';
-        DOCUMENTATION_OPTIONS.theme_switcher_version_match = '1.5.dev0';
+        DOCUMENTATION_OPTIONS.theme_switcher_json_url = 'https://scikit-learn.org/_pst_preview/_static/versions.json';
+        DOCUMENTATION_OPTIONS.theme_switcher_version_match = '1.6.dev0';
         DOCUMENTATION_OPTIONS.show_version_warning_banner = true;
         </script>
 <script src="../../_static/scripts/dropdown.js?v=12d599f8"></script>
@@ -549,7 +549,6 @@ document.write(`
 <li class="toctree-l2"><a class="reference internal" href="../applications/plot_face_recognition.html">Faces recognition example using eigenfaces and SVMs</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../applications/plot_digits_denoising.html">Image denoising using kernel PCA</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../applications/plot_time_series_lagged_features.html">Lagged features for time series forecasting</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../applications/svm_gui.html">Libsvm GUI</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../applications/plot_model_complexity_influence.html">Model Complexity Influence</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../applications/plot_out_of_core_classification.html">Out-of-core classification of text documents</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../applications/plot_outlier_detection_wine.html">Outlier detection on a real data set</a></li>
@@ -694,6 +693,8 @@ document.write(`
 <li class="toctree-l2"><a class="reference internal" href="../model_selection/plot_cv_predict.html">Plotting Cross-Validated Predictions</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../model_selection/plot_learning_curve.html">Plotting Learning Curves and Checking Models’ Scalability</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../model_selection/plot_validation_curve.html">Plotting Validation Curves</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../model_selection/plot_tuned_decision_threshold.html">Post-hoc tuning the cut-off point of decision function</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../model_selection/plot_cost_sensitive_learning.html">Post-tuning the decision threshold for cost-sensitive learning</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../model_selection/plot_precision_recall.html">Precision-Recall</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../model_selection/plot_roc_crossval.html">Receiver Operating Characteristic (ROC) with cross validation</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../model_selection/plot_grid_search_text_feature_extraction.html">Sample pipeline for text feature extraction and evaluation</a></li>
@@ -858,11 +859,6 @@ requires the package <code class="docutils literal notranslate"><span class="pre
 <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"The number of bytes taken in RAM is </span><span class="si">{</span><span class="n">raccoon_face</span><span class="o">.</span><span class="n">nbytes</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
 </pre></div>
 </div>
-<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>The dimension of the image is (768, 1024)
-The data used to encode the image is of type uint8
-The number of bytes taken in RAM is 786432
-</pre></div>
-</div>
 <p>Thus the image is a 2D array of 768 pixels in height and 1024 pixels in width. Each
 value is a 8-bit unsigned integer, which means that the image is encoded using 8
 bits per pixel. The total memory usage of the image is 786 kilobytes (1 byte equals
@@ -883,7 +879,7 @@ shades of gray, at most. We can check the distribution of these values.</p>
 <span class="n">_</span> <span class="o">=</span> <span class="n">fig</span><span class="o">.</span><span class="n">suptitle</span><span class="p">(</span><span class="s2">"Original image of a raccoon face"</span><span class="p">)</span>
 </pre></div>
 </div>
-<img alt="Original image of a raccoon face, Rendering of the image, Distribution of the pixel values" class="sphx-glr-single-img" src="../../_images/sphx_glr_plot_face_compress_001.png" srcset="../../_images/sphx_glr_plot_face_compress_001.png"/></section>
+</section>
 <section id="compression-via-vector-quantization">
 <h2>Compression via vector quantization<a class="headerlink" href="#compression-via-vector-quantization" title="Link to this heading">#</a></h2>
 <p>The idea behind compression via vector quantization is to reduce the number of
@@ -906,7 +902,6 @@ the previous histogram, we know that this strategy is certainly not optimal.</p>
     <span class="n">encode</span><span class="o">=</span><span class="s2">"ordinal"</span><span class="p">,</span>
     <span class="n">strategy</span><span class="o">=</span><span class="s2">"uniform"</span><span class="p">,</span>
     <span class="n">random_state</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
-    <span class="n">subsample</span><span class="o">=</span><span class="mi">200_000</span><span class="p">,</span>
 <span class="p">)</span>
 <span class="n">compressed_raccoon_uniform</span> <span class="o">=</span> <span class="n">encoder</span><span class="o">.</span><span class="n">fit_transform</span><span class="p">(</span><span class="n">raccoon_face</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">))</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span>
     <span class="n">raccoon_face</span><span class="o">.</span><span class="n">shape</span>
@@ -923,7 +918,7 @@ the previous histogram, we know that this strategy is certainly not optimal.</p>
 <span class="n">_</span> <span class="o">=</span> <span class="n">fig</span><span class="o">.</span><span class="n">suptitle</span><span class="p">(</span><span class="s2">"Raccoon face compressed using 3 bits and a uniform strategy"</span><span class="p">)</span>
 </pre></div>
 </div>
-<img alt="Raccoon face compressed using 3 bits and a uniform strategy, Rendering of the image, Sub-sampled distribution of the pixel values" class="sphx-glr-single-img" src="../../_images/sphx_glr_plot_face_compress_002.png" srcset="../../_images/sphx_glr_plot_face_compress_002.png"/><p>Qualitatively, we can spot some small regions where we see the effect of the
+<p>Qualitatively, we can spot some small regions where we see the effect of the
 compression (e.g. leaves on the bottom right corner). But after all, the resulting
 image is still looking good.</p>
 <p>We observe that the distribution of pixels values have been mapped to 8
@@ -934,10 +929,6 @@ original pixel values.</p>
 <span class="n">bin_center</span>
 </pre></div>
 </div>
-<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>array([ 15.625,  46.875,  78.125, 109.375, 140.625, 171.875, 203.125,
-       234.375])
-</pre></div>
-</div>
 <div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">_</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <a class="sphx-glr-backref-module-matplotlib-pyplot sphx-glr-backref-type-py-function" href="https://matplotlib.org/stable/api/_as_gen/matplotlib.pyplot.subplots.html#matplotlib.pyplot.subplots" title="matplotlib.pyplot.subplots"><span class="n">plt</span><span class="o">.</span><span class="n">subplots</span></a><span class="p">()</span>
 <span class="n">ax</span><span class="o">.</span><span class="n">hist</span><span class="p">(</span><span class="n">raccoon_face</span><span class="o">.</span><span class="n">ravel</span><span class="p">(),</span> <span class="n">bins</span><span class="o">=</span><span class="mi">256</span><span class="p">)</span>
 <span class="n">color</span> <span class="o">=</span> <span class="s2">"tab:orange"</span>
@@ -946,7 +937,7 @@ original pixel values.</p>
     <span class="n">ax</span><span class="o">.</span><span class="n">text</span><span class="p">(</span><span class="n">center</span> <span class="o">-</span> <span class="mi">10</span><span class="p">,</span> <span class="n">ax</span><span class="o">.</span><span class="n">get_ybound</span><span class="p">()[</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="mi">100</span><span class="p">,</span> <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">center</span><span class="si">:</span><span class="s2">.1f</span><span class="si">}</span><span class="s2">"</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="n">color</span><span class="p">)</span>
 </pre></div>
 </div>
-<img alt="plot face compress" class="sphx-glr-single-img" src="../../_images/sphx_glr_plot_face_compress_003.png" srcset="../../_images/sphx_glr_plot_face_compress_003.png"/><p>As previously stated, the uniform sampling strategy is not optimal. Notice for
+<p>As previously stated, the uniform sampling strategy is not optimal. Notice for
 instance that the pixels mapped to the value 7 will encode a rather small
 amount of information, whereas the mapped value 3 will represent a large
 amount of counts. We can instead use a clustering strategy such as k-means to
@@ -956,7 +947,6 @@ find a more optimal mapping.</p>
     <span class="n">encode</span><span class="o">=</span><span class="s2">"ordinal"</span><span class="p">,</span>
     <span class="n">strategy</span><span class="o">=</span><span class="s2">"kmeans"</span><span class="p">,</span>
     <span class="n">random_state</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
-    <span class="n">subsample</span><span class="o">=</span><span class="mi">200_000</span><span class="p">,</span>
 <span class="p">)</span>
 <span class="n">compressed_raccoon_kmeans</span> <span class="o">=</span> <span class="n">encoder</span><span class="o">.</span><span class="n">fit_transform</span><span class="p">(</span><span class="n">raccoon_face</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">))</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span>
     <span class="n">raccoon_face</span><span class="o">.</span><span class="n">shape</span>
@@ -973,13 +963,9 @@ find a more optimal mapping.</p>
 <span class="n">_</span> <span class="o">=</span> <span class="n">fig</span><span class="o">.</span><span class="n">suptitle</span><span class="p">(</span><span class="s2">"Raccoon face compressed using 3 bits and a K-means strategy"</span><span class="p">)</span>
 </pre></div>
 </div>
-<img alt="Raccoon face compressed using 3 bits and a K-means strategy, Rendering of the image, Distribution of the pixel values" class="sphx-glr-single-img" src="../../_images/sphx_glr_plot_face_compress_004.png" srcset="../../_images/sphx_glr_plot_face_compress_004.png"/><div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">bin_edges</span> <span class="o">=</span> <span class="n">encoder</span><span class="o">.</span><span class="n">bin_edges_</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">bin_edges</span> <span class="o">=</span> <span class="n">encoder</span><span class="o">.</span><span class="n">bin_edges_</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
 <span class="n">bin_center</span> <span class="o">=</span> <span class="n">bin_edges</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="p">(</span><span class="n">bin_edges</span><span class="p">[</span><span class="mi">1</span><span class="p">:]</span> <span class="o">-</span> <span class="n">bin_edges</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span> <span class="o">/</span> <span class="mi">2</span>
 <span class="n">bin_center</span>
-</pre></div>
-</div>
-<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>array([ 18.90885631,  53.34346583,  82.64447187, 109.28225276,
-       134.70763101, 159.78681467, 185.17226834, 224.02069427])
 </pre></div>
 </div>
 <div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">_</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <a class="sphx-glr-backref-module-matplotlib-pyplot sphx-glr-backref-type-py-function" href="https://matplotlib.org/stable/api/_as_gen/matplotlib.pyplot.subplots.html#matplotlib.pyplot.subplots" title="matplotlib.pyplot.subplots"><span class="n">plt</span><span class="o">.</span><span class="n">subplots</span></a><span class="p">()</span>
@@ -990,7 +976,7 @@ find a more optimal mapping.</p>
     <span class="n">ax</span><span class="o">.</span><span class="n">text</span><span class="p">(</span><span class="n">center</span> <span class="o">-</span> <span class="mi">10</span><span class="p">,</span> <span class="n">ax</span><span class="o">.</span><span class="n">get_ybound</span><span class="p">()[</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="mi">100</span><span class="p">,</span> <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">center</span><span class="si">:</span><span class="s2">.1f</span><span class="si">}</span><span class="s2">"</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="n">color</span><span class="p">)</span>
 </pre></div>
 </div>
-<img alt="plot face compress" class="sphx-glr-single-img" src="../../_images/sphx_glr_plot_face_compress_005.png" srcset="../../_images/sphx_glr_plot_face_compress_005.png"/><p>The counts in the bins are now more balanced and their centers are no longer
+<p>The counts in the bins are now more balanced and their centers are no longer
 equally spaced. Note that we could enforce the same number of pixels per bin
 by using the <code class="docutils literal notranslate"><span class="pre">strategy="quantile"</span></code> instead of <code class="docutils literal notranslate"><span class="pre">strategy="kmeans"</span></code>.</p>
 </section>
@@ -1001,18 +987,11 @@ by using the <code class="docutils literal notranslate"><span class="pre">strate
 <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Compression ratio: </span><span class="si">{</span><span class="n">compressed_raccoon_kmeans</span><span class="o">.</span><span class="n">nbytes</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="n">raccoon_face</span><span class="o">.</span><span class="n">nbytes</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
 </pre></div>
 </div>
-<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>The number of bytes taken in RAM is 6291456
-Compression ratio: 8.0
-</pre></div>
-</div>
 <p>It is quite surprising to see that our compressed image is taking x8 more
 memory than the original image. This is indeed the opposite of what we
 expected. The reason is mainly due to the type of data used to encode the
 image.</p>
 <div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Type of the compressed image: </span><span class="si">{</span><span class="n">compressed_raccoon_kmeans</span><span class="o">.</span><span class="n">dtype</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
-</pre></div>
-</div>
-<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>Type of the compressed image: float64
 </pre></div>
 </div>
 <p>Indeed, the output of the <a class="reference internal" href="../../modules/generated/sklearn.preprocessing.KBinsDiscretizer.html#sklearn.preprocessing.KBinsDiscretizer" title="sklearn.preprocessing.KBinsDiscretizer"><code class="xref py py-class docutils literal notranslate"><span class="pre">KBinsDiscretizer</span></code></a> is
@@ -1024,7 +1003,6 @@ representation does not exist and to encode the 8 values, we would need to use
 the 8-bit unsigned integer representation as well.</p>
 <p>In practice, observing a memory gain would require the original image to be in
 a 64-bit float representation.</p>
-<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> (0 minutes 2.285 seconds)</p>
 
 <p class="rubric">Related examples</p>
 <div class="sphx-glr-thumbnails"><div class="sphx-glr-thumbcontainer" tooltip="An example comparing the effect of reconstructing noisy fragments of a raccoon face image using..."><img alt="" src="../../_images/sphx_glr_plot_image_denoising_thumb.png"/>

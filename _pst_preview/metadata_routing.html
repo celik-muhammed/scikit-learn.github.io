@@ -16,7 +16,7 @@
 <meta property="og:image:alt" content="scikit-learn" />
 <meta name="description" content="This guide demonstrates how metadata can be routed and passed between objects in scikit-learn. If you are developing a scikit-learn compatible estimator or meta-estimator, you can check our related..." />
 
-    <title>1. Metadata Routing &#8212; scikit-learn 1.5.dev0 documentation</title>
+    <title>1. Metadata Routing &#8212; scikit-learn 1.6.dev0 documentation</title>
   
   
   
@@ -54,8 +54,8 @@
 <link rel="preload" as="script" href="_static/scripts/pydata-sphinx-theme.js?digest=8d27b9dea8ad943066ae" />
   <script src="_static/vendor/fontawesome/6.5.1/js/all.min.js?digest=8d27b9dea8ad943066ae"></script>
 
-    <script src="_static/documentation_options.js?v=a2c36881"></script>
-    <script src="_static/doctools.js?v=888ff710"></script>
+    <script src="_static/documentation_options.js?v=d875d36e"></script>
+    <script src="_static/doctools.js?v=9a2dae69"></script>
     <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="_static/clipboard.min.js?v=a7894cd8"></script>
     <script src="_static/copybutton.js?v=97f0b27d"></script>
@@ -65,8 +65,8 @@
     <script>DOCUMENTATION_OPTIONS.pagename = 'metadata_routing';</script>
     <script>
         DOCUMENTATION_OPTIONS.theme_version = '0.15.2';
-        DOCUMENTATION_OPTIONS.theme_switcher_json_url = 'https://scikit-learn.org/_pst_preview/versions.json';
-        DOCUMENTATION_OPTIONS.theme_switcher_version_match = '1.5.dev0';
+        DOCUMENTATION_OPTIONS.theme_switcher_json_url = 'https://scikit-learn.org/_pst_preview/_static/versions.json';
+        DOCUMENTATION_OPTIONS.theme_switcher_version_match = '1.6.dev0';
         DOCUMENTATION_OPTIONS.show_version_warning_banner = true;
         </script>
     <script src="_static/scripts/dropdown.js?v=12d599f8"></script>
@@ -630,8 +630,9 @@ document.write(`
 <li class="toctree-l1 has-children"><a class="reference internal" href="model_selection.html">3. Model selection and evaluation</a><input class="toctree-checkbox" id="toctree-checkbox-3" name="toctree-checkbox-3" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-3"><i class="fa-solid fa-chevron-down"></i></label><ul>
 <li class="toctree-l2"><a class="reference internal" href="modules/cross_validation.html">3.1. Cross-validation: evaluating estimator performance</a></li>
 <li class="toctree-l2"><a class="reference internal" href="modules/grid_search.html">3.2. Tuning the hyper-parameters of an estimator</a></li>
-<li class="toctree-l2"><a class="reference internal" href="modules/model_evaluation.html">3.3. Metrics and scoring: quantifying the quality of predictions</a></li>
-<li class="toctree-l2"><a class="reference internal" href="modules/learning_curve.html">3.4. Validation curves: plotting scores to evaluate models</a></li>
+<li class="toctree-l2"><a class="reference internal" href="modules/classification_threshold.html">3.3. Tuning the decision threshold for class prediction</a></li>
+<li class="toctree-l2"><a class="reference internal" href="modules/model_evaluation.html">3.4. Metrics and scoring: quantifying the quality of predictions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="modules/learning_curve.html">3.5. Validation curves: plotting scores to evaluate models</a></li>
 </ul>
 </li>
 <li class="toctree-l1 has-children"><a class="reference internal" href="inspection.html">4. Inspection</a><input class="toctree-checkbox" id="toctree-checkbox-4" name="toctree-checkbox-4" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-4"><i class="fa-solid fa-chevron-down"></i></label><ul>
@@ -957,8 +958,10 @@ should be passed to the estimator’s scorer or not:</p>
 <span class="gp">... </span>    <span class="p">)</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">sample_weight</span><span class="o">=</span><span class="n">my_weights</span><span class="p">)</span>
 <span class="gp">... </span><span class="k">except</span> <span class="ne">ValueError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
 <span class="gp">... </span>    <span class="nb">print</span><span class="p">(</span><span class="n">e</span><span class="p">)</span>
-<span class="go">[sample_weight] are passed but are not explicitly set as requested or not for</span>
-<span class="go">LogisticRegression.score</span>
+<span class="go">[sample_weight] are passed but are not explicitly set as requested or not</span>
+<span class="go">requested for LogisticRegression.score, which is used within GridSearchCV.fit.</span>
+<span class="go">Call `LogisticRegression.set_score_request({metadata}=True/False)` for each metadata</span>
+<span class="go">you want to request/ignore.</span>
 </pre></div>
 </div>
 <p>The issue can be fixed by explicitly setting the request value:</p>
@@ -984,6 +987,9 @@ meta-estimators and tools which support and don’t yet support metadata routing
 <ul class="simple">
 <li><p><a class="reference internal" href="modules/generated/sklearn.calibration.CalibratedClassifierCV.html#sklearn.calibration.CalibratedClassifierCV" title="sklearn.calibration.CalibratedClassifierCV"><code class="xref py py-class docutils literal notranslate"><span class="pre">sklearn.calibration.CalibratedClassifierCV</span></code></a></p></li>
 <li><p><a class="reference internal" href="modules/generated/sklearn.compose.ColumnTransformer.html#sklearn.compose.ColumnTransformer" title="sklearn.compose.ColumnTransformer"><code class="xref py py-class docutils literal notranslate"><span class="pre">sklearn.compose.ColumnTransformer</span></code></a></p></li>
+<li><p><a class="reference internal" href="modules/generated/sklearn.covariance.GraphicalLassoCV.html#sklearn.covariance.GraphicalLassoCV" title="sklearn.covariance.GraphicalLassoCV"><code class="xref py py-class docutils literal notranslate"><span class="pre">sklearn.covariance.GraphicalLassoCV</span></code></a></p></li>
+<li><p><a class="reference internal" href="modules/generated/sklearn.ensemble.StackingClassifier.html#sklearn.ensemble.StackingClassifier" title="sklearn.ensemble.StackingClassifier"><code class="xref py py-class docutils literal notranslate"><span class="pre">sklearn.ensemble.StackingClassifier</span></code></a></p></li>
+<li><p><a class="reference internal" href="modules/generated/sklearn.ensemble.StackingRegressor.html#sklearn.ensemble.StackingRegressor" title="sklearn.ensemble.StackingRegressor"><code class="xref py py-class docutils literal notranslate"><span class="pre">sklearn.ensemble.StackingRegressor</span></code></a></p></li>
 <li><p><a class="reference internal" href="modules/generated/sklearn.ensemble.VotingClassifier.html#sklearn.ensemble.VotingClassifier" title="sklearn.ensemble.VotingClassifier"><code class="xref py py-class docutils literal notranslate"><span class="pre">sklearn.ensemble.VotingClassifier</span></code></a></p></li>
 <li><p><a class="reference internal" href="modules/generated/sklearn.ensemble.VotingRegressor.html#sklearn.ensemble.VotingRegressor" title="sklearn.ensemble.VotingRegressor"><code class="xref py py-class docutils literal notranslate"><span class="pre">sklearn.ensemble.VotingRegressor</span></code></a></p></li>
 <li><p><a class="reference internal" href="modules/generated/sklearn.ensemble.BaggingClassifier.html#sklearn.ensemble.BaggingClassifier" title="sklearn.ensemble.BaggingClassifier"><code class="xref py py-class docutils literal notranslate"><span class="pre">sklearn.ensemble.BaggingClassifier</span></code></a></p></li>
@@ -997,6 +1003,7 @@ meta-estimators and tools which support and don’t yet support metadata routing
 <li><p><a class="reference internal" href="modules/generated/sklearn.linear_model.LogisticRegressionCV.html#sklearn.linear_model.LogisticRegressionCV" title="sklearn.linear_model.LogisticRegressionCV"><code class="xref py py-class docutils literal notranslate"><span class="pre">sklearn.linear_model.LogisticRegressionCV</span></code></a></p></li>
 <li><p><a class="reference internal" href="modules/generated/sklearn.linear_model.MultiTaskElasticNetCV.html#sklearn.linear_model.MultiTaskElasticNetCV" title="sklearn.linear_model.MultiTaskElasticNetCV"><code class="xref py py-class docutils literal notranslate"><span class="pre">sklearn.linear_model.MultiTaskElasticNetCV</span></code></a></p></li>
 <li><p><a class="reference internal" href="modules/generated/sklearn.linear_model.MultiTaskLassoCV.html#sklearn.linear_model.MultiTaskLassoCV" title="sklearn.linear_model.MultiTaskLassoCV"><code class="xref py py-class docutils literal notranslate"><span class="pre">sklearn.linear_model.MultiTaskLassoCV</span></code></a></p></li>
+<li><p><a class="reference internal" href="modules/generated/sklearn.linear_model.OrthogonalMatchingPursuitCV.html#sklearn.linear_model.OrthogonalMatchingPursuitCV" title="sklearn.linear_model.OrthogonalMatchingPursuitCV"><code class="xref py py-class docutils literal notranslate"><span class="pre">sklearn.linear_model.OrthogonalMatchingPursuitCV</span></code></a></p></li>
 <li><p><a class="reference internal" href="modules/generated/sklearn.linear_model.RANSACRegressor.html#sklearn.linear_model.RANSACRegressor" title="sklearn.linear_model.RANSACRegressor"><code class="xref py py-class docutils literal notranslate"><span class="pre">sklearn.linear_model.RANSACRegressor</span></code></a></p></li>
 <li><p><a class="reference internal" href="modules/generated/sklearn.linear_model.RidgeClassifierCV.html#sklearn.linear_model.RidgeClassifierCV" title="sklearn.linear_model.RidgeClassifierCV"><code class="xref py py-class docutils literal notranslate"><span class="pre">sklearn.linear_model.RidgeClassifierCV</span></code></a></p></li>
 <li><p><a class="reference internal" href="modules/generated/sklearn.linear_model.RidgeCV.html#sklearn.linear_model.RidgeCV" title="sklearn.linear_model.RidgeCV"><code class="xref py py-class docutils literal notranslate"><span class="pre">sklearn.linear_model.RidgeCV</span></code></a></p></li>
@@ -1007,13 +1014,13 @@ meta-estimators and tools which support and don’t yet support metadata routing
 <li><p><a class="reference internal" href="modules/generated/sklearn.model_selection.cross_validate.html#sklearn.model_selection.cross_validate" title="sklearn.model_selection.cross_validate"><code class="xref py py-func docutils literal notranslate"><span class="pre">sklearn.model_selection.cross_validate</span></code></a></p></li>
 <li><p><a class="reference internal" href="modules/generated/sklearn.model_selection.cross_val_score.html#sklearn.model_selection.cross_val_score" title="sklearn.model_selection.cross_val_score"><code class="xref py py-func docutils literal notranslate"><span class="pre">sklearn.model_selection.cross_val_score</span></code></a></p></li>
 <li><p><a class="reference internal" href="modules/generated/sklearn.model_selection.cross_val_predict.html#sklearn.model_selection.cross_val_predict" title="sklearn.model_selection.cross_val_predict"><code class="xref py py-func docutils literal notranslate"><span class="pre">sklearn.model_selection.cross_val_predict</span></code></a></p></li>
+<li><p><a class="reference internal" href="modules/generated/sklearn.model_selection.learning_curve.html#sklearn.model_selection.learning_curve" title="sklearn.model_selection.learning_curve"><code class="xref py py-class docutils literal notranslate"><span class="pre">sklearn.model_selection.learning_curve</span></code></a></p></li>
 <li><p><a class="reference internal" href="modules/generated/sklearn.multiclass.OneVsOneClassifier.html#sklearn.multiclass.OneVsOneClassifier" title="sklearn.multiclass.OneVsOneClassifier"><code class="xref py py-class docutils literal notranslate"><span class="pre">sklearn.multiclass.OneVsOneClassifier</span></code></a></p></li>
 <li><p><a class="reference internal" href="modules/generated/sklearn.multiclass.OneVsRestClassifier.html#sklearn.multiclass.OneVsRestClassifier" title="sklearn.multiclass.OneVsRestClassifier"><code class="xref py py-class docutils literal notranslate"><span class="pre">sklearn.multiclass.OneVsRestClassifier</span></code></a></p></li>
 <li><p><a class="reference internal" href="modules/generated/sklearn.multiclass.OutputCodeClassifier.html#sklearn.multiclass.OutputCodeClassifier" title="sklearn.multiclass.OutputCodeClassifier"><code class="xref py py-class docutils literal notranslate"><span class="pre">sklearn.multiclass.OutputCodeClassifier</span></code></a></p></li>
 <li><p><a class="reference internal" href="modules/generated/sklearn.multioutput.ClassifierChain.html#sklearn.multioutput.ClassifierChain" title="sklearn.multioutput.ClassifierChain"><code class="xref py py-class docutils literal notranslate"><span class="pre">sklearn.multioutput.ClassifierChain</span></code></a></p></li>
 <li><p><a class="reference internal" href="modules/generated/sklearn.multioutput.MultiOutputClassifier.html#sklearn.multioutput.MultiOutputClassifier" title="sklearn.multioutput.MultiOutputClassifier"><code class="xref py py-class docutils literal notranslate"><span class="pre">sklearn.multioutput.MultiOutputClassifier</span></code></a></p></li>
 <li><p><a class="reference internal" href="modules/generated/sklearn.multioutput.MultiOutputRegressor.html#sklearn.multioutput.MultiOutputRegressor" title="sklearn.multioutput.MultiOutputRegressor"><code class="xref py py-class docutils literal notranslate"><span class="pre">sklearn.multioutput.MultiOutputRegressor</span></code></a></p></li>
-<li><p><a class="reference internal" href="modules/generated/sklearn.linear_model.OrthogonalMatchingPursuitCV.html#sklearn.linear_model.OrthogonalMatchingPursuitCV" title="sklearn.linear_model.OrthogonalMatchingPursuitCV"><code class="xref py py-class docutils literal notranslate"><span class="pre">sklearn.linear_model.OrthogonalMatchingPursuitCV</span></code></a></p></li>
 <li><p><a class="reference internal" href="modules/generated/sklearn.multioutput.RegressorChain.html#sklearn.multioutput.RegressorChain" title="sklearn.multioutput.RegressorChain"><code class="xref py py-class docutils literal notranslate"><span class="pre">sklearn.multioutput.RegressorChain</span></code></a></p></li>
 <li><p><a class="reference internal" href="modules/generated/sklearn.pipeline.FeatureUnion.html#sklearn.pipeline.FeatureUnion" title="sklearn.pipeline.FeatureUnion"><code class="xref py py-class docutils literal notranslate"><span class="pre">sklearn.pipeline.FeatureUnion</span></code></a></p></li>
 <li><p><a class="reference internal" href="modules/generated/sklearn.pipeline.Pipeline.html#sklearn.pipeline.Pipeline" title="sklearn.pipeline.Pipeline"><code class="xref py py-class docutils literal notranslate"><span class="pre">sklearn.pipeline.Pipeline</span></code></a></p></li>
@@ -1021,17 +1028,11 @@ meta-estimators and tools which support and don’t yet support metadata routing
 <p>Meta-estimators and tools not supporting metadata routing yet:</p>
 <ul class="simple">
 <li><p><a class="reference internal" href="modules/generated/sklearn.compose.TransformedTargetRegressor.html#sklearn.compose.TransformedTargetRegressor" title="sklearn.compose.TransformedTargetRegressor"><code class="xref py py-class docutils literal notranslate"><span class="pre">sklearn.compose.TransformedTargetRegressor</span></code></a></p></li>
-<li><p><a class="reference internal" href="modules/generated/sklearn.covariance.GraphicalLassoCV.html#sklearn.covariance.GraphicalLassoCV" title="sklearn.covariance.GraphicalLassoCV"><code class="xref py py-class docutils literal notranslate"><span class="pre">sklearn.covariance.GraphicalLassoCV</span></code></a></p></li>
 <li><p><a class="reference internal" href="modules/generated/sklearn.ensemble.AdaBoostClassifier.html#sklearn.ensemble.AdaBoostClassifier" title="sklearn.ensemble.AdaBoostClassifier"><code class="xref py py-class docutils literal notranslate"><span class="pre">sklearn.ensemble.AdaBoostClassifier</span></code></a></p></li>
 <li><p><a class="reference internal" href="modules/generated/sklearn.ensemble.AdaBoostRegressor.html#sklearn.ensemble.AdaBoostRegressor" title="sklearn.ensemble.AdaBoostRegressor"><code class="xref py py-class docutils literal notranslate"><span class="pre">sklearn.ensemble.AdaBoostRegressor</span></code></a></p></li>
-<li><p><a class="reference internal" href="modules/generated/sklearn.ensemble.StackingClassifier.html#sklearn.ensemble.StackingClassifier" title="sklearn.ensemble.StackingClassifier"><code class="xref py py-class docutils literal notranslate"><span class="pre">sklearn.ensemble.StackingClassifier</span></code></a></p></li>
-<li><p><a class="reference internal" href="modules/generated/sklearn.ensemble.StackingRegressor.html#sklearn.ensemble.StackingRegressor" title="sklearn.ensemble.StackingRegressor"><code class="xref py py-class docutils literal notranslate"><span class="pre">sklearn.ensemble.StackingRegressor</span></code></a></p></li>
 <li><p><a class="reference internal" href="modules/generated/sklearn.feature_selection.RFE.html#sklearn.feature_selection.RFE" title="sklearn.feature_selection.RFE"><code class="xref py py-class docutils literal notranslate"><span class="pre">sklearn.feature_selection.RFE</span></code></a></p></li>
 <li><p><a class="reference internal" href="modules/generated/sklearn.feature_selection.RFECV.html#sklearn.feature_selection.RFECV" title="sklearn.feature_selection.RFECV"><code class="xref py py-class docutils literal notranslate"><span class="pre">sklearn.feature_selection.RFECV</span></code></a></p></li>
 <li><p><a class="reference internal" href="modules/generated/sklearn.feature_selection.SequentialFeatureSelector.html#sklearn.feature_selection.SequentialFeatureSelector" title="sklearn.feature_selection.SequentialFeatureSelector"><code class="xref py py-class docutils literal notranslate"><span class="pre">sklearn.feature_selection.SequentialFeatureSelector</span></code></a></p></li>
-<li><p><a class="reference internal" href="modules/generated/sklearn.impute.IterativeImputer.html#sklearn.impute.IterativeImputer" title="sklearn.impute.IterativeImputer"><code class="xref py py-class docutils literal notranslate"><span class="pre">sklearn.impute.IterativeImputer</span></code></a></p></li>
-<li><p><a class="reference internal" href="modules/generated/sklearn.linear_model.RANSACRegressor.html#sklearn.linear_model.RANSACRegressor" title="sklearn.linear_model.RANSACRegressor"><code class="xref py py-class docutils literal notranslate"><span class="pre">sklearn.linear_model.RANSACRegressor</span></code></a></p></li>
-<li><p><a class="reference internal" href="modules/generated/sklearn.model_selection.learning_curve.html#sklearn.model_selection.learning_curve" title="sklearn.model_selection.learning_curve"><code class="xref py py-class docutils literal notranslate"><span class="pre">sklearn.model_selection.learning_curve</span></code></a></p></li>
 <li><p><a class="reference internal" href="modules/generated/sklearn.model_selection.permutation_test_score.html#sklearn.model_selection.permutation_test_score" title="sklearn.model_selection.permutation_test_score"><code class="xref py py-class docutils literal notranslate"><span class="pre">sklearn.model_selection.permutation_test_score</span></code></a></p></li>
 <li><p><a class="reference internal" href="modules/generated/sklearn.model_selection.validation_curve.html#sklearn.model_selection.validation_curve" title="sklearn.model_selection.validation_curve"><code class="xref py py-class docutils literal notranslate"><span class="pre">sklearn.model_selection.validation_curve</span></code></a></p></li>
 <li><p><a class="reference internal" href="modules/generated/sklearn.semi_supervised.SelfTrainingClassifier.html#sklearn.semi_supervised.SelfTrainingClassifier" title="sklearn.semi_supervised.SelfTrainingClassifier"><code class="xref py py-class docutils literal notranslate"><span class="pre">sklearn.semi_supervised.SelfTrainingClassifier</span></code></a></p></li>

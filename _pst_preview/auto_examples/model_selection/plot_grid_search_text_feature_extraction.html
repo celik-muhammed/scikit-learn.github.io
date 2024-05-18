@@ -13,7 +13,7 @@
 <meta content="https://scikit-learn.org/stable/_static/scikit-learn-logo-small.png" property="og:image"/>
 <meta content="scikit-learn" property="og:image:alt"/>
 <meta content="The dataset used in this example is The 20 newsgroups text dataset which will be automatically downloaded, cached and reused for the document classification example. In this example, we tune the hy..." name="description"/>
-<title>Sample pipeline for text feature extraction and evaluation — scikit-learn 1.5.dev0 documentation</title>
+<title>Sample pipeline for text feature extraction and evaluation — scikit-learn 1.6.dev0 documentation</title>
 <script data-cfasync="false">
     document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
     document.documentElement.dataset.theme = localStorage.getItem("theme") || "light";
@@ -42,8 +42,8 @@
 <link as="script" href="../../_static/scripts/bootstrap.js?digest=8d27b9dea8ad943066ae" rel="preload"/>
 <link as="script" href="../../_static/scripts/pydata-sphinx-theme.js?digest=8d27b9dea8ad943066ae" rel="preload"/>
 <script src="../../_static/vendor/fontawesome/6.5.1/js/all.min.js?digest=8d27b9dea8ad943066ae"></script>
-<script src="../../_static/documentation_options.js?v=a2c36881"></script>
-<script src="../../_static/doctools.js?v=888ff710"></script>
+<script src="../../_static/documentation_options.js?v=d875d36e"></script>
+<script src="../../_static/doctools.js?v=9a2dae69"></script>
 <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
 <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
 <script src="../../_static/copybutton.js?v=97f0b27d"></script>
@@ -54,8 +54,8 @@
 <script>DOCUMENTATION_OPTIONS.pagename = 'auto_examples/model_selection/plot_grid_search_text_feature_extraction';</script>
 <script>
         DOCUMENTATION_OPTIONS.theme_version = '0.15.2';
-        DOCUMENTATION_OPTIONS.theme_switcher_json_url = 'https://scikit-learn.org/_pst_preview/versions.json';
-        DOCUMENTATION_OPTIONS.theme_switcher_version_match = '1.5.dev0';
+        DOCUMENTATION_OPTIONS.theme_switcher_json_url = 'https://scikit-learn.org/_pst_preview/_static/versions.json';
+        DOCUMENTATION_OPTIONS.theme_switcher_version_match = '1.6.dev0';
         DOCUMENTATION_OPTIONS.show_version_warning_banner = true;
         </script>
 <script src="../../_static/scripts/dropdown.js?v=12d599f8"></script>
@@ -550,7 +550,6 @@ document.write(`
 <li class="toctree-l2"><a class="reference internal" href="../applications/plot_face_recognition.html">Faces recognition example using eigenfaces and SVMs</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../applications/plot_digits_denoising.html">Image denoising using kernel PCA</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../applications/plot_time_series_lagged_features.html">Lagged features for time series forecasting</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../applications/svm_gui.html">Libsvm GUI</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../applications/plot_model_complexity_influence.html">Model Complexity Influence</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../applications/plot_out_of_core_classification.html">Out-of-core classification of text documents</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../applications/plot_outlier_detection_wine.html">Outlier detection on a real data set</a></li>
@@ -695,6 +694,8 @@ document.write(`
 <li class="toctree-l2"><a class="reference internal" href="plot_cv_predict.html">Plotting Cross-Validated Predictions</a></li>
 <li class="toctree-l2"><a class="reference internal" href="plot_learning_curve.html">Plotting Learning Curves and Checking Models’ Scalability</a></li>
 <li class="toctree-l2"><a class="reference internal" href="plot_validation_curve.html">Plotting Validation Curves</a></li>
+<li class="toctree-l2"><a class="reference internal" href="plot_tuned_decision_threshold.html">Post-hoc tuning the cut-off point of decision function</a></li>
+<li class="toctree-l2"><a class="reference internal" href="plot_cost_sensitive_learning.html">Post-tuning the decision threshold for cost-sensitive learning</a></li>
 <li class="toctree-l2"><a class="reference internal" href="plot_precision_recall.html">Precision-Recall</a></li>
 <li class="toctree-l2"><a class="reference internal" href="plot_roc_crossval.html">Receiver Operating Characteristic (ROC) with cross validation</a></li>
 <li class="toctree-l2 current active"><a class="current reference internal" href="#">Sample pipeline for text feature extraction and evaluation</a></li>
@@ -881,11 +882,6 @@ the 20 of them.</p>
 <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">data_train</span><span class="o">.</span><span class="n">data</span><span class="p">)</span><span class="si">}</span><span class="s2"> documents"</span><span class="p">)</span>
 </pre></div>
 </div>
-<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>Loading 20 newsgroups dataset for 2 categories:
-['alt.atheism', 'talk.religion.misc']
-857 documents
-</pre></div>
-</div>
 </section>
 <section id="pipeline-with-hyperparameter-tuning">
 <h2>Pipeline with hyperparameter tuning<a class="headerlink" href="#pipeline-with-hyperparameter-tuning" title="Link to this heading">#</a></h2>
@@ -904,415 +900,7 @@ classifier yet effective for text classification.</p>
 <span class="n">pipeline</span>
 </pre></div>
 </div>
-<div class="output_subarea output_html rendered_html output_result">
-<style>#sk-container-id-56 {
-  /* Definition of color scheme common for light and dark mode */
-  --sklearn-color-text: black;
-  --sklearn-color-line: gray;
-  /* Definition of color scheme for unfitted estimators */
-  --sklearn-color-unfitted-level-0: #fff5e6;
-  --sklearn-color-unfitted-level-1: #f6e4d2;
-  --sklearn-color-unfitted-level-2: #ffe0b3;
-  --sklearn-color-unfitted-level-3: chocolate;
-  /* Definition of color scheme for fitted estimators */
-  --sklearn-color-fitted-level-0: #f0f8ff;
-  --sklearn-color-fitted-level-1: #d4ebff;
-  --sklearn-color-fitted-level-2: #b3dbfd;
-  --sklearn-color-fitted-level-3: cornflowerblue;
-
-  /* Specific color for light theme */
-  --sklearn-color-text-on-default-background: var(--sg-text-color, var(--theme-code-foreground, var(--jp-content-font-color1, black)));
-  --sklearn-color-background: var(--sg-background-color, var(--theme-background, var(--jp-layout-color0, white)));
-  --sklearn-color-border-box: var(--sg-text-color, var(--theme-code-foreground, var(--jp-content-font-color1, black)));
-  --sklearn-color-icon: #696969;
-
-  @media (prefers-color-scheme: dark) {
-    /* Redefinition of color scheme for dark theme */
-    --sklearn-color-text-on-default-background: var(--sg-text-color, var(--theme-code-foreground, var(--jp-content-font-color1, white)));
-    --sklearn-color-background: var(--sg-background-color, var(--theme-background, var(--jp-layout-color0, #111)));
-    --sklearn-color-border-box: var(--sg-text-color, var(--theme-code-foreground, var(--jp-content-font-color1, white)));
-    --sklearn-color-icon: #878787;
-  }
-}
-
-#sk-container-id-56 {
-  color: var(--sklearn-color-text);
-}
-
-#sk-container-id-56 pre {
-  padding: 0;
-}
-
-#sk-container-id-56 input.sk-hidden--visually {
-  border: 0;
-  clip: rect(1px 1px 1px 1px);
-  clip: rect(1px, 1px, 1px, 1px);
-  height: 1px;
-  margin: -1px;
-  overflow: hidden;
-  padding: 0;
-  position: absolute;
-  width: 1px;
-}
-
-#sk-container-id-56 div.sk-dashed-wrapped {
-  border: 1px dashed var(--sklearn-color-line);
-  margin: 0 0.4em 0.5em 0.4em;
-  box-sizing: border-box;
-  padding-bottom: 0.4em;
-  background-color: var(--sklearn-color-background);
-}
-
-#sk-container-id-56 div.sk-container {
-  /* jupyter's `normalize.less` sets `[hidden] { display: none; }`
-     but bootstrap.min.css set `[hidden] { display: none !important; }`
-     so we also need the `!important` here to be able to override the
-     default hidden behavior on the sphinx rendered scikit-learn.org.
-     See: https://github.com/scikit-learn/scikit-learn/issues/21755 */
-  display: inline-block !important;
-  position: relative;
-}
-
-#sk-container-id-56 div.sk-text-repr-fallback {
-  display: none;
-}
-
-div.sk-parallel-item,
-div.sk-serial,
-div.sk-item {
-  /* draw centered vertical line to link estimators */
-  background-image: linear-gradient(var(--sklearn-color-text-on-default-background), var(--sklearn-color-text-on-default-background));
-  background-size: 2px 100%;
-  background-repeat: no-repeat;
-  background-position: center center;
-}
-
-/* Parallel-specific style estimator block */
-
-#sk-container-id-56 div.sk-parallel-item::after {
-  content: "";
-  width: 100%;
-  border-bottom: 2px solid var(--sklearn-color-text-on-default-background);
-  flex-grow: 1;
-}
-
-#sk-container-id-56 div.sk-parallel {
-  display: flex;
-  align-items: stretch;
-  justify-content: center;
-  background-color: var(--sklearn-color-background);
-  position: relative;
-}
-
-#sk-container-id-56 div.sk-parallel-item {
-  display: flex;
-  flex-direction: column;
-}
-
-#sk-container-id-56 div.sk-parallel-item:first-child::after {
-  align-self: flex-end;
-  width: 50%;
-}
-
-#sk-container-id-56 div.sk-parallel-item:last-child::after {
-  align-self: flex-start;
-  width: 50%;
-}
-
-#sk-container-id-56 div.sk-parallel-item:only-child::after {
-  width: 0;
-}
-
-/* Serial-specific style estimator block */
-
-#sk-container-id-56 div.sk-serial {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  background-color: var(--sklearn-color-background);
-  padding-right: 1em;
-  padding-left: 1em;
-}
-
-
-/* Toggleable style: style used for estimator/Pipeline/ColumnTransformer box that is
-clickable and can be expanded/collapsed.
-- Pipeline and ColumnTransformer use this feature and define the default style
-- Estimators will overwrite some part of the style using the `sk-estimator` class
-*/
-
-/* Pipeline and ColumnTransformer style (default) */
-
-#sk-container-id-56 div.sk-toggleable {
-  /* Default theme specific background. It is overwritten whether we have a
-  specific estimator or a Pipeline/ColumnTransformer */
-  background-color: var(--sklearn-color-background);
-}
-
-/* Toggleable label */
-#sk-container-id-56 label.sk-toggleable__label {
-  cursor: pointer;
-  display: block;
-  width: 100%;
-  margin-bottom: 0;
-  padding: 0.5em;
-  box-sizing: border-box;
-  text-align: center;
-}
-
-#sk-container-id-56 label.sk-toggleable__label-arrow:before {
-  /* Arrow on the left of the label */
-  content: "▸";
-  float: left;
-  margin-right: 0.25em;
-  color: var(--sklearn-color-icon);
-}
-
-#sk-container-id-56 label.sk-toggleable__label-arrow:hover:before {
-  color: var(--sklearn-color-text);
-}
-
-/* Toggleable content - dropdown */
-
-#sk-container-id-56 div.sk-toggleable__content {
-  max-height: 0;
-  max-width: 0;
-  overflow: hidden;
-  text-align: left;
-  /* unfitted */
-  background-color: var(--sklearn-color-unfitted-level-0);
-}
-
-#sk-container-id-56 div.sk-toggleable__content.fitted {
-  /* fitted */
-  background-color: var(--sklearn-color-fitted-level-0);
-}
-
-#sk-container-id-56 div.sk-toggleable__content pre {
-  margin: 0.2em;
-  border-radius: 0.25em;
-  color: var(--sklearn-color-text);
-  /* unfitted */
-  background-color: var(--sklearn-color-unfitted-level-0);
-}
-
-#sk-container-id-56 div.sk-toggleable__content.fitted pre {
-  /* unfitted */
-  background-color: var(--sklearn-color-fitted-level-0);
-}
-
-#sk-container-id-56 input.sk-toggleable__control:checked~div.sk-toggleable__content {
-  /* Expand drop-down */
-  max-height: 200px;
-  max-width: 100%;
-  overflow: auto;
-}
-
-#sk-container-id-56 input.sk-toggleable__control:checked~label.sk-toggleable__label-arrow:before {
-  content: "▾";
-}
-
-/* Pipeline/ColumnTransformer-specific style */
-
-#sk-container-id-56 div.sk-label input.sk-toggleable__control:checked~label.sk-toggleable__label {
-  color: var(--sklearn-color-text);
-  background-color: var(--sklearn-color-unfitted-level-2);
-}
-
-#sk-container-id-56 div.sk-label.fitted input.sk-toggleable__control:checked~label.sk-toggleable__label {
-  background-color: var(--sklearn-color-fitted-level-2);
-}
-
-/* Estimator-specific style */
-
-/* Colorize estimator box */
-#sk-container-id-56 div.sk-estimator input.sk-toggleable__control:checked~label.sk-toggleable__label {
-  /* unfitted */
-  background-color: var(--sklearn-color-unfitted-level-2);
-}
-
-#sk-container-id-56 div.sk-estimator.fitted input.sk-toggleable__control:checked~label.sk-toggleable__label {
-  /* fitted */
-  background-color: var(--sklearn-color-fitted-level-2);
-}
-
-#sk-container-id-56 div.sk-label label.sk-toggleable__label,
-#sk-container-id-56 div.sk-label label {
-  /* The background is the default theme color */
-  color: var(--sklearn-color-text-on-default-background);
-}
-
-/* On hover, darken the color of the background */
-#sk-container-id-56 div.sk-label:hover label.sk-toggleable__label {
-  color: var(--sklearn-color-text);
-  background-color: var(--sklearn-color-unfitted-level-2);
-}
-
-/* Label box, darken color on hover, fitted */
-#sk-container-id-56 div.sk-label.fitted:hover label.sk-toggleable__label.fitted {
-  color: var(--sklearn-color-text);
-  background-color: var(--sklearn-color-fitted-level-2);
-}
-
-/* Estimator label */
-
-#sk-container-id-56 div.sk-label label {
-  font-family: monospace;
-  font-weight: bold;
-  display: inline-block;
-  line-height: 1.2em;
-}
-
-#sk-container-id-56 div.sk-label-container {
-  text-align: center;
-}
-
-/* Estimator-specific */
-#sk-container-id-56 div.sk-estimator {
-  font-family: monospace;
-  border: 1px dotted var(--sklearn-color-border-box);
-  border-radius: 0.25em;
-  box-sizing: border-box;
-  margin-bottom: 0.5em;
-  /* unfitted */
-  background-color: var(--sklearn-color-unfitted-level-0);
-}
-
-#sk-container-id-56 div.sk-estimator.fitted {
-  /* fitted */
-  background-color: var(--sklearn-color-fitted-level-0);
-}
-
-/* on hover */
-#sk-container-id-56 div.sk-estimator:hover {
-  /* unfitted */
-  background-color: var(--sklearn-color-unfitted-level-2);
-}
-
-#sk-container-id-56 div.sk-estimator.fitted:hover {
-  /* fitted */
-  background-color: var(--sklearn-color-fitted-level-2);
-}
-
-/* Specification for estimator info (e.g. "i" and "?") */
-
-/* Common style for "i" and "?" */
-
-.sk-estimator-doc-link,
-a:link.sk-estimator-doc-link,
-a:visited.sk-estimator-doc-link {
-  float: right;
-  font-size: smaller;
-  line-height: 1em;
-  font-family: monospace;
-  background-color: var(--sklearn-color-background);
-  border-radius: 1em;
-  height: 1em;
-  width: 1em;
-  text-decoration: none !important;
-  margin-left: 1ex;
-  /* unfitted */
-  border: var(--sklearn-color-unfitted-level-1) 1pt solid;
-  color: var(--sklearn-color-unfitted-level-1);
-}
-
-.sk-estimator-doc-link.fitted,
-a:link.sk-estimator-doc-link.fitted,
-a:visited.sk-estimator-doc-link.fitted {
-  /* fitted */
-  border: var(--sklearn-color-fitted-level-1) 1pt solid;
-  color: var(--sklearn-color-fitted-level-1);
-}
-
-/* On hover */
-div.sk-estimator:hover .sk-estimator-doc-link:hover,
-.sk-estimator-doc-link:hover,
-div.sk-label-container:hover .sk-estimator-doc-link:hover,
-.sk-estimator-doc-link:hover {
-  /* unfitted */
-  background-color: var(--sklearn-color-unfitted-level-3);
-  color: var(--sklearn-color-background);
-  text-decoration: none;
-}
-
-div.sk-estimator.fitted:hover .sk-estimator-doc-link.fitted:hover,
-.sk-estimator-doc-link.fitted:hover,
-div.sk-label-container:hover .sk-estimator-doc-link.fitted:hover,
-.sk-estimator-doc-link.fitted:hover {
-  /* fitted */
-  background-color: var(--sklearn-color-fitted-level-3);
-  color: var(--sklearn-color-background);
-  text-decoration: none;
-}
-
-/* Span, style for the box shown on hovering the info icon */
-.sk-estimator-doc-link span {
-  display: none;
-  z-index: 9999;
-  position: relative;
-  font-weight: normal;
-  right: .2ex;
-  padding: .5ex;
-  margin: .5ex;
-  width: min-content;
-  min-width: 20ex;
-  max-width: 50ex;
-  color: var(--sklearn-color-text);
-  box-shadow: 2pt 2pt 4pt #999;
-  /* unfitted */
-  background: var(--sklearn-color-unfitted-level-0);
-  border: .5pt solid var(--sklearn-color-unfitted-level-3);
-}
-
-.sk-estimator-doc-link.fitted span {
-  /* fitted */
-  background: var(--sklearn-color-fitted-level-0);
-  border: var(--sklearn-color-fitted-level-3);
-}
-
-.sk-estimator-doc-link:hover span {
-  display: block;
-}
-
-/* "?"-specific style due to the `<a>` HTML tag */
-
-#sk-container-id-56 a.estimator_doc_link {
-  float: right;
-  font-size: 1rem;
-  line-height: 1em;
-  font-family: monospace;
-  background-color: var(--sklearn-color-background);
-  border-radius: 1rem;
-  height: 1rem;
-  width: 1rem;
-  text-decoration: none;
-  /* unfitted */
-  color: var(--sklearn-color-unfitted-level-1);
-  border: var(--sklearn-color-unfitted-level-1) 1pt solid;
-}
-
-#sk-container-id-56 a.estimator_doc_link.fitted {
-  /* fitted */
-  border: var(--sklearn-color-fitted-level-1) 1pt solid;
-  color: var(--sklearn-color-fitted-level-1);
-}
-
-/* On hover */
-#sk-container-id-56 a.estimator_doc_link:hover {
-  /* unfitted */
-  background-color: var(--sklearn-color-unfitted-level-3);
-  color: var(--sklearn-color-background);
-  text-decoration: none;
-}
-
-#sk-container-id-56 a.estimator_doc_link.fitted:hover {
-  /* fitted */
-  background-color: var(--sklearn-color-fitted-level-3);
-}
-</style><div class="sk-top-container" id="sk-container-id-56"><div class="sk-text-repr-fallback"><pre>Pipeline(steps=[('vect', TfidfVectorizer()), ('clf', ComplementNB())])</pre><b>In a Jupyter environment, please rerun this cell to show the HTML representation or trust the notebook. <br/>On GitHub, the HTML representation is unable to render, please try loading this page with nbviewer.org.</b></div><div class="sk-container" hidden=""><div class="sk-item sk-dashed-wrapped"><div class="sk-label-container"><div class="sk-label sk-toggleable"><input class="sk-toggleable__control sk-hidden--visually" id="sk-estimator-id-234" type="checkbox"/><label class="sk-toggleable__label sk-toggleable__label-arrow" for="sk-estimator-id-234">  Pipeline<a class="sk-estimator-doc-link" href="https://scikit-learn.org/dev/modules/generated/sklearn.pipeline.Pipeline.html" rel="noreferrer" target="_blank">?<span>Documentation for Pipeline</span></a><span class="sk-estimator-doc-link">i<span>Not fitted</span></span></label><div class="sk-toggleable__content"><pre>Pipeline(steps=[('vect', TfidfVectorizer()), ('clf', ComplementNB())])</pre></div> </div></div><div class="sk-serial"><div class="sk-item"><div class="sk-estimator sk-toggleable"><input class="sk-toggleable__control sk-hidden--visually" id="sk-estimator-id-235" type="checkbox"/><label class="sk-toggleable__label sk-toggleable__label-arrow" for="sk-estimator-id-235"> TfidfVectorizer<a class="sk-estimator-doc-link" href="https://scikit-learn.org/dev/modules/generated/sklearn.feature_extraction.text.TfidfVectorizer.html" rel="noreferrer" target="_blank">?<span>Documentation for TfidfVectorizer</span></a></label><div class="sk-toggleable__content"><pre>TfidfVectorizer()</pre></div> </div></div><div class="sk-item"><div class="sk-estimator sk-toggleable"><input class="sk-toggleable__control sk-hidden--visually" id="sk-estimator-id-236" type="checkbox"/><label class="sk-toggleable__label sk-toggleable__label-arrow" for="sk-estimator-id-236"> ComplementNB<a class="sk-estimator-doc-link" href="https://scikit-learn.org/dev/modules/generated/sklearn.naive_bayes.ComplementNB.html" rel="noreferrer" target="_blank">?<span>Documentation for ComplementNB</span></a></label><div class="sk-toggleable__content"><pre>ComplementNB()</pre></div> </div></div></div></div></div></div>
-</div>
-<br/>
-<br/><p>We define a grid of hyperparameters to be explored by the
+<p>We define a grid of hyperparameters to be explored by the
 <a class="reference internal" href="../../modules/generated/sklearn.model_selection.RandomizedSearchCV.html#sklearn.model_selection.RandomizedSearchCV" title="sklearn.model_selection.RandomizedSearchCV"><code class="xref py py-class docutils literal notranslate"><span class="pre">RandomizedSearchCV</span></code></a>. Using a
 <a class="reference internal" href="../../modules/generated/sklearn.model_selection.GridSearchCV.html#sklearn.model_selection.GridSearchCV" title="sklearn.model_selection.GridSearchCV"><code class="xref py py-class docutils literal notranslate"><span class="pre">GridSearchCV</span></code></a> instead would explore all the
 possible combinations on the grid, which can be costly to compute, whereas the
@@ -1357,25 +945,11 @@ via the parameter <code class="docutils literal notranslate"><span class="pre">n
 <a class="sphx-glr-backref-module-pprint sphx-glr-backref-type-py-function" href="https://docs.python.org/3/library/pprint.html#pprint.pprint" title="pprint.pprint"><span class="n">pprint</span></a><span class="p">(</span><span class="n">parameter_grid</span><span class="p">)</span>
 </pre></div>
 </div>
-<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>Performing grid search...
-Hyperparameters to be evaluated:
-{'clf__alpha': array([1.e-06, 1.e-05, 1.e-04, 1.e-03, 1.e-02, 1.e-01, 1.e+00, 1.e+01,
-       1.e+02, 1.e+03, 1.e+04, 1.e+05, 1.e+06]),
- 'vect__max_df': (0.2, 0.4, 0.6, 0.8, 1.0),
- 'vect__min_df': (1, 3, 5, 10),
- 'vect__ngram_range': ((1, 1), (1, 2)),
- 'vect__norm': ('l1', 'l2')}
-</pre></div>
-</div>
 <div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">time</span> <span class="kn">import</span> <a class="sphx-glr-backref-module-time sphx-glr-backref-type-py-function" href="https://docs.python.org/3/library/time.html#time.time" title="time.time"><span class="n">time</span></a>
 
 <span class="n">t0</span> <span class="o">=</span> <a class="sphx-glr-backref-module-time sphx-glr-backref-type-py-function" href="https://docs.python.org/3/library/time.html#time.time" title="time.time"><span class="n">time</span></a><span class="p">()</span>
 <span class="n">random_search</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">data_train</span><span class="o">.</span><span class="n">data</span><span class="p">,</span> <span class="n">data_train</span><span class="o">.</span><span class="n">target</span><span class="p">)</span>
 <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Done in </span><span class="si">{</span><a class="sphx-glr-backref-module-time sphx-glr-backref-type-py-function" href="https://docs.python.org/3/library/time.html#time.time" title="time.time"><span class="n">time</span></a><span class="p">()</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">t0</span><span class="si">:</span><span class="s2">.3f</span><span class="si">}</span><span class="s2">s"</span><span class="p">)</span>
-</pre></div>
-</div>
-<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>Fitting 5 folds for each of 40 candidates, totalling 200 fits
-Done in 32.304s
 </pre></div>
 </div>
 <div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="s2">"Best parameters combination found:"</span><span class="p">)</span>
@@ -1384,24 +958,12 @@ Done in 32.304s
     <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">param_name</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">best_parameters</span><span class="p">[</span><span class="n">param_name</span><span class="p">]</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
 </pre></div>
 </div>
-<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>Best parameters combination found:
-clf__alpha: 0.01
-vect__max_df: 0.2
-vect__min_df: 1
-vect__ngram_range: (1, 1)
-vect__norm: l1
-</pre></div>
-</div>
 <div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">test_accuracy</span> <span class="o">=</span> <span class="n">random_search</span><span class="o">.</span><span class="n">score</span><span class="p">(</span><span class="n">data_test</span><span class="o">.</span><span class="n">data</span><span class="p">,</span> <span class="n">data_test</span><span class="o">.</span><span class="n">target</span><span class="p">)</span>
 <span class="nb">print</span><span class="p">(</span>
     <span class="s2">"Accuracy of the best parameters using the inner CV of "</span>
     <span class="sa">f</span><span class="s2">"the random search: </span><span class="si">{</span><span class="n">random_search</span><span class="o">.</span><span class="n">best_score_</span><span class="si">:</span><span class="s2">.3f</span><span class="si">}</span><span class="s2">"</span>
 <span class="p">)</span>
 <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Accuracy on test set: </span><span class="si">{</span><span class="n">test_accuracy</span><span class="si">:</span><span class="s2">.3f</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
-</pre></div>
-</div>
-<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>Accuracy of the best parameters using the inner CV of the random search: 0.816
-Accuracy on test set: 0.709
 </pre></div>
 </div>
 <p>The prefixes <code class="docutils literal notranslate"><span class="pre">vect</span></code> and <code class="docutils literal notranslate"><span class="pre">clf</span></code> are required to avoid possible ambiguities in
@@ -1455,12 +1017,7 @@ different folds of the cross-validation.</p>
 <span class="n">fig</span>
 </pre></div>
 </div>
-<div class="output_subarea output_html rendered_html output_result">
-<div> <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-AMS-MML_SVG"></script><script type="text/javascript">if (window.MathJax && window.MathJax.Hub && window.MathJax.Hub.Config) {window.MathJax.Hub.Config({SVG: {font: "STIX-Web"}});}</script> <script type="text/javascript">window.PlotlyConfig = {MathJaxConfig: 'local'};</script>
-<script charset="utf-8" src="https://cdn.plot.ly/plotly-2.29.1.min.js"></script> <div class="plotly-graph-div" id="81df8932-38c0-4d82-b6b5-b7f5cc658507" style="height:525px; width:100%;"></div> <script type="text/javascript">                                    window.PLOTLYENV=window.PLOTLYENV || {};                                    if (document.getElementById("81df8932-38c0-4d82-b6b5-b7f5cc658507")) {                    Plotly.newPlot(                        "81df8932-38c0-4d82-b6b5-b7f5cc658507",                        [{"customdata":[[1.0,3,[1,2],"l2",10.0],[0.6,3,[1,2],"l2",100.0],[0.6,10,[1,1],"l1",0.01],[1.0,10,[1,2],"l2",0.001],[0.2,3,[1,2],"l2",1.0],[0.2,1,[1,2],"l2",1000.0],[0.2,1,[1,2],"l2",1.0],[1.0,5,[1,2],"l1",100000.0],[0.2,5,[1,2],"l2",0.001],[0.4,10,[1,2],"l1",0.001],[1.0,5,[1,2],"l2",1e-06],[0.4,10,[1,2],"l2",100.0],[0.6,3,[1,2],"l1",100.0],[0.2,1,[1,1],"l1",0.01],[0.6,10,[1,2],"l2",0.01],[0.8,3,[1,2],"l1",0.001],[0.8,5,[1,1],"l1",10000.0],[0.8,1,[1,1],"l2",100.0],[0.4,5,[1,2],"l1",1.0],[0.8,1,[1,2],"l1",1.0],[0.2,1,[1,1],"l2",1e-06],[0.4,5,[1,2],"l2",1e-06],[0.8,1,[1,2],"l2",1.0],[0.4,10,[1,2],"l2",1e-06],[0.6,1,[1,1],"l2",1.0],[1.0,1,[1,2],"l1",1.0],[0.2,1,[1,2],"l1",1000000.0],[0.8,1,[1,2],"l2",10000.0],[0.8,10,[1,1],"l1",0.01],[1.0,5,[1,1],"l1",0.001],[0.2,5,[1,2],"l2",0.01],[0.8,10,[1,2],"l2",100000.0],[0.4,1,[1,2],"l1",1e-06],[0.6,3,[1,2],"l1",100000.0],[0.2,5,[1,1],"l2",10000.0],[1.0,1,[1,1],"l2",10000.0],[0.6,3,[1,2],"l1",1.0],[0.8,3,[1,2],"l2",1000000.0],[0.8,3,[1,2],"l2",0.001],[0.2,1,[1,2],"l2",0.09999999999999999]],"error_x":{"array":[0.007156415204754915,0.011010231980239692,0.005956251823621257,0.006779054874541395,0.0076713963543240836,0.011558903607155623,0.011205819750903163,0.005296628683664215,0.005425210491531622,0.006617877961572232,0.005818482833404034,0.008138047274686902,0.008345603983193286,0.0039894015656935355,0.007853201021704576,0.010599964221537271,0.0029814022376833077,0.004610416164841002,0.0073516975740229255,0.010472114778032787,0.0075291440929651475,0.007937628618284495,0.009354104149583148,0.005459083156726104,0.013306395535099394,0.013945817537421698,0.010689124450985665,0.008788471675746446,0.006425514180879599,0.003016809280457597,0.007753784338236285,0.006788901903759951,0.011104524370286705,0.008694579282229813,0.0033840902949068205,0.010406255473068443,0.00714034093267622,0.011125245807481735,0.00809989423134197,0.010583182640518498]},"error_y":{"array":[0.021709462916372543,0.019660424372293657,0.02280701551644583,0.04141503839481188,0.025197247740550304,0.02185207140572817,0.03919239713819249,0.0064363918745756095,0.04904124161348298,0.05189316457318038,0.048501681550639386,0.03741855291831512,0.017469874157429344,0.02173863377120521,0.03542621298833128,0.025243761085853186,0.006667969931544837,0.006180189207600158,0.03507679946932842,0.011860875164389911,0.03629456169941096,0.04938433795727698,0.03192696045040785,0.039585633198194775,0.03748169491939798,0.008394295296711565,0.024477745202560856,0.009089774981294351,0.017562478457491922,0.023480916167601486,0.0422343170600075,0.0070716818832471,0.02787646303524185,0.017469874157429344,0.02866436715108689,0.0030358844335549935,0.024286892696920713,0.006307564442123955,0.03887461994008526,0.028260891331683496]},"hovertemplate":"CV Score time (s)=%{x}\u003cbr\u003eCV score (accuracy)=%{y}\u003cbr\u003emax_df=%{customdata[0]}\u003cbr\u003emin_df=%{customdata[1]}\u003cbr\u003engram_range=%{customdata[2]}\u003cbr\u003enorm=%{customdata[3]}\u003cbr\u003ealpha=%{customdata[4]}\u003cextra\u003e\u003c\u002fextra\u003e","legendgroup":"","marker":{"color":"#636efa","symbol":"circle"},"mode":"markers","name":"","orientation":"v","showlegend":false,"x":[0.04991130828857422,0.05008201599121094,0.02276954650878906,0.03855423927307129,0.04178533554077148,0.05353426933288574,0.04959297180175781,0.03887605667114258,0.04442930221557617,0.04407234191894531,0.03895511627197266,0.04052648544311523,0.04642620086669922,0.022247838973999023,0.04609394073486328,0.04351820945739746,0.01899247169494629,0.024645090103149414,0.04242405891418457,0.04862065315246582,0.02431321144104004,0.04567270278930664,0.055316925048828125,0.0517463207244873,0.02644343376159668,0.06032576560974121,0.06750631332397461,0.057128095626831056,0.02173328399658203,0.021175527572631837,0.04593653678894043,0.04285674095153809,0.05335550308227539,0.04965434074401855,0.020073509216308592,0.027331733703613283,0.044451236724853516,0.047452354431152345,0.0481722354888916,0.05288033485412598],"xaxis":"x","y":[0.6067319461444309,0.6114035087719298,0.7444308445532435,0.7385624915000679,0.7735890112879098,0.6988916088671291,0.7350537195702435,0.5775873793009656,0.7723922208622331,0.7327281381748946,0.76890384876921,0.6603835169318646,0.599734802121583,0.8156262749898001,0.73625050999592,0.7958044335645316,0.5729294165646674,0.5705902352781178,0.6661906704746362,0.5857405140758873,0.7841425268597851,0.7665714674282607,0.670875832993336,0.7304229566163472,0.7000271997824018,0.5810825513395892,0.6673806609547123,0.5775873793009656,0.7479464164286685,0.7770909832721339,0.7747314021487828,0.5845913232694139,0.8109547123623011,0.599734802121583,0.7280769753841969,0.5624303005575955,0.6195498436012512,0.5752685978512172,0.7829389364885082,0.8132666938664489],"yaxis":"y","type":"scatter"}],                        {"template":{"data":{"histogram2dcontour":[{"type":"histogram2dcontour","colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]]}],"choropleth":[{"type":"choropleth","colorbar":{"outlinewidth":0,"ticks":""}}],"histogram2d":[{"type":"histogram2d","colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]]}],"heatmap":[{"type":"heatmap","colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]]}],"heatmapgl":[{"type":"heatmapgl","colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]]}],"contourcarpet":[{"type":"contourcarpet","colorbar":{"outlinewidth":0,"ticks":""}}],"contour":[{"type":"contour","colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]]}],"surface":[{"type":"surface","colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]]}],"mesh3d":[{"type":"mesh3d","colorbar":{"outlinewidth":0,"ticks":""}}],"scatter":[{"fillpattern":{"fillmode":"overlay","size":10,"solidity":0.2},"type":"scatter"}],"parcoords":[{"type":"parcoords","line":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"scatterpolargl":[{"type":"scatterpolargl","marker":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"bar":[{"error_x":{"color":"#2a3f5f"},"error_y":{"color":"#2a3f5f"},"marker":{"line":{"color":"#E5ECF6","width":0.5},"pattern":{"fillmode":"overlay","size":10,"solidity":0.2}},"type":"bar"}],"scattergeo":[{"type":"scattergeo","marker":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"scatterpolar":[{"type":"scatterpolar","marker":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"histogram":[{"marker":{"pattern":{"fillmode":"overlay","size":10,"solidity":0.2}},"type":"histogram"}],"scattergl":[{"type":"scattergl","marker":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"scatter3d":[{"type":"scatter3d","line":{"colorbar":{"outlinewidth":0,"ticks":""}},"marker":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"scattermapbox":[{"type":"scattermapbox","marker":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"scatterternary":[{"type":"scatterternary","marker":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"scattercarpet":[{"type":"scattercarpet","marker":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"carpet":[{"aaxis":{"endlinecolor":"#2a3f5f","gridcolor":"white","linecolor":"white","minorgridcolor":"white","startlinecolor":"#2a3f5f"},"baxis":{"endlinecolor":"#2a3f5f","gridcolor":"white","linecolor":"white","minorgridcolor":"white","startlinecolor":"#2a3f5f"},"type":"carpet"}],"table":[{"cells":{"fill":{"color":"#EBF0F8"},"line":{"color":"white"}},"header":{"fill":{"color":"#C8D4E3"},"line":{"color":"white"}},"type":"table"}],"barpolar":[{"marker":{"line":{"color":"#E5ECF6","width":0.5},"pattern":{"fillmode":"overlay","size":10,"solidity":0.2}},"type":"barpolar"}],"pie":[{"automargin":true,"type":"pie"}]},"layout":{"autotypenumbers":"strict","colorway":["#636efa","#EF553B","#00cc96","#ab63fa","#FFA15A","#19d3f3","#FF6692","#B6E880","#FF97FF","#FECB52"],"font":{"color":"#2a3f5f"},"hovermode":"closest","hoverlabel":{"align":"left"},"paper_bgcolor":"white","plot_bgcolor":"#E5ECF6","polar":{"bgcolor":"#E5ECF6","angularaxis":{"gridcolor":"white","linecolor":"white","ticks":""},"radialaxis":{"gridcolor":"white","linecolor":"white","ticks":""}},"ternary":{"bgcolor":"#E5ECF6","aaxis":{"gridcolor":"white","linecolor":"white","ticks":""},"baxis":{"gridcolor":"white","linecolor":"white","ticks":""},"caxis":{"gridcolor":"white","linecolor":"white","ticks":""}},"coloraxis":{"colorbar":{"outlinewidth":0,"ticks":""}},"colorscale":{"sequential":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]],"sequentialminus":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]],"diverging":[[0,"#8e0152"],[0.1,"#c51b7d"],[0.2,"#de77ae"],[0.3,"#f1b6da"],[0.4,"#fde0ef"],[0.5,"#f7f7f7"],[0.6,"#e6f5d0"],[0.7,"#b8e186"],[0.8,"#7fbc41"],[0.9,"#4d9221"],[1,"#276419"]]},"xaxis":{"gridcolor":"white","linecolor":"white","ticks":"","title":{"standoff":15},"zerolinecolor":"white","automargin":true,"zerolinewidth":2},"yaxis":{"gridcolor":"white","linecolor":"white","ticks":"","title":{"standoff":15},"zerolinecolor":"white","automargin":true,"zerolinewidth":2},"scene":{"xaxis":{"backgroundcolor":"#E5ECF6","gridcolor":"white","linecolor":"white","showbackground":true,"ticks":"","zerolinecolor":"white","gridwidth":2},"yaxis":{"backgroundcolor":"#E5ECF6","gridcolor":"white","linecolor":"white","showbackground":true,"ticks":"","zerolinecolor":"white","gridwidth":2},"zaxis":{"backgroundcolor":"#E5ECF6","gridcolor":"white","linecolor":"white","showbackground":true,"ticks":"","zerolinecolor":"white","gridwidth":2}},"shapedefaults":{"line":{"color":"#2a3f5f"}},"annotationdefaults":{"arrowcolor":"#2a3f5f","arrowhead":0,"arrowwidth":1},"geo":{"bgcolor":"white","landcolor":"#E5ECF6","subunitcolor":"white","showland":true,"showlakes":true,"lakecolor":"white"},"title":{"x":0.05},"mapbox":{"style":"light"}}},"xaxis":{"anchor":"y","domain":[0.0,1.0],"title":{"text":"CV Score time (s)"}},"yaxis":{"anchor":"x","domain":[0.0,1.0],"title":{"text":"CV score (accuracy)"}},"legend":{"tracegroupgap":0},"margin":{"t":60},"title":{"text":"trade-off between scoring time and mean test score","y":0.95,"x":0.5,"xanchor":"center","yanchor":"top"}},                        {"responsive": true}                    )                };                            </script> </div>
-</div>
-<br/>
-<br/><p>Notice that the cluster of models in the upper-left corner of the plot have
+<p>Notice that the cluster of models in the upper-left corner of the plot have
 the best trade-off between accuracy and scoring time. In this case, using
 bigrams increases the required scoring time without improving considerably the
 accuracy of the pipeline.</p>
@@ -1508,12 +1065,7 @@ said axis is to be understood as <span class="math notranslate nohighlight">\(10
 <span class="n">fig</span>
 </pre></div>
 </div>
-<div class="output_subarea output_html rendered_html output_result">
-<div> <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-AMS-MML_SVG"></script><script type="text/javascript">if (window.MathJax && window.MathJax.Hub && window.MathJax.Hub.Config) {window.MathJax.Hub.Config({SVG: {font: "STIX-Web"}});}</script> <script type="text/javascript">window.PlotlyConfig = {MathJaxConfig: 'local'};</script>
-<script charset="utf-8" src="https://cdn.plot.ly/plotly-2.29.1.min.js"></script> <div class="plotly-graph-div" id="a9e5ea6b-ceb6-4f9b-9a99-e1b6ce88d1da" style="height:525px; width:100%;"></div> <script type="text/javascript">                                    window.PLOTLYENV=window.PLOTLYENV || {};                                    if (document.getElementById("a9e5ea6b-ceb6-4f9b-9a99-e1b6ce88d1da")) {                    Plotly.newPlot(                        "a9e5ea6b-ceb6-4f9b-9a99-e1b6ce88d1da",                        [{"dimensions":[{"label":"max_df","values":[1.0,0.6,0.6,1.0,0.2,0.2,0.2,1.0,0.2,0.4,1.0,0.4,0.6,0.2,0.6,0.8,0.8,0.8,0.4,0.8,0.2,0.4,0.8,0.4,0.6,1.0,0.2,0.8,0.8,1.0,0.2,0.8,0.4,0.6,0.2,1.0,0.6,0.8,0.8,0.2]},{"label":"min_df","values":[3,3,10,10,3,1,1,5,5,10,5,10,3,1,10,3,5,1,5,1,1,5,1,10,1,1,1,1,10,5,5,10,1,3,5,1,3,3,3,1]},{"label":"ngram_range","values":[2,2,1,2,2,2,2,2,2,2,2,2,2,1,2,2,1,1,2,2,1,2,2,2,1,2,2,2,1,1,2,2,2,2,1,1,2,2,2,2]},{"label":"norm","values":[2,2,1,2,2,2,2,1,2,1,2,2,1,1,2,1,1,2,1,1,2,2,2,2,2,1,1,2,1,1,2,2,1,1,2,2,1,2,2,2]},{"label":"alpha","values":[1.0,2.0,-2.0,-3.0,0.0,3.0,0.0,5.0,-3.0,-3.0,-6.0,2.0,2.0,-2.0,-2.0,-3.0,4.0,2.0,0.0,0.0,-6.0,-6.0,0.0,-6.0,0.0,0.0,6.0,4.0,-2.0,-3.0,-2.0,5.0,-6.0,5.0,4.0,4.0,0.0,6.0,-3.0,-1.0]},{"label":"CV score (accuracy)","values":[0.6067319461444309,0.6114035087719298,0.7444308445532435,0.7385624915000679,0.7735890112879098,0.6988916088671291,0.7350537195702435,0.5775873793009656,0.7723922208622331,0.7327281381748946,0.76890384876921,0.6603835169318646,0.599734802121583,0.8156262749898001,0.73625050999592,0.7958044335645316,0.5729294165646674,0.5705902352781178,0.6661906704746362,0.5857405140758873,0.7841425268597851,0.7665714674282607,0.670875832993336,0.7304229566163472,0.7000271997824018,0.5810825513395892,0.6673806609547123,0.5775873793009656,0.7479464164286685,0.7770909832721339,0.7747314021487828,0.5845913232694139,0.8109547123623011,0.599734802121583,0.7280769753841969,0.5624303005575955,0.6195498436012512,0.5752685978512172,0.7829389364885082,0.8132666938664489]},{"label":"CV Score time (s)","values":[0.04991130828857422,0.05008201599121094,0.02276954650878906,0.03855423927307129,0.04178533554077148,0.05353426933288574,0.04959297180175781,0.03887605667114258,0.04442930221557617,0.04407234191894531,0.03895511627197266,0.04052648544311523,0.04642620086669922,0.022247838973999023,0.04609394073486328,0.04351820945739746,0.01899247169494629,0.024645090103149414,0.04242405891418457,0.04862065315246582,0.02431321144104004,0.04567270278930664,0.055316925048828125,0.0517463207244873,0.02644343376159668,0.06032576560974121,0.06750631332397461,0.057128095626831056,0.02173328399658203,0.021175527572631837,0.04593653678894043,0.04285674095153809,0.05335550308227539,0.04965434074401855,0.020073509216308592,0.027331733703613283,0.044451236724853516,0.047452354431152345,0.0481722354888916,0.05288033485412598]}],"domain":{"x":[0.0,1.0],"y":[0.0,1.0]},"line":{"color":[0.6067319461444309,0.6114035087719298,0.7444308445532435,0.7385624915000679,0.7735890112879098,0.6988916088671291,0.7350537195702435,0.5775873793009656,0.7723922208622331,0.7327281381748946,0.76890384876921,0.6603835169318646,0.599734802121583,0.8156262749898001,0.73625050999592,0.7958044335645316,0.5729294165646674,0.5705902352781178,0.6661906704746362,0.5857405140758873,0.7841425268597851,0.7665714674282607,0.670875832993336,0.7304229566163472,0.7000271997824018,0.5810825513395892,0.6673806609547123,0.5775873793009656,0.7479464164286685,0.7770909832721339,0.7747314021487828,0.5845913232694139,0.8109547123623011,0.599734802121583,0.7280769753841969,0.5624303005575955,0.6195498436012512,0.5752685978512172,0.7829389364885082,0.8132666938664489],"coloraxis":"coloraxis"},"name":"","type":"parcoords"}],                        {"template":{"data":{"histogram2dcontour":[{"type":"histogram2dcontour","colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]]}],"choropleth":[{"type":"choropleth","colorbar":{"outlinewidth":0,"ticks":""}}],"histogram2d":[{"type":"histogram2d","colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]]}],"heatmap":[{"type":"heatmap","colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]]}],"heatmapgl":[{"type":"heatmapgl","colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]]}],"contourcarpet":[{"type":"contourcarpet","colorbar":{"outlinewidth":0,"ticks":""}}],"contour":[{"type":"contour","colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]]}],"surface":[{"type":"surface","colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]]}],"mesh3d":[{"type":"mesh3d","colorbar":{"outlinewidth":0,"ticks":""}}],"scatter":[{"fillpattern":{"fillmode":"overlay","size":10,"solidity":0.2},"type":"scatter"}],"parcoords":[{"type":"parcoords","line":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"scatterpolargl":[{"type":"scatterpolargl","marker":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"bar":[{"error_x":{"color":"#2a3f5f"},"error_y":{"color":"#2a3f5f"},"marker":{"line":{"color":"#E5ECF6","width":0.5},"pattern":{"fillmode":"overlay","size":10,"solidity":0.2}},"type":"bar"}],"scattergeo":[{"type":"scattergeo","marker":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"scatterpolar":[{"type":"scatterpolar","marker":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"histogram":[{"marker":{"pattern":{"fillmode":"overlay","size":10,"solidity":0.2}},"type":"histogram"}],"scattergl":[{"type":"scattergl","marker":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"scatter3d":[{"type":"scatter3d","line":{"colorbar":{"outlinewidth":0,"ticks":""}},"marker":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"scattermapbox":[{"type":"scattermapbox","marker":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"scatterternary":[{"type":"scatterternary","marker":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"scattercarpet":[{"type":"scattercarpet","marker":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"carpet":[{"aaxis":{"endlinecolor":"#2a3f5f","gridcolor":"white","linecolor":"white","minorgridcolor":"white","startlinecolor":"#2a3f5f"},"baxis":{"endlinecolor":"#2a3f5f","gridcolor":"white","linecolor":"white","minorgridcolor":"white","startlinecolor":"#2a3f5f"},"type":"carpet"}],"table":[{"cells":{"fill":{"color":"#EBF0F8"},"line":{"color":"white"}},"header":{"fill":{"color":"#C8D4E3"},"line":{"color":"white"}},"type":"table"}],"barpolar":[{"marker":{"line":{"color":"#E5ECF6","width":0.5},"pattern":{"fillmode":"overlay","size":10,"solidity":0.2}},"type":"barpolar"}],"pie":[{"automargin":true,"type":"pie"}]},"layout":{"autotypenumbers":"strict","colorway":["#636efa","#EF553B","#00cc96","#ab63fa","#FFA15A","#19d3f3","#FF6692","#B6E880","#FF97FF","#FECB52"],"font":{"color":"#2a3f5f"},"hovermode":"closest","hoverlabel":{"align":"left"},"paper_bgcolor":"white","plot_bgcolor":"#E5ECF6","polar":{"bgcolor":"#E5ECF6","angularaxis":{"gridcolor":"white","linecolor":"white","ticks":""},"radialaxis":{"gridcolor":"white","linecolor":"white","ticks":""}},"ternary":{"bgcolor":"#E5ECF6","aaxis":{"gridcolor":"white","linecolor":"white","ticks":""},"baxis":{"gridcolor":"white","linecolor":"white","ticks":""},"caxis":{"gridcolor":"white","linecolor":"white","ticks":""}},"coloraxis":{"colorbar":{"outlinewidth":0,"ticks":""}},"colorscale":{"sequential":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]],"sequentialminus":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]],"diverging":[[0,"#8e0152"],[0.1,"#c51b7d"],[0.2,"#de77ae"],[0.3,"#f1b6da"],[0.4,"#fde0ef"],[0.5,"#f7f7f7"],[0.6,"#e6f5d0"],[0.7,"#b8e186"],[0.8,"#7fbc41"],[0.9,"#4d9221"],[1,"#276419"]]},"xaxis":{"gridcolor":"white","linecolor":"white","ticks":"","title":{"standoff":15},"zerolinecolor":"white","automargin":true,"zerolinewidth":2},"yaxis":{"gridcolor":"white","linecolor":"white","ticks":"","title":{"standoff":15},"zerolinecolor":"white","automargin":true,"zerolinewidth":2},"scene":{"xaxis":{"backgroundcolor":"#E5ECF6","gridcolor":"white","linecolor":"white","showbackground":true,"ticks":"","zerolinecolor":"white","gridwidth":2},"yaxis":{"backgroundcolor":"#E5ECF6","gridcolor":"white","linecolor":"white","showbackground":true,"ticks":"","zerolinecolor":"white","gridwidth":2},"zaxis":{"backgroundcolor":"#E5ECF6","gridcolor":"white","linecolor":"white","showbackground":true,"ticks":"","zerolinecolor":"white","gridwidth":2}},"shapedefaults":{"line":{"color":"#2a3f5f"}},"annotationdefaults":{"arrowcolor":"#2a3f5f","arrowhead":0,"arrowwidth":1},"geo":{"bgcolor":"white","landcolor":"#E5ECF6","subunitcolor":"white","showland":true,"showlakes":true,"lakecolor":"white"},"title":{"x":0.05},"mapbox":{"style":"light"}}},"coloraxis":{"colorbar":{"title":{"text":"CV score (accuracy)"}},"colorscale":[[0.0,"#fde725"],[0.1111111111111111,"#b5de2b"],[0.2222222222222222,"#6ece58"],[0.3333333333333333,"#35b779"],[0.4444444444444444,"#1f9e89"],[0.5555555555555556,"#26828e"],[0.6666666666666666,"#31688e"],[0.7777777777777778,"#3e4989"],[0.8888888888888888,"#482878"],[1.0,"#440154"]]},"legend":{"tracegroupgap":0},"margin":{"t":60},"title":{"text":"Parallel coordinates plot of text classifier pipeline","y":0.99,"x":0.5,"xanchor":"center","yanchor":"top"}},                        {"responsive": true}                    )                };                            </script> </div>
-</div>
-<br/>
-<br/><p>The parallel coordinates plot displays the values of the hyperparameters on
+<p>The parallel coordinates plot displays the values of the hyperparameters on
 different columns while the performance metric is color coded. It is possible
 to select a range of results by clicking and holding on any axis of the
 parallel coordinate plot. You can then slide (move) the range selection and
@@ -1528,7 +1080,6 @@ overfit and therefore require a stronger regularization to compensate. Having
 less features require less regularization and less scoring time.</p>
 <p>The best accuracy scores are obtained when <code class="docutils literal notranslate"><span class="pre">alpha</span></code> is between <span class="math notranslate nohighlight">\(10^{-6}\)</span>
 and <span class="math notranslate nohighlight">\(10^0\)</span>, regardless of the hyperparameter <code class="docutils literal notranslate"><span class="pre">norm</span></code>.</p>
-<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> (0 minutes 34.483 seconds)</p>
 
 <p class="rubric">Related examples</p>
 <div class="sphx-glr-thumbnails"><div class="sphx-glr-thumbcontainer" tooltip="This is an example showing how scikit-learn can be used to classify documents by topics using a..."><img alt="" src="../../_images/sphx_glr_plot_document_classification_20newsgroups_thumb.png"/>

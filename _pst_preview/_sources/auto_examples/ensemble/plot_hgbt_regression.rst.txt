@@ -11,7 +11,7 @@
         :class: sphx-glr-download-link-note
 
         :ref:`Go to the end <sphx_glr_download_auto_examples_ensemble_plot_hgbt_regression.py>`
-        to download the full example code or to run this example in your browser via JupyterLite or Binder
+        to download the full example code. or to run this example in your browser via JupyterLite or Binder
 
 .. rst-class:: sphx-glr-example-title
 
@@ -32,10 +32,10 @@ ten thousands (see
 
 The top usability features of HGBT models are:
 
-1. Several available loss function for mean and quantile regression tasks, see
+1. Several available loss functions for mean and quantile regression tasks, see
    :ref:`Quantile loss <quantile_support_hgbdt>`.
-2. :ref:`categorical_support_gbdt` (see
-   :ref:`sphx_glr_auto_examples_ensemble_plot_gradient_boosting_categorical.py`).
+2. :ref:`categorical_support_gbdt`, see
+   :ref:`sphx_glr_auto_examples_ensemble_plot_gradient_boosting_categorical.py`.
 3. Early stopping.
 4. :ref:`nan_support_hgbt`, which avoids the need for an imputer.
 5. :ref:`monotonic_cst_gbdt`.
@@ -53,12 +53,6 @@ setting.
     # License: BSD 3 clause
 
 
-
-
-
-
-
-
 .. GENERATED FROM PYTHON SOURCE LINES 33-53
 
 Preparing the data
@@ -69,7 +63,7 @@ market, prices are not fixed and are affected by supply and demand. They are
 set every five minutes. Electricity transfers to/from the neighboring state of
 Victoria were done to alleviate fluctuations.
 
-The dataset (originally named ELEC2) contains 45,312 instances dated from 7
+The dataset, originally named ELEC2, contains 45,312 instances dated from 7
 May 1996 to 5 December 1998. Each sample of the dataset refers to a period of
 30 minutes, i.e. there are 48 instances for each time period of one day. Each
 sample on the dataset has 7 columns:
@@ -79,7 +73,7 @@ sample on the dataset has 7 columns:
   - nswprice/nswdemand: electricity price/demand of New South Wales;
   - vicprice/vicdemand: electricity price/demand of Victoria.
 
-It is originally a classification task, but here we use it for the regression
+Originally, it is a classification task, but here we use it for the regression
 task to predict the scheduled electricity transfer between states.
 
 .. GENERATED FROM PYTHON SOURCE LINES 53-61
@@ -95,12 +89,6 @@ task to predict the scheduled electricity transfer between states.
     df = electricity.frame
 
 
-
-
-
-
-
-
 .. GENERATED FROM PYTHON SOURCE LINES 62-64
 
 This particular dataset has a stepwise constant target for the first 17,760
@@ -112,18 +100,6 @@ samples:
 
 
     df["transfer"][:17_760].unique()
-
-
-
-
-
-.. rst-class:: sphx-glr-script-out
-
- .. code-block:: none
-
-
-    array([0.414912, 0.500526])
-
 
 
 .. GENERATED FROM PYTHON SOURCE LINES 68-70
@@ -154,20 +130,9 @@ different days of the week:
     _ = ax.legend(handles, ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"])
 
 
-
-
-.. image-sg:: /auto_examples/ensemble/images/sphx_glr_plot_hgbt_regression_001.png
-   :alt: Hourly energy transfer for different days of the week
-   :srcset: /auto_examples/ensemble/images/sphx_glr_plot_hgbt_regression_001.png
-   :class: sphx-glr-single-img
-
-
-
-
-
 .. GENERATED FROM PYTHON SOURCE LINES 89-99
 
-Notice energy transfer increases systematically during weekends.
+Notice that energy transfer increases systematically during weekends.
 
 Effect of number of trees and early stopping
 ============================================
@@ -176,7 +141,7 @@ train a :class:`~sklearn.ensemble.HistGradientBoostingRegressor` over the
 daily electricity transfer using the whole dataset. Then we visualize its
 predictions depending on the `max_iter` parameter. Here we don't try to
 evaluate the performance of the model and its capacity to generalize but
-rather its capacity to learn from the training data.
+rather its capability to learn from the training data.
 
 .. GENERATED FROM PYTHON SOURCE LINES 99-109
 
@@ -191,20 +156,6 @@ rather its capacity to learn from the training data.
     print(f"Training sample size: {X_train.shape[0]}")
     print(f"Test sample size: {X_test.shape[0]}")
     print(f"Number of features: {X_train.shape[1]}")
-
-
-
-
-
-.. rst-class:: sphx-glr-script-out
-
- .. code-block:: none
-
-    Training sample size: 16531
-    Test sample size: 11021
-    Number of features: 7
-
-
 
 
 .. GENERATED FROM PYTHON SOURCE LINES 110-143
@@ -245,43 +196,34 @@ rather its capacity to learn from the training data.
     _ = ax.legend()
 
 
-
-
-.. image-sg:: /auto_examples/ensemble/images/sphx_glr_plot_hgbt_regression_002.png
-   :alt: Predicted average energy transfer during the week
-   :srcset: /auto_examples/ensemble/images/sphx_glr_plot_hgbt_regression_002.png
-   :class: sphx-glr-single-img
-
-
-
-
-
-.. GENERATED FROM PYTHON SOURCE LINES 144-166
+.. GENERATED FROM PYTHON SOURCE LINES 144-168
 
 With just a few iterations, HGBT models can achieve convergence (see
 :ref:`sphx_glr_auto_examples_ensemble_plot_forest_hist_grad_boosting_comparison.py`),
 meaning that adding more trees does not improve the model anymore. In the
-figure above, 5 iterations are not enough to be able to predict. With 50
+figure above, 5 iterations are not enough to get good predictions. With 50
 iterations, we are already able to do a good job.
 
-Instead of relying on `max_iter` alone to determine when to stop, the HGBT
-implementation in scikit-learn supports early stopping. With it, the model
+Setting `max_iter` too high might degrade the prediction quality and cost a lot of
+avoidable computing resources. Therefore, the HGBT implementation in scikit-learn
+provides an automatic **early stopping** strategy. With it, the model
 uses a fraction of the training data as internal validation set
 (`validation_fraction`) and stops training if the validation score does not
 improve (or degrades) after `n_iter_no_change` iterations up to a certain
-`tol`.
+tolerance (`tol`).
 
 Notice that there is a trade-off between `learning_rate` and `max_iter`:
 Generally, smaller learning rates are preferable but require more iterations
 to converge to the minimum loss, while larger learning rates converge faster
 (less iterations/trees needed) but at the cost of a larger minimum loss.
 
-Indeed, a good practice is to tune the learning rate along with any other
+Because of this high correlation between the learning rate the number of iterations,
+a good practice is to tune the learning rate along with all (important) other
 hyperparameters, fit the HBGT on the training set with a large enough value
 for `max_iter` and determine the best `max_iter` via early stopping and some
 explicit `validation_fraction`.
 
-.. GENERATED FROM PYTHON SOURCE LINES 166-187
+.. GENERATED FROM PYTHON SOURCE LINES 168-189
 
 .. code-block:: Python
 
@@ -307,24 +249,13 @@ explicit `validation_fraction`.
     )
 
 
-
-
-.. image-sg:: /auto_examples/ensemble/images/sphx_glr_plot_hgbt_regression_003.png
-   :alt: Loss of hgbt with early stopping (n_iter=392)
-   :srcset: /auto_examples/ensemble/images/sphx_glr_plot_hgbt_regression_003.png
-   :class: sphx-glr-single-img
-
-
-
-
-
-.. GENERATED FROM PYTHON SOURCE LINES 188-191
+.. GENERATED FROM PYTHON SOURCE LINES 190-193
 
 We can then overwrite the value for `max_iter` to a reasonable value and avoid
 the extra computational cost of the inner validation. Rounding up the number
 of iterations may account for variability of the training set:
 
-.. GENERATED FROM PYTHON SOURCE LINES 191-198
+.. GENERATED FROM PYTHON SOURCE LINES 193-200
 
 .. code-block:: Python
 
@@ -336,13 +267,7 @@ of iterations may account for variability of the training set:
     hgbt = HistGradientBoostingRegressor(**common_params)
 
 
-
-
-
-
-
-
-.. GENERATED FROM PYTHON SOURCE LINES 199-215
+.. GENERATED FROM PYTHON SOURCE LINES 201-217
 
 .. note:: The inner validation done during early stopping is not optimal for
    time series.
@@ -352,16 +277,16 @@ Support for missing values
 HGBT models have native support of missing values. During training, the tree
 grower decides where samples with missing values should go (left or right
 child) at each split, based on the potential gain. When predicting, these
-samples are sent to either child accordingly. If a feature had no missing
-values during training, samples with missing values for that feature are sent
-to the child with the most samples.
+samples are sent to the learnt child accordingly. If a feature had no missing
+values during training, then for prediction, samples with missing values for that
+feature are sent to the child with the most samples (as seen during fit).
 
 The present example shows how HGBT regressions deal with values missing
 completely at random (MCAR), i.e. the missingness does not depend on the
 observed data or the unobserved data. We can simulate such scenario by
 randomly replacing values from randomly selected features with `nan` values.
 
-.. GENERATED FROM PYTHON SOURCE LINES 215-258
+.. GENERATED FROM PYTHON SOURCE LINES 217-260
 
 .. code-block:: Python
 
@@ -409,18 +334,7 @@ randomly replacing values from randomly selected features with `nan` values.
     _ = ax.legend(loc="lower right")
 
 
-
-
-.. image-sg:: /auto_examples/ensemble/images/sphx_glr_plot_hgbt_regression_004.png
-   :alt: Daily energy transfer predictions on data with MCAR values
-   :srcset: /auto_examples/ensemble/images/sphx_glr_plot_hgbt_regression_004.png
-   :class: sphx-glr-single-img
-
-
-
-
-
-.. GENERATED FROM PYTHON SOURCE LINES 259-268
+.. GENERATED FROM PYTHON SOURCE LINES 261-270
 
 As expected, the model degrades as the proportion of missing values increases.
 
@@ -432,7 +346,7 @@ uncertainty of the target variable. For instance, predicting the 5th and 95th
 percentiles can provide a 90% prediction interval, i.e. the range within which
 we expect a new observed value to fall with 90% probability.
 
-.. GENERATED FROM PYTHON SOURCE LINES 268-308
+.. GENERATED FROM PYTHON SOURCE LINES 270-310
 
 .. code-block:: Python
 
@@ -477,18 +391,7 @@ we expect a new observed value to fall with 90% probability.
     _ = ax.legend(loc="lower right")
 
 
-
-
-.. image-sg:: /auto_examples/ensemble/images/sphx_glr_plot_hgbt_regression_005.png
-   :alt: Daily energy transfer predictions with quantile loss
-   :srcset: /auto_examples/ensemble/images/sphx_glr_plot_hgbt_regression_005.png
-   :class: sphx-glr-single-img
-
-
-
-
-
-.. GENERATED FROM PYTHON SOURCE LINES 309-346
+.. GENERATED FROM PYTHON SOURCE LINES 311-349
 
 We observe a tendence to over-estimate the energy transfer. This could be be
 quantitatively confirmed by computing empirical coverage numbers as done in
@@ -497,10 +400,10 @@ Keep in mind that those predicted percentiles are just estimations from a
 model. One can still improve the quality of such estimations by:
 
 - collecting more data-points;
-- better tuning of the model hyperparameters (see
-  :ref:`sphx_glr_auto_examples_ensemble_plot_gradient_boosting_quantile.py`);
-- engineering more predictive features from the same data (see
-  :ref:`sphx_glr_auto_examples_applications_plot_cyclical_feature_engineering.py`).
+- better tuning of the model hyperparameters, see
+  :ref:`sphx_glr_auto_examples_ensemble_plot_gradient_boosting_quantile.py`;
+- engineering more predictive features from the same data, see
+  :ref:`sphx_glr_auto_examples_applications_plot_cyclical_feature_engineering.py`.
 
 Monotonic constraints
 =====================
@@ -526,9 +429,10 @@ constraints by passing a dictionary with the convention:
 - 0: no constraint
 - -1: monotonic decrease
 
-Else, one can pass an array-like encoding the above convention by position.
+Alternatively, one can pass an array-like object encoding the above convention by
+position.
 
-.. GENERATED FROM PYTHON SOURCE LINES 346-396
+.. GENERATED FROM PYTHON SOURCE LINES 349-399
 
 .. code-block:: Python
 
@@ -583,21 +487,11 @@ Else, one can pass an array-like encoding the above convention by position.
     _ = plt.legend()
 
 
+.. GENERATED FROM PYTHON SOURCE LINES 400-410
 
-
-.. image-sg:: /auto_examples/ensemble/images/sphx_glr_plot_hgbt_regression_006.png
-   :alt: plot hgbt regression
-   :srcset: /auto_examples/ensemble/images/sphx_glr_plot_hgbt_regression_006.png
-   :class: sphx-glr-single-img
-
-
-
-
-
-.. GENERATED FROM PYTHON SOURCE LINES 397-406
-
-Observe that `nswdemand` seems already monotonic without constraint. This is a
-good example to show that the model is "overconstraining".
+Observe that `nswdemand` and `vicdemand` seem already monotonic without constraint.
+This is a good example to show that the model with monotonicity constraints is
+"overconstraining".
 
 Additionally, we can verify that the predictive quality of the model is not
 significantly degraded by introducing the monotonic constraints. For such
@@ -606,7 +500,7 @@ cross-validation to estimate the variance of the test score. By doing so we
 guarantee that the training data does not succeed the testing data, which is
 crucial when dealing with data that have a temporal relationship.
 
-.. GENERATED FROM PYTHON SOURCE LINES 406-421
+.. GENERATED FROM PYTHON SOURCE LINES 410-425
 
 .. code-block:: Python
 
@@ -626,29 +520,11 @@ crucial when dealing with data that have a temporal relationship.
     print(f"RMSE with constraints    = {rmse.mean():.3f} +/- {rmse.std():.3f}")
 
 
-
-
-
-.. rst-class:: sphx-glr-script-out
-
- .. code-block:: none
-
-    RMSE without constraints = 0.103 +/- 0.030
-    RMSE with constraints    = 0.107 +/- 0.034
-
-
-
-
-.. GENERATED FROM PYTHON SOURCE LINES 422-425
+.. GENERATED FROM PYTHON SOURCE LINES 426-429
 
 That being said, notice the comparison is between two different models that
 may be optimized by a different combination of hyperparameters. That is the
 reason why we do no use the `common_params` in this section as done before.
-
-
-.. rst-class:: sphx-glr-timing
-
-   **Total running time of the script:** (0 minutes 21.422 seconds)
 
 
 .. _sphx_glr_download_auto_examples_ensemble_plot_hgbt_regression.py:

@@ -13,7 +13,7 @@
 <meta content="https://scikit-learn.org/stable/_static/scikit-learn-logo-small.png" property="og:image"/>
 <meta content="scikit-learn" property="og:image:alt"/>
 <meta content="The present example compares three l1-based regression models on a synthetic signal obtained from sparse and correlated features that are further corrupted with additive gaussian noise: a Lasso;, a..." name="description"/>
-<title>L1-based models for Sparse Signals — scikit-learn 1.5.dev0 documentation</title>
+<title>L1-based models for Sparse Signals — scikit-learn 1.6.dev0 documentation</title>
 <script data-cfasync="false">
     document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
     document.documentElement.dataset.theme = localStorage.getItem("theme") || "light";
@@ -42,8 +42,8 @@
 <link as="script" href="../../_static/scripts/bootstrap.js?digest=8d27b9dea8ad943066ae" rel="preload"/>
 <link as="script" href="../../_static/scripts/pydata-sphinx-theme.js?digest=8d27b9dea8ad943066ae" rel="preload"/>
 <script src="../../_static/vendor/fontawesome/6.5.1/js/all.min.js?digest=8d27b9dea8ad943066ae"></script>
-<script src="../../_static/documentation_options.js?v=a2c36881"></script>
-<script src="../../_static/doctools.js?v=888ff710"></script>
+<script src="../../_static/documentation_options.js?v=d875d36e"></script>
+<script src="../../_static/doctools.js?v=9a2dae69"></script>
 <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
 <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
 <script src="../../_static/copybutton.js?v=97f0b27d"></script>
@@ -54,8 +54,8 @@
 <script>DOCUMENTATION_OPTIONS.pagename = 'auto_examples/linear_model/plot_lasso_and_elasticnet';</script>
 <script>
         DOCUMENTATION_OPTIONS.theme_version = '0.15.2';
-        DOCUMENTATION_OPTIONS.theme_switcher_json_url = 'https://scikit-learn.org/_pst_preview/versions.json';
-        DOCUMENTATION_OPTIONS.theme_switcher_version_match = '1.5.dev0';
+        DOCUMENTATION_OPTIONS.theme_switcher_json_url = 'https://scikit-learn.org/_pst_preview/_static/versions.json';
+        DOCUMENTATION_OPTIONS.theme_switcher_version_match = '1.6.dev0';
         DOCUMENTATION_OPTIONS.show_version_warning_banner = true;
         </script>
 <script src="../../_static/scripts/dropdown.js?v=12d599f8"></script>
@@ -550,7 +550,6 @@ document.write(`
 <li class="toctree-l2"><a class="reference internal" href="../applications/plot_face_recognition.html">Faces recognition example using eigenfaces and SVMs</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../applications/plot_digits_denoising.html">Image denoising using kernel PCA</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../applications/plot_time_series_lagged_features.html">Lagged features for time series forecasting</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../applications/svm_gui.html">Libsvm GUI</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../applications/plot_model_complexity_influence.html">Model Complexity Influence</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../applications/plot_out_of_core_classification.html">Out-of-core classification of text documents</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../applications/plot_outlier_detection_wine.html">Outlier detection on a real data set</a></li>
@@ -695,6 +694,8 @@ document.write(`
 <li class="toctree-l2"><a class="reference internal" href="../model_selection/plot_cv_predict.html">Plotting Cross-Validated Predictions</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../model_selection/plot_learning_curve.html">Plotting Learning Curves and Checking Models’ Scalability</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../model_selection/plot_validation_curve.html">Plotting Validation Curves</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../model_selection/plot_tuned_decision_threshold.html">Post-hoc tuning the cut-off point of decision function</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../model_selection/plot_cost_sensitive_learning.html">Post-tuning the decision threshold for cost-sensitive learning</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../model_selection/plot_precision_recall.html">Precision-Recall</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../model_selection/plot_roc_crossval.html">Receiver Operating Characteristic (ROC) with cross validation</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../model_selection/plot_grid_search_text_feature_extraction.html">Sample pipeline for text feature extraction and evaluation</a></li>
@@ -887,10 +888,6 @@ l1-penalization is necessary.</p>
 <div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">freqs</span><span class="p">[:</span><span class="n">n_informative</span><span class="p">]</span>
 </pre></div>
 </div>
-<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>array([ 2.9502547 , 11.8059798 , 12.63394388, 12.70359377, 24.62241605,
-       37.84077985, 40.30506066, 44.63327171, 54.74495357, 59.02456369])
-</pre></div>
-</div>
 <p>A random phase is introduced using <a class="reference external" href="https://numpy.org/doc/stable/reference/random/generated/numpy.random.random_sample.html#numpy.random.random_sample" title="(in NumPy v1.26)"><code class="xref py py-func docutils literal notranslate"><span class="pre">numpy.random.random_sample</span></code></a>
 and some gaussian noise (implemented by <a class="reference external" href="https://numpy.org/doc/stable/reference/random/generated/numpy.random.normal.html#numpy.random.normal" title="(in NumPy v1.26)"><code class="xref py py-func docutils literal notranslate"><span class="pre">numpy.random.normal</span></code></a>)
 is added to both the features and the target.</p>
@@ -913,7 +910,7 @@ We can visualize the target.</p>
 <span class="n">_</span> <span class="o">=</span> <a class="sphx-glr-backref-module-matplotlib-pyplot sphx-glr-backref-type-py-function" href="https://matplotlib.org/stable/api/_as_gen/matplotlib.pyplot.title.html#matplotlib.pyplot.title" title="matplotlib.pyplot.title"><span class="n">plt</span><span class="o">.</span><span class="n">title</span></a><span class="p">(</span><span class="s2">"Superposition of sinusoidal signals"</span><span class="p">)</span>
 </pre></div>
 </div>
-<img alt="Superposition of sinusoidal signals" class="sphx-glr-single-img" src="../../_images/sphx_glr_plot_lasso_and_elasticnet_001.png" srcset="../../_images/sphx_glr_plot_lasso_and_elasticnet_001.png"/><p>We split the data into train and test sets for simplicity. In practice one
+<p>We split the data into train and test sets for simplicity. In practice one
 should use a <a class="reference internal" href="../../modules/generated/sklearn.model_selection.TimeSeriesSplit.html#sklearn.model_selection.TimeSeriesSplit" title="sklearn.model_selection.TimeSeriesSplit"><code class="xref py py-class docutils literal notranslate"><span class="pre">TimeSeriesSplit</span></code></a>
 cross-validation to estimate the variance of the test score. Here we set
 <code class="docutils literal notranslate"><span class="pre">shuffle="False"</span></code> as we must not use training data that succeed the testing
@@ -950,10 +947,6 @@ execute, we directly set the optimal value for alpha here.</p>
 <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Lasso r^2 on test data : </span><span class="si">{</span><span class="n">r2_score_lasso</span><span class="si">:</span><span class="s2">.3f</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
 </pre></div>
 </div>
-<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>Lasso fit done in 0.001s
-Lasso r^2 on test data : 0.480
-</pre></div>
-</div>
 </section>
 <section id="automatic-relevance-determination-ard">
 <h2>Automatic Relevance Determination (ARD)<a class="headerlink" href="#automatic-relevance-determination-ard" title="Link to this heading">#</a></h2>
@@ -972,10 +965,6 @@ comparison of <a class="reference internal" href="../../modules/generated/sklear
 <span class="n">y_pred_ard</span> <span class="o">=</span> <span class="n">ard</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">X_test</span><span class="p">)</span>
 <span class="n">r2_score_ard</span> <span class="o">=</span> <a class="sphx-glr-backref-module-sklearn-metrics sphx-glr-backref-type-py-function" href="../../modules/generated/sklearn.metrics.r2_score.html#sklearn.metrics.r2_score" title="sklearn.metrics.r2_score"><span class="n">r2_score</span></a><span class="p">(</span><span class="n">y_test</span><span class="p">,</span> <span class="n">y_pred_ard</span><span class="p">)</span>
 <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"ARD r^2 on test data : </span><span class="si">{</span><span class="n">r2_score_ard</span><span class="si">:</span><span class="s2">.3f</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
-</pre></div>
-</div>
-<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>ARD fit done in 0.089s
-ARD r^2 on test data : 0.542
 </pre></div>
 </div>
 </section>
@@ -1002,10 +991,6 @@ example simple.</p>
 <span class="n">y_pred_enet</span> <span class="o">=</span> <span class="n">enet</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">X_test</span><span class="p">)</span>
 <span class="n">r2_score_enet</span> <span class="o">=</span> <a class="sphx-glr-backref-module-sklearn-metrics sphx-glr-backref-type-py-function" href="../../modules/generated/sklearn.metrics.r2_score.html#sklearn.metrics.r2_score" title="sklearn.metrics.r2_score"><span class="n">r2_score</span></a><span class="p">(</span><span class="n">y_test</span><span class="p">,</span> <span class="n">y_pred_enet</span><span class="p">)</span>
 <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"ElasticNet r^2 on test data : </span><span class="si">{</span><span class="n">r2_score_enet</span><span class="si">:</span><span class="s2">.3f</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
-</pre></div>
-</div>
-<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>ElasticNet fit done in 0.001s
-ElasticNet r^2 on test data : 0.636
 </pre></div>
 </div>
 </section>
@@ -1044,7 +1029,7 @@ and estimated coefficients of the respective linear models.</p>
 <a class="sphx-glr-backref-module-matplotlib-pyplot sphx-glr-backref-type-py-function" href="https://matplotlib.org/stable/api/_as_gen/matplotlib.pyplot.tight_layout.html#matplotlib.pyplot.tight_layout" title="matplotlib.pyplot.tight_layout"><span class="n">plt</span><span class="o">.</span><span class="n">tight_layout</span></a><span class="p">()</span>
 </pre></div>
 </div>
-<img alt="Models' coefficients Lasso $R^2$: 0.480, ARD $R^2$: 0.542, ElasticNet $R^2$: 0.636" class="sphx-glr-single-img" src="../../_images/sphx_glr_plot_lasso_and_elasticnet_002.png" srcset="../../_images/sphx_glr_plot_lasso_and_elasticnet_002.png"/><p>In the present example <a class="reference internal" href="../../modules/generated/sklearn.linear_model.ElasticNet.html#sklearn.linear_model.ElasticNet" title="sklearn.linear_model.ElasticNet"><code class="xref py py-class docutils literal notranslate"><span class="pre">ElasticNet</span></code></a> yields the
+<p>In the present example <a class="reference internal" href="../../modules/generated/sklearn.linear_model.ElasticNet.html#sklearn.linear_model.ElasticNet" title="sklearn.linear_model.ElasticNet"><code class="xref py py-class docutils literal notranslate"><span class="pre">ElasticNet</span></code></a> yields the
 best score and captures the most of the predictive features, yet still fails
 at finding all the true components. Notice that both
 <a class="reference internal" href="../../modules/generated/sklearn.linear_model.ElasticNet.html#sklearn.linear_model.ElasticNet" title="sklearn.linear_model.ElasticNet"><code class="xref py py-class docutils literal notranslate"><span class="pre">ElasticNet</span></code></a> and
@@ -1081,7 +1066,6 @@ high-dimensional data” N. Meinshausen, B. Yu - The Annals of Statistics
 </aside>
 </aside>
 </div></blockquote>
-<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> (0 minutes 0.486 seconds)</p>
 
 <p class="rubric">Related examples</p>
 <div class="sphx-glr-thumbnails"><div class="sphx-glr-thumbcontainer" tooltip="We show that linear_model.Lasso provides the same results for dense and sparse data and that in..."><img alt="" src="../../_images/sphx_glr_plot_lasso_dense_vs_sparse_data_thumb.png"/>

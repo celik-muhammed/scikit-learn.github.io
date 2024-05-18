@@ -16,7 +16,7 @@
 <meta property="og:image:alt" content="scikit-learn" />
 <meta name="description" content="Gaussian Processes (GP) are a nonparametric supervised learning method used to solve regression and probabilistic classification problems. The advantages of Gaussian processes are: The prediction i..." />
 
-    <title>1.7. Gaussian Processes &#8212; scikit-learn 1.5.dev0 documentation</title>
+    <title>1.7. Gaussian Processes &#8212; scikit-learn 1.6.dev0 documentation</title>
   
   
   
@@ -54,8 +54,8 @@
 <link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=8d27b9dea8ad943066ae" />
   <script src="../_static/vendor/fontawesome/6.5.1/js/all.min.js?digest=8d27b9dea8ad943066ae"></script>
 
-    <script src="../_static/documentation_options.js?v=a2c36881"></script>
-    <script src="../_static/doctools.js?v=888ff710"></script>
+    <script src="../_static/documentation_options.js?v=d875d36e"></script>
+    <script src="../_static/doctools.js?v=9a2dae69"></script>
     <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
     <script src="../_static/copybutton.js?v=97f0b27d"></script>
@@ -66,8 +66,8 @@
     <script>DOCUMENTATION_OPTIONS.pagename = 'modules/gaussian_process';</script>
     <script>
         DOCUMENTATION_OPTIONS.theme_version = '0.15.2';
-        DOCUMENTATION_OPTIONS.theme_switcher_json_url = 'https://scikit-learn.org/_pst_preview/versions.json';
-        DOCUMENTATION_OPTIONS.theme_switcher_version_match = '1.5.dev0';
+        DOCUMENTATION_OPTIONS.theme_switcher_json_url = 'https://scikit-learn.org/_pst_preview/_static/versions.json';
+        DOCUMENTATION_OPTIONS.theme_switcher_version_match = '1.6.dev0';
         DOCUMENTATION_OPTIONS.show_version_warning_banner = true;
         </script>
     <script src="../_static/scripts/dropdown.js?v=12d599f8"></script>
@@ -631,8 +631,9 @@ document.write(`
 <li class="toctree-l1 has-children"><a class="reference internal" href="../model_selection.html">3. Model selection and evaluation</a><input class="toctree-checkbox" id="toctree-checkbox-3" name="toctree-checkbox-3" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-3"><i class="fa-solid fa-chevron-down"></i></label><ul>
 <li class="toctree-l2"><a class="reference internal" href="cross_validation.html">3.1. Cross-validation: evaluating estimator performance</a></li>
 <li class="toctree-l2"><a class="reference internal" href="grid_search.html">3.2. Tuning the hyper-parameters of an estimator</a></li>
-<li class="toctree-l2"><a class="reference internal" href="model_evaluation.html">3.3. Metrics and scoring: quantifying the quality of predictions</a></li>
-<li class="toctree-l2"><a class="reference internal" href="learning_curve.html">3.4. Validation curves: plotting scores to evaluate models</a></li>
+<li class="toctree-l2"><a class="reference internal" href="classification_threshold.html">3.3. Tuning the decision threshold for class prediction</a></li>
+<li class="toctree-l2"><a class="reference internal" href="model_evaluation.html">3.4. Metrics and scoring: quantifying the quality of predictions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="learning_curve.html">3.5. Validation curves: plotting scores to evaluate models</a></li>
 </ul>
 </li>
 <li class="toctree-l1 has-children"><a class="reference internal" href="../inspection.html">4. Inspection</a><input class="toctree-checkbox" id="toctree-checkbox-4" name="toctree-checkbox-4" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-4"><i class="fa-solid fa-chevron-down"></i></label><ul>
@@ -762,7 +763,8 @@ will combine this prior and the likelihood function based on training samples.
 It allows to give a probabilistic approach to prediction by giving the mean and
 standard deviation as output when predicting.</p>
 <figure class="align-center">
-<a class="reference external image-reference" href="../auto_examples/gaussian_process/plot_gpr_noisy_targets.html"><img alt="../_images/sphx_glr_plot_gpr_noisy_targets_002.png" src="../_images/sphx_glr_plot_gpr_noisy_targets_002.png" /></a>
+<a class="reference external image-reference" href="../auto_examples/gaussian_process/plot_gpr_noisy_targets.html"><img alt="../_images/sphx_glr_plot_gpr_noisy_targets_002.png" src="../_images/sphx_glr_plot_gpr_noisy_targets_002.png" />
+</a>
 </figure>
 <p>The prior mean is assumed to be constant and zero (for <code class="docutils literal notranslate"><span class="pre">normalize_y=False</span></code>) or
 the training data’s mean (for <code class="docutils literal notranslate"><span class="pre">normalize_y=True</span></code>). The prior’s covariance is
@@ -786,7 +788,8 @@ kernel, which can estimate the global noise level from the data (see example
 below). The figure below shows the effect of noisy target handled by setting
 the parameter <code class="docutils literal notranslate"><span class="pre">alpha</span></code>.</p>
 <figure class="align-center">
-<a class="reference external image-reference" href="../auto_examples/gaussian_process/plot_gpr_noisy_targets.html"><img alt="../_images/sphx_glr_plot_gpr_noisy_targets_003.png" src="../_images/sphx_glr_plot_gpr_noisy_targets_003.png" /></a>
+<a class="reference external image-reference" href="../auto_examples/gaussian_process/plot_gpr_noisy_targets.html"><img alt="../_images/sphx_glr_plot_gpr_noisy_targets_003.png" src="../_images/sphx_glr_plot_gpr_noisy_targets_003.png" />
+</a>
 </figure>
 <p>The implementation is based on Algorithm 2.1 of <a class="reference internal" href="#rw2006" id="id1"><span>[RW2006]</span></a>. In addition to
 the API of standard scikit-learn estimators, <a class="reference internal" href="generated/sklearn.gaussian_process.GaussianProcessRegressor.html#sklearn.gaussian_process.GaussianProcessRegressor" title="sklearn.gaussian_process.GaussianProcessRegressor"><code class="xref py py-class docutils literal notranslate"><span class="pre">GaussianProcessRegressor</span></code></a>:</p>
@@ -875,10 +878,12 @@ internally by GPC.</p>
 the kernel’s hyperparameters, highlighting the two choices of the
 hyperparameters used in the first figure by black dots.</p>
 <figure class="align-center">
-<a class="reference external image-reference" href="../auto_examples/gaussian_process/plot_gpc.html"><img alt="../_images/sphx_glr_plot_gpc_001.png" src="../_images/sphx_glr_plot_gpc_001.png" /></a>
+<a class="reference external image-reference" href="../auto_examples/gaussian_process/plot_gpc.html"><img alt="../_images/sphx_glr_plot_gpc_001.png" src="../_images/sphx_glr_plot_gpc_001.png" />
+</a>
 </figure>
 <figure class="align-center">
-<a class="reference external image-reference" href="../auto_examples/gaussian_process/plot_gpc.html"><img alt="../_images/sphx_glr_plot_gpc_002.png" src="../_images/sphx_glr_plot_gpc_002.png" /></a>
+<a class="reference external image-reference" href="../auto_examples/gaussian_process/plot_gpc.html"><img alt="../_images/sphx_glr_plot_gpc_002.png" src="../_images/sphx_glr_plot_gpc_002.png" />
+</a>
 </figure>
 </section>
 <section id="illustration-of-gpc-on-the-xor-dataset">
@@ -890,7 +895,8 @@ better results because the class-boundaries are linear and coincide with the
 coordinate axes. In practice, however, stationary kernels such as <a class="reference internal" href="generated/sklearn.gaussian_process.kernels.RBF.html#sklearn.gaussian_process.kernels.RBF" title="sklearn.gaussian_process.kernels.RBF"><code class="xref py py-class docutils literal notranslate"><span class="pre">RBF</span></code></a>
 often obtain better results.</p>
 <figure class="align-center">
-<a class="reference external image-reference" href="../auto_examples/gaussian_process/plot_gpc_xor.html"><img alt="../_images/sphx_glr_plot_gpc_xor_001.png" src="../_images/sphx_glr_plot_gpc_xor_001.png" /></a>
+<a class="reference external image-reference" href="../auto_examples/gaussian_process/plot_gpc_xor.html"><img alt="../_images/sphx_glr_plot_gpc_xor_001.png" src="../_images/sphx_glr_plot_gpc_xor_001.png" />
+</a>
 </figure>
 </section>
 <section id="gaussian-process-classification-gpc-on-iris-dataset">
@@ -901,7 +907,8 @@ This illustrates the applicability of GPC to non-binary classification.
 The anisotropic RBF kernel obtains slightly higher log-marginal-likelihood by
 assigning different length-scales to the two feature dimensions.</p>
 <figure class="align-center">
-<a class="reference external image-reference" href="../auto_examples/gaussian_process/plot_gpc_iris.html"><img alt="../_images/sphx_glr_plot_gpc_iris_001.png" src="../_images/sphx_glr_plot_gpc_iris_001.png" /></a>
+<a class="reference external image-reference" href="../auto_examples/gaussian_process/plot_gpc_iris.html"><img alt="../_images/sphx_glr_plot_gpc_iris_001.png" src="../_images/sphx_glr_plot_gpc_iris_001.png" />
+</a>
 </figure>
 </section>
 </section>
@@ -1049,7 +1056,8 @@ kernel as covariance function have mean square derivatives of all orders, and ar
 very smooth. The prior and posterior of a GP resulting from an RBF kernel are shown in
 the following figure:</p>
 <figure class="align-center">
-<a class="reference external image-reference" href="../auto_examples/gaussian_process/plot_gpr_prior_posterior.html"><img alt="../_images/sphx_glr_plot_gpr_prior_posterior_001.png" src="../_images/sphx_glr_plot_gpr_prior_posterior_001.png" /></a>
+<a class="reference external image-reference" href="../auto_examples/gaussian_process/plot_gpr_prior_posterior.html"><img alt="../_images/sphx_glr_plot_gpr_prior_posterior_001.png" src="../_images/sphx_glr_plot_gpr_prior_posterior_001.png" />
+</a>
 </figure>
 </section>
 <section id="matern-kernel">
@@ -1088,7 +1096,8 @@ allows adapting to the properties of the true underlying functional relation.</p
 </details><p>The prior and posterior of a GP resulting from a Matérn kernel are shown in
 the following figure:</p>
 <figure class="align-center">
-<a class="reference external image-reference" href="../auto_examples/gaussian_process/plot_gpr_prior_posterior.html"><img alt="../_images/sphx_glr_plot_gpr_prior_posterior_005.png" src="../_images/sphx_glr_plot_gpr_prior_posterior_005.png" /></a>
+<a class="reference external image-reference" href="../auto_examples/gaussian_process/plot_gpr_prior_posterior.html"><img alt="../_images/sphx_glr_plot_gpr_prior_posterior_005.png" src="../_images/sphx_glr_plot_gpr_prior_posterior_005.png" />
+</a>
 </figure>
 <p>See <a class="reference internal" href="#rw2006" id="id5"><span>[RW2006]</span></a>, pp84 for further details regarding the
 different variants of the Matérn kernel.</p>
@@ -1105,7 +1114,8 @@ The kernel is given by:</p>
 <p>The prior and posterior of a GP resulting from a <a class="reference internal" href="generated/sklearn.gaussian_process.kernels.RationalQuadratic.html#sklearn.gaussian_process.kernels.RationalQuadratic" title="sklearn.gaussian_process.kernels.RationalQuadratic"><code class="xref py py-class docutils literal notranslate"><span class="pre">RationalQuadratic</span></code></a> kernel are shown in
 the following figure:</p>
 <figure class="align-center">
-<a class="reference external image-reference" href="../auto_examples/gaussian_process/plot_gpr_prior_posterior.html"><img alt="../_images/sphx_glr_plot_gpr_prior_posterior_002.png" src="../_images/sphx_glr_plot_gpr_prior_posterior_002.png" /></a>
+<a class="reference external image-reference" href="../auto_examples/gaussian_process/plot_gpr_prior_posterior.html"><img alt="../_images/sphx_glr_plot_gpr_prior_posterior_002.png" src="../_images/sphx_glr_plot_gpr_prior_posterior_002.png" />
+</a>
 </figure>
 </section>
 <section id="exp-sine-squared-kernel">
@@ -1119,7 +1129,8 @@ The kernel is given by:</p>
 <p>The prior and posterior of a GP resulting from an ExpSineSquared kernel are shown in
 the following figure:</p>
 <figure class="align-center">
-<a class="reference external image-reference" href="../auto_examples/gaussian_process/plot_gpr_prior_posterior.html"><img alt="../_images/sphx_glr_plot_gpr_prior_posterior_003.png" src="../_images/sphx_glr_plot_gpr_prior_posterior_003.png" /></a>
+<a class="reference external image-reference" href="../auto_examples/gaussian_process/plot_gpr_prior_posterior.html"><img alt="../_images/sphx_glr_plot_gpr_prior_posterior_003.png" src="../_images/sphx_glr_plot_gpr_prior_posterior_003.png" />
+</a>
 </figure>
 </section>
 <section id="dot-product-kernel">
@@ -1135,7 +1146,8 @@ is called the homogeneous linear kernel, otherwise it is inhomogeneous. The kern
 <p>The <a class="reference internal" href="generated/sklearn.gaussian_process.kernels.DotProduct.html#sklearn.gaussian_process.kernels.DotProduct" title="sklearn.gaussian_process.kernels.DotProduct"><code class="xref py py-class docutils literal notranslate"><span class="pre">DotProduct</span></code></a> kernel is commonly combined with exponentiation. An example with exponent 2 is
 shown in the following figure:</p>
 <figure class="align-center">
-<a class="reference external image-reference" href="../auto_examples/gaussian_process/plot_gpr_prior_posterior.html"><img alt="../_images/sphx_glr_plot_gpr_prior_posterior_004.png" src="../_images/sphx_glr_plot_gpr_prior_posterior_004.png" /></a>
+<a class="reference external image-reference" href="../auto_examples/gaussian_process/plot_gpr_prior_posterior.html"><img alt="../_images/sphx_glr_plot_gpr_prior_posterior_004.png" src="../_images/sphx_glr_plot_gpr_prior_posterior_004.png" />
+</a>
 </figure>
 </section>
 <section id="references">

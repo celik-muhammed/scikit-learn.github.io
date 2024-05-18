@@ -13,7 +13,7 @@
 <meta content="https://scikit-learn.org/stable/_static/scikit-learn-logo-small.png" property="og:image"/>
 <meta content="scikit-learn" property="og:image:alt"/>
 <meta content="This example illustrates the use of Poisson, Gamma and Tweedie regression on the French Motor Third-Party Liability Claims dataset, and is inspired by an R tutorial 1. In this dataset, each sample ..." name="description"/>
-<title>Tweedie regression on insurance claims — scikit-learn 1.5.dev0 documentation</title>
+<title>Tweedie regression on insurance claims — scikit-learn 1.6.dev0 documentation</title>
 <script data-cfasync="false">
     document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
     document.documentElement.dataset.theme = localStorage.getItem("theme") || "light";
@@ -42,8 +42,8 @@
 <link as="script" href="../../_static/scripts/bootstrap.js?digest=8d27b9dea8ad943066ae" rel="preload"/>
 <link as="script" href="../../_static/scripts/pydata-sphinx-theme.js?digest=8d27b9dea8ad943066ae" rel="preload"/>
 <script src="../../_static/vendor/fontawesome/6.5.1/js/all.min.js?digest=8d27b9dea8ad943066ae"></script>
-<script src="../../_static/documentation_options.js?v=a2c36881"></script>
-<script src="../../_static/doctools.js?v=888ff710"></script>
+<script src="../../_static/documentation_options.js?v=d875d36e"></script>
+<script src="../../_static/doctools.js?v=9a2dae69"></script>
 <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
 <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
 <script src="../../_static/copybutton.js?v=97f0b27d"></script>
@@ -54,8 +54,8 @@
 <script>DOCUMENTATION_OPTIONS.pagename = 'auto_examples/linear_model/plot_tweedie_regression_insurance_claims';</script>
 <script>
         DOCUMENTATION_OPTIONS.theme_version = '0.15.2';
-        DOCUMENTATION_OPTIONS.theme_switcher_json_url = 'https://scikit-learn.org/_pst_preview/versions.json';
-        DOCUMENTATION_OPTIONS.theme_switcher_version_match = '1.5.dev0';
+        DOCUMENTATION_OPTIONS.theme_switcher_json_url = 'https://scikit-learn.org/_pst_preview/_static/versions.json';
+        DOCUMENTATION_OPTIONS.theme_switcher_version_match = '1.6.dev0';
         DOCUMENTATION_OPTIONS.show_version_warning_banner = true;
         </script>
 <script src="../../_static/scripts/dropdown.js?v=12d599f8"></script>
@@ -550,7 +550,6 @@ document.write(`
 <li class="toctree-l2"><a class="reference internal" href="../applications/plot_face_recognition.html">Faces recognition example using eigenfaces and SVMs</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../applications/plot_digits_denoising.html">Image denoising using kernel PCA</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../applications/plot_time_series_lagged_features.html">Lagged features for time series forecasting</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../applications/svm_gui.html">Libsvm GUI</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../applications/plot_model_complexity_influence.html">Model Complexity Influence</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../applications/plot_out_of_core_classification.html">Out-of-core classification of text documents</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../applications/plot_outlier_detection_wine.html">Outlier detection on a real data set</a></li>
@@ -695,6 +694,8 @@ document.write(`
 <li class="toctree-l2"><a class="reference internal" href="../model_selection/plot_cv_predict.html">Plotting Cross-Validated Predictions</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../model_selection/plot_learning_curve.html">Plotting Learning Curves and Checking Models’ Scalability</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../model_selection/plot_validation_curve.html">Plotting Validation Curves</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../model_selection/plot_tuned_decision_threshold.html">Post-hoc tuning the cut-off point of decision function</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../model_selection/plot_cost_sensitive_learning.html">Post-tuning the decision threshold for cost-sensitive learning</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../model_selection/plot_precision_recall.html">Precision-Recall</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../model_selection/plot_roc_crossval.html">Receiver Operating Characteristic (ROC) with cross validation</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../model_selection/plot_grid_search_text_feature_extraction.html">Sample pipeline for text feature extraction and evaluation</a></li>
@@ -862,12 +863,6 @@ helper functions for loading the data and visualizing results.</p>
 Third-Party Liability Claims (November 8, 2018). <a class="reference external" href="https://doi.org/10.2139/ssrn.3164764">doi:10.2139/ssrn.3164764</a></p>
 </aside>
 </aside>
-<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Authors: Christian Lorentzen &lt;lorentzen.ch@gmail.com&gt;</span>
-<span class="c1">#          Roman Yurchak &lt;rth.yurchak@gmail.com&gt;</span>
-<span class="c1">#          Olivier Grisel &lt;olivier.grisel@ensta.org&gt;</span>
-<span class="c1"># License: BSD 3 clause</span>
-</pre></div>
-</div>
 <div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">functools</span> <span class="kn">import</span> <a class="sphx-glr-backref-module-functools sphx-glr-backref-type-py-function" href="https://docs.python.org/3/library/functools.html#functools.partial" title="functools.partial"><span class="n">partial</span></a>
 
 <span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
@@ -1063,7 +1058,7 @@ containing the claim amount (<code class="docutils literal notranslate"><span cl
     <span class="p">[</span>
         <span class="p">(</span>
             <span class="s2">"binned_numeric"</span><span class="p">,</span>
-            <a class="sphx-glr-backref-module-sklearn-preprocessing sphx-glr-backref-type-py-class sphx-glr-backref-instance" href="../../modules/generated/sklearn.preprocessing.KBinsDiscretizer.html#sklearn.preprocessing.KBinsDiscretizer" title="sklearn.preprocessing.KBinsDiscretizer"><span class="n">KBinsDiscretizer</span></a><span class="p">(</span><span class="n">n_bins</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">subsample</span><span class="o">=</span><span class="nb">int</span><span class="p">(</span><span class="mf">2e5</span><span class="p">),</span> <span class="n">random_state</span><span class="o">=</span><span class="mi">0</span><span class="p">),</span>
+            <a class="sphx-glr-backref-module-sklearn-preprocessing sphx-glr-backref-type-py-class sphx-glr-backref-instance" href="../../modules/generated/sklearn.preprocessing.KBinsDiscretizer.html#sklearn.preprocessing.KBinsDiscretizer" title="sklearn.preprocessing.KBinsDiscretizer"><span class="n">KBinsDiscretizer</span></a><span class="p">(</span><span class="n">n_bins</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="mi">0</span><span class="p">),</span>
             <span class="p">[</span><span class="s2">"VehAge"</span><span class="p">,</span> <span class="s2">"DrivAge"</span><span class="p">],</span>
         <span class="p">),</span>
         <span class="p">(</span>
@@ -1092,31 +1087,6 @@ containing the claim amount (<code class="docutils literal notranslate"><span cl
     <span class="nb">print</span><span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="n">df</span><span class="o">.</span><span class="n">ClaimAmount</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">head</span><span class="p">())</span>
 </pre></div>
 </div>
-<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>       ClaimNb  Exposure Area  VehPower  VehAge  DrivAge  BonusMalus VehBrand  \
-IDpol
-139          1      0.75    F         7       1       61          50      B12
-190          1      0.14    B        12       5       50          60      B12
-414          1      0.14    E         4       0       36          85      B12
-424          2      0.62    F        10       0       51         100      B12
-463          1      0.31    A         5       0       45          50      B12
-
-        VehGas  Density Region  ClaimAmount   PurePremium  Frequency  \
-IDpol
-139    Regular    27000    R11       303.00    404.000000   1.333333
-190     Diesel       56    R25      1981.84  14156.000000   7.142857
-414    Regular     4792    R11      1456.55  10403.928571   7.142857
-424    Regular    27000    R11     10834.00  17474.193548   3.225806
-463    Regular       12    R73      3986.67  12860.225806   3.225806
-
-       AvgClaimAmount
-IDpol
-139            303.00
-190           1981.84
-414           1456.55
-424           5417.00
-463           3986.67
-</pre></div>
-</div>
 </section>
 <section id="frequency-model-poisson-distribution">
 <h2>Frequency model – Poisson distribution<a class="headerlink" href="#frequency-model-poisson-distribution" title="Link to this heading">#</a></h2>
@@ -1138,13 +1108,7 @@ non-zero is quite small:</p>
 <div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="nb">len</span><span class="p">(</span><span class="n">df_test</span><span class="p">)</span>
 </pre></div>
 </div>
-<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>169504
-</pre></div>
-</div>
 <div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="nb">len</span><span class="p">(</span><span class="n">df_test</span><span class="p">[</span><span class="n">df_test</span><span class="p">[</span><span class="s2">"ClaimAmount"</span><span class="p">]</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">])</span>
-</pre></div>
-</div>
-<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>6237
 </pre></div>
 </div>
 <p>As a consequence, we expect a significant variability in our
@@ -1167,14 +1131,6 @@ we use a weak L2 penalization to avoid numerical issues.</p>
 <span class="p">)</span>
 <span class="nb">print</span><span class="p">(</span><span class="s2">"Evaluation of PoissonRegressor on target Frequency"</span><span class="p">)</span>
 <span class="nb">print</span><span class="p">(</span><span class="n">scores</span><span class="p">)</span>
-</pre></div>
-</div>
-<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>Evaluation of PoissonRegressor on target Frequency
-subset               train    test
-metric
-D² explained        0.0448  0.0427
-mean abs. error     0.1379  0.1378
-mean squared error  0.2441  0.2246
 </pre></div>
 </div>
 <p>Note that the score measured on the test set is surprisingly better than on
@@ -1235,7 +1191,7 @@ bonus/malus (<code class="docutils literal notranslate"><span class="pre">BonusM
 <span class="p">)</span>
 </pre></div>
 </div>
-<img alt="train data, test data, test data, test data" class="sphx-glr-single-img" src="../../_images/sphx_glr_plot_tweedie_regression_insurance_claims_001.png" srcset="../../_images/sphx_glr_plot_tweedie_regression_insurance_claims_001.png"/><p>According to the observed data, the frequency of accidents is higher for
+<p>According to the observed data, the frequency of accidents is higher for
 drivers younger than 30 years old, and is positively correlated with the
 <code class="docutils literal notranslate"><span class="pre">BonusMalus</span></code> variable. Our model is able to mostly correctly model this
 behaviour.</p>
@@ -1278,14 +1234,6 @@ more than one claim.</p></li>
 <span class="nb">print</span><span class="p">(</span><span class="n">scores</span><span class="p">)</span>
 </pre></div>
 </div>
-<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>Evaluation of GammaRegressor on target AvgClaimAmount
-subset                     train          test
-metric
-D² explained        3.900000e-03  4.400000e-03
-mean abs. error     1.756746e+03  1.744042e+03
-mean squared error  5.801770e+07  5.030677e+07
-</pre></div>
-</div>
 <p>Those values of the metrics are not necessarily easy to interpret. It can be
 insightful to compare them with a model that does not use any input
 features and always predicts a constant value, i.e. the average claim
@@ -1312,14 +1260,6 @@ amount, in the same setting:</p>
 <span class="nb">print</span><span class="p">(</span><span class="n">scores</span><span class="p">)</span>
 </pre></div>
 </div>
-<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>Evaluation of a mean predictor on target AvgClaimAmount
-subset                     train          test
-metric
-D² explained        0.000000e+00 -0.000000e+00
-mean abs. error     1.756687e+03  1.744497e+03
-mean squared error  5.803882e+07  5.033764e+07
-</pre></div>
-</div>
 <p>We conclude that the claim amount is very challenging to predict. Still, the
 <a class="reference internal" href="../../modules/generated/sklearn.linear_model.GammaRegressor.html#sklearn.linear_model.GammaRegressor" title="sklearn.linear_model.GammaRegressor"><code class="xref py py-class docutils literal notranslate"><span class="pre">GammaRegressor</span></code></a> is able to leverage some
 information from the input features to slightly improve upon the mean
@@ -1344,12 +1284,6 @@ a claims frequency model.</p>
     <span class="s2">"Predicted Mean AvgClaim Amount (dummy) | NbClaim &gt; 0: </span><span class="si">%.2f</span><span class="s2">"</span>
     <span class="o">%</span> <span class="n">dummy_sev</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">X_train</span><span class="p">)</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span>
 <span class="p">)</span>
-</pre></div>
-</div>
-<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>Mean AvgClaim Amount per policy:              71.78
-Mean AvgClaim Amount | NbClaim &gt; 0:           1951.21
-Predicted Mean AvgClaim Amount | NbClaim &gt; 0: 1940.95
-Predicted Mean AvgClaim Amount (dummy) | NbClaim &gt; 0: 1978.59
 </pre></div>
 </div>
 <p>We can visually compare observed and predicted values, aggregated for
@@ -1381,7 +1315,7 @@ the drivers age (<code class="docutils literal notranslate"><span class="pre">Dr
 <a class="sphx-glr-backref-module-matplotlib-pyplot sphx-glr-backref-type-py-function" href="https://matplotlib.org/stable/api/_as_gen/matplotlib.pyplot.tight_layout.html#matplotlib.pyplot.tight_layout" title="matplotlib.pyplot.tight_layout"><span class="n">plt</span><span class="o">.</span><span class="n">tight_layout</span></a><span class="p">()</span>
 </pre></div>
 </div>
-<img alt="train data, test data" class="sphx-glr-single-img" src="../../_images/sphx_glr_plot_tweedie_regression_insurance_claims_002.png" srcset="../../_images/sphx_glr_plot_tweedie_regression_insurance_claims_002.png"/><p>Overall, the drivers age (<code class="docutils literal notranslate"><span class="pre">DrivAge</span></code>) has a weak impact on the claim
+<p>Overall, the drivers age (<code class="docutils literal notranslate"><span class="pre">DrivAge</span></code>) has a weak impact on the claim
 severity, both in observed and predicted data.</p>
 </section>
 <section id="pure-premium-modeling-via-a-product-model-vs-single-tweedieregressor">
@@ -1450,22 +1384,6 @@ regardless of <code class="docutils literal notranslate"><span class="pre">power
     <span class="nb">print</span><span class="p">(</span><span class="n">scores</span><span class="p">)</span>
 </pre></div>
 </div>
-<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>Evaluation of the Product Model and the Tweedie Regressor on target PurePremium
-                          Product Model               TweedieRegressor
-subset                            train          test            train          test
-metric
-D² explained                        NaN           NaN     1.640000e-02  1.370000e-02
-mean Tweedie dev p=1.5000  7.669930e+01  7.617050e+01     7.640770e+01  7.640880e+01
-mean Tweedie dev p=1.7000  3.695740e+01  3.683980e+01     3.682880e+01  3.692270e+01
-mean Tweedie dev p=1.8000  3.046010e+01  3.040530e+01     3.037600e+01  3.045390e+01
-mean Tweedie dev p=1.9000  3.387580e+01  3.385000e+01     3.382120e+01  3.387830e+01
-mean Tweedie dev p=1.9900  2.015716e+02  2.015414e+02     2.015347e+02  2.015587e+02
-mean Tweedie dev p=1.9990  1.914573e+03  1.914370e+03     1.914538e+03  1.914387e+03
-mean Tweedie dev p=1.9999  1.904751e+04  1.904556e+04     1.904747e+04  1.904558e+04
-mean abs. error            2.730119e+02  2.722128e+02     2.739865e+02  2.731249e+02
-mean squared error         3.295040e+07  3.212197e+07     3.295505e+07  3.213056e+07
-</pre></div>
-</div>
 <p>In this example, both modeling approaches yield comparable performance
 metrics. For implementation reasons, the percentage of explained variance
 <span class="math notranslate nohighlight">\(D^2\)</span> is not available for the product model.</p>
@@ -1492,12 +1410,6 @@ behavior depends on the amount of regularization).</p>
     <span class="p">)</span>
 
 <span class="nb">print</span><span class="p">(</span><a class="sphx-glr-backref-module-pandas sphx-glr-backref-type-py-class sphx-glr-backref-instance" href="https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.DataFrame.html#pandas.DataFrame" title="pandas.DataFrame"><span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span></a><span class="p">(</span><span class="n">res</span><span class="p">)</span><span class="o">.</span><span class="n">set_index</span><span class="p">(</span><span class="s2">"subset"</span><span class="p">)</span><span class="o">.</span><span class="n">T</span><span class="p">)</span>
-</pre></div>
-</div>
-<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>subset                                      train          test
-observed                             3.917618e+07  1.299546e+07
-predicted, frequency*severity model  3.916555e+07  1.313276e+07
-predicted, tweedie, power=1.90       3.951751e+07  1.325198e+07
 </pre></div>
 </div>
 <p>Finally, we can compare the two models using a plot of cumulated claims: for
@@ -1577,21 +1489,17 @@ of models, each with its own set of hyperparameters.</p>
 <a class="sphx-glr-backref-module-matplotlib-pyplot sphx-glr-backref-type-py-function" href="https://matplotlib.org/stable/api/_as_gen/matplotlib.pyplot.plot.html#matplotlib.pyplot.plot" title="matplotlib.pyplot.plot"><span class="n">plt</span><span class="o">.</span><span class="n">plot</span></a><span class="p">()</span>
 </pre></div>
 </div>
-<img alt="Lorenz Curves" class="sphx-glr-single-img" src="../../_images/sphx_glr_plot_tweedie_regression_insurance_claims_003.png" srcset="../../_images/sphx_glr_plot_tweedie_regression_insurance_claims_003.png"/><div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>[]
-</pre></div>
-</div>
-<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> (0 minutes 9.512 seconds)</p>
 
 <p class="rubric">Related examples</p>
 <div class="sphx-glr-thumbnails"><div class="sphx-glr-thumbcontainer" tooltip="This example illustrates the use of log-linear Poisson regression on the French Motor Third-Par..."><img alt="" src="../../_images/sphx_glr_plot_poisson_regression_non_normal_loss_thumb.png"/>
 <p><a class="reference internal" href="plot_poisson_regression_non_normal_loss.html#sphx-glr-auto-examples-linear-model-plot-poisson-regression-non-normal-loss-py"><span class="std std-ref">Poisson regression and non-normal loss</span></a></p>
 <div class="sphx-glr-thumbnail-title">Poisson regression and non-normal loss</div>
-</div><div class="sphx-glr-thumbcontainer" tooltip="This example demonstrates how pandas-engineered lagged features can be used for time series for..."><img alt="" src="../../_images/sphx_glr_plot_time_series_lagged_features_thumb.png"/>
-<p><a class="reference internal" href="../applications/plot_time_series_lagged_features.html#sphx-glr-auto-examples-applications-plot-time-series-lagged-features-py"><span class="std std-ref">Lagged features for time series forecasting</span></a></p>
-<div class="sphx-glr-thumbnail-title">Lagged features for time series forecasting</div>
 </div><div class="sphx-glr-thumbcontainer" tooltip="Well calibrated classifiers are probabilistic classifiers for which the output of predict_proba..."><img alt="" src="../../_images/sphx_glr_plot_compare_calibration_thumb.png"/>
 <p><a class="reference internal" href="../calibration/plot_compare_calibration.html#sphx-glr-auto-examples-calibration-plot-compare-calibration-py"><span class="std std-ref">Comparison of Calibration of Classifiers</span></a></p>
 <div class="sphx-glr-thumbnail-title">Comparison of Calibration of Classifiers</div>
+</div><div class="sphx-glr-thumbcontainer" tooltip="This example demonstrates how Polars-engineered lagged features can be used for time series for..."><img alt="" src="../../_images/sphx_glr_plot_time_series_lagged_features_thumb.png"/>
+<p><a class="reference internal" href="../applications/plot_time_series_lagged_features.html#sphx-glr-auto-examples-applications-plot-time-series-lagged-features-py"><span class="std std-ref">Lagged features for time series forecasting</span></a></p>
+<div class="sphx-glr-thumbnail-title">Lagged features for time series forecasting</div>
 </div><div class="sphx-glr-thumbcontainer" tooltip="This example shows how to use cross_val_predict together with PredictionErrorDisplay to visuali..."><img alt="" src="../../_images/sphx_glr_plot_cv_predict_thumb.png"/>
 <p><a class="reference internal" href="../model_selection/plot_cv_predict.html#sphx-glr-auto-examples-model-selection-plot-cv-predict-py"><span class="std std-ref">Plotting Cross-Validated Predictions</span></a></p>
 <div class="sphx-glr-thumbnail-title">Plotting Cross-Validated Predictions</div>

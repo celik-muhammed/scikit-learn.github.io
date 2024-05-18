@@ -13,7 +13,7 @@
 <meta content="https://scikit-learn.org/stable/_static/scikit-learn-logo-small.png" property="og:image"/>
 <meta content="scikit-learn" property="og:image:alt"/>
 <meta content="This example illustrates and compares two approaches for feature selection: SelectFromModel which is based on feature importance, and SequentialFeatureSelector which relies on a greedy approach. We..." name="description"/>
-<title>Model-based and sequential feature selection — scikit-learn 1.5.dev0 documentation</title>
+<title>Model-based and sequential feature selection — scikit-learn 1.6.dev0 documentation</title>
 <script data-cfasync="false">
     document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
     document.documentElement.dataset.theme = localStorage.getItem("theme") || "light";
@@ -42,8 +42,8 @@
 <link as="script" href="../../_static/scripts/bootstrap.js?digest=8d27b9dea8ad943066ae" rel="preload"/>
 <link as="script" href="../../_static/scripts/pydata-sphinx-theme.js?digest=8d27b9dea8ad943066ae" rel="preload"/>
 <script src="../../_static/vendor/fontawesome/6.5.1/js/all.min.js?digest=8d27b9dea8ad943066ae"></script>
-<script src="../../_static/documentation_options.js?v=a2c36881"></script>
-<script src="../../_static/doctools.js?v=888ff710"></script>
+<script src="../../_static/documentation_options.js?v=d875d36e"></script>
+<script src="../../_static/doctools.js?v=9a2dae69"></script>
 <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
 <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
 <script src="../../_static/copybutton.js?v=97f0b27d"></script>
@@ -53,8 +53,8 @@
 <script>DOCUMENTATION_OPTIONS.pagename = 'auto_examples/feature_selection/plot_select_from_model_diabetes';</script>
 <script>
         DOCUMENTATION_OPTIONS.theme_version = '0.15.2';
-        DOCUMENTATION_OPTIONS.theme_switcher_json_url = 'https://scikit-learn.org/_pst_preview/versions.json';
-        DOCUMENTATION_OPTIONS.theme_switcher_version_match = '1.5.dev0';
+        DOCUMENTATION_OPTIONS.theme_switcher_json_url = 'https://scikit-learn.org/_pst_preview/_static/versions.json';
+        DOCUMENTATION_OPTIONS.theme_switcher_version_match = '1.6.dev0';
         DOCUMENTATION_OPTIONS.show_version_warning_banner = true;
         </script>
 <script src="../../_static/scripts/dropdown.js?v=12d599f8"></script>
@@ -549,7 +549,6 @@ document.write(`
 <li class="toctree-l2"><a class="reference internal" href="../applications/plot_face_recognition.html">Faces recognition example using eigenfaces and SVMs</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../applications/plot_digits_denoising.html">Image denoising using kernel PCA</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../applications/plot_time_series_lagged_features.html">Lagged features for time series forecasting</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../applications/svm_gui.html">Libsvm GUI</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../applications/plot_model_complexity_influence.html">Model Complexity Influence</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../applications/plot_out_of_core_classification.html">Out-of-core classification of text documents</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../applications/plot_outlier_detection_wine.html">Outlier detection on a real data set</a></li>
@@ -694,6 +693,8 @@ document.write(`
 <li class="toctree-l2"><a class="reference internal" href="../model_selection/plot_cv_predict.html">Plotting Cross-Validated Predictions</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../model_selection/plot_learning_curve.html">Plotting Learning Curves and Checking Models’ Scalability</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../model_selection/plot_validation_curve.html">Plotting Validation Curves</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../model_selection/plot_tuned_decision_threshold.html">Post-hoc tuning the cut-off point of decision function</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../model_selection/plot_cost_sensitive_learning.html">Post-tuning the decision threshold for cost-sensitive learning</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../model_selection/plot_precision_recall.html">Precision-Recall</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../model_selection/plot_roc_crossval.html">Receiver Operating Characteristic (ROC) with cross validation</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../model_selection/plot_grid_search_text_feature_extraction.html">Sample pipeline for text feature extraction and evaluation</a></li>
@@ -852,46 +853,6 @@ scikit-learn, and print its description:</p>
 <span class="nb">print</span><span class="p">(</span><span class="n">diabetes</span><span class="o">.</span><span class="n">DESCR</span><span class="p">)</span>
 </pre></div>
 </div>
-<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>.. _diabetes_dataset:
-
-Diabetes dataset
-----------------
-
-Ten baseline variables, age, sex, body mass index, average blood
-pressure, and six blood serum measurements were obtained for each of n =
-442 diabetes patients, as well as the response of interest, a
-quantitative measure of disease progression one year after baseline.
-
-**Data Set Characteristics:**
-
-:Number of Instances: 442
-
-:Number of Attributes: First 10 columns are numeric predictive values
-
-:Target: Column 11 is a quantitative measure of disease progression one year after baseline
-
-:Attribute Information:
-    - age     age in years
-    - sex
-    - bmi     body mass index
-    - bp      average blood pressure
-    - s1      tc, total serum cholesterol
-    - s2      ldl, low-density lipoproteins
-    - s3      hdl, high-density lipoproteins
-    - s4      tch, total cholesterol / HDL
-    - s5      ltg, possibly log of serum triglycerides level
-    - s6      glu, blood sugar level
-
-Note: Each of these 10 feature variables have been mean centered and scaled by the standard deviation times the square root of `n_samples` (i.e. the sum of squares of each column totals 1).
-
-Source URL:
-https://www4.stat.ncsu.edu/~boos/var.select/diabetes.html
-
-For more information see:
-Bradley Efron, Trevor Hastie, Iain Johnstone and Robert Tibshirani (2004) "Least Angle Regression," Annals of Statistics (with discussion), 407-499.
-(https://web.stanford.edu/~hastie/Papers/LARS/LeastAngle_2002.pdf)
-</pre></div>
-</div>
 </section>
 <section id="feature-importance-from-coefficients">
 <h2>Feature importance from coefficients<a class="headerlink" href="#feature-importance-from-coefficients" title="Link to this heading">#</a></h2>
@@ -917,7 +878,7 @@ linear models, you may refer to
 <a class="sphx-glr-backref-module-matplotlib-pyplot sphx-glr-backref-type-py-function" href="https://matplotlib.org/stable/api/_as_gen/matplotlib.pyplot.show.html#matplotlib.pyplot.show" title="matplotlib.pyplot.show"><span class="n">plt</span><span class="o">.</span><span class="n">show</span></a><span class="p">()</span>
 </pre></div>
 </div>
-<img alt="Feature importances via coefficients" class="sphx-glr-single-img" src="../../_images/sphx_glr_plot_select_from_model_diabetes_001.png" srcset="../../_images/sphx_glr_plot_select_from_model_diabetes_001.png"/></section>
+</section>
 <section id="selecting-features-based-on-importance">
 <h2>Selecting features based on importance<a class="headerlink" href="#selecting-features-based-on-importance" title="Link to this heading">#</a></h2>
 <p>Now we want to select the two features which are the most important according
@@ -938,10 +899,6 @@ above the coefficient of third most important feature.</p>
 <span class="n">toc</span> <span class="o">=</span> <a class="sphx-glr-backref-module-time sphx-glr-backref-type-py-function" href="https://docs.python.org/3/library/time.html#time.time" title="time.time"><span class="n">time</span></a><span class="p">()</span>
 <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Features selected by SelectFromModel: </span><span class="si">{</span><span class="n">feature_names</span><span class="p">[</span><span class="n">sfm</span><span class="o">.</span><span class="n">get_support</span><span class="p">()]</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
 <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Done in </span><span class="si">{</span><span class="n">toc</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">tic</span><span class="si">:</span><span class="s2">.3f</span><span class="si">}</span><span class="s2">s"</span><span class="p">)</span>
-</pre></div>
-</div>
-<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>Features selected by SelectFromModel: ['s1' 's5']
-Done in 0.002s
 </pre></div>
 </div>
 </section>
@@ -983,12 +940,6 @@ both approaches here.</p>
 <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Done in </span><span class="si">{</span><span class="n">toc_bwd</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">tic_bwd</span><span class="si">:</span><span class="s2">.3f</span><span class="si">}</span><span class="s2">s"</span><span class="p">)</span>
 </pre></div>
 </div>
-<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>Features selected by forward sequential selection: ['bmi' 's5']
-Done in 0.162s
-Features selected by backward sequential selection: ['bmi' 's5']
-Done in 0.464s
-</pre></div>
-</div>
 <p>Interestingly, forward and backward selection have selected the same set of
 features. In general, this isn’t the case and the two methods would lead to
 different results.</p>
@@ -1026,126 +977,6 @@ features and 569 samples.</p>
 <span class="nb">print</span><span class="p">(</span><span class="n">breast_cancer_data</span><span class="o">.</span><span class="n">DESCR</span><span class="p">)</span>
 </pre></div>
 </div>
-<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>.. _breast_cancer_dataset:
-
-Breast cancer wisconsin (diagnostic) dataset
---------------------------------------------
-
-**Data Set Characteristics:**
-
-:Number of Instances: 569
-
-:Number of Attributes: 30 numeric, predictive attributes and the class
-
-:Attribute Information:
-    - radius (mean of distances from center to points on the perimeter)
-    - texture (standard deviation of gray-scale values)
-    - perimeter
-    - area
-    - smoothness (local variation in radius lengths)
-    - compactness (perimeter^2 / area - 1.0)
-    - concavity (severity of concave portions of the contour)
-    - concave points (number of concave portions of the contour)
-    - symmetry
-    - fractal dimension ("coastline approximation" - 1)
-
-    The mean, standard error, and "worst" or largest (mean of the three
-    worst/largest values) of these features were computed for each image,
-    resulting in 30 features.  For instance, field 0 is Mean Radius, field
-    10 is Radius SE, field 20 is Worst Radius.
-
-    - class:
-            - WDBC-Malignant
-            - WDBC-Benign
-
-:Summary Statistics:
-
-===================================== ====== ======
-                                        Min    Max
-===================================== ====== ======
-radius (mean):                        6.981  28.11
-texture (mean):                       9.71   39.28
-perimeter (mean):                     43.79  188.5
-area (mean):                          143.5  2501.0
-smoothness (mean):                    0.053  0.163
-compactness (mean):                   0.019  0.345
-concavity (mean):                     0.0    0.427
-concave points (mean):                0.0    0.201
-symmetry (mean):                      0.106  0.304
-fractal dimension (mean):             0.05   0.097
-radius (standard error):              0.112  2.873
-texture (standard error):             0.36   4.885
-perimeter (standard error):           0.757  21.98
-area (standard error):                6.802  542.2
-smoothness (standard error):          0.002  0.031
-compactness (standard error):         0.002  0.135
-concavity (standard error):           0.0    0.396
-concave points (standard error):      0.0    0.053
-symmetry (standard error):            0.008  0.079
-fractal dimension (standard error):   0.001  0.03
-radius (worst):                       7.93   36.04
-texture (worst):                      12.02  49.54
-perimeter (worst):                    50.41  251.2
-area (worst):                         185.2  4254.0
-smoothness (worst):                   0.071  0.223
-compactness (worst):                  0.027  1.058
-concavity (worst):                    0.0    1.252
-concave points (worst):               0.0    0.291
-symmetry (worst):                     0.156  0.664
-fractal dimension (worst):            0.055  0.208
-===================================== ====== ======
-
-:Missing Attribute Values: None
-
-:Class Distribution: 212 - Malignant, 357 - Benign
-
-:Creator:  Dr. William H. Wolberg, W. Nick Street, Olvi L. Mangasarian
-
-:Donor: Nick Street
-
-:Date: November, 1995
-
-This is a copy of UCI ML Breast Cancer Wisconsin (Diagnostic) datasets.
-https://goo.gl/U2Uwz2
-
-Features are computed from a digitized image of a fine needle
-aspirate (FNA) of a breast mass.  They describe
-characteristics of the cell nuclei present in the image.
-
-Separating plane described above was obtained using
-Multisurface Method-Tree (MSM-T) [K. P. Bennett, "Decision Tree
-Construction Via Linear Programming." Proceedings of the 4th
-Midwest Artificial Intelligence and Cognitive Science Society,
-pp. 97-101, 1992], a classification method which uses linear
-programming to construct a decision tree.  Relevant features
-were selected using an exhaustive search in the space of 1-4
-features and 1-3 separating planes.
-
-The actual linear program used to obtain the separating plane
-in the 3-dimensional space is that described in:
-[K. P. Bennett and O. L. Mangasarian: "Robust Linear
-Programming Discrimination of Two Linearly Inseparable Sets",
-Optimization Methods and Software 1, 1992, 23-34].
-
-This database is also available through the UW CS ftp server:
-
-ftp ftp.cs.wisc.edu
-cd math-prog/cpo-dataset/machine-learn/WDBC/
-
-.. dropdown:: References
-
-  - W.N. Street, W.H. Wolberg and O.L. Mangasarian. Nuclear feature extraction
-    for breast tumor diagnosis. IS&amp;T/SPIE 1993 International Symposium on
-    Electronic Imaging: Science and Technology, volume 1905, pages 861-870,
-    San Jose, CA, 1993.
-  - O.L. Mangasarian, W.N. Street and W.H. Wolberg. Breast cancer diagnosis and
-    prognosis via linear programming. Operations Research, 43(4), pages 570-577,
-    July-August 1995.
-  - W.H. Wolberg, W.N. Street, and O.L. Mangasarian. Machine learning techniques
-    to diagnose breast cancer from fine-needle aspirates. Cancer Letters 77 (1994)
-    163-171.
-</pre></div>
-</div>
 <p>We will make use of the <a class="reference internal" href="../../modules/generated/sklearn.linear_model.LogisticRegression.html#sklearn.linear_model.LogisticRegression" title="sklearn.linear_model.LogisticRegression"><code class="xref py py-class docutils literal notranslate"><span class="pre">LogisticRegression</span></code></a>
 estimator with <a class="reference internal" href="../../modules/generated/sklearn.feature_selection.SequentialFeatureSelector.html#sklearn.feature_selection.SequentialFeatureSelector" title="sklearn.feature_selection.SequentialFeatureSelector"><code class="xref py py-class docutils literal notranslate"><span class="pre">SequentialFeatureSelector</span></code></a>
 to perform the feature selection.</p>
@@ -1173,30 +1004,9 @@ to perform the feature selection.</p>
     <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Done in </span><span class="si">{</span><span class="n">end</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">start</span><span class="si">:</span><span class="s2">.3f</span><span class="si">}</span><span class="s2">s"</span><span class="p">)</span>
 </pre></div>
 </div>
-<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>tol: -0.01
-Features selected: ['worst perimeter']
-ROC AUC score: 0.975
-Done in 13.733s
-
-tol: -0.001
-Features selected: ['radius error' 'fractal dimension error' 'worst texture'
- 'worst perimeter' 'worst concave points']
-ROC AUC score: 0.997
-Done in 13.590s
-
-tol: -0.0001
-Features selected: ['mean compactness' 'mean concavity' 'mean concave points' 'radius error'
- 'area error' 'concave points error' 'symmetry error'
- 'fractal dimension error' 'worst texture' 'worst perimeter' 'worst area'
- 'worst concave points' 'worst symmetry']
-ROC AUC score: 0.998
-Done in 12.096s
-</pre></div>
-</div>
 <p>We can see that the number of features selected tend to increase as negative
 values of <code class="docutils literal notranslate"><span class="pre">tol</span></code> approach to zero. The time taken for feature selection also
 decreases as the values of <code class="docutils literal notranslate"><span class="pre">tol</span></code> come closer to zero.</p>
-<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> (0 minutes 40.139 seconds)</p>
 
 <p class="rubric">Related examples</p>
 <div class="sphx-glr-thumbnails"><div class="sphx-glr-thumbcontainer" tooltip="This example shows how a feature selection can be easily integrated within a machine learning p..."><img alt="" src="../../_images/sphx_glr_plot_feature_selection_pipeline_thumb.png"/>
@@ -1205,12 +1015,12 @@ decreases as the values of <code class="docutils literal notranslate"><span clas
 </div><div class="sphx-glr-thumbcontainer" tooltip="We are pleased to announce the release of scikit-learn 0.24! Many bug fixes and improvements we..."><img alt="" src="../../_images/sphx_glr_plot_release_highlights_0_24_0_thumb.png"/>
 <p><a class="reference internal" href="../release_highlights/plot_release_highlights_0_24_0.html#sphx-glr-auto-examples-release-highlights-plot-release-highlights-0-24-0-py"><span class="std std-ref">Release Highlights for scikit-learn 0.24</span></a></p>
 <div class="sphx-glr-thumbnail-title">Release Highlights for scikit-learn 0.24</div>
+</div><div class="sphx-glr-thumbcontainer" tooltip="Once a binary classifier is trained, the predict method outputs class label predictions corresp..."><img alt="" src="../../_images/sphx_glr_plot_tuned_decision_threshold_thumb.png"/>
+<p><a class="reference internal" href="../model_selection/plot_tuned_decision_threshold.html#sphx-glr-auto-examples-model-selection-plot-tuned-decision-threshold-py"><span class="std std-ref">Post-hoc tuning the cut-off point of decision function</span></a></p>
+<div class="sphx-glr-thumbnail-title">Post-hoc tuning the cut-off point of decision function</div>
 </div><div class="sphx-glr-thumbcontainer" tooltip="A Recursive Feature Elimination (RFE) example with automatic tuning of the number of features s..."><img alt="" src="../../_images/sphx_glr_plot_rfe_with_cross_validation_thumb.png"/>
 <p><a class="reference internal" href="plot_rfe_with_cross_validation.html#sphx-glr-auto-examples-feature-selection-plot-rfe-with-cross-validation-py"><span class="std std-ref">Recursive feature elimination with cross-validation</span></a></p>
 <div class="sphx-glr-thumbnail-title">Recursive feature elimination with cross-validation</div>
-</div><div class="sphx-glr-thumbcontainer" tooltip="In linear models, the target value is modeled as a linear combination of the features (see the ..."><img alt="" src="../../_images/sphx_glr_plot_linear_model_coefficient_interpretation_thumb.png"/>
-<p><a class="reference internal" href="../inspection/plot_linear_model_coefficient_interpretation.html#sphx-glr-auto-examples-inspection-plot-linear-model-coefficient-interpretation-py"><span class="std std-ref">Common pitfalls in the interpretation of coefficients of linear models</span></a></p>
-<div class="sphx-glr-thumbnail-title">Common pitfalls in the interpretation of coefficients of linear models</div>
 </div></div><p class="sphx-glr-signature"><a class="reference external" href="https://sphinx-gallery.github.io">Gallery generated by Sphinx-Gallery</a></p>
 </section>
 </section>

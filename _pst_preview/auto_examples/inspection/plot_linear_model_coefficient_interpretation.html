@@ -13,7 +13,7 @@
 <meta content="https://scikit-learn.org/stable/_static/scikit-learn-logo-small.png" property="og:image"/>
 <meta content="scikit-learn" property="og:image:alt"/>
 <meta content="In linear models, the target value is modeled as a linear combination of the features (see the Linear Models User Guide section for a description of a set of linear models available in scikit-learn..." name="description"/>
-<title>Common pitfalls in the interpretation of coefficients of linear models — scikit-learn 1.5.dev0 documentation</title>
+<title>Common pitfalls in the interpretation of coefficients of linear models — scikit-learn 1.6.dev0 documentation</title>
 <script data-cfasync="false">
     document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
     document.documentElement.dataset.theme = localStorage.getItem("theme") || "light";
@@ -42,8 +42,8 @@
 <link as="script" href="../../_static/scripts/bootstrap.js?digest=8d27b9dea8ad943066ae" rel="preload"/>
 <link as="script" href="../../_static/scripts/pydata-sphinx-theme.js?digest=8d27b9dea8ad943066ae" rel="preload"/>
 <script src="../../_static/vendor/fontawesome/6.5.1/js/all.min.js?digest=8d27b9dea8ad943066ae"></script>
-<script src="../../_static/documentation_options.js?v=a2c36881"></script>
-<script src="../../_static/doctools.js?v=888ff710"></script>
+<script src="../../_static/documentation_options.js?v=d875d36e"></script>
+<script src="../../_static/doctools.js?v=9a2dae69"></script>
 <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
 <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
 <script src="../../_static/copybutton.js?v=97f0b27d"></script>
@@ -54,8 +54,8 @@
 <script>DOCUMENTATION_OPTIONS.pagename = 'auto_examples/inspection/plot_linear_model_coefficient_interpretation';</script>
 <script>
         DOCUMENTATION_OPTIONS.theme_version = '0.15.2';
-        DOCUMENTATION_OPTIONS.theme_switcher_json_url = 'https://scikit-learn.org/_pst_preview/versions.json';
-        DOCUMENTATION_OPTIONS.theme_switcher_version_match = '1.5.dev0';
+        DOCUMENTATION_OPTIONS.theme_switcher_json_url = 'https://scikit-learn.org/_pst_preview/_static/versions.json';
+        DOCUMENTATION_OPTIONS.theme_switcher_version_match = '1.6.dev0';
         DOCUMENTATION_OPTIONS.show_version_warning_banner = true;
         </script>
 <script src="../../_static/scripts/dropdown.js?v=12d599f8"></script>
@@ -550,7 +550,6 @@ document.write(`
 <li class="toctree-l2"><a class="reference internal" href="../applications/plot_face_recognition.html">Faces recognition example using eigenfaces and SVMs</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../applications/plot_digits_denoising.html">Image denoising using kernel PCA</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../applications/plot_time_series_lagged_features.html">Lagged features for time series forecasting</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../applications/svm_gui.html">Libsvm GUI</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../applications/plot_model_complexity_influence.html">Model Complexity Influence</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../applications/plot_out_of_core_classification.html">Out-of-core classification of text documents</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../applications/plot_outlier_detection_wine.html">Outlier detection on a real data set</a></li>
@@ -695,6 +694,8 @@ document.write(`
 <li class="toctree-l2"><a class="reference internal" href="../model_selection/plot_cv_predict.html">Plotting Cross-Validated Predictions</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../model_selection/plot_learning_curve.html">Plotting Learning Curves and Checking Models’ Scalability</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../model_selection/plot_validation_curve.html">Plotting Validation Curves</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../model_selection/plot_tuned_decision_threshold.html">Post-hoc tuning the cut-off point of decision function</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../model_selection/plot_cost_sensitive_learning.html">Post-tuning the decision threshold for cost-sensitive learning</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../model_selection/plot_precision_recall.html">Precision-Recall</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../model_selection/plot_roc_crossval.html">Receiver Operating Characteristic (ROC) with cross validation</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../model_selection/plot_grid_search_text_feature_extraction.html">Sample pipeline for text feature extraction and evaluation</a></li>
@@ -863,13 +864,14 @@ various features such as experience, age, or education.</p>
 <li><p><a class="reference internal" href="#the-machine-learning-pipeline" id="id2">The machine-learning pipeline</a></p></li>
 <li><p><a class="reference internal" href="#processing-the-dataset" id="id3">Processing the dataset</a></p></li>
 <li><p><a class="reference internal" href="#interpreting-coefficients-scale-matters" id="id4">Interpreting coefficients: scale matters</a></p></li>
-<li><p><a class="reference internal" href="#checking-the-variability-of-the-coefficients" id="id5">Checking the variability of the coefficients</a></p></li>
-<li><p><a class="reference internal" href="#the-problem-of-correlated-variables" id="id6">The problem of correlated variables</a></p></li>
-<li><p><a class="reference internal" href="#preprocessing-numerical-variables" id="id7">Preprocessing numerical variables</a></p></li>
-<li><p><a class="reference internal" href="#linear-models-with-regularization" id="id8">Linear models with regularization</a></p></li>
-<li><p><a class="reference internal" href="#linear-models-with-sparse-coefficients" id="id9">Linear models with sparse coefficients</a></p></li>
-<li><p><a class="reference internal" href="#wrong-causal-interpretation" id="id10">Wrong causal interpretation</a></p></li>
-<li><p><a class="reference internal" href="#lessons-learned" id="id11">Lessons learned</a></p></li>
+<li><p><a class="reference internal" href="#interpreting-coefficients-being-cautious-about-causality" id="id5">Interpreting coefficients: being cautious about causality</a></p></li>
+<li><p><a class="reference internal" href="#checking-the-variability-of-the-coefficients" id="id6">Checking the variability of the coefficients</a></p></li>
+<li><p><a class="reference internal" href="#the-problem-of-correlated-variables" id="id7">The problem of correlated variables</a></p></li>
+<li><p><a class="reference internal" href="#preprocessing-numerical-variables" id="id8">Preprocessing numerical variables</a></p></li>
+<li><p><a class="reference internal" href="#linear-models-with-regularization" id="id9">Linear models with regularization</a></p></li>
+<li><p><a class="reference internal" href="#linear-models-with-sparse-coefficients" id="id10">Linear models with sparse coefficients</a></p></li>
+<li><p><a class="reference internal" href="#wrong-causal-interpretation" id="id11">Wrong causal interpretation</a></p></li>
+<li><p><a class="reference internal" href="#lessons-learned" id="id12">Lessons learned</a></p></li>
 </ul>
 </nav>
 <div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
@@ -895,306 +897,16 @@ target variable (i.e., the variable which we want to predict).</p>
 <span class="n">X</span><span class="o">.</span><span class="n">describe</span><span class="p">(</span><span class="n">include</span><span class="o">=</span><span class="s2">"all"</span><span class="p">)</span>
 </pre></div>
 </div>
-<div class="output_subarea output_html rendered_html output_result">
-<div>
-<style scoped="">
-    .dataframe tbody tr th:only-of-type {
-        vertical-align: middle;
-    }
-
-    .dataframe tbody tr th {
-        vertical-align: top;
-    }
-
-    .dataframe thead th {
-        text-align: right;
-    }
-</style>
-<table border="1" class="dataframe">
-<thead>
-<tr style="text-align: right;">
-<th></th>
-<th>EDUCATION</th>
-<th>SOUTH</th>
-<th>SEX</th>
-<th>EXPERIENCE</th>
-<th>UNION</th>
-<th>AGE</th>
-<th>RACE</th>
-<th>OCCUPATION</th>
-<th>SECTOR</th>
-<th>MARR</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<th>count</th>
-<td>534.000000</td>
-<td>534</td>
-<td>534</td>
-<td>534.000000</td>
-<td>534</td>
-<td>534.000000</td>
-<td>534</td>
-<td>534</td>
-<td>534</td>
-<td>534</td>
-</tr>
-<tr>
-<th>unique</th>
-<td>NaN</td>
-<td>2</td>
-<td>2</td>
-<td>NaN</td>
-<td>2</td>
-<td>NaN</td>
-<td>3</td>
-<td>6</td>
-<td>3</td>
-<td>2</td>
-</tr>
-<tr>
-<th>top</th>
-<td>NaN</td>
-<td>no</td>
-<td>male</td>
-<td>NaN</td>
-<td>not_member</td>
-<td>NaN</td>
-<td>White</td>
-<td>Other</td>
-<td>Other</td>
-<td>Married</td>
-</tr>
-<tr>
-<th>freq</th>
-<td>NaN</td>
-<td>378</td>
-<td>289</td>
-<td>NaN</td>
-<td>438</td>
-<td>NaN</td>
-<td>440</td>
-<td>156</td>
-<td>411</td>
-<td>350</td>
-</tr>
-<tr>
-<th>mean</th>
-<td>13.018727</td>
-<td>NaN</td>
-<td>NaN</td>
-<td>17.822097</td>
-<td>NaN</td>
-<td>36.833333</td>
-<td>NaN</td>
-<td>NaN</td>
-<td>NaN</td>
-<td>NaN</td>
-</tr>
-<tr>
-<th>std</th>
-<td>2.615373</td>
-<td>NaN</td>
-<td>NaN</td>
-<td>12.379710</td>
-<td>NaN</td>
-<td>11.726573</td>
-<td>NaN</td>
-<td>NaN</td>
-<td>NaN</td>
-<td>NaN</td>
-</tr>
-<tr>
-<th>min</th>
-<td>2.000000</td>
-<td>NaN</td>
-<td>NaN</td>
-<td>0.000000</td>
-<td>NaN</td>
-<td>18.000000</td>
-<td>NaN</td>
-<td>NaN</td>
-<td>NaN</td>
-<td>NaN</td>
-</tr>
-<tr>
-<th>25%</th>
-<td>12.000000</td>
-<td>NaN</td>
-<td>NaN</td>
-<td>8.000000</td>
-<td>NaN</td>
-<td>28.000000</td>
-<td>NaN</td>
-<td>NaN</td>
-<td>NaN</td>
-<td>NaN</td>
-</tr>
-<tr>
-<th>50%</th>
-<td>12.000000</td>
-<td>NaN</td>
-<td>NaN</td>
-<td>15.000000</td>
-<td>NaN</td>
-<td>35.000000</td>
-<td>NaN</td>
-<td>NaN</td>
-<td>NaN</td>
-<td>NaN</td>
-</tr>
-<tr>
-<th>75%</th>
-<td>15.000000</td>
-<td>NaN</td>
-<td>NaN</td>
-<td>26.000000</td>
-<td>NaN</td>
-<td>44.000000</td>
-<td>NaN</td>
-<td>NaN</td>
-<td>NaN</td>
-<td>NaN</td>
-</tr>
-<tr>
-<th>max</th>
-<td>18.000000</td>
-<td>NaN</td>
-<td>NaN</td>
-<td>55.000000</td>
-<td>NaN</td>
-<td>64.000000</td>
-<td>NaN</td>
-<td>NaN</td>
-<td>NaN</td>
-<td>NaN</td>
-</tr>
-</tbody>
-</table>
-</div>
-</div>
-<br/>
-<br/><p>Note that the dataset contains categorical and numerical variables.
+<p>Note that the dataset contains categorical and numerical variables.
 We will need to take this into account when preprocessing the dataset
 thereafter.</p>
 <div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">X</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
 </pre></div>
 </div>
-<div class="output_subarea output_html rendered_html output_result">
-<div>
-<style scoped="">
-    .dataframe tbody tr th:only-of-type {
-        vertical-align: middle;
-    }
-
-    .dataframe tbody tr th {
-        vertical-align: top;
-    }
-
-    .dataframe thead th {
-        text-align: right;
-    }
-</style>
-<table border="1" class="dataframe">
-<thead>
-<tr style="text-align: right;">
-<th></th>
-<th>EDUCATION</th>
-<th>SOUTH</th>
-<th>SEX</th>
-<th>EXPERIENCE</th>
-<th>UNION</th>
-<th>AGE</th>
-<th>RACE</th>
-<th>OCCUPATION</th>
-<th>SECTOR</th>
-<th>MARR</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<th>0</th>
-<td>8</td>
-<td>no</td>
-<td>female</td>
-<td>21</td>
-<td>not_member</td>
-<td>35</td>
-<td>Hispanic</td>
-<td>Other</td>
-<td>Manufacturing</td>
-<td>Married</td>
-</tr>
-<tr>
-<th>1</th>
-<td>9</td>
-<td>no</td>
-<td>female</td>
-<td>42</td>
-<td>not_member</td>
-<td>57</td>
-<td>White</td>
-<td>Other</td>
-<td>Manufacturing</td>
-<td>Married</td>
-</tr>
-<tr>
-<th>2</th>
-<td>12</td>
-<td>no</td>
-<td>male</td>
-<td>1</td>
-<td>not_member</td>
-<td>19</td>
-<td>White</td>
-<td>Other</td>
-<td>Manufacturing</td>
-<td>Unmarried</td>
-</tr>
-<tr>
-<th>3</th>
-<td>12</td>
-<td>no</td>
-<td>male</td>
-<td>4</td>
-<td>not_member</td>
-<td>22</td>
-<td>White</td>
-<td>Other</td>
-<td>Other</td>
-<td>Unmarried</td>
-</tr>
-<tr>
-<th>4</th>
-<td>12</td>
-<td>no</td>
-<td>male</td>
-<td>17</td>
-<td>not_member</td>
-<td>35</td>
-<td>White</td>
-<td>Other</td>
-<td>Other</td>
-<td>Married</td>
-</tr>
-</tbody>
-</table>
-</div>
-</div>
-<br/>
-<br/><p>Our target for prediction: the wage.
+<p>Our target for prediction: the wage.
 Wages are described as floating-point number in dollars per hour.</p>
 <div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">y</span> <span class="o">=</span> <span class="n">survey</span><span class="o">.</span><span class="n">target</span><span class="o">.</span><span class="n">values</span><span class="o">.</span><span class="n">ravel</span><span class="p">()</span>
 <span class="n">survey</span><span class="o">.</span><span class="n">target</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
-</pre></div>
-</div>
-<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>0    5.10
-1    4.95
-2    6.67
-3    4.00
-4    7.50
-Name: WAGE, dtype: float64
 </pre></div>
 </div>
 <p>We split the sample into a train and a test dataset.
@@ -1217,7 +929,7 @@ variables will be used. In the following plot, each dot represents a sample.</p>
 <span class="n">_</span> <span class="o">=</span> <a class="sphx-glr-backref-module-seaborn sphx-glr-backref-type-py-function" href="https://seaborn.pydata.org/generated/seaborn.pairplot.html#seaborn.pairplot" title="seaborn.pairplot"><span class="n">sns</span><span class="o">.</span><span class="n">pairplot</span></a><span class="p">(</span><span class="n">train_dataset</span><span class="p">,</span> <span class="n">kind</span><span class="o">=</span><span class="s2">"reg"</span><span class="p">,</span> <span class="n">diag_kind</span><span class="o">=</span><span class="s2">"kde"</span><span class="p">)</span>
 </pre></div>
 </div>
-<img alt="plot linear model coefficient interpretation" class="sphx-glr-single-img" src="../../_images/sphx_glr_plot_linear_model_coefficient_interpretation_001.png" srcset="../../_images/sphx_glr_plot_linear_model_coefficient_interpretation_001.png"/><p>Looking closely at the WAGE distribution reveals that it has a
+<p>Looking closely at the WAGE distribution reveals that it has a
 long tail. For this reason, we should take its logarithm
 to turn it approximately into a normal distribution (linear models such
 as ridge or lasso work best for a normal distribution of error).</p>
@@ -1232,25 +944,6 @@ of a specific variable without keeping the others fixed.</p>
 <p>To design our machine-learning pipeline, we first manually
 check the type of data that we are dealing with:</p>
 <div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">survey</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">info</span><span class="p">()</span>
-</pre></div>
-</div>
-<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>&lt;class 'pandas.core.frame.DataFrame'&gt;
-RangeIndex: 534 entries, 0 to 533
-Data columns (total 10 columns):
- #   Column      Non-Null Count  Dtype
----  ------      --------------  -----
- 0   EDUCATION   534 non-null    int64
- 1   SOUTH       534 non-null    category
- 2   SEX         534 non-null    category
- 3   EXPERIENCE  534 non-null    int64
- 4   UNION       534 non-null    category
- 5   AGE         534 non-null    int64
- 6   RACE        534 non-null    category
- 7   OCCUPATION  534 non-null    category
- 8   SECTOR      534 non-null    category
- 9   MARR        534 non-null    category
-dtypes: category(7), int64(3)
-memory usage: 17.2 KB
 </pre></div>
 </div>
 <p>As seen previously, the dataset contains columns with different data types
@@ -1299,443 +992,7 @@ with a very small regularization and to model the logarithm of the WAGE.</p>
 <div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">model</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X_train</span><span class="p">,</span> <span class="n">y_train</span><span class="p">)</span>
 </pre></div>
 </div>
-<div class="output_subarea output_html rendered_html output_result">
-<style>#sk-container-id-31 {
-  /* Definition of color scheme common for light and dark mode */
-  --sklearn-color-text: black;
-  --sklearn-color-line: gray;
-  /* Definition of color scheme for unfitted estimators */
-  --sklearn-color-unfitted-level-0: #fff5e6;
-  --sklearn-color-unfitted-level-1: #f6e4d2;
-  --sklearn-color-unfitted-level-2: #ffe0b3;
-  --sklearn-color-unfitted-level-3: chocolate;
-  /* Definition of color scheme for fitted estimators */
-  --sklearn-color-fitted-level-0: #f0f8ff;
-  --sklearn-color-fitted-level-1: #d4ebff;
-  --sklearn-color-fitted-level-2: #b3dbfd;
-  --sklearn-color-fitted-level-3: cornflowerblue;
-
-  /* Specific color for light theme */
-  --sklearn-color-text-on-default-background: var(--sg-text-color, var(--theme-code-foreground, var(--jp-content-font-color1, black)));
-  --sklearn-color-background: var(--sg-background-color, var(--theme-background, var(--jp-layout-color0, white)));
-  --sklearn-color-border-box: var(--sg-text-color, var(--theme-code-foreground, var(--jp-content-font-color1, black)));
-  --sklearn-color-icon: #696969;
-
-  @media (prefers-color-scheme: dark) {
-    /* Redefinition of color scheme for dark theme */
-    --sklearn-color-text-on-default-background: var(--sg-text-color, var(--theme-code-foreground, var(--jp-content-font-color1, white)));
-    --sklearn-color-background: var(--sg-background-color, var(--theme-background, var(--jp-layout-color0, #111)));
-    --sklearn-color-border-box: var(--sg-text-color, var(--theme-code-foreground, var(--jp-content-font-color1, white)));
-    --sklearn-color-icon: #878787;
-  }
-}
-
-#sk-container-id-31 {
-  color: var(--sklearn-color-text);
-}
-
-#sk-container-id-31 pre {
-  padding: 0;
-}
-
-#sk-container-id-31 input.sk-hidden--visually {
-  border: 0;
-  clip: rect(1px 1px 1px 1px);
-  clip: rect(1px, 1px, 1px, 1px);
-  height: 1px;
-  margin: -1px;
-  overflow: hidden;
-  padding: 0;
-  position: absolute;
-  width: 1px;
-}
-
-#sk-container-id-31 div.sk-dashed-wrapped {
-  border: 1px dashed var(--sklearn-color-line);
-  margin: 0 0.4em 0.5em 0.4em;
-  box-sizing: border-box;
-  padding-bottom: 0.4em;
-  background-color: var(--sklearn-color-background);
-}
-
-#sk-container-id-31 div.sk-container {
-  /* jupyter's `normalize.less` sets `[hidden] { display: none; }`
-     but bootstrap.min.css set `[hidden] { display: none !important; }`
-     so we also need the `!important` here to be able to override the
-     default hidden behavior on the sphinx rendered scikit-learn.org.
-     See: https://github.com/scikit-learn/scikit-learn/issues/21755 */
-  display: inline-block !important;
-  position: relative;
-}
-
-#sk-container-id-31 div.sk-text-repr-fallback {
-  display: none;
-}
-
-div.sk-parallel-item,
-div.sk-serial,
-div.sk-item {
-  /* draw centered vertical line to link estimators */
-  background-image: linear-gradient(var(--sklearn-color-text-on-default-background), var(--sklearn-color-text-on-default-background));
-  background-size: 2px 100%;
-  background-repeat: no-repeat;
-  background-position: center center;
-}
-
-/* Parallel-specific style estimator block */
-
-#sk-container-id-31 div.sk-parallel-item::after {
-  content: "";
-  width: 100%;
-  border-bottom: 2px solid var(--sklearn-color-text-on-default-background);
-  flex-grow: 1;
-}
-
-#sk-container-id-31 div.sk-parallel {
-  display: flex;
-  align-items: stretch;
-  justify-content: center;
-  background-color: var(--sklearn-color-background);
-  position: relative;
-}
-
-#sk-container-id-31 div.sk-parallel-item {
-  display: flex;
-  flex-direction: column;
-}
-
-#sk-container-id-31 div.sk-parallel-item:first-child::after {
-  align-self: flex-end;
-  width: 50%;
-}
-
-#sk-container-id-31 div.sk-parallel-item:last-child::after {
-  align-self: flex-start;
-  width: 50%;
-}
-
-#sk-container-id-31 div.sk-parallel-item:only-child::after {
-  width: 0;
-}
-
-/* Serial-specific style estimator block */
-
-#sk-container-id-31 div.sk-serial {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  background-color: var(--sklearn-color-background);
-  padding-right: 1em;
-  padding-left: 1em;
-}
-
-
-/* Toggleable style: style used for estimator/Pipeline/ColumnTransformer box that is
-clickable and can be expanded/collapsed.
-- Pipeline and ColumnTransformer use this feature and define the default style
-- Estimators will overwrite some part of the style using the `sk-estimator` class
-*/
-
-/* Pipeline and ColumnTransformer style (default) */
-
-#sk-container-id-31 div.sk-toggleable {
-  /* Default theme specific background. It is overwritten whether we have a
-  specific estimator or a Pipeline/ColumnTransformer */
-  background-color: var(--sklearn-color-background);
-}
-
-/* Toggleable label */
-#sk-container-id-31 label.sk-toggleable__label {
-  cursor: pointer;
-  display: block;
-  width: 100%;
-  margin-bottom: 0;
-  padding: 0.5em;
-  box-sizing: border-box;
-  text-align: center;
-}
-
-#sk-container-id-31 label.sk-toggleable__label-arrow:before {
-  /* Arrow on the left of the label */
-  content: "▸";
-  float: left;
-  margin-right: 0.25em;
-  color: var(--sklearn-color-icon);
-}
-
-#sk-container-id-31 label.sk-toggleable__label-arrow:hover:before {
-  color: var(--sklearn-color-text);
-}
-
-/* Toggleable content - dropdown */
-
-#sk-container-id-31 div.sk-toggleable__content {
-  max-height: 0;
-  max-width: 0;
-  overflow: hidden;
-  text-align: left;
-  /* unfitted */
-  background-color: var(--sklearn-color-unfitted-level-0);
-}
-
-#sk-container-id-31 div.sk-toggleable__content.fitted {
-  /* fitted */
-  background-color: var(--sklearn-color-fitted-level-0);
-}
-
-#sk-container-id-31 div.sk-toggleable__content pre {
-  margin: 0.2em;
-  border-radius: 0.25em;
-  color: var(--sklearn-color-text);
-  /* unfitted */
-  background-color: var(--sklearn-color-unfitted-level-0);
-}
-
-#sk-container-id-31 div.sk-toggleable__content.fitted pre {
-  /* unfitted */
-  background-color: var(--sklearn-color-fitted-level-0);
-}
-
-#sk-container-id-31 input.sk-toggleable__control:checked~div.sk-toggleable__content {
-  /* Expand drop-down */
-  max-height: 200px;
-  max-width: 100%;
-  overflow: auto;
-}
-
-#sk-container-id-31 input.sk-toggleable__control:checked~label.sk-toggleable__label-arrow:before {
-  content: "▾";
-}
-
-/* Pipeline/ColumnTransformer-specific style */
-
-#sk-container-id-31 div.sk-label input.sk-toggleable__control:checked~label.sk-toggleable__label {
-  color: var(--sklearn-color-text);
-  background-color: var(--sklearn-color-unfitted-level-2);
-}
-
-#sk-container-id-31 div.sk-label.fitted input.sk-toggleable__control:checked~label.sk-toggleable__label {
-  background-color: var(--sklearn-color-fitted-level-2);
-}
-
-/* Estimator-specific style */
-
-/* Colorize estimator box */
-#sk-container-id-31 div.sk-estimator input.sk-toggleable__control:checked~label.sk-toggleable__label {
-  /* unfitted */
-  background-color: var(--sklearn-color-unfitted-level-2);
-}
-
-#sk-container-id-31 div.sk-estimator.fitted input.sk-toggleable__control:checked~label.sk-toggleable__label {
-  /* fitted */
-  background-color: var(--sklearn-color-fitted-level-2);
-}
-
-#sk-container-id-31 div.sk-label label.sk-toggleable__label,
-#sk-container-id-31 div.sk-label label {
-  /* The background is the default theme color */
-  color: var(--sklearn-color-text-on-default-background);
-}
-
-/* On hover, darken the color of the background */
-#sk-container-id-31 div.sk-label:hover label.sk-toggleable__label {
-  color: var(--sklearn-color-text);
-  background-color: var(--sklearn-color-unfitted-level-2);
-}
-
-/* Label box, darken color on hover, fitted */
-#sk-container-id-31 div.sk-label.fitted:hover label.sk-toggleable__label.fitted {
-  color: var(--sklearn-color-text);
-  background-color: var(--sklearn-color-fitted-level-2);
-}
-
-/* Estimator label */
-
-#sk-container-id-31 div.sk-label label {
-  font-family: monospace;
-  font-weight: bold;
-  display: inline-block;
-  line-height: 1.2em;
-}
-
-#sk-container-id-31 div.sk-label-container {
-  text-align: center;
-}
-
-/* Estimator-specific */
-#sk-container-id-31 div.sk-estimator {
-  font-family: monospace;
-  border: 1px dotted var(--sklearn-color-border-box);
-  border-radius: 0.25em;
-  box-sizing: border-box;
-  margin-bottom: 0.5em;
-  /* unfitted */
-  background-color: var(--sklearn-color-unfitted-level-0);
-}
-
-#sk-container-id-31 div.sk-estimator.fitted {
-  /* fitted */
-  background-color: var(--sklearn-color-fitted-level-0);
-}
-
-/* on hover */
-#sk-container-id-31 div.sk-estimator:hover {
-  /* unfitted */
-  background-color: var(--sklearn-color-unfitted-level-2);
-}
-
-#sk-container-id-31 div.sk-estimator.fitted:hover {
-  /* fitted */
-  background-color: var(--sklearn-color-fitted-level-2);
-}
-
-/* Specification for estimator info (e.g. "i" and "?") */
-
-/* Common style for "i" and "?" */
-
-.sk-estimator-doc-link,
-a:link.sk-estimator-doc-link,
-a:visited.sk-estimator-doc-link {
-  float: right;
-  font-size: smaller;
-  line-height: 1em;
-  font-family: monospace;
-  background-color: var(--sklearn-color-background);
-  border-radius: 1em;
-  height: 1em;
-  width: 1em;
-  text-decoration: none !important;
-  margin-left: 1ex;
-  /* unfitted */
-  border: var(--sklearn-color-unfitted-level-1) 1pt solid;
-  color: var(--sklearn-color-unfitted-level-1);
-}
-
-.sk-estimator-doc-link.fitted,
-a:link.sk-estimator-doc-link.fitted,
-a:visited.sk-estimator-doc-link.fitted {
-  /* fitted */
-  border: var(--sklearn-color-fitted-level-1) 1pt solid;
-  color: var(--sklearn-color-fitted-level-1);
-}
-
-/* On hover */
-div.sk-estimator:hover .sk-estimator-doc-link:hover,
-.sk-estimator-doc-link:hover,
-div.sk-label-container:hover .sk-estimator-doc-link:hover,
-.sk-estimator-doc-link:hover {
-  /* unfitted */
-  background-color: var(--sklearn-color-unfitted-level-3);
-  color: var(--sklearn-color-background);
-  text-decoration: none;
-}
-
-div.sk-estimator.fitted:hover .sk-estimator-doc-link.fitted:hover,
-.sk-estimator-doc-link.fitted:hover,
-div.sk-label-container:hover .sk-estimator-doc-link.fitted:hover,
-.sk-estimator-doc-link.fitted:hover {
-  /* fitted */
-  background-color: var(--sklearn-color-fitted-level-3);
-  color: var(--sklearn-color-background);
-  text-decoration: none;
-}
-
-/* Span, style for the box shown on hovering the info icon */
-.sk-estimator-doc-link span {
-  display: none;
-  z-index: 9999;
-  position: relative;
-  font-weight: normal;
-  right: .2ex;
-  padding: .5ex;
-  margin: .5ex;
-  width: min-content;
-  min-width: 20ex;
-  max-width: 50ex;
-  color: var(--sklearn-color-text);
-  box-shadow: 2pt 2pt 4pt #999;
-  /* unfitted */
-  background: var(--sklearn-color-unfitted-level-0);
-  border: .5pt solid var(--sklearn-color-unfitted-level-3);
-}
-
-.sk-estimator-doc-link.fitted span {
-  /* fitted */
-  background: var(--sklearn-color-fitted-level-0);
-  border: var(--sklearn-color-fitted-level-3);
-}
-
-.sk-estimator-doc-link:hover span {
-  display: block;
-}
-
-/* "?"-specific style due to the `<a>` HTML tag */
-
-#sk-container-id-31 a.estimator_doc_link {
-  float: right;
-  font-size: 1rem;
-  line-height: 1em;
-  font-family: monospace;
-  background-color: var(--sklearn-color-background);
-  border-radius: 1rem;
-  height: 1rem;
-  width: 1rem;
-  text-decoration: none;
-  /* unfitted */
-  color: var(--sklearn-color-unfitted-level-1);
-  border: var(--sklearn-color-unfitted-level-1) 1pt solid;
-}
-
-#sk-container-id-31 a.estimator_doc_link.fitted {
-  /* fitted */
-  border: var(--sklearn-color-fitted-level-1) 1pt solid;
-  color: var(--sklearn-color-fitted-level-1);
-}
-
-/* On hover */
-#sk-container-id-31 a.estimator_doc_link:hover {
-  /* unfitted */
-  background-color: var(--sklearn-color-unfitted-level-3);
-  color: var(--sklearn-color-background);
-  text-decoration: none;
-}
-
-#sk-container-id-31 a.estimator_doc_link.fitted:hover {
-  /* fitted */
-  background-color: var(--sklearn-color-fitted-level-3);
-}
-</style><div class="sk-top-container" id="sk-container-id-31"><div class="sk-text-repr-fallback"><pre>Pipeline(steps=[('columntransformer',
-                 ColumnTransformer(remainder='passthrough',
-                                   transformers=[('onehotencoder',
-                                                  OneHotEncoder(drop='if_binary'),
-                                                  ['RACE', 'OCCUPATION',
-                                                   'SECTOR', 'MARR', 'UNION',
-                                                   'SEX', 'SOUTH'])],
-                                   verbose_feature_names_out=False)),
-                ('transformedtargetregressor',
-                 TransformedTargetRegressor(func=&lt;ufunc 'log10'&gt;,
-                                            inverse_func=&lt;ufunc 'exp10'&gt;,
-                                            regressor=Ridge(alpha=1e-10)))])</pre><b>In a Jupyter environment, please rerun this cell to show the HTML representation or trust the notebook. <br/>On GitHub, the HTML representation is unable to render, please try loading this page with nbviewer.org.</b></div><div class="sk-container" hidden=""><div class="sk-item sk-dashed-wrapped"><div class="sk-label-container"><div class="sk-label fitted sk-toggleable"><input class="sk-toggleable__control sk-hidden--visually" id="sk-estimator-id-114" type="checkbox"/><label class="sk-toggleable__label fitted sk-toggleable__label-arrow fitted" for="sk-estimator-id-114">  Pipeline<a class="sk-estimator-doc-link fitted" href="https://scikit-learn.org/dev/modules/generated/sklearn.pipeline.Pipeline.html" rel="noreferrer" target="_blank">?<span>Documentation for Pipeline</span></a><span class="sk-estimator-doc-link fitted">i<span>Fitted</span></span></label><div class="sk-toggleable__content fitted"><pre>Pipeline(steps=[('columntransformer',
-                 ColumnTransformer(remainder='passthrough',
-                                   transformers=[('onehotencoder',
-                                                  OneHotEncoder(drop='if_binary'),
-                                                  ['RACE', 'OCCUPATION',
-                                                   'SECTOR', 'MARR', 'UNION',
-                                                   'SEX', 'SOUTH'])],
-                                   verbose_feature_names_out=False)),
-                ('transformedtargetregressor',
-                 TransformedTargetRegressor(func=&lt;ufunc 'log10'&gt;,
-                                            inverse_func=&lt;ufunc 'exp10'&gt;,
-                                            regressor=Ridge(alpha=1e-10)))])</pre></div> </div></div><div class="sk-serial"><div class="sk-item sk-dashed-wrapped"><div class="sk-label-container"><div class="sk-label fitted sk-toggleable"><input class="sk-toggleable__control sk-hidden--visually" id="sk-estimator-id-115" type="checkbox"/><label class="sk-toggleable__label fitted sk-toggleable__label-arrow fitted" for="sk-estimator-id-115"> columntransformer: ColumnTransformer<a class="sk-estimator-doc-link fitted" href="https://scikit-learn.org/dev/modules/generated/sklearn.compose.ColumnTransformer.html" rel="noreferrer" target="_blank">?<span>Documentation for columntransformer: ColumnTransformer</span></a></label><div class="sk-toggleable__content fitted"><pre>ColumnTransformer(remainder='passthrough',
-                  transformers=[('onehotencoder',
-                                 OneHotEncoder(drop='if_binary'),
-                                 ['RACE', 'OCCUPATION', 'SECTOR', 'MARR',
-                                  'UNION', 'SEX', 'SOUTH'])],
-                  verbose_feature_names_out=False)</pre></div> </div></div><div class="sk-parallel"><div class="sk-parallel-item"><div class="sk-item"><div class="sk-label-container"><div class="sk-label fitted sk-toggleable"><input class="sk-toggleable__control sk-hidden--visually" id="sk-estimator-id-116" type="checkbox"/><label class="sk-toggleable__label fitted sk-toggleable__label-arrow fitted" for="sk-estimator-id-116">onehotencoder</label><div class="sk-toggleable__content fitted"><pre>['RACE', 'OCCUPATION', 'SECTOR', 'MARR', 'UNION', 'SEX', 'SOUTH']</pre></div> </div></div><div class="sk-serial"><div class="sk-item"><div class="sk-estimator fitted sk-toggleable"><input class="sk-toggleable__control sk-hidden--visually" id="sk-estimator-id-117" type="checkbox"/><label class="sk-toggleable__label fitted sk-toggleable__label-arrow fitted" for="sk-estimator-id-117"> OneHotEncoder<a class="sk-estimator-doc-link fitted" href="https://scikit-learn.org/dev/modules/generated/sklearn.preprocessing.OneHotEncoder.html" rel="noreferrer" target="_blank">?<span>Documentation for OneHotEncoder</span></a></label><div class="sk-toggleable__content fitted"><pre>OneHotEncoder(drop='if_binary')</pre></div> </div></div></div></div></div><div class="sk-parallel-item"><div class="sk-item"><div class="sk-label-container"><div class="sk-label fitted sk-toggleable"><input class="sk-toggleable__control sk-hidden--visually" id="sk-estimator-id-118" type="checkbox"/><label class="sk-toggleable__label fitted sk-toggleable__label-arrow fitted" for="sk-estimator-id-118">remainder</label><div class="sk-toggleable__content fitted"><pre>['EDUCATION', 'EXPERIENCE', 'AGE']</pre></div> </div></div><div class="sk-serial"><div class="sk-item"><div class="sk-estimator fitted sk-toggleable"><input class="sk-toggleable__control sk-hidden--visually" id="sk-estimator-id-119" type="checkbox"/><label class="sk-toggleable__label fitted sk-toggleable__label-arrow fitted" for="sk-estimator-id-119">passthrough</label><div class="sk-toggleable__content fitted"><pre>passthrough</pre></div> </div></div></div></div></div></div></div><div class="sk-item sk-dashed-wrapped"><div class="sk-label-container"><div class="sk-label fitted sk-toggleable"><input class="sk-toggleable__control sk-hidden--visually" id="sk-estimator-id-120" type="checkbox"/><label class="sk-toggleable__label fitted sk-toggleable__label-arrow fitted" for="sk-estimator-id-120"> transformedtargetregressor: TransformedTargetRegressor<a class="sk-estimator-doc-link fitted" href="https://scikit-learn.org/dev/modules/generated/sklearn.compose.TransformedTargetRegressor.html" rel="noreferrer" target="_blank">?<span>Documentation for transformedtargetregressor: TransformedTargetRegressor</span></a></label><div class="sk-toggleable__content fitted"><pre>TransformedTargetRegressor(func=&lt;ufunc 'log10'&gt;, inverse_func=&lt;ufunc 'exp10'&gt;,
-                           regressor=Ridge(alpha=1e-10))</pre></div> </div></div><div class="sk-parallel"><div class="sk-parallel-item"><div class="sk-item"><div class="sk-label-container"><div class="sk-label fitted sk-toggleable"><input class="sk-toggleable__control sk-hidden--visually" id="sk-estimator-id-121" type="checkbox"/><label class="sk-toggleable__label fitted sk-toggleable__label-arrow fitted" for="sk-estimator-id-121">regressor: Ridge</label><div class="sk-toggleable__content fitted"><pre>Ridge(alpha=1e-10)</pre></div> </div></div><div class="sk-serial"><div class="sk-item"><div class="sk-estimator fitted sk-toggleable"><input class="sk-toggleable__control sk-hidden--visually" id="sk-estimator-id-122" type="checkbox"/><label class="sk-toggleable__label fitted sk-toggleable__label-arrow fitted" for="sk-estimator-id-122"> Ridge<a class="sk-estimator-doc-link fitted" href="https://scikit-learn.org/dev/modules/generated/sklearn.linear_model.Ridge.html" rel="noreferrer" target="_blank">?<span>Documentation for Ridge</span></a></label><div class="sk-toggleable__content fitted"><pre>Ridge(alpha=1e-10)</pre></div> </div></div></div></div></div></div></div></div></div></div></div>
-</div>
-<br/>
-<br/><p>Then we check the performance of the computed model plotting its predictions
+<p>Then we check the performance of the computed model plotting its predictions
 on the test set and computing,
 for example, the median absolute error of the model.</p>
 <div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">sklearn.metrics</span> <span class="kn">import</span> <span class="n">PredictionErrorDisplay</span><span class="p">,</span> <a class="sphx-glr-backref-module-sklearn-metrics sphx-glr-backref-type-py-function" href="../../modules/generated/sklearn.metrics.median_absolute_error.html#sklearn.metrics.median_absolute_error" title="sklearn.metrics.median_absolute_error"><span class="n">median_absolute_error</span></a>
@@ -1760,7 +1017,7 @@ for example, the median absolute error of the model.</p>
 <a class="sphx-glr-backref-module-matplotlib-pyplot sphx-glr-backref-type-py-function" href="https://matplotlib.org/stable/api/_as_gen/matplotlib.pyplot.tight_layout.html#matplotlib.pyplot.tight_layout" title="matplotlib.pyplot.tight_layout"><span class="n">plt</span><span class="o">.</span><span class="n">tight_layout</span></a><span class="p">()</span>
 </pre></div>
 </div>
-<img alt="Ridge model, small regularization" class="sphx-glr-single-img" src="../../_images/sphx_glr_plot_linear_model_coefficient_interpretation_002.png" srcset="../../_images/sphx_glr_plot_linear_model_coefficient_interpretation_002.png"/><p>The model learnt is far from being a good model making accurate predictions:
+<p>The model learnt is far from being a good model making accurate predictions:
 this is obvious when looking at the plot above, where good predictions
 should lie on the black dashed line.</p>
 <p>In the following section, we will interpret the coefficients of the model.
@@ -1783,111 +1040,7 @@ regressor we have fitted.</p>
 <span class="n">coefs</span>
 </pre></div>
 </div>
-<div class="output_subarea output_html rendered_html output_result">
-<div>
-<style scoped="">
-    .dataframe tbody tr th:only-of-type {
-        vertical-align: middle;
-    }
-
-    .dataframe tbody tr th {
-        vertical-align: top;
-    }
-
-    .dataframe thead th {
-        text-align: right;
-    }
-</style>
-<table border="1" class="dataframe">
-<thead>
-<tr style="text-align: right;">
-<th></th>
-<th>Coefficients</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<th>RACE_Hispanic</th>
-<td>-0.013519</td>
-</tr>
-<tr>
-<th>RACE_Other</th>
-<td>-0.009075</td>
-</tr>
-<tr>
-<th>RACE_White</th>
-<td>0.022594</td>
-</tr>
-<tr>
-<th>OCCUPATION_Clerical</th>
-<td>0.000045</td>
-</tr>
-<tr>
-<th>OCCUPATION_Management</th>
-<td>0.090528</td>
-</tr>
-<tr>
-<th>OCCUPATION_Other</th>
-<td>-0.025102</td>
-</tr>
-<tr>
-<th>OCCUPATION_Professional</th>
-<td>0.071964</td>
-</tr>
-<tr>
-<th>OCCUPATION_Sales</th>
-<td>-0.046636</td>
-</tr>
-<tr>
-<th>OCCUPATION_Service</th>
-<td>-0.091053</td>
-</tr>
-<tr>
-<th>SECTOR_Construction</th>
-<td>-0.000198</td>
-</tr>
-<tr>
-<th>SECTOR_Manufacturing</th>
-<td>0.031255</td>
-</tr>
-<tr>
-<th>SECTOR_Other</th>
-<td>-0.031025</td>
-</tr>
-<tr>
-<th>MARR_Unmarried</th>
-<td>-0.032405</td>
-</tr>
-<tr>
-<th>UNION_not_member</th>
-<td>-0.117154</td>
-</tr>
-<tr>
-<th>SEX_male</th>
-<td>0.090808</td>
-</tr>
-<tr>
-<th>SOUTH_yes</th>
-<td>-0.033823</td>
-</tr>
-<tr>
-<th>EDUCATION</th>
-<td>0.054699</td>
-</tr>
-<tr>
-<th>EXPERIENCE</th>
-<td>0.035005</td>
-</tr>
-<tr>
-<th>AGE</th>
-<td>-0.030867</td>
-</tr>
-</tbody>
-</table>
-</div>
-</div>
-<br/>
-<br/><p>The AGE coefficient is expressed in “dollars/hour per living years” while the
+<p>The AGE coefficient is expressed in “dollars/hour per living years” while the
 EDUCATION one is expressed in “dollars/hour per years of education”. This
 representation of the coefficients has the benefit of making clear the
 practical predictions of the model: an increase of <span class="math notranslate nohighlight">\(1\)</span> year in AGE
@@ -1906,7 +1059,7 @@ visible if we plot the coefficients.</p>
 <a class="sphx-glr-backref-module-matplotlib-pyplot sphx-glr-backref-type-py-function" href="https://matplotlib.org/stable/api/_as_gen/matplotlib.pyplot.subplots_adjust.html#matplotlib.pyplot.subplots_adjust" title="matplotlib.pyplot.subplots_adjust"><span class="n">plt</span><span class="o">.</span><span class="n">subplots_adjust</span></a><span class="p">(</span><span class="n">left</span><span class="o">=</span><span class="mf">0.3</span><span class="p">)</span>
 </pre></div>
 </div>
-<img alt="Ridge model, small regularization" class="sphx-glr-single-img" src="../../_images/sphx_glr_plot_linear_model_coefficient_interpretation_003.png" srcset="../../_images/sphx_glr_plot_linear_model_coefficient_interpretation_003.png"/><p>Indeed, from the plot above the most important factor in determining WAGE
+<p>Indeed, from the plot above the most important factor in determining WAGE
 appears to be the
 variable UNION, even if our intuition might tell us that variables
 like EXPERIENCE should have more impact.</p>
@@ -1925,7 +1078,7 @@ features.</p>
 <a class="sphx-glr-backref-module-matplotlib-pyplot sphx-glr-backref-type-py-function" href="https://matplotlib.org/stable/api/_as_gen/matplotlib.pyplot.subplots_adjust.html#matplotlib.pyplot.subplots_adjust" title="matplotlib.pyplot.subplots_adjust"><span class="n">plt</span><span class="o">.</span><span class="n">subplots_adjust</span></a><span class="p">(</span><span class="n">left</span><span class="o">=</span><span class="mf">0.3</span><span class="p">)</span>
 </pre></div>
 </div>
-<img alt="Feature ranges" class="sphx-glr-single-img" src="../../_images/sphx_glr_plot_linear_model_coefficient_interpretation_004.png" srcset="../../_images/sphx_glr_plot_linear_model_coefficient_interpretation_004.png"/><p>Multiplying the coefficients by the standard deviation of the related
+<p>Multiplying the coefficients by the standard deviation of the related
 feature would reduce all the coefficients to the same unit of measure.
 As we will see <a class="reference internal" href="#scaling-num"><span class="std std-ref">after</span></a> this is equivalent to normalize
 numerical variables to their standard deviation,
@@ -1946,7 +1099,7 @@ coefficient on the output, all else being equal.</p>
 <a class="sphx-glr-backref-module-matplotlib-pyplot sphx-glr-backref-type-py-function" href="https://matplotlib.org/stable/api/_as_gen/matplotlib.pyplot.subplots_adjust.html#matplotlib.pyplot.subplots_adjust" title="matplotlib.pyplot.subplots_adjust"><span class="n">plt</span><span class="o">.</span><span class="n">subplots_adjust</span></a><span class="p">(</span><span class="n">left</span><span class="o">=</span><span class="mf">0.3</span><span class="p">)</span>
 </pre></div>
 </div>
-<img alt="Ridge model, small regularization" class="sphx-glr-single-img" src="../../_images/sphx_glr_plot_linear_model_coefficient_interpretation_005.png" srcset="../../_images/sphx_glr_plot_linear_model_coefficient_interpretation_005.png"/><p>Now that the coefficients have been scaled, we can safely compare them.</p>
+<p>Now that the coefficients have been scaled, we can safely compare them.</p>
 <div class="admonition warning">
 <p class="admonition-title">Warning</p>
 <p>Why does the plot above suggest that an increase in age leads to a
@@ -1961,8 +1114,32 @@ other features remain constant.
 Also, AGE, EXPERIENCE and EDUCATION are the three variables that most
 influence the model.</p>
 </section>
+<section id="interpreting-coefficients-being-cautious-about-causality">
+<h2><a class="toc-backref" href="#id5" role="doc-backlink">Interpreting coefficients: being cautious about causality</a><a class="headerlink" href="#interpreting-coefficients-being-cautious-about-causality" title="Link to this heading">#</a></h2>
+<p>Linear models are a great tool for measuring statistical association, but we
+should be cautious when making statements about causality, after all
+correlation doesn’t always imply causation. This is particularly difficult in
+the social sciences because the variables we observe only function as proxies
+for the underlying causal process.</p>
+<p>In our particular case we can think of the EDUCATION of an individual as a
+proxy for their professional aptitude, the real variable we’re interested in
+but can’t observe. We’d certainly like to think that staying in school for
+longer would increase technical competency, but it’s also quite possible that
+causality goes the other way too. That is, those who are technically
+competent tend to stay in school for longer.</p>
+<p>An employer is unlikely to care which case it is (or if it’s a mix of both),
+as long as they remain convinced that a person with more EDUCATION is better
+suited for the job, they will be happy to pay out a higher WAGE.</p>
+<p>This confounding of effects becomes problematic when thinking about some
+form of intervention e.g. government subsidies of university degrees or
+promotional material encouraging individuals to take up higher education.
+The usefulness of these measures could end up being overstated, especially if
+the degree of confounding is strong. Our model predicts a <span class="math notranslate nohighlight">\(0.054699\)</span>
+increase in hourly wage for each year of education. The actual causal effect
+might be lower because of this confounding.</p>
+</section>
 <section id="checking-the-variability-of-the-coefficients">
-<h2><a class="toc-backref" href="#id5" role="doc-backlink">Checking the variability of the coefficients</a><a class="headerlink" href="#checking-the-variability-of-the-coefficients" title="Link to this heading">#</a></h2>
+<h2><a class="toc-backref" href="#id6" role="doc-backlink">Checking the variability of the coefficients</a><a class="headerlink" href="#checking-the-variability-of-the-coefficients" title="Link to this heading">#</a></h2>
 <p>We can check the coefficient variability through cross-validation:
 it is a form of data perturbation (related to
 <a class="reference external" href="https://en.wikipedia.org/wiki/Resampling_(statistics)">resampling</a>).</p>
@@ -2000,9 +1177,9 @@ with caution.</p>
 <a class="sphx-glr-backref-module-matplotlib-pyplot sphx-glr-backref-type-py-function" href="https://matplotlib.org/stable/api/_as_gen/matplotlib.pyplot.subplots_adjust.html#matplotlib.pyplot.subplots_adjust" title="matplotlib.pyplot.subplots_adjust"><span class="n">plt</span><span class="o">.</span><span class="n">subplots_adjust</span></a><span class="p">(</span><span class="n">left</span><span class="o">=</span><span class="mf">0.3</span><span class="p">)</span>
 </pre></div>
 </div>
-<img alt="Ridge model, small regularization, Coefficient importance and its variability" class="sphx-glr-single-img" src="../../_images/sphx_glr_plot_linear_model_coefficient_interpretation_006.png" srcset="../../_images/sphx_glr_plot_linear_model_coefficient_interpretation_006.png"/></section>
+</section>
 <section id="the-problem-of-correlated-variables">
-<h2><a class="toc-backref" href="#id6" role="doc-backlink">The problem of correlated variables</a><a class="headerlink" href="#the-problem-of-correlated-variables" title="Link to this heading">#</a></h2>
+<h2><a class="toc-backref" href="#id7" role="doc-backlink">The problem of correlated variables</a><a class="headerlink" href="#the-problem-of-correlated-variables" title="Link to this heading">#</a></h2>
 <p>The AGE and EXPERIENCE coefficients are affected by strong variability which
 might be due to the collinearity between the 2 features: as AGE and
 EXPERIENCE vary together in the data, their effect is difficult to tease
@@ -2018,7 +1195,7 @@ EXPERIENCE coefficient.</p>
 <span class="n">_</span> <span class="o">=</span> <a class="sphx-glr-backref-module-matplotlib-pyplot sphx-glr-backref-type-py-function" href="https://matplotlib.org/stable/api/_as_gen/matplotlib.pyplot.title.html#matplotlib.pyplot.title" title="matplotlib.pyplot.title"><span class="n">plt</span><span class="o">.</span><span class="n">title</span></a><span class="p">(</span><span class="s2">"Co-variations of coefficients for AGE and EXPERIENCE across folds"</span><span class="p">)</span>
 </pre></div>
 </div>
-<img alt="Co-variations of coefficients for AGE and EXPERIENCE across folds" class="sphx-glr-single-img" src="../../_images/sphx_glr_plot_linear_model_coefficient_interpretation_007.png" srcset="../../_images/sphx_glr_plot_linear_model_coefficient_interpretation_007.png"/><p>Two regions are populated: when the EXPERIENCE coefficient is
+<p>Two regions are populated: when the EXPERIENCE coefficient is
 positive the AGE one is negative and vice-versa.</p>
 <p>To go further we remove one of the 2 features and check what is the impact
 on the model stability.</p>
@@ -2053,12 +1230,12 @@ on the model stability.</p>
 <a class="sphx-glr-backref-module-matplotlib-pyplot sphx-glr-backref-type-py-function" href="https://matplotlib.org/stable/api/_as_gen/matplotlib.pyplot.subplots_adjust.html#matplotlib.pyplot.subplots_adjust" title="matplotlib.pyplot.subplots_adjust"><span class="n">plt</span><span class="o">.</span><span class="n">subplots_adjust</span></a><span class="p">(</span><span class="n">left</span><span class="o">=</span><span class="mf">0.3</span><span class="p">)</span>
 </pre></div>
 </div>
-<img alt="Ridge model, small regularization, AGE dropped, Coefficient importance and its variability" class="sphx-glr-single-img" src="../../_images/sphx_glr_plot_linear_model_coefficient_interpretation_008.png" srcset="../../_images/sphx_glr_plot_linear_model_coefficient_interpretation_008.png"/><p>The estimation of the EXPERIENCE coefficient now shows a much reduced
+<p>The estimation of the EXPERIENCE coefficient now shows a much reduced
 variability. EXPERIENCE remains important for all models trained during
 cross-validation.</p>
 </section>
 <section id="preprocessing-numerical-variables">
-<span id="scaling-num"></span><h2><a class="toc-backref" href="#id7" role="doc-backlink">Preprocessing numerical variables</a><a class="headerlink" href="#preprocessing-numerical-variables" title="Link to this heading">#</a></h2>
+<span id="scaling-num"></span><h2><a class="toc-backref" href="#id8" role="doc-backlink">Preprocessing numerical variables</a><a class="headerlink" href="#preprocessing-numerical-variables" title="Link to this heading">#</a></h2>
 <p>As said above (see “<a class="reference internal" href="#the-pipeline"><span class="std std-ref">The machine-learning pipeline</span></a>”), we could also choose to scale
 numerical values before training the model.
 This can be useful when we apply a similar amount of regularization to all of them
@@ -2083,447 +1260,7 @@ variables to unit variance.</p>
 <span class="n">model</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X_train</span><span class="p">,</span> <span class="n">y_train</span><span class="p">)</span>
 </pre></div>
 </div>
-<div class="output_subarea output_html rendered_html output_result">
-<style>#sk-container-id-32 {
-  /* Definition of color scheme common for light and dark mode */
-  --sklearn-color-text: black;
-  --sklearn-color-line: gray;
-  /* Definition of color scheme for unfitted estimators */
-  --sklearn-color-unfitted-level-0: #fff5e6;
-  --sklearn-color-unfitted-level-1: #f6e4d2;
-  --sklearn-color-unfitted-level-2: #ffe0b3;
-  --sklearn-color-unfitted-level-3: chocolate;
-  /* Definition of color scheme for fitted estimators */
-  --sklearn-color-fitted-level-0: #f0f8ff;
-  --sklearn-color-fitted-level-1: #d4ebff;
-  --sklearn-color-fitted-level-2: #b3dbfd;
-  --sklearn-color-fitted-level-3: cornflowerblue;
-
-  /* Specific color for light theme */
-  --sklearn-color-text-on-default-background: var(--sg-text-color, var(--theme-code-foreground, var(--jp-content-font-color1, black)));
-  --sklearn-color-background: var(--sg-background-color, var(--theme-background, var(--jp-layout-color0, white)));
-  --sklearn-color-border-box: var(--sg-text-color, var(--theme-code-foreground, var(--jp-content-font-color1, black)));
-  --sklearn-color-icon: #696969;
-
-  @media (prefers-color-scheme: dark) {
-    /* Redefinition of color scheme for dark theme */
-    --sklearn-color-text-on-default-background: var(--sg-text-color, var(--theme-code-foreground, var(--jp-content-font-color1, white)));
-    --sklearn-color-background: var(--sg-background-color, var(--theme-background, var(--jp-layout-color0, #111)));
-    --sklearn-color-border-box: var(--sg-text-color, var(--theme-code-foreground, var(--jp-content-font-color1, white)));
-    --sklearn-color-icon: #878787;
-  }
-}
-
-#sk-container-id-32 {
-  color: var(--sklearn-color-text);
-}
-
-#sk-container-id-32 pre {
-  padding: 0;
-}
-
-#sk-container-id-32 input.sk-hidden--visually {
-  border: 0;
-  clip: rect(1px 1px 1px 1px);
-  clip: rect(1px, 1px, 1px, 1px);
-  height: 1px;
-  margin: -1px;
-  overflow: hidden;
-  padding: 0;
-  position: absolute;
-  width: 1px;
-}
-
-#sk-container-id-32 div.sk-dashed-wrapped {
-  border: 1px dashed var(--sklearn-color-line);
-  margin: 0 0.4em 0.5em 0.4em;
-  box-sizing: border-box;
-  padding-bottom: 0.4em;
-  background-color: var(--sklearn-color-background);
-}
-
-#sk-container-id-32 div.sk-container {
-  /* jupyter's `normalize.less` sets `[hidden] { display: none; }`
-     but bootstrap.min.css set `[hidden] { display: none !important; }`
-     so we also need the `!important` here to be able to override the
-     default hidden behavior on the sphinx rendered scikit-learn.org.
-     See: https://github.com/scikit-learn/scikit-learn/issues/21755 */
-  display: inline-block !important;
-  position: relative;
-}
-
-#sk-container-id-32 div.sk-text-repr-fallback {
-  display: none;
-}
-
-div.sk-parallel-item,
-div.sk-serial,
-div.sk-item {
-  /* draw centered vertical line to link estimators */
-  background-image: linear-gradient(var(--sklearn-color-text-on-default-background), var(--sklearn-color-text-on-default-background));
-  background-size: 2px 100%;
-  background-repeat: no-repeat;
-  background-position: center center;
-}
-
-/* Parallel-specific style estimator block */
-
-#sk-container-id-32 div.sk-parallel-item::after {
-  content: "";
-  width: 100%;
-  border-bottom: 2px solid var(--sklearn-color-text-on-default-background);
-  flex-grow: 1;
-}
-
-#sk-container-id-32 div.sk-parallel {
-  display: flex;
-  align-items: stretch;
-  justify-content: center;
-  background-color: var(--sklearn-color-background);
-  position: relative;
-}
-
-#sk-container-id-32 div.sk-parallel-item {
-  display: flex;
-  flex-direction: column;
-}
-
-#sk-container-id-32 div.sk-parallel-item:first-child::after {
-  align-self: flex-end;
-  width: 50%;
-}
-
-#sk-container-id-32 div.sk-parallel-item:last-child::after {
-  align-self: flex-start;
-  width: 50%;
-}
-
-#sk-container-id-32 div.sk-parallel-item:only-child::after {
-  width: 0;
-}
-
-/* Serial-specific style estimator block */
-
-#sk-container-id-32 div.sk-serial {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  background-color: var(--sklearn-color-background);
-  padding-right: 1em;
-  padding-left: 1em;
-}
-
-
-/* Toggleable style: style used for estimator/Pipeline/ColumnTransformer box that is
-clickable and can be expanded/collapsed.
-- Pipeline and ColumnTransformer use this feature and define the default style
-- Estimators will overwrite some part of the style using the `sk-estimator` class
-*/
-
-/* Pipeline and ColumnTransformer style (default) */
-
-#sk-container-id-32 div.sk-toggleable {
-  /* Default theme specific background. It is overwritten whether we have a
-  specific estimator or a Pipeline/ColumnTransformer */
-  background-color: var(--sklearn-color-background);
-}
-
-/* Toggleable label */
-#sk-container-id-32 label.sk-toggleable__label {
-  cursor: pointer;
-  display: block;
-  width: 100%;
-  margin-bottom: 0;
-  padding: 0.5em;
-  box-sizing: border-box;
-  text-align: center;
-}
-
-#sk-container-id-32 label.sk-toggleable__label-arrow:before {
-  /* Arrow on the left of the label */
-  content: "▸";
-  float: left;
-  margin-right: 0.25em;
-  color: var(--sklearn-color-icon);
-}
-
-#sk-container-id-32 label.sk-toggleable__label-arrow:hover:before {
-  color: var(--sklearn-color-text);
-}
-
-/* Toggleable content - dropdown */
-
-#sk-container-id-32 div.sk-toggleable__content {
-  max-height: 0;
-  max-width: 0;
-  overflow: hidden;
-  text-align: left;
-  /* unfitted */
-  background-color: var(--sklearn-color-unfitted-level-0);
-}
-
-#sk-container-id-32 div.sk-toggleable__content.fitted {
-  /* fitted */
-  background-color: var(--sklearn-color-fitted-level-0);
-}
-
-#sk-container-id-32 div.sk-toggleable__content pre {
-  margin: 0.2em;
-  border-radius: 0.25em;
-  color: var(--sklearn-color-text);
-  /* unfitted */
-  background-color: var(--sklearn-color-unfitted-level-0);
-}
-
-#sk-container-id-32 div.sk-toggleable__content.fitted pre {
-  /* unfitted */
-  background-color: var(--sklearn-color-fitted-level-0);
-}
-
-#sk-container-id-32 input.sk-toggleable__control:checked~div.sk-toggleable__content {
-  /* Expand drop-down */
-  max-height: 200px;
-  max-width: 100%;
-  overflow: auto;
-}
-
-#sk-container-id-32 input.sk-toggleable__control:checked~label.sk-toggleable__label-arrow:before {
-  content: "▾";
-}
-
-/* Pipeline/ColumnTransformer-specific style */
-
-#sk-container-id-32 div.sk-label input.sk-toggleable__control:checked~label.sk-toggleable__label {
-  color: var(--sklearn-color-text);
-  background-color: var(--sklearn-color-unfitted-level-2);
-}
-
-#sk-container-id-32 div.sk-label.fitted input.sk-toggleable__control:checked~label.sk-toggleable__label {
-  background-color: var(--sklearn-color-fitted-level-2);
-}
-
-/* Estimator-specific style */
-
-/* Colorize estimator box */
-#sk-container-id-32 div.sk-estimator input.sk-toggleable__control:checked~label.sk-toggleable__label {
-  /* unfitted */
-  background-color: var(--sklearn-color-unfitted-level-2);
-}
-
-#sk-container-id-32 div.sk-estimator.fitted input.sk-toggleable__control:checked~label.sk-toggleable__label {
-  /* fitted */
-  background-color: var(--sklearn-color-fitted-level-2);
-}
-
-#sk-container-id-32 div.sk-label label.sk-toggleable__label,
-#sk-container-id-32 div.sk-label label {
-  /* The background is the default theme color */
-  color: var(--sklearn-color-text-on-default-background);
-}
-
-/* On hover, darken the color of the background */
-#sk-container-id-32 div.sk-label:hover label.sk-toggleable__label {
-  color: var(--sklearn-color-text);
-  background-color: var(--sklearn-color-unfitted-level-2);
-}
-
-/* Label box, darken color on hover, fitted */
-#sk-container-id-32 div.sk-label.fitted:hover label.sk-toggleable__label.fitted {
-  color: var(--sklearn-color-text);
-  background-color: var(--sklearn-color-fitted-level-2);
-}
-
-/* Estimator label */
-
-#sk-container-id-32 div.sk-label label {
-  font-family: monospace;
-  font-weight: bold;
-  display: inline-block;
-  line-height: 1.2em;
-}
-
-#sk-container-id-32 div.sk-label-container {
-  text-align: center;
-}
-
-/* Estimator-specific */
-#sk-container-id-32 div.sk-estimator {
-  font-family: monospace;
-  border: 1px dotted var(--sklearn-color-border-box);
-  border-radius: 0.25em;
-  box-sizing: border-box;
-  margin-bottom: 0.5em;
-  /* unfitted */
-  background-color: var(--sklearn-color-unfitted-level-0);
-}
-
-#sk-container-id-32 div.sk-estimator.fitted {
-  /* fitted */
-  background-color: var(--sklearn-color-fitted-level-0);
-}
-
-/* on hover */
-#sk-container-id-32 div.sk-estimator:hover {
-  /* unfitted */
-  background-color: var(--sklearn-color-unfitted-level-2);
-}
-
-#sk-container-id-32 div.sk-estimator.fitted:hover {
-  /* fitted */
-  background-color: var(--sklearn-color-fitted-level-2);
-}
-
-/* Specification for estimator info (e.g. "i" and "?") */
-
-/* Common style for "i" and "?" */
-
-.sk-estimator-doc-link,
-a:link.sk-estimator-doc-link,
-a:visited.sk-estimator-doc-link {
-  float: right;
-  font-size: smaller;
-  line-height: 1em;
-  font-family: monospace;
-  background-color: var(--sklearn-color-background);
-  border-radius: 1em;
-  height: 1em;
-  width: 1em;
-  text-decoration: none !important;
-  margin-left: 1ex;
-  /* unfitted */
-  border: var(--sklearn-color-unfitted-level-1) 1pt solid;
-  color: var(--sklearn-color-unfitted-level-1);
-}
-
-.sk-estimator-doc-link.fitted,
-a:link.sk-estimator-doc-link.fitted,
-a:visited.sk-estimator-doc-link.fitted {
-  /* fitted */
-  border: var(--sklearn-color-fitted-level-1) 1pt solid;
-  color: var(--sklearn-color-fitted-level-1);
-}
-
-/* On hover */
-div.sk-estimator:hover .sk-estimator-doc-link:hover,
-.sk-estimator-doc-link:hover,
-div.sk-label-container:hover .sk-estimator-doc-link:hover,
-.sk-estimator-doc-link:hover {
-  /* unfitted */
-  background-color: var(--sklearn-color-unfitted-level-3);
-  color: var(--sklearn-color-background);
-  text-decoration: none;
-}
-
-div.sk-estimator.fitted:hover .sk-estimator-doc-link.fitted:hover,
-.sk-estimator-doc-link.fitted:hover,
-div.sk-label-container:hover .sk-estimator-doc-link.fitted:hover,
-.sk-estimator-doc-link.fitted:hover {
-  /* fitted */
-  background-color: var(--sklearn-color-fitted-level-3);
-  color: var(--sklearn-color-background);
-  text-decoration: none;
-}
-
-/* Span, style for the box shown on hovering the info icon */
-.sk-estimator-doc-link span {
-  display: none;
-  z-index: 9999;
-  position: relative;
-  font-weight: normal;
-  right: .2ex;
-  padding: .5ex;
-  margin: .5ex;
-  width: min-content;
-  min-width: 20ex;
-  max-width: 50ex;
-  color: var(--sklearn-color-text);
-  box-shadow: 2pt 2pt 4pt #999;
-  /* unfitted */
-  background: var(--sklearn-color-unfitted-level-0);
-  border: .5pt solid var(--sklearn-color-unfitted-level-3);
-}
-
-.sk-estimator-doc-link.fitted span {
-  /* fitted */
-  background: var(--sklearn-color-fitted-level-0);
-  border: var(--sklearn-color-fitted-level-3);
-}
-
-.sk-estimator-doc-link:hover span {
-  display: block;
-}
-
-/* "?"-specific style due to the `<a>` HTML tag */
-
-#sk-container-id-32 a.estimator_doc_link {
-  float: right;
-  font-size: 1rem;
-  line-height: 1em;
-  font-family: monospace;
-  background-color: var(--sklearn-color-background);
-  border-radius: 1rem;
-  height: 1rem;
-  width: 1rem;
-  text-decoration: none;
-  /* unfitted */
-  color: var(--sklearn-color-unfitted-level-1);
-  border: var(--sklearn-color-unfitted-level-1) 1pt solid;
-}
-
-#sk-container-id-32 a.estimator_doc_link.fitted {
-  /* fitted */
-  border: var(--sklearn-color-fitted-level-1) 1pt solid;
-  color: var(--sklearn-color-fitted-level-1);
-}
-
-/* On hover */
-#sk-container-id-32 a.estimator_doc_link:hover {
-  /* unfitted */
-  background-color: var(--sklearn-color-unfitted-level-3);
-  color: var(--sklearn-color-background);
-  text-decoration: none;
-}
-
-#sk-container-id-32 a.estimator_doc_link.fitted:hover {
-  /* fitted */
-  background-color: var(--sklearn-color-fitted-level-3);
-}
-</style><div class="sk-top-container" id="sk-container-id-32"><div class="sk-text-repr-fallback"><pre>Pipeline(steps=[('columntransformer',
-                 ColumnTransformer(transformers=[('onehotencoder',
-                                                  OneHotEncoder(drop='if_binary'),
-                                                  ['RACE', 'OCCUPATION',
-                                                   'SECTOR', 'MARR', 'UNION',
-                                                   'SEX', 'SOUTH']),
-                                                 ('standardscaler',
-                                                  StandardScaler(),
-                                                  ['EDUCATION', 'EXPERIENCE',
-                                                   'AGE'])])),
-                ('transformedtargetregressor',
-                 TransformedTargetRegressor(func=&lt;ufunc 'log10'&gt;,
-                                            inverse_func=&lt;ufunc 'exp10'&gt;,
-                                            regressor=Ridge(alpha=1e-10)))])</pre><b>In a Jupyter environment, please rerun this cell to show the HTML representation or trust the notebook. <br/>On GitHub, the HTML representation is unable to render, please try loading this page with nbviewer.org.</b></div><div class="sk-container" hidden=""><div class="sk-item sk-dashed-wrapped"><div class="sk-label-container"><div class="sk-label fitted sk-toggleable"><input class="sk-toggleable__control sk-hidden--visually" id="sk-estimator-id-123" type="checkbox"/><label class="sk-toggleable__label fitted sk-toggleable__label-arrow fitted" for="sk-estimator-id-123">  Pipeline<a class="sk-estimator-doc-link fitted" href="https://scikit-learn.org/dev/modules/generated/sklearn.pipeline.Pipeline.html" rel="noreferrer" target="_blank">?<span>Documentation for Pipeline</span></a><span class="sk-estimator-doc-link fitted">i<span>Fitted</span></span></label><div class="sk-toggleable__content fitted"><pre>Pipeline(steps=[('columntransformer',
-                 ColumnTransformer(transformers=[('onehotencoder',
-                                                  OneHotEncoder(drop='if_binary'),
-                                                  ['RACE', 'OCCUPATION',
-                                                   'SECTOR', 'MARR', 'UNION',
-                                                   'SEX', 'SOUTH']),
-                                                 ('standardscaler',
-                                                  StandardScaler(),
-                                                  ['EDUCATION', 'EXPERIENCE',
-                                                   'AGE'])])),
-                ('transformedtargetregressor',
-                 TransformedTargetRegressor(func=&lt;ufunc 'log10'&gt;,
-                                            inverse_func=&lt;ufunc 'exp10'&gt;,
-                                            regressor=Ridge(alpha=1e-10)))])</pre></div> </div></div><div class="sk-serial"><div class="sk-item sk-dashed-wrapped"><div class="sk-label-container"><div class="sk-label fitted sk-toggleable"><input class="sk-toggleable__control sk-hidden--visually" id="sk-estimator-id-124" type="checkbox"/><label class="sk-toggleable__label fitted sk-toggleable__label-arrow fitted" for="sk-estimator-id-124"> columntransformer: ColumnTransformer<a class="sk-estimator-doc-link fitted" href="https://scikit-learn.org/dev/modules/generated/sklearn.compose.ColumnTransformer.html" rel="noreferrer" target="_blank">?<span>Documentation for columntransformer: ColumnTransformer</span></a></label><div class="sk-toggleable__content fitted"><pre>ColumnTransformer(transformers=[('onehotencoder',
-                                 OneHotEncoder(drop='if_binary'),
-                                 ['RACE', 'OCCUPATION', 'SECTOR', 'MARR',
-                                  'UNION', 'SEX', 'SOUTH']),
-                                ('standardscaler', StandardScaler(),
-                                 ['EDUCATION', 'EXPERIENCE', 'AGE'])])</pre></div> </div></div><div class="sk-parallel"><div class="sk-parallel-item"><div class="sk-item"><div class="sk-label-container"><div class="sk-label fitted sk-toggleable"><input class="sk-toggleable__control sk-hidden--visually" id="sk-estimator-id-125" type="checkbox"/><label class="sk-toggleable__label fitted sk-toggleable__label-arrow fitted" for="sk-estimator-id-125">onehotencoder</label><div class="sk-toggleable__content fitted"><pre>['RACE', 'OCCUPATION', 'SECTOR', 'MARR', 'UNION', 'SEX', 'SOUTH']</pre></div> </div></div><div class="sk-serial"><div class="sk-item"><div class="sk-estimator fitted sk-toggleable"><input class="sk-toggleable__control sk-hidden--visually" id="sk-estimator-id-126" type="checkbox"/><label class="sk-toggleable__label fitted sk-toggleable__label-arrow fitted" for="sk-estimator-id-126"> OneHotEncoder<a class="sk-estimator-doc-link fitted" href="https://scikit-learn.org/dev/modules/generated/sklearn.preprocessing.OneHotEncoder.html" rel="noreferrer" target="_blank">?<span>Documentation for OneHotEncoder</span></a></label><div class="sk-toggleable__content fitted"><pre>OneHotEncoder(drop='if_binary')</pre></div> </div></div></div></div></div><div class="sk-parallel-item"><div class="sk-item"><div class="sk-label-container"><div class="sk-label fitted sk-toggleable"><input class="sk-toggleable__control sk-hidden--visually" id="sk-estimator-id-127" type="checkbox"/><label class="sk-toggleable__label fitted sk-toggleable__label-arrow fitted" for="sk-estimator-id-127">standardscaler</label><div class="sk-toggleable__content fitted"><pre>['EDUCATION', 'EXPERIENCE', 'AGE']</pre></div> </div></div><div class="sk-serial"><div class="sk-item"><div class="sk-estimator fitted sk-toggleable"><input class="sk-toggleable__control sk-hidden--visually" id="sk-estimator-id-128" type="checkbox"/><label class="sk-toggleable__label fitted sk-toggleable__label-arrow fitted" for="sk-estimator-id-128"> StandardScaler<a class="sk-estimator-doc-link fitted" href="https://scikit-learn.org/dev/modules/generated/sklearn.preprocessing.StandardScaler.html" rel="noreferrer" target="_blank">?<span>Documentation for StandardScaler</span></a></label><div class="sk-toggleable__content fitted"><pre>StandardScaler()</pre></div> </div></div></div></div></div></div></div><div class="sk-item sk-dashed-wrapped"><div class="sk-label-container"><div class="sk-label fitted sk-toggleable"><input class="sk-toggleable__control sk-hidden--visually" id="sk-estimator-id-129" type="checkbox"/><label class="sk-toggleable__label fitted sk-toggleable__label-arrow fitted" for="sk-estimator-id-129"> transformedtargetregressor: TransformedTargetRegressor<a class="sk-estimator-doc-link fitted" href="https://scikit-learn.org/dev/modules/generated/sklearn.compose.TransformedTargetRegressor.html" rel="noreferrer" target="_blank">?<span>Documentation for transformedtargetregressor: TransformedTargetRegressor</span></a></label><div class="sk-toggleable__content fitted"><pre>TransformedTargetRegressor(func=&lt;ufunc 'log10'&gt;, inverse_func=&lt;ufunc 'exp10'&gt;,
-                           regressor=Ridge(alpha=1e-10))</pre></div> </div></div><div class="sk-parallel"><div class="sk-parallel-item"><div class="sk-item"><div class="sk-label-container"><div class="sk-label fitted sk-toggleable"><input class="sk-toggleable__control sk-hidden--visually" id="sk-estimator-id-130" type="checkbox"/><label class="sk-toggleable__label fitted sk-toggleable__label-arrow fitted" for="sk-estimator-id-130">regressor: Ridge</label><div class="sk-toggleable__content fitted"><pre>Ridge(alpha=1e-10)</pre></div> </div></div><div class="sk-serial"><div class="sk-item"><div class="sk-estimator fitted sk-toggleable"><input class="sk-toggleable__control sk-hidden--visually" id="sk-estimator-id-131" type="checkbox"/><label class="sk-toggleable__label fitted sk-toggleable__label-arrow fitted" for="sk-estimator-id-131"> Ridge<a class="sk-estimator-doc-link fitted" href="https://scikit-learn.org/dev/modules/generated/sklearn.linear_model.Ridge.html" rel="noreferrer" target="_blank">?<span>Documentation for Ridge</span></a></label><div class="sk-toggleable__content fitted"><pre>Ridge(alpha=1e-10)</pre></div> </div></div></div></div></div></div></div></div></div></div></div>
-</div>
-<br/>
-<br/><p>Again, we check the performance of the computed
+<p>Again, we check the performance of the computed
 model using, for example, the median absolute error of the model and the R
 squared coefficient.</p>
 <div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">mae_train</span> <span class="o">=</span> <a class="sphx-glr-backref-module-sklearn-metrics sphx-glr-backref-type-py-function" href="../../modules/generated/sklearn.metrics.median_absolute_error.html#sklearn.metrics.median_absolute_error" title="sklearn.metrics.median_absolute_error"><span class="n">median_absolute_error</span></a><span class="p">(</span><span class="n">y_train</span><span class="p">,</span> <span class="n">model</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">X_train</span><span class="p">))</span>
@@ -2545,7 +1282,7 @@ squared coefficient.</p>
 <a class="sphx-glr-backref-module-matplotlib-pyplot sphx-glr-backref-type-py-function" href="https://matplotlib.org/stable/api/_as_gen/matplotlib.pyplot.tight_layout.html#matplotlib.pyplot.tight_layout" title="matplotlib.pyplot.tight_layout"><span class="n">plt</span><span class="o">.</span><span class="n">tight_layout</span></a><span class="p">()</span>
 </pre></div>
 </div>
-<img alt="Ridge model, small regularization" class="sphx-glr-single-img" src="../../_images/sphx_glr_plot_linear_model_coefficient_interpretation_009.png" srcset="../../_images/sphx_glr_plot_linear_model_coefficient_interpretation_009.png"/><p>For the coefficient analysis, scaling is not needed this time because it
+<p>For the coefficient analysis, scaling is not needed this time because it
 was performed during the preprocessing step.</p>
 <div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">coefs</span> <span class="o">=</span> <a class="sphx-glr-backref-module-pandas sphx-glr-backref-type-py-class sphx-glr-backref-instance" href="https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.DataFrame.html#pandas.DataFrame" title="pandas.DataFrame"><span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span></a><span class="p">(</span>
     <span class="n">model</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">regressor_</span><span class="o">.</span><span class="n">coef_</span><span class="p">,</span>
@@ -2559,7 +1296,7 @@ was performed during the preprocessing step.</p>
 <a class="sphx-glr-backref-module-matplotlib-pyplot sphx-glr-backref-type-py-function" href="https://matplotlib.org/stable/api/_as_gen/matplotlib.pyplot.subplots_adjust.html#matplotlib.pyplot.subplots_adjust" title="matplotlib.pyplot.subplots_adjust"><span class="n">plt</span><span class="o">.</span><span class="n">subplots_adjust</span></a><span class="p">(</span><span class="n">left</span><span class="o">=</span><span class="mf">0.3</span><span class="p">)</span>
 </pre></div>
 </div>
-<img alt="Ridge model, small regularization, normalized variables" class="sphx-glr-single-img" src="../../_images/sphx_glr_plot_linear_model_coefficient_interpretation_010.png" srcset="../../_images/sphx_glr_plot_linear_model_coefficient_interpretation_010.png"/><p>We now inspect the coefficients across several cross-validation folds. As in
+<p>We now inspect the coefficients across several cross-validation folds. As in
 the above example, we do not need to scale the coefficients by the std. dev.
 of the feature values since this scaling was already
 done in the preprocessing step of the pipeline.</p>
@@ -2584,10 +1321,10 @@ done in the preprocessing step of the pipeline.</p>
 <a class="sphx-glr-backref-module-matplotlib-pyplot sphx-glr-backref-type-py-function" href="https://matplotlib.org/stable/api/_as_gen/matplotlib.pyplot.subplots_adjust.html#matplotlib.pyplot.subplots_adjust" title="matplotlib.pyplot.subplots_adjust"><span class="n">plt</span><span class="o">.</span><span class="n">subplots_adjust</span></a><span class="p">(</span><span class="n">left</span><span class="o">=</span><span class="mf">0.3</span><span class="p">)</span>
 </pre></div>
 </div>
-<img alt="Coefficient variability" class="sphx-glr-single-img" src="../../_images/sphx_glr_plot_linear_model_coefficient_interpretation_011.png" srcset="../../_images/sphx_glr_plot_linear_model_coefficient_interpretation_011.png"/><p>The result is quite similar to the non-normalized case.</p>
+<p>The result is quite similar to the non-normalized case.</p>
 </section>
 <section id="linear-models-with-regularization">
-<h2><a class="toc-backref" href="#id8" role="doc-backlink">Linear models with regularization</a><a class="headerlink" href="#linear-models-with-regularization" title="Link to this heading">#</a></h2>
+<h2><a class="toc-backref" href="#id9" role="doc-backlink">Linear models with regularization</a><a class="headerlink" href="#linear-models-with-regularization" title="Link to this heading">#</a></h2>
 <p>In machine-learning practice, ridge regression is more often used with
 non-negligible regularization.</p>
 <p>Above, we limited this regularization to a very little amount. Regularization
@@ -2609,461 +1346,8 @@ is best suited for prediction.</p>
 <span class="n">model</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X_train</span><span class="p">,</span> <span class="n">y_train</span><span class="p">)</span>
 </pre></div>
 </div>
-<div class="output_subarea output_html rendered_html output_result">
-<style>#sk-container-id-33 {
-  /* Definition of color scheme common for light and dark mode */
-  --sklearn-color-text: black;
-  --sklearn-color-line: gray;
-  /* Definition of color scheme for unfitted estimators */
-  --sklearn-color-unfitted-level-0: #fff5e6;
-  --sklearn-color-unfitted-level-1: #f6e4d2;
-  --sklearn-color-unfitted-level-2: #ffe0b3;
-  --sklearn-color-unfitted-level-3: chocolate;
-  /* Definition of color scheme for fitted estimators */
-  --sklearn-color-fitted-level-0: #f0f8ff;
-  --sklearn-color-fitted-level-1: #d4ebff;
-  --sklearn-color-fitted-level-2: #b3dbfd;
-  --sklearn-color-fitted-level-3: cornflowerblue;
-
-  /* Specific color for light theme */
-  --sklearn-color-text-on-default-background: var(--sg-text-color, var(--theme-code-foreground, var(--jp-content-font-color1, black)));
-  --sklearn-color-background: var(--sg-background-color, var(--theme-background, var(--jp-layout-color0, white)));
-  --sklearn-color-border-box: var(--sg-text-color, var(--theme-code-foreground, var(--jp-content-font-color1, black)));
-  --sklearn-color-icon: #696969;
-
-  @media (prefers-color-scheme: dark) {
-    /* Redefinition of color scheme for dark theme */
-    --sklearn-color-text-on-default-background: var(--sg-text-color, var(--theme-code-foreground, var(--jp-content-font-color1, white)));
-    --sklearn-color-background: var(--sg-background-color, var(--theme-background, var(--jp-layout-color0, #111)));
-    --sklearn-color-border-box: var(--sg-text-color, var(--theme-code-foreground, var(--jp-content-font-color1, white)));
-    --sklearn-color-icon: #878787;
-  }
-}
-
-#sk-container-id-33 {
-  color: var(--sklearn-color-text);
-}
-
-#sk-container-id-33 pre {
-  padding: 0;
-}
-
-#sk-container-id-33 input.sk-hidden--visually {
-  border: 0;
-  clip: rect(1px 1px 1px 1px);
-  clip: rect(1px, 1px, 1px, 1px);
-  height: 1px;
-  margin: -1px;
-  overflow: hidden;
-  padding: 0;
-  position: absolute;
-  width: 1px;
-}
-
-#sk-container-id-33 div.sk-dashed-wrapped {
-  border: 1px dashed var(--sklearn-color-line);
-  margin: 0 0.4em 0.5em 0.4em;
-  box-sizing: border-box;
-  padding-bottom: 0.4em;
-  background-color: var(--sklearn-color-background);
-}
-
-#sk-container-id-33 div.sk-container {
-  /* jupyter's `normalize.less` sets `[hidden] { display: none; }`
-     but bootstrap.min.css set `[hidden] { display: none !important; }`
-     so we also need the `!important` here to be able to override the
-     default hidden behavior on the sphinx rendered scikit-learn.org.
-     See: https://github.com/scikit-learn/scikit-learn/issues/21755 */
-  display: inline-block !important;
-  position: relative;
-}
-
-#sk-container-id-33 div.sk-text-repr-fallback {
-  display: none;
-}
-
-div.sk-parallel-item,
-div.sk-serial,
-div.sk-item {
-  /* draw centered vertical line to link estimators */
-  background-image: linear-gradient(var(--sklearn-color-text-on-default-background), var(--sklearn-color-text-on-default-background));
-  background-size: 2px 100%;
-  background-repeat: no-repeat;
-  background-position: center center;
-}
-
-/* Parallel-specific style estimator block */
-
-#sk-container-id-33 div.sk-parallel-item::after {
-  content: "";
-  width: 100%;
-  border-bottom: 2px solid var(--sklearn-color-text-on-default-background);
-  flex-grow: 1;
-}
-
-#sk-container-id-33 div.sk-parallel {
-  display: flex;
-  align-items: stretch;
-  justify-content: center;
-  background-color: var(--sklearn-color-background);
-  position: relative;
-}
-
-#sk-container-id-33 div.sk-parallel-item {
-  display: flex;
-  flex-direction: column;
-}
-
-#sk-container-id-33 div.sk-parallel-item:first-child::after {
-  align-self: flex-end;
-  width: 50%;
-}
-
-#sk-container-id-33 div.sk-parallel-item:last-child::after {
-  align-self: flex-start;
-  width: 50%;
-}
-
-#sk-container-id-33 div.sk-parallel-item:only-child::after {
-  width: 0;
-}
-
-/* Serial-specific style estimator block */
-
-#sk-container-id-33 div.sk-serial {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  background-color: var(--sklearn-color-background);
-  padding-right: 1em;
-  padding-left: 1em;
-}
-
-
-/* Toggleable style: style used for estimator/Pipeline/ColumnTransformer box that is
-clickable and can be expanded/collapsed.
-- Pipeline and ColumnTransformer use this feature and define the default style
-- Estimators will overwrite some part of the style using the `sk-estimator` class
-*/
-
-/* Pipeline and ColumnTransformer style (default) */
-
-#sk-container-id-33 div.sk-toggleable {
-  /* Default theme specific background. It is overwritten whether we have a
-  specific estimator or a Pipeline/ColumnTransformer */
-  background-color: var(--sklearn-color-background);
-}
-
-/* Toggleable label */
-#sk-container-id-33 label.sk-toggleable__label {
-  cursor: pointer;
-  display: block;
-  width: 100%;
-  margin-bottom: 0;
-  padding: 0.5em;
-  box-sizing: border-box;
-  text-align: center;
-}
-
-#sk-container-id-33 label.sk-toggleable__label-arrow:before {
-  /* Arrow on the left of the label */
-  content: "▸";
-  float: left;
-  margin-right: 0.25em;
-  color: var(--sklearn-color-icon);
-}
-
-#sk-container-id-33 label.sk-toggleable__label-arrow:hover:before {
-  color: var(--sklearn-color-text);
-}
-
-/* Toggleable content - dropdown */
-
-#sk-container-id-33 div.sk-toggleable__content {
-  max-height: 0;
-  max-width: 0;
-  overflow: hidden;
-  text-align: left;
-  /* unfitted */
-  background-color: var(--sklearn-color-unfitted-level-0);
-}
-
-#sk-container-id-33 div.sk-toggleable__content.fitted {
-  /* fitted */
-  background-color: var(--sklearn-color-fitted-level-0);
-}
-
-#sk-container-id-33 div.sk-toggleable__content pre {
-  margin: 0.2em;
-  border-radius: 0.25em;
-  color: var(--sklearn-color-text);
-  /* unfitted */
-  background-color: var(--sklearn-color-unfitted-level-0);
-}
-
-#sk-container-id-33 div.sk-toggleable__content.fitted pre {
-  /* unfitted */
-  background-color: var(--sklearn-color-fitted-level-0);
-}
-
-#sk-container-id-33 input.sk-toggleable__control:checked~div.sk-toggleable__content {
-  /* Expand drop-down */
-  max-height: 200px;
-  max-width: 100%;
-  overflow: auto;
-}
-
-#sk-container-id-33 input.sk-toggleable__control:checked~label.sk-toggleable__label-arrow:before {
-  content: "▾";
-}
-
-/* Pipeline/ColumnTransformer-specific style */
-
-#sk-container-id-33 div.sk-label input.sk-toggleable__control:checked~label.sk-toggleable__label {
-  color: var(--sklearn-color-text);
-  background-color: var(--sklearn-color-unfitted-level-2);
-}
-
-#sk-container-id-33 div.sk-label.fitted input.sk-toggleable__control:checked~label.sk-toggleable__label {
-  background-color: var(--sklearn-color-fitted-level-2);
-}
-
-/* Estimator-specific style */
-
-/* Colorize estimator box */
-#sk-container-id-33 div.sk-estimator input.sk-toggleable__control:checked~label.sk-toggleable__label {
-  /* unfitted */
-  background-color: var(--sklearn-color-unfitted-level-2);
-}
-
-#sk-container-id-33 div.sk-estimator.fitted input.sk-toggleable__control:checked~label.sk-toggleable__label {
-  /* fitted */
-  background-color: var(--sklearn-color-fitted-level-2);
-}
-
-#sk-container-id-33 div.sk-label label.sk-toggleable__label,
-#sk-container-id-33 div.sk-label label {
-  /* The background is the default theme color */
-  color: var(--sklearn-color-text-on-default-background);
-}
-
-/* On hover, darken the color of the background */
-#sk-container-id-33 div.sk-label:hover label.sk-toggleable__label {
-  color: var(--sklearn-color-text);
-  background-color: var(--sklearn-color-unfitted-level-2);
-}
-
-/* Label box, darken color on hover, fitted */
-#sk-container-id-33 div.sk-label.fitted:hover label.sk-toggleable__label.fitted {
-  color: var(--sklearn-color-text);
-  background-color: var(--sklearn-color-fitted-level-2);
-}
-
-/* Estimator label */
-
-#sk-container-id-33 div.sk-label label {
-  font-family: monospace;
-  font-weight: bold;
-  display: inline-block;
-  line-height: 1.2em;
-}
-
-#sk-container-id-33 div.sk-label-container {
-  text-align: center;
-}
-
-/* Estimator-specific */
-#sk-container-id-33 div.sk-estimator {
-  font-family: monospace;
-  border: 1px dotted var(--sklearn-color-border-box);
-  border-radius: 0.25em;
-  box-sizing: border-box;
-  margin-bottom: 0.5em;
-  /* unfitted */
-  background-color: var(--sklearn-color-unfitted-level-0);
-}
-
-#sk-container-id-33 div.sk-estimator.fitted {
-  /* fitted */
-  background-color: var(--sklearn-color-fitted-level-0);
-}
-
-/* on hover */
-#sk-container-id-33 div.sk-estimator:hover {
-  /* unfitted */
-  background-color: var(--sklearn-color-unfitted-level-2);
-}
-
-#sk-container-id-33 div.sk-estimator.fitted:hover {
-  /* fitted */
-  background-color: var(--sklearn-color-fitted-level-2);
-}
-
-/* Specification for estimator info (e.g. "i" and "?") */
-
-/* Common style for "i" and "?" */
-
-.sk-estimator-doc-link,
-a:link.sk-estimator-doc-link,
-a:visited.sk-estimator-doc-link {
-  float: right;
-  font-size: smaller;
-  line-height: 1em;
-  font-family: monospace;
-  background-color: var(--sklearn-color-background);
-  border-radius: 1em;
-  height: 1em;
-  width: 1em;
-  text-decoration: none !important;
-  margin-left: 1ex;
-  /* unfitted */
-  border: var(--sklearn-color-unfitted-level-1) 1pt solid;
-  color: var(--sklearn-color-unfitted-level-1);
-}
-
-.sk-estimator-doc-link.fitted,
-a:link.sk-estimator-doc-link.fitted,
-a:visited.sk-estimator-doc-link.fitted {
-  /* fitted */
-  border: var(--sklearn-color-fitted-level-1) 1pt solid;
-  color: var(--sklearn-color-fitted-level-1);
-}
-
-/* On hover */
-div.sk-estimator:hover .sk-estimator-doc-link:hover,
-.sk-estimator-doc-link:hover,
-div.sk-label-container:hover .sk-estimator-doc-link:hover,
-.sk-estimator-doc-link:hover {
-  /* unfitted */
-  background-color: var(--sklearn-color-unfitted-level-3);
-  color: var(--sklearn-color-background);
-  text-decoration: none;
-}
-
-div.sk-estimator.fitted:hover .sk-estimator-doc-link.fitted:hover,
-.sk-estimator-doc-link.fitted:hover,
-div.sk-label-container:hover .sk-estimator-doc-link.fitted:hover,
-.sk-estimator-doc-link.fitted:hover {
-  /* fitted */
-  background-color: var(--sklearn-color-fitted-level-3);
-  color: var(--sklearn-color-background);
-  text-decoration: none;
-}
-
-/* Span, style for the box shown on hovering the info icon */
-.sk-estimator-doc-link span {
-  display: none;
-  z-index: 9999;
-  position: relative;
-  font-weight: normal;
-  right: .2ex;
-  padding: .5ex;
-  margin: .5ex;
-  width: min-content;
-  min-width: 20ex;
-  max-width: 50ex;
-  color: var(--sklearn-color-text);
-  box-shadow: 2pt 2pt 4pt #999;
-  /* unfitted */
-  background: var(--sklearn-color-unfitted-level-0);
-  border: .5pt solid var(--sklearn-color-unfitted-level-3);
-}
-
-.sk-estimator-doc-link.fitted span {
-  /* fitted */
-  background: var(--sklearn-color-fitted-level-0);
-  border: var(--sklearn-color-fitted-level-3);
-}
-
-.sk-estimator-doc-link:hover span {
-  display: block;
-}
-
-/* "?"-specific style due to the `<a>` HTML tag */
-
-#sk-container-id-33 a.estimator_doc_link {
-  float: right;
-  font-size: 1rem;
-  line-height: 1em;
-  font-family: monospace;
-  background-color: var(--sklearn-color-background);
-  border-radius: 1rem;
-  height: 1rem;
-  width: 1rem;
-  text-decoration: none;
-  /* unfitted */
-  color: var(--sklearn-color-unfitted-level-1);
-  border: var(--sklearn-color-unfitted-level-1) 1pt solid;
-}
-
-#sk-container-id-33 a.estimator_doc_link.fitted {
-  /* fitted */
-  border: var(--sklearn-color-fitted-level-1) 1pt solid;
-  color: var(--sklearn-color-fitted-level-1);
-}
-
-/* On hover */
-#sk-container-id-33 a.estimator_doc_link:hover {
-  /* unfitted */
-  background-color: var(--sklearn-color-unfitted-level-3);
-  color: var(--sklearn-color-background);
-  text-decoration: none;
-}
-
-#sk-container-id-33 a.estimator_doc_link.fitted:hover {
-  /* fitted */
-  background-color: var(--sklearn-color-fitted-level-3);
-}
-</style><div class="sk-top-container" id="sk-container-id-33"><div class="sk-text-repr-fallback"><pre>Pipeline(steps=[('columntransformer',
-                 ColumnTransformer(transformers=[('onehotencoder',
-                                                  OneHotEncoder(drop='if_binary'),
-                                                  ['RACE', 'OCCUPATION',
-                                                   'SECTOR', 'MARR', 'UNION',
-                                                   'SEX', 'SOUTH']),
-                                                 ('standardscaler',
-                                                  StandardScaler(),
-                                                  ['EDUCATION', 'EXPERIENCE',
-                                                   'AGE'])])),
-                ('transformedtargetregressor',
-                 TransformedTargetRegressor(func=&lt;ufunc 'log10'&gt;,
-                                            inverse_func=&lt;ufunc 'exp10'&gt;,
-                                            regressor=RidgeCV(alphas=array([1.e-10, 1.e-09, 1.e-08, 1.e-07, 1.e-06, 1.e-05, 1.e-04, 1.e-03,
-       1.e-02, 1.e-01, 1.e+00, 1.e+01, 1.e+02, 1.e+03, 1.e+04, 1.e+05,
-       1.e+06, 1.e+07, 1.e+08, 1.e+09, 1.e+10]))))])</pre><b>In a Jupyter environment, please rerun this cell to show the HTML representation or trust the notebook. <br/>On GitHub, the HTML representation is unable to render, please try loading this page with nbviewer.org.</b></div><div class="sk-container" hidden=""><div class="sk-item sk-dashed-wrapped"><div class="sk-label-container"><div class="sk-label fitted sk-toggleable"><input class="sk-toggleable__control sk-hidden--visually" id="sk-estimator-id-132" type="checkbox"/><label class="sk-toggleable__label fitted sk-toggleable__label-arrow fitted" for="sk-estimator-id-132">  Pipeline<a class="sk-estimator-doc-link fitted" href="https://scikit-learn.org/dev/modules/generated/sklearn.pipeline.Pipeline.html" rel="noreferrer" target="_blank">?<span>Documentation for Pipeline</span></a><span class="sk-estimator-doc-link fitted">i<span>Fitted</span></span></label><div class="sk-toggleable__content fitted"><pre>Pipeline(steps=[('columntransformer',
-                 ColumnTransformer(transformers=[('onehotencoder',
-                                                  OneHotEncoder(drop='if_binary'),
-                                                  ['RACE', 'OCCUPATION',
-                                                   'SECTOR', 'MARR', 'UNION',
-                                                   'SEX', 'SOUTH']),
-                                                 ('standardscaler',
-                                                  StandardScaler(),
-                                                  ['EDUCATION', 'EXPERIENCE',
-                                                   'AGE'])])),
-                ('transformedtargetregressor',
-                 TransformedTargetRegressor(func=&lt;ufunc 'log10'&gt;,
-                                            inverse_func=&lt;ufunc 'exp10'&gt;,
-                                            regressor=RidgeCV(alphas=array([1.e-10, 1.e-09, 1.e-08, 1.e-07, 1.e-06, 1.e-05, 1.e-04, 1.e-03,
-       1.e-02, 1.e-01, 1.e+00, 1.e+01, 1.e+02, 1.e+03, 1.e+04, 1.e+05,
-       1.e+06, 1.e+07, 1.e+08, 1.e+09, 1.e+10]))))])</pre></div> </div></div><div class="sk-serial"><div class="sk-item sk-dashed-wrapped"><div class="sk-label-container"><div class="sk-label fitted sk-toggleable"><input class="sk-toggleable__control sk-hidden--visually" id="sk-estimator-id-133" type="checkbox"/><label class="sk-toggleable__label fitted sk-toggleable__label-arrow fitted" for="sk-estimator-id-133"> columntransformer: ColumnTransformer<a class="sk-estimator-doc-link fitted" href="https://scikit-learn.org/dev/modules/generated/sklearn.compose.ColumnTransformer.html" rel="noreferrer" target="_blank">?<span>Documentation for columntransformer: ColumnTransformer</span></a></label><div class="sk-toggleable__content fitted"><pre>ColumnTransformer(transformers=[('onehotencoder',
-                                 OneHotEncoder(drop='if_binary'),
-                                 ['RACE', 'OCCUPATION', 'SECTOR', 'MARR',
-                                  'UNION', 'SEX', 'SOUTH']),
-                                ('standardscaler', StandardScaler(),
-                                 ['EDUCATION', 'EXPERIENCE', 'AGE'])])</pre></div> </div></div><div class="sk-parallel"><div class="sk-parallel-item"><div class="sk-item"><div class="sk-label-container"><div class="sk-label fitted sk-toggleable"><input class="sk-toggleable__control sk-hidden--visually" id="sk-estimator-id-134" type="checkbox"/><label class="sk-toggleable__label fitted sk-toggleable__label-arrow fitted" for="sk-estimator-id-134">onehotencoder</label><div class="sk-toggleable__content fitted"><pre>['RACE', 'OCCUPATION', 'SECTOR', 'MARR', 'UNION', 'SEX', 'SOUTH']</pre></div> </div></div><div class="sk-serial"><div class="sk-item"><div class="sk-estimator fitted sk-toggleable"><input class="sk-toggleable__control sk-hidden--visually" id="sk-estimator-id-135" type="checkbox"/><label class="sk-toggleable__label fitted sk-toggleable__label-arrow fitted" for="sk-estimator-id-135"> OneHotEncoder<a class="sk-estimator-doc-link fitted" href="https://scikit-learn.org/dev/modules/generated/sklearn.preprocessing.OneHotEncoder.html" rel="noreferrer" target="_blank">?<span>Documentation for OneHotEncoder</span></a></label><div class="sk-toggleable__content fitted"><pre>OneHotEncoder(drop='if_binary')</pre></div> </div></div></div></div></div><div class="sk-parallel-item"><div class="sk-item"><div class="sk-label-container"><div class="sk-label fitted sk-toggleable"><input class="sk-toggleable__control sk-hidden--visually" id="sk-estimator-id-136" type="checkbox"/><label class="sk-toggleable__label fitted sk-toggleable__label-arrow fitted" for="sk-estimator-id-136">standardscaler</label><div class="sk-toggleable__content fitted"><pre>['EDUCATION', 'EXPERIENCE', 'AGE']</pre></div> </div></div><div class="sk-serial"><div class="sk-item"><div class="sk-estimator fitted sk-toggleable"><input class="sk-toggleable__control sk-hidden--visually" id="sk-estimator-id-137" type="checkbox"/><label class="sk-toggleable__label fitted sk-toggleable__label-arrow fitted" for="sk-estimator-id-137"> StandardScaler<a class="sk-estimator-doc-link fitted" href="https://scikit-learn.org/dev/modules/generated/sklearn.preprocessing.StandardScaler.html" rel="noreferrer" target="_blank">?<span>Documentation for StandardScaler</span></a></label><div class="sk-toggleable__content fitted"><pre>StandardScaler()</pre></div> </div></div></div></div></div></div></div><div class="sk-item sk-dashed-wrapped"><div class="sk-label-container"><div class="sk-label fitted sk-toggleable"><input class="sk-toggleable__control sk-hidden--visually" id="sk-estimator-id-138" type="checkbox"/><label class="sk-toggleable__label fitted sk-toggleable__label-arrow fitted" for="sk-estimator-id-138"> transformedtargetregressor: TransformedTargetRegressor<a class="sk-estimator-doc-link fitted" href="https://scikit-learn.org/dev/modules/generated/sklearn.compose.TransformedTargetRegressor.html" rel="noreferrer" target="_blank">?<span>Documentation for transformedtargetregressor: TransformedTargetRegressor</span></a></label><div class="sk-toggleable__content fitted"><pre>TransformedTargetRegressor(func=&lt;ufunc 'log10'&gt;, inverse_func=&lt;ufunc 'exp10'&gt;,
-                           regressor=RidgeCV(alphas=array([1.e-10, 1.e-09, 1.e-08, 1.e-07, 1.e-06, 1.e-05, 1.e-04, 1.e-03,
-       1.e-02, 1.e-01, 1.e+00, 1.e+01, 1.e+02, 1.e+03, 1.e+04, 1.e+05,
-       1.e+06, 1.e+07, 1.e+08, 1.e+09, 1.e+10])))</pre></div> </div></div><div class="sk-parallel"><div class="sk-parallel-item"><div class="sk-item"><div class="sk-label-container"><div class="sk-label fitted sk-toggleable"><input class="sk-toggleable__control sk-hidden--visually" id="sk-estimator-id-139" type="checkbox"/><label class="sk-toggleable__label fitted sk-toggleable__label-arrow fitted" for="sk-estimator-id-139">regressor: RidgeCV</label><div class="sk-toggleable__content fitted"><pre>RidgeCV(alphas=array([1.e-10, 1.e-09, 1.e-08, 1.e-07, 1.e-06, 1.e-05, 1.e-04, 1.e-03,
-       1.e-02, 1.e-01, 1.e+00, 1.e+01, 1.e+02, 1.e+03, 1.e+04, 1.e+05,
-       1.e+06, 1.e+07, 1.e+08, 1.e+09, 1.e+10]))</pre></div> </div></div><div class="sk-serial"><div class="sk-item"><div class="sk-estimator fitted sk-toggleable"><input class="sk-toggleable__control sk-hidden--visually" id="sk-estimator-id-140" type="checkbox"/><label class="sk-toggleable__label fitted sk-toggleable__label-arrow fitted" for="sk-estimator-id-140"> RidgeCV<a class="sk-estimator-doc-link fitted" href="https://scikit-learn.org/dev/modules/generated/sklearn.linear_model.RidgeCV.html" rel="noreferrer" target="_blank">?<span>Documentation for RidgeCV</span></a></label><div class="sk-toggleable__content fitted"><pre>RidgeCV(alphas=array([1.e-10, 1.e-09, 1.e-08, 1.e-07, 1.e-06, 1.e-05, 1.e-04, 1.e-03,
-       1.e-02, 1.e-01, 1.e+00, 1.e+01, 1.e+02, 1.e+03, 1.e+04, 1.e+05,
-       1.e+06, 1.e+07, 1.e+08, 1.e+09, 1.e+10]))</pre></div> </div></div></div></div></div></div></div></div></div></div></div>
-</div>
-<br/>
-<br/><p>First we check which value of <span class="math notranslate nohighlight">\(\alpha\)</span> has been selected.</p>
+<p>First we check which value of <span class="math notranslate nohighlight">\(\alpha\)</span> has been selected.</p>
 <div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">model</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">regressor_</span><span class="o">.</span><span class="n">alpha_</span>
-</pre></div>
-</div>
-<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>10.0
 </pre></div>
 </div>
 <p>Then we check the quality of the predictions.</p>
@@ -3086,7 +1370,7 @@ div.sk-label-container:hover .sk-estimator-doc-link.fitted:hover,
 <a class="sphx-glr-backref-module-matplotlib-pyplot sphx-glr-backref-type-py-function" href="https://matplotlib.org/stable/api/_as_gen/matplotlib.pyplot.tight_layout.html#matplotlib.pyplot.tight_layout" title="matplotlib.pyplot.tight_layout"><span class="n">plt</span><span class="o">.</span><span class="n">tight_layout</span></a><span class="p">()</span>
 </pre></div>
 </div>
-<img alt="Ridge model, optimum regularization" class="sphx-glr-single-img" src="../../_images/sphx_glr_plot_linear_model_coefficient_interpretation_012.png" srcset="../../_images/sphx_glr_plot_linear_model_coefficient_interpretation_012.png"/><p>The ability to reproduce the data of the regularized model is similar to
+<p>The ability to reproduce the data of the regularized model is similar to
 the one of the non-regularized model.</p>
 <div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">coefs</span> <span class="o">=</span> <a class="sphx-glr-backref-module-pandas sphx-glr-backref-type-py-class sphx-glr-backref-instance" href="https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.DataFrame.html#pandas.DataFrame" title="pandas.DataFrame"><span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span></a><span class="p">(</span>
     <span class="n">model</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">regressor_</span><span class="o">.</span><span class="n">coef_</span><span class="p">,</span>
@@ -3100,7 +1384,7 @@ the one of the non-regularized model.</p>
 <a class="sphx-glr-backref-module-matplotlib-pyplot sphx-glr-backref-type-py-function" href="https://matplotlib.org/stable/api/_as_gen/matplotlib.pyplot.subplots_adjust.html#matplotlib.pyplot.subplots_adjust" title="matplotlib.pyplot.subplots_adjust"><span class="n">plt</span><span class="o">.</span><span class="n">subplots_adjust</span></a><span class="p">(</span><span class="n">left</span><span class="o">=</span><span class="mf">0.3</span><span class="p">)</span>
 </pre></div>
 </div>
-<img alt="Ridge model, with regularization, normalized variables" class="sphx-glr-single-img" src="../../_images/sphx_glr_plot_linear_model_coefficient_interpretation_013.png" srcset="../../_images/sphx_glr_plot_linear_model_coefficient_interpretation_013.png"/><p>The coefficients are significantly different.
+<p>The coefficients are significantly different.
 AGE and EXPERIENCE coefficients are both positive but they now have less
 influence on the prediction.</p>
 <p>The regularization reduces the influence of correlated
@@ -3133,9 +1417,9 @@ the <a class="reference internal" href="#covariation"><span class="std std-ref">
 <span class="n">_</span> <span class="o">=</span> <a class="sphx-glr-backref-module-matplotlib-pyplot sphx-glr-backref-type-py-function" href="https://matplotlib.org/stable/api/_as_gen/matplotlib.pyplot.title.html#matplotlib.pyplot.title" title="matplotlib.pyplot.title"><span class="n">plt</span><span class="o">.</span><span class="n">title</span></a><span class="p">(</span><span class="s2">"Co-variations of coefficients for AGE and EXPERIENCE across folds"</span><span class="p">)</span>
 </pre></div>
 </div>
-<img alt="Co-variations of coefficients for AGE and EXPERIENCE across folds" class="sphx-glr-single-img" src="../../_images/sphx_glr_plot_linear_model_coefficient_interpretation_014.png" srcset="../../_images/sphx_glr_plot_linear_model_coefficient_interpretation_014.png"/></section>
+</section>
 <section id="linear-models-with-sparse-coefficients">
-<h2><a class="toc-backref" href="#id9" role="doc-backlink">Linear models with sparse coefficients</a><a class="headerlink" href="#linear-models-with-sparse-coefficients" title="Link to this heading">#</a></h2>
+<h2><a class="toc-backref" href="#id10" role="doc-backlink">Linear models with sparse coefficients</a><a class="headerlink" href="#linear-models-with-sparse-coefficients" title="Link to this heading">#</a></h2>
 <p>Another possibility to take into account correlated variables in the dataset,
 is to estimate sparse coefficients. In some way we already did it manually
 when we dropped the AGE column in a previous ridge estimation.</p>
@@ -3162,9 +1446,6 @@ validation in order to determine which value of the regularization parameter
 <div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">model</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">regressor_</span><span class="o">.</span><span class="n">alpha_</span>
 </pre></div>
 </div>
-<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>0.001
-</pre></div>
-</div>
 <p>Then we check the quality of the predictions.</p>
 <div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">mae_train</span> <span class="o">=</span> <a class="sphx-glr-backref-module-sklearn-metrics sphx-glr-backref-type-py-function" href="../../modules/generated/sklearn.metrics.median_absolute_error.html#sklearn.metrics.median_absolute_error" title="sklearn.metrics.median_absolute_error"><span class="n">median_absolute_error</span></a><span class="p">(</span><span class="n">y_train</span><span class="p">,</span> <span class="n">model</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">X_train</span><span class="p">))</span>
 <span class="n">y_pred</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">X_test</span><span class="p">)</span>
@@ -3185,7 +1466,7 @@ validation in order to determine which value of the regularization parameter
 <a class="sphx-glr-backref-module-matplotlib-pyplot sphx-glr-backref-type-py-function" href="https://matplotlib.org/stable/api/_as_gen/matplotlib.pyplot.tight_layout.html#matplotlib.pyplot.tight_layout" title="matplotlib.pyplot.tight_layout"><span class="n">plt</span><span class="o">.</span><span class="n">tight_layout</span></a><span class="p">()</span>
 </pre></div>
 </div>
-<img alt="Lasso model, optimum regularization" class="sphx-glr-single-img" src="../../_images/sphx_glr_plot_linear_model_coefficient_interpretation_015.png" srcset="../../_images/sphx_glr_plot_linear_model_coefficient_interpretation_015.png"/><p>For our dataset, again the model is not very predictive.</p>
+<p>For our dataset, again the model is not very predictive.</p>
 <div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">coefs</span> <span class="o">=</span> <a class="sphx-glr-backref-module-pandas sphx-glr-backref-type-py-class sphx-glr-backref-instance" href="https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.DataFrame.html#pandas.DataFrame" title="pandas.DataFrame"><span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span></a><span class="p">(</span>
     <span class="n">model</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">regressor_</span><span class="o">.</span><span class="n">coef_</span><span class="p">,</span>
     <span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="s2">"Coefficients importance"</span><span class="p">],</span>
@@ -3197,7 +1478,7 @@ validation in order to determine which value of the regularization parameter
 <a class="sphx-glr-backref-module-matplotlib-pyplot sphx-glr-backref-type-py-function" href="https://matplotlib.org/stable/api/_as_gen/matplotlib.pyplot.subplots_adjust.html#matplotlib.pyplot.subplots_adjust" title="matplotlib.pyplot.subplots_adjust"><span class="n">plt</span><span class="o">.</span><span class="n">subplots_adjust</span></a><span class="p">(</span><span class="n">left</span><span class="o">=</span><span class="mf">0.3</span><span class="p">)</span>
 </pre></div>
 </div>
-<img alt="Lasso model, optimum regularization, normalized variables" class="sphx-glr-single-img" src="../../_images/sphx_glr_plot_linear_model_coefficient_interpretation_016.png" srcset="../../_images/sphx_glr_plot_linear_model_coefficient_interpretation_016.png"/><p>A Lasso model identifies the correlation between
+<p>A Lasso model identifies the correlation between
 AGE and EXPERIENCE and suppresses one of them for the sake of the prediction.</p>
 <p>It is important to keep in mind that the coefficients that have been
 dropped may still be related to the outcome by themselves: the model
@@ -3227,11 +1508,11 @@ caution.</p>
 <a class="sphx-glr-backref-module-matplotlib-pyplot sphx-glr-backref-type-py-function" href="https://matplotlib.org/stable/api/_as_gen/matplotlib.pyplot.subplots_adjust.html#matplotlib.pyplot.subplots_adjust" title="matplotlib.pyplot.subplots_adjust"><span class="n">plt</span><span class="o">.</span><span class="n">subplots_adjust</span></a><span class="p">(</span><span class="n">left</span><span class="o">=</span><span class="mf">0.3</span><span class="p">)</span>
 </pre></div>
 </div>
-<img alt="Coefficient variability" class="sphx-glr-single-img" src="../../_images/sphx_glr_plot_linear_model_coefficient_interpretation_017.png" srcset="../../_images/sphx_glr_plot_linear_model_coefficient_interpretation_017.png"/><p>We observe that the AGE and EXPERIENCE coefficients are varying a lot
+<p>We observe that the AGE and EXPERIENCE coefficients are varying a lot
 depending of the fold.</p>
 </section>
 <section id="wrong-causal-interpretation">
-<h2><a class="toc-backref" href="#id10" role="doc-backlink">Wrong causal interpretation</a><a class="headerlink" href="#wrong-causal-interpretation" title="Link to this heading">#</a></h2>
+<h2><a class="toc-backref" href="#id11" role="doc-backlink">Wrong causal interpretation</a><a class="headerlink" href="#wrong-causal-interpretation" title="Link to this heading">#</a></h2>
 <p>Policy makers might want to know the effect of education on wage to assess
 whether or not a certain policy designed to entice people to pursue more
 education would make economic sense. While Machine Learning models are great
@@ -3251,11 +1532,14 @@ coefficient, thereby exaggerating the effect of education on wages.</p>
 for a simulated case of ability OVB.</p>
 </section>
 <section id="lessons-learned">
-<h2><a class="toc-backref" href="#id11" role="doc-backlink">Lessons learned</a><a class="headerlink" href="#lessons-learned" title="Link to this heading">#</a></h2>
+<h2><a class="toc-backref" href="#id12" role="doc-backlink">Lessons learned</a><a class="headerlink" href="#lessons-learned" title="Link to this heading">#</a></h2>
 <ul class="simple">
 <li><p>Coefficients must be scaled to the same unit of measure to retrieve
 feature importance. Scaling them with the standard-deviation of the
 feature is a useful proxy.</p></li>
+<li><p>Interpreting causality is difficult when there are confounding effects. If
+the relationship between two variables is also affected by something
+unobserved, we should be careful when making conclusions about causality.</p></li>
 <li><p>Coefficients in multivariate linear models represent the dependency
 between a given feature and the target, <strong>conditional</strong> on the other
 features.</p></li>
@@ -3270,21 +1554,20 @@ to be biased by unobserved confounders.</p></li>
 <li><p>Inspection tools may not necessarily provide insights on the true
 data generating process.</p></li>
 </ul>
-<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> (0 minutes 14.472 seconds)</p>
 
 <p class="rubric">Related examples</p>
 <div class="sphx-glr-thumbnails"><div class="sphx-glr-thumbcontainer" tooltip="A model that overfits learns the training data too well, capturing both the underlying patterns..."><img alt="" src="../../_images/sphx_glr_plot_ridge_coeffs_thumb.png"/>
 <p><a class="reference internal" href="../linear_model/plot_ridge_coeffs.html#sphx-glr-auto-examples-linear-model-plot-ridge-coeffs-py"><span class="std std-ref">Ridge coefficients as a function of the L2 Regularization</span></a></p>
 <div class="sphx-glr-thumbnail-title">Ridge coefficients as a function of the L2 Regularization</div>
-</div><div class="sphx-glr-thumbcontainer" tooltip="Shows the effect of collinearity in the coefficients of an estimator."><img alt="" src="../../_images/sphx_glr_plot_ridge_path_thumb.png"/>
-<p><a class="reference internal" href="../linear_model/plot_ridge_path.html#sphx-glr-auto-examples-linear-model-plot-ridge-path-py"><span class="std std-ref">Plot Ridge coefficients as a function of the regularization</span></a></p>
-<div class="sphx-glr-thumbnail-title">Plot Ridge coefficients as a function of the regularization</div>
 </div><div class="sphx-glr-thumbcontainer" tooltip="Machine Learning models are great for measuring statistical associations. Unfortunately, unless..."><img alt="" src="../../_images/sphx_glr_plot_causal_interpretation_thumb.png"/>
 <p><a class="reference internal" href="plot_causal_interpretation.html#sphx-glr-auto-examples-inspection-plot-causal-interpretation-py"><span class="std std-ref">Failure of Machine Learning to infer causal effects</span></a></p>
 <div class="sphx-glr-thumbnail-title">Failure of Machine Learning to infer causal effects</div>
-</div><div class="sphx-glr-thumbcontainer" tooltip="Computes Lasso Path along the regularization parameter using the LARS algorithm on the diabetes..."><img alt="" src="../../_images/sphx_glr_plot_lasso_lars_thumb.png"/>
-<p><a class="reference internal" href="../linear_model/plot_lasso_lars.html#sphx-glr-auto-examples-linear-model-plot-lasso-lars-py"><span class="std std-ref">Lasso path using LARS</span></a></p>
-<div class="sphx-glr-thumbnail-title">Lasso path using LARS</div>
+</div><div class="sphx-glr-thumbcontainer" tooltip="Shows the effect of collinearity in the coefficients of an estimator."><img alt="" src="../../_images/sphx_glr_plot_ridge_path_thumb.png"/>
+<p><a class="reference internal" href="../linear_model/plot_ridge_path.html#sphx-glr-auto-examples-linear-model-plot-ridge-path-py"><span class="std std-ref">Plot Ridge coefficients as a function of the regularization</span></a></p>
+<div class="sphx-glr-thumbnail-title">Plot Ridge coefficients as a function of the regularization</div>
+</div><div class="sphx-glr-thumbcontainer" tooltip="This notebook introduces different strategies to leverage time-related features for a bike shar..."><img alt="" src="../../_images/sphx_glr_plot_cyclical_feature_engineering_thumb.png"/>
+<p><a class="reference internal" href="../applications/plot_cyclical_feature_engineering.html#sphx-glr-auto-examples-applications-plot-cyclical-feature-engineering-py"><span class="std std-ref">Time-related feature engineering</span></a></p>
+<div class="sphx-glr-thumbnail-title">Time-related feature engineering</div>
 </div></div><p class="sphx-glr-signature"><a class="reference external" href="https://sphinx-gallery.github.io">Gallery generated by Sphinx-Gallery</a></p>
 </section>
 </section>
@@ -3322,6 +1605,7 @@ data generating process.</p></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#the-machine-learning-pipeline">The machine-learning pipeline</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#processing-the-dataset">Processing the dataset</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#interpreting-coefficients-scale-matters">Interpreting coefficients: scale matters</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#interpreting-coefficients-being-cautious-about-causality">Interpreting coefficients: being cautious about causality</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#checking-the-variability-of-the-coefficients">Checking the variability of the coefficients</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#the-problem-of-correlated-variables">The problem of correlated variables</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#preprocessing-numerical-variables">Preprocessing numerical variables</a></li>

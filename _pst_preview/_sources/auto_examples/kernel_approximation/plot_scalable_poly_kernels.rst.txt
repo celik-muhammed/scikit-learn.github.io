@@ -11,7 +11,7 @@
         :class: sphx-glr-download-link-note
 
         :ref:`Go to the end <sphx_glr_download_auto_examples_kernel_approximation_plot_scalable_poly_kernels.py>`
-        to download the full example code or to run this example in your browser via JupyterLite or Binder
+        to download the full example code. or to run this example in your browser via JupyterLite or Binder
 
 .. rst-class:: sphx-glr-example-title
 
@@ -47,12 +47,6 @@ approximating the accuracy of a kernelized classifier in a scalable manner.
     # License: BSD 3 clause
 
 
-
-
-
-
-
-
 .. GENERATED FROM PYTHON SOURCE LINES 28-37
 
 Preparing the data
@@ -78,12 +72,6 @@ LIBSVM webpage [2], which was the one used in [1].
     y[y == 2] = 1  # We will try to separate class 2 from the other 6 classes.
 
 
-
-
-
-
-
-
 .. GENERATED FROM PYTHON SOURCE LINES 46-52
 
 Partitioning the data
@@ -103,12 +91,6 @@ select 100,000 for training.
     X_train, X_test, y_train, y_test = train_test_split(
         X, y, train_size=5_000, test_size=10_000, random_state=42
     )
-
-
-
-
-
-
 
 
 .. GENERATED FROM PYTHON SOURCE LINES 60-66
@@ -133,12 +115,6 @@ original Tensor Sketch paper [1].
     X_test = mm.transform(X_test)
 
 
-
-
-
-
-
-
 .. GENERATED FROM PYTHON SOURCE LINES 75-81
 
 Establishing a baseline model
@@ -159,7 +135,7 @@ plot them later.
 
     results = {}
 
-    lsvm = LinearSVC(dual="auto")
+    lsvm = LinearSVC()
     start = time.time()
     lsvm.fit(X_train, y_train)
     lsvm_time = time.time() - start
@@ -167,18 +143,6 @@ plot them later.
 
     results["LSVM"] = {"time": lsvm_time, "score": lsvm_score}
     print(f"Linear SVM score on raw features: {lsvm_score:.2f}%")
-
-
-
-
-
-.. rst-class:: sphx-glr-script-out
-
- .. code-block:: none
-
-    Linear SVM score on raw features: 75.62%
-
-
 
 
 .. GENERATED FROM PYTHON SOURCE LINES 98-117
@@ -219,7 +183,7 @@ times to compensate for the stochastic nature of :class:`PolynomialCountSketch`.
         for _ in range(n_runs):
             pipeline = make_pipeline(
                 PolynomialCountSketch(n_components=n_components, degree=4),
-                LinearSVC(dual="auto"),
+                LinearSVC(),
             )
 
             start = time.time()
@@ -238,21 +202,6 @@ times to compensate for the stochastic nature of :class:`PolynomialCountSketch`.
             f"Linear SVM score on {n_components} PolynomialCountSketch "
             + f"features: {ps_lsvm_score:.2f}%"
         )
-
-
-
-
-
-.. rst-class:: sphx-glr-script-out
-
- .. code-block:: none
-
-    Linear SVM score on 250 PolynomialCountSketch features: 76.55%
-    Linear SVM score on 500 PolynomialCountSketch features: 76.92%
-    Linear SVM score on 1000 PolynomialCountSketch features: 77.79%
-    Linear SVM score on 2000 PolynomialCountSketch features: 78.59%
-
-
 
 
 .. GENERATED FROM PYTHON SOURCE LINES 150-157
@@ -281,18 +230,6 @@ reason why kernel approximators are so useful:
 
     results["KSVM"] = {"time": ksvm_time, "score": ksvm_score}
     print(f"Kernel-SVM score on raw features: {ksvm_score:.2f}%")
-
-
-
-
-
-.. rst-class:: sphx-glr-script-out
-
- .. code-block:: none
-
-    Kernel-SVM score on raw features: 79.78%
-
-
 
 
 .. GENERATED FROM PYTHON SOURCE LINES 171-178
@@ -374,17 +311,6 @@ much faster if the number of training samples increases.
     plt.show()
 
 
-
-
-.. image-sg:: /auto_examples/kernel_approximation/images/sphx_glr_plot_scalable_poly_kernels_001.png
-   :alt: plot scalable poly kernels
-   :srcset: /auto_examples/kernel_approximation/images/sphx_glr_plot_scalable_poly_kernels_001.png
-   :class: sphx-glr-single-img
-
-
-
-
-
 .. GENERATED FROM PYTHON SOURCE LINES 243-252
 
 References
@@ -396,11 +322,6 @@ https://doi.org/10.1145/2487575.2487591
 
 [2] LIBSVM binary datasets repository
 https://www.csie.ntu.edu.tw/~cjlin/libsvmtools/datasets/binary.html
-
-
-.. rst-class:: sphx-glr-timing
-
-   **Total running time of the script:** (0 minutes 24.087 seconds)
 
 
 .. _sphx_glr_download_auto_examples_kernel_approximation_plot_scalable_poly_kernels.py:

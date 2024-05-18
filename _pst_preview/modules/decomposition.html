@@ -16,7 +16,7 @@
 <meta property="og:image:alt" content="scikit-learn" />
 <meta name="description" content="Principal component analysis (PCA): Exact PCA and probabilistic interpretation: PCA is used to decompose a multivariate dataset in a set of successive orthogonal components that explain a maximum a..." />
 
-    <title>2.5. Decomposing signals in components (matrix factorization problems) &#8212; scikit-learn 1.5.dev0 documentation</title>
+    <title>2.5. Decomposing signals in components (matrix factorization problems) &#8212; scikit-learn 1.6.dev0 documentation</title>
   
   
   
@@ -54,8 +54,8 @@
 <link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=8d27b9dea8ad943066ae" />
   <script src="../_static/vendor/fontawesome/6.5.1/js/all.min.js?digest=8d27b9dea8ad943066ae"></script>
 
-    <script src="../_static/documentation_options.js?v=a2c36881"></script>
-    <script src="../_static/doctools.js?v=888ff710"></script>
+    <script src="../_static/documentation_options.js?v=d875d36e"></script>
+    <script src="../_static/doctools.js?v=9a2dae69"></script>
     <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
     <script src="../_static/copybutton.js?v=97f0b27d"></script>
@@ -66,8 +66,8 @@
     <script>DOCUMENTATION_OPTIONS.pagename = 'modules/decomposition';</script>
     <script>
         DOCUMENTATION_OPTIONS.theme_version = '0.15.2';
-        DOCUMENTATION_OPTIONS.theme_switcher_json_url = 'https://scikit-learn.org/_pst_preview/versions.json';
-        DOCUMENTATION_OPTIONS.theme_switcher_version_match = '1.5.dev0';
+        DOCUMENTATION_OPTIONS.theme_switcher_json_url = 'https://scikit-learn.org/_pst_preview/_static/versions.json';
+        DOCUMENTATION_OPTIONS.theme_switcher_version_match = '1.6.dev0';
         DOCUMENTATION_OPTIONS.show_version_warning_banner = true;
         </script>
     <script src="../_static/scripts/dropdown.js?v=12d599f8"></script>
@@ -631,8 +631,9 @@ document.write(`
 <li class="toctree-l1 has-children"><a class="reference internal" href="../model_selection.html">3. Model selection and evaluation</a><input class="toctree-checkbox" id="toctree-checkbox-3" name="toctree-checkbox-3" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-3"><i class="fa-solid fa-chevron-down"></i></label><ul>
 <li class="toctree-l2"><a class="reference internal" href="cross_validation.html">3.1. Cross-validation: evaluating estimator performance</a></li>
 <li class="toctree-l2"><a class="reference internal" href="grid_search.html">3.2. Tuning the hyper-parameters of an estimator</a></li>
-<li class="toctree-l2"><a class="reference internal" href="model_evaluation.html">3.3. Metrics and scoring: quantifying the quality of predictions</a></li>
-<li class="toctree-l2"><a class="reference internal" href="learning_curve.html">3.4. Validation curves: plotting scores to evaluate models</a></li>
+<li class="toctree-l2"><a class="reference internal" href="classification_threshold.html">3.3. Tuning the decision threshold for class prediction</a></li>
+<li class="toctree-l2"><a class="reference internal" href="model_evaluation.html">3.4. Metrics and scoring: quantifying the quality of predictions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="learning_curve.html">3.5. Validation curves: plotting scores to evaluate models</a></li>
 </ul>
 </li>
 <li class="toctree-l1 has-children"><a class="reference internal" href="../inspection.html">4. Inspection</a><input class="toctree-checkbox" id="toctree-checkbox-4" name="toctree-checkbox-4" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-4"><i class="fa-solid fa-chevron-down"></i></label><ul>
@@ -753,14 +754,16 @@ algorithm.</p>
 <p>Below is an example of the iris dataset, which is comprised of 4
 features, projected on the 2 dimensions that explain most variance:</p>
 <figure class="align-center">
-<a class="reference external image-reference" href="../auto_examples/decomposition/plot_pca_vs_lda.html"><img alt="../_images/sphx_glr_plot_pca_vs_lda_001.png" src="../_images/sphx_glr_plot_pca_vs_lda_001.png" style="width: 480.0px; height: 360.0px;" /></a>
+<a class="reference external image-reference" href="../auto_examples/decomposition/plot_pca_vs_lda.html"><img alt="../_images/sphx_glr_plot_pca_vs_lda_001.png" src="../_images/sphx_glr_plot_pca_vs_lda_001.png" style="width: 480.0px; height: 360.0px;" />
+</a>
 </figure>
 <p>The <a class="reference internal" href="generated/sklearn.decomposition.PCA.html#sklearn.decomposition.PCA" title="sklearn.decomposition.PCA"><code class="xref py py-class docutils literal notranslate"><span class="pre">PCA</span></code></a> object also provides a
 probabilistic interpretation of the PCA that can give a likelihood of
 data based on the amount of variance it explains. As such it implements a
 <a class="reference internal" href="../glossary.html#term-score"><span class="xref std std-term">score</span></a> method that can be used in cross-validation:</p>
 <figure class="align-center">
-<a class="reference external image-reference" href="../auto_examples/decomposition/plot_pca_vs_fa_model_selection.html"><img alt="../_images/sphx_glr_plot_pca_vs_fa_model_selection_001.png" src="../_images/sphx_glr_plot_pca_vs_fa_model_selection_001.png" style="width: 480.0px; height: 360.0px;" /></a>
+<a class="reference external image-reference" href="../auto_examples/decomposition/plot_pca_vs_fa_model_selection.html"><img alt="../_images/sphx_glr_plot_pca_vs_fa_model_selection_001.png" src="../_images/sphx_glr_plot_pca_vs_fa_model_selection_001.png" style="width: 480.0px; height: 360.0px;" />
+</a>
 </figure>
 <p class="rubric">Examples</p>
 <ul class="simple">
@@ -792,10 +795,12 @@ number of samples to be processed in the dataset.</p>
 <p>As in <a class="reference internal" href="generated/sklearn.decomposition.PCA.html#sklearn.decomposition.PCA" title="sklearn.decomposition.PCA"><code class="xref py py-class docutils literal notranslate"><span class="pre">PCA</span></code></a>, <a class="reference internal" href="generated/sklearn.decomposition.IncrementalPCA.html#sklearn.decomposition.IncrementalPCA" title="sklearn.decomposition.IncrementalPCA"><code class="xref py py-class docutils literal notranslate"><span class="pre">IncrementalPCA</span></code></a> centers but does not scale the
 input data for each feature before applying the SVD.</p>
 <figure class="align-center">
-<a class="reference external image-reference" href="../auto_examples/decomposition/plot_incremental_pca.html"><img alt="../_images/sphx_glr_plot_incremental_pca_001.png" src="../_images/sphx_glr_plot_incremental_pca_001.png" style="width: 600.0px; height: 600.0px;" /></a>
+<a class="reference external image-reference" href="../auto_examples/decomposition/plot_incremental_pca.html"><img alt="../_images/sphx_glr_plot_incremental_pca_001.png" src="../_images/sphx_glr_plot_incremental_pca_001.png" style="width: 600.0px; height: 600.0px;" />
+</a>
 </figure>
 <figure class="align-center">
-<a class="reference external image-reference" href="../auto_examples/decomposition/plot_incremental_pca.html"><img alt="../_images/sphx_glr_plot_incremental_pca_002.png" src="../_images/sphx_glr_plot_incremental_pca_002.png" style="width: 600.0px; height: 600.0px;" /></a>
+<a class="reference external image-reference" href="../auto_examples/decomposition/plot_incremental_pca.html"><img alt="../_images/sphx_glr_plot_incremental_pca_002.png" src="../_images/sphx_glr_plot_incremental_pca_002.png" style="width: 600.0px; height: 600.0px;" />
+</a>
 </figure>
 <p class="rubric">Examples</p>
 <ul class="simple">
@@ -939,7 +944,8 @@ has many applications including denoising, compression and structured
 prediction (kernel dependency estimation). <a class="reference internal" href="generated/sklearn.decomposition.KernelPCA.html#sklearn.decomposition.KernelPCA" title="sklearn.decomposition.KernelPCA"><code class="xref py py-class docutils literal notranslate"><span class="pre">KernelPCA</span></code></a> supports both
 <code class="docutils literal notranslate"><span class="pre">transform</span></code> and <code class="docutils literal notranslate"><span class="pre">inverse_transform</span></code>.</p>
 <figure class="align-center">
-<a class="reference external image-reference" href="../auto_examples/decomposition/plot_kernel_pca.html"><img alt="../_images/sphx_glr_plot_kernel_pca_002.png" src="../_images/sphx_glr_plot_kernel_pca_002.png" style="width: 1050.0px; height: 300.0px;" /></a>
+<a class="reference external image-reference" href="../auto_examples/decomposition/plot_kernel_pca.html"><img alt="../_images/sphx_glr_plot_kernel_pca_002.png" src="../_images/sphx_glr_plot_kernel_pca_002.png" style="width: 1050.0px; height: 300.0px;" />
+</a>
 </figure>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
@@ -952,6 +958,7 @@ linked below for more details.</p>
 <p class="rubric">Examples</p>
 <ul class="simple">
 <li><p><a class="reference internal" href="../auto_examples/decomposition/plot_kernel_pca.html#sphx-glr-auto-examples-decomposition-plot-kernel-pca-py"><span class="std std-ref">Kernel PCA</span></a></p></li>
+<li><p><a class="reference internal" href="../auto_examples/applications/plot_digits_denoising.html#sphx-glr-auto-examples-applications-plot-digits-denoising-py"><span class="std std-ref">Image denoising using kernel PCA</span></a></p></li>
 </ul>
 <p class="rubric">References</p>
 <div role="list" class="citation-list">
@@ -1177,7 +1184,8 @@ indicates positive values, and white represents zeros.</p>
 <strong><a class="reference external" href="../auto_examples/decomposition/plot_image_denoising.html"><img alt="dict_img_pos3" src="../_images/sphx_glr_plot_faces_decomposition_012.png" style="width: 360.0px; height: 275.4px;" /></a> <a class="reference external" href="../auto_examples/decomposition/plot_image_denoising.html"><img alt="dict_img_pos4" src="../_images/sphx_glr_plot_faces_decomposition_013.png" style="width: 360.0px; height: 275.4px;" /></a></strong></p><p>The following image shows how a dictionary learned from 4x4 pixel image patches
 extracted from part of the image of a raccoon face looks like.</p>
 <figure class="align-center">
-<a class="reference external image-reference" href="../auto_examples/decomposition/plot_image_denoising.html"><img alt="../_images/sphx_glr_plot_image_denoising_001.png" src="../_images/sphx_glr_plot_image_denoising_001.png" style="width: 250.0px; height: 165.0px;" /></a>
+<a class="reference external image-reference" href="../auto_examples/decomposition/plot_image_denoising.html"><img alt="../_images/sphx_glr_plot_image_denoising_001.png" src="../_images/sphx_glr_plot_image_denoising_001.png" style="width: 250.0px; height: 165.0px;" />
+</a>
 </figure>
 <p class="rubric">Examples</p>
 <ul class="simple">
@@ -1202,7 +1210,8 @@ implement a stopping condition.</p>
 iterating only once over a mini-batch. This can be used for online learning
 when the data is not readily available from the start, or for when the data
 does not fit into the memory.</p>
-<a class="reference external image-reference" href="../auto_examples/cluster/plot_dict_face_patches.html"><img alt="../_images/sphx_glr_plot_dict_face_patches_001.png" class="align-right" src="../_images/sphx_glr_plot_dict_face_patches_001.png" style="width: 210.0px; height: 200.0px;" /></a>
+<a class="reference external image-reference" href="../auto_examples/cluster/plot_dict_face_patches.html"><img alt="../_images/sphx_glr_plot_dict_face_patches_001.png" class="align-right" src="../_images/sphx_glr_plot_dict_face_patches_001.png" style="width: 210.0px; height: 200.0px;" />
+</a>
 <aside class="topic">
 <p class="topic-title"><strong>Clustering for dictionary learning</strong></p>
 <p>Note that when using dictionary learning to extract a representation
@@ -1265,12 +1274,14 @@ about these components (e.g. whether they are orthogonal):</p>
 it can model the variance in every direction of the input space independently
 (heteroscedastic noise):</p>
 <figure class="align-center">
-<a class="reference external image-reference" href="../auto_examples/decomposition/plot_faces_decomposition.html"><img alt="../_images/sphx_glr_plot_faces_decomposition_009.png" src="../_images/sphx_glr_plot_faces_decomposition_009.png" style="width: 240.0px; height: 270.0px;" /></a>
+<a class="reference external image-reference" href="../auto_examples/decomposition/plot_faces_decomposition.html"><img alt="../_images/sphx_glr_plot_faces_decomposition_009.png" src="../_images/sphx_glr_plot_faces_decomposition_009.png" style="width: 240.0px; height: 270.0px;" />
+</a>
 </figure>
 <p>This allows better model selection than probabilistic PCA in the presence
 of heteroscedastic noise:</p>
 <figure class="align-center">
-<a class="reference external image-reference" href="../auto_examples/decomposition/plot_pca_vs_fa_model_selection.html"><img alt="../_images/sphx_glr_plot_pca_vs_fa_model_selection_002.png" src="../_images/sphx_glr_plot_pca_vs_fa_model_selection_002.png" style="width: 480.0px; height: 360.0px;" /></a>
+<a class="reference external image-reference" href="../auto_examples/decomposition/plot_pca_vs_fa_model_selection.html"><img alt="../_images/sphx_glr_plot_pca_vs_fa_model_selection_002.png" src="../_images/sphx_glr_plot_pca_vs_fa_model_selection_002.png" style="width: 480.0px; height: 360.0px;" />
+</a>
 </figure>
 <p>Factor Analysis is often followed by a rotation of the factors (with the
 parameter <code class="docutils literal notranslate"><span class="pre">rotation</span></code>), usually to improve interpretability. For example,
@@ -1296,7 +1307,8 @@ of the PCA variants.</p>
 <p>It is classically used to separate mixed signals (a problem known as
 <em>blind source separation</em>), as in the example below:</p>
 <figure class="align-center">
-<a class="reference external image-reference" href="../auto_examples/decomposition/plot_ica_blind_source_separation.html"><img alt="../_images/sphx_glr_plot_ica_blind_source_separation_001.png" src="../_images/sphx_glr_plot_ica_blind_source_separation_001.png" style="width: 384.0px; height: 288.0px;" /></a>
+<a class="reference external image-reference" href="../auto_examples/decomposition/plot_ica_blind_source_separation.html"><img alt="../_images/sphx_glr_plot_ica_blind_source_separation_001.png" src="../_images/sphx_glr_plot_ica_blind_source_separation_001.png" style="width: 384.0px; height: 288.0px;" />
+</a>
 </figure>
 <p>ICA can also be used as yet another non linear decomposition that finds
 components with some sparsity:</p>
@@ -1387,7 +1399,8 @@ Kullback-Leibler (KL) divergence, also referred as I-divergence:</p>
 defined by :</p>
 <div class="math notranslate nohighlight">
 \[d_{\beta}(X, Y) = \sum_{i,j} \frac{1}{\beta(\beta - 1)}(X_{ij}^\beta + (\beta-1)Y_{ij}^\beta - \beta X_{ij} Y_{ij}^{\beta - 1})\]</div>
-<a class="reference internal image-reference" href="../_images/beta_divergence.png"><img alt="../_images/beta_divergence.png" class="align-center" src="../_images/beta_divergence.png" style="width: 480.0px; height: 360.0px;" /></a>
+<a class="reference internal image-reference" href="../_images/beta_divergence.png"><img alt="../_images/beta_divergence.png" class="align-center" src="../_images/beta_divergence.png" style="width: 480.0px; height: 360.0px;" />
+</a>
 <p>Note that this definition is not valid if <span class="math notranslate nohighlight">\(\beta \in (0; 1)\)</span>, yet it can
 be continuously extended to the definitions of <span class="math notranslate nohighlight">\(d_{KL}\)</span> and <span class="math notranslate nohighlight">\(d_{IS}\)</span>
 respectively.</p>

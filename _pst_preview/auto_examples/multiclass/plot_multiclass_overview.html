@@ -13,7 +13,7 @@
 <meta content="https://scikit-learn.org/stable/_static/scikit-learn-logo-small.png" property="og:image"/>
 <meta content="scikit-learn" property="og:image:alt"/>
 <meta content="In this example, we discuss the problem of classification when the target variable is composed of more than two classes. This is called multiclass classification. In scikit-learn, all estimators su..." name="description"/>
-<title>Overview of multiclass training meta-estimators — scikit-learn 1.5.dev0 documentation</title>
+<title>Overview of multiclass training meta-estimators — scikit-learn 1.6.dev0 documentation</title>
 <script data-cfasync="false">
     document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
     document.documentElement.dataset.theme = localStorage.getItem("theme") || "light";
@@ -42,8 +42,8 @@
 <link as="script" href="../../_static/scripts/bootstrap.js?digest=8d27b9dea8ad943066ae" rel="preload"/>
 <link as="script" href="../../_static/scripts/pydata-sphinx-theme.js?digest=8d27b9dea8ad943066ae" rel="preload"/>
 <script src="../../_static/vendor/fontawesome/6.5.1/js/all.min.js?digest=8d27b9dea8ad943066ae"></script>
-<script src="../../_static/documentation_options.js?v=a2c36881"></script>
-<script src="../../_static/doctools.js?v=888ff710"></script>
+<script src="../../_static/documentation_options.js?v=d875d36e"></script>
+<script src="../../_static/doctools.js?v=9a2dae69"></script>
 <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
 <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
 <script src="../../_static/copybutton.js?v=97f0b27d"></script>
@@ -53,8 +53,8 @@
 <script>DOCUMENTATION_OPTIONS.pagename = 'auto_examples/multiclass/plot_multiclass_overview';</script>
 <script>
         DOCUMENTATION_OPTIONS.theme_version = '0.15.2';
-        DOCUMENTATION_OPTIONS.theme_switcher_json_url = 'https://scikit-learn.org/_pst_preview/versions.json';
-        DOCUMENTATION_OPTIONS.theme_switcher_version_match = '1.5.dev0';
+        DOCUMENTATION_OPTIONS.theme_switcher_json_url = 'https://scikit-learn.org/_pst_preview/_static/versions.json';
+        DOCUMENTATION_OPTIONS.theme_switcher_version_match = '1.6.dev0';
         DOCUMENTATION_OPTIONS.show_version_warning_banner = true;
         </script>
 <script src="../../_static/scripts/dropdown.js?v=12d599f8"></script>
@@ -549,7 +549,6 @@ document.write(`
 <li class="toctree-l2"><a class="reference internal" href="../applications/plot_face_recognition.html">Faces recognition example using eigenfaces and SVMs</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../applications/plot_digits_denoising.html">Image denoising using kernel PCA</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../applications/plot_time_series_lagged_features.html">Lagged features for time series forecasting</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../applications/svm_gui.html">Libsvm GUI</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../applications/plot_model_complexity_influence.html">Model Complexity Influence</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../applications/plot_out_of_core_classification.html">Out-of-core classification of text documents</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../applications/plot_outlier_detection_wine.html">Outlier detection on a real data set</a></li>
@@ -694,6 +693,8 @@ document.write(`
 <li class="toctree-l2"><a class="reference internal" href="../model_selection/plot_cv_predict.html">Plotting Cross-Validated Predictions</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../model_selection/plot_learning_curve.html">Plotting Learning Curves and Checking Models’ Scalability</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../model_selection/plot_validation_curve.html">Plotting Validation Curves</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../model_selection/plot_tuned_decision_threshold.html">Post-hoc tuning the cut-off point of decision function</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../model_selection/plot_cost_sensitive_learning.html">Post-tuning the decision threshold for cost-sensitive learning</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../model_selection/plot_precision_recall.html">Precision-Recall</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../model_selection/plot_roc_crossval.html">Receiver Operating Characteristic (ROC) with cross validation</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../model_selection/plot_grid_search_text_feature_extraction.html">Sample pipeline for text feature extraction and evaluation</a></li>
@@ -859,20 +860,6 @@ the target for which we want to build a predictive model.</p>
 <div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">y</span><span class="o">.</span><span class="n">value_counts</span><span class="p">()</span><span class="o">.</span><span class="n">sort_index</span><span class="p">()</span>
 </pre></div>
 </div>
-<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>class_protein_localization
-CYT    463
-ERL      5
-EXC     35
-ME1     44
-ME2     51
-ME3    163
-MIT    244
-NUC    429
-POX     20
-VAC     30
-Name: count, dtype: int64
-</pre></div>
-</div>
 <p>We see that the target is discrete and composed of 10 classes. We therefore
 deal with a multiclass classification problem.</p>
 </section>
@@ -946,7 +933,7 @@ We plot the score distribution of the different strategies.</p>
 <span class="p">)</span>
 </pre></div>
 </div>
-<img alt="Density of the accuracy scores for the different multiclass strategies" class="sphx-glr-single-img" src="../../_images/sphx_glr_plot_multiclass_overview_001.png" srcset="../../_images/sphx_glr_plot_multiclass_overview_001.png"/><p>At a first glance, we can see that the built-in strategy of the decision
+<p>At a first glance, we can see that the built-in strategy of the decision
 tree classifier is working quite well. One-vs-one and the error-correcting
 output code strategies are working even better. However, the
 one-vs-rest strategy is not working as well as the other strategies.</p>
@@ -990,7 +977,7 @@ base decision tree.</p>
 <a class="sphx-glr-backref-module-matplotlib-pyplot sphx-glr-backref-type-py-function" href="https://matplotlib.org/stable/api/_as_gen/matplotlib.pyplot.show.html#matplotlib.pyplot.show" title="matplotlib.pyplot.show"><span class="n">plt</span><span class="o">.</span><span class="n">show</span></a><span class="p">()</span>
 </pre></div>
 </div>
-<img alt="Density of the accuracy scores for the different multiclass strategies" class="sphx-glr-single-img" src="../../_images/sphx_glr_plot_multiclass_overview_002.png" srcset="../../_images/sphx_glr_plot_multiclass_overview_002.png"/><p>We can see that once the hyperparameters are optimized, all multiclass
+<p>We can see that once the hyperparameters are optimized, all multiclass
 strategies have similar performance as discussed in <a class="footnote-reference brackets" href="#id7" id="id4" role="doc-noteref"><span class="fn-bracket">[</span>3<span class="fn-bracket">]</span></a>.</p>
 </section>
 <section id="conclusion">
@@ -1036,21 +1023,20 @@ Jan (2004): 101-141.</a>.</p>
 </aside>
 </aside>
 </div></blockquote>
-<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> (0 minutes 19.853 seconds)</p>
 
 <p class="rubric">Related examples</p>
 <div class="sphx-glr-thumbnails"><div class="sphx-glr-thumbcontainer" tooltip="This example compares non-nested and nested cross-validation strategies on a classifier of the ..."><img alt="" src="../../_images/sphx_glr_plot_nested_cross_validation_iris_thumb.png"/>
 <p><a class="reference internal" href="../model_selection/plot_nested_cross_validation_iris.html#sphx-glr-auto-examples-model-selection-plot-nested-cross-validation-iris-py"><span class="std std-ref">Nested versus non-nested cross-validation</span></a></p>
 <div class="sphx-glr-thumbnail-title">Nested versus non-nested cross-validation</div>
-</div><div class="sphx-glr-thumbcontainer" tooltip="The most naive strategy to solve such a task is to independently train a binary classifier on e..."><img alt="" src="../../_images/sphx_glr_plot_classifier_chain_yeast_thumb.png"/>
-<p><a class="reference internal" href="../multioutput/plot_classifier_chain_yeast.html#sphx-glr-auto-examples-multioutput-plot-classifier-chain-yeast-py"><span class="std std-ref">Multilabel classification using a classifier chain</span></a></p>
-<div class="sphx-glr-thumbnail-title">Multilabel classification using a classifier chain</div>
+</div><div class="sphx-glr-thumbcontainer" tooltip="Plot the classification probability for different classifiers. We use a 3 class dataset, and we..."><img alt="" src="../../_images/sphx_glr_plot_classification_probability_thumb.png"/>
+<p><a class="reference internal" href="../classification/plot_classification_probability.html#sphx-glr-auto-examples-classification-plot-classification-probability-py"><span class="std std-ref">Plot classification probability</span></a></p>
+<div class="sphx-glr-thumbnail-title">Plot classification probability</div>
+</div><div class="sphx-glr-thumbcontainer" tooltip="Once a binary classifier is trained, the predict method outputs class label predictions corresp..."><img alt="" src="../../_images/sphx_glr_plot_tuned_decision_threshold_thumb.png"/>
+<p><a class="reference internal" href="../model_selection/plot_tuned_decision_threshold.html#sphx-glr-auto-examples-model-selection-plot-tuned-decision-threshold-py"><span class="std std-ref">Post-hoc tuning the cut-off point of decision function</span></a></p>
+<div class="sphx-glr-thumbnail-title">Post-hoc tuning the cut-off point of decision function</div>
 </div><div class="sphx-glr-thumbcontainer" tooltip="We are pleased to announce the release of scikit-learn 0.22, which comes with many bug fixes an..."><img alt="" src="../../_images/sphx_glr_plot_release_highlights_0_22_0_thumb.png"/>
 <p><a class="reference internal" href="../release_highlights/plot_release_highlights_0_22_0.html#sphx-glr-auto-examples-release-highlights-plot-release-highlights-0-22-0-py"><span class="std std-ref">Release Highlights for scikit-learn 0.22</span></a></p>
 <div class="sphx-glr-thumbnail-title">Release Highlights for scikit-learn 0.22</div>
-</div><div class="sphx-glr-thumbcontainer" tooltip="This example illustrates the effect of the parameters gamma and C of the Radial Basis Function ..."><img alt="" src="../../_images/sphx_glr_plot_rbf_parameters_thumb.png"/>
-<p><a class="reference internal" href="../svm/plot_rbf_parameters.html#sphx-glr-auto-examples-svm-plot-rbf-parameters-py"><span class="std std-ref">RBF SVM parameters</span></a></p>
-<div class="sphx-glr-thumbnail-title">RBF SVM parameters</div>
 </div></div><p class="sphx-glr-signature"><a class="reference external" href="https://sphinx-gallery.github.io">Gallery generated by Sphinx-Gallery</a></p>
 </section>
 </section>

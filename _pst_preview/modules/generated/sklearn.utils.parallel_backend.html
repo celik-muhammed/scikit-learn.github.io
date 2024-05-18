@@ -14,7 +14,7 @@
 <meta property="og:image" content="https://scikit-learn.org/stable/_static/scikit-learn-logo-small.png" />
 <meta property="og:image:alt" content="scikit-learn" />
 
-    <title>parallel_backend &#8212; scikit-learn 1.5.dev0 documentation</title>
+    <title>parallel_backend &#8212; scikit-learn 1.6.dev0 documentation</title>
   
   
   
@@ -53,8 +53,8 @@
 <link rel="preload" as="script" href="../../_static/scripts/pydata-sphinx-theme.js?digest=8d27b9dea8ad943066ae" />
   <script src="../../_static/vendor/fontawesome/6.5.1/js/all.min.js?digest=8d27b9dea8ad943066ae"></script>
 
-    <script src="../../_static/documentation_options.js?v=a2c36881"></script>
-    <script src="../../_static/doctools.js?v=888ff710"></script>
+    <script src="../../_static/documentation_options.js?v=d875d36e"></script>
+    <script src="../../_static/doctools.js?v=9a2dae69"></script>
     <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
     <script src="../../_static/copybutton.js?v=97f0b27d"></script>
@@ -64,8 +64,8 @@
     <script>DOCUMENTATION_OPTIONS.pagename = 'modules/generated/sklearn.utils.parallel_backend';</script>
     <script>
         DOCUMENTATION_OPTIONS.theme_version = '0.15.2';
-        DOCUMENTATION_OPTIONS.theme_switcher_json_url = 'https://scikit-learn.org/_pst_preview/versions.json';
-        DOCUMENTATION_OPTIONS.theme_switcher_version_match = '1.5.dev0';
+        DOCUMENTATION_OPTIONS.theme_switcher_json_url = 'https://scikit-learn.org/_pst_preview/_static/versions.json';
+        DOCUMENTATION_OPTIONS.theme_switcher_version_match = '1.6.dev0';
         DOCUMENTATION_OPTIONS.show_version_warning_banner = true;
         </script>
     <script src="../../_static/scripts/dropdown.js?v=12d599f8"></script>
@@ -1336,87 +1336,8 @@ document.write(`
 <h1>parallel_backend<a class="headerlink" href="#parallel-backend" title="Link to this heading">#</a></h1>
 <dl class="py class">
 <dt class="sig sig-object py" id="sklearn.utils.parallel_backend">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">sklearn.utils.</span></span><span class="sig-name descname"><span class="pre">parallel_backend</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">backend</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_jobs</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">-1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">inner_max_num_threads</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">backend_params</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/scikit-learn/scikit-learn/blob/b548b7c13/sklearn/../../mambaforge/envs/testenv/lib/python3.9/site-packages/joblib/parallel.py#L450"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#sklearn.utils.parallel_backend" title="Link to this definition">#</a></dt>
-<dd><p>Change the default backend used by Parallel inside a with block.</p>
-<div class="admonition warning">
-<p class="admonition-title">Warning</p>
-<p>It is advised to use the <a class="reference external" href="https://joblib.readthedocs.io/en/latest/generated/joblib.parallel_config.html#joblib.parallel_config" title="(in joblib v1.5.dev0)"><code class="xref py py-class docutils literal notranslate"><span class="pre">parallel_config</span></code></a> context
-manager instead, which allows more fine-grained control over the
-backend configuration.</p>
-</div>
-<p>If <code class="docutils literal notranslate"><span class="pre">backend</span></code> is a string it must match a previously registered
-implementation using the <a class="reference internal" href="sklearn.utils.register_parallel_backend.html#sklearn.utils.register_parallel_backend" title="sklearn.utils.register_parallel_backend"><code class="xref py py-func docutils literal notranslate"><span class="pre">register_parallel_backend</span></code></a> function.</p>
-<p>By default the following backends are available:</p>
-<ul class="simple">
-<li><p>‘loky’: single-host, process-based parallelism (used by default),</p></li>
-<li><p>‘threading’: single-host, thread-based parallelism,</p></li>
-<li><p>‘multiprocessing’: legacy single-host, process-based parallelism.</p></li>
-</ul>
-<p>‘loky’ is recommended to run functions that manipulate Python objects.
-‘threading’ is a low-overhead alternative that is most efficient for
-functions that release the Global Interpreter Lock: e.g. I/O-bound code or
-CPU-bound code in a few calls to native code that explicitly releases the
-GIL. Note that on some rare systems (such as Pyodide),
-multiprocessing and loky may not be available, in which case joblib
-defaults to threading.</p>
-<p>You can also use the <a class="reference external" href="https://docs.dask.org/en/stable/">Dask</a> joblib
-backend to distribute work across machines. This works well with
-scikit-learn estimators with the <code class="docutils literal notranslate"><span class="pre">n_jobs</span></code> parameter, for example:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">joblib</span>  
-<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">sklearn.model_selection</span> <span class="kn">import</span> <span class="n">GridSearchCV</span>  
-<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">dask.distributed</span> <span class="kn">import</span> <span class="n">Client</span><span class="p">,</span> <span class="n">LocalCluster</span> 
-</pre></div>
-</div>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="c1"># create a local Dask cluster</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">cluster</span> <span class="o">=</span> <span class="n">LocalCluster</span><span class="p">()</span>  
-<span class="gp">&gt;&gt;&gt; </span><span class="n">client</span> <span class="o">=</span> <span class="n">Client</span><span class="p">(</span><span class="n">cluster</span><span class="p">)</span>  
-<span class="gp">&gt;&gt;&gt; </span><span class="n">grid_search</span> <span class="o">=</span> <span class="n">GridSearchCV</span><span class="p">(</span><span class="n">estimator</span><span class="p">,</span> <span class="n">param_grid</span><span class="p">,</span> <span class="n">n_jobs</span><span class="o">=-</span><span class="mi">1</span><span class="p">)</span>
-<span class="gp">... </span>
-<span class="gp">&gt;&gt;&gt; </span><span class="k">with</span> <span class="n">joblib</span><span class="o">.</span><span class="n">parallel_backend</span><span class="p">(</span><span class="s2">&quot;dask&quot;</span><span class="p">,</span> <span class="n">scatter</span><span class="o">=</span><span class="p">[</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">]):</span>  
-<span class="gp">... </span>    <span class="n">grid_search</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
-</pre></div>
-</div>
-<p>It is also possible to use the distributed ‘ray’ backend for distributing
-the workload to a cluster of nodes. To use the ‘ray’ joblib backend add
-the following lines:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">ray.util.joblib</span> <span class="kn">import</span> <span class="n">register_ray</span>  
-<span class="gp">&gt;&gt;&gt; </span><span class="n">register_ray</span><span class="p">()</span>  
-<span class="gp">&gt;&gt;&gt; </span><span class="k">with</span> <span class="n">parallel_backend</span><span class="p">(</span><span class="s2">&quot;ray&quot;</span><span class="p">):</span>  
-<span class="gp">... </span>    <span class="nb">print</span><span class="p">(</span><span class="n">Parallel</span><span class="p">()(</span><span class="n">delayed</span><span class="p">(</span><span class="n">neg</span><span class="p">)(</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">5</span><span class="p">)))</span>
-<span class="go">[-1, -2, -3, -4, -5]</span>
-</pre></div>
-</div>
-<p>Alternatively the backend can be passed directly as an instance.</p>
-<p>By default all available workers will be used (<code class="docutils literal notranslate"><span class="pre">n_jobs=-1</span></code>) unless the
-caller passes an explicit value for the <code class="docutils literal notranslate"><span class="pre">n_jobs</span></code> parameter.</p>
-<p>This is an alternative to passing a <code class="docutils literal notranslate"><span class="pre">backend='backend_name'</span></code> argument to
-the <code class="xref py py-class docutils literal notranslate"><span class="pre">Parallel</span></code> class constructor. It is particularly useful when
-calling into library code that uses joblib internally but does not expose
-the backend argument in its own API.</p>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">operator</span> <span class="kn">import</span> <span class="n">neg</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="k">with</span> <span class="n">parallel_backend</span><span class="p">(</span><span class="s1">&#39;threading&#39;</span><span class="p">):</span>
-<span class="gp">... </span>    <span class="nb">print</span><span class="p">(</span><span class="n">Parallel</span><span class="p">()(</span><span class="n">delayed</span><span class="p">(</span><span class="n">neg</span><span class="p">)(</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">5</span><span class="p">)))</span>
-<span class="gp">...</span>
-<span class="go">[-1, -2, -3, -4, -5]</span>
-</pre></div>
-</div>
-<p>Joblib also tries to limit the oversubscription by limiting the number of
-threads usable in some third-party library threadpools like OpenBLAS, MKL
-or OpenMP. The default limit in each worker is set to
-<code class="docutils literal notranslate"><span class="pre">max(cpu_count()</span> <span class="pre">//</span> <span class="pre">effective_n_jobs,</span> <span class="pre">1)</span></code> but this limit can be
-overwritten with the <code class="docutils literal notranslate"><span class="pre">inner_max_num_threads</span></code> argument which will be used
-to set this limit in the child processes.</p>
-<div class="versionadded">
-<p><span class="versionmodified added">New in version 0.10.</span></p>
-</div>
-<div class="admonition seealso">
-<p class="admonition-title">See also</p>
-<dl class="simple">
-<dt><a class="reference external" href="https://joblib.readthedocs.io/en/latest/generated/joblib.parallel_config.html#joblib.parallel_config" title="(in joblib v1.5.dev0)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">joblib.parallel_config</span></code></a></dt><dd><p>context manager to change the backend configuration.</p>
-</dd>
-</dl>
-</div>
-</dd></dl>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">sklearn.utils.</span></span><span class="sig-name descname"><span class="pre">parallel_backend</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/scikit-learn/scikit-learn/blob/a9d8f103c/sklearn/utils/__init__.py#L49"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#sklearn.utils.parallel_backend" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
 
 </section>
 

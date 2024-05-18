@@ -13,7 +13,7 @@
 <meta content="https://scikit-learn.org/stable/_static/scikit-learn-logo-small.png" property="og:image"/>
 <meta content="scikit-learn" property="og:image:alt"/>
 <meta content="An example illustrating the approximation of the feature map of an RBF kernel. It shows how to use RBFSampler and Nystroem to approximate the feature map of an RBF kernel for classification with an..." name="description"/>
-<title>Explicit feature map approximation for RBF kernels — scikit-learn 1.5.dev0 documentation</title>
+<title>Explicit feature map approximation for RBF kernels — scikit-learn 1.6.dev0 documentation</title>
 <script data-cfasync="false">
     document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
     document.documentElement.dataset.theme = localStorage.getItem("theme") || "light";
@@ -42,8 +42,8 @@
 <link as="script" href="../../_static/scripts/bootstrap.js?digest=8d27b9dea8ad943066ae" rel="preload"/>
 <link as="script" href="../../_static/scripts/pydata-sphinx-theme.js?digest=8d27b9dea8ad943066ae" rel="preload"/>
 <script src="../../_static/vendor/fontawesome/6.5.1/js/all.min.js?digest=8d27b9dea8ad943066ae"></script>
-<script src="../../_static/documentation_options.js?v=a2c36881"></script>
-<script src="../../_static/doctools.js?v=888ff710"></script>
+<script src="../../_static/documentation_options.js?v=d875d36e"></script>
+<script src="../../_static/doctools.js?v=9a2dae69"></script>
 <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
 <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
 <script src="../../_static/copybutton.js?v=97f0b27d"></script>
@@ -53,8 +53,8 @@
 <script>DOCUMENTATION_OPTIONS.pagename = 'auto_examples/miscellaneous/plot_kernel_approximation';</script>
 <script>
         DOCUMENTATION_OPTIONS.theme_version = '0.15.2';
-        DOCUMENTATION_OPTIONS.theme_switcher_json_url = 'https://scikit-learn.org/_pst_preview/versions.json';
-        DOCUMENTATION_OPTIONS.theme_switcher_version_match = '1.5.dev0';
+        DOCUMENTATION_OPTIONS.theme_switcher_json_url = 'https://scikit-learn.org/_pst_preview/_static/versions.json';
+        DOCUMENTATION_OPTIONS.theme_switcher_version_match = '1.6.dev0';
         DOCUMENTATION_OPTIONS.show_version_warning_banner = true;
         </script>
 <script src="../../_static/scripts/dropdown.js?v=12d599f8"></script>
@@ -549,7 +549,6 @@ document.write(`
 <li class="toctree-l2"><a class="reference internal" href="../applications/plot_face_recognition.html">Faces recognition example using eigenfaces and SVMs</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../applications/plot_digits_denoising.html">Image denoising using kernel PCA</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../applications/plot_time_series_lagged_features.html">Lagged features for time series forecasting</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../applications/svm_gui.html">Libsvm GUI</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../applications/plot_model_complexity_influence.html">Model Complexity Influence</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../applications/plot_out_of_core_classification.html">Out-of-core classification of text documents</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../applications/plot_outlier_detection_wine.html">Outlier detection on a real data set</a></li>
@@ -694,6 +693,8 @@ document.write(`
 <li class="toctree-l2"><a class="reference internal" href="../model_selection/plot_cv_predict.html">Plotting Cross-Validated Predictions</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../model_selection/plot_learning_curve.html">Plotting Learning Curves and Checking Models’ Scalability</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../model_selection/plot_validation_curve.html">Plotting Validation Curves</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../model_selection/plot_tuned_decision_threshold.html">Post-hoc tuning the cut-off point of decision function</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../model_selection/plot_cost_sensitive_learning.html">Post-tuning the decision threshold for cost-sensitive learning</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../model_selection/plot_precision_recall.html">Precision-Recall</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../model_selection/plot_roc_crossval.html">Receiver Operating Characteristic (ROC) with cross validation</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../model_selection/plot_grid_search_text_feature_extraction.html">Sample pipeline for text feature extraction and evaluation</a></li>
@@ -889,7 +890,7 @@ turn the data in a (samples, feature) matrix:</p>
 
 <span class="c1"># Create a classifier: a support vector classifier</span>
 <span class="n">kernel_svm</span> <span class="o">=</span> <a class="sphx-glr-backref-module-sklearn-svm sphx-glr-backref-type-py-class sphx-glr-backref-instance" href="../../modules/generated/sklearn.svm.SVC.html#sklearn.svm.SVC" title="sklearn.svm.SVC"><span class="n">svm</span><span class="o">.</span><span class="n">SVC</span></a><span class="p">(</span><span class="n">gamma</span><span class="o">=</span><span class="mf">0.2</span><span class="p">)</span>
-<span class="n">linear_svm</span> <span class="o">=</span> <a class="sphx-glr-backref-module-sklearn-svm sphx-glr-backref-type-py-class sphx-glr-backref-instance" href="../../modules/generated/sklearn.svm.LinearSVC.html#sklearn.svm.LinearSVC" title="sklearn.svm.LinearSVC"><span class="n">svm</span><span class="o">.</span><span class="n">LinearSVC</span></a><span class="p">(</span><span class="n">dual</span><span class="o">=</span><span class="s2">"auto"</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="mi">42</span><span class="p">)</span>
+<span class="n">linear_svm</span> <span class="o">=</span> <a class="sphx-glr-backref-module-sklearn-svm sphx-glr-backref-type-py-class sphx-glr-backref-instance" href="../../modules/generated/sklearn.svm.LinearSVC.html#sklearn.svm.LinearSVC" title="sklearn.svm.LinearSVC"><span class="n">svm</span><span class="o">.</span><span class="n">LinearSVC</span></a><span class="p">(</span><span class="n">random_state</span><span class="o">=</span><span class="mi">42</span><span class="p">)</span>
 
 <span class="c1"># create pipeline from kernel approximation</span>
 <span class="c1"># and linear svm</span>
@@ -898,14 +899,14 @@ turn the data in a (samples, feature) matrix:</p>
 <span class="n">fourier_approx_svm</span> <span class="o">=</span> <a class="sphx-glr-backref-module-sklearn-pipeline sphx-glr-backref-type-py-class sphx-glr-backref-instance" href="../../modules/generated/sklearn.pipeline.Pipeline.html#sklearn.pipeline.Pipeline" title="sklearn.pipeline.Pipeline"><span class="n">pipeline</span><span class="o">.</span><span class="n">Pipeline</span></a><span class="p">(</span>
     <span class="p">[</span>
         <span class="p">(</span><span class="s2">"feature_map"</span><span class="p">,</span> <span class="n">feature_map_fourier</span><span class="p">),</span>
-        <span class="p">(</span><span class="s2">"svm"</span><span class="p">,</span> <a class="sphx-glr-backref-module-sklearn-svm sphx-glr-backref-type-py-class sphx-glr-backref-instance" href="../../modules/generated/sklearn.svm.LinearSVC.html#sklearn.svm.LinearSVC" title="sklearn.svm.LinearSVC"><span class="n">svm</span><span class="o">.</span><span class="n">LinearSVC</span></a><span class="p">(</span><span class="n">dual</span><span class="o">=</span><span class="s2">"auto"</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="mi">42</span><span class="p">)),</span>
+        <span class="p">(</span><span class="s2">"svm"</span><span class="p">,</span> <a class="sphx-glr-backref-module-sklearn-svm sphx-glr-backref-type-py-class sphx-glr-backref-instance" href="../../modules/generated/sklearn.svm.LinearSVC.html#sklearn.svm.LinearSVC" title="sklearn.svm.LinearSVC"><span class="n">svm</span><span class="o">.</span><span class="n">LinearSVC</span></a><span class="p">(</span><span class="n">random_state</span><span class="o">=</span><span class="mi">42</span><span class="p">)),</span>
     <span class="p">]</span>
 <span class="p">)</span>
 
 <span class="n">nystroem_approx_svm</span> <span class="o">=</span> <a class="sphx-glr-backref-module-sklearn-pipeline sphx-glr-backref-type-py-class sphx-glr-backref-instance" href="../../modules/generated/sklearn.pipeline.Pipeline.html#sklearn.pipeline.Pipeline" title="sklearn.pipeline.Pipeline"><span class="n">pipeline</span><span class="o">.</span><span class="n">Pipeline</span></a><span class="p">(</span>
     <span class="p">[</span>
         <span class="p">(</span><span class="s2">"feature_map"</span><span class="p">,</span> <span class="n">feature_map_nystroem</span><span class="p">),</span>
-        <span class="p">(</span><span class="s2">"svm"</span><span class="p">,</span> <a class="sphx-glr-backref-module-sklearn-svm sphx-glr-backref-type-py-class sphx-glr-backref-instance" href="../../modules/generated/sklearn.svm.LinearSVC.html#sklearn.svm.LinearSVC" title="sklearn.svm.LinearSVC"><span class="n">svm</span><span class="o">.</span><span class="n">LinearSVC</span></a><span class="p">(</span><span class="n">dual</span><span class="o">=</span><span class="s2">"auto"</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="mi">42</span><span class="p">)),</span>
+        <span class="p">(</span><span class="s2">"svm"</span><span class="p">,</span> <a class="sphx-glr-backref-module-sklearn-svm sphx-glr-backref-type-py-class sphx-glr-backref-instance" href="../../modules/generated/sklearn.svm.LinearSVC.html#sklearn.svm.LinearSVC" title="sklearn.svm.LinearSVC"><span class="n">svm</span><span class="o">.</span><span class="n">LinearSVC</span></a><span class="p">(</span><span class="n">random_state</span><span class="o">=</span><span class="mi">42</span><span class="p">)),</span>
     <span class="p">]</span>
 <span class="p">)</span>
 
@@ -1076,18 +1077,18 @@ in <a class="reference internal" href="../../modules/kernel_approximation.html#k
 <a class="sphx-glr-backref-module-matplotlib-pyplot sphx-glr-backref-type-py-function" href="https://matplotlib.org/stable/api/_as_gen/matplotlib.pyplot.show.html#matplotlib.pyplot.show" title="matplotlib.pyplot.show"><span class="n">plt</span><span class="o">.</span><span class="n">show</span></a><span class="p">()</span>
 </pre></div>
 </div>
-<img alt="SVC with rbf kernel, SVC (linear kernel)  with Fourier rbf feature map n_components=100, SVC (linear kernel)  with Nystroem rbf feature map n_components=100" class="sphx-glr-single-img" src="../../_images/sphx_glr_plot_kernel_approximation_002.png" srcset="../../_images/sphx_glr_plot_kernel_approximation_002.png"/><p class="sphx-glr-timing"><strong>Total running time of the script:</strong> (0 minutes 1.764 seconds)</p>
+<img alt="SVC with rbf kernel, SVC (linear kernel)  with Fourier rbf feature map n_components=100, SVC (linear kernel)  with Nystroem rbf feature map n_components=100" class="sphx-glr-single-img" src="../../_images/sphx_glr_plot_kernel_approximation_002.png" srcset="../../_images/sphx_glr_plot_kernel_approximation_002.png"/><p class="sphx-glr-timing"><strong>Total running time of the script:</strong> (0 minutes 1.543 seconds)</p>
 
 <p class="rubric">Related examples</p>
 <div class="sphx-glr-thumbnails"><div class="sphx-glr-thumbcontainer" tooltip="Comparison of different linear SVM classifiers on a 2D projection of the iris dataset. We only ..."><img alt="" src="../../_images/sphx_glr_plot_iris_svc_thumb.png"/>
 <p><a class="reference internal" href="../svm/plot_iris_svc.html#sphx-glr-auto-examples-svm-plot-iris-svc-py"><span class="std std-ref">Plot different SVM classifiers in the iris dataset</span></a></p>
 <div class="sphx-glr-thumbnail-title">Plot different SVM classifiers in the iris dataset</div>
-</div><div class="sphx-glr-thumbcontainer" tooltip="A comparison for the decision boundaries generated on the iris dataset by Label Spreading, Self..."><img alt="" src="../../_images/sphx_glr_plot_semi_supervised_versus_svm_iris_thumb.png"/>
-<p><a class="reference internal" href="../semi_supervised/plot_semi_supervised_versus_svm_iris.html#sphx-glr-auto-examples-semi-supervised-plot-semi-supervised-versus-svm-iris-py"><span class="std std-ref">Decision boundary of semi-supervised classifiers versus SVM on the Iris dataset</span></a></p>
-<div class="sphx-glr-thumbnail-title">Decision boundary of semi-supervised classifiers versus SVM on the Iris dataset</div>
 </div><div class="sphx-glr-thumbcontainer" tooltip="This example illustrates the effect of the parameters gamma and C of the Radial Basis Function ..."><img alt="" src="../../_images/sphx_glr_plot_rbf_parameters_thumb.png"/>
 <p><a class="reference internal" href="../svm/plot_rbf_parameters.html#sphx-glr-auto-examples-svm-plot-rbf-parameters-py"><span class="std std-ref">RBF SVM parameters</span></a></p>
 <div class="sphx-glr-thumbnail-title">RBF SVM parameters</div>
+</div><div class="sphx-glr-thumbcontainer" tooltip="A comparison for the decision boundaries generated on the iris dataset by Label Spreading, Self..."><img alt="" src="../../_images/sphx_glr_plot_semi_supervised_versus_svm_iris_thumb.png"/>
+<p><a class="reference internal" href="../semi_supervised/plot_semi_supervised_versus_svm_iris.html#sphx-glr-auto-examples-semi-supervised-plot-semi-supervised-versus-svm-iris-py"><span class="std std-ref">Decision boundary of semi-supervised classifiers versus SVM on the Iris dataset</span></a></p>
+<div class="sphx-glr-thumbnail-title">Decision boundary of semi-supervised classifiers versus SVM on the Iris dataset</div>
 </div><div class="sphx-glr-thumbcontainer" tooltip="This example illustrates the use of PolynomialCountSketch to efficiently generate polynomial ke..."><img alt="" src="../../_images/sphx_glr_plot_scalable_poly_kernels_thumb.png"/>
 <p><a class="reference internal" href="../kernel_approximation/plot_scalable_poly_kernels.html#sphx-glr-auto-examples-kernel-approximation-plot-scalable-poly-kernels-py"><span class="std std-ref">Scalable learning with polynomial kernel approximation</span></a></p>
 <div class="sphx-glr-thumbnail-title">Scalable learning with polynomial kernel approximation</div>

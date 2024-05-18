@@ -16,7 +16,7 @@
 <meta property="og:image:alt" content="scikit-learn" />
 <meta name="description" content="Support vector machines (SVMs) are a set of supervised learning methods used for classification, regression and outliers detection. The advantages of support vector machines are: Effective in high ..." />
 
-    <title>1.4. Support Vector Machines &#8212; scikit-learn 1.5.dev0 documentation</title>
+    <title>1.4. Support Vector Machines &#8212; scikit-learn 1.6.dev0 documentation</title>
   
   
   
@@ -54,8 +54,8 @@
 <link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=8d27b9dea8ad943066ae" />
   <script src="../_static/vendor/fontawesome/6.5.1/js/all.min.js?digest=8d27b9dea8ad943066ae"></script>
 
-    <script src="../_static/documentation_options.js?v=a2c36881"></script>
-    <script src="../_static/doctools.js?v=888ff710"></script>
+    <script src="../_static/documentation_options.js?v=d875d36e"></script>
+    <script src="../_static/doctools.js?v=9a2dae69"></script>
     <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
     <script src="../_static/copybutton.js?v=97f0b27d"></script>
@@ -66,8 +66,8 @@
     <script>DOCUMENTATION_OPTIONS.pagename = 'modules/svm';</script>
     <script>
         DOCUMENTATION_OPTIONS.theme_version = '0.15.2';
-        DOCUMENTATION_OPTIONS.theme_switcher_json_url = 'https://scikit-learn.org/_pst_preview/versions.json';
-        DOCUMENTATION_OPTIONS.theme_switcher_version_match = '1.5.dev0';
+        DOCUMENTATION_OPTIONS.theme_switcher_json_url = 'https://scikit-learn.org/_pst_preview/_static/versions.json';
+        DOCUMENTATION_OPTIONS.theme_switcher_version_match = '1.6.dev0';
         DOCUMENTATION_OPTIONS.show_version_warning_banner = true;
         </script>
     <script src="../_static/scripts/dropdown.js?v=12d599f8"></script>
@@ -631,8 +631,9 @@ document.write(`
 <li class="toctree-l1 has-children"><a class="reference internal" href="../model_selection.html">3. Model selection and evaluation</a><input class="toctree-checkbox" id="toctree-checkbox-3" name="toctree-checkbox-3" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-3"><i class="fa-solid fa-chevron-down"></i></label><ul>
 <li class="toctree-l2"><a class="reference internal" href="cross_validation.html">3.1. Cross-validation: evaluating estimator performance</a></li>
 <li class="toctree-l2"><a class="reference internal" href="grid_search.html">3.2. Tuning the hyper-parameters of an estimator</a></li>
-<li class="toctree-l2"><a class="reference internal" href="model_evaluation.html">3.3. Metrics and scoring: quantifying the quality of predictions</a></li>
-<li class="toctree-l2"><a class="reference internal" href="learning_curve.html">3.4. Validation curves: plotting scores to evaluate models</a></li>
+<li class="toctree-l2"><a class="reference internal" href="classification_threshold.html">3.3. Tuning the decision threshold for class prediction</a></li>
+<li class="toctree-l2"><a class="reference internal" href="model_evaluation.html">3.4. Metrics and scoring: quantifying the quality of predictions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="learning_curve.html">3.5. Validation curves: plotting scores to evaluate models</a></li>
 </ul>
 </li>
 <li class="toctree-l1 has-children"><a class="reference internal" href="../inspection.html">4. Inspection</a><input class="toctree-checkbox" id="toctree-checkbox-4" name="toctree-checkbox-4" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-4"><i class="fa-solid fa-chevron-down"></i></label><ul>
@@ -768,7 +769,8 @@ data. For optimal performance, use C-ordered <code class="docutils literal notra
 <p><a class="reference internal" href="generated/sklearn.svm.SVC.html#sklearn.svm.SVC" title="sklearn.svm.SVC"><code class="xref py py-class docutils literal notranslate"><span class="pre">SVC</span></code></a>, <a class="reference internal" href="generated/sklearn.svm.NuSVC.html#sklearn.svm.NuSVC" title="sklearn.svm.NuSVC"><code class="xref py py-class docutils literal notranslate"><span class="pre">NuSVC</span></code></a> and <a class="reference internal" href="generated/sklearn.svm.LinearSVC.html#sklearn.svm.LinearSVC" title="sklearn.svm.LinearSVC"><code class="xref py py-class docutils literal notranslate"><span class="pre">LinearSVC</span></code></a> are classes
 capable of performing binary and multi-class classification on a dataset.</p>
 <figure class="align-center">
-<a class="reference external image-reference" href="../auto_examples/svm/plot_iris_svc.html"><img alt="../_images/sphx_glr_plot_iris_svc_001.png" src="../_images/sphx_glr_plot_iris_svc_001.png" /></a>
+<a class="reference external image-reference" href="../auto_examples/svm/plot_iris_svc.html"><img alt="../_images/sphx_glr_plot_iris_svc_001.png" src="../_images/sphx_glr_plot_iris_svc_001.png" />
+</a>
 </figure>
 <p><a class="reference internal" href="generated/sklearn.svm.SVC.html#sklearn.svm.SVC" title="sklearn.svm.SVC"><code class="xref py py-class docutils literal notranslate"><span class="pre">SVC</span></code></a> and <a class="reference internal" href="generated/sklearn.svm.NuSVC.html#sklearn.svm.NuSVC" title="sklearn.svm.NuSVC"><code class="xref py py-class docutils literal notranslate"><span class="pre">NuSVC</span></code></a> are similar methods, but accept slightly
 different sets of parameters and have different mathematical formulations (see
@@ -838,7 +840,7 @@ function of shape <code class="docutils literal notranslate"><span class="pre">(
 <span class="gp">&gt;&gt;&gt; </span><span class="n">clf</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">Y</span><span class="p">)</span>
 <span class="go">SVC(decision_function_shape=&#39;ovo&#39;)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">dec</span> <span class="o">=</span> <span class="n">clf</span><span class="o">.</span><span class="n">decision_function</span><span class="p">([[</span><span class="mi">1</span><span class="p">]])</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">dec</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="c1"># 4 classes: 4*3/2 = 6</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">dec</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="c1"># 6 classes: 4*3/2 = 6</span>
 <span class="go">6</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">clf</span><span class="o">.</span><span class="n">decision_function_shape</span> <span class="o">=</span> <span class="s2">&quot;ovr&quot;</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">dec</span> <span class="o">=</span> <span class="n">clf</span><span class="o">.</span><span class="n">decision_function</span><span class="p">([[</span><span class="mi">1</span><span class="p">]])</span>
@@ -848,9 +850,9 @@ function of shape <code class="docutils literal notranslate"><span class="pre">(
 </div>
 <p>On the other hand, <a class="reference internal" href="generated/sklearn.svm.LinearSVC.html#sklearn.svm.LinearSVC" title="sklearn.svm.LinearSVC"><code class="xref py py-class docutils literal notranslate"><span class="pre">LinearSVC</span></code></a> implements “one-vs-the-rest”
 multi-class strategy, thus training <code class="docutils literal notranslate"><span class="pre">n_classes</span></code> models.</p>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">lin_clf</span> <span class="o">=</span> <span class="n">svm</span><span class="o">.</span><span class="n">LinearSVC</span><span class="p">(</span><span class="n">dual</span><span class="o">=</span><span class="s2">&quot;auto&quot;</span><span class="p">)</span>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">lin_clf</span> <span class="o">=</span> <span class="n">svm</span><span class="o">.</span><span class="n">LinearSVC</span><span class="p">()</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">lin_clf</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">Y</span><span class="p">)</span>
-<span class="go">LinearSVC(dual=&#39;auto&#39;)</span>
+<span class="go">LinearSVC()</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">dec</span> <span class="o">=</span> <span class="n">lin_clf</span><span class="o">.</span><span class="n">decision_function</span><span class="p">([[</span><span class="mi">1</span><span class="p">]])</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">dec</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
 <span class="go">4</span>
@@ -988,7 +990,8 @@ that sets the parameter <code class="docutils literal notranslate"><span class="
 The figure below illustrates the decision boundary of an unbalanced problem,
 with and without weight correction.</p>
 <figure class="align-center">
-<a class="reference external image-reference" href="../auto_examples/svm/plot_separating_hyperplane_unbalanced.html"><img alt="../_images/sphx_glr_plot_separating_hyperplane_unbalanced_001.png" src="../_images/sphx_glr_plot_separating_hyperplane_unbalanced_001.png" style="width: 480.0px; height: 360.0px;" /></a>
+<a class="reference external image-reference" href="../auto_examples/svm/plot_separating_hyperplane_unbalanced.html"><img alt="../_images/sphx_glr_plot_separating_hyperplane_unbalanced_001.png" src="../_images/sphx_glr_plot_separating_hyperplane_unbalanced_001.png" style="width: 480.0px; height: 360.0px;" />
+</a>
 </figure>
 <p><a class="reference internal" href="generated/sklearn.svm.SVC.html#sklearn.svm.SVC" title="sklearn.svm.SVC"><code class="xref py py-class docutils literal notranslate"><span class="pre">SVC</span></code></a>, <a class="reference internal" href="generated/sklearn.svm.NuSVC.html#sklearn.svm.NuSVC" title="sklearn.svm.NuSVC"><code class="xref py py-class docutils literal notranslate"><span class="pre">NuSVC</span></code></a>, <a class="reference internal" href="generated/sklearn.svm.SVR.html#sklearn.svm.SVR" title="sklearn.svm.SVR"><code class="xref py py-class docutils literal notranslate"><span class="pre">SVR</span></code></a>, <a class="reference internal" href="generated/sklearn.svm.NuSVR.html#sklearn.svm.NuSVR" title="sklearn.svm.NuSVR"><code class="xref py py-class docutils literal notranslate"><span class="pre">NuSVR</span></code></a>, <a class="reference internal" href="generated/sklearn.svm.LinearSVC.html#sklearn.svm.LinearSVC" title="sklearn.svm.LinearSVC"><code class="xref py py-class docutils literal notranslate"><span class="pre">LinearSVC</span></code></a>,
 <a class="reference internal" href="generated/sklearn.svm.LinearSVR.html#sklearn.svm.LinearSVR" title="sklearn.svm.LinearSVR"><code class="xref py py-class docutils literal notranslate"><span class="pre">LinearSVR</span></code></a> and <a class="reference internal" href="generated/sklearn.svm.OneClassSVM.html#sklearn.svm.OneClassSVM" title="sklearn.svm.OneClassSVM"><code class="xref py py-class docutils literal notranslate"><span class="pre">OneClassSVM</span></code></a> implement also weights for
@@ -999,7 +1002,8 @@ get these samples right. The figure below illustrates the effect of sample
 weighting on the decision boundary. The size of the circles is proportional
 to the sample weights:</p>
 <figure class="align-center">
-<a class="reference external image-reference" href="../auto_examples/svm/plot_weighted_samples.html"><img alt="../_images/sphx_glr_plot_weighted_samples_001.png" src="../_images/sphx_glr_plot_weighted_samples_001.png" style="width: 1050.0px; height: 450.0px;" /></a>
+<a class="reference external image-reference" href="../auto_examples/svm/plot_weighted_samples.html"><img alt="../_images/sphx_glr_plot_weighted_samples_001.png" src="../_images/sphx_glr_plot_weighted_samples_001.png" style="width: 1050.0px; height: 450.0px;" />
+</a>
 </figure>
 <p class="rubric">Examples</p>
 <ul class="simple">
@@ -1193,6 +1197,7 @@ is advised to use <a class="reference internal" href="generated/sklearn.model_se
 <ul class="simple">
 <li><p><a class="reference internal" href="../auto_examples/svm/plot_rbf_parameters.html#sphx-glr-auto-examples-svm-plot-rbf-parameters-py"><span class="std std-ref">RBF SVM parameters</span></a></p></li>
 <li><p><a class="reference internal" href="../auto_examples/svm/plot_svm_nonlinear.html#sphx-glr-auto-examples-svm-plot-svm-nonlinear-py"><span class="std std-ref">Non-linear SVM</span></a></p></li>
+<li><p><a class="reference internal" href="../auto_examples/svm/plot_svm_scale_c.html#sphx-glr-auto-examples-svm-plot-svm-scale-c-py"><span class="std std-ref">Scaling the regularization parameter for SVCs</span></a></p></li>
 </ul>
 </section>
 <section id="custom-kernels">
@@ -1278,7 +1283,8 @@ generalization error of the classifier. The figure below shows the decision
 function for a linearly separable problem, with three samples on the
 margin boundaries, called “support vectors”:</p>
 <figure class="align-center">
-<a class="reference internal image-reference" href="../_images/sphx_glr_plot_separating_hyperplane_001.png"><img alt="../_images/sphx_glr_plot_separating_hyperplane_001.png" src="../_images/sphx_glr_plot_separating_hyperplane_001.png" style="width: 480.0px; height: 360.0px;" /></a>
+<a class="reference internal image-reference" href="../_images/sphx_glr_plot_separating_hyperplane_001.png"><img alt="../_images/sphx_glr_plot_separating_hyperplane_001.png" src="../_images/sphx_glr_plot_separating_hyperplane_001.png" style="width: 480.0px; height: 360.0px;" />
+</a>
 </figure>
 <p>In general, when the problem isn’t linearly separable, the support vectors
 are the samples <em>within</em> the margin boundaries.</p>

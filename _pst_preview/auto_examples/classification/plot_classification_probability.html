@@ -9,11 +9,11 @@
 <meta content="website" property="og:type"/>
 <meta content="https://scikit-learn/stable/auto_examples/classification/plot_classification_probability.html" property="og:url"/>
 <meta content="scikit-learn" property="og:site_name"/>
-<meta content="Plot the classification probability for different classifiers. We use a 3 class dataset, and we classify it with a Support Vector classifier, L1 and L2 penalized logistic regression with either a O..." property="og:description"/>
+<meta content="Plot the classification probability for different classifiers. We use a 3 class dataset, and we classify it with a Support Vector classifier, L1 and L2 penalized logistic regression (multinomial mu..." property="og:description"/>
 <meta content="https://scikit-learn.org/stable/_static/scikit-learn-logo-small.png" property="og:image"/>
 <meta content="scikit-learn" property="og:image:alt"/>
-<meta content="Plot the classification probability for different classifiers. We use a 3 class dataset, and we classify it with a Support Vector classifier, L1 and L2 penalized logistic regression with either a O..." name="description"/>
-<title>Plot classification probability — scikit-learn 1.5.dev0 documentation</title>
+<meta content="Plot the classification probability for different classifiers. We use a 3 class dataset, and we classify it with a Support Vector classifier, L1 and L2 penalized logistic regression (multinomial mu..." name="description"/>
+<title>Plot classification probability — scikit-learn 1.6.dev0 documentation</title>
 <script data-cfasync="false">
     document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
     document.documentElement.dataset.theme = localStorage.getItem("theme") || "light";
@@ -42,8 +42,8 @@
 <link as="script" href="../../_static/scripts/bootstrap.js?digest=8d27b9dea8ad943066ae" rel="preload"/>
 <link as="script" href="../../_static/scripts/pydata-sphinx-theme.js?digest=8d27b9dea8ad943066ae" rel="preload"/>
 <script src="../../_static/vendor/fontawesome/6.5.1/js/all.min.js?digest=8d27b9dea8ad943066ae"></script>
-<script src="../../_static/documentation_options.js?v=a2c36881"></script>
-<script src="../../_static/doctools.js?v=888ff710"></script>
+<script src="../../_static/documentation_options.js?v=d875d36e"></script>
+<script src="../../_static/doctools.js?v=9a2dae69"></script>
 <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
 <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
 <script src="../../_static/copybutton.js?v=97f0b27d"></script>
@@ -53,8 +53,8 @@
 <script>DOCUMENTATION_OPTIONS.pagename = 'auto_examples/classification/plot_classification_probability';</script>
 <script>
         DOCUMENTATION_OPTIONS.theme_version = '0.15.2';
-        DOCUMENTATION_OPTIONS.theme_switcher_json_url = 'https://scikit-learn.org/_pst_preview/versions.json';
-        DOCUMENTATION_OPTIONS.theme_switcher_version_match = '1.5.dev0';
+        DOCUMENTATION_OPTIONS.theme_switcher_json_url = 'https://scikit-learn.org/_pst_preview/_static/versions.json';
+        DOCUMENTATION_OPTIONS.theme_switcher_version_match = '1.6.dev0';
         DOCUMENTATION_OPTIONS.show_version_warning_banner = true;
         </script>
 <script src="../../_static/scripts/dropdown.js?v=12d599f8"></script>
@@ -549,7 +549,6 @@ document.write(`
 <li class="toctree-l2"><a class="reference internal" href="../applications/plot_face_recognition.html">Faces recognition example using eigenfaces and SVMs</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../applications/plot_digits_denoising.html">Image denoising using kernel PCA</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../applications/plot_time_series_lagged_features.html">Lagged features for time series forecasting</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../applications/svm_gui.html">Libsvm GUI</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../applications/plot_model_complexity_influence.html">Model Complexity Influence</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../applications/plot_out_of_core_classification.html">Out-of-core classification of text documents</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../applications/plot_outlier_detection_wine.html">Outlier detection on a real data set</a></li>
@@ -694,6 +693,8 @@ document.write(`
 <li class="toctree-l2"><a class="reference internal" href="../model_selection/plot_cv_predict.html">Plotting Cross-Validated Predictions</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../model_selection/plot_learning_curve.html">Plotting Learning Curves and Checking Models’ Scalability</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../model_selection/plot_validation_curve.html">Plotting Validation Curves</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../model_selection/plot_tuned_decision_threshold.html">Post-hoc tuning the cut-off point of decision function</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../model_selection/plot_cost_sensitive_learning.html">Post-tuning the decision threshold for cost-sensitive learning</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../model_selection/plot_precision_recall.html">Precision-Recall</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../model_selection/plot_roc_crossval.html">Receiver Operating Characteristic (ROC) with cross validation</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../model_selection/plot_grid_search_text_feature_extraction.html">Sample pipeline for text feature extraction and evaluation</a></li>
@@ -833,23 +834,13 @@ document.write(`
 <span id="sphx-glr-auto-examples-classification-plot-classification-probability-py"></span><h1>Plot classification probability<a class="headerlink" href="#plot-classification-probability" title="Link to this heading">#</a></h1>
 <p>Plot the classification probability for different classifiers. We use a 3 class
 dataset, and we classify it with a Support Vector classifier, L1 and L2
-penalized logistic regression with either a One-Vs-Rest or multinomial setting,
-and Gaussian process classification.</p>
+penalized logistic regression (multinomial multiclass), a One-Vs-Rest version with
+logistic regression, and Gaussian process classification.</p>
 <p>Linear SVC is not a probabilistic classifier by default but it has a built-in
 calibration option enabled in this example (<code class="docutils literal notranslate"><span class="pre">probability=True</span></code>).</p>
 <p>The logistic regression with One-Vs-Rest is not a multiclass classifier out of
 the box. As a result it has more trouble in separating class 2 and 3 than the
 other estimators.</p>
-<img alt="Class 0, Class 1, Class 2, Class 0, Class 1, Class 2, Class 0, Class 1, Class 2, Class 0, Class 1, Class 2, Class 0, Class 1, Class 2, Probability" class="sphx-glr-single-img" src="../../_images/sphx_glr_plot_classification_probability_001.png" srcset="../../_images/sphx_glr_plot_classification_probability_001.png"/><div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>Accuracy (train) for L1 logistic: 83.3%
-Accuracy (train) for L2 logistic (Multinomial): 82.7%
-Accuracy (train) for L2 logistic (OvR): 79.3%
-Accuracy (train) for Linear SVC: 82.0%
-Accuracy (train) for GPC: 82.7%
-</pre></div>
-</div>
-<div class="line-block">
-<div class="line"><br/></div>
-</div>
 <div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Author: Alexandre Gramfort &lt;alexandre.gramfort@inria.fr&gt;</span>
 <span class="c1"># License: BSD 3 clause</span>
 
@@ -863,6 +854,7 @@ Accuracy (train) for GPC: 82.7%
 <span class="kn">from</span> <span class="nn">sklearn.inspection</span> <span class="kn">import</span> <span class="n">DecisionBoundaryDisplay</span>
 <span class="kn">from</span> <span class="nn">sklearn.linear_model</span> <span class="kn">import</span> <a class="sphx-glr-backref-module-sklearn-linear_model sphx-glr-backref-type-py-class sphx-glr-backref-instance" href="../../modules/generated/sklearn.linear_model.LogisticRegression.html#sklearn.linear_model.LogisticRegression" title="sklearn.linear_model.LogisticRegression"><span class="n">LogisticRegression</span></a>
 <span class="kn">from</span> <span class="nn">sklearn.metrics</span> <span class="kn">import</span> <a class="sphx-glr-backref-module-sklearn-metrics sphx-glr-backref-type-py-function" href="../../modules/generated/sklearn.metrics.accuracy_score.html#sklearn.metrics.accuracy_score" title="sklearn.metrics.accuracy_score"><span class="n">accuracy_score</span></a>
+<span class="kn">from</span> <span class="nn">sklearn.multiclass</span> <span class="kn">import</span> <a class="sphx-glr-backref-module-sklearn-multiclass sphx-glr-backref-type-py-class sphx-glr-backref-instance" href="../../modules/generated/sklearn.multiclass.OneVsRestClassifier.html#sklearn.multiclass.OneVsRestClassifier" title="sklearn.multiclass.OneVsRestClassifier"><span class="n">OneVsRestClassifier</span></a>
 <span class="kn">from</span> <span class="nn">sklearn.svm</span> <span class="kn">import</span> <a class="sphx-glr-backref-module-sklearn-svm sphx-glr-backref-type-py-class sphx-glr-backref-instance" href="../../modules/generated/sklearn.svm.SVC.html#sklearn.svm.SVC" title="sklearn.svm.SVC"><span class="n">SVC</span></a>
 
 <span class="n">iris</span> <span class="o">=</span> <a class="sphx-glr-backref-module-sklearn-datasets sphx-glr-backref-type-py-function" href="../../modules/generated/sklearn.datasets.load_iris.html#sklearn.datasets.load_iris" title="sklearn.datasets.load_iris"><span class="n">datasets</span><span class="o">.</span><span class="n">load_iris</span></a><span class="p">()</span>
@@ -876,14 +868,12 @@ Accuracy (train) for GPC: 82.7%
 
 <span class="c1"># Create different classifiers.</span>
 <span class="n">classifiers</span> <span class="o">=</span> <span class="p">{</span>
-    <span class="s2">"L1 logistic"</span><span class="p">:</span> <a class="sphx-glr-backref-module-sklearn-linear_model sphx-glr-backref-type-py-class sphx-glr-backref-instance" href="../../modules/generated/sklearn.linear_model.LogisticRegression.html#sklearn.linear_model.LogisticRegression" title="sklearn.linear_model.LogisticRegression"><span class="n">LogisticRegression</span></a><span class="p">(</span>
-        <span class="n">C</span><span class="o">=</span><span class="n">C</span><span class="p">,</span> <span class="n">penalty</span><span class="o">=</span><span class="s2">"l1"</span><span class="p">,</span> <span class="n">solver</span><span class="o">=</span><span class="s2">"saga"</span><span class="p">,</span> <span class="n">multi_class</span><span class="o">=</span><span class="s2">"multinomial"</span><span class="p">,</span> <span class="n">max_iter</span><span class="o">=</span><span class="mi">10000</span>
-    <span class="p">),</span>
+    <span class="s2">"L1 logistic"</span><span class="p">:</span> <a class="sphx-glr-backref-module-sklearn-linear_model sphx-glr-backref-type-py-class sphx-glr-backref-instance" href="../../modules/generated/sklearn.linear_model.LogisticRegression.html#sklearn.linear_model.LogisticRegression" title="sklearn.linear_model.LogisticRegression"><span class="n">LogisticRegression</span></a><span class="p">(</span><span class="n">C</span><span class="o">=</span><span class="n">C</span><span class="p">,</span> <span class="n">penalty</span><span class="o">=</span><span class="s2">"l1"</span><span class="p">,</span> <span class="n">solver</span><span class="o">=</span><span class="s2">"saga"</span><span class="p">,</span> <span class="n">max_iter</span><span class="o">=</span><span class="mi">10000</span><span class="p">),</span>
     <span class="s2">"L2 logistic (Multinomial)"</span><span class="p">:</span> <a class="sphx-glr-backref-module-sklearn-linear_model sphx-glr-backref-type-py-class sphx-glr-backref-instance" href="../../modules/generated/sklearn.linear_model.LogisticRegression.html#sklearn.linear_model.LogisticRegression" title="sklearn.linear_model.LogisticRegression"><span class="n">LogisticRegression</span></a><span class="p">(</span>
-        <span class="n">C</span><span class="o">=</span><span class="n">C</span><span class="p">,</span> <span class="n">penalty</span><span class="o">=</span><span class="s2">"l2"</span><span class="p">,</span> <span class="n">solver</span><span class="o">=</span><span class="s2">"saga"</span><span class="p">,</span> <span class="n">multi_class</span><span class="o">=</span><span class="s2">"multinomial"</span><span class="p">,</span> <span class="n">max_iter</span><span class="o">=</span><span class="mi">10000</span>
+        <span class="n">C</span><span class="o">=</span><span class="n">C</span><span class="p">,</span> <span class="n">penalty</span><span class="o">=</span><span class="s2">"l2"</span><span class="p">,</span> <span class="n">solver</span><span class="o">=</span><span class="s2">"saga"</span><span class="p">,</span> <span class="n">max_iter</span><span class="o">=</span><span class="mi">10000</span>
     <span class="p">),</span>
-    <span class="s2">"L2 logistic (OvR)"</span><span class="p">:</span> <a class="sphx-glr-backref-module-sklearn-linear_model sphx-glr-backref-type-py-class sphx-glr-backref-instance" href="../../modules/generated/sklearn.linear_model.LogisticRegression.html#sklearn.linear_model.LogisticRegression" title="sklearn.linear_model.LogisticRegression"><span class="n">LogisticRegression</span></a><span class="p">(</span>
-        <span class="n">C</span><span class="o">=</span><span class="n">C</span><span class="p">,</span> <span class="n">penalty</span><span class="o">=</span><span class="s2">"l2"</span><span class="p">,</span> <span class="n">solver</span><span class="o">=</span><span class="s2">"saga"</span><span class="p">,</span> <span class="n">multi_class</span><span class="o">=</span><span class="s2">"ovr"</span><span class="p">,</span> <span class="n">max_iter</span><span class="o">=</span><span class="mi">10000</span>
+    <span class="s2">"L2 logistic (OvR)"</span><span class="p">:</span> <a class="sphx-glr-backref-module-sklearn-multiclass sphx-glr-backref-type-py-class sphx-glr-backref-instance" href="../../modules/generated/sklearn.multiclass.OneVsRestClassifier.html#sklearn.multiclass.OneVsRestClassifier" title="sklearn.multiclass.OneVsRestClassifier"><span class="n">OneVsRestClassifier</span></a><span class="p">(</span>
+        <a class="sphx-glr-backref-module-sklearn-linear_model sphx-glr-backref-type-py-class sphx-glr-backref-instance" href="../../modules/generated/sklearn.linear_model.LogisticRegression.html#sklearn.linear_model.LogisticRegression" title="sklearn.linear_model.LogisticRegression"><span class="n">LogisticRegression</span></a><span class="p">(</span><span class="n">C</span><span class="o">=</span><span class="n">C</span><span class="p">,</span> <span class="n">penalty</span><span class="o">=</span><span class="s2">"l2"</span><span class="p">,</span> <span class="n">solver</span><span class="o">=</span><span class="s2">"saga"</span><span class="p">,</span> <span class="n">max_iter</span><span class="o">=</span><span class="mi">10000</span><span class="p">)</span>
     <span class="p">),</span>
     <span class="s2">"Linear SVC"</span><span class="p">:</span> <a class="sphx-glr-backref-module-sklearn-svm sphx-glr-backref-type-py-class sphx-glr-backref-instance" href="../../modules/generated/sklearn.svm.SVC.html#sklearn.svm.SVC" title="sklearn.svm.SVC"><span class="n">SVC</span></a><span class="p">(</span><span class="n">kernel</span><span class="o">=</span><span class="s2">"linear"</span><span class="p">,</span> <span class="n">C</span><span class="o">=</span><span class="n">C</span><span class="p">,</span> <span class="n">probability</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="mi">0</span><span class="p">),</span>
     <span class="s2">"GPC"</span><span class="p">:</span> <a class="sphx-glr-backref-module-sklearn-gaussian_process sphx-glr-backref-type-py-class sphx-glr-backref-instance" href="../../modules/generated/sklearn.gaussian_process.GaussianProcessClassifier.html#sklearn.gaussian_process.GaussianProcessClassifier" title="sklearn.gaussian_process.GaussianProcessClassifier"><span class="n">GaussianProcessClassifier</span></a><span class="p">(</span><span class="n">kernel</span><span class="p">),</span>
@@ -929,21 +919,20 @@ Accuracy (train) for GPC: 82.7%
 <a class="sphx-glr-backref-module-matplotlib-pyplot sphx-glr-backref-type-py-function" href="https://matplotlib.org/stable/api/_as_gen/matplotlib.pyplot.show.html#matplotlib.pyplot.show" title="matplotlib.pyplot.show"><span class="n">plt</span><span class="o">.</span><span class="n">show</span></a><span class="p">()</span>
 </pre></div>
 </div>
-<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> (0 minutes 1.543 seconds)</p>
 
 <p class="rubric">Related examples</p>
 <div class="sphx-glr-thumbnails"><div class="sphx-glr-thumbcontainer" tooltip="Comparison of multinomial logistic L1 vs one-versus-rest L1 logistic regression to classify doc..."><img alt="" src="../../_images/sphx_glr_plot_sparse_logistic_regression_20newsgroups_thumb.png"/>
 <p><a class="reference internal" href="../linear_model/plot_sparse_logistic_regression_20newsgroups.html#sphx-glr-auto-examples-linear-model-plot-sparse-logistic-regression-20newsgroups-py"><span class="std std-ref">Multiclass sparse logistic regression on 20newgroups</span></a></p>
 <div class="sphx-glr-thumbnail-title">Multiclass sparse logistic regression on 20newgroups</div>
-</div><div class="sphx-glr-thumbcontainer" tooltip="Plot decision surface of multinomial and One-vs-Rest Logistic Regression. The hyperplanes corre..."><img alt="" src="../../_images/sphx_glr_plot_logistic_multinomial_thumb.png"/>
-<p><a class="reference internal" href="../linear_model/plot_logistic_multinomial.html#sphx-glr-auto-examples-linear-model-plot-logistic-multinomial-py"><span class="std std-ref">Plot multinomial and One-vs-Rest Logistic Regression</span></a></p>
-<div class="sphx-glr-thumbnail-title">Plot multinomial and One-vs-Rest Logistic Regression</div>
-</div><div class="sphx-glr-thumbcontainer" tooltip="Here we fit a multinomial logistic regression with L1 penalty on a subset of the MNIST digits c..."><img alt="" src="../../_images/sphx_glr_plot_sparse_logistic_regression_mnist_thumb.png"/>
-<p><a class="reference internal" href="../linear_model/plot_sparse_logistic_regression_mnist.html#sphx-glr-auto-examples-linear-model-plot-sparse-logistic-regression-mnist-py"><span class="std std-ref">MNIST classification using multinomial logistic + L1</span></a></p>
-<div class="sphx-glr-thumbnail-title">MNIST classification using multinomial logistic + L1</div>
 </div><div class="sphx-glr-thumbcontainer" tooltip="Comparison of the sparsity (percentage of zero coefficients) of solutions when L1, L2 and Elast..."><img alt="" src="../../_images/sphx_glr_plot_logistic_l1_l2_sparsity_thumb.png"/>
 <p><a class="reference internal" href="../linear_model/plot_logistic_l1_l2_sparsity.html#sphx-glr-auto-examples-linear-model-plot-logistic-l1-l2-sparsity-py"><span class="std std-ref">L1 Penalty and Sparsity in Logistic Regression</span></a></p>
 <div class="sphx-glr-thumbnail-title">L1 Penalty and Sparsity in Logistic Regression</div>
+</div><div class="sphx-glr-thumbcontainer" tooltip="Show below is a logistic-regression classifiers decision boundaries on the first two dimensions..."><img alt="" src="../../_images/sphx_glr_plot_iris_logistic_thumb.png"/>
+<p><a class="reference internal" href="../linear_model/plot_iris_logistic.html#sphx-glr-auto-examples-linear-model-plot-iris-logistic-py"><span class="std std-ref">Logistic Regression 3-class Classifier</span></a></p>
+<div class="sphx-glr-thumbnail-title">Logistic Regression 3-class Classifier</div>
+</div><div class="sphx-glr-thumbcontainer" tooltip="Here we fit a multinomial logistic regression with L1 penalty on a subset of the MNIST digits c..."><img alt="" src="../../_images/sphx_glr_plot_sparse_logistic_regression_mnist_thumb.png"/>
+<p><a class="reference internal" href="../linear_model/plot_sparse_logistic_regression_mnist.html#sphx-glr-auto-examples-linear-model-plot-sparse-logistic-regression-mnist-py"><span class="std std-ref">MNIST classification using multinomial logistic + L1</span></a></p>
+<div class="sphx-glr-thumbnail-title">MNIST classification using multinomial logistic + L1</div>
 </div></div><p class="sphx-glr-signature"><a class="reference external" href="https://sphinx-gallery.github.io">Gallery generated by Sphinx-Gallery</a></p>
 </section>
 </article>

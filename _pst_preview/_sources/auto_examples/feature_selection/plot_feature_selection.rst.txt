@@ -11,7 +11,7 @@
         :class: sphx-glr-download-link-note
 
         :ref:`Go to the end <sphx_glr_download_auto_examples_feature_selection_plot_feature_selection.py>`
-        to download the full example code or to run this example in your browser via JupyterLite or Binder
+        to download the full example code. or to run this example in your browser via JupyterLite or Binder
 
 .. rst-class:: sphx-glr-example-title
 
@@ -61,12 +61,6 @@ Generate sample data
     X_train, X_test, y_train, y_test = train_test_split(X, y, stratify=y, random_state=0)
 
 
-
-
-
-
-
-
 .. GENERATED FROM PYTHON SOURCE LINES 41-47
 
 Univariate feature selection
@@ -88,12 +82,6 @@ the four most significant features.
     scores /= scores.max()
 
 
-
-
-
-
-
-
 .. GENERATED FROM PYTHON SOURCE LINES 55-66
 
 .. code-block:: Python
@@ -108,17 +96,6 @@ the four most significant features.
     plt.xlabel("Feature number")
     plt.ylabel(r"Univariate score ($-Log(p_{value})$)")
     plt.show()
-
-
-
-
-.. image-sg:: /auto_examples/feature_selection/images/sphx_glr_plot_feature_selection_001.png
-   :alt: Feature univariate score
-   :srcset: /auto_examples/feature_selection/images/sphx_glr_plot_feature_selection_001.png
-   :class: sphx-glr-single-img
-
-
-
 
 
 .. GENERATED FROM PYTHON SOURCE LINES 67-70
@@ -142,7 +119,7 @@ Without univariate feature selection
     from sklearn.preprocessing import MinMaxScaler
     from sklearn.svm import LinearSVC
 
-    clf = make_pipeline(MinMaxScaler(), LinearSVC(dual="auto"))
+    clf = make_pipeline(MinMaxScaler(), LinearSVC())
     clf.fit(X_train, y_train)
     print(
         "Classification accuracy without selecting features: {:.3f}".format(
@@ -154,29 +131,15 @@ Without univariate feature selection
     svm_weights /= svm_weights.sum()
 
 
-
-
-
-.. rst-class:: sphx-glr-script-out
-
- .. code-block:: none
-
-    Classification accuracy without selecting features: 0.789
-
-
-
-
 .. GENERATED FROM PYTHON SOURCE LINES 92-93
 
 After univariate feature selection
 
-.. GENERATED FROM PYTHON SOURCE LINES 93-106
+.. GENERATED FROM PYTHON SOURCE LINES 93-104
 
 .. code-block:: Python
 
-    clf_selected = make_pipeline(
-        SelectKBest(f_classif, k=4), MinMaxScaler(), LinearSVC(dual="auto")
-    )
+    clf_selected = make_pipeline(SelectKBest(f_classif, k=4), MinMaxScaler(), LinearSVC())
     clf_selected.fit(X_train, y_train)
     print(
         "Classification accuracy after univariate feature selection: {:.3f}".format(
@@ -188,19 +151,7 @@ After univariate feature selection
     svm_weights_selected /= svm_weights_selected.sum()
 
 
-
-
-
-.. rst-class:: sphx-glr-script-out
-
- .. code-block:: none
-
-    Classification accuracy after univariate feature selection: 0.868
-
-
-
-
-.. GENERATED FROM PYTHON SOURCE LINES 107-127
+.. GENERATED FROM PYTHON SOURCE LINES 105-125
 
 .. code-block:: Python
 
@@ -225,29 +176,13 @@ After univariate feature selection
     plt.show()
 
 
-
-
-.. image-sg:: /auto_examples/feature_selection/images/sphx_glr_plot_feature_selection_002.png
-   :alt: Comparing feature selection
-   :srcset: /auto_examples/feature_selection/images/sphx_glr_plot_feature_selection_002.png
-   :class: sphx-glr-single-img
-
-
-
-
-
-.. GENERATED FROM PYTHON SOURCE LINES 128-133
+.. GENERATED FROM PYTHON SOURCE LINES 126-131
 
 Without univariate feature selection, the SVM assigns a large weight
 to the first 4 original significant features, but also selects many of the
 non-informative features. Applying univariate feature selection before
 the SVM increases the SVM weight attributed to the significant features,
 and will thus improve classification.
-
-
-.. rst-class:: sphx-glr-timing
-
-   **Total running time of the script:** (0 minutes 0.180 seconds)
 
 
 .. _sphx_glr_download_auto_examples_feature_selection_plot_feature_selection.py:

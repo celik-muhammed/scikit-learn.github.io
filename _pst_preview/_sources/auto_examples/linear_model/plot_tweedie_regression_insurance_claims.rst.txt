@@ -11,7 +11,7 @@
         :class: sphx-glr-download-link-note
 
         :ref:`Go to the end <sphx_glr_download_auto_examples_linear_model_plot_tweedie_regression_insurance_claims.py>`
-        to download the full example code or to run this example in your browser via JupyterLite or Binder
+        to download the full example code. or to run this example in your browser via JupyterLite or Binder
 
 .. rst-class:: sphx-glr-example-title
 
@@ -55,24 +55,7 @@ helper functions for loading the data and visualizing results.
     Third-Party Liability Claims (November 8, 2018). `doi:10.2139/ssrn.3164764
     <https://doi.org/10.2139/ssrn.3164764>`_
 
-.. GENERATED FROM PYTHON SOURCE LINES 39-45
-
-.. code-block:: Python
-
-
-    # Authors: Christian Lorentzen <lorentzen.ch@gmail.com>
-    #          Roman Yurchak <rth.yurchak@gmail.com>
-    #          Olivier Grisel <olivier.grisel@ensta.org>
-    # License: BSD 3 clause
-
-
-
-
-
-
-
-
-.. GENERATED FROM PYTHON SOURCE LINES 46-206
+.. GENERATED FROM PYTHON SOURCE LINES 43-203
 
 .. code-block:: Python
 
@@ -237,13 +220,7 @@ helper functions for loading the data and visualizing results.
 
 
 
-
-
-
-
-
-
-.. GENERATED FROM PYTHON SOURCE LINES 207-214
+.. GENERATED FROM PYTHON SOURCE LINES 204-211
 
 Loading datasets, basic feature extraction and target definitions
 -----------------------------------------------------------------
@@ -253,7 +230,7 @@ containing the number of claims (``ClaimNb``), with the freMTPL2sev table,
 containing the claim amount (``ClaimAmount``) for the same policy ids
 (``IDpol``).
 
-.. GENERATED FROM PYTHON SOURCE LINES 214-272
+.. GENERATED FROM PYTHON SOURCE LINES 211-269
 
 .. code-block:: Python
 
@@ -287,7 +264,7 @@ containing the claim amount (``ClaimAmount``) for the same policy ids
         [
             (
                 "binned_numeric",
-                KBinsDiscretizer(n_bins=10, subsample=int(2e5), random_state=0),
+                KBinsDiscretizer(n_bins=10, random_state=0),
                 ["VehAge", "DrivAge"],
             ),
             (
@@ -316,41 +293,7 @@ containing the claim amount (``ClaimAmount``) for the same policy ids
         print(df[df.ClaimAmount > 0].head())
 
 
-
-
-
-.. rst-class:: sphx-glr-script-out
-
- .. code-block:: none
-
-           ClaimNb  Exposure Area  VehPower  VehAge  DrivAge  BonusMalus VehBrand  \
-    IDpol                                                                           
-    139          1      0.75    F         7       1       61          50      B12   
-    190          1      0.14    B        12       5       50          60      B12   
-    414          1      0.14    E         4       0       36          85      B12   
-    424          2      0.62    F        10       0       51         100      B12   
-    463          1      0.31    A         5       0       45          50      B12   
-
-            VehGas  Density Region  ClaimAmount   PurePremium  Frequency  \
-    IDpol                                                                  
-    139    Regular    27000    R11       303.00    404.000000   1.333333   
-    190     Diesel       56    R25      1981.84  14156.000000   7.142857   
-    414    Regular     4792    R11      1456.55  10403.928571   7.142857   
-    424    Regular    27000    R11     10834.00  17474.193548   3.225806   
-    463    Regular       12    R73      3986.67  12860.225806   3.225806   
-
-           AvgClaimAmount  
-    IDpol                  
-    139            303.00  
-    190           1981.84  
-    414           1456.55  
-    424           5417.00  
-    463           3986.67  
-
-
-
-
-.. GENERATED FROM PYTHON SOURCE LINES 273-282
+.. GENERATED FROM PYTHON SOURCE LINES 270-279
 
 Frequency model -- Poisson distribution
 ---------------------------------------
@@ -362,7 +305,7 @@ constant rate in a given time interval (``Exposure``, in units of years).
 Here we model the frequency ``y = ClaimNb / Exposure``, which is still a
 (scaled) Poisson distribution, and use ``Exposure`` as `sample_weight`.
 
-.. GENERATED FROM PYTHON SOURCE LINES 283-288
+.. GENERATED FROM PYTHON SOURCE LINES 280-285
 
 .. code-block:: Python
 
@@ -372,57 +315,27 @@ Here we model the frequency ``y = ClaimNb / Exposure``, which is still a
     df_train, df_test, X_train, X_test = train_test_split(df, X, random_state=0)
 
 
-
-
-
-
-
-
-.. GENERATED FROM PYTHON SOURCE LINES 289-292
+.. GENERATED FROM PYTHON SOURCE LINES 286-289
 
 Let us keep in mind that despite the seemingly large number of data points in
 this dataset, the number of evaluation points where the claim amount is
 non-zero is quite small:
 
-.. GENERATED FROM PYTHON SOURCE LINES 293-295
+.. GENERATED FROM PYTHON SOURCE LINES 290-292
 
 .. code-block:: Python
 
     len(df_test)
 
 
-
-
-
-.. rst-class:: sphx-glr-script-out
-
- .. code-block:: none
-
-
-    169504
-
-
-
-.. GENERATED FROM PYTHON SOURCE LINES 296-298
+.. GENERATED FROM PYTHON SOURCE LINES 293-295
 
 .. code-block:: Python
 
     len(df_test[df_test["ClaimAmount"] > 0])
 
 
-
-
-
-.. rst-class:: sphx-glr-script-out
-
- .. code-block:: none
-
-
-    6237
-
-
-
-.. GENERATED FROM PYTHON SOURCE LINES 299-306
+.. GENERATED FROM PYTHON SOURCE LINES 296-303
 
 As a consequence, we expect a significant variability in our
 evaluation upon random resampling of the train test split.
@@ -432,7 +345,7 @@ on the training set via a Newton solver. Some of the features are collinear
 (e.g. because we did not drop any categorical level in the `OneHotEncoder`),
 we use a weak L2 penalization to avoid numerical issues.
 
-.. GENERATED FROM PYTHON SOURCE LINES 307-322
+.. GENERATED FROM PYTHON SOURCE LINES 304-319
 
 .. code-block:: Python
 
@@ -452,24 +365,7 @@ we use a weak L2 penalization to avoid numerical issues.
     print(scores)
 
 
-
-
-
-.. rst-class:: sphx-glr-script-out
-
- .. code-block:: none
-
-    Evaluation of PoissonRegressor on target Frequency
-    subset               train    test
-    metric                            
-    D² explained        0.0448  0.0427
-    mean abs. error     0.1379  0.1378
-    mean squared error  0.2441  0.2246
-
-
-
-
-.. GENERATED FROM PYTHON SOURCE LINES 323-331
+.. GENERATED FROM PYTHON SOURCE LINES 320-328
 
 Note that the score measured on the test set is surprisingly better than on
 the training set. This might be specific to this random train-test split.
@@ -480,7 +376,7 @@ We can visually compare observed and predicted values, aggregated by the
 drivers age (``DrivAge``), vehicle age (``VehAge``) and the insurance
 bonus/malus (``BonusMalus``).
 
-.. GENERATED FROM PYTHON SOURCE LINES 332-384
+.. GENERATED FROM PYTHON SOURCE LINES 329-381
 
 .. code-block:: Python
 
@@ -537,18 +433,7 @@ bonus/malus (``BonusMalus``).
 
 
 
-
-
-.. image-sg:: /auto_examples/linear_model/images/sphx_glr_plot_tweedie_regression_insurance_claims_001.png
-   :alt: train data, test data, test data, test data
-   :srcset: /auto_examples/linear_model/images/sphx_glr_plot_tweedie_regression_insurance_claims_001.png
-   :class: sphx-glr-single-img
-
-
-
-
-
-.. GENERATED FROM PYTHON SOURCE LINES 385-402
+.. GENERATED FROM PYTHON SOURCE LINES 382-399
 
 According to the observed data, the frequency of accidents is higher for
 drivers younger than 30 years old, and is positively correlated with the
@@ -568,7 +453,7 @@ Note:
 - We use ``ClaimNb`` as `sample_weight` to account for policies that contain
   more than one claim.
 
-.. GENERATED FROM PYTHON SOURCE LINES 402-427
+.. GENERATED FROM PYTHON SOURCE LINES 399-424
 
 .. code-block:: Python
 
@@ -598,31 +483,14 @@ Note:
     print(scores)
 
 
-
-
-
-.. rst-class:: sphx-glr-script-out
-
- .. code-block:: none
-
-    Evaluation of GammaRegressor on target AvgClaimAmount
-    subset                     train          test
-    metric                                        
-    D² explained        3.900000e-03  4.400000e-03
-    mean abs. error     1.756746e+03  1.744042e+03
-    mean squared error  5.801770e+07  5.030677e+07
-
-
-
-
-.. GENERATED FROM PYTHON SOURCE LINES 428-432
+.. GENERATED FROM PYTHON SOURCE LINES 425-429
 
 Those values of the metrics are not necessarily easy to interpret. It can be
 insightful to compare them with a model that does not use any input
 features and always predicts a constant value, i.e. the average claim
 amount, in the same setting:
 
-.. GENERATED FROM PYTHON SOURCE LINES 433-455
+.. GENERATED FROM PYTHON SOURCE LINES 430-452
 
 .. code-block:: Python
 
@@ -649,24 +517,7 @@ amount, in the same setting:
     print(scores)
 
 
-
-
-
-.. rst-class:: sphx-glr-script-out
-
- .. code-block:: none
-
-    Evaluation of a mean predictor on target AvgClaimAmount
-    subset                     train          test
-    metric                                        
-    D² explained        0.000000e+00 -0.000000e+00
-    mean abs. error     1.756687e+03  1.744497e+03
-    mean squared error  5.803882e+07  5.033764e+07
-
-
-
-
-.. GENERATED FROM PYTHON SOURCE LINES 456-465
+.. GENERATED FROM PYTHON SOURCE LINES 453-462
 
 We conclude that the claim amount is very challenging to predict. Still, the
 :class:`~sklearn.linear_model.GammaRegressor` is able to leverage some
@@ -678,7 +529,7 @@ it is conditional on having at least one claim, and cannot be used to predict
 the average claim amount per policy. For this, it needs to be combined with
 a claims frequency model.
 
-.. GENERATED FROM PYTHON SOURCE LINES 466-484
+.. GENERATED FROM PYTHON SOURCE LINES 463-481
 
 .. code-block:: Python
 
@@ -701,27 +552,12 @@ a claims frequency model.
     )
 
 
-
-
-
-.. rst-class:: sphx-glr-script-out
-
- .. code-block:: none
-
-    Mean AvgClaim Amount per policy:              71.78 
-    Mean AvgClaim Amount | NbClaim > 0:           1951.21
-    Predicted Mean AvgClaim Amount | NbClaim > 0: 1940.95
-    Predicted Mean AvgClaim Amount (dummy) | NbClaim > 0: 1978.59
-
-
-
-
-.. GENERATED FROM PYTHON SOURCE LINES 485-487
+.. GENERATED FROM PYTHON SOURCE LINES 482-484
 
 We can visually compare observed and predicted values, aggregated for
 the drivers age (``DrivAge``).
 
-.. GENERATED FROM PYTHON SOURCE LINES 487-514
+.. GENERATED FROM PYTHON SOURCE LINES 484-511
 
 .. code-block:: Python
 
@@ -753,18 +589,7 @@ the drivers age (``DrivAge``).
     plt.tight_layout()
 
 
-
-
-.. image-sg:: /auto_examples/linear_model/images/sphx_glr_plot_tweedie_regression_insurance_claims_002.png
-   :alt: train data, test data
-   :srcset: /auto_examples/linear_model/images/sphx_glr_plot_tweedie_regression_insurance_claims_002.png
-   :class: sphx-glr-single-img
-
-
-
-
-
-.. GENERATED FROM PYTHON SOURCE LINES 515-545
+.. GENERATED FROM PYTHON SOURCE LINES 512-542
 
 Overall, the drivers age (``DrivAge``) has a weak impact on the claim
 severity, both in observed and predicted data.
@@ -797,7 +622,7 @@ models side by side, i.e. we compare them at identical values of `power`.
 Ideally, we hope that one model will be consistently better than the other,
 regardless of `power`.
 
-.. GENERATED FROM PYTHON SOURCE LINES 545-586
+.. GENERATED FROM PYTHON SOURCE LINES 542-583
 
 .. code-block:: Python
 
@@ -843,32 +668,7 @@ regardless of `power`.
         print(scores)
 
 
-
-
-
-.. rst-class:: sphx-glr-script-out
-
- .. code-block:: none
-
-    Evaluation of the Product Model and the Tweedie Regressor on target PurePremium
-                              Product Model               TweedieRegressor              
-    subset                            train          test            train          test
-    metric                                                                              
-    D² explained                        NaN           NaN     1.640000e-02  1.370000e-02
-    mean Tweedie dev p=1.5000  7.669930e+01  7.617050e+01     7.640770e+01  7.640880e+01
-    mean Tweedie dev p=1.7000  3.695740e+01  3.683980e+01     3.682880e+01  3.692270e+01
-    mean Tweedie dev p=1.8000  3.046010e+01  3.040530e+01     3.037600e+01  3.045390e+01
-    mean Tweedie dev p=1.9000  3.387580e+01  3.385000e+01     3.382120e+01  3.387830e+01
-    mean Tweedie dev p=1.9900  2.015716e+02  2.015414e+02     2.015347e+02  2.015587e+02
-    mean Tweedie dev p=1.9990  1.914573e+03  1.914370e+03     1.914538e+03  1.914387e+03
-    mean Tweedie dev p=1.9999  1.904751e+04  1.904556e+04     1.904747e+04  1.904558e+04
-    mean abs. error            2.730119e+02  2.722128e+02     2.739865e+02  2.731249e+02
-    mean squared error         3.295040e+07  3.212197e+07     3.295505e+07  3.213056e+07
-
-
-
-
-.. GENERATED FROM PYTHON SOURCE LINES 587-595
+.. GENERATED FROM PYTHON SOURCE LINES 584-592
 
 In this example, both modeling approaches yield comparable performance
 metrics. For implementation reasons, the percentage of explained variance
@@ -879,7 +679,7 @@ predicted total claim amount over the test and train subsets. We see that,
 on average, both model tend to underestimate the total claim (but this
 behavior depends on the amount of regularization).
 
-.. GENERATED FROM PYTHON SOURCE LINES 595-616
+.. GENERATED FROM PYTHON SOURCE LINES 592-613
 
 .. code-block:: Python
 
@@ -905,22 +705,7 @@ behavior depends on the amount of regularization).
     print(pd.DataFrame(res).set_index("subset").T)
 
 
-
-
-
-.. rst-class:: sphx-glr-script-out
-
- .. code-block:: none
-
-    subset                                      train          test
-    observed                             3.917618e+07  1.299546e+07
-    predicted, frequency*severity model  3.916555e+07  1.313276e+07
-    predicted, tweedie, power=1.90       3.951751e+07  1.325198e+07
-
-
-
-
-.. GENERATED FROM PYTHON SOURCE LINES 617-646
+.. GENERATED FROM PYTHON SOURCE LINES 614-643
 
 Finally, we can compare the two models using a plot of cumulated claims: for
 each model, the policyholders are ranked from safest to riskiest based on the
@@ -952,7 +737,7 @@ directly fit on the pure premium is operationally simpler to develop and
 maintain as it consists of a single scikit-learn estimator instead of a pair
 of models, each with its own set of hyperparameters.
 
-.. GENERATED FROM PYTHON SOURCE LINES 647-697
+.. GENERATED FROM PYTHON SOURCE LINES 644-694
 
 .. code-block:: Python
 
@@ -1006,28 +791,6 @@ of models, each with its own set of hyperparameters.
     )
     ax.legend(loc="upper left")
     plt.plot()
-
-
-
-.. image-sg:: /auto_examples/linear_model/images/sphx_glr_plot_tweedie_regression_insurance_claims_003.png
-   :alt: Lorenz Curves
-   :srcset: /auto_examples/linear_model/images/sphx_glr_plot_tweedie_regression_insurance_claims_003.png
-   :class: sphx-glr-single-img
-
-
-.. rst-class:: sphx-glr-script-out
-
- .. code-block:: none
-
-
-    []
-
-
-
-
-.. rst-class:: sphx-glr-timing
-
-   **Total running time of the script:** (0 minutes 9.512 seconds)
 
 
 .. _sphx_glr_download_auto_examples_linear_model_plot_tweedie_regression_insurance_claims.py:

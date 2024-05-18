@@ -13,7 +13,7 @@
 <meta content="https://scikit-learn.org/stable/_static/scikit-learn-logo-small.png" property="og:image"/>
 <meta content="scikit-learn" property="og:image:alt"/>
 <meta content="This example balances model complexity and cross-validated score by finding a decent accuracy within 1 standard deviation of the best accuracy score while minimising the number of PCA components [1..." name="description"/>
-<title>Balance model complexity and cross-validated score — scikit-learn 1.5.dev0 documentation</title>
+<title>Balance model complexity and cross-validated score — scikit-learn 1.6.dev0 documentation</title>
 <script data-cfasync="false">
     document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
     document.documentElement.dataset.theme = localStorage.getItem("theme") || "light";
@@ -42,8 +42,8 @@
 <link as="script" href="../../_static/scripts/bootstrap.js?digest=8d27b9dea8ad943066ae" rel="preload"/>
 <link as="script" href="../../_static/scripts/pydata-sphinx-theme.js?digest=8d27b9dea8ad943066ae" rel="preload"/>
 <script src="../../_static/vendor/fontawesome/6.5.1/js/all.min.js?digest=8d27b9dea8ad943066ae"></script>
-<script src="../../_static/documentation_options.js?v=a2c36881"></script>
-<script src="../../_static/doctools.js?v=888ff710"></script>
+<script src="../../_static/documentation_options.js?v=d875d36e"></script>
+<script src="../../_static/doctools.js?v=9a2dae69"></script>
 <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
 <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
 <script src="../../_static/copybutton.js?v=97f0b27d"></script>
@@ -53,8 +53,8 @@
 <script>DOCUMENTATION_OPTIONS.pagename = 'auto_examples/model_selection/plot_grid_search_refit_callable';</script>
 <script>
         DOCUMENTATION_OPTIONS.theme_version = '0.15.2';
-        DOCUMENTATION_OPTIONS.theme_switcher_json_url = 'https://scikit-learn.org/_pst_preview/versions.json';
-        DOCUMENTATION_OPTIONS.theme_switcher_version_match = '1.5.dev0';
+        DOCUMENTATION_OPTIONS.theme_switcher_json_url = 'https://scikit-learn.org/_pst_preview/_static/versions.json';
+        DOCUMENTATION_OPTIONS.theme_switcher_version_match = '1.6.dev0';
         DOCUMENTATION_OPTIONS.show_version_warning_banner = true;
         </script>
 <script src="../../_static/scripts/dropdown.js?v=12d599f8"></script>
@@ -549,7 +549,6 @@ document.write(`
 <li class="toctree-l2"><a class="reference internal" href="../applications/plot_face_recognition.html">Faces recognition example using eigenfaces and SVMs</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../applications/plot_digits_denoising.html">Image denoising using kernel PCA</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../applications/plot_time_series_lagged_features.html">Lagged features for time series forecasting</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../applications/svm_gui.html">Libsvm GUI</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../applications/plot_model_complexity_influence.html">Model Complexity Influence</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../applications/plot_out_of_core_classification.html">Out-of-core classification of text documents</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../applications/plot_outlier_detection_wine.html">Outlier detection on a real data set</a></li>
@@ -694,6 +693,8 @@ document.write(`
 <li class="toctree-l2"><a class="reference internal" href="plot_cv_predict.html">Plotting Cross-Validated Predictions</a></li>
 <li class="toctree-l2"><a class="reference internal" href="plot_learning_curve.html">Plotting Learning Curves and Checking Models’ Scalability</a></li>
 <li class="toctree-l2"><a class="reference internal" href="plot_validation_curve.html">Plotting Validation Curves</a></li>
+<li class="toctree-l2"><a class="reference internal" href="plot_tuned_decision_threshold.html">Post-hoc tuning the cut-off point of decision function</a></li>
+<li class="toctree-l2"><a class="reference internal" href="plot_cost_sensitive_learning.html">Post-tuning the decision threshold for cost-sensitive learning</a></li>
 <li class="toctree-l2"><a class="reference internal" href="plot_precision_recall.html">Precision-Recall</a></li>
 <li class="toctree-l2"><a class="reference internal" href="plot_roc_crossval.html">Receiver Operating Characteristic (ROC) with cross validation</a></li>
 <li class="toctree-l2"><a class="reference internal" href="plot_grid_search_text_feature_extraction.html">Sample pipeline for text feature extraction and evaluation</a></li>
@@ -841,14 +842,6 @@ score.</p>
 <p>[1] Hastie, T., Tibshirani, R.,, Friedman, J. (2001). Model Assessment and
 Selection. The Elements of Statistical Learning (pp. 219-260). New York,
 NY, USA: Springer New York Inc..</p>
-<img alt="Balance model complexity and cross-validated score" class="sphx-glr-single-img" src="../../_images/sphx_glr_plot_grid_search_refit_callable_001.png" srcset="../../_images/sphx_glr_plot_grid_search_refit_callable_001.png"/><div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>The best_index_ is 2
-The n_components selected is 10
-The corresponding accuracy score is 0.88
-</pre></div>
-</div>
-<div class="line-block">
-<div class="line"><br/></div>
-</div>
 <div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Author: Wenhao Zhang &lt;wenhaoz@ucla.edu&gt;</span>
 
 <span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
@@ -912,7 +905,7 @@ The corresponding accuracy score is 0.88
 <span class="n">pipe</span> <span class="o">=</span> <a class="sphx-glr-backref-module-sklearn-pipeline sphx-glr-backref-type-py-class sphx-glr-backref-instance" href="../../modules/generated/sklearn.pipeline.Pipeline.html#sklearn.pipeline.Pipeline" title="sklearn.pipeline.Pipeline"><span class="n">Pipeline</span></a><span class="p">(</span>
     <span class="p">[</span>
         <span class="p">(</span><span class="s2">"reduce_dim"</span><span class="p">,</span> <a class="sphx-glr-backref-module-sklearn-decomposition sphx-glr-backref-type-py-class sphx-glr-backref-instance" href="../../modules/generated/sklearn.decomposition.PCA.html#sklearn.decomposition.PCA" title="sklearn.decomposition.PCA"><span class="n">PCA</span></a><span class="p">(</span><span class="n">random_state</span><span class="o">=</span><span class="mi">42</span><span class="p">)),</span>
-        <span class="p">(</span><span class="s2">"classify"</span><span class="p">,</span> <a class="sphx-glr-backref-module-sklearn-svm sphx-glr-backref-type-py-class sphx-glr-backref-instance" href="../../modules/generated/sklearn.svm.LinearSVC.html#sklearn.svm.LinearSVC" title="sklearn.svm.LinearSVC"><span class="n">LinearSVC</span></a><span class="p">(</span><span class="n">random_state</span><span class="o">=</span><span class="mi">42</span><span class="p">,</span> <span class="n">C</span><span class="o">=</span><span class="mf">0.01</span><span class="p">,</span> <span class="n">dual</span><span class="o">=</span><span class="s2">"auto"</span><span class="p">)),</span>
+        <span class="p">(</span><span class="s2">"classify"</span><span class="p">,</span> <a class="sphx-glr-backref-module-sklearn-svm sphx-glr-backref-type-py-class sphx-glr-backref-instance" href="../../modules/generated/sklearn.svm.LinearSVC.html#sklearn.svm.LinearSVC" title="sklearn.svm.LinearSVC"><span class="n">LinearSVC</span></a><span class="p">(</span><span class="n">random_state</span><span class="o">=</span><span class="mi">42</span><span class="p">,</span> <span class="n">C</span><span class="o">=</span><span class="mf">0.01</span><span class="p">)),</span>
     <span class="p">]</span>
 <span class="p">)</span>
 
@@ -957,15 +950,14 @@ The corresponding accuracy score is 0.88
 <a class="sphx-glr-backref-module-matplotlib-pyplot sphx-glr-backref-type-py-function" href="https://matplotlib.org/stable/api/_as_gen/matplotlib.pyplot.show.html#matplotlib.pyplot.show" title="matplotlib.pyplot.show"><span class="n">plt</span><span class="o">.</span><span class="n">show</span></a><span class="p">()</span>
 </pre></div>
 </div>
-<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> (0 minutes 1.323 seconds)</p>
 
 <p class="rubric">Related examples</p>
-<div class="sphx-glr-thumbnails"><div class="sphx-glr-thumbcontainer" tooltip="This examples shows how a classifier is optimized by cross-validation, which is done using the ..."><img alt="" src="../../_images/sphx_glr_plot_grid_search_digits_thumb.png"/>
-<p><a class="reference internal" href="plot_grid_search_digits.html#sphx-glr-auto-examples-model-selection-plot-grid-search-digits-py"><span class="std std-ref">Custom refit strategy of a grid search with cross-validation</span></a></p>
-<div class="sphx-glr-thumbnail-title">Custom refit strategy of a grid search with cross-validation</div>
-</div><div class="sphx-glr-thumbcontainer" tooltip="A Recursive Feature Elimination (RFE) example with automatic tuning of the number of features s..."><img alt="" src="../../_images/sphx_glr_plot_rfe_with_cross_validation_thumb.png"/>
+<div class="sphx-glr-thumbnails"><div class="sphx-glr-thumbcontainer" tooltip="A Recursive Feature Elimination (RFE) example with automatic tuning of the number of features s..."><img alt="" src="../../_images/sphx_glr_plot_rfe_with_cross_validation_thumb.png"/>
 <p><a class="reference internal" href="../feature_selection/plot_rfe_with_cross_validation.html#sphx-glr-auto-examples-feature-selection-plot-rfe-with-cross-validation-py"><span class="std std-ref">Recursive feature elimination with cross-validation</span></a></p>
 <div class="sphx-glr-thumbnail-title">Recursive feature elimination with cross-validation</div>
+</div><div class="sphx-glr-thumbcontainer" tooltip="This examples shows how a classifier is optimized by cross-validation, which is done using the ..."><img alt="" src="../../_images/sphx_glr_plot_grid_search_digits_thumb.png"/>
+<p><a class="reference internal" href="plot_grid_search_digits.html#sphx-glr-auto-examples-model-selection-plot-grid-search-digits-py"><span class="std std-ref">Custom refit strategy of a grid search with cross-validation</span></a></p>
+<div class="sphx-glr-thumbnail-title">Custom refit strategy of a grid search with cross-validation</div>
 </div><div class="sphx-glr-thumbcontainer" tooltip="In this example we compare the performance of Random Forest (RF) and Histogram Gradient Boostin..."><img alt="" src="../../_images/sphx_glr_plot_forest_hist_grad_boosting_comparison_thumb.png"/>
 <p><a class="reference internal" href="../ensemble/plot_forest_hist_grad_boosting_comparison.html#sphx-glr-auto-examples-ensemble-plot-forest-hist-grad-boosting-comparison-py"><span class="std std-ref">Comparing Random Forests and Histogram Gradient Boosting models</span></a></p>
 <div class="sphx-glr-thumbnail-title">Comparing Random Forests and Histogram Gradient Boosting models</div>

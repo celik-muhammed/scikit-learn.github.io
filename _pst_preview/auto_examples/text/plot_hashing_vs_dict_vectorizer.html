@@ -13,7 +13,7 @@
 <meta content="https://scikit-learn.org/stable/_static/scikit-learn-logo-small.png" property="og:image"/>
 <meta content="scikit-learn" property="og:image:alt"/>
 <meta content="In this example we illustrate text vectorization, which is the process of representing non-numerical input data (such as dictionaries or text documents) as vectors of real numbers. We first compare..." name="description"/>
-<title>FeatureHasher and DictVectorizer Comparison — scikit-learn 1.5.dev0 documentation</title>
+<title>FeatureHasher and DictVectorizer Comparison — scikit-learn 1.6.dev0 documentation</title>
 <script data-cfasync="false">
     document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
     document.documentElement.dataset.theme = localStorage.getItem("theme") || "light";
@@ -42,8 +42,8 @@
 <link as="script" href="../../_static/scripts/bootstrap.js?digest=8d27b9dea8ad943066ae" rel="preload"/>
 <link as="script" href="../../_static/scripts/pydata-sphinx-theme.js?digest=8d27b9dea8ad943066ae" rel="preload"/>
 <script src="../../_static/vendor/fontawesome/6.5.1/js/all.min.js?digest=8d27b9dea8ad943066ae"></script>
-<script src="../../_static/documentation_options.js?v=a2c36881"></script>
-<script src="../../_static/doctools.js?v=888ff710"></script>
+<script src="../../_static/documentation_options.js?v=d875d36e"></script>
+<script src="../../_static/doctools.js?v=9a2dae69"></script>
 <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
 <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
 <script src="../../_static/copybutton.js?v=97f0b27d"></script>
@@ -53,8 +53,8 @@
 <script>DOCUMENTATION_OPTIONS.pagename = 'auto_examples/text/plot_hashing_vs_dict_vectorizer';</script>
 <script>
         DOCUMENTATION_OPTIONS.theme_version = '0.15.2';
-        DOCUMENTATION_OPTIONS.theme_switcher_json_url = 'https://scikit-learn.org/_pst_preview/versions.json';
-        DOCUMENTATION_OPTIONS.theme_switcher_version_match = '1.5.dev0';
+        DOCUMENTATION_OPTIONS.theme_switcher_json_url = 'https://scikit-learn.org/_pst_preview/_static/versions.json';
+        DOCUMENTATION_OPTIONS.theme_switcher_version_match = '1.6.dev0';
         DOCUMENTATION_OPTIONS.show_version_warning_banner = true;
         </script>
 <script src="../../_static/scripts/dropdown.js?v=12d599f8"></script>
@@ -549,7 +549,6 @@ document.write(`
 <li class="toctree-l2"><a class="reference internal" href="../applications/plot_face_recognition.html">Faces recognition example using eigenfaces and SVMs</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../applications/plot_digits_denoising.html">Image denoising using kernel PCA</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../applications/plot_time_series_lagged_features.html">Lagged features for time series forecasting</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../applications/svm_gui.html">Libsvm GUI</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../applications/plot_model_complexity_influence.html">Model Complexity Influence</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../applications/plot_out_of_core_classification.html">Out-of-core classification of text documents</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../applications/plot_outlier_detection_wine.html">Outlier detection on a real data set</a></li>
@@ -694,6 +693,8 @@ document.write(`
 <li class="toctree-l2"><a class="reference internal" href="../model_selection/plot_cv_predict.html">Plotting Cross-Validated Predictions</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../model_selection/plot_learning_curve.html">Plotting Learning Curves and Checking Models’ Scalability</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../model_selection/plot_validation_curve.html">Plotting Validation Curves</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../model_selection/plot_tuned_decision_threshold.html">Post-hoc tuning the cut-off point of decision function</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../model_selection/plot_cost_sensitive_learning.html">Post-tuning the decision threshold for cost-sensitive learning</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../model_selection/plot_precision_recall.html">Precision-Recall</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../model_selection/plot_roc_crossval.html">Receiver Operating Characteristic (ROC) with cross validation</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../model_selection/plot_grid_search_text_feature_extraction.html">Sample pipeline for text feature extraction and evaluation</a></li>
@@ -878,10 +879,6 @@ cost, we select a subset of 7 topics and use the training set only.</p>
 <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">raw_data</span><span class="p">)</span><span class="si">}</span><span class="s2"> documents - </span><span class="si">{</span><span class="n">data_size_mb</span><span class="si">:</span><span class="s2">.3f</span><span class="si">}</span><span class="s2">MB"</span><span class="p">)</span>
 </pre></div>
 </div>
-<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>Loading 20 newsgroups training data
-3803 documents - 6.245MB
-</pre></div>
-</div>
 </section>
 <section id="define-preprocessing-functions">
 <h2>Define preprocessing functions<a class="headerlink" href="#define-preprocessing-functions" title="Link to this heading">#</a></h2>
@@ -906,9 +903,6 @@ as numbers and the underscore:</p>
 <span class="nb">list</span><span class="p">(</span><span class="n">tokenize</span><span class="p">(</span><span class="s2">"This is a simple example, isn't it?"</span><span class="p">))</span>
 </pre></div>
 </div>
-<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>['this', 'is', 'a', 'simple', 'example', 'isn', 't', 'it']
-</pre></div>
-</div>
 <p>We define an additional function that counts the (frequency of) occurrence of
 each token in a given document. It returns a frequency dictionary to be used
 by the vectorizers.</p>
@@ -925,9 +919,6 @@ by the vectorizers.</p>
 
 
 <span class="n">token_freqs</span><span class="p">(</span><span class="s2">"That is one example, but this is another one"</span><span class="p">)</span>
-</pre></div>
-</div>
-<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>defaultdict(&lt;class 'int'&gt;, {'that': 1, 'is': 2, 'one': 2, 'example': 1, 'but': 1, 'this': 1, 'another': 1})
 </pre></div>
 </div>
 <p>Observe in particular that the repeated token <code class="docutils literal notranslate"><span class="pre">"is"</span></code> is counted twice for
@@ -959,10 +950,6 @@ both of them receive dictionaries as input.</p>
 <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Found </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">vectorizer</span><span class="o">.</span><span class="n">get_feature_names_out</span><span class="p">())</span><span class="si">}</span><span class="s2"> unique terms"</span><span class="p">)</span>
 </pre></div>
 </div>
-<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>done in 1.098 s at 5.7 MB/s
-Found 47928 unique terms
-</pre></div>
-</div>
 <p>The actual mapping from text token to column index is explicitly stored in
 the <code class="docutils literal notranslate"><span class="pre">.vocabulary_</span></code> attribute which is a potentially very large Python
 dictionary:</p>
@@ -972,13 +959,7 @@ dictionary:</p>
 <div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="nb">len</span><span class="p">(</span><span class="n">vectorizer</span><span class="o">.</span><span class="n">vocabulary_</span><span class="p">)</span>
 </pre></div>
 </div>
-<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>47928
-</pre></div>
-</div>
 <div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">vectorizer</span><span class="o">.</span><span class="n">vocabulary_</span><span class="p">[</span><span class="s2">"example"</span><span class="p">]</span>
-</pre></div>
-</div>
-<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>19145
 </pre></div>
 </div>
 </section>
@@ -1026,10 +1007,6 @@ encoded feature matrix. For such a purpose we define the following function:</p>
 <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Found </span><span class="si">{</span><span class="n">n_nonzero_columns</span><span class="p">(</span><span class="n">X</span><span class="p">)</span><span class="si">}</span><span class="s2"> unique tokens"</span><span class="p">)</span>
 </pre></div>
 </div>
-<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>done in 0.570 s at 10.9 MB/s
-Found 43873 unique tokens
-</pre></div>
-</div>
 <p>The number of unique tokens when using the
 <a class="reference internal" href="../../modules/generated/sklearn.feature_extraction.FeatureHasher.html#sklearn.feature_extraction.FeatureHasher" title="sklearn.feature_extraction.FeatureHasher"><code class="xref py py-func docutils literal notranslate"><span class="pre">FeatureHasher</span></code></a> is lower than those obtained
 using the <a class="reference internal" href="../../modules/generated/sklearn.feature_extraction.DictVectorizer.html#sklearn.feature_extraction.DictVectorizer" title="sklearn.feature_extraction.DictVectorizer"><code class="xref py py-func docutils literal notranslate"><span class="pre">DictVectorizer</span></code></a>. This is due to
@@ -1046,10 +1023,6 @@ majority of them is inactive.</p>
 
 <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"done in </span><span class="si">{</span><span class="n">duration</span><span class="si">:</span><span class="s2">.3f</span><span class="si">}</span><span class="s2"> s at </span><span class="si">{</span><span class="n">data_size_mb</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="n">duration</span><span class="si">:</span><span class="s2">.1f</span><span class="si">}</span><span class="s2"> MB/s"</span><span class="p">)</span>
 <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Found </span><span class="si">{</span><span class="n">n_nonzero_columns</span><span class="p">(</span><span class="n">X</span><span class="p">)</span><span class="si">}</span><span class="s2"> unique tokens"</span><span class="p">)</span>
-</pre></div>
-</div>
-<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>done in 0.569 s at 11.0 MB/s
-Found 47668 unique tokens
 </pre></div>
 </div>
 <p>We confirm that the number of unique tokens gets closer to the number of
@@ -1071,10 +1044,6 @@ passing a dictionary with an implied frequency of 1 for each feature name.</p>
 <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Found </span><span class="si">{</span><span class="n">n_nonzero_columns</span><span class="p">(</span><span class="n">X</span><span class="p">)</span><span class="si">}</span><span class="s2"> unique tokens"</span><span class="p">)</span>
 </pre></div>
 </div>
-<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>done in 0.534 s at 11.7 MB/s
-Found 43873 unique tokens
-</pre></div>
-</div>
 <p>We now plot the speed of the above methods for vectorizing.</p>
 <div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
 
@@ -1088,7 +1057,7 @@ Found 43873 unique tokens
 <span class="n">_</span> <span class="o">=</span> <span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s2">"speed (MB/s)"</span><span class="p">)</span>
 </pre></div>
 </div>
-<img alt="plot hashing vs dict vectorizer" class="sphx-glr-single-img" src="../../_images/sphx_glr_plot_hashing_vs_dict_vectorizer_001.png" srcset="../../_images/sphx_glr_plot_hashing_vs_dict_vectorizer_001.png"/><p>In both cases <a class="reference internal" href="../../modules/generated/sklearn.feature_extraction.FeatureHasher.html#sklearn.feature_extraction.FeatureHasher" title="sklearn.feature_extraction.FeatureHasher"><code class="xref py py-func docutils literal notranslate"><span class="pre">FeatureHasher</span></code></a> is
+<p>In both cases <a class="reference internal" href="../../modules/generated/sklearn.feature_extraction.FeatureHasher.html#sklearn.feature_extraction.FeatureHasher" title="sklearn.feature_extraction.FeatureHasher"><code class="xref py py-func docutils literal notranslate"><span class="pre">FeatureHasher</span></code></a> is
 approximately twice as fast as
 <a class="reference internal" href="../../modules/generated/sklearn.feature_extraction.DictVectorizer.html#sklearn.feature_extraction.DictVectorizer" title="sklearn.feature_extraction.DictVectorizer"><code class="xref py py-func docutils literal notranslate"><span class="pre">DictVectorizer</span></code></a>. This is handy when dealing
 with large amounts of data, with the downside of losing the invertibility of
@@ -1121,10 +1090,6 @@ is more flexible. In particular it accepts various regex patterns through the
 <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Found </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">vectorizer</span><span class="o">.</span><span class="n">get_feature_names_out</span><span class="p">())</span><span class="si">}</span><span class="s2"> unique terms"</span><span class="p">)</span>
 </pre></div>
 </div>
-<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>done in 0.683 s at 9.1 MB/s
-Found 47885 unique terms
-</pre></div>
-</div>
 <p>We see that using the <a class="reference internal" href="../../modules/generated/sklearn.feature_extraction.text.CountVectorizer.html#sklearn.feature_extraction.text.CountVectorizer" title="sklearn.feature_extraction.text.CountVectorizer"><code class="xref py py-func docutils literal notranslate"><span class="pre">CountVectorizer</span></code></a>
 implementation is approximately twice as fast as using the
 <a class="reference internal" href="../../modules/generated/sklearn.feature_extraction.DictVectorizer.html#sklearn.feature_extraction.DictVectorizer" title="sklearn.feature_extraction.DictVectorizer"><code class="xref py py-func docutils literal notranslate"><span class="pre">DictVectorizer</span></code></a> along with the simple
@@ -1147,9 +1112,6 @@ preprocessing and tokenization of the
 <span class="n">dict_count_vectorizers</span><span class="p">[</span><span class="s2">"vectorizer"</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">vectorizer</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="p">)</span>
 <span class="n">dict_count_vectorizers</span><span class="p">[</span><span class="s2">"speed"</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">data_size_mb</span> <span class="o">/</span> <span class="n">duration</span><span class="p">)</span>
 <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"done in </span><span class="si">{</span><span class="n">duration</span><span class="si">:</span><span class="s2">.3f</span><span class="si">}</span><span class="s2"> s at </span><span class="si">{</span><span class="n">data_size_mb</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="n">duration</span><span class="si">:</span><span class="s2">.1f</span><span class="si">}</span><span class="s2"> MB/s"</span><span class="p">)</span>
-</pre></div>
-</div>
-<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>done in 0.497 s at 12.6 MB/s
 </pre></div>
 </div>
 <p>We can observe that this is the fastest text tokenization strategy so far,
@@ -1185,10 +1147,6 @@ normalizing and weighting from a
 <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Found </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">vectorizer</span><span class="o">.</span><span class="n">get_feature_names_out</span><span class="p">())</span><span class="si">}</span><span class="s2"> unique terms"</span><span class="p">)</span>
 </pre></div>
 </div>
-<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>done in 0.681 s at 9.2 MB/s
-Found 47885 unique terms
-</pre></div>
-</div>
 </section>
 <section id="summary">
 <h2>Summary<a class="headerlink" href="#summary" title="Link to this heading">#</a></h2>
@@ -1204,7 +1162,7 @@ in a single plot:</p>
 <span class="n">_</span> <span class="o">=</span> <span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s2">"speed (MB/s)"</span><span class="p">)</span>
 </pre></div>
 </div>
-<img alt="plot hashing vs dict vectorizer" class="sphx-glr-single-img" src="../../_images/sphx_glr_plot_hashing_vs_dict_vectorizer_002.png" srcset="../../_images/sphx_glr_plot_hashing_vs_dict_vectorizer_002.png"/><p>Notice from the plot that
+<p>Notice from the plot that
 <a class="reference internal" href="../../modules/generated/sklearn.feature_extraction.text.TfidfVectorizer.html#sklearn.feature_extraction.text.TfidfVectorizer" title="sklearn.feature_extraction.text.TfidfVectorizer"><code class="xref py py-func docutils literal notranslate"><span class="pre">TfidfVectorizer</span></code></a> is slightly slower
 than <a class="reference internal" href="../../modules/generated/sklearn.feature_extraction.text.CountVectorizer.html#sklearn.feature_extraction.text.CountVectorizer" title="sklearn.feature_extraction.text.CountVectorizer"><code class="xref py py-func docutils literal notranslate"><span class="pre">CountVectorizer</span></code></a> because of the
 extra operation induced by the
@@ -1219,7 +1177,6 @@ their equivalent <a class="reference internal" href="../../modules/generated/skl
 <a class="reference internal" href="../../modules/generated/sklearn.feature_extraction.FeatureHasher.html#sklearn.feature_extraction.FeatureHasher" title="sklearn.feature_extraction.FeatureHasher"><code class="xref py py-func docutils literal notranslate"><span class="pre">FeatureHasher</span></code></a> on manually tokenized
 documents since the internal tokenization step of the former vectorizers
 compiles a regular expression once and then reuses it for all the documents.</p>
-<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> (0 minutes 5.121 seconds)</p>
 
 <p class="rubric">Related examples</p>
 <div class="sphx-glr-thumbnails"><div class="sphx-glr-thumbcontainer" tooltip="This is an example showing how the scikit-learn API can be used to cluster documents by topics ..."><img alt="" src="../../_images/sphx_glr_plot_document_clustering_thumb.png"/>
