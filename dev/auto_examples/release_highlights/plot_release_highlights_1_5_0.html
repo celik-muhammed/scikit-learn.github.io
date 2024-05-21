@@ -846,84 +846,109 @@ all the changes</strong>, please refer to the <a class="reference internal" href
 </div>
 <section id="fixedthresholdclassifier-setting-the-decision-threshold-of-a-binary-classifier">
 <h2>FixedThresholdClassifier: Setting the decision threshold of a binary classifier<a class="headerlink" href="#fixedthresholdclassifier-setting-the-decision-threshold-of-a-binary-classifier" title="Link to this heading">#</a></h2>
-<p>All binary classifiers of scikit-learn use a fixed decision threshold of 0.5 to
-convert probability estimates (i.e. output of <code class="docutils literal notranslate"><span class="pre">predict_proba</span></code>) into class
-predictions. However, 0.5 is almost never the desired threshold for a given problem.
-<a class="reference internal" href="../../modules/generated/sklearn.model_selection.FixedThresholdClassifier.html#sklearn.model_selection.FixedThresholdClassifier" title="sklearn.model_selection.FixedThresholdClassifier"><code class="xref py py-class docutils literal notranslate"><span class="pre">FixedThresholdClassifier</span></code></a> allows to wrap any binary
-classifier and set a custom decision threshold.</p>
+<p>All binary classifiers of scikit-learn use a fixed decision threshold of 0.5
+to convert probability estimates (i.e. output of <code class="docutils literal notranslate"><span class="pre">predict_proba</span></code>) into class
+predictions. However, 0.5 is almost never the desired threshold for a given
+problem. <a class="reference internal" href="../../modules/generated/sklearn.model_selection.FixedThresholdClassifier.html#sklearn.model_selection.FixedThresholdClassifier" title="sklearn.model_selection.FixedThresholdClassifier"><code class="xref py py-class docutils literal notranslate"><span class="pre">FixedThresholdClassifier</span></code></a> allows wrapping any
+binary classifier and setting a custom decision threshold.</p>
 <div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">sklearn.datasets</span> <span class="kn">import</span> <a class="sphx-glr-backref-module-sklearn-datasets sphx-glr-backref-type-py-function" href="../../modules/generated/sklearn.datasets.make_classification.html#sklearn.datasets.make_classification" title="sklearn.datasets.make_classification"><span class="n">make_classification</span></a>
+<span class="kn">from</span> <span class="nn">sklearn.model_selection</span> <span class="kn">import</span> <a class="sphx-glr-backref-module-sklearn-model_selection sphx-glr-backref-type-py-function" href="../../modules/generated/sklearn.model_selection.train_test_split.html#sklearn.model_selection.train_test_split" title="sklearn.model_selection.train_test_split"><span class="n">train_test_split</span></a>
 <span class="kn">from</span> <span class="nn">sklearn.linear_model</span> <span class="kn">import</span> <a class="sphx-glr-backref-module-sklearn-linear_model sphx-glr-backref-type-py-class sphx-glr-backref-instance" href="../../modules/generated/sklearn.linear_model.LogisticRegression.html#sklearn.linear_model.LogisticRegression" title="sklearn.linear_model.LogisticRegression"><span class="n">LogisticRegression</span></a>
-<span class="kn">from</span> <span class="nn">sklearn.metrics</span> <span class="kn">import</span> <a class="sphx-glr-backref-module-sklearn-metrics sphx-glr-backref-type-py-function" href="../../modules/generated/sklearn.metrics.confusion_matrix.html#sklearn.metrics.confusion_matrix" title="sklearn.metrics.confusion_matrix"><span class="n">confusion_matrix</span></a>
+<span class="kn">from</span> <span class="nn">sklearn.metrics</span> <span class="kn">import</span> <span class="n">ConfusionMatrixDisplay</span>
 
-<span class="n">X</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <a class="sphx-glr-backref-module-sklearn-datasets sphx-glr-backref-type-py-function" href="../../modules/generated/sklearn.datasets.make_classification.html#sklearn.datasets.make_classification" title="sklearn.datasets.make_classification"><span class="n">make_classification</span></a><span class="p">(</span><span class="n">n_samples</span><span class="o">=</span><span class="mi">1_000</span><span class="p">,</span> <span class="n">weights</span><span class="o">=</span><span class="p">[</span><span class="mf">0.9</span><span class="p">,</span> <span class="mf">0.1</span><span class="p">],</span> <span class="n">random_state</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
-<span class="n">classifier</span> <span class="o">=</span> <a class="sphx-glr-backref-module-sklearn-linear_model sphx-glr-backref-type-py-class sphx-glr-backref-instance" href="../../modules/generated/sklearn.linear_model.LogisticRegression.html#sklearn.linear_model.LogisticRegression" title="sklearn.linear_model.LogisticRegression"><span class="n">LogisticRegression</span></a><span class="p">(</span><span class="n">random_state</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
 
-<span class="nb">print</span><span class="p">(</span><span class="s2">"confusion matrix:</span><span class="se">\n</span><span class="s2">"</span><span class="p">,</span> <a class="sphx-glr-backref-module-sklearn-metrics sphx-glr-backref-type-py-function" href="../../modules/generated/sklearn.metrics.confusion_matrix.html#sklearn.metrics.confusion_matrix" title="sklearn.metrics.confusion_matrix"><span class="n">confusion_matrix</span></a><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">classifier</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">X</span><span class="p">)))</span>
+<span class="n">X</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <a class="sphx-glr-backref-module-sklearn-datasets sphx-glr-backref-type-py-function" href="../../modules/generated/sklearn.datasets.make_classification.html#sklearn.datasets.make_classification" title="sklearn.datasets.make_classification"><span class="n">make_classification</span></a><span class="p">(</span><span class="n">n_samples</span><span class="o">=</span><span class="mi">10_000</span><span class="p">,</span> <span class="n">weights</span><span class="o">=</span><span class="p">[</span><span class="mf">0.9</span><span class="p">,</span> <span class="mf">0.1</span><span class="p">],</span> <span class="n">random_state</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+<span class="n">X_train</span><span class="p">,</span> <span class="n">X_test</span><span class="p">,</span> <span class="n">y_train</span><span class="p">,</span> <span class="n">y_test</span> <span class="o">=</span> <a class="sphx-glr-backref-module-sklearn-model_selection sphx-glr-backref-type-py-function" href="../../modules/generated/sklearn.model_selection.train_test_split.html#sklearn.model_selection.train_test_split" title="sklearn.model_selection.train_test_split"><span class="n">train_test_split</span></a><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+
+<span class="n">classifier_05</span> <span class="o">=</span> <a class="sphx-glr-backref-module-sklearn-linear_model sphx-glr-backref-type-py-class sphx-glr-backref-instance" href="../../modules/generated/sklearn.linear_model.LogisticRegression.html#sklearn.linear_model.LogisticRegression" title="sklearn.linear_model.LogisticRegression"><span class="n">LogisticRegression</span></a><span class="p">(</span><span class="n">C</span><span class="o">=</span><span class="mf">1e6</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X_train</span><span class="p">,</span> <span class="n">y_train</span><span class="p">)</span>
+<span class="n">_</span> <span class="o">=</span> <a class="sphx-glr-backref-module-sklearn-metrics-ConfusionMatrixDisplay sphx-glr-backref-type-py-method" href="../../modules/generated/sklearn.metrics.ConfusionMatrixDisplay.html#sklearn.metrics.ConfusionMatrixDisplay.from_estimator" title="sklearn.metrics.ConfusionMatrixDisplay.from_estimator"><span class="n">ConfusionMatrixDisplay</span><span class="o">.</span><span class="n">from_estimator</span></a><span class="p">(</span><span class="n">classifier_05</span><span class="p">,</span> <span class="n">X_test</span><span class="p">,</span> <span class="n">y_test</span><span class="p">)</span>
 </pre></div>
 </div>
-<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>confusion matrix:
- [[891   6]
- [ 18  85]]
-</pre></div>
-</div>
-<p>Lowering the threshold, i.e. allowing more samples to be classified as the positive
+<img alt="plot release highlights 1 5 0" class="sphx-glr-single-img" src="../../_images/sphx_glr_plot_release_highlights_1_5_0_001.png" srcset="../../_images/sphx_glr_plot_release_highlights_1_5_0_001.png"/><p>Lowering the threshold, i.e. allowing more samples to be classified as the positive
 class, increases the number of true positives at the cost of more false positives
 (as is well known from the concavity of the ROC curve).</p>
 <div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">sklearn.model_selection</span> <span class="kn">import</span> <a class="sphx-glr-backref-module-sklearn-model_selection sphx-glr-backref-type-py-class sphx-glr-backref-instance" href="../../modules/generated/sklearn.model_selection.FixedThresholdClassifier.html#sklearn.model_selection.FixedThresholdClassifier" title="sklearn.model_selection.FixedThresholdClassifier"><span class="n">FixedThresholdClassifier</span></a>
 
-<span class="n">wrapped_classifier</span> <span class="o">=</span> <a class="sphx-glr-backref-module-sklearn-model_selection sphx-glr-backref-type-py-class sphx-glr-backref-instance" href="../../modules/generated/sklearn.model_selection.FixedThresholdClassifier.html#sklearn.model_selection.FixedThresholdClassifier" title="sklearn.model_selection.FixedThresholdClassifier"><span class="n">FixedThresholdClassifier</span></a><span class="p">(</span><span class="n">classifier</span><span class="p">,</span> <span class="n">threshold</span><span class="o">=</span><span class="mf">0.1</span><span class="p">)</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
-
-<span class="nb">print</span><span class="p">(</span><span class="s2">"confusion matrix:</span><span class="se">\n</span><span class="s2">"</span><span class="p">,</span> <a class="sphx-glr-backref-module-sklearn-metrics sphx-glr-backref-type-py-function" href="../../modules/generated/sklearn.metrics.confusion_matrix.html#sklearn.metrics.confusion_matrix" title="sklearn.metrics.confusion_matrix"><span class="n">confusion_matrix</span></a><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">wrapped_classifier</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">X</span><span class="p">)))</span>
+<span class="n">classifier_01</span> <span class="o">=</span> <a class="sphx-glr-backref-module-sklearn-model_selection sphx-glr-backref-type-py-class sphx-glr-backref-instance" href="../../modules/generated/sklearn.model_selection.FixedThresholdClassifier.html#sklearn.model_selection.FixedThresholdClassifier" title="sklearn.model_selection.FixedThresholdClassifier"><span class="n">FixedThresholdClassifier</span></a><span class="p">(</span><span class="n">classifier_05</span><span class="p">,</span> <span class="n">threshold</span><span class="o">=</span><span class="mf">0.1</span><span class="p">)</span>
+<span class="n">classifier_01</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X_train</span><span class="p">,</span> <span class="n">y_train</span><span class="p">)</span>
+<span class="n">_</span> <span class="o">=</span> <a class="sphx-glr-backref-module-sklearn-metrics-ConfusionMatrixDisplay sphx-glr-backref-type-py-method" href="../../modules/generated/sklearn.metrics.ConfusionMatrixDisplay.html#sklearn.metrics.ConfusionMatrixDisplay.from_estimator" title="sklearn.metrics.ConfusionMatrixDisplay.from_estimator"><span class="n">ConfusionMatrixDisplay</span><span class="o">.</span><span class="n">from_estimator</span></a><span class="p">(</span><span class="n">classifier_01</span><span class="p">,</span> <span class="n">X_test</span><span class="p">,</span> <span class="n">y_test</span><span class="p">)</span>
 </pre></div>
 </div>
-<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>confusion matrix:
- [[858  39]
- [  5  98]]
-</pre></div>
-</div>
-</section>
+<img alt="plot release highlights 1 5 0" class="sphx-glr-single-img" src="../../_images/sphx_glr_plot_release_highlights_1_5_0_002.png" srcset="../../_images/sphx_glr_plot_release_highlights_1_5_0_002.png"/></section>
 <section id="tunedthresholdclassifiercv-tuning-the-decision-threshold-of-a-binary-classifier">
 <h2>TunedThresholdClassifierCV: Tuning the decision threshold of a binary classifier<a class="headerlink" href="#tunedthresholdclassifiercv-tuning-the-decision-threshold-of-a-binary-classifier" title="Link to this heading">#</a></h2>
-<p>The decision threshold of a binary classifier can be tuned to optimize a given
-metric, using <a class="reference internal" href="../../modules/generated/sklearn.model_selection.TunedThresholdClassifierCV.html#sklearn.model_selection.TunedThresholdClassifierCV" title="sklearn.model_selection.TunedThresholdClassifierCV"><code class="xref py py-class docutils literal notranslate"><span class="pre">TunedThresholdClassifierCV</span></code></a>.</p>
-<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">sklearn.metrics</span> <span class="kn">import</span> <a class="sphx-glr-backref-module-sklearn-metrics sphx-glr-backref-type-py-function" href="../../modules/generated/sklearn.metrics.balanced_accuracy_score.html#sklearn.metrics.balanced_accuracy_score" title="sklearn.metrics.balanced_accuracy_score"><span class="n">balanced_accuracy_score</span></a>
+<p>The decision threshold of a binary classifier can be tuned to optimize a
+given metric, using <a class="reference internal" href="../../modules/generated/sklearn.model_selection.TunedThresholdClassifierCV.html#sklearn.model_selection.TunedThresholdClassifierCV" title="sklearn.model_selection.TunedThresholdClassifierCV"><code class="xref py py-class docutils literal notranslate"><span class="pre">TunedThresholdClassifierCV</span></code></a>.</p>
+<p>It is particularly useful to find the best decision threshold when the model
+is meant to be deployed in a specific application context where we can assign
+different gains or costs for true positives, true negatives, false positives,
+and false negatives.</p>
+<p>Let’s illustrate this by considering an arbitrary case where:</p>
+<ul class="simple">
+<li><p>each true positive gains 1 unit of profit, e.g. euro, year of life in good
+health, etc.;</p></li>
+<li><p>true negatives gain or cost nothing;</p></li>
+<li><p>each false negative costs 2;</p></li>
+<li><p>each false positive costs 0.1.</p></li>
+</ul>
+<p>Our metric quantifies the average profit per sample, which is defined by the
+following Python function:</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">sklearn.metrics</span> <span class="kn">import</span> <a class="sphx-glr-backref-module-sklearn-metrics sphx-glr-backref-type-py-function" href="../../modules/generated/sklearn.metrics.confusion_matrix.html#sklearn.metrics.confusion_matrix" title="sklearn.metrics.confusion_matrix"><span class="n">confusion_matrix</span></a>
 
-<span class="c1"># Due to the class imbalance, the balanced accuracy is not optimal for the default</span>
-<span class="c1"># threshold. The classifier tends to over predict the majority class.</span>
-<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"balanced accuracy: </span><span class="si">{</span><a class="sphx-glr-backref-module-sklearn-metrics sphx-glr-backref-type-py-function" href="../../modules/generated/sklearn.metrics.balanced_accuracy_score.html#sklearn.metrics.balanced_accuracy_score" title="sklearn.metrics.balanced_accuracy_score"><span class="n">balanced_accuracy_score</span></a><span class="p">(</span><span class="n">y</span><span class="p">,</span><span class="w"> </span><span class="n">classifier</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">X</span><span class="p">))</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+
+<span class="k">def</span> <span class="nf">custom_score</span><span class="p">(</span><span class="n">y_observed</span><span class="p">,</span> <span class="n">y_pred</span><span class="p">):</span>
+    <span class="n">tn</span><span class="p">,</span> <span class="n">fp</span><span class="p">,</span> <span class="n">fn</span><span class="p">,</span> <span class="n">tp</span> <span class="o">=</span> <a class="sphx-glr-backref-module-sklearn-metrics sphx-glr-backref-type-py-function" href="../../modules/generated/sklearn.metrics.confusion_matrix.html#sklearn.metrics.confusion_matrix" title="sklearn.metrics.confusion_matrix"><span class="n">confusion_matrix</span></a><span class="p">(</span><span class="n">y_observed</span><span class="p">,</span> <span class="n">y_pred</span><span class="p">,</span> <span class="n">normalize</span><span class="o">=</span><span class="s2">"all"</span><span class="p">)</span><span class="o">.</span><span class="n">ravel</span><span class="p">()</span>
+    <span class="k">return</span> <span class="n">tp</span> <span class="o">-</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">fn</span> <span class="o">-</span> <span class="mf">0.1</span> <span class="o">*</span> <span class="n">fp</span>
+
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">"Untuned decision threshold: 0.5"</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Custom score: </span><span class="si">{</span><span class="n">custom_score</span><span class="p">(</span><span class="n">y_test</span><span class="p">,</span><span class="w"> </span><span class="n">classifier_05</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">X_test</span><span class="p">))</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
 </pre></div>
 </div>
-<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>balanced accuracy: 0.91
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>Untuned decision threshold: 0.5
+Custom score: -0.12
 </pre></div>
 </div>
-<p>Tuning the threshold to optimize the balanced accuracy gives a smaller threshold
-that allows more samples to be classified as the positive class.</p>
+<p>It is interesting to observe that the average gain per prediction is negative
+which means that this decision system is making a loss on average.</p>
+<p>Tuning the threshold to optimize this custom metric gives a smaller threshold
+that allows more samples to be classified as the positive class. As a result,
+the average gain per prediction improves.</p>
 <div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">sklearn.model_selection</span> <span class="kn">import</span> <a class="sphx-glr-backref-module-sklearn-model_selection sphx-glr-backref-type-py-class sphx-glr-backref-instance" href="../../modules/generated/sklearn.model_selection.TunedThresholdClassifierCV.html#sklearn.model_selection.TunedThresholdClassifierCV" title="sklearn.model_selection.TunedThresholdClassifierCV"><span class="n">TunedThresholdClassifierCV</span></a>
+<span class="kn">from</span> <span class="nn">sklearn.metrics</span> <span class="kn">import</span> <a class="sphx-glr-backref-module-sklearn-metrics sphx-glr-backref-type-py-function" href="../../modules/generated/sklearn.metrics.make_scorer.html#sklearn.metrics.make_scorer" title="sklearn.metrics.make_scorer"><span class="n">make_scorer</span></a>
 
+<span class="n">custom_scorer</span> <span class="o">=</span> <a class="sphx-glr-backref-module-sklearn-metrics sphx-glr-backref-type-py-function" href="../../modules/generated/sklearn.metrics.make_scorer.html#sklearn.metrics.make_scorer" title="sklearn.metrics.make_scorer"><span class="n">make_scorer</span></a><span class="p">(</span>
+    <span class="n">custom_score</span><span class="p">,</span> <span class="n">response_method</span><span class="o">=</span><span class="s2">"predict"</span><span class="p">,</span> <span class="n">greater_is_better</span><span class="o">=</span><span class="kc">True</span>
+<span class="p">)</span>
 <span class="n">tuned_classifier</span> <span class="o">=</span> <a class="sphx-glr-backref-module-sklearn-model_selection sphx-glr-backref-type-py-class sphx-glr-backref-instance" href="../../modules/generated/sklearn.model_selection.TunedThresholdClassifierCV.html#sklearn.model_selection.TunedThresholdClassifierCV" title="sklearn.model_selection.TunedThresholdClassifierCV"><span class="n">TunedThresholdClassifierCV</span></a><span class="p">(</span>
-    <span class="n">classifier</span><span class="p">,</span> <span class="n">cv</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> <span class="n">scoring</span><span class="o">=</span><span class="s2">"balanced_accuracy"</span>
+    <span class="n">classifier_05</span><span class="p">,</span> <span class="n">cv</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> <span class="n">scoring</span><span class="o">=</span><span class="n">custom_scorer</span>
 <span class="p">)</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
 
-<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"new threshold: </span><span class="si">{</span><span class="n">tuned_classifier</span><span class="o">.</span><span class="n">best_threshold_</span><span class="si">:</span><span class="s2">.4f</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span>
-    <span class="sa">f</span><span class="s2">"balanced accuracy: </span><span class="si">{</span><a class="sphx-glr-backref-module-sklearn-metrics sphx-glr-backref-type-py-function" href="../../modules/generated/sklearn.metrics.balanced_accuracy_score.html#sklearn.metrics.balanced_accuracy_score" title="sklearn.metrics.balanced_accuracy_score"><span class="n">balanced_accuracy_score</span></a><span class="p">(</span><span class="n">y</span><span class="p">,</span><span class="w"> </span><span class="n">tuned_classifier</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">X</span><span class="p">))</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2">"</span>
-<span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Tuned decision threshold: </span><span class="si">{</span><span class="n">tuned_classifier</span><span class="o">.</span><span class="n">best_threshold_</span><span class="si">:</span><span class="s2">.3f</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Custom score: </span><span class="si">{</span><span class="n">custom_score</span><span class="p">(</span><span class="n">y_test</span><span class="p">,</span><span class="w"> </span><span class="n">tuned_classifier</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">X_test</span><span class="p">))</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
 </pre></div>
 </div>
-<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>new threshold: 0.0909
-balanced accuracy: 0.96
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>Tuned decision threshold: 0.071
+Custom score: 0.04
 </pre></div>
 </div>
-<p><a class="reference internal" href="../../modules/generated/sklearn.model_selection.TunedThresholdClassifierCV.html#sklearn.model_selection.TunedThresholdClassifierCV" title="sklearn.model_selection.TunedThresholdClassifierCV"><code class="xref py py-class docutils literal notranslate"><span class="pre">TunedThresholdClassifierCV</span></code></a> also benefits from the
-metadata routing support (<a class="reference internal" href="../../metadata_routing.html#metadata-routing"><span class="std std-ref">Metadata Routing User Guide</span></a>)
-allowing to optimze complex business metrics, detailed
-in <a class="reference internal" href="../model_selection/plot_cost_sensitive_learning.html#sphx-glr-auto-examples-model-selection-plot-cost-sensitive-learning-py"><span class="std std-ref">Post-tuning the decision threshold for cost-sensitive learning</span></a>.</p>
+<p>We observe that tuning the decision threshold can turn a machine
+learning-based system that makes a loss on average into a beneficial one.</p>
+<p>In practice, defining a meaningful application-specific metric might involve
+making those costs for bad predictions and gains for good predictions depend on
+auxiliary metadata specific to each individual data point such as the amount
+of a transaction in a fraud detection system.</p>
+<p>To achieve this, <a class="reference internal" href="../../modules/generated/sklearn.model_selection.TunedThresholdClassifierCV.html#sklearn.model_selection.TunedThresholdClassifierCV" title="sklearn.model_selection.TunedThresholdClassifierCV"><code class="xref py py-class docutils literal notranslate"><span class="pre">TunedThresholdClassifierCV</span></code></a>
+leverages metadata routing support (<a class="reference internal" href="../../metadata_routing.html#metadata-routing"><span class="std std-ref">Metadata Routing User
+Guide</span></a>) allowing to optimize complex business metrics as
+detailed in <a class="reference internal" href="../model_selection/plot_cost_sensitive_learning.html#sphx-glr-auto-examples-model-selection-plot-cost-sensitive-learning-py"><span class="std std-ref">Post-tuning the decision threshold for cost-sensitive
+learning</span></a>.</p>
 </section>
 <section id="performance-improvements-in-pca">
 <h2>Performance improvements in PCA<a class="headerlink" href="#performance-improvements-in-pca" title="Link to this heading">#</a></h2>
-<p><a class="reference internal" href="../../modules/generated/sklearn.decomposition.PCA.html#sklearn.decomposition.PCA" title="sklearn.decomposition.PCA"><code class="xref py py-class docutils literal notranslate"><span class="pre">PCA</span></code></a> has a new solver, “covariance_eigh”, which is faster
-and more memory efficient than the other solvers for datasets with a large number
-of samples and a small number of features.</p>
+<p><a class="reference internal" href="../../modules/generated/sklearn.decomposition.PCA.html#sklearn.decomposition.PCA" title="sklearn.decomposition.PCA"><code class="xref py py-class docutils literal notranslate"><span class="pre">PCA</span></code></a> has a new solver, <code class="docutils literal notranslate"><span class="pre">"covariance_eigh"</span></code>, which is
+up to an order of magnitude faster and more memory efficient than the other
+solvers for datasets with many data points and few features.</p>
 <div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">sklearn.datasets</span> <span class="kn">import</span> <a class="sphx-glr-backref-module-sklearn-datasets sphx-glr-backref-type-py-function" href="../../modules/generated/sklearn.datasets.make_low_rank_matrix.html#sklearn.datasets.make_low_rank_matrix" title="sklearn.datasets.make_low_rank_matrix"><span class="n">make_low_rank_matrix</span></a>
 <span class="kn">from</span> <span class="nn">sklearn.decomposition</span> <span class="kn">import</span> <a class="sphx-glr-backref-module-sklearn-decomposition sphx-glr-backref-type-py-class sphx-glr-backref-instance" href="../../modules/generated/sklearn.decomposition.PCA.html#sklearn.decomposition.PCA" title="sklearn.decomposition.PCA"><span class="n">PCA</span></a>
 
@@ -931,25 +956,32 @@ of samples and a small number of features.</p>
     <span class="n">n_samples</span><span class="o">=</span><span class="mi">10_000</span><span class="p">,</span> <span class="n">n_features</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">tail_strength</span><span class="o">=</span><span class="mf">0.1</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="mi">0</span>
 <span class="p">)</span>
 
-<span class="n">pca</span> <span class="o">=</span> <a class="sphx-glr-backref-module-sklearn-decomposition sphx-glr-backref-type-py-class sphx-glr-backref-instance" href="../../modules/generated/sklearn.decomposition.PCA.html#sklearn.decomposition.PCA" title="sklearn.decomposition.PCA"><span class="n">PCA</span></a><span class="p">(</span><span class="n">n_components</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X</span><span class="p">)</span>
-
-<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"explained variance: </span><span class="si">{</span><span class="n">pca</span><span class="o">.</span><span class="n">explained_variance_ratio_</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+<span class="n">pca</span> <span class="o">=</span> <a class="sphx-glr-backref-module-sklearn-decomposition sphx-glr-backref-type-py-class sphx-glr-backref-instance" href="../../modules/generated/sklearn.decomposition.PCA.html#sklearn.decomposition.PCA" title="sklearn.decomposition.PCA"><span class="n">PCA</span></a><span class="p">(</span><span class="n">n_components</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">svd_solver</span><span class="o">=</span><span class="s2">"covariance_eigh"</span><span class="p">)</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Explained variance: </span><span class="si">{</span><span class="n">pca</span><span class="o">.</span><span class="n">explained_variance_ratio_</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
 </pre></div>
 </div>
-<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>explained variance: 0.88
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>Explained variance: 0.88
 </pre></div>
 </div>
-<p>The “full” solver has also been improved to use less memory and allows to
-transform faster. The “auto” option for the solver takes advantage of the
-new solver and is now able to select an appropriate solver for sparse
-datasets.</p>
+<p>The new solver also accepts sparse input data:</p>
 <div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">scipy.sparse</span> <span class="kn">import</span> <a class="sphx-glr-backref-module-scipy-sparse sphx-glr-backref-type-py-function" href="https://docs.scipy.org/doc/scipy/reference/generated/scipy.sparse.random.html#scipy.sparse.random" title="scipy.sparse.random"><span class="n">random</span></a>
 
-<span class="n">X</span> <span class="o">=</span> <a class="sphx-glr-backref-module-scipy-sparse sphx-glr-backref-type-py-function" href="https://docs.scipy.org/doc/scipy/reference/generated/scipy.sparse.random.html#scipy.sparse.random" title="scipy.sparse.random"><span class="n">random</span></a><span class="p">(</span><span class="mi">10000</span><span class="p">,</span> <span class="mi">100</span><span class="p">,</span> <span class="nb">format</span><span class="o">=</span><span class="s2">"csr"</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+<span class="n">X</span> <span class="o">=</span> <a class="sphx-glr-backref-module-scipy-sparse sphx-glr-backref-type-py-function" href="https://docs.scipy.org/doc/scipy/reference/generated/scipy.sparse.random.html#scipy.sparse.random" title="scipy.sparse.random"><span class="n">random</span></a><span class="p">(</span><span class="mi">10_000</span><span class="p">,</span> <span class="mi">100</span><span class="p">,</span> <span class="nb">format</span><span class="o">=</span><span class="s2">"csr"</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
 
-<span class="n">pca</span> <span class="o">=</span> <a class="sphx-glr-backref-module-sklearn-decomposition sphx-glr-backref-type-py-class sphx-glr-backref-instance" href="../../modules/generated/sklearn.decomposition.PCA.html#sklearn.decomposition.PCA" title="sklearn.decomposition.PCA"><span class="n">PCA</span></a><span class="p">(</span><span class="n">n_components</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">svd_solver</span><span class="o">=</span><span class="s2">"auto"</span><span class="p">)</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X</span><span class="p">)</span>
+<span class="n">pca</span> <span class="o">=</span> <a class="sphx-glr-backref-module-sklearn-decomposition sphx-glr-backref-type-py-class sphx-glr-backref-instance" href="../../modules/generated/sklearn.decomposition.PCA.html#sklearn.decomposition.PCA" title="sklearn.decomposition.PCA"><span class="n">PCA</span></a><span class="p">(</span><span class="n">n_components</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">svd_solver</span><span class="o">=</span><span class="s2">"covariance_eigh"</span><span class="p">)</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Explained variance: </span><span class="si">{</span><span class="n">pca</span><span class="o">.</span><span class="n">explained_variance_ratio_</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
 </pre></div>
 </div>
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>Explained variance: 0.13
+</pre></div>
+</div>
+<p>The <code class="docutils literal notranslate"><span class="pre">"full"</span></code> solver has also been improved to use less memory and allows
+faster transformation. The default <code class="docutils literal notranslate"><span class="pre">svd_solver="auto"`</span></code> option takes
+advantage of the new solver and is now able to select an appropriate solver
+for sparse datasets.</p>
+<p>Similarly to most other PCA solvers, the new <code class="docutils literal notranslate"><span class="pre">"covariance_eigh"</span></code> solver can leverage
+GPU computation if the input data is passed as a PyTorch or CuPy array by
+enabling the experimental support for <a class="reference internal" href="../../modules/array_api.html#array-api"><span class="std std-ref">Array API</span></a>.</p>
 </section>
 <section id="columntransformer-is-subscriptable">
 <h2>ColumnTransformer is subscriptable<a class="headerlink" href="#columntransformer-is-subscriptable" title="Link to this heading">#</a></h2>
@@ -1043,18 +1075,18 @@ non-numeric arrays using a callable metric.</p>
        [3., 2.]])
 </pre></div>
 </div>
-<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> (0 minutes 0.789 seconds)</p>
+<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> (0 minutes 1.022 seconds)</p>
 
 <p class="rubric">Related examples</p>
 <div class="sphx-glr-thumbnails"><div class="sphx-glr-thumbcontainer" tooltip="Once a binary classifier is trained, the predict method outputs class label predictions corresp..."><img alt="" src="../../_images/sphx_glr_plot_tuned_decision_threshold_thumb.png"/>
 <p><a class="reference internal" href="../model_selection/plot_tuned_decision_threshold.html#sphx-glr-auto-examples-model-selection-plot-tuned-decision-threshold-py"><span class="std std-ref">Post-hoc tuning the cut-off point of decision function</span></a></p>
 <div class="sphx-glr-thumbnail-title">Post-hoc tuning the cut-off point of decision function</div>
-</div><div class="sphx-glr-thumbcontainer" tooltip="We are pleased to announce the release of scikit-learn 1.4! Many bug fixes and improvements wer..."><img alt="" src="../../_images/sphx_glr_plot_release_highlights_1_4_0_thumb.png"/>
-<p><a class="reference internal" href="plot_release_highlights_1_4_0.html#sphx-glr-auto-examples-release-highlights-plot-release-highlights-1-4-0-py"><span class="std std-ref">Release Highlights for scikit-learn 1.4</span></a></p>
-<div class="sphx-glr-thumbnail-title">Release Highlights for scikit-learn 1.4</div>
 </div><div class="sphx-glr-thumbcontainer" tooltip="Once a classifier is trained, the output of the predict method outputs class label predictions ..."><img alt="" src="../../_images/sphx_glr_plot_cost_sensitive_learning_thumb.png"/>
 <p><a class="reference internal" href="../model_selection/plot_cost_sensitive_learning.html#sphx-glr-auto-examples-model-selection-plot-cost-sensitive-learning-py"><span class="std std-ref">Post-tuning the decision threshold for cost-sensitive learning</span></a></p>
 <div class="sphx-glr-thumbnail-title">Post-tuning the decision threshold for cost-sensitive learning</div>
+</div><div class="sphx-glr-thumbcontainer" tooltip="We are pleased to announce the release of scikit-learn 0.22, which comes with many bug fixes an..."><img alt="" src="../../_images/sphx_glr_plot_release_highlights_0_22_0_thumb.png"/>
+<p><a class="reference internal" href="plot_release_highlights_0_22_0.html#sphx-glr-auto-examples-release-highlights-plot-release-highlights-0-22-0-py"><span class="std std-ref">Release Highlights for scikit-learn 0.22</span></a></p>
+<div class="sphx-glr-thumbnail-title">Release Highlights for scikit-learn 0.22</div>
 </div><div class="sphx-glr-thumbcontainer" tooltip="We are pleased to announce the release of scikit-learn 1.3! Many bug fixes and improvements wer..."><img alt="" src="../../_images/sphx_glr_plot_release_highlights_1_3_0_thumb.png"/>
 <p><a class="reference internal" href="plot_release_highlights_1_3_0.html#sphx-glr-auto-examples-release-highlights-plot-release-highlights-1-3-0-py"><span class="std std-ref">Release Highlights for scikit-learn 1.3</span></a></p>
 <div class="sphx-glr-thumbnail-title">Release Highlights for scikit-learn 1.3</div>
