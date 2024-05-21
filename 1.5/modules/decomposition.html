@@ -1,12 +1,12 @@
 
-
 <!DOCTYPE html>
-<!-- data-theme below is forced to be "light" but should be changed if we use pydata-theme-sphinx in the future -->
-<!--[if IE 8]><html class="no-js lt-ie9" lang="en" data-content_root="../" data-theme="light"> <![endif]-->
-<!--[if gt IE 8]><!--> <html class="no-js" lang="en" data-content_root="../" data-theme="light"> <!--<![endif]-->
-<head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+
+<html lang="en" data-content_root="../" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 <meta property="og:title" content="2.5. Decomposing signals in components (matrix factorization problems)" />
 <meta property="og:type" content="website" />
 <meta property="og:url" content="https://scikit-learn/stable/modules/decomposition.html" />
@@ -16,214 +16,729 @@
 <meta property="og:image:alt" content="scikit-learn" />
 <meta name="description" content="Principal component analysis (PCA): Exact PCA and probabilistic interpretation: PCA is used to decompose a multivariate dataset in a set of successive orthogonal components that explain a maximum a..." />
 
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>2.5. Decomposing signals in components (matrix factorization problems) &#8212; scikit-learn 1.5.0 documentation</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "light";
+  </script>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../_static/styles/theme.css?digest=8d27b9dea8ad943066ae" rel="stylesheet" />
+<link href="../_static/styles/bootstrap.css?digest=8d27b9dea8ad943066ae" rel="stylesheet" />
+<link href="../_static/styles/pydata-sphinx-theme.css?digest=8d27b9dea8ad943066ae" rel="stylesheet" />
 
   
-  <title>2.5. Decomposing signals in components (matrix factorization problems) &mdash; scikit-learn 1.5.0rc1 documentation</title>
+  <link href="../_static/vendor/fontawesome/6.5.1/css/all.min.css?digest=8d27b9dea8ad943066ae" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.1/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.1/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.1/webfonts/fa-regular-400.woff2" />
+
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=a746c00c" />
+    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="../_static/plot_directive.css" />
+    <link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Vibur" />
+    <link rel="stylesheet" type="text/css" href="../_static/jupyterlite_sphinx.css?v=ca70e7f1" />
+    <link rel="stylesheet" type="text/css" href="../_static/sg_gallery.css?v=61a4c737" />
+    <link rel="stylesheet" type="text/css" href="../_static/sg_gallery-binder.css?v=f4aeca0c" />
+    <link rel="stylesheet" type="text/css" href="../_static/sg_gallery-dataframe.css?v=2082cf3c" />
+    <link rel="stylesheet" type="text/css" href="../_static/sg_gallery-rendered-html.css?v=1277b6f3" />
+    <link rel="stylesheet" type="text/css" href="../_static/design-style.1e8bd061cd6da7fc9cf755528e8ffc24.min.css?v=0a3b3ea7" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/colors.css?v=cc94ab7d" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/custom.css?v=42c874f8" />
   
-  <link rel="canonical" href="https://scikit-learn.org/stable/modules/decomposition.html" />
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=8d27b9dea8ad943066ae" />
+<link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=8d27b9dea8ad943066ae" />
+  <script src="../_static/vendor/fontawesome/6.5.1/js/all.min.js?digest=8d27b9dea8ad943066ae"></script>
+
+    <script src="../_static/documentation_options.js?v=e0a75244"></script>
+    <script src="../_static/doctools.js?v=9a2dae69"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="../_static/copybutton.js?v=97f0b27d"></script>
+    <script src="../_static/jupyterlite_sphinx.js?v=d6bdf5f8"></script>
+    <script src="../_static/design-tabs.js?v=36754332"></script>
+    <script data-domain="scikit-learn.org" defer="defer" src="https://views.scientific-python.org/js/script.js"></script>
+    <script async="async" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'modules/decomposition';</script>
+    <script>
+        DOCUMENTATION_OPTIONS.theme_version = '0.15.2';
+        DOCUMENTATION_OPTIONS.theme_switcher_json_url = 'https://scikit-learn.org/dev/_static/versions.json';
+        DOCUMENTATION_OPTIONS.theme_switcher_version_match = '1.5.0';
+        DOCUMENTATION_OPTIONS.show_version_warning_banner = true;
+        </script>
+    <script src="../_static/scripts/dropdown.js?v=12d599f8"></script>
+    <script src="../_static/scripts/version-switcher.js?v=a6dd8357"></script>
+    <link rel="icon" href="../_static/favicon.ico"/>
+    <link rel="author" title="About these documents" href="../about.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="2.6. Covariance estimation" href="covariance.html" />
+    <link rel="prev" title="2.4. Biclustering" href="biclustering.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
 
   
-  <link rel="shortcut icon" href="../_static/favicon.ico"/>
+  
+  <a id="pst-skip-link" class="skip-link" href="#main-content">Skip to main content</a>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>
+    Back to top
+  </button>
+
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          name="__primary"
+          id="__primary"/>
+  <label class="overlay overlay-primary" for="__primary"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          name="__secondary"
+          id="__secondary"/>
+  <label class="overlay overlay-secondary" for="__secondary"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+<form class="bd-search d-flex align-items-center"
+      action="../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search the docs ..."
+         aria-label="Search the docs ..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+  </div>
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar">
+<div class="bd-header__inner bd-page-width">
+  <label class="sidebar-toggle primary-toggle" for="__primary">
+    <span class="fa-solid fa-bars"></span>
+  </label>
+  
+  
+  <div class=" navbar-header-items__start">
+    
+      <div class="navbar-item">
+
   
 
-  <link rel="stylesheet" href="../_static/css/vendor/bootstrap.min.css" type="text/css" />
-  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
-  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
-  <link rel="stylesheet" href="../_static/copybutton.css" type="text/css" />
-  <link rel="stylesheet" href="../_static/plot_directive.css" type="text/css" />
-  <link rel="stylesheet" href="../https://fonts.googleapis.com/css?family=Vibur" type="text/css" />
-  <link rel="stylesheet" href="../_static/jupyterlite_sphinx.css" type="text/css" />
-  <link rel="stylesheet" href="../_static/sg_gallery.css" type="text/css" />
-  <link rel="stylesheet" href="../_static/sg_gallery-binder.css" type="text/css" />
-  <link rel="stylesheet" href="../_static/sg_gallery-dataframe.css" type="text/css" />
-  <link rel="stylesheet" href="../_static/sg_gallery-rendered-html.css" type="text/css" />
-  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
-<script id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
-<script src="../_static/js/vendor/jquery-3.6.3.slim.min.js"></script>
-<script src="../_static/js/details-permalink.js"></script> 
-</head>
-<body>
+<a class="navbar-brand logo" href="../index.html">
+  
+  
+  
+  
+  
+    
+    
+      
+    
+    
+    <img src="../_static/scikit-learn-logo-small.png" class="logo__image only-light" alt="scikit-learn homepage"/>
+    <script>document.write(`<img src="../_static/scikit-learn-logo-small.png" class="logo__image only-dark" alt="scikit-learn homepage"/>`);</script>
+  
+  
+</a></div>
+    
+  </div>
+  
+  <div class=" navbar-header-items">
+    
+    <div class="me-auto navbar-header-items__center">
+      
+        <div class="navbar-item">
+<nav class="navbar-nav">
+  <ul class="bd-navbar-elements navbar-nav">
+    
+                    <li class="nav-item">
+                      <a class="nav-link nav-internal" href="../install.html">
+                        Install
+                      </a>
+                    </li>
+                
 
+                    <li class="nav-item current active">
+                      <a class="nav-link nav-internal" href="../user_guide.html">
+                        User Guide
+                      </a>
+                    </li>
+                
 
+                    <li class="nav-item">
+                      <a class="nav-link nav-internal" href="../api/index.html">
+                        API
+                      </a>
+                    </li>
+                
 
+                    <li class="nav-item">
+                      <a class="nav-link nav-internal" href="../auto_examples/index.html">
+                        Examples
+                      </a>
+                    </li>
+                
 
+                    <li class="nav-item">
+                      <a class="nav-link nav-external" href="https://blog.scikit-learn.org/">
+                        Community
+                      </a>
+                    </li>
+                
+            <li class="nav-item dropdown">
+                <button class="btn dropdown-toggle nav-item" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-controls="pst-nav-more-links">
+                    More
+                </button>
+                <ul id="pst-nav-more-links" class="dropdown-menu">
+                    
+                    <li class="nav-item">
+                      <a class="nav-link dropdown-item nav-internal" href="../getting_started.html">
+                        Getting Started
+                      </a>
+                    </li>
+                
 
+                    <li class="nav-item">
+                      <a class="nav-link dropdown-item nav-internal" href="../tutorial/index.html">
+                        Tutorials
+                      </a>
+                    </li>
+                
 
-<nav id="navbar" class="sk-docs-navbar navbar navbar-expand-md navbar-light bg-light py-0">
-  <div class="container-fluid sk-docs-container px-0">
-      <a class="navbar-brand py-0" href="../index.html">
-        <img
-          class="sk-brand-img"
-          src="../_static/scikit-learn-logo-small.png"
-          alt="logo"/>
-      </a>
-    <button
-      id="sk-navbar-toggler"
-      class="navbar-toggler"
+                    <li class="nav-item">
+                      <a class="nav-link dropdown-item nav-internal" href="../whats_new.html">
+                        Release History
+                      </a>
+                    </li>
+                
+
+                    <li class="nav-item">
+                      <a class="nav-link dropdown-item nav-internal" href="../glossary.html">
+                        Glossary
+                      </a>
+                    </li>
+                
+
+                    <li class="nav-item">
+                      <a class="nav-link dropdown-item nav-external" href="https://scikit-learn.org/dev/developers/index.html">
+                        Development
+                      </a>
+                    </li>
+                
+
+                    <li class="nav-item">
+                      <a class="nav-link dropdown-item nav-internal" href="../faq.html">
+                        FAQ
+                      </a>
+                    </li>
+                
+
+                    <li class="nav-item">
+                      <a class="nav-link dropdown-item nav-internal" href="../support.html">
+                        Support
+                      </a>
+                    </li>
+                
+
+                    <li class="nav-item">
+                      <a class="nav-link dropdown-item nav-internal" href="../related_projects.html">
+                        Related Projects
+                      </a>
+                    </li>
+                
+
+                    <li class="nav-item">
+                      <a class="nav-link dropdown-item nav-internal" href="../roadmap.html">
+                        Roadmap
+                      </a>
+                    </li>
+                
+
+                    <li class="nav-item">
+                      <a class="nav-link dropdown-item nav-internal" href="../governance.html">
+                        Governance
+                      </a>
+                    </li>
+                
+
+                    <li class="nav-item">
+                      <a class="nav-link dropdown-item nav-internal" href="../about.html">
+                        About us
+                      </a>
+                    </li>
+                
+                </ul>
+            </li>
+            
+  </ul>
+</nav></div>
+      
+    </div>
+    
+    
+    <div class="navbar-header-items__end">
+      
+        <div class="navbar-item navbar-persistent--container">
+          
+
+<script>
+document.write(`
+  <button class="btn btn-sm navbar-btn search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+  </button>
+`);
+</script>
+        </div>
+      
+      
+        <div class="navbar-item">
+
+<script>
+document.write(`
+  <button class="btn btn-sm navbar-btn theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="theme-switch nav-link" data-mode="light"><i class="fa-solid fa-sun fa-lg"></i></span>
+    <span class="theme-switch nav-link" data-mode="dark"><i class="fa-solid fa-moon fa-lg"></i></span>
+    <span class="theme-switch nav-link" data-mode="auto"><i class="fa-solid fa-circle-half-stroke fa-lg"></i></span>
+  </button>
+`);
+</script></div>
+      
+        <div class="navbar-item"><ul class="navbar-icon-links navbar-nav"
+    aria-label="Icon Links">
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://github.com/scikit-learn/scikit-learn" title="GitHub" class="nav-link" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><span><i class="fa-brands fa-square-github fa-lg" aria-hidden="true"></i></span>
+            <span class="sr-only">GitHub</span></a>
+        </li>
+</ul></div>
+      
+        <div class="navbar-item">
+<script>
+document.write(`
+  <div class="version-switcher__container dropdown">
+    <button id="pst-version-switcher-button-2"
       type="button"
-      data-toggle="collapse"
-      data-target="#navbarSupportedContent"
-      aria-controls="navbarSupportedContent"
-      aria-expanded="false"
-      aria-label="Toggle navigation"
+      class="version-switcher__button btn btn-sm navbar-btn dropdown-toggle"
+      data-bs-toggle="dropdown"
+      aria-haspopup="listbox"
+      aria-controls="pst-version-switcher-list-2"
+      aria-label="Version switcher list"
     >
-      <span class="navbar-toggler-icon"></span>
+      Choose version  <!-- this text may get changed later by javascript -->
+      <span class="caret"></span>
     </button>
-
-    <div class="sk-navbar-collapse collapse navbar-collapse" id="navbarSupportedContent">
-      <ul class="navbar-nav mr-auto">
-        <li class="nav-item">
-          <a class="sk-nav-link nav-link" href="../install.html">Install</a>
-        </li>
-        <li class="nav-item">
-          <a class="sk-nav-link nav-link" href="../user_guide.html">User Guide</a>
-        </li>
-        <li class="nav-item">
-          <a class="sk-nav-link nav-link" href="classes.html">API</a>
-        </li>
-        <li class="nav-item">
-          <a class="sk-nav-link nav-link" href="../auto_examples/index.html">Examples</a>
-        </li>
-        <li class="nav-item">
-          <a class="sk-nav-link nav-link" target="_blank" rel="noopener noreferrer" href="https://blog.scikit-learn.org/">Community</a>
-        </li>
-        <li class="nav-item">
-          <a class="sk-nav-link nav-link nav-more-item-mobile-items" href="../getting_started.html" >Getting Started</a>
-        </li>
-        <li class="nav-item">
-          <a class="sk-nav-link nav-link nav-more-item-mobile-items" href="../tutorial/index.html" >Tutorial</a>
-        </li>
-        <li class="nav-item">
-          <a class="sk-nav-link nav-link nav-more-item-mobile-items" href="../whats_new/v1.5.html" >What's new</a>
-        </li>
-        <li class="nav-item">
-          <a class="sk-nav-link nav-link nav-more-item-mobile-items" href="../glossary.html" >Glossary</a>
-        </li>
-        <li class="nav-item">
-          <a class="sk-nav-link nav-link nav-more-item-mobile-items" href="https://scikit-learn.org/dev/developers/index.html" target="_blank" rel="noopener noreferrer">Development</a>
-        </li>
-        <li class="nav-item">
-          <a class="sk-nav-link nav-link nav-more-item-mobile-items" href="../faq.html" >FAQ</a>
-        </li>
-        <li class="nav-item">
-          <a class="sk-nav-link nav-link nav-more-item-mobile-items" href="../support.html" >Support</a>
-        </li>
-        <li class="nav-item">
-          <a class="sk-nav-link nav-link nav-more-item-mobile-items" href="../related_projects.html" >Related packages</a>
-        </li>
-        <li class="nav-item">
-          <a class="sk-nav-link nav-link nav-more-item-mobile-items" href="../roadmap.html" >Roadmap</a>
-        </li>
-        <li class="nav-item">
-          <a class="sk-nav-link nav-link nav-more-item-mobile-items" href="../governance.html" >Governance</a>
-        </li>
-        <li class="nav-item">
-          <a class="sk-nav-link nav-link nav-more-item-mobile-items" href="../about.html" >About us</a>
-        </li>
-        <li class="nav-item">
-          <a class="sk-nav-link nav-link nav-more-item-mobile-items" href="https://github.com/scikit-learn/scikit-learn" >GitHub</a>
-        </li>
-        <li class="nav-item">
-          <a class="sk-nav-link nav-link nav-more-item-mobile-items" href="https://scikit-learn.org/dev/versions.html" >Other Versions and Download</a>
-        </li>
-        <li class="nav-item dropdown nav-more-item-dropdown">
-          <a class="sk-nav-link nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">More</a>
-          <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-              <a class="sk-nav-dropdown-item dropdown-item" href="../getting_started.html" >Getting Started</a>
-              <a class="sk-nav-dropdown-item dropdown-item" href="../tutorial/index.html" >Tutorial</a>
-              <a class="sk-nav-dropdown-item dropdown-item" href="../whats_new/v1.5.html" >What's new</a>
-              <a class="sk-nav-dropdown-item dropdown-item" href="../glossary.html" >Glossary</a>
-              <a class="sk-nav-dropdown-item dropdown-item" href="https://scikit-learn.org/dev/developers/index.html" target="_blank" rel="noopener noreferrer">Development</a>
-              <a class="sk-nav-dropdown-item dropdown-item" href="../faq.html" >FAQ</a>
-              <a class="sk-nav-dropdown-item dropdown-item" href="../support.html" >Support</a>
-              <a class="sk-nav-dropdown-item dropdown-item" href="../related_projects.html" >Related packages</a>
-              <a class="sk-nav-dropdown-item dropdown-item" href="../roadmap.html" >Roadmap</a>
-              <a class="sk-nav-dropdown-item dropdown-item" href="../governance.html" >Governance</a>
-              <a class="sk-nav-dropdown-item dropdown-item" href="../about.html" >About us</a>
-              <a class="sk-nav-dropdown-item dropdown-item" href="https://github.com/scikit-learn/scikit-learn" >GitHub</a>
-              <a class="sk-nav-dropdown-item dropdown-item" href="https://scikit-learn.org/dev/versions.html" >Other Versions and Download</a>
-          </div>
-        </li>
-      </ul>
-      <div id="searchbox" role="search">
-          <div class="searchformwrapper">
-          <form class="search" action="../search.html" method="get">
-            <input class="sk-search-text-input" type="text" name="q" aria-labelledby="searchlabel" />
-            <input class="sk-search-text-btn" type="submit" value="Go" />
-          </form>
-          </div>
-      </div>
+    <div id="pst-version-switcher-list-2"
+      class="version-switcher__menu dropdown-menu list-group-flush py-0"
+      role="listbox" aria-labelledby="pst-version-switcher-button-2">
+      <!-- dropdown will be populated by javascript on page load -->
     </div>
   </div>
-</nav>
-<div class="d-flex" id="sk-doc-wrapper">
-    <input type="checkbox" name="sk-toggle-checkbox" id="sk-toggle-checkbox">
-    <label id="sk-sidemenu-toggle" class="sk-btn-toggle-toc btn sk-btn-primary" for="sk-toggle-checkbox">Toggle Menu</label>
-    <div id="sk-sidebar-wrapper" class="border-right">
-      <div class="sk-sidebar-toc-wrapper">
-        <div class="btn-group w-100 mb-2" role="group" aria-label="rellinks">
-            <a href="biclustering.html" role="button" class="btn sk-btn-rellink py-1" sk-rellink-tooltip="2.4. Biclustering">Prev</a><a href="../unsupervised_learning.html" role="button" class="btn sk-btn-rellink py-1" sk-rellink-tooltip="2. Unsupervised learning">Up</a>
-            <a href="covariance.html" role="button" class="btn sk-btn-rellink py-1" sk-rellink-tooltip="2.6. Covariance estimation">Next</a>
-        </div>
-        <div class="alert alert-danger p-1 mb-2" role="alert">
-          <p class="text-center mb-0">
-          <strong>scikit-learn 1.5.0rc1</strong><br/>
-          <a href="https://scikit-learn.org/dev/versions.html">Other versions</a>
-          </p>
-        </div>
-        <div class="alert alert-warning p-1 mb-2" role="alert">
-          <p class="text-center mb-0">
-            Please <a class="font-weight-bold" href="../about.html#citing-scikit-learn"><string>cite us</string></a> if you use the software.
-          </p>
-        </div>
-            <div class="sk-sidebar-toc">
-              <ul>
-<li><a class="reference internal" href="#">2.5. Decomposing signals in components (matrix factorization problems)</a><ul>
-<li><a class="reference internal" href="#principal-component-analysis-pca">2.5.1. Principal component analysis (PCA)</a><ul>
-<li><a class="reference internal" href="#exact-pca-and-probabilistic-interpretation">2.5.1.1. Exact PCA and probabilistic interpretation</a></li>
-<li><a class="reference internal" href="#incremental-pca">2.5.1.2. Incremental PCA</a></li>
-<li><a class="reference internal" href="#pca-using-randomized-svd">2.5.1.3. PCA using randomized SVD</a></li>
-<li><a class="reference internal" href="#sparse-principal-components-analysis-sparsepca-and-minibatchsparsepca">2.5.1.4. Sparse principal components analysis (SparsePCA and MiniBatchSparsePCA)</a></li>
-</ul>
-</li>
-<li><a class="reference internal" href="#kernel-principal-component-analysis-kpca">2.5.2. Kernel Principal Component Analysis (kPCA)</a><ul>
-<li><a class="reference internal" href="#exact-kernel-pca">2.5.2.1. Exact Kernel PCA</a></li>
-<li><a class="reference internal" href="#choice-of-solver-for-kernel-pca">2.5.2.2. Choice of solver for Kernel PCA</a></li>
-</ul>
-</li>
-<li><a class="reference internal" href="#truncated-singular-value-decomposition-and-latent-semantic-analysis">2.5.3. Truncated singular value decomposition and latent semantic analysis</a></li>
-<li><a class="reference internal" href="#dictionary-learning">2.5.4. Dictionary Learning</a><ul>
-<li><a class="reference internal" href="#sparse-coding-with-a-precomputed-dictionary">2.5.4.1. Sparse coding with a precomputed dictionary</a></li>
-<li><a class="reference internal" href="#generic-dictionary-learning">2.5.4.2. Generic dictionary learning</a></li>
-<li><a class="reference internal" href="#mini-batch-dictionary-learning">2.5.4.3. Mini-batch dictionary learning</a></li>
-</ul>
-</li>
-<li><a class="reference internal" href="#factor-analysis">2.5.5. Factor Analysis</a></li>
-<li><a class="reference internal" href="#independent-component-analysis-ica">2.5.6. Independent component analysis (ICA)</a></li>
-<li><a class="reference internal" href="#non-negative-matrix-factorization-nmf-or-nnmf">2.5.7. Non-negative matrix factorization (NMF or NNMF)</a><ul>
-<li><a class="reference internal" href="#nmf-with-the-frobenius-norm">2.5.7.1. NMF with the Frobenius norm</a></li>
-<li><a class="reference internal" href="#nmf-with-a-beta-divergence">2.5.7.2. NMF with a beta-divergence</a></li>
-<li><a class="reference internal" href="#mini-batch-non-negative-matrix-factorization">2.5.7.3. Mini-batch Non Negative Matrix Factorization</a></li>
-</ul>
-</li>
-<li><a class="reference internal" href="#latent-dirichlet-allocation-lda">2.5.8. Latent Dirichlet Allocation (LDA)</a></li>
-</ul>
-</li>
-</ul>
-
-            </div>
-      </div>
+`);
+</script></div>
+      
     </div>
-    <div id="sk-page-content-wrapper">
-      <div class="sk-page-content container-fluid body px-md-3" role="main">
+    
+  </div>
+  
+  
+    <div class="navbar-persistent--mobile">
+
+<script>
+document.write(`
+  <button class="btn btn-sm navbar-btn search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+  </button>
+`);
+</script>
+    </div>
+  
+
+  
+    <label class="sidebar-toggle secondary-toggle" for="__secondary" tabindex="0">
+      <span class="fa-solid fa-outdent"></span>
+    </label>
+  
+</div>
+
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <div class="bd-sidebar-primary bd-sidebar">
         
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+      <div class="sidebar-header-items__center">
+        
+          <div class="navbar-item">
+<nav class="navbar-nav">
+  <ul class="bd-navbar-elements navbar-nav">
+    
+                    <li class="nav-item">
+                      <a class="nav-link nav-internal" href="../install.html">
+                        Install
+                      </a>
+                    </li>
+                
+
+                    <li class="nav-item current active">
+                      <a class="nav-link nav-internal" href="../user_guide.html">
+                        User Guide
+                      </a>
+                    </li>
+                
+
+                    <li class="nav-item">
+                      <a class="nav-link nav-internal" href="../api/index.html">
+                        API
+                      </a>
+                    </li>
+                
+
+                    <li class="nav-item">
+                      <a class="nav-link nav-internal" href="../auto_examples/index.html">
+                        Examples
+                      </a>
+                    </li>
+                
+
+                    <li class="nav-item">
+                      <a class="nav-link nav-external" href="https://blog.scikit-learn.org/">
+                        Community
+                      </a>
+                    </li>
+                
+            <li class="nav-item dropdown">
+                <button class="btn dropdown-toggle nav-item" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-controls="pst-nav-more-links-2">
+                    More
+                </button>
+                <ul id="pst-nav-more-links-2" class="dropdown-menu">
+                    
+                    <li class="nav-item">
+                      <a class="nav-link dropdown-item nav-internal" href="../getting_started.html">
+                        Getting Started
+                      </a>
+                    </li>
+                
+
+                    <li class="nav-item">
+                      <a class="nav-link dropdown-item nav-internal" href="../tutorial/index.html">
+                        Tutorials
+                      </a>
+                    </li>
+                
+
+                    <li class="nav-item">
+                      <a class="nav-link dropdown-item nav-internal" href="../whats_new.html">
+                        Release History
+                      </a>
+                    </li>
+                
+
+                    <li class="nav-item">
+                      <a class="nav-link dropdown-item nav-internal" href="../glossary.html">
+                        Glossary
+                      </a>
+                    </li>
+                
+
+                    <li class="nav-item">
+                      <a class="nav-link dropdown-item nav-external" href="https://scikit-learn.org/dev/developers/index.html">
+                        Development
+                      </a>
+                    </li>
+                
+
+                    <li class="nav-item">
+                      <a class="nav-link dropdown-item nav-internal" href="../faq.html">
+                        FAQ
+                      </a>
+                    </li>
+                
+
+                    <li class="nav-item">
+                      <a class="nav-link dropdown-item nav-internal" href="../support.html">
+                        Support
+                      </a>
+                    </li>
+                
+
+                    <li class="nav-item">
+                      <a class="nav-link dropdown-item nav-internal" href="../related_projects.html">
+                        Related Projects
+                      </a>
+                    </li>
+                
+
+                    <li class="nav-item">
+                      <a class="nav-link dropdown-item nav-internal" href="../roadmap.html">
+                        Roadmap
+                      </a>
+                    </li>
+                
+
+                    <li class="nav-item">
+                      <a class="nav-link dropdown-item nav-internal" href="../governance.html">
+                        Governance
+                      </a>
+                    </li>
+                
+
+                    <li class="nav-item">
+                      <a class="nav-link dropdown-item nav-internal" href="../about.html">
+                        About us
+                      </a>
+                    </li>
+                
+                </ul>
+            </li>
+            
+  </ul>
+</nav></div>
+        
+      </div>
+    
+    
+    
+      <div class="sidebar-header-items__end">
+        
+          <div class="navbar-item">
+
+<script>
+document.write(`
+  <button class="btn btn-sm navbar-btn theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="theme-switch nav-link" data-mode="light"><i class="fa-solid fa-sun fa-lg"></i></span>
+    <span class="theme-switch nav-link" data-mode="dark"><i class="fa-solid fa-moon fa-lg"></i></span>
+    <span class="theme-switch nav-link" data-mode="auto"><i class="fa-solid fa-circle-half-stroke fa-lg"></i></span>
+  </button>
+`);
+</script></div>
+        
+          <div class="navbar-item"><ul class="navbar-icon-links navbar-nav"
+    aria-label="Icon Links">
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://github.com/scikit-learn/scikit-learn" title="GitHub" class="nav-link" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><span><i class="fa-brands fa-square-github fa-lg" aria-hidden="true"></i></span>
+            <span class="sr-only">GitHub</span></a>
+        </li>
+</ul></div>
+        
+          <div class="navbar-item">
+<script>
+document.write(`
+  <div class="version-switcher__container dropdown">
+    <button id="pst-version-switcher-button-3"
+      type="button"
+      class="version-switcher__button btn btn-sm navbar-btn dropdown-toggle"
+      data-bs-toggle="dropdown"
+      aria-haspopup="listbox"
+      aria-controls="pst-version-switcher-list-3"
+      aria-label="Version switcher list"
+    >
+      Choose version  <!-- this text may get changed later by javascript -->
+      <span class="caret"></span>
+    </button>
+    <div id="pst-version-switcher-list-3"
+      class="version-switcher__menu dropdown-menu list-group-flush py-0"
+      role="listbox" aria-labelledby="pst-version-switcher-button-3">
+      <!-- dropdown will be populated by javascript on page load -->
+    </div>
+  </div>
+`);
+</script></div>
+        
+      </div>
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+<nav class="bd-docs-nav bd-links"
+     aria-label="Section Navigation">
+  <p class="bd-links__title" role="heading" aria-level="1">Section Navigation</p>
+  <div class="bd-toc-item navbar-nav"><ul class="current nav bd-sidenav">
+<li class="toctree-l1 has-children"><a class="reference internal" href="../supervised_learning.html">1. Supervised learning</a><input class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-1"><i class="fa-solid fa-chevron-down"></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="linear_model.html">1.1. Linear Models</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lda_qda.html">1.2. Linear and Quadratic Discriminant Analysis</a></li>
+<li class="toctree-l2"><a class="reference internal" href="kernel_ridge.html">1.3. Kernel ridge regression</a></li>
+<li class="toctree-l2"><a class="reference internal" href="svm.html">1.4. Support Vector Machines</a></li>
+<li class="toctree-l2"><a class="reference internal" href="sgd.html">1.5. Stochastic Gradient Descent</a></li>
+<li class="toctree-l2"><a class="reference internal" href="neighbors.html">1.6. Nearest Neighbors</a></li>
+<li class="toctree-l2"><a class="reference internal" href="gaussian_process.html">1.7. Gaussian Processes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="cross_decomposition.html">1.8. Cross decomposition</a></li>
+<li class="toctree-l2"><a class="reference internal" href="naive_bayes.html">1.9. Naive Bayes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tree.html">1.10. Decision Trees</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ensemble.html">1.11. Ensembles: Gradient boosting, random forests, bagging, voting, stacking</a></li>
+<li class="toctree-l2"><a class="reference internal" href="multiclass.html">1.12. Multiclass and multioutput algorithms</a></li>
+<li class="toctree-l2"><a class="reference internal" href="feature_selection.html">1.13. Feature selection</a></li>
+<li class="toctree-l2"><a class="reference internal" href="semi_supervised.html">1.14. Semi-supervised learning</a></li>
+<li class="toctree-l2"><a class="reference internal" href="isotonic.html">1.15. Isotonic regression</a></li>
+<li class="toctree-l2"><a class="reference internal" href="calibration.html">1.16. Probability calibration</a></li>
+<li class="toctree-l2"><a class="reference internal" href="neural_networks_supervised.html">1.17. Neural network models (supervised)</a></li>
+</ul>
+</li>
+<li class="toctree-l1 current active has-children"><a class="reference internal" href="../unsupervised_learning.html">2. Unsupervised learning</a><input checked="" class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-2"><i class="fa-solid fa-chevron-down"></i></label><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="mixture.html">2.1. Gaussian mixture models</a></li>
+<li class="toctree-l2"><a class="reference internal" href="manifold.html">2.2. Manifold learning</a></li>
+<li class="toctree-l2"><a class="reference internal" href="clustering.html">2.3. Clustering</a></li>
+<li class="toctree-l2"><a class="reference internal" href="biclustering.html">2.4. Biclustering</a></li>
+<li class="toctree-l2 current active"><a class="current reference internal" href="#">2.5. Decomposing signals in components (matrix factorization problems)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="covariance.html">2.6. Covariance estimation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="outlier_detection.html">2.7. Novelty and Outlier Detection</a></li>
+<li class="toctree-l2"><a class="reference internal" href="density.html">2.8. Density Estimation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="neural_networks_unsupervised.html">2.9. Neural network models (unsupervised)</a></li>
+</ul>
+</li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../model_selection.html">3. Model selection and evaluation</a><input class="toctree-checkbox" id="toctree-checkbox-3" name="toctree-checkbox-3" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-3"><i class="fa-solid fa-chevron-down"></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="cross_validation.html">3.1. Cross-validation: evaluating estimator performance</a></li>
+<li class="toctree-l2"><a class="reference internal" href="grid_search.html">3.2. Tuning the hyper-parameters of an estimator</a></li>
+<li class="toctree-l2"><a class="reference internal" href="classification_threshold.html">3.3. Tuning the decision threshold for class prediction</a></li>
+<li class="toctree-l2"><a class="reference internal" href="model_evaluation.html">3.4. Metrics and scoring: quantifying the quality of predictions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="learning_curve.html">3.5. Validation curves: plotting scores to evaluate models</a></li>
+</ul>
+</li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../inspection.html">4. Inspection</a><input class="toctree-checkbox" id="toctree-checkbox-4" name="toctree-checkbox-4" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-4"><i class="fa-solid fa-chevron-down"></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="partial_dependence.html">4.1. Partial Dependence and Individual Conditional Expectation plots</a></li>
+<li class="toctree-l2"><a class="reference internal" href="permutation_importance.html">4.2. Permutation feature importance</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../visualizations.html">5. Visualizations</a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../data_transforms.html">6. Dataset transformations</a><input class="toctree-checkbox" id="toctree-checkbox-5" name="toctree-checkbox-5" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-5"><i class="fa-solid fa-chevron-down"></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="compose.html">6.1. Pipelines and composite estimators</a></li>
+<li class="toctree-l2"><a class="reference internal" href="feature_extraction.html">6.2. Feature extraction</a></li>
+<li class="toctree-l2"><a class="reference internal" href="preprocessing.html">6.3. Preprocessing data</a></li>
+<li class="toctree-l2"><a class="reference internal" href="impute.html">6.4. Imputation of missing values</a></li>
+<li class="toctree-l2"><a class="reference internal" href="unsupervised_reduction.html">6.5. Unsupervised dimensionality reduction</a></li>
+<li class="toctree-l2"><a class="reference internal" href="random_projection.html">6.6. Random Projection</a></li>
+<li class="toctree-l2"><a class="reference internal" href="kernel_approximation.html">6.7. Kernel Approximation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="metrics.html">6.8. Pairwise metrics, Affinities and Kernels</a></li>
+<li class="toctree-l2"><a class="reference internal" href="preprocessing_targets.html">6.9. Transforming the prediction target (<code class="docutils literal notranslate"><span class="pre">y</span></code>)</a></li>
+</ul>
+</li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../datasets.html">7. Dataset loading utilities</a><input class="toctree-checkbox" id="toctree-checkbox-6" name="toctree-checkbox-6" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-6"><i class="fa-solid fa-chevron-down"></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../datasets/toy_dataset.html">7.1. Toy datasets</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../datasets/real_world.html">7.2. Real world datasets</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../datasets/sample_generators.html">7.3. Generated datasets</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../datasets/loading_other_datasets.html">7.4. Loading other datasets</a></li>
+</ul>
+</li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../computing.html">8. Computing with scikit-learn</a><input class="toctree-checkbox" id="toctree-checkbox-7" name="toctree-checkbox-7" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-7"><i class="fa-solid fa-chevron-down"></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../computing/scaling_strategies.html">8.1. Strategies to scale computationally: bigger data</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../computing/computational_performance.html">8.2. Computational Performance</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../computing/parallelism.html">8.3. Parallelism, resource management, and configuration</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../model_persistence.html">9. Model persistence</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../common_pitfalls.html">10. Common pitfalls and recommended practices</a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../dispatching.html">11. Dispatching</a><input class="toctree-checkbox" id="toctree-checkbox-8" name="toctree-checkbox-8" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-8"><i class="fa-solid fa-chevron-down"></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="array_api.html">11.1. Array API support (experimental)</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main">
+        
+        
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item">
+
+
+
+<nav aria-label="Breadcrumb">
+  <ul class="bd-breadcrumbs">
+    
+    <li class="breadcrumb-item breadcrumb-home">
+      <a href="../index.html" class="nav-link" aria-label="Home">
+        <i class="fa-solid fa-home"></i>
+      </a>
+    </li>
+    
+    <li class="breadcrumb-item"><a href="../user_guide.html" class="nav-link">User Guide</a></li>
+    
+    
+    <li class="breadcrumb-item"><a href="../unsupervised_learning.html" class="nav-link"><span class="section-number">2. </span>Unsupervised learning</a></li>
+    
+    <li class="breadcrumb-item active" aria-current="page"><span...</li>
+  </ul>
+</nav>
+</div>
+      
+    </div>
+  
+  
+</div>
+</div>
+              
+              
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
   <section id="decomposing-signals-in-components-matrix-factorization-problems">
-<span id="decompositions"></span><h1><span class="section-number">2.5. </span>Decomposing signals in components (matrix factorization problems)<a class="headerlink" href="#decomposing-signals-in-components-matrix-factorization-problems" title="Link to this heading">¶</a></h1>
+<span id="decompositions"></span><h1><span class="section-number">2.5. </span>Decomposing signals in components (matrix factorization problems)<a class="headerlink" href="#decomposing-signals-in-components-matrix-factorization-problems" title="Link to this heading">#</a></h1>
 <section id="principal-component-analysis-pca">
-<span id="pca"></span><h2><span class="section-number">2.5.1. </span>Principal component analysis (PCA)<a class="headerlink" href="#principal-component-analysis-pca" title="Link to this heading">¶</a></h2>
+<span id="pca"></span><h2><span class="section-number">2.5.1. </span>Principal component analysis (PCA)<a class="headerlink" href="#principal-component-analysis-pca" title="Link to this heading">#</a></h2>
 <section id="exact-pca-and-probabilistic-interpretation">
-<h3><span class="section-number">2.5.1.1. </span>Exact PCA and probabilistic interpretation<a class="headerlink" href="#exact-pca-and-probabilistic-interpretation" title="Link to this heading">¶</a></h3>
+<h3><span class="section-number">2.5.1.1. </span>Exact PCA and probabilistic interpretation<a class="headerlink" href="#exact-pca-and-probabilistic-interpretation" title="Link to this heading">#</a></h3>
 <p>PCA is used to decompose a multivariate dataset in a set of successive
 orthogonal components that explain a maximum amount of the variance. In
 scikit-learn, <a class="reference internal" href="generated/sklearn.decomposition.PCA.html#sklearn.decomposition.PCA" title="sklearn.decomposition.PCA"><code class="xref py py-class docutils literal notranslate"><span class="pre">PCA</span></code></a> is implemented as a <em>transformer</em> object
@@ -250,17 +765,15 @@ data based on the amount of variance it explains. As such it implements a
 <a class="reference external image-reference" href="../auto_examples/decomposition/plot_pca_vs_fa_model_selection.html"><img alt="../_images/sphx_glr_plot_pca_vs_fa_model_selection_001.png" src="../_images/sphx_glr_plot_pca_vs_fa_model_selection_001.png" style="width: 480.0px; height: 360.0px;" />
 </a>
 </figure>
-<aside class="topic">
-<p class="topic-title">Examples:</p>
+<p class="rubric">Examples</p>
 <ul class="simple">
 <li><p><a class="reference internal" href="../auto_examples/decomposition/plot_pca_iris.html#sphx-glr-auto-examples-decomposition-plot-pca-iris-py"><span class="std std-ref">PCA example with Iris Data-set</span></a></p></li>
 <li><p><a class="reference internal" href="../auto_examples/decomposition/plot_pca_vs_lda.html#sphx-glr-auto-examples-decomposition-plot-pca-vs-lda-py"><span class="std std-ref">Comparison of LDA and PCA 2D projection of Iris dataset</span></a></p></li>
 <li><p><a class="reference internal" href="../auto_examples/decomposition/plot_pca_vs_fa_model_selection.html#sphx-glr-auto-examples-decomposition-plot-pca-vs-fa-model-selection-py"><span class="std std-ref">Model selection with Probabilistic PCA and Factor Analysis (FA)</span></a></p></li>
 </ul>
-</aside>
 </section>
 <section id="incremental-pca">
-<span id="incrementalpca"></span><h3><span class="section-number">2.5.1.2. </span>Incremental PCA<a class="headerlink" href="#incremental-pca" title="Link to this heading">¶</a></h3>
+<span id="incrementalpca"></span><h3><span class="section-number">2.5.1.2. </span>Incremental PCA<a class="headerlink" href="#incremental-pca" title="Link to this heading">#</a></h3>
 <p>The <a class="reference internal" href="generated/sklearn.decomposition.PCA.html#sklearn.decomposition.PCA" title="sklearn.decomposition.PCA"><code class="xref py py-class docutils literal notranslate"><span class="pre">PCA</span></code></a> object is very useful, but has certain limitations for
 large datasets. The biggest limitation is that <a class="reference internal" href="generated/sklearn.decomposition.PCA.html#sklearn.decomposition.PCA" title="sklearn.decomposition.PCA"><code class="xref py py-class docutils literal notranslate"><span class="pre">PCA</span></code></a> only supports
 batch processing, which means all of the data to be processed must fit in main
@@ -289,15 +802,13 @@ input data for each feature before applying the SVD.</p>
 <a class="reference external image-reference" href="../auto_examples/decomposition/plot_incremental_pca.html"><img alt="../_images/sphx_glr_plot_incremental_pca_002.png" src="../_images/sphx_glr_plot_incremental_pca_002.png" style="width: 600.0px; height: 600.0px;" />
 </a>
 </figure>
-<aside class="topic">
-<p class="topic-title">Examples:</p>
+<p class="rubric">Examples</p>
 <ul class="simple">
 <li><p><a class="reference internal" href="../auto_examples/decomposition/plot_incremental_pca.html#sphx-glr-auto-examples-decomposition-plot-incremental-pca-py"><span class="std std-ref">Incremental PCA</span></a></p></li>
 </ul>
-</aside>
 </section>
 <section id="pca-using-randomized-svd">
-<span id="randomizedpca"></span><h3><span class="section-number">2.5.1.3. </span>PCA using randomized SVD<a class="headerlink" href="#pca-using-randomized-svd" title="Link to this heading">¶</a></h3>
+<span id="randomizedpca"></span><h3><span class="section-number">2.5.1.3. </span>PCA using randomized SVD<a class="headerlink" href="#pca-using-randomized-svd" title="Link to this heading">#</a></h3>
 <p>It is often interesting to project data to a lower-dimensional
 space that preserves most of the variance, by dropping the singular vector
 of components associated with lower singular values.</p>
@@ -334,15 +845,12 @@ implemented in <a class="reference internal" href="generated/sklearn.decompositi
 <p>Note: the implementation of <code class="docutils literal notranslate"><span class="pre">inverse_transform</span></code> in <a class="reference internal" href="generated/sklearn.decomposition.PCA.html#sklearn.decomposition.PCA" title="sklearn.decomposition.PCA"><code class="xref py py-class docutils literal notranslate"><span class="pre">PCA</span></code></a> with
 <code class="docutils literal notranslate"><span class="pre">svd_solver='randomized'</span></code> is not the exact inverse transform of
 <code class="docutils literal notranslate"><span class="pre">transform</span></code> even when <code class="docutils literal notranslate"><span class="pre">whiten=False</span></code> (default).</p>
-<aside class="topic">
-<p class="topic-title">Examples:</p>
+<p class="rubric">Examples</p>
 <ul class="simple">
 <li><p><a class="reference internal" href="../auto_examples/applications/plot_face_recognition.html#sphx-glr-auto-examples-applications-plot-face-recognition-py"><span class="std std-ref">Faces recognition example using eigenfaces and SVMs</span></a></p></li>
 <li><p><a class="reference internal" href="../auto_examples/decomposition/plot_faces_decomposition.html#sphx-glr-auto-examples-decomposition-plot-faces-decomposition-py"><span class="std std-ref">Faces dataset decompositions</span></a></p></li>
 </ul>
-</aside>
-<aside class="topic">
-<p class="topic-title">References:</p>
+<p class="rubric">References</p>
 <ul class="simple">
 <li><p>Algorithm 4.3 in
 <a class="reference external" href="https://arxiv.org/abs/0909.4061">“Finding structure with randomness: Stochastic algorithms for
@@ -351,10 +859,9 @@ Halko, et al., 2009</p></li>
 <li><p><a class="reference external" href="https://arxiv.org/abs/1412.3510">“An implementation of a randomized algorithm for principal component
 analysis”</a> A. Szlam et al. 2014</p></li>
 </ul>
-</aside>
 </section>
 <section id="sparse-principal-components-analysis-sparsepca-and-minibatchsparsepca">
-<span id="sparsepca"></span><h3><span class="section-number">2.5.1.4. </span>Sparse principal components analysis (SparsePCA and MiniBatchSparsePCA)<a class="headerlink" href="#sparse-principal-components-analysis-sparsepca-and-minibatchsparsepca" title="Link to this heading">¶</a></h3>
+<span id="sparsepca"></span><h3><span class="section-number">2.5.1.4. </span>Sparse principal components analysis (SparsePCA and MiniBatchSparsePCA)<a class="headerlink" href="#sparse-principal-components-analysis-sparsepca-and-minibatchsparsepca" title="Link to this heading">#</a></h3>
 <p><a class="reference internal" href="generated/sklearn.decomposition.SparsePCA.html#sklearn.decomposition.SparsePCA" title="sklearn.decomposition.SparsePCA"><code class="xref py py-class docutils literal notranslate"><span class="pre">SparsePCA</span></code></a> is a variant of PCA, with the goal of extracting the
 set of sparse components that best reconstruct the data.</p>
 <p>Mini-batch sparse PCA (<a class="reference internal" href="generated/sklearn.decomposition.MiniBatchSparsePCA.html#sklearn.decomposition.MiniBatchSparsePCA" title="sklearn.decomposition.MiniBatchSparsePCA"><code class="xref py py-class docutils literal notranslate"><span class="pre">MiniBatchSparsePCA</span></code></a>) is a variant of
@@ -408,14 +915,11 @@ factorization, while larger values shrink many coefficients to zero.</p>
 the algorithm is online along the features direction, not the samples
 direction.</p>
 </div>
-<aside class="topic">
-<p class="topic-title">Examples:</p>
+<p class="rubric">Examples</p>
 <ul class="simple">
 <li><p><a class="reference internal" href="../auto_examples/decomposition/plot_faces_decomposition.html#sphx-glr-auto-examples-decomposition-plot-faces-decomposition-py"><span class="std std-ref">Faces dataset decompositions</span></a></p></li>
 </ul>
-</aside>
-<aside class="topic">
-<p class="topic-title">References:</p>
+<p class="rubric">References</p>
 <div role="list" class="citation-list">
 <div class="citation" id="mrl09" role="doc-biblioentry">
 <span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id2">Mrl09</a><span class="fn-bracket">]</span></span>
@@ -428,13 +932,12 @@ J. Mairal, F. Bach, J. Ponce, G. Sapiro, 2009</p>
 R. Jenatton, G. Obozinski, F. Bach, 2009</p>
 </div>
 </div>
-</aside>
 </section>
 </section>
 <section id="kernel-principal-component-analysis-kpca">
-<span id="kernel-pca"></span><h2><span class="section-number">2.5.2. </span>Kernel Principal Component Analysis (kPCA)<a class="headerlink" href="#kernel-principal-component-analysis-kpca" title="Link to this heading">¶</a></h2>
+<span id="kernel-pca"></span><h2><span class="section-number">2.5.2. </span>Kernel Principal Component Analysis (kPCA)<a class="headerlink" href="#kernel-principal-component-analysis-kpca" title="Link to this heading">#</a></h2>
 <section id="exact-kernel-pca">
-<h3><span class="section-number">2.5.2.1. </span>Exact Kernel PCA<a class="headerlink" href="#exact-kernel-pca" title="Link to this heading">¶</a></h3>
+<h3><span class="section-number">2.5.2.1. </span>Exact Kernel PCA<a class="headerlink" href="#exact-kernel-pca" title="Link to this heading">#</a></h3>
 <p><a class="reference internal" href="generated/sklearn.decomposition.KernelPCA.html#sklearn.decomposition.KernelPCA" title="sklearn.decomposition.KernelPCA"><code class="xref py py-class docutils literal notranslate"><span class="pre">KernelPCA</span></code></a> is an extension of PCA which achieves non-linear
 dimensionality reduction through the use of kernels (see <a class="reference internal" href="metrics.html#metrics"><span class="std std-ref">Pairwise metrics, Affinities and Kernels</span></a>) <a class="reference internal" href="#scholkopf1997" id="id3"><span>[Scholkopf1997]</span></a>. It
 has many applications including denoising, compression and structured
@@ -452,14 +955,12 @@ space <a class="reference internal" href="#bakir2003" id="id4"><span>[Bakir2003]
 <a class="reference internal" href="generated/sklearn.decomposition.KernelPCA.html#sklearn.decomposition.KernelPCA.inverse_transform" title="sklearn.decomposition.KernelPCA.inverse_transform"><code class="xref py py-meth docutils literal notranslate"><span class="pre">KernelPCA.inverse_transform</span></code></a> is an approximation. See the example
 linked below for more details.</p>
 </div>
-<aside class="topic">
-<p class="topic-title">Examples:</p>
+<p class="rubric">Examples</p>
 <ul class="simple">
 <li><p><a class="reference internal" href="../auto_examples/decomposition/plot_kernel_pca.html#sphx-glr-auto-examples-decomposition-plot-kernel-pca-py"><span class="std std-ref">Kernel PCA</span></a></p></li>
+<li><p><a class="reference internal" href="../auto_examples/applications/plot_digits_denoising.html#sphx-glr-auto-examples-applications-plot-digits-denoising-py"><span class="std std-ref">Image denoising using kernel PCA</span></a></p></li>
 </ul>
-</aside>
-<aside class="topic">
-<p class="topic-title">References:</p>
+<p class="rubric">References</p>
 <div role="list" class="citation-list">
 <div class="citation" id="scholkopf1997" role="doc-biblioentry">
 <span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id3">Scholkopf1997</a><span class="fn-bracket">]</span></span>
@@ -475,10 +976,9 @@ Springer, Berlin, Heidelberg, 1997.</p>
 Advances in neural information processing systems 16 (2003): 449-456.</p>
 </div>
 </div>
-</aside>
 </section>
 <section id="choice-of-solver-for-kernel-pca">
-<span id="kpca-solvers"></span><h3><span class="section-number">2.5.2.2. </span>Choice of solver for Kernel PCA<a class="headerlink" href="#choice-of-solver-for-kernel-pca" title="Link to this heading">¶</a></h3>
+<span id="kpca-solvers"></span><h3><span class="section-number">2.5.2.2. </span>Choice of solver for Kernel PCA<a class="headerlink" href="#choice-of-solver-for-kernel-pca" title="Link to this heading">#</a></h3>
 <p>While in <a class="reference internal" href="generated/sklearn.decomposition.PCA.html#sklearn.decomposition.PCA" title="sklearn.decomposition.PCA"><code class="xref py py-class docutils literal notranslate"><span class="pre">PCA</span></code></a> the number of components is bounded by the number of
 features, in <a class="reference internal" href="generated/sklearn.decomposition.KernelPCA.html#sklearn.decomposition.KernelPCA" title="sklearn.decomposition.KernelPCA"><code class="xref py py-class docutils literal notranslate"><span class="pre">KernelPCA</span></code></a> the number of components is bounded by the
 number of samples. Many real-world datasets have large number of samples! In
@@ -488,59 +988,56 @@ computation time, as data is mostly described by the first few components
 is eigendecomposed in the Kernel PCA fitting process has an effective rank that
 is much smaller than its size. This is a situation where approximate
 eigensolvers can provide speedup with very low precision loss.</p>
-<p><details id="summary-anchor">
-<summary class="btn btn-light">
-<strong>Eigensolvers</strong>
-<span class="tooltiptext">Click for more details</span>
-<a class="headerlink" href="#summary-anchor" title="Permalink to this heading">¶</a>
-</summary>
-<div class="card"></p>
-<p>The optional parameter <code class="docutils literal notranslate"><span class="pre">eigen_solver='randomized'</span></code> can be used to
+<details class="sd-sphinx-override sd-dropdown sd-card sd-mb-3" id="eigensolvers">
+<summary class="sd-summary-title sd-card-header">
+Eigensolvers<a class="headerlink" href="#eigensolvers" title="Link to this dropdown">#</a><div class="sd-summary-down docutils">
+<svg version="1.1" width="1.5em" height="1.5em" class="sd-octicon sd-octicon-chevron-down" viewBox="0 0 24 24" aria-hidden="true"><path fill-rule="evenodd" d="M5.22 8.72a.75.75 0 000 1.06l6.25 6.25a.75.75 0 001.06 0l6.25-6.25a.75.75 0 00-1.06-1.06L12 14.44 6.28 8.72a.75.75 0 00-1.06 0z"></path></svg></div>
+<div class="sd-summary-up docutils">
+<svg version="1.1" width="1.5em" height="1.5em" class="sd-octicon sd-octicon-chevron-up" viewBox="0 0 24 24" aria-hidden="true"><path fill-rule="evenodd" d="M18.78 15.28a.75.75 0 000-1.06l-6.25-6.25a.75.75 0 00-1.06 0l-6.25 6.25a.75.75 0 101.06 1.06L12 9.56l5.72 5.72a.75.75 0 001.06 0z"></path></svg></div>
+</summary><div class="sd-summary-content sd-card-body docutils">
+<p class="sd-card-text">The optional parameter <code class="docutils literal notranslate"><span class="pre">eigen_solver='randomized'</span></code> can be used to
 <em>significantly</em> reduce the computation time when the number of requested
 <code class="docutils literal notranslate"><span class="pre">n_components</span></code> is small compared with the number of samples. It relies on
 randomized decomposition methods to find an approximate solution in a shorter
 time.</p>
-<p>The time complexity of the randomized <a class="reference internal" href="generated/sklearn.decomposition.KernelPCA.html#sklearn.decomposition.KernelPCA" title="sklearn.decomposition.KernelPCA"><code class="xref py py-class docutils literal notranslate"><span class="pre">KernelPCA</span></code></a> is
+<p class="sd-card-text">The time complexity of the randomized <a class="reference internal" href="generated/sklearn.decomposition.KernelPCA.html#sklearn.decomposition.KernelPCA" title="sklearn.decomposition.KernelPCA"><code class="xref py py-class docutils literal notranslate"><span class="pre">KernelPCA</span></code></a> is
 <span class="math notranslate nohighlight">\(O(n_{\mathrm{samples}}^2 \cdot n_{\mathrm{components}})\)</span>
 instead of <span class="math notranslate nohighlight">\(O(n_{\mathrm{samples}}^3)\)</span> for the exact method
 implemented with <code class="docutils literal notranslate"><span class="pre">eigen_solver='dense'</span></code>.</p>
-<p>The memory footprint of randomized <a class="reference internal" href="generated/sklearn.decomposition.KernelPCA.html#sklearn.decomposition.KernelPCA" title="sklearn.decomposition.KernelPCA"><code class="xref py py-class docutils literal notranslate"><span class="pre">KernelPCA</span></code></a> is also proportional to
+<p class="sd-card-text">The memory footprint of randomized <a class="reference internal" href="generated/sklearn.decomposition.KernelPCA.html#sklearn.decomposition.KernelPCA" title="sklearn.decomposition.KernelPCA"><code class="xref py py-class docutils literal notranslate"><span class="pre">KernelPCA</span></code></a> is also proportional to
 <span class="math notranslate nohighlight">\(2 \cdot n_{\mathrm{samples}} \cdot n_{\mathrm{components}}\)</span> instead of
 <span class="math notranslate nohighlight">\(n_{\mathrm{samples}}^2\)</span> for the exact method.</p>
-<p>Note: this technique is the same as in <a class="reference internal" href="#randomizedpca"><span class="std std-ref">PCA using randomized SVD</span></a>.</p>
-<p>In addition to the above two solvers, <code class="docutils literal notranslate"><span class="pre">eigen_solver='arpack'</span></code> can be used as
+<p class="sd-card-text">Note: this technique is the same as in <a class="reference internal" href="#randomizedpca"><span class="std std-ref">PCA using randomized SVD</span></a>.</p>
+<p class="sd-card-text">In addition to the above two solvers, <code class="docutils literal notranslate"><span class="pre">eigen_solver='arpack'</span></code> can be used as
 an alternate way to get an approximate decomposition. In practice, this method
 only provides reasonable execution times when the number of components to find
 is extremely small. It is enabled by default when the desired number of
 components is less than 10 (strict) and the number of samples is more than 200
 (strict). See <a class="reference internal" href="generated/sklearn.decomposition.KernelPCA.html#sklearn.decomposition.KernelPCA" title="sklearn.decomposition.KernelPCA"><code class="xref py py-class docutils literal notranslate"><span class="pre">KernelPCA</span></code></a> for details.</p>
-<aside class="topic">
-<p class="topic-title">References:</p>
+<p class="rubric">References</p>
 <ul class="simple">
-<li><p><em>dense</em> solver:
+<li><p class="sd-card-text"><em>dense</em> solver:
 <a class="reference external" href="https://docs.scipy.org/doc/scipy/reference/generated/scipy.linalg.eigh.html">scipy.linalg.eigh documentation</a></p></li>
-<li><p><em>randomized</em> solver:</p>
+<li><p class="sd-card-text"><em>randomized</em> solver:</p>
 <ul>
-<li><p>Algorithm 4.3 in
+<li><p class="sd-card-text">Algorithm 4.3 in
 <a class="reference external" href="https://arxiv.org/abs/0909.4061">“Finding structure with randomness: Stochastic
 algorithms for constructing approximate matrix decompositions”</a>
 Halko, et al. (2009)</p></li>
-<li><p><a class="reference external" href="https://arxiv.org/abs/1412.3510">“An implementation of a randomized algorithm
+<li><p class="sd-card-text"><a class="reference external" href="https://arxiv.org/abs/1412.3510">“An implementation of a randomized algorithm
 for principal component analysis”</a>
 A. Szlam et al. (2014)</p></li>
 </ul>
 </li>
-<li><p><em>arpack</em> solver:
+<li><p class="sd-card-text"><em>arpack</em> solver:
 <a class="reference external" href="https://docs.scipy.org/doc/scipy/reference/generated/scipy.sparse.linalg.eigsh.html">scipy.sparse.linalg.eigsh documentation</a>
 R. B. Lehoucq, D. C. Sorensen, and C. Yang, (1998)</p></li>
 </ul>
-</aside>
-<p></div>
-</details></p>
-</section>
+</div>
+</details></section>
 </section>
 <section id="truncated-singular-value-decomposition-and-latent-semantic-analysis">
-<span id="lsa"></span><h2><span class="section-number">2.5.3. </span>Truncated singular value decomposition and latent semantic analysis<a class="headerlink" href="#truncated-singular-value-decomposition-and-latent-semantic-analysis" title="Link to this heading">¶</a></h2>
+<span id="lsa"></span><h2><span class="section-number">2.5.3. </span>Truncated singular value decomposition and latent semantic analysis<a class="headerlink" href="#truncated-singular-value-decomposition-and-latent-semantic-analysis" title="Link to this heading">#</a></h2>
 <p><a class="reference internal" href="generated/sklearn.decomposition.TruncatedSVD.html#sklearn.decomposition.TruncatedSVD" title="sklearn.decomposition.TruncatedSVD"><code class="xref py py-class docutils literal notranslate"><span class="pre">TruncatedSVD</span></code></a> implements a variant of singular value decomposition
 (SVD) that only computes the <span class="math notranslate nohighlight">\(k\)</span> largest singular values,
 where <span class="math notranslate nohighlight">\(k\)</span> is a user-specified parameter.</p>
@@ -549,14 +1046,14 @@ in that the matrix <span class="math notranslate nohighlight">\(X\)</span> does 
 When the columnwise (per-feature) means of <span class="math notranslate nohighlight">\(X\)</span>
 are subtracted from the feature values,
 truncated SVD on the resulting matrix is equivalent to PCA.</p>
-<p><details id="summary-anchor">
-<summary class="btn btn-light">
-<strong>About truncated SVD and latent semantic analysis (LSA)</strong>
-<span class="tooltiptext">Click for more details</span>
-<a class="headerlink" href="#summary-anchor" title="Permalink to this heading">¶</a>
-</summary>
-<div class="card"></p>
-<p>When truncated SVD is applied to term-document matrices
+<details class="sd-sphinx-override sd-dropdown sd-card sd-mb-3" id="about-truncated-svd-and-latent-semantic-analysis-(lsa)">
+<summary class="sd-summary-title sd-card-header">
+About truncated SVD and latent semantic analysis (LSA)<a class="headerlink" href="#about-truncated-svd-and-latent-semantic-analysis-(lsa)" title="Link to this dropdown">#</a><div class="sd-summary-down docutils">
+<svg version="1.1" width="1.5em" height="1.5em" class="sd-octicon sd-octicon-chevron-down" viewBox="0 0 24 24" aria-hidden="true"><path fill-rule="evenodd" d="M5.22 8.72a.75.75 0 000 1.06l6.25 6.25a.75.75 0 001.06 0l6.25-6.25a.75.75 0 00-1.06-1.06L12 14.44 6.28 8.72a.75.75 0 00-1.06 0z"></path></svg></div>
+<div class="sd-summary-up docutils">
+<svg version="1.1" width="1.5em" height="1.5em" class="sd-octicon sd-octicon-chevron-up" viewBox="0 0 24 24" aria-hidden="true"><path fill-rule="evenodd" d="M18.78 15.28a.75.75 0 000-1.06l-6.25-6.25a.75.75 0 00-1.06 0l-6.25 6.25a.75.75 0 101.06 1.06L12 9.56l5.72 5.72a.75.75 0 001.06 0z"></path></svg></div>
+</summary><div class="sd-summary-content sd-card-body docutils">
+<p class="sd-card-text">When truncated SVD is applied to term-document matrices
 (as returned by <a class="reference internal" href="generated/sklearn.feature_extraction.text.CountVectorizer.html#sklearn.feature_extraction.text.CountVectorizer" title="sklearn.feature_extraction.text.CountVectorizer"><code class="xref py py-class docutils literal notranslate"><span class="pre">CountVectorizer</span></code></a> or
 <a class="reference internal" href="generated/sklearn.feature_extraction.text.TfidfVectorizer.html#sklearn.feature_extraction.text.TfidfVectorizer" title="sklearn.feature_extraction.text.TfidfVectorizer"><code class="xref py py-class docutils literal notranslate"><span class="pre">TfidfVectorizer</span></code></a>),
 this transformation is known as
@@ -569,58 +1066,53 @@ which cause term-document matrices to be overly sparse
 and exhibit poor similarity under measures such as cosine similarity.</p>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
-<p>LSA is also known as latent semantic indexing, LSI,
+<p class="sd-card-text">LSA is also known as latent semantic indexing, LSI,
 though strictly that refers to its use in persistent indexes
 for information retrieval purposes.</p>
 </div>
-<p>Mathematically, truncated SVD applied to training samples <span class="math notranslate nohighlight">\(X\)</span>
+<p class="sd-card-text">Mathematically, truncated SVD applied to training samples <span class="math notranslate nohighlight">\(X\)</span>
 produces a low-rank approximation <span class="math notranslate nohighlight">\(X\)</span>:</p>
 <div class="math notranslate nohighlight">
 \[X \approx X_k = U_k \Sigma_k V_k^\top\]</div>
-<p>After this operation, <span class="math notranslate nohighlight">\(U_k \Sigma_k\)</span>
+<p class="sd-card-text">After this operation, <span class="math notranslate nohighlight">\(U_k \Sigma_k\)</span>
 is the transformed training set with <span class="math notranslate nohighlight">\(k\)</span> features
 (called <code class="docutils literal notranslate"><span class="pre">n_components</span></code> in the API).</p>
-<p>To also transform a test set <span class="math notranslate nohighlight">\(X\)</span>, we multiply it with <span class="math notranslate nohighlight">\(V_k\)</span>:</p>
+<p class="sd-card-text">To also transform a test set <span class="math notranslate nohighlight">\(X\)</span>, we multiply it with <span class="math notranslate nohighlight">\(V_k\)</span>:</p>
 <div class="math notranslate nohighlight">
 \[X' = X V_k\]</div>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
-<p>Most treatments of LSA in the natural language processing (NLP)
+<p class="sd-card-text">Most treatments of LSA in the natural language processing (NLP)
 and information retrieval (IR) literature
 swap the axes of the matrix <span class="math notranslate nohighlight">\(X\)</span> so that it has shape
-<code class="docutils literal notranslate"><span class="pre">n_features</span></code> × <code class="docutils literal notranslate"><span class="pre">n_samples</span></code>.
+<code class="docutils literal notranslate"><span class="pre">(n_features,</span> <span class="pre">n_samples)</span></code>.
 We present LSA in a different way that matches the scikit-learn API better,
 but the singular values found are the same.</p>
 </div>
-<p>While the <a class="reference internal" href="generated/sklearn.decomposition.TruncatedSVD.html#sklearn.decomposition.TruncatedSVD" title="sklearn.decomposition.TruncatedSVD"><code class="xref py py-class docutils literal notranslate"><span class="pre">TruncatedSVD</span></code></a> transformer
+<p class="sd-card-text">While the <a class="reference internal" href="generated/sklearn.decomposition.TruncatedSVD.html#sklearn.decomposition.TruncatedSVD" title="sklearn.decomposition.TruncatedSVD"><code class="xref py py-class docutils literal notranslate"><span class="pre">TruncatedSVD</span></code></a> transformer
 works with any feature matrix,
-using it on tf–idf matrices is recommended over raw frequency counts
+using it on tf-idf matrices is recommended over raw frequency counts
 in an LSA/document processing setting.
 In particular, sublinear scaling and inverse document frequency
 should be turned on (<code class="docutils literal notranslate"><span class="pre">sublinear_tf=True,</span> <span class="pre">use_idf=True</span></code>)
 to bring the feature values closer to a Gaussian distribution,
 compensating for LSA’s erroneous assumptions about textual data.</p>
-<p></div>
-</details></p>
-<aside class="topic">
-<p class="topic-title">Examples:</p>
+</div>
+</details><p class="rubric">Examples</p>
 <ul class="simple">
 <li><p><a class="reference internal" href="../auto_examples/text/plot_document_clustering.html#sphx-glr-auto-examples-text-plot-document-clustering-py"><span class="std std-ref">Clustering text documents using k-means</span></a></p></li>
 </ul>
-</aside>
-<aside class="topic">
-<p class="topic-title">References:</p>
+<p class="rubric">References</p>
 <ul class="simple">
 <li><p>Christopher D. Manning, Prabhakar Raghavan and Hinrich Schütze (2008),
 <em>Introduction to Information Retrieval</em>, Cambridge University Press,
 chapter 18: <a class="reference external" href="https://nlp.stanford.edu/IR-book/pdf/18lsi.pdf">Matrix decompositions &amp; latent semantic indexing</a></p></li>
 </ul>
-</aside>
 </section>
 <section id="dictionary-learning">
-<span id="dictionarylearning"></span><h2><span class="section-number">2.5.4. </span>Dictionary Learning<a class="headerlink" href="#dictionary-learning" title="Link to this heading">¶</a></h2>
+<span id="dictionarylearning"></span><h2><span class="section-number">2.5.4. </span>Dictionary Learning<a class="headerlink" href="#dictionary-learning" title="Link to this heading">#</a></h2>
 <section id="sparse-coding-with-a-precomputed-dictionary">
-<span id="sparsecoder"></span><h3><span class="section-number">2.5.4.1. </span>Sparse coding with a precomputed dictionary<a class="headerlink" href="#sparse-coding-with-a-precomputed-dictionary" title="Link to this heading">¶</a></h3>
+<span id="sparsecoder"></span><h3><span class="section-number">2.5.4.1. </span>Sparse coding with a precomputed dictionary<a class="headerlink" href="#sparse-coding-with-a-precomputed-dictionary" title="Link to this heading">#</a></h3>
 <p>The <a class="reference internal" href="generated/sklearn.decomposition.SparseCoder.html#sklearn.decomposition.SparseCoder" title="sklearn.decomposition.SparseCoder"><code class="xref py py-class docutils literal notranslate"><span class="pre">SparseCoder</span></code></a> object is an estimator that can be used to transform signals
 into sparse linear combination of atoms from a fixed, precomputed dictionary
 such as a discrete wavelet basis. This object therefore does not
@@ -653,15 +1145,13 @@ and is constructed using the following rule: First, the regular code of length
 filled with the positive part of the regular code vector. The second half of
 the split code is filled with the negative part of the code vector, only with
 a positive sign. Therefore, the split_code is non-negative.</p>
-<aside class="topic">
-<p class="topic-title">Examples:</p>
+<p class="rubric">Examples</p>
 <ul class="simple">
 <li><p><a class="reference internal" href="../auto_examples/decomposition/plot_sparse_coding.html#sphx-glr-auto-examples-decomposition-plot-sparse-coding-py"><span class="std std-ref">Sparse coding with a precomputed dictionary</span></a></p></li>
 </ul>
-</aside>
 </section>
 <section id="generic-dictionary-learning">
-<h3><span class="section-number">2.5.4.2. </span>Generic dictionary learning<a class="headerlink" href="#generic-dictionary-learning" title="Link to this heading">¶</a></h3>
+<h3><span class="section-number">2.5.4.2. </span>Generic dictionary learning<a class="headerlink" href="#generic-dictionary-learning" title="Link to this heading">#</a></h3>
 <p>Dictionary learning (<a class="reference internal" href="generated/sklearn.decomposition.DictionaryLearning.html#sklearn.decomposition.DictionaryLearning" title="sklearn.decomposition.DictionaryLearning"><code class="xref py py-class docutils literal notranslate"><span class="pre">DictionaryLearning</span></code></a>) is a matrix factorization
 problem that amounts to finding a (usually overcomplete) dictionary that will
 perform well at sparsely encoding the fitted data.</p>
@@ -697,22 +1187,18 @@ extracted from part of the image of a raccoon face looks like.</p>
 <a class="reference external image-reference" href="../auto_examples/decomposition/plot_image_denoising.html"><img alt="../_images/sphx_glr_plot_image_denoising_001.png" src="../_images/sphx_glr_plot_image_denoising_001.png" style="width: 250.0px; height: 165.0px;" />
 </a>
 </figure>
-<aside class="topic">
-<p class="topic-title">Examples:</p>
+<p class="rubric">Examples</p>
 <ul class="simple">
 <li><p><a class="reference internal" href="../auto_examples/decomposition/plot_image_denoising.html#sphx-glr-auto-examples-decomposition-plot-image-denoising-py"><span class="std std-ref">Image denoising using dictionary learning</span></a></p></li>
 </ul>
-</aside>
-<aside class="topic">
-<p class="topic-title">References:</p>
+<p class="rubric">References</p>
 <ul class="simple">
 <li><p><a class="reference external" href="https://www.di.ens.fr/sierra/pdfs/icml09.pdf">“Online dictionary learning for sparse coding”</a>
 J. Mairal, F. Bach, J. Ponce, G. Sapiro, 2009</p></li>
 </ul>
-</aside>
 </section>
 <section id="mini-batch-dictionary-learning">
-<span id="minibatchdictionarylearning"></span><h3><span class="section-number">2.5.4.3. </span>Mini-batch dictionary learning<a class="headerlink" href="#mini-batch-dictionary-learning" title="Link to this heading">¶</a></h3>
+<span id="minibatchdictionarylearning"></span><h3><span class="section-number">2.5.4.3. </span>Mini-batch dictionary learning<a class="headerlink" href="#mini-batch-dictionary-learning" title="Link to this heading">#</a></h3>
 <p><a class="reference internal" href="generated/sklearn.decomposition.MiniBatchDictionaryLearning.html#sklearn.decomposition.MiniBatchDictionaryLearning" title="sklearn.decomposition.MiniBatchDictionaryLearning"><code class="xref py py-class docutils literal notranslate"><span class="pre">MiniBatchDictionaryLearning</span></code></a> implements a faster, but less accurate
 version of the dictionary learning algorithm that is better suited for large
 datasets.</p>
@@ -738,7 +1224,7 @@ computationally efficient and implements on-line learning with a
 </section>
 </section>
 <section id="factor-analysis">
-<span id="fa"></span><h2><span class="section-number">2.5.5. </span>Factor Analysis<a class="headerlink" href="#factor-analysis" title="Link to this heading">¶</a></h2>
+<span id="fa"></span><h2><span class="section-number">2.5.5. </span>Factor Analysis<a class="headerlink" href="#factor-analysis" title="Link to this heading">#</a></h2>
 <p>In unsupervised learning we only have a dataset <span class="math notranslate nohighlight">\(X = \{x_1, x_2, \dots, x_n
 \}\)</span>. How can this dataset be described mathematically? A very simple
 <code class="docutils literal notranslate"><span class="pre">continuous</span> <span class="pre">latent</span> <span class="pre">variable</span></code> model for <span class="math notranslate nohighlight">\(X\)</span> is</p>
@@ -802,16 +1288,14 @@ parameter <code class="docutils literal notranslate"><span class="pre">rotation<
 Varimax rotation maximizes the sum of the variances of the squared loadings,
 i.e., it tends to produce sparser factors, which are influenced by only a few
 features each (the “simple structure”). See e.g., the first example below.</p>
-<aside class="topic">
-<p class="topic-title">Examples:</p>
+<p class="rubric">Examples</p>
 <ul class="simple">
 <li><p><a class="reference internal" href="../auto_examples/decomposition/plot_varimax_fa.html#sphx-glr-auto-examples-decomposition-plot-varimax-fa-py"><span class="std std-ref">Factor Analysis (with rotation) to visualize patterns</span></a></p></li>
 <li><p><a class="reference internal" href="../auto_examples/decomposition/plot_pca_vs_fa_model_selection.html#sphx-glr-auto-examples-decomposition-plot-pca-vs-fa-model-selection-py"><span class="std std-ref">Model selection with Probabilistic PCA and Factor Analysis (FA)</span></a></p></li>
 </ul>
-</aside>
 </section>
 <section id="independent-component-analysis-ica">
-<span id="ica"></span><h2><span class="section-number">2.5.6. </span>Independent component analysis (ICA)<a class="headerlink" href="#independent-component-analysis-ica" title="Link to this heading">¶</a></h2>
+<span id="ica"></span><h2><span class="section-number">2.5.6. </span>Independent component analysis (ICA)<a class="headerlink" href="#independent-component-analysis-ica" title="Link to this heading">#</a></h2>
 <p>Independent component analysis separates a multivariate signal into
 additive subcomponents that are maximally independent. It is
 implemented in scikit-learn using the <a class="reference internal" href="generated/sklearn.decomposition.FastICA.html#sklearn.decomposition.FastICA" title="sklearn.decomposition.FastICA"><code class="xref py py-class docutils literal notranslate"><span class="pre">Fast</span> <span class="pre">ICA</span></code></a>
@@ -829,19 +1313,17 @@ of the PCA variants.</p>
 <p>ICA can also be used as yet another non linear decomposition that finds
 components with some sparsity:</p>
 <p class="centered">
-<strong><a class="reference external" href="../auto_examples/decomposition/plot_faces_decomposition.html"><img alt="pca_img4" src="../_images/sphx_glr_plot_faces_decomposition_002.png" style="width: 360.0px; height: 275.4px;" /></a> <a class="reference external" href="../auto_examples/decomposition/plot_faces_decomposition.html"><img alt="ica_img4" src="../_images/sphx_glr_plot_faces_decomposition_004.png" style="width: 360.0px; height: 275.4px;" /></a></strong></p><aside class="topic">
-<p class="topic-title">Examples:</p>
+<strong><a class="reference external" href="../auto_examples/decomposition/plot_faces_decomposition.html"><img alt="pca_img4" src="../_images/sphx_glr_plot_faces_decomposition_002.png" style="width: 360.0px; height: 275.4px;" /></a> <a class="reference external" href="../auto_examples/decomposition/plot_faces_decomposition.html"><img alt="ica_img4" src="../_images/sphx_glr_plot_faces_decomposition_004.png" style="width: 360.0px; height: 275.4px;" /></a></strong></p><p class="rubric">Examples</p>
 <ul class="simple">
 <li><p><a class="reference internal" href="../auto_examples/decomposition/plot_ica_blind_source_separation.html#sphx-glr-auto-examples-decomposition-plot-ica-blind-source-separation-py"><span class="std std-ref">Blind source separation using FastICA</span></a></p></li>
 <li><p><a class="reference internal" href="../auto_examples/decomposition/plot_ica_vs_pca.html#sphx-glr-auto-examples-decomposition-plot-ica-vs-pca-py"><span class="std std-ref">FastICA on 2D point clouds</span></a></p></li>
 <li><p><a class="reference internal" href="../auto_examples/decomposition/plot_faces_decomposition.html#sphx-glr-auto-examples-decomposition-plot-faces-decomposition-py"><span class="std std-ref">Faces dataset decompositions</span></a></p></li>
 </ul>
-</aside>
 </section>
 <section id="non-negative-matrix-factorization-nmf-or-nnmf">
-<span id="nmf"></span><h2><span class="section-number">2.5.7. </span>Non-negative matrix factorization (NMF or NNMF)<a class="headerlink" href="#non-negative-matrix-factorization-nmf-or-nnmf" title="Link to this heading">¶</a></h2>
+<span id="nmf"></span><h2><span class="section-number">2.5.7. </span>Non-negative matrix factorization (NMF or NNMF)<a class="headerlink" href="#non-negative-matrix-factorization-nmf-or-nnmf" title="Link to this heading">#</a></h2>
 <section id="nmf-with-the-frobenius-norm">
-<h3><span class="section-number">2.5.7.1. </span>NMF with the Frobenius norm<a class="headerlink" href="#nmf-with-the-frobenius-norm" title="Link to this heading">¶</a></h3>
+<h3><span class="section-number">2.5.7.1. </span>NMF with the Frobenius norm<a class="headerlink" href="#nmf-with-the-frobenius-norm" title="Link to this heading">#</a></h3>
 <p><a class="reference internal" href="generated/sklearn.decomposition.NMF.html#sklearn.decomposition.NMF" title="sklearn.decomposition.NMF"><code class="xref py py-class docutils literal notranslate"><span class="pre">NMF</span></code></a> <a class="footnote-reference brackets" href="#id13" id="id6" role="doc-noteref"><span class="fn-bracket">[</span>1<span class="fn-bracket">]</span></a> is an alternative approach to decomposition that assumes that the
 data and the components are non-negative. <a class="reference internal" href="generated/sklearn.decomposition.NMF.html#sklearn.decomposition.NMF" title="sklearn.decomposition.NMF"><code class="xref py py-class docutils literal notranslate"><span class="pre">NMF</span></code></a> can be plugged in
 instead of <a class="reference internal" href="generated/sklearn.decomposition.PCA.html#sklearn.decomposition.PCA" title="sklearn.decomposition.PCA"><code class="xref py py-class docutils literal notranslate"><span class="pre">PCA</span></code></a> or its variants, in the cases where the data matrix
@@ -899,7 +1381,7 @@ the size of the training set. Then the priors terms are:</p>
 + (\alpha_H \rho ||H||_1 + \frac{\alpha_H(1-\rho)}{2} ||H||_{\mathrm{Fro}} ^ 2) * n\_samples\]</div>
 </section>
 <section id="nmf-with-a-beta-divergence">
-<h3><span class="section-number">2.5.7.2. </span>NMF with a beta-divergence<a class="headerlink" href="#nmf-with-a-beta-divergence" title="Link to this heading">¶</a></h3>
+<h3><span class="section-number">2.5.7.2. </span>NMF with a beta-divergence<a class="headerlink" href="#nmf-with-a-beta-divergence" title="Link to this heading">#</a></h3>
 <p>As described previously, the most widely used distance function is the squared
 Frobenius norm, which is an obvious extension of the Euclidean norm to
 matrices:</p>
@@ -922,14 +1404,14 @@ defined by :</p>
 <p>Note that this definition is not valid if <span class="math notranslate nohighlight">\(\beta \in (0; 1)\)</span>, yet it can
 be continuously extended to the definitions of <span class="math notranslate nohighlight">\(d_{KL}\)</span> and <span class="math notranslate nohighlight">\(d_{IS}\)</span>
 respectively.</p>
-<p><details id="summary-anchor">
-<summary class="btn btn-light">
-<strong>NMF implemented solvers</strong>
-<span class="tooltiptext">Click for more details</span>
-<a class="headerlink" href="#summary-anchor" title="Permalink to this heading">¶</a>
-</summary>
-<div class="card"></p>
-<p><a class="reference internal" href="generated/sklearn.decomposition.NMF.html#sklearn.decomposition.NMF" title="sklearn.decomposition.NMF"><code class="xref py py-class docutils literal notranslate"><span class="pre">NMF</span></code></a> implements two solvers, using Coordinate Descent (‘cd’) <a class="footnote-reference brackets" href="#id16" id="id10" role="doc-noteref"><span class="fn-bracket">[</span>5<span class="fn-bracket">]</span></a>, and
+<details class="sd-sphinx-override sd-dropdown sd-card sd-mb-3" id="nmf-implemented-solvers">
+<summary class="sd-summary-title sd-card-header">
+NMF implemented solvers<a class="headerlink" href="#nmf-implemented-solvers" title="Link to this dropdown">#</a><div class="sd-summary-down docutils">
+<svg version="1.1" width="1.5em" height="1.5em" class="sd-octicon sd-octicon-chevron-down" viewBox="0 0 24 24" aria-hidden="true"><path fill-rule="evenodd" d="M5.22 8.72a.75.75 0 000 1.06l6.25 6.25a.75.75 0 001.06 0l6.25-6.25a.75.75 0 00-1.06-1.06L12 14.44 6.28 8.72a.75.75 0 00-1.06 0z"></path></svg></div>
+<div class="sd-summary-up docutils">
+<svg version="1.1" width="1.5em" height="1.5em" class="sd-octicon sd-octicon-chevron-up" viewBox="0 0 24 24" aria-hidden="true"><path fill-rule="evenodd" d="M18.78 15.28a.75.75 0 000-1.06l-6.25-6.25a.75.75 0 00-1.06 0l-6.25 6.25a.75.75 0 101.06 1.06L12 9.56l5.72 5.72a.75.75 0 001.06 0z"></path></svg></div>
+</summary><div class="sd-summary-content sd-card-body docutils">
+<p class="sd-card-text"><a class="reference internal" href="generated/sklearn.decomposition.NMF.html#sklearn.decomposition.NMF" title="sklearn.decomposition.NMF"><code class="xref py py-class docutils literal notranslate"><span class="pre">NMF</span></code></a> implements two solvers, using Coordinate Descent (‘cd’) <a class="footnote-reference brackets" href="#id16" id="id10" role="doc-noteref"><span class="fn-bracket">[</span>5<span class="fn-bracket">]</span></a>, and
 Multiplicative Update (‘mu’) <a class="footnote-reference brackets" href="#id17" id="id11" role="doc-noteref"><span class="fn-bracket">[</span>6<span class="fn-bracket">]</span></a>. The ‘mu’ solver can optimize every
 beta-divergence, including of course the Frobenius norm (<span class="math notranslate nohighlight">\(\beta=2\)</span>), the
 (generalized) Kullback-Leibler divergence (<span class="math notranslate nohighlight">\(\beta=1\)</span>) and the
@@ -937,12 +1419,11 @@ Itakura-Saito divergence (<span class="math notranslate nohighlight">\(\beta=0\)
 <span class="math notranslate nohighlight">\(\beta \in (1; 2)\)</span>, the ‘mu’ solver is significantly faster than for other
 values of <span class="math notranslate nohighlight">\(\beta\)</span>. Note also that with a negative (or 0, i.e.
 ‘itakura-saito’) <span class="math notranslate nohighlight">\(\beta\)</span>, the input matrix cannot contain zero values.</p>
-<p>The ‘cd’ solver can only optimize the Frobenius norm. Due to the
+<p class="sd-card-text">The ‘cd’ solver can only optimize the Frobenius norm. Due to the
 underlying non-convexity of NMF, the different solvers may converge to
 different minima, even when optimizing the same distance function.</p>
-<p></div>
-</details></p>
-<p>NMF is best used with the <code class="docutils literal notranslate"><span class="pre">fit_transform</span></code> method, which returns the matrix W.
+</div>
+</details><p>NMF is best used with the <code class="docutils literal notranslate"><span class="pre">fit_transform</span></code> method, which returns the matrix W.
 The matrix H is stored into the fitted model in the <code class="docutils literal notranslate"><span class="pre">components_</span></code> attribute;
 the method <code class="docutils literal notranslate"><span class="pre">transform</span></code> will decompose a new matrix X_new based on these
 stored components:</p>
@@ -956,16 +1437,14 @@ stored components:</p>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">W_new</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">transform</span><span class="p">(</span><span class="n">X_new</span><span class="p">)</span>
 </pre></div>
 </div>
-<aside class="topic">
-<p class="topic-title">Examples:</p>
+<p class="rubric">Examples</p>
 <ul class="simple">
 <li><p><a class="reference internal" href="../auto_examples/decomposition/plot_faces_decomposition.html#sphx-glr-auto-examples-decomposition-plot-faces-decomposition-py"><span class="std std-ref">Faces dataset decompositions</span></a></p></li>
 <li><p><a class="reference internal" href="../auto_examples/applications/plot_topics_extraction_with_nmf_lda.html#sphx-glr-auto-examples-applications-plot-topics-extraction-with-nmf-lda-py"><span class="std std-ref">Topic extraction with Non-negative Matrix Factorization and Latent Dirichlet Allocation</span></a></p></li>
 </ul>
-</aside>
 </section>
 <section id="mini-batch-non-negative-matrix-factorization">
-<span id="minibatchnmf"></span><h3><span class="section-number">2.5.7.3. </span>Mini-batch Non Negative Matrix Factorization<a class="headerlink" href="#mini-batch-non-negative-matrix-factorization" title="Link to this heading">¶</a></h3>
+<span id="minibatchnmf"></span><h3><span class="section-number">2.5.7.3. </span>Mini-batch Non Negative Matrix Factorization<a class="headerlink" href="#mini-batch-non-negative-matrix-factorization" title="Link to this heading">#</a></h3>
 <p><a class="reference internal" href="generated/sklearn.decomposition.MiniBatchNMF.html#sklearn.decomposition.MiniBatchNMF" title="sklearn.decomposition.MiniBatchNMF"><code class="xref py py-class docutils literal notranslate"><span class="pre">MiniBatchNMF</span></code></a> <a class="footnote-reference brackets" href="#id18" id="id12" role="doc-noteref"><span class="fn-bracket">[</span>7<span class="fn-bracket">]</span></a> implements a faster, but less accurate version of the
 non negative matrix factorization (i.e. <a class="reference internal" href="generated/sklearn.decomposition.NMF.html#sklearn.decomposition.NMF" title="sklearn.decomposition.NMF"><code class="xref py py-class docutils literal notranslate"><span class="pre">NMF</span></code></a>),
 better suited for large datasets.</p>
@@ -980,8 +1459,7 @@ parameter.</p>
 <p>The estimator also implements <code class="docutils literal notranslate"><span class="pre">partial_fit</span></code>, which updates <code class="docutils literal notranslate"><span class="pre">H</span></code> by iterating
 only once over a mini-batch. This can be used for online learning when the data
 is not readily available from the start, or when the data does not fit into memory.</p>
-<aside class="topic">
-<p class="topic-title">References:</p>
+<p class="rubric">References</p>
 <aside class="footnote-list brackets">
 <aside class="footnote brackets" id="id13" role="doc-footnote">
 <span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id6">1</a><span class="fn-bracket">]</span></span>
@@ -1019,11 +1497,10 @@ Itakura-Saito divergence”</a>
 A. Lefevre, F. Bach, C. Fevotte, 2011</p>
 </aside>
 </aside>
-</aside>
 </section>
 </section>
 <section id="latent-dirichlet-allocation-lda">
-<span id="latentdirichletallocation"></span><h2><span class="section-number">2.5.8. </span>Latent Dirichlet Allocation (LDA)<a class="headerlink" href="#latent-dirichlet-allocation-lda" title="Link to this heading">¶</a></h2>
+<span id="latentdirichletallocation"></span><h2><span class="section-number">2.5.8. </span>Latent Dirichlet Allocation (LDA)<a class="headerlink" href="#latent-dirichlet-allocation-lda" title="Link to this heading">#</a></h2>
 <p>Latent Dirichlet Allocation is a generative probabilistic model for collections of
 discrete dataset such as text corpora. It is also a topic model that is used for
 discovering abstract topics from a collection of documents.</p>
@@ -1044,51 +1521,50 @@ the only data that we observe. The latent variables determine the random mixture
 of topics in the corpus and the distribution of words in the documents.
 The goal of LDA is to use the observed words to infer the hidden topic
 structure.</p>
-<p><details id="summary-anchor">
-<summary class="btn btn-light">
-<strong>Details on modeling text corpora</strong>
-<span class="tooltiptext">Click for more details</span>
-<a class="headerlink" href="#summary-anchor" title="Permalink to this heading">¶</a>
-</summary>
-<div class="card"></p>
-<p>When modeling text corpora, the model assumes the following generative process
+<details class="sd-sphinx-override sd-dropdown sd-card sd-mb-3" id="details-on-modeling-text-corpora">
+<summary class="sd-summary-title sd-card-header">
+Details on modeling text corpora<a class="headerlink" href="#details-on-modeling-text-corpora" title="Link to this dropdown">#</a><div class="sd-summary-down docutils">
+<svg version="1.1" width="1.5em" height="1.5em" class="sd-octicon sd-octicon-chevron-down" viewBox="0 0 24 24" aria-hidden="true"><path fill-rule="evenodd" d="M5.22 8.72a.75.75 0 000 1.06l6.25 6.25a.75.75 0 001.06 0l6.25-6.25a.75.75 0 00-1.06-1.06L12 14.44 6.28 8.72a.75.75 0 00-1.06 0z"></path></svg></div>
+<div class="sd-summary-up docutils">
+<svg version="1.1" width="1.5em" height="1.5em" class="sd-octicon sd-octicon-chevron-up" viewBox="0 0 24 24" aria-hidden="true"><path fill-rule="evenodd" d="M18.78 15.28a.75.75 0 000-1.06l-6.25-6.25a.75.75 0 00-1.06 0l-6.25 6.25a.75.75 0 101.06 1.06L12 9.56l5.72 5.72a.75.75 0 001.06 0z"></path></svg></div>
+</summary><div class="sd-summary-content sd-card-body docutils">
+<p class="sd-card-text">When modeling text corpora, the model assumes the following generative process
 for a corpus with <span class="math notranslate nohighlight">\(D\)</span> documents and <span class="math notranslate nohighlight">\(K\)</span> topics, with <span class="math notranslate nohighlight">\(K\)</span>
 corresponding to <code class="docutils literal notranslate"><span class="pre">n_components</span></code> in the API:</p>
 <ol class="arabic simple">
-<li><p>For each topic <span class="math notranslate nohighlight">\(k \in K\)</span>, draw <span class="math notranslate nohighlight">\(\beta_k \sim
+<li><p class="sd-card-text">For each topic <span class="math notranslate nohighlight">\(k \in K\)</span>, draw <span class="math notranslate nohighlight">\(\beta_k \sim
 \mathrm{Dirichlet}(\eta)\)</span>. This provides a distribution over the words,
 i.e. the probability of a word appearing in topic <span class="math notranslate nohighlight">\(k\)</span>.
 <span class="math notranslate nohighlight">\(\eta\)</span> corresponds to <code class="docutils literal notranslate"><span class="pre">topic_word_prior</span></code>.</p></li>
-<li><p>For each document <span class="math notranslate nohighlight">\(d \in D\)</span>, draw the topic proportions
+<li><p class="sd-card-text">For each document <span class="math notranslate nohighlight">\(d \in D\)</span>, draw the topic proportions
 <span class="math notranslate nohighlight">\(\theta_d \sim \mathrm{Dirichlet}(\alpha)\)</span>. <span class="math notranslate nohighlight">\(\alpha\)</span>
 corresponds to <code class="docutils literal notranslate"><span class="pre">doc_topic_prior</span></code>.</p></li>
-<li><p>For each word <span class="math notranslate nohighlight">\(i\)</span> in document <span class="math notranslate nohighlight">\(d\)</span>:</p>
+<li><p class="sd-card-text">For each word <span class="math notranslate nohighlight">\(i\)</span> in document <span class="math notranslate nohighlight">\(d\)</span>:</p>
 <ol class="loweralpha simple">
-<li><p>Draw the topic assignment <span class="math notranslate nohighlight">\(z_{di} \sim \mathrm{Multinomial}
+<li><p class="sd-card-text">Draw the topic assignment <span class="math notranslate nohighlight">\(z_{di} \sim \mathrm{Multinomial}
 (\theta_d)\)</span></p></li>
-<li><p>Draw the observed word <span class="math notranslate nohighlight">\(w_{ij} \sim \mathrm{Multinomial}
+<li><p class="sd-card-text">Draw the observed word <span class="math notranslate nohighlight">\(w_{ij} \sim \mathrm{Multinomial}
 (\beta_{z_{di}})\)</span></p></li>
 </ol>
 </li>
 </ol>
-<p>For parameter estimation, the posterior distribution is:</p>
+<p class="sd-card-text">For parameter estimation, the posterior distribution is:</p>
 <div class="math notranslate nohighlight">
 \[p(z, \theta, \beta |w, \alpha, \eta) =
-  \frac{p(z, \theta, \beta|\alpha, \eta)}{p(w|\alpha, \eta)}\]</div>
-<p>Since the posterior is intractable, variational Bayesian method
+\frac{p(z, \theta, \beta|\alpha, \eta)}{p(w|\alpha, \eta)}\]</div>
+<p class="sd-card-text">Since the posterior is intractable, variational Bayesian method
 uses a simpler distribution <span class="math notranslate nohighlight">\(q(z,\theta,\beta | \lambda, \phi, \gamma)\)</span>
 to approximate it, and those variational parameters <span class="math notranslate nohighlight">\(\lambda\)</span>,
 <span class="math notranslate nohighlight">\(\phi\)</span>, <span class="math notranslate nohighlight">\(\gamma\)</span> are optimized to maximize the Evidence
 Lower Bound (ELBO):</p>
 <div class="math notranslate nohighlight">
 \[\log\: P(w | \alpha, \eta) \geq L(w,\phi,\gamma,\lambda) \overset{\triangle}{=}
-  E_{q}[\log\:p(w,z,\theta,\beta|\alpha,\eta)] - E_{q}[\log\:q(z, \theta, \beta)]\]</div>
-<p>Maximizing ELBO is equivalent to minimizing the Kullback-Leibler(KL) divergence
+E_{q}[\log\:p(w,z,\theta,\beta|\alpha,\eta)] - E_{q}[\log\:q(z, \theta, \beta)]\]</div>
+<p class="sd-card-text">Maximizing ELBO is equivalent to minimizing the Kullback-Leibler(KL) divergence
 between <span class="math notranslate nohighlight">\(q(z,\theta,\beta)\)</span> and the true posterior
 <span class="math notranslate nohighlight">\(p(z, \theta, \beta |w, \alpha, \eta)\)</span>.</p>
-<p></div>
-</details></p>
-<p><a class="reference internal" href="generated/sklearn.decomposition.LatentDirichletAllocation.html#sklearn.decomposition.LatentDirichletAllocation" title="sklearn.decomposition.LatentDirichletAllocation"><code class="xref py py-class docutils literal notranslate"><span class="pre">LatentDirichletAllocation</span></code></a> implements the online variational Bayes
+</div>
+</details><p><a class="reference internal" href="generated/sklearn.decomposition.LatentDirichletAllocation.html#sklearn.decomposition.LatentDirichletAllocation" title="sklearn.decomposition.LatentDirichletAllocation"><code class="xref py py-class docutils literal notranslate"><span class="pre">LatentDirichletAllocation</span></code></a> implements the online variational Bayes
 algorithm and supports both online and batch update methods.
 While the batch method updates variational variables after each full pass through
 the data, the online method updates variational variables from mini-batch data
@@ -1105,14 +1581,11 @@ will be decomposed into a “topic-term” matrix and a “document-topic” mat
 can be calculated from <code class="docutils literal notranslate"><span class="pre">transform</span></code> method.</p>
 <p><a class="reference internal" href="generated/sklearn.decomposition.LatentDirichletAllocation.html#sklearn.decomposition.LatentDirichletAllocation" title="sklearn.decomposition.LatentDirichletAllocation"><code class="xref py py-class docutils literal notranslate"><span class="pre">LatentDirichletAllocation</span></code></a> also implements <code class="docutils literal notranslate"><span class="pre">partial_fit</span></code> method. This is used
 when data can be fetched sequentially.</p>
-<aside class="topic">
-<p class="topic-title">Examples:</p>
+<p class="rubric">Examples</p>
 <ul class="simple">
 <li><p><a class="reference internal" href="../auto_examples/applications/plot_topics_extraction_with_nmf_lda.html#sphx-glr-auto-examples-applications-plot-topics-extraction-with-nmf-lda-py"><span class="std std-ref">Topic extraction with Non-negative Matrix Factorization and Latent Dirichlet Allocation</span></a></p></li>
 </ul>
-</aside>
-<aside class="topic">
-<p class="topic-title">References:</p>
+<p class="rubric">References</p>
 <ul class="simple">
 <li><p><a class="reference external" href="https://www.jmlr.org/papers/volume3/blei03a/blei03a.pdf">“Latent Dirichlet Allocation”</a>
 D. Blei, A. Ng, M. Jordan, 2003</p></li>
@@ -1123,77 +1596,138 @@ M. Hoffman, D. Blei, C. Wang, J. Paisley, 2013</p></li>
 <li><p><a class="reference external" href="https://link.springer.com/article/10.1007%2FBF02289233">“The varimax criterion for analytic rotation in factor analysis”</a>
 H. F. Kaiser, 1958</p></li>
 </ul>
-</aside>
 <p>See also <a class="reference internal" href="neighbors.html#nca-dim-reduction"><span class="std std-ref">Dimensionality reduction</span></a> for dimensionality reduction with
 Neighborhood Components Analysis.</p>
 </section>
 </section>
 
 
+                </article>
+              
+              
+              
+                <footer class="bd-footer-article">
+                  <div class="footer-article-items footer-article__inner">
+  
+    <div class="footer-article-item">
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="biclustering.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title"><span class="section-number">2.4. </span>Biclustering</p>
       </div>
-    <div class="container">
-      <footer class="sk-content-footer">
-            &copy; 2007 - 2024, scikit-learn developers (BSD License).
-          <a href="../_sources/modules/decomposition.rst.txt" rel="nofollow">Show this page source</a>
-      </footer>
-    </div>
+    </a>
+    <a class="right-next"
+       href="covariance.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title"><span class="section-number">2.6. </span>Covariance estimation</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div></div>
+  
+</div>
+                </footer>
+              
+              
+              
+            </div>
+            
+            
+              
+                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+<div
+    id="pst-page-navigation-heading-2"
+    class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> On this page
+  </div>
+  <nav class="bd-toc-nav page-toc" aria-labelledby="pst-page-navigation-heading-2">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#principal-component-analysis-pca">2.5.1. Principal component analysis (PCA)</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#exact-pca-and-probabilistic-interpretation">2.5.1.1. Exact PCA and probabilistic interpretation</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#incremental-pca">2.5.1.2. Incremental PCA</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pca-using-randomized-svd">2.5.1.3. PCA using randomized SVD</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#sparse-principal-components-analysis-sparsepca-and-minibatchsparsepca">2.5.1.4. Sparse principal components analysis (SparsePCA and MiniBatchSparsePCA)</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#kernel-principal-component-analysis-kpca">2.5.2. Kernel Principal Component Analysis (kPCA)</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#exact-kernel-pca">2.5.2.1. Exact Kernel PCA</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#choice-of-solver-for-kernel-pca">2.5.2.2. Choice of solver for Kernel PCA</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#truncated-singular-value-decomposition-and-latent-semantic-analysis">2.5.3. Truncated singular value decomposition and latent semantic analysis</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#dictionary-learning">2.5.4. Dictionary Learning</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#sparse-coding-with-a-precomputed-dictionary">2.5.4.1. Sparse coding with a precomputed dictionary</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#generic-dictionary-learning">2.5.4.2. Generic dictionary learning</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#mini-batch-dictionary-learning">2.5.4.3. Mini-batch dictionary learning</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#factor-analysis">2.5.5. Factor Analysis</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#independent-component-analysis-ica">2.5.6. Independent component analysis (ICA)</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#non-negative-matrix-factorization-nmf-or-nnmf">2.5.7. Non-negative matrix factorization (NMF or NNMF)</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#nmf-with-the-frobenius-norm">2.5.7.1. NMF with the Frobenius norm</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#nmf-with-a-beta-divergence">2.5.7.2. NMF with a beta-divergence</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#mini-batch-non-negative-matrix-factorization">2.5.7.3. Mini-batch Non Negative Matrix Factorization</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#latent-dirichlet-allocation-lda">2.5.8. Latent Dirichlet Allocation (LDA)</a></li>
+</ul>
+  </nav></div>
+
+  <div class="sidebar-secondary-item">
+
+  <div class="tocsection sourcelink">
+    <a href="../_sources/modules/decomposition.rst.txt">
+      <i class="fa-solid fa-file-lines"></i> Show Source
+    </a>
   </div>
 </div>
-<script src="../_static/js/vendor/bootstrap.min.js"></script>
 
-<script>
-    window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
-    ga('create', 'UA-22606712-2', 'auto');
-    ga('set', 'anonymizeIp', true);
-    ga('send', 'pageview');
-</script>
-<script async src='https://www.google-analytics.com/analytics.js'></script>
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+          </footer>
+        
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="../_static/scripts/bootstrap.js?digest=8d27b9dea8ad943066ae"></script>
+<script src="../_static/scripts/pydata-sphinx-theme.js?digest=8d27b9dea8ad943066ae"></script>
 
+  <footer class="bd-footer">
+<div class="bd-footer__inner bd-page-width">
+  
+    <div class="footer-items__start">
+      
+        <div class="footer-item">
 
-
-<script defer data-domain="scikit-learn.org" src="https://views.scientific-python.org/js/script.js">
-</script>
-
-
-<script src="../_static/clipboard.min.js"></script>
-<script src="../_static/copybutton.js"></script>
-
-<script>
-$(document).ready(function() {
-    /* Add a [>>>] button on the top-right corner of code samples to hide
-     * the >>> and ... prompts and the output and thus make the code
-     * copyable. */
-    var div = $('.highlight-python .highlight,' +
-                '.highlight-python3 .highlight,' +
-                '.highlight-pycon .highlight,' +
-		'.highlight-default .highlight')
-    var pre = div.find('pre');
-
-    // get the styles from the current theme
-    pre.parent().parent().css('position', 'relative');
-
-    // create and add the button to all the code blocks that contain >>>
-    div.each(function(index) {
-        var jthis = $(this);
-        // tracebacks (.gt) contain bare text elements that need to be
-        // wrapped in a span to work with .nextUntil() (see later)
-        jthis.find('pre:has(.gt)').contents().filter(function() {
-            return ((this.nodeType == 3) && (this.data.trim().length > 0));
-        }).wrap('<span>');
-    });
-
-	/*** Add permalink buttons next to glossary terms ***/
-	$('dl.glossary > dt[id]').append(function() {
-		return ('<a class="headerlink" href="#' +
-			    this.getAttribute('id') +
-			    '" title="Permalink to this term">¶</a>');
-	});
-});
-
-</script>
+  <p class="copyright">
     
-<script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js"></script>
+      © Copyright 2007 - 2024, scikit-learn developers (BSD License).
+      <br/>
     
-    <script src="https://scikit-learn.org/versionwarning.js"></script>
-</body>
+  </p>
+</div>
+      
+    </div>
+  
+  
+  
+</div>
+
+  </footer>
+  </body>
 </html>

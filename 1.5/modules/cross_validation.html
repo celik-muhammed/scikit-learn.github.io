@@ -1,12 +1,12 @@
 
-
 <!DOCTYPE html>
-<!-- data-theme below is forced to be "light" but should be changed if we use pydata-theme-sphinx in the future -->
-<!--[if IE 8]><html class="no-js lt-ie9" lang="en" data-content_root="../" data-theme="light"> <![endif]-->
-<!--[if gt IE 8]><!--> <html class="no-js" lang="en" data-content_root="../" data-theme="light"> <!--<![endif]-->
-<head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+
+<html lang="en" data-content_root="../" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 <meta property="og:title" content="3.1. Cross-validation: evaluating estimator performance" />
 <meta property="og:type" content="website" />
 <meta property="og:url" content="https://scikit-learn/stable/modules/cross_validation.html" />
@@ -16,220 +16,725 @@
 <meta property="og:image:alt" content="Grid Search Workflow" />
 <meta name="description" content="Learning the parameters of a prediction function and testing it on the same data is a methodological mistake: a model that would just repeat the labels of the samples that it has just seen would ha..." />
 
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>3.1. Cross-validation: evaluating estimator performance &#8212; scikit-learn 1.5.0 documentation</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "light";
+  </script>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../_static/styles/theme.css?digest=8d27b9dea8ad943066ae" rel="stylesheet" />
+<link href="../_static/styles/bootstrap.css?digest=8d27b9dea8ad943066ae" rel="stylesheet" />
+<link href="../_static/styles/pydata-sphinx-theme.css?digest=8d27b9dea8ad943066ae" rel="stylesheet" />
 
   
-  <title>3.1. Cross-validation: evaluating estimator performance &mdash; scikit-learn 1.5.0rc1 documentation</title>
+  <link href="../_static/vendor/fontawesome/6.5.1/css/all.min.css?digest=8d27b9dea8ad943066ae" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.1/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.1/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.1/webfonts/fa-regular-400.woff2" />
+
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=a746c00c" />
+    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="../_static/plot_directive.css" />
+    <link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Vibur" />
+    <link rel="stylesheet" type="text/css" href="../_static/jupyterlite_sphinx.css?v=ca70e7f1" />
+    <link rel="stylesheet" type="text/css" href="../_static/sg_gallery.css?v=61a4c737" />
+    <link rel="stylesheet" type="text/css" href="../_static/sg_gallery-binder.css?v=f4aeca0c" />
+    <link rel="stylesheet" type="text/css" href="../_static/sg_gallery-dataframe.css?v=2082cf3c" />
+    <link rel="stylesheet" type="text/css" href="../_static/sg_gallery-rendered-html.css?v=1277b6f3" />
+    <link rel="stylesheet" type="text/css" href="../_static/design-style.1e8bd061cd6da7fc9cf755528e8ffc24.min.css?v=0a3b3ea7" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/colors.css?v=cc94ab7d" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/custom.css?v=42c874f8" />
   
-  <link rel="canonical" href="https://scikit-learn.org/stable/modules/cross_validation.html" />
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=8d27b9dea8ad943066ae" />
+<link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=8d27b9dea8ad943066ae" />
+  <script src="../_static/vendor/fontawesome/6.5.1/js/all.min.js?digest=8d27b9dea8ad943066ae"></script>
+
+    <script src="../_static/documentation_options.js?v=e0a75244"></script>
+    <script src="../_static/doctools.js?v=9a2dae69"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="../_static/copybutton.js?v=97f0b27d"></script>
+    <script src="../_static/jupyterlite_sphinx.js?v=d6bdf5f8"></script>
+    <script src="../_static/design-tabs.js?v=36754332"></script>
+    <script data-domain="scikit-learn.org" defer="defer" src="https://views.scientific-python.org/js/script.js"></script>
+    <script async="async" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'modules/cross_validation';</script>
+    <script>
+        DOCUMENTATION_OPTIONS.theme_version = '0.15.2';
+        DOCUMENTATION_OPTIONS.theme_switcher_json_url = 'https://scikit-learn.org/dev/_static/versions.json';
+        DOCUMENTATION_OPTIONS.theme_switcher_version_match = '1.5.0';
+        DOCUMENTATION_OPTIONS.show_version_warning_banner = true;
+        </script>
+    <script src="../_static/scripts/dropdown.js?v=12d599f8"></script>
+    <script src="../_static/scripts/version-switcher.js?v=a6dd8357"></script>
+    <link rel="icon" href="../_static/favicon.ico"/>
+    <link rel="author" title="About these documents" href="../about.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="3.2. Tuning the hyper-parameters of an estimator" href="grid_search.html" />
+    <link rel="prev" title="3. Model selection and evaluation" href="../model_selection.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
 
   
-  <link rel="shortcut icon" href="../_static/favicon.ico"/>
+  
+  <a id="pst-skip-link" class="skip-link" href="#main-content">Skip to main content</a>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>
+    Back to top
+  </button>
+
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          name="__primary"
+          id="__primary"/>
+  <label class="overlay overlay-primary" for="__primary"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          name="__secondary"
+          id="__secondary"/>
+  <label class="overlay overlay-secondary" for="__secondary"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+<form class="bd-search d-flex align-items-center"
+      action="../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search the docs ..."
+         aria-label="Search the docs ..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+  </div>
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar">
+<div class="bd-header__inner bd-page-width">
+  <label class="sidebar-toggle primary-toggle" for="__primary">
+    <span class="fa-solid fa-bars"></span>
+  </label>
+  
+  
+  <div class=" navbar-header-items__start">
+    
+      <div class="navbar-item">
+
   
 
-  <link rel="stylesheet" href="../_static/css/vendor/bootstrap.min.css" type="text/css" />
-  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
-  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
-  <link rel="stylesheet" href="../_static/copybutton.css" type="text/css" />
-  <link rel="stylesheet" href="../_static/plot_directive.css" type="text/css" />
-  <link rel="stylesheet" href="../https://fonts.googleapis.com/css?family=Vibur" type="text/css" />
-  <link rel="stylesheet" href="../_static/jupyterlite_sphinx.css" type="text/css" />
-  <link rel="stylesheet" href="../_static/sg_gallery.css" type="text/css" />
-  <link rel="stylesheet" href="../_static/sg_gallery-binder.css" type="text/css" />
-  <link rel="stylesheet" href="../_static/sg_gallery-dataframe.css" type="text/css" />
-  <link rel="stylesheet" href="../_static/sg_gallery-rendered-html.css" type="text/css" />
-  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
-<script id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
-<script src="../_static/js/vendor/jquery-3.6.3.slim.min.js"></script>
-<script src="../_static/js/details-permalink.js"></script> 
-</head>
-<body>
+<a class="navbar-brand logo" href="../index.html">
+  
+  
+  
+  
+  
+    
+    
+      
+    
+    
+    <img src="../_static/scikit-learn-logo-small.png" class="logo__image only-light" alt="scikit-learn homepage"/>
+    <script>document.write(`<img src="../_static/scikit-learn-logo-small.png" class="logo__image only-dark" alt="scikit-learn homepage"/>`);</script>
+  
+  
+</a></div>
+    
+  </div>
+  
+  <div class=" navbar-header-items">
+    
+    <div class="me-auto navbar-header-items__center">
+      
+        <div class="navbar-item">
+<nav class="navbar-nav">
+  <ul class="bd-navbar-elements navbar-nav">
+    
+                    <li class="nav-item">
+                      <a class="nav-link nav-internal" href="../install.html">
+                        Install
+                      </a>
+                    </li>
+                
 
+                    <li class="nav-item current active">
+                      <a class="nav-link nav-internal" href="../user_guide.html">
+                        User Guide
+                      </a>
+                    </li>
+                
 
+                    <li class="nav-item">
+                      <a class="nav-link nav-internal" href="../api/index.html">
+                        API
+                      </a>
+                    </li>
+                
 
+                    <li class="nav-item">
+                      <a class="nav-link nav-internal" href="../auto_examples/index.html">
+                        Examples
+                      </a>
+                    </li>
+                
 
+                    <li class="nav-item">
+                      <a class="nav-link nav-external" href="https://blog.scikit-learn.org/">
+                        Community
+                      </a>
+                    </li>
+                
+            <li class="nav-item dropdown">
+                <button class="btn dropdown-toggle nav-item" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-controls="pst-nav-more-links">
+                    More
+                </button>
+                <ul id="pst-nav-more-links" class="dropdown-menu">
+                    
+                    <li class="nav-item">
+                      <a class="nav-link dropdown-item nav-internal" href="../getting_started.html">
+                        Getting Started
+                      </a>
+                    </li>
+                
 
+                    <li class="nav-item">
+                      <a class="nav-link dropdown-item nav-internal" href="../tutorial/index.html">
+                        Tutorials
+                      </a>
+                    </li>
+                
 
-<nav id="navbar" class="sk-docs-navbar navbar navbar-expand-md navbar-light bg-light py-0">
-  <div class="container-fluid sk-docs-container px-0">
-      <a class="navbar-brand py-0" href="../index.html">
-        <img
-          class="sk-brand-img"
-          src="../_static/scikit-learn-logo-small.png"
-          alt="logo"/>
-      </a>
-    <button
-      id="sk-navbar-toggler"
-      class="navbar-toggler"
+                    <li class="nav-item">
+                      <a class="nav-link dropdown-item nav-internal" href="../whats_new.html">
+                        Release History
+                      </a>
+                    </li>
+                
+
+                    <li class="nav-item">
+                      <a class="nav-link dropdown-item nav-internal" href="../glossary.html">
+                        Glossary
+                      </a>
+                    </li>
+                
+
+                    <li class="nav-item">
+                      <a class="nav-link dropdown-item nav-external" href="https://scikit-learn.org/dev/developers/index.html">
+                        Development
+                      </a>
+                    </li>
+                
+
+                    <li class="nav-item">
+                      <a class="nav-link dropdown-item nav-internal" href="../faq.html">
+                        FAQ
+                      </a>
+                    </li>
+                
+
+                    <li class="nav-item">
+                      <a class="nav-link dropdown-item nav-internal" href="../support.html">
+                        Support
+                      </a>
+                    </li>
+                
+
+                    <li class="nav-item">
+                      <a class="nav-link dropdown-item nav-internal" href="../related_projects.html">
+                        Related Projects
+                      </a>
+                    </li>
+                
+
+                    <li class="nav-item">
+                      <a class="nav-link dropdown-item nav-internal" href="../roadmap.html">
+                        Roadmap
+                      </a>
+                    </li>
+                
+
+                    <li class="nav-item">
+                      <a class="nav-link dropdown-item nav-internal" href="../governance.html">
+                        Governance
+                      </a>
+                    </li>
+                
+
+                    <li class="nav-item">
+                      <a class="nav-link dropdown-item nav-internal" href="../about.html">
+                        About us
+                      </a>
+                    </li>
+                
+                </ul>
+            </li>
+            
+  </ul>
+</nav></div>
+      
+    </div>
+    
+    
+    <div class="navbar-header-items__end">
+      
+        <div class="navbar-item navbar-persistent--container">
+          
+
+<script>
+document.write(`
+  <button class="btn btn-sm navbar-btn search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+  </button>
+`);
+</script>
+        </div>
+      
+      
+        <div class="navbar-item">
+
+<script>
+document.write(`
+  <button class="btn btn-sm navbar-btn theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="theme-switch nav-link" data-mode="light"><i class="fa-solid fa-sun fa-lg"></i></span>
+    <span class="theme-switch nav-link" data-mode="dark"><i class="fa-solid fa-moon fa-lg"></i></span>
+    <span class="theme-switch nav-link" data-mode="auto"><i class="fa-solid fa-circle-half-stroke fa-lg"></i></span>
+  </button>
+`);
+</script></div>
+      
+        <div class="navbar-item"><ul class="navbar-icon-links navbar-nav"
+    aria-label="Icon Links">
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://github.com/scikit-learn/scikit-learn" title="GitHub" class="nav-link" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><span><i class="fa-brands fa-square-github fa-lg" aria-hidden="true"></i></span>
+            <span class="sr-only">GitHub</span></a>
+        </li>
+</ul></div>
+      
+        <div class="navbar-item">
+<script>
+document.write(`
+  <div class="version-switcher__container dropdown">
+    <button id="pst-version-switcher-button-2"
       type="button"
-      data-toggle="collapse"
-      data-target="#navbarSupportedContent"
-      aria-controls="navbarSupportedContent"
-      aria-expanded="false"
-      aria-label="Toggle navigation"
+      class="version-switcher__button btn btn-sm navbar-btn dropdown-toggle"
+      data-bs-toggle="dropdown"
+      aria-haspopup="listbox"
+      aria-controls="pst-version-switcher-list-2"
+      aria-label="Version switcher list"
     >
-      <span class="navbar-toggler-icon"></span>
+      Choose version  <!-- this text may get changed later by javascript -->
+      <span class="caret"></span>
     </button>
-
-    <div class="sk-navbar-collapse collapse navbar-collapse" id="navbarSupportedContent">
-      <ul class="navbar-nav mr-auto">
-        <li class="nav-item">
-          <a class="sk-nav-link nav-link" href="../install.html">Install</a>
-        </li>
-        <li class="nav-item">
-          <a class="sk-nav-link nav-link" href="../user_guide.html">User Guide</a>
-        </li>
-        <li class="nav-item">
-          <a class="sk-nav-link nav-link" href="classes.html">API</a>
-        </li>
-        <li class="nav-item">
-          <a class="sk-nav-link nav-link" href="../auto_examples/index.html">Examples</a>
-        </li>
-        <li class="nav-item">
-          <a class="sk-nav-link nav-link" target="_blank" rel="noopener noreferrer" href="https://blog.scikit-learn.org/">Community</a>
-        </li>
-        <li class="nav-item">
-          <a class="sk-nav-link nav-link nav-more-item-mobile-items" href="../getting_started.html" >Getting Started</a>
-        </li>
-        <li class="nav-item">
-          <a class="sk-nav-link nav-link nav-more-item-mobile-items" href="../tutorial/index.html" >Tutorial</a>
-        </li>
-        <li class="nav-item">
-          <a class="sk-nav-link nav-link nav-more-item-mobile-items" href="../whats_new/v1.5.html" >What's new</a>
-        </li>
-        <li class="nav-item">
-          <a class="sk-nav-link nav-link nav-more-item-mobile-items" href="../glossary.html" >Glossary</a>
-        </li>
-        <li class="nav-item">
-          <a class="sk-nav-link nav-link nav-more-item-mobile-items" href="https://scikit-learn.org/dev/developers/index.html" target="_blank" rel="noopener noreferrer">Development</a>
-        </li>
-        <li class="nav-item">
-          <a class="sk-nav-link nav-link nav-more-item-mobile-items" href="../faq.html" >FAQ</a>
-        </li>
-        <li class="nav-item">
-          <a class="sk-nav-link nav-link nav-more-item-mobile-items" href="../support.html" >Support</a>
-        </li>
-        <li class="nav-item">
-          <a class="sk-nav-link nav-link nav-more-item-mobile-items" href="../related_projects.html" >Related packages</a>
-        </li>
-        <li class="nav-item">
-          <a class="sk-nav-link nav-link nav-more-item-mobile-items" href="../roadmap.html" >Roadmap</a>
-        </li>
-        <li class="nav-item">
-          <a class="sk-nav-link nav-link nav-more-item-mobile-items" href="../governance.html" >Governance</a>
-        </li>
-        <li class="nav-item">
-          <a class="sk-nav-link nav-link nav-more-item-mobile-items" href="../about.html" >About us</a>
-        </li>
-        <li class="nav-item">
-          <a class="sk-nav-link nav-link nav-more-item-mobile-items" href="https://github.com/scikit-learn/scikit-learn" >GitHub</a>
-        </li>
-        <li class="nav-item">
-          <a class="sk-nav-link nav-link nav-more-item-mobile-items" href="https://scikit-learn.org/dev/versions.html" >Other Versions and Download</a>
-        </li>
-        <li class="nav-item dropdown nav-more-item-dropdown">
-          <a class="sk-nav-link nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">More</a>
-          <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-              <a class="sk-nav-dropdown-item dropdown-item" href="../getting_started.html" >Getting Started</a>
-              <a class="sk-nav-dropdown-item dropdown-item" href="../tutorial/index.html" >Tutorial</a>
-              <a class="sk-nav-dropdown-item dropdown-item" href="../whats_new/v1.5.html" >What's new</a>
-              <a class="sk-nav-dropdown-item dropdown-item" href="../glossary.html" >Glossary</a>
-              <a class="sk-nav-dropdown-item dropdown-item" href="https://scikit-learn.org/dev/developers/index.html" target="_blank" rel="noopener noreferrer">Development</a>
-              <a class="sk-nav-dropdown-item dropdown-item" href="../faq.html" >FAQ</a>
-              <a class="sk-nav-dropdown-item dropdown-item" href="../support.html" >Support</a>
-              <a class="sk-nav-dropdown-item dropdown-item" href="../related_projects.html" >Related packages</a>
-              <a class="sk-nav-dropdown-item dropdown-item" href="../roadmap.html" >Roadmap</a>
-              <a class="sk-nav-dropdown-item dropdown-item" href="../governance.html" >Governance</a>
-              <a class="sk-nav-dropdown-item dropdown-item" href="../about.html" >About us</a>
-              <a class="sk-nav-dropdown-item dropdown-item" href="https://github.com/scikit-learn/scikit-learn" >GitHub</a>
-              <a class="sk-nav-dropdown-item dropdown-item" href="https://scikit-learn.org/dev/versions.html" >Other Versions and Download</a>
-          </div>
-        </li>
-      </ul>
-      <div id="searchbox" role="search">
-          <div class="searchformwrapper">
-          <form class="search" action="../search.html" method="get">
-            <input class="sk-search-text-input" type="text" name="q" aria-labelledby="searchlabel" />
-            <input class="sk-search-text-btn" type="submit" value="Go" />
-          </form>
-          </div>
-      </div>
+    <div id="pst-version-switcher-list-2"
+      class="version-switcher__menu dropdown-menu list-group-flush py-0"
+      role="listbox" aria-labelledby="pst-version-switcher-button-2">
+      <!-- dropdown will be populated by javascript on page load -->
     </div>
   </div>
-</nav>
-<div class="d-flex" id="sk-doc-wrapper">
-    <input type="checkbox" name="sk-toggle-checkbox" id="sk-toggle-checkbox">
-    <label id="sk-sidemenu-toggle" class="sk-btn-toggle-toc btn sk-btn-primary" for="sk-toggle-checkbox">Toggle Menu</label>
-    <div id="sk-sidebar-wrapper" class="border-right">
-      <div class="sk-sidebar-toc-wrapper">
-        <div class="btn-group w-100 mb-2" role="group" aria-label="rellinks">
-            <a href="../model_selection.html" role="button" class="btn sk-btn-rellink py-1" sk-rellink-tooltip="3. Model selection and evaluation">Prev</a><a href="../model_selection.html" role="button" class="btn sk-btn-rellink py-1" sk-rellink-tooltip="3. Model selection and evaluation">Up</a>
-            <a href="grid_search.html" role="button" class="btn sk-btn-rellink py-1" sk-rellink-tooltip="3.2. Tuning the hyper-parameters of an estimator">Next</a>
-        </div>
-        <div class="alert alert-danger p-1 mb-2" role="alert">
-          <p class="text-center mb-0">
-          <strong>scikit-learn 1.5.0rc1</strong><br/>
-          <a href="https://scikit-learn.org/dev/versions.html">Other versions</a>
-          </p>
-        </div>
-        <div class="alert alert-warning p-1 mb-2" role="alert">
-          <p class="text-center mb-0">
-            Please <a class="font-weight-bold" href="../about.html#citing-scikit-learn"><string>cite us</string></a> if you use the software.
-          </p>
-        </div>
-            <div class="sk-sidebar-toc">
-              <ul>
-<li><a class="reference internal" href="#">3.1. Cross-validation: evaluating estimator performance</a><ul>
-<li><a class="reference internal" href="#computing-cross-validated-metrics">3.1.1. Computing cross-validated metrics</a><ul>
-<li><a class="reference internal" href="#the-cross-validate-function-and-multiple-metric-evaluation">3.1.1.1. The cross_validate function and multiple metric evaluation</a></li>
-<li><a class="reference internal" href="#obtaining-predictions-by-cross-validation">3.1.1.2. Obtaining predictions by cross-validation</a></li>
-</ul>
-</li>
-<li><a class="reference internal" href="#cross-validation-iterators">3.1.2. Cross validation iterators</a><ul>
-<li><a class="reference internal" href="#cross-validation-iterators-for-i-i-d-data">3.1.2.1. Cross-validation iterators for i.i.d. data</a><ul>
-<li><a class="reference internal" href="#k-fold">3.1.2.1.1. K-fold</a></li>
-<li><a class="reference internal" href="#repeated-k-fold">3.1.2.1.2. Repeated K-Fold</a></li>
-<li><a class="reference internal" href="#leave-one-out-loo">3.1.2.1.3. Leave One Out (LOO)</a></li>
-<li><a class="reference internal" href="#leave-p-out-lpo">3.1.2.1.4. Leave P Out (LPO)</a></li>
-<li><a class="reference internal" href="#random-permutations-cross-validation-a-k-a-shuffle-split">3.1.2.1.5. Random permutations cross-validation a.k.a. Shuffle &amp; Split</a></li>
-</ul>
-</li>
-<li><a class="reference internal" href="#cross-validation-iterators-with-stratification-based-on-class-labels">3.1.2.2. Cross-validation iterators with stratification based on class labels</a><ul>
-<li><a class="reference internal" href="#stratified-k-fold">3.1.2.2.1. Stratified k-fold</a></li>
-<li><a class="reference internal" href="#stratified-shuffle-split">3.1.2.2.2. Stratified Shuffle Split</a></li>
-</ul>
-</li>
-<li><a class="reference internal" href="#predefined-fold-splits-validation-sets">3.1.2.3. Predefined fold-splits / Validation-sets</a></li>
-<li><a class="reference internal" href="#cross-validation-iterators-for-grouped-data">3.1.2.4. Cross-validation iterators for grouped data</a><ul>
-<li><a class="reference internal" href="#group-k-fold">3.1.2.4.1. Group k-fold</a></li>
-<li><a class="reference internal" href="#stratifiedgroupkfold">3.1.2.4.2. StratifiedGroupKFold</a></li>
-<li><a class="reference internal" href="#leave-one-group-out">3.1.2.4.3. Leave One Group Out</a></li>
-<li><a class="reference internal" href="#leave-p-groups-out">3.1.2.4.4. Leave P Groups Out</a></li>
-<li><a class="reference internal" href="#group-shuffle-split">3.1.2.4.5. Group Shuffle Split</a></li>
-</ul>
-</li>
-<li><a class="reference internal" href="#using-cross-validation-iterators-to-split-train-and-test">3.1.2.5. Using cross-validation iterators to split train and test</a></li>
-<li><a class="reference internal" href="#cross-validation-of-time-series-data">3.1.2.6. Cross validation of time series data</a><ul>
-<li><a class="reference internal" href="#time-series-split">3.1.2.6.1. Time Series Split</a></li>
-</ul>
-</li>
-</ul>
-</li>
-<li><a class="reference internal" href="#a-note-on-shuffling">3.1.3. A note on shuffling</a></li>
-<li><a class="reference internal" href="#cross-validation-and-model-selection">3.1.4. Cross validation and model selection</a></li>
-<li><a class="reference internal" href="#permutation-test-score">3.1.5. Permutation test score</a></li>
-</ul>
-</li>
-</ul>
-
-            </div>
-      </div>
+`);
+</script></div>
+      
     </div>
-    <div id="sk-page-content-wrapper">
-      <div class="sk-page-content container-fluid body px-md-3" role="main">
+    
+  </div>
+  
+  
+    <div class="navbar-persistent--mobile">
+
+<script>
+document.write(`
+  <button class="btn btn-sm navbar-btn search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+  </button>
+`);
+</script>
+    </div>
+  
+
+  
+    <label class="sidebar-toggle secondary-toggle" for="__secondary" tabindex="0">
+      <span class="fa-solid fa-outdent"></span>
+    </label>
+  
+</div>
+
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <div class="bd-sidebar-primary bd-sidebar">
         
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+      <div class="sidebar-header-items__center">
+        
+          <div class="navbar-item">
+<nav class="navbar-nav">
+  <ul class="bd-navbar-elements navbar-nav">
+    
+                    <li class="nav-item">
+                      <a class="nav-link nav-internal" href="../install.html">
+                        Install
+                      </a>
+                    </li>
+                
+
+                    <li class="nav-item current active">
+                      <a class="nav-link nav-internal" href="../user_guide.html">
+                        User Guide
+                      </a>
+                    </li>
+                
+
+                    <li class="nav-item">
+                      <a class="nav-link nav-internal" href="../api/index.html">
+                        API
+                      </a>
+                    </li>
+                
+
+                    <li class="nav-item">
+                      <a class="nav-link nav-internal" href="../auto_examples/index.html">
+                        Examples
+                      </a>
+                    </li>
+                
+
+                    <li class="nav-item">
+                      <a class="nav-link nav-external" href="https://blog.scikit-learn.org/">
+                        Community
+                      </a>
+                    </li>
+                
+            <li class="nav-item dropdown">
+                <button class="btn dropdown-toggle nav-item" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-controls="pst-nav-more-links-2">
+                    More
+                </button>
+                <ul id="pst-nav-more-links-2" class="dropdown-menu">
+                    
+                    <li class="nav-item">
+                      <a class="nav-link dropdown-item nav-internal" href="../getting_started.html">
+                        Getting Started
+                      </a>
+                    </li>
+                
+
+                    <li class="nav-item">
+                      <a class="nav-link dropdown-item nav-internal" href="../tutorial/index.html">
+                        Tutorials
+                      </a>
+                    </li>
+                
+
+                    <li class="nav-item">
+                      <a class="nav-link dropdown-item nav-internal" href="../whats_new.html">
+                        Release History
+                      </a>
+                    </li>
+                
+
+                    <li class="nav-item">
+                      <a class="nav-link dropdown-item nav-internal" href="../glossary.html">
+                        Glossary
+                      </a>
+                    </li>
+                
+
+                    <li class="nav-item">
+                      <a class="nav-link dropdown-item nav-external" href="https://scikit-learn.org/dev/developers/index.html">
+                        Development
+                      </a>
+                    </li>
+                
+
+                    <li class="nav-item">
+                      <a class="nav-link dropdown-item nav-internal" href="../faq.html">
+                        FAQ
+                      </a>
+                    </li>
+                
+
+                    <li class="nav-item">
+                      <a class="nav-link dropdown-item nav-internal" href="../support.html">
+                        Support
+                      </a>
+                    </li>
+                
+
+                    <li class="nav-item">
+                      <a class="nav-link dropdown-item nav-internal" href="../related_projects.html">
+                        Related Projects
+                      </a>
+                    </li>
+                
+
+                    <li class="nav-item">
+                      <a class="nav-link dropdown-item nav-internal" href="../roadmap.html">
+                        Roadmap
+                      </a>
+                    </li>
+                
+
+                    <li class="nav-item">
+                      <a class="nav-link dropdown-item nav-internal" href="../governance.html">
+                        Governance
+                      </a>
+                    </li>
+                
+
+                    <li class="nav-item">
+                      <a class="nav-link dropdown-item nav-internal" href="../about.html">
+                        About us
+                      </a>
+                    </li>
+                
+                </ul>
+            </li>
+            
+  </ul>
+</nav></div>
+        
+      </div>
+    
+    
+    
+      <div class="sidebar-header-items__end">
+        
+          <div class="navbar-item">
+
+<script>
+document.write(`
+  <button class="btn btn-sm navbar-btn theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="theme-switch nav-link" data-mode="light"><i class="fa-solid fa-sun fa-lg"></i></span>
+    <span class="theme-switch nav-link" data-mode="dark"><i class="fa-solid fa-moon fa-lg"></i></span>
+    <span class="theme-switch nav-link" data-mode="auto"><i class="fa-solid fa-circle-half-stroke fa-lg"></i></span>
+  </button>
+`);
+</script></div>
+        
+          <div class="navbar-item"><ul class="navbar-icon-links navbar-nav"
+    aria-label="Icon Links">
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://github.com/scikit-learn/scikit-learn" title="GitHub" class="nav-link" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><span><i class="fa-brands fa-square-github fa-lg" aria-hidden="true"></i></span>
+            <span class="sr-only">GitHub</span></a>
+        </li>
+</ul></div>
+        
+          <div class="navbar-item">
+<script>
+document.write(`
+  <div class="version-switcher__container dropdown">
+    <button id="pst-version-switcher-button-3"
+      type="button"
+      class="version-switcher__button btn btn-sm navbar-btn dropdown-toggle"
+      data-bs-toggle="dropdown"
+      aria-haspopup="listbox"
+      aria-controls="pst-version-switcher-list-3"
+      aria-label="Version switcher list"
+    >
+      Choose version  <!-- this text may get changed later by javascript -->
+      <span class="caret"></span>
+    </button>
+    <div id="pst-version-switcher-list-3"
+      class="version-switcher__menu dropdown-menu list-group-flush py-0"
+      role="listbox" aria-labelledby="pst-version-switcher-button-3">
+      <!-- dropdown will be populated by javascript on page load -->
+    </div>
+  </div>
+`);
+</script></div>
+        
+      </div>
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+<nav class="bd-docs-nav bd-links"
+     aria-label="Section Navigation">
+  <p class="bd-links__title" role="heading" aria-level="1">Section Navigation</p>
+  <div class="bd-toc-item navbar-nav"><ul class="current nav bd-sidenav">
+<li class="toctree-l1 has-children"><a class="reference internal" href="../supervised_learning.html">1. Supervised learning</a><input class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-1"><i class="fa-solid fa-chevron-down"></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="linear_model.html">1.1. Linear Models</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lda_qda.html">1.2. Linear and Quadratic Discriminant Analysis</a></li>
+<li class="toctree-l2"><a class="reference internal" href="kernel_ridge.html">1.3. Kernel ridge regression</a></li>
+<li class="toctree-l2"><a class="reference internal" href="svm.html">1.4. Support Vector Machines</a></li>
+<li class="toctree-l2"><a class="reference internal" href="sgd.html">1.5. Stochastic Gradient Descent</a></li>
+<li class="toctree-l2"><a class="reference internal" href="neighbors.html">1.6. Nearest Neighbors</a></li>
+<li class="toctree-l2"><a class="reference internal" href="gaussian_process.html">1.7. Gaussian Processes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="cross_decomposition.html">1.8. Cross decomposition</a></li>
+<li class="toctree-l2"><a class="reference internal" href="naive_bayes.html">1.9. Naive Bayes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tree.html">1.10. Decision Trees</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ensemble.html">1.11. Ensembles: Gradient boosting, random forests, bagging, voting, stacking</a></li>
+<li class="toctree-l2"><a class="reference internal" href="multiclass.html">1.12. Multiclass and multioutput algorithms</a></li>
+<li class="toctree-l2"><a class="reference internal" href="feature_selection.html">1.13. Feature selection</a></li>
+<li class="toctree-l2"><a class="reference internal" href="semi_supervised.html">1.14. Semi-supervised learning</a></li>
+<li class="toctree-l2"><a class="reference internal" href="isotonic.html">1.15. Isotonic regression</a></li>
+<li class="toctree-l2"><a class="reference internal" href="calibration.html">1.16. Probability calibration</a></li>
+<li class="toctree-l2"><a class="reference internal" href="neural_networks_supervised.html">1.17. Neural network models (supervised)</a></li>
+</ul>
+</li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../unsupervised_learning.html">2. Unsupervised learning</a><input class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-2"><i class="fa-solid fa-chevron-down"></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="mixture.html">2.1. Gaussian mixture models</a></li>
+<li class="toctree-l2"><a class="reference internal" href="manifold.html">2.2. Manifold learning</a></li>
+<li class="toctree-l2"><a class="reference internal" href="clustering.html">2.3. Clustering</a></li>
+<li class="toctree-l2"><a class="reference internal" href="biclustering.html">2.4. Biclustering</a></li>
+<li class="toctree-l2"><a class="reference internal" href="decomposition.html">2.5. Decomposing signals in components (matrix factorization problems)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="covariance.html">2.6. Covariance estimation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="outlier_detection.html">2.7. Novelty and Outlier Detection</a></li>
+<li class="toctree-l2"><a class="reference internal" href="density.html">2.8. Density Estimation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="neural_networks_unsupervised.html">2.9. Neural network models (unsupervised)</a></li>
+</ul>
+</li>
+<li class="toctree-l1 current active has-children"><a class="reference internal" href="../model_selection.html">3. Model selection and evaluation</a><input checked="" class="toctree-checkbox" id="toctree-checkbox-3" name="toctree-checkbox-3" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-3"><i class="fa-solid fa-chevron-down"></i></label><ul class="current">
+<li class="toctree-l2 current active"><a class="current reference internal" href="#">3.1. Cross-validation: evaluating estimator performance</a></li>
+<li class="toctree-l2"><a class="reference internal" href="grid_search.html">3.2. Tuning the hyper-parameters of an estimator</a></li>
+<li class="toctree-l2"><a class="reference internal" href="classification_threshold.html">3.3. Tuning the decision threshold for class prediction</a></li>
+<li class="toctree-l2"><a class="reference internal" href="model_evaluation.html">3.4. Metrics and scoring: quantifying the quality of predictions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="learning_curve.html">3.5. Validation curves: plotting scores to evaluate models</a></li>
+</ul>
+</li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../inspection.html">4. Inspection</a><input class="toctree-checkbox" id="toctree-checkbox-4" name="toctree-checkbox-4" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-4"><i class="fa-solid fa-chevron-down"></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="partial_dependence.html">4.1. Partial Dependence and Individual Conditional Expectation plots</a></li>
+<li class="toctree-l2"><a class="reference internal" href="permutation_importance.html">4.2. Permutation feature importance</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../visualizations.html">5. Visualizations</a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../data_transforms.html">6. Dataset transformations</a><input class="toctree-checkbox" id="toctree-checkbox-5" name="toctree-checkbox-5" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-5"><i class="fa-solid fa-chevron-down"></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="compose.html">6.1. Pipelines and composite estimators</a></li>
+<li class="toctree-l2"><a class="reference internal" href="feature_extraction.html">6.2. Feature extraction</a></li>
+<li class="toctree-l2"><a class="reference internal" href="preprocessing.html">6.3. Preprocessing data</a></li>
+<li class="toctree-l2"><a class="reference internal" href="impute.html">6.4. Imputation of missing values</a></li>
+<li class="toctree-l2"><a class="reference internal" href="unsupervised_reduction.html">6.5. Unsupervised dimensionality reduction</a></li>
+<li class="toctree-l2"><a class="reference internal" href="random_projection.html">6.6. Random Projection</a></li>
+<li class="toctree-l2"><a class="reference internal" href="kernel_approximation.html">6.7. Kernel Approximation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="metrics.html">6.8. Pairwise metrics, Affinities and Kernels</a></li>
+<li class="toctree-l2"><a class="reference internal" href="preprocessing_targets.html">6.9. Transforming the prediction target (<code class="docutils literal notranslate"><span class="pre">y</span></code>)</a></li>
+</ul>
+</li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../datasets.html">7. Dataset loading utilities</a><input class="toctree-checkbox" id="toctree-checkbox-6" name="toctree-checkbox-6" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-6"><i class="fa-solid fa-chevron-down"></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../datasets/toy_dataset.html">7.1. Toy datasets</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../datasets/real_world.html">7.2. Real world datasets</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../datasets/sample_generators.html">7.3. Generated datasets</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../datasets/loading_other_datasets.html">7.4. Loading other datasets</a></li>
+</ul>
+</li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../computing.html">8. Computing with scikit-learn</a><input class="toctree-checkbox" id="toctree-checkbox-7" name="toctree-checkbox-7" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-7"><i class="fa-solid fa-chevron-down"></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../computing/scaling_strategies.html">8.1. Strategies to scale computationally: bigger data</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../computing/computational_performance.html">8.2. Computational Performance</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../computing/parallelism.html">8.3. Parallelism, resource management, and configuration</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../model_persistence.html">9. Model persistence</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../common_pitfalls.html">10. Common pitfalls and recommended practices</a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../dispatching.html">11. Dispatching</a><input class="toctree-checkbox" id="toctree-checkbox-8" name="toctree-checkbox-8" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-8"><i class="fa-solid fa-chevron-down"></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="array_api.html">11.1. Array API support (experimental)</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main">
+        
+        
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item">
+
+
+
+<nav aria-label="Breadcrumb">
+  <ul class="bd-breadcrumbs">
+    
+    <li class="breadcrumb-item breadcrumb-home">
+      <a href="../index.html" class="nav-link" aria-label="Home">
+        <i class="fa-solid fa-home"></i>
+      </a>
+    </li>
+    
+    <li class="breadcrumb-item"><a href="../user_guide.html" class="nav-link">User Guide</a></li>
+    
+    
+    <li class="breadcrumb-item"><a href="../model_selection.html" class="nav-link"><span class="section-number">3. </span>Model selection and evaluation</a></li>
+    
+    <li class="breadcrumb-item active" aria-current="page"><span...</li>
+  </ul>
+</nav>
+</div>
+      
+    </div>
+  
+  
+</div>
+</div>
+              
+              
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
   <section id="cross-validation-evaluating-estimator-performance">
-<span id="cross-validation"></span><h1><span class="section-number">3.1. </span>Cross-validation: evaluating estimator performance<a class="headerlink" href="#cross-validation-evaluating-estimator-performance" title="Link to this heading">¶</a></h1>
+<span id="cross-validation"></span><h1><span class="section-number">3.1. </span>Cross-validation: evaluating estimator performance<a class="headerlink" href="#cross-validation-evaluating-estimator-performance" title="Link to this heading">#</a></h1>
 <p>Learning the parameters of a prediction function and testing it on the
 same data is a methodological mistake: a model that would just repeat
 the labels of the samples that it has just seen would have a perfect
@@ -317,7 +822,7 @@ where the number of samples is very small.</p>
 <a class="reference internal image-reference" href="../_images/grid_search_cross_validation.png"><img alt="A depiction of a 5 fold cross validation on a training set, while holding out a test set." class="align-center" src="../_images/grid_search_cross_validation.png" style="width: 500px; height: 300px;" />
 </a>
 <section id="computing-cross-validated-metrics">
-<h2><span class="section-number">3.1.1. </span>Computing cross-validated metrics<a class="headerlink" href="#computing-cross-validated-metrics" title="Link to this heading">¶</a></h2>
+<h2><span class="section-number">3.1.1. </span>Computing cross-validated metrics<a class="headerlink" href="#computing-cross-validated-metrics" title="Link to this heading">#</a></h2>
 <p>The simplest way to use cross-validation is to call the
 <a class="reference internal" href="generated/sklearn.model_selection.cross_val_score.html#sklearn.model_selection.cross_val_score" title="sklearn.model_selection.cross_val_score"><code class="xref py py-func docutils literal notranslate"><span class="pre">cross_val_score</span></code></a> helper function on the estimator and the dataset.</p>
 <p>The following example demonstrates how to estimate the accuracy of a linear
@@ -376,15 +881,14 @@ indices, for example:</p>
 <span class="go">array([1.        , 0.973...])</span>
 </pre></div>
 </div>
-<p><details id="summary-anchor">
-<summary class="btn btn-light">
-<strong>Data transformation with held out data</strong>
-<span class="tooltiptext">Click for more details</span>
-<a class="headerlink" href="#summary-anchor" title="Permalink to this heading">¶</a>
-</summary>
-<div class="card"></p>
-<blockquote>
-<div><p>Just as it is important to test a predictor on data held-out from
+<details class="sd-sphinx-override sd-dropdown sd-card sd-mb-3" id="data-transformation-with-held-out-data">
+<summary class="sd-summary-title sd-card-header">
+Data transformation with held-out data<a class="headerlink" href="#data-transformation-with-held-out-data" title="Link to this dropdown">#</a><div class="sd-summary-down docutils">
+<svg version="1.1" width="1.5em" height="1.5em" class="sd-octicon sd-octicon-chevron-down" viewBox="0 0 24 24" aria-hidden="true"><path fill-rule="evenodd" d="M5.22 8.72a.75.75 0 000 1.06l6.25 6.25a.75.75 0 001.06 0l6.25-6.25a.75.75 0 00-1.06-1.06L12 14.44 6.28 8.72a.75.75 0 00-1.06 0z"></path></svg></div>
+<div class="sd-summary-up docutils">
+<svg version="1.1" width="1.5em" height="1.5em" class="sd-octicon sd-octicon-chevron-up" viewBox="0 0 24 24" aria-hidden="true"><path fill-rule="evenodd" d="M18.78 15.28a.75.75 0 000-1.06l-6.25-6.25a.75.75 0 00-1.06 0l-6.25 6.25a.75.75 0 101.06 1.06L12 9.56l5.72 5.72a.75.75 0 001.06 0z"></path></svg></div>
+</summary><div class="sd-summary-content sd-card-body docutils">
+<p class="sd-card-text">Just as it is important to test a predictor on data held-out from
 training, preprocessing (such as standardization, feature selection, etc.)
 and similar <a class="reference internal" href="../data_transforms.html#data-transforms"><span class="std std-ref">data transformations</span></a> similarly should
 be learnt from a training set and applied to held-out data for prediction:</p>
@@ -399,7 +903,7 @@ be learnt from a training set and applied to held-out data for prediction:</p>
 <span class="go">0.9333...</span>
 </pre></div>
 </div>
-<p>A <a class="reference internal" href="generated/sklearn.pipeline.Pipeline.html#sklearn.pipeline.Pipeline" title="sklearn.pipeline.Pipeline"><code class="xref py py-class docutils literal notranslate"><span class="pre">Pipeline</span></code></a> makes it easier to compose
+<p class="sd-card-text">A <a class="reference internal" href="generated/sklearn.pipeline.Pipeline.html#sklearn.pipeline.Pipeline" title="sklearn.pipeline.Pipeline"><code class="xref py py-class docutils literal notranslate"><span class="pre">Pipeline</span></code></a> makes it easier to compose
 estimators, providing this behavior under cross-validation:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">sklearn.pipeline</span> <span class="kn">import</span> <span class="n">make_pipeline</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">clf</span> <span class="o">=</span> <span class="n">make_pipeline</span><span class="p">(</span><span class="n">preprocessing</span><span class="o">.</span><span class="n">StandardScaler</span><span class="p">(),</span> <span class="n">svm</span><span class="o">.</span><span class="n">SVC</span><span class="p">(</span><span class="n">C</span><span class="o">=</span><span class="mi">1</span><span class="p">))</span>
@@ -407,12 +911,10 @@ estimators, providing this behavior under cross-validation:</p>
 <span class="go">array([0.977..., 0.933..., 0.955..., 0.933..., 0.977...])</span>
 </pre></div>
 </div>
-<p>See <a class="reference internal" href="compose.html#combining-estimators"><span class="std std-ref">Pipelines and composite estimators</span></a>.</p>
-</div></blockquote>
-<p></div>
-</details></p>
-<section id="the-cross-validate-function-and-multiple-metric-evaluation">
-<span id="multimetric-cross-validation"></span><h3><span class="section-number">3.1.1.1. </span>The cross_validate function and multiple metric evaluation<a class="headerlink" href="#the-cross-validate-function-and-multiple-metric-evaluation" title="Link to this heading">¶</a></h3>
+<p class="sd-card-text">See <a class="reference internal" href="compose.html#combining-estimators"><span class="std std-ref">Pipelines and composite estimators</span></a>.</p>
+</div>
+</details><section id="the-cross-validate-function-and-multiple-metric-evaluation">
+<span id="multimetric-cross-validation"></span><h3><span class="section-number">3.1.1.1. </span>The cross_validate function and multiple metric evaluation<a class="headerlink" href="#the-cross-validate-function-and-multiple-metric-evaluation" title="Link to this heading">#</a></h3>
 <p>The <a class="reference internal" href="generated/sklearn.model_selection.cross_validate.html#sklearn.model_selection.cross_validate" title="sklearn.model_selection.cross_validate"><code class="xref py py-func docutils literal notranslate"><span class="pre">cross_validate</span></code></a> function differs from <a class="reference internal" href="generated/sklearn.model_selection.cross_val_score.html#sklearn.model_selection.cross_val_score" title="sklearn.model_selection.cross_val_score"><code class="xref py py-func docutils literal notranslate"><span class="pre">cross_val_score</span></code></a> in
 two ways:</p>
 <ul class="simple">
@@ -468,7 +970,7 @@ predefined scorer names:</p>
 </div>
 </section>
 <section id="obtaining-predictions-by-cross-validation">
-<h3><span class="section-number">3.1.1.2. </span>Obtaining predictions by cross-validation<a class="headerlink" href="#obtaining-predictions-by-cross-validation" title="Link to this heading">¶</a></h3>
+<h3><span class="section-number">3.1.1.2. </span>Obtaining predictions by cross-validation<a class="headerlink" href="#obtaining-predictions-by-cross-validation" title="Link to this heading">#</a></h3>
 <p>The function <a class="reference internal" href="generated/sklearn.model_selection.cross_val_predict.html#sklearn.model_selection.cross_val_predict" title="sklearn.model_selection.cross_val_predict"><code class="xref py py-func docutils literal notranslate"><span class="pre">cross_val_predict</span></code></a> has a similar interface to
 <a class="reference internal" href="generated/sklearn.model_selection.cross_val_score.html#sklearn.model_selection.cross_val_score" title="sklearn.model_selection.cross_val_score"><code class="xref py py-func docutils literal notranslate"><span class="pre">cross_val_score</span></code></a>, but returns, for each element in the input, the
 prediction that was obtained for that element when it was in the test set. Only
@@ -495,8 +997,7 @@ train another estimator in ensemble methods.</p></li>
 </dl>
 <p>The available cross validation iterators are introduced in the following
 section.</p>
-<aside class="topic">
-<p class="topic-title">Examples</p>
+<p class="rubric">Examples</p>
 <ul class="simple">
 <li><p><a class="reference internal" href="../auto_examples/model_selection/plot_roc_crossval.html#sphx-glr-auto-examples-model-selection-plot-roc-crossval-py"><span class="std std-ref">Receiver Operating Characteristic (ROC) with cross validation</span></a>,</p></li>
 <li><p><a class="reference internal" href="../auto_examples/feature_selection/plot_rfe_with_cross_validation.html#sphx-glr-auto-examples-feature-selection-plot-rfe-with-cross-validation-py"><span class="std std-ref">Recursive feature elimination with cross-validation</span></a>,</p></li>
@@ -505,16 +1006,15 @@ section.</p>
 <li><p><a class="reference internal" href="../auto_examples/model_selection/plot_cv_predict.html#sphx-glr-auto-examples-model-selection-plot-cv-predict-py"><span class="std std-ref">Plotting Cross-Validated Predictions</span></a>,</p></li>
 <li><p><a class="reference internal" href="../auto_examples/model_selection/plot_nested_cross_validation_iris.html#sphx-glr-auto-examples-model-selection-plot-nested-cross-validation-iris-py"><span class="std std-ref">Nested versus non-nested cross-validation</span></a>.</p></li>
 </ul>
-</aside>
 </section>
 </section>
 <section id="cross-validation-iterators">
-<h2><span class="section-number">3.1.2. </span>Cross validation iterators<a class="headerlink" href="#cross-validation-iterators" title="Link to this heading">¶</a></h2>
+<h2><span class="section-number">3.1.2. </span>Cross validation iterators<a class="headerlink" href="#cross-validation-iterators" title="Link to this heading">#</a></h2>
 <p>The following sections list utilities to generate indices
 that can be used to generate dataset splits according to different cross
 validation strategies.</p>
 <section id="cross-validation-iterators-for-i-i-d-data">
-<span id="iid-cv"></span><h3><span class="section-number">3.1.2.1. </span>Cross-validation iterators for i.i.d. data<a class="headerlink" href="#cross-validation-iterators-for-i-i-d-data" title="Link to this heading">¶</a></h3>
+<span id="iid-cv"></span><h3><span class="section-number">3.1.2.1. </span>Cross-validation iterators for i.i.d. data<a class="headerlink" href="#cross-validation-iterators-for-i-i-d-data" title="Link to this heading">#</a></h3>
 <p>Assuming that some data is Independent and Identically Distributed (i.i.d.) is
 making the assumption that all samples stem from the same generative process
 and that the generative process is assumed to have no memory of past generated
@@ -531,7 +1031,7 @@ Similarly, if we know that the generative process has a group structure
 devices), it is safer to use <a class="reference internal" href="#group-cv"><span class="std std-ref">group-wise cross-validation</span></a>.</p>
 </div>
 <section id="k-fold">
-<span id="id2"></span><h4><span class="section-number">3.1.2.1.1. </span>K-fold<a class="headerlink" href="#k-fold" title="Link to this heading">¶</a></h4>
+<span id="id2"></span><h4><span class="section-number">3.1.2.1.1. </span>K-fold<a class="headerlink" href="#k-fold" title="Link to this heading">#</a></h4>
 <p><a class="reference internal" href="generated/sklearn.model_selection.KFold.html#sklearn.model_selection.KFold" title="sklearn.model_selection.KFold"><code class="xref py py-class docutils literal notranslate"><span class="pre">KFold</span></code></a> divides all the samples in <span class="math notranslate nohighlight">\(k\)</span> groups of samples,
 called folds (if <span class="math notranslate nohighlight">\(k = n\)</span>, this is equivalent to the <em>Leave One
 Out</em> strategy), of equal sizes (if possible). The prediction function is
@@ -564,7 +1064,7 @@ Thus, one can create the training/test sets using numpy indexing:</p>
 </div>
 </section>
 <section id="repeated-k-fold">
-<span id="id3"></span><h4><span class="section-number">3.1.2.1.2. </span>Repeated K-Fold<a class="headerlink" href="#repeated-k-fold" title="Link to this heading">¶</a></h4>
+<span id="id3"></span><h4><span class="section-number">3.1.2.1.2. </span>Repeated K-Fold<a class="headerlink" href="#repeated-k-fold" title="Link to this heading">#</a></h4>
 <p><a class="reference internal" href="generated/sklearn.model_selection.RepeatedKFold.html#sklearn.model_selection.RepeatedKFold" title="sklearn.model_selection.RepeatedKFold"><code class="xref py py-class docutils literal notranslate"><span class="pre">RepeatedKFold</span></code></a> repeats K-Fold n times. It can be used when one
 requires to run <a class="reference internal" href="generated/sklearn.model_selection.KFold.html#sklearn.model_selection.KFold" title="sklearn.model_selection.KFold"><code class="xref py py-class docutils literal notranslate"><span class="pre">KFold</span></code></a> n times, producing different splits in
 each repetition.</p>
@@ -587,7 +1087,7 @@ each repetition.</p>
 with different randomization in each repetition.</p>
 </section>
 <section id="leave-one-out-loo">
-<span id="leave-one-out"></span><h4><span class="section-number">3.1.2.1.3. </span>Leave One Out (LOO)<a class="headerlink" href="#leave-one-out-loo" title="Link to this heading">¶</a></h4>
+<span id="leave-one-out"></span><h4><span class="section-number">3.1.2.1.3. </span>Leave One Out (LOO)<a class="headerlink" href="#leave-one-out-loo" title="Link to this heading">#</a></h4>
 <p><a class="reference internal" href="generated/sklearn.model_selection.LeaveOneOut.html#sklearn.model_selection.LeaveOneOut" title="sklearn.model_selection.LeaveOneOut"><code class="xref py py-class docutils literal notranslate"><span class="pre">LeaveOneOut</span></code></a> (or LOO) is a simple cross-validation. Each learning
 set is created by taking all the samples except one, the test set being
 the sample left out. Thus, for <span class="math notranslate nohighlight">\(n\)</span> samples, we have <span class="math notranslate nohighlight">\(n\)</span> different
@@ -622,29 +1122,26 @@ entire training set.</p>
 then 5- or 10- fold cross validation can overestimate the generalization error.</p>
 <p>As a general rule, most authors, and empirical evidence, suggest that 5- or 10-
 fold cross validation should be preferred to LOO.</p>
-<p><details id="summary-anchor">
-<summary class="btn btn-light">
-<strong>References</strong>
-<span class="tooltiptext">Click for more details</span>
-<a class="headerlink" href="#summary-anchor" title="Permalink to this heading">¶</a>
-</summary>
-<div class="card"></p>
-<blockquote>
-<div><ul class="simple">
-<li><p><a class="reference external" href="http://www.faqs.org/faqs/ai-faq/neural-nets/part3/section-12.html">http://www.faqs.org/faqs/ai-faq/neural-nets/part3/section-12.html</a>;</p></li>
-<li><p>T. Hastie, R. Tibshirani, J. Friedman,  <a class="reference external" href="https://web.stanford.edu/~hastie/ElemStatLearn/">The Elements of Statistical Learning</a>, Springer 2009</p></li>
-<li><p>L. Breiman, P. Spector <a class="reference external" href="https://digitalassets.lib.berkeley.edu/sdtr/ucb/text/197.pdf">Submodel selection and evaluation in regression: The X-random case</a>, International Statistical Review 1992;</p></li>
-<li><p>R. Kohavi, <a class="reference external" href="https://www.ijcai.org/Proceedings/95-2/Papers/016.pdf">A Study of Cross-Validation and Bootstrap for Accuracy Estimation and Model Selection</a>, Intl. Jnt. Conf. AI</p></li>
-<li><p>R. Bharat Rao, G. Fung, R. Rosales, <a class="reference external" href="https://people.csail.mit.edu/romer/papers/CrossVal_SDM08.pdf">On the Dangers of Cross-Validation. An Experimental Evaluation</a>, SIAM 2008;</p></li>
-<li><p>G. James, D. Witten, T. Hastie, R Tibshirani, <a class="reference external" href="https://www.statlearning.com">An Introduction to
+<details class="sd-sphinx-override sd-dropdown sd-card sd-mb-3" id="references">
+<summary class="sd-summary-title sd-card-header">
+References<a class="headerlink" href="#references" title="Link to this dropdown">#</a><div class="sd-summary-down docutils">
+<svg version="1.1" width="1.5em" height="1.5em" class="sd-octicon sd-octicon-chevron-down" viewBox="0 0 24 24" aria-hidden="true"><path fill-rule="evenodd" d="M5.22 8.72a.75.75 0 000 1.06l6.25 6.25a.75.75 0 001.06 0l6.25-6.25a.75.75 0 00-1.06-1.06L12 14.44 6.28 8.72a.75.75 0 00-1.06 0z"></path></svg></div>
+<div class="sd-summary-up docutils">
+<svg version="1.1" width="1.5em" height="1.5em" class="sd-octicon sd-octicon-chevron-up" viewBox="0 0 24 24" aria-hidden="true"><path fill-rule="evenodd" d="M18.78 15.28a.75.75 0 000-1.06l-6.25-6.25a.75.75 0 00-1.06 0l-6.25 6.25a.75.75 0 101.06 1.06L12 9.56l5.72 5.72a.75.75 0 001.06 0z"></path></svg></div>
+</summary><div class="sd-summary-content sd-card-body docutils">
+<ul class="simple">
+<li><p class="sd-card-text"><a class="reference external" href="http://www.faqs.org/faqs/ai-faq/neural-nets/part3/section-12.html">http://www.faqs.org/faqs/ai-faq/neural-nets/part3/section-12.html</a>;</p></li>
+<li><p class="sd-card-text">T. Hastie, R. Tibshirani, J. Friedman,  <a class="reference external" href="https://web.stanford.edu/~hastie/ElemStatLearn/">The Elements of Statistical Learning</a>, Springer 2009</p></li>
+<li><p class="sd-card-text">L. Breiman, P. Spector <a class="reference external" href="https://digitalassets.lib.berkeley.edu/sdtr/ucb/text/197.pdf">Submodel selection and evaluation in regression: The X-random case</a>, International Statistical Review 1992;</p></li>
+<li><p class="sd-card-text">R. Kohavi, <a class="reference external" href="https://www.ijcai.org/Proceedings/95-2/Papers/016.pdf">A Study of Cross-Validation and Bootstrap for Accuracy Estimation and Model Selection</a>, Intl. Jnt. Conf. AI</p></li>
+<li><p class="sd-card-text">R. Bharat Rao, G. Fung, R. Rosales, <a class="reference external" href="https://people.csail.mit.edu/romer/papers/CrossVal_SDM08.pdf">On the Dangers of Cross-Validation. An Experimental Evaluation</a>, SIAM 2008;</p></li>
+<li><p class="sd-card-text">G. James, D. Witten, T. Hastie, R Tibshirani, <a class="reference external" href="https://www.statlearning.com">An Introduction to
 Statistical Learning</a>, Springer 2013.</p></li>
 </ul>
-</div></blockquote>
-<p></div>
-</details></p>
-</section>
+</div>
+</details></section>
 <section id="leave-p-out-lpo">
-<span id="leave-p-out"></span><h4><span class="section-number">3.1.2.1.4. </span>Leave P Out (LPO)<a class="headerlink" href="#leave-p-out-lpo" title="Link to this heading">¶</a></h4>
+<span id="leave-p-out"></span><h4><span class="section-number">3.1.2.1.4. </span>Leave P Out (LPO)<a class="headerlink" href="#leave-p-out-lpo" title="Link to this heading">#</a></h4>
 <p><a class="reference internal" href="generated/sklearn.model_selection.LeavePOut.html#sklearn.model_selection.LeavePOut" title="sklearn.model_selection.LeavePOut"><code class="xref py py-class docutils literal notranslate"><span class="pre">LeavePOut</span></code></a> is very similar to <a class="reference internal" href="generated/sklearn.model_selection.LeaveOneOut.html#sklearn.model_selection.LeaveOneOut" title="sklearn.model_selection.LeaveOneOut"><code class="xref py py-class docutils literal notranslate"><span class="pre">LeaveOneOut</span></code></a> as it creates all
 the possible training/test sets by removing <span class="math notranslate nohighlight">\(p\)</span> samples from the complete
 set. For <span class="math notranslate nohighlight">\(n\)</span> samples, this produces <span class="math notranslate nohighlight">\({n \choose p}\)</span> train-test
@@ -667,7 +1164,7 @@ overlap for <span class="math notranslate nohighlight">\(p &gt; 1\)</span>.</p>
 </div>
 </section>
 <section id="random-permutations-cross-validation-a-k-a-shuffle-split">
-<span id="shufflesplit"></span><h4><span class="section-number">3.1.2.1.5. </span>Random permutations cross-validation a.k.a. Shuffle &amp; Split<a class="headerlink" href="#random-permutations-cross-validation-a-k-a-shuffle-split" title="Link to this heading">¶</a></h4>
+<span id="shufflesplit"></span><h4><span class="section-number">3.1.2.1.5. </span>Random permutations cross-validation a.k.a. Shuffle &amp; Split<a class="headerlink" href="#random-permutations-cross-validation-a-k-a-shuffle-split" title="Link to this heading">#</a></h4>
 <p>The <a class="reference internal" href="generated/sklearn.model_selection.ShuffleSplit.html#sklearn.model_selection.ShuffleSplit" title="sklearn.model_selection.ShuffleSplit"><code class="xref py py-class docutils literal notranslate"><span class="pre">ShuffleSplit</span></code></a> iterator will generate a user defined number of
 independent train / test dataset splits. Samples are first shuffled and
 then split into a pair of train and test sets.</p>
@@ -699,7 +1196,7 @@ the proportion of samples on each side of the train / test split.</p>
 </section>
 </section>
 <section id="cross-validation-iterators-with-stratification-based-on-class-labels">
-<span id="stratification"></span><h3><span class="section-number">3.1.2.2. </span>Cross-validation iterators with stratification based on class labels<a class="headerlink" href="#cross-validation-iterators-with-stratification-based-on-class-labels" title="Link to this heading">¶</a></h3>
+<span id="stratification"></span><h3><span class="section-number">3.1.2.2. </span>Cross-validation iterators with stratification based on class labels<a class="headerlink" href="#cross-validation-iterators-with-stratification-based-on-class-labels" title="Link to this heading">#</a></h3>
 <p>Some classification problems can exhibit a large imbalance in the distribution
 of the target classes: for instance there could be several times more negative
 samples than positive samples. In such cases it is recommended to use
@@ -707,7 +1204,7 @@ stratified sampling as implemented in <a class="reference internal" href="genera
 <a class="reference internal" href="generated/sklearn.model_selection.StratifiedShuffleSplit.html#sklearn.model_selection.StratifiedShuffleSplit" title="sklearn.model_selection.StratifiedShuffleSplit"><code class="xref py py-class docutils literal notranslate"><span class="pre">StratifiedShuffleSplit</span></code></a> to ensure that relative class frequencies is
 approximately preserved in each train and validation fold.</p>
 <section id="stratified-k-fold">
-<span id="id4"></span><h4><span class="section-number">3.1.2.2.1. </span>Stratified k-fold<a class="headerlink" href="#stratified-k-fold" title="Link to this heading">¶</a></h4>
+<span id="id4"></span><h4><span class="section-number">3.1.2.2.1. </span>Stratified k-fold<a class="headerlink" href="#stratified-k-fold" title="Link to this heading">#</a></h4>
 <p><a class="reference internal" href="generated/sklearn.model_selection.StratifiedKFold.html#sklearn.model_selection.StratifiedKFold" title="sklearn.model_selection.StratifiedKFold"><code class="xref py py-class docutils literal notranslate"><span class="pre">StratifiedKFold</span></code></a> is a variation of <em>k-fold</em> which returns <em>stratified</em>
 folds: each set contains approximately the same percentage of samples of each
 target class as the complete set.</p>
@@ -744,7 +1241,7 @@ two unbalanced classes.  We show the number of samples in each class and compare
 with different randomization in each repetition.</p>
 </section>
 <section id="stratified-shuffle-split">
-<span id="id5"></span><h4><span class="section-number">3.1.2.2.2. </span>Stratified Shuffle Split<a class="headerlink" href="#stratified-shuffle-split" title="Link to this heading">¶</a></h4>
+<span id="id5"></span><h4><span class="section-number">3.1.2.2.2. </span>Stratified Shuffle Split<a class="headerlink" href="#stratified-shuffle-split" title="Link to this heading">#</a></h4>
 <p><a class="reference internal" href="generated/sklearn.model_selection.StratifiedShuffleSplit.html#sklearn.model_selection.StratifiedShuffleSplit" title="sklearn.model_selection.StratifiedShuffleSplit"><code class="xref py py-class docutils literal notranslate"><span class="pre">StratifiedShuffleSplit</span></code></a> is a variation of <em>ShuffleSplit</em>, which returns
 stratified splits, <em>i.e</em> which creates splits by preserving the same
 percentage for each target class as in the complete set.</p>
@@ -756,7 +1253,7 @@ percentage for each target class as in the complete set.</p>
 </section>
 </section>
 <section id="predefined-fold-splits-validation-sets">
-<span id="predefined-split"></span><h3><span class="section-number">3.1.2.3. </span>Predefined fold-splits / Validation-sets<a class="headerlink" href="#predefined-fold-splits-validation-sets" title="Link to this heading">¶</a></h3>
+<span id="predefined-split"></span><h3><span class="section-number">3.1.2.3. </span>Predefined fold-splits / Validation-sets<a class="headerlink" href="#predefined-fold-splits-validation-sets" title="Link to this heading">#</a></h3>
 <p>For some datasets, a pre-defined split of the data into training- and
 validation fold or into several cross-validation folds already
 exists. Using <a class="reference internal" href="generated/sklearn.model_selection.PredefinedSplit.html#sklearn.model_selection.PredefinedSplit" title="sklearn.model_selection.PredefinedSplit"><code class="xref py py-class docutils literal notranslate"><span class="pre">PredefinedSplit</span></code></a> it is possible to use these folds
@@ -765,7 +1262,7 @@ e.g. when searching for hyperparameters.</p>
 samples that are part of the validation set, and to -1 for all other samples.</p>
 </section>
 <section id="cross-validation-iterators-for-grouped-data">
-<span id="group-cv"></span><h3><span class="section-number">3.1.2.4. </span>Cross-validation iterators for grouped data<a class="headerlink" href="#cross-validation-iterators-for-grouped-data" title="Link to this heading">¶</a></h3>
+<span id="group-cv"></span><h3><span class="section-number">3.1.2.4. </span>Cross-validation iterators for grouped data<a class="headerlink" href="#cross-validation-iterators-for-grouped-data" title="Link to this heading">#</a></h3>
 <p>The i.i.d. assumption is broken if the underlying generative process yield
 groups of dependent samples.</p>
 <p>Such a grouping of data is domain specific. An example would be when there is
@@ -780,7 +1277,7 @@ not represented at all in the paired training fold.</p>
 The grouping identifier for the samples is specified via the <code class="docutils literal notranslate"><span class="pre">groups</span></code>
 parameter.</p>
 <section id="group-k-fold">
-<span id="id6"></span><h4><span class="section-number">3.1.2.4.1. </span>Group k-fold<a class="headerlink" href="#group-k-fold" title="Link to this heading">¶</a></h4>
+<span id="id6"></span><h4><span class="section-number">3.1.2.4.1. </span>Group k-fold<a class="headerlink" href="#group-k-fold" title="Link to this heading">#</a></h4>
 <p><a class="reference internal" href="generated/sklearn.model_selection.GroupKFold.html#sklearn.model_selection.GroupKFold" title="sklearn.model_selection.GroupKFold"><code class="xref py py-class docutils literal notranslate"><span class="pre">GroupKFold</span></code></a> is a variation of k-fold which ensures that the same group is
 not represented in both testing and training sets. For example if the data is
 obtained from different subjects with several samples per-subject and if the
@@ -817,7 +1314,7 @@ is not randomized at all, whereas <a class="reference internal" href="generated/
 <code class="docutils literal notranslate"><span class="pre">shuffle=True</span></code>.</p>
 </section>
 <section id="stratifiedgroupkfold">
-<span id="stratified-group-k-fold"></span><h4><span class="section-number">3.1.2.4.2. </span>StratifiedGroupKFold<a class="headerlink" href="#stratifiedgroupkfold" title="Link to this heading">¶</a></h4>
+<span id="stratified-group-k-fold"></span><h4><span class="section-number">3.1.2.4.2. </span>StratifiedGroupKFold<a class="headerlink" href="#stratifiedgroupkfold" title="Link to this heading">#</a></h4>
 <p><a class="reference internal" href="generated/sklearn.model_selection.StratifiedGroupKFold.html#sklearn.model_selection.StratifiedGroupKFold" title="sklearn.model_selection.StratifiedGroupKFold"><code class="xref py py-class docutils literal notranslate"><span class="pre">StratifiedGroupKFold</span></code></a> is a cross-validation scheme that combines both
 <a class="reference internal" href="generated/sklearn.model_selection.StratifiedKFold.html#sklearn.model_selection.StratifiedKFold" title="sklearn.model_selection.StratifiedKFold"><code class="xref py py-class docutils literal notranslate"><span class="pre">StratifiedKFold</span></code></a> and <a class="reference internal" href="generated/sklearn.model_selection.GroupKFold.html#sklearn.model_selection.GroupKFold" title="sklearn.model_selection.GroupKFold"><code class="xref py py-class docutils literal notranslate"><span class="pre">GroupKFold</span></code></a>. The idea is to try to
 preserve the distribution of classes in each split while keeping each group
@@ -836,44 +1333,43 @@ dataset so that using just <a class="reference internal" href="generated/sklearn
 <span class="go">[ 1  2  3  8  9 10 12 13 14 15 16 17] [ 0  4  5  6  7 11]</span>
 </pre></div>
 </div>
-<p><details id="summary-anchor">
-<summary class="btn btn-light">
-<strong>Implementation notes</strong>
-<span class="tooltiptext">Click for more details</span>
-<a class="headerlink" href="#summary-anchor" title="Permalink to this heading">¶</a>
-</summary>
-<div class="card"></p>
+<details class="sd-sphinx-override sd-dropdown sd-card sd-mb-3" id="implementation-notes">
+<summary class="sd-summary-title sd-card-header">
+Implementation notes<a class="headerlink" href="#implementation-notes" title="Link to this dropdown">#</a><div class="sd-summary-down docutils">
+<svg version="1.1" width="1.5em" height="1.5em" class="sd-octicon sd-octicon-chevron-down" viewBox="0 0 24 24" aria-hidden="true"><path fill-rule="evenodd" d="M5.22 8.72a.75.75 0 000 1.06l6.25 6.25a.75.75 0 001.06 0l6.25-6.25a.75.75 0 00-1.06-1.06L12 14.44 6.28 8.72a.75.75 0 00-1.06 0z"></path></svg></div>
+<div class="sd-summary-up docutils">
+<svg version="1.1" width="1.5em" height="1.5em" class="sd-octicon sd-octicon-chevron-up" viewBox="0 0 24 24" aria-hidden="true"><path fill-rule="evenodd" d="M18.78 15.28a.75.75 0 000-1.06l-6.25-6.25a.75.75 0 00-1.06 0l-6.25 6.25a.75.75 0 101.06 1.06L12 9.56l5.72 5.72a.75.75 0 001.06 0z"></path></svg></div>
+</summary><div class="sd-summary-content sd-card-body docutils">
 <ul>
-<li><p>With the current implementation full shuffle is not possible in most
+<li><p class="sd-card-text">With the current implementation full shuffle is not possible in most
 scenarios. When shuffle=True, the following happens:</p>
 <ol class="arabic simple">
-<li><p>All groups are shuffled.</p></li>
-<li><p>Groups are sorted by standard deviation of classes using stable sort.</p></li>
-<li><p>Sorted groups are iterated over and assigned to folds.</p></li>
+<li><p class="sd-card-text">All groups are shuffled.</p></li>
+<li><p class="sd-card-text">Groups are sorted by standard deviation of classes using stable sort.</p></li>
+<li><p class="sd-card-text">Sorted groups are iterated over and assigned to folds.</p></li>
 </ol>
-<p>That means that only groups with the same standard deviation of class
+<p class="sd-card-text">That means that only groups with the same standard deviation of class
 distribution will be shuffled, which might be useful when each group has only
 a single class.</p>
 </li>
-<li><p>The algorithm greedily assigns each group to one of n_splits test sets,
+<li><p class="sd-card-text">The algorithm greedily assigns each group to one of n_splits test sets,
 choosing the test set that minimises the variance in class distribution
 across test sets. Group assignment proceeds from groups with highest to
 lowest variance in class frequency, i.e. large groups peaked on one or few
 classes are assigned first.</p></li>
-<li><p>This split is suboptimal in a sense that it might produce imbalanced splits
+<li><p class="sd-card-text">This split is suboptimal in a sense that it might produce imbalanced splits
 even if perfect stratification is possible. If you have relatively close
 distribution of classes in each group, using <a class="reference internal" href="generated/sklearn.model_selection.GroupKFold.html#sklearn.model_selection.GroupKFold" title="sklearn.model_selection.GroupKFold"><code class="xref py py-class docutils literal notranslate"><span class="pre">GroupKFold</span></code></a> is better.</p></li>
 </ul>
-<p></div>
-</details></p>
-<p>Here is a visualization of cross-validation behavior for uneven groups:</p>
+</div>
+</details><p>Here is a visualization of cross-validation behavior for uneven groups:</p>
 <figure class="align-center">
 <a class="reference external image-reference" href="../auto_examples/model_selection/plot_cv_indices.html"><img alt="../_images/sphx_glr_plot_cv_indices_005.png" src="../_images/sphx_glr_plot_cv_indices_005.png" style="width: 450.0px; height: 225.0px;" />
 </a>
 </figure>
 </section>
 <section id="leave-one-group-out">
-<span id="id7"></span><h4><span class="section-number">3.1.2.4.3. </span>Leave One Group Out<a class="headerlink" href="#leave-one-group-out" title="Link to this heading">¶</a></h4>
+<span id="id7"></span><h4><span class="section-number">3.1.2.4.3. </span>Leave One Group Out<a class="headerlink" href="#leave-one-group-out" title="Link to this heading">#</a></h4>
 <p><a class="reference internal" href="generated/sklearn.model_selection.LeaveOneGroupOut.html#sklearn.model_selection.LeaveOneGroupOut" title="sklearn.model_selection.LeaveOneGroupOut"><code class="xref py py-class docutils literal notranslate"><span class="pre">LeaveOneGroupOut</span></code></a> is a cross-validation scheme where each split holds
 out samples belonging to one specific group. Group information is
 provided via an array that encodes the group of each sample.</p>
@@ -902,7 +1398,7 @@ groups could be the year of collection of the samples and thus allow
 for cross-validation against time-based splits.</p>
 </section>
 <section id="leave-p-groups-out">
-<span id="id8"></span><h4><span class="section-number">3.1.2.4.4. </span>Leave P Groups Out<a class="headerlink" href="#leave-p-groups-out" title="Link to this heading">¶</a></h4>
+<span id="id8"></span><h4><span class="section-number">3.1.2.4.4. </span>Leave P Groups Out<a class="headerlink" href="#leave-p-groups-out" title="Link to this heading">#</a></h4>
 <p><a class="reference internal" href="generated/sklearn.model_selection.LeavePGroupsOut.html#sklearn.model_selection.LeavePGroupsOut" title="sklearn.model_selection.LeavePGroupsOut"><code class="xref py py-class docutils literal notranslate"><span class="pre">LeavePGroupsOut</span></code></a> is similar as <a class="reference internal" href="generated/sklearn.model_selection.LeaveOneGroupOut.html#sklearn.model_selection.LeaveOneGroupOut" title="sklearn.model_selection.LeaveOneGroupOut"><code class="xref py py-class docutils literal notranslate"><span class="pre">LeaveOneGroupOut</span></code></a>, but removes
 samples related to <span class="math notranslate nohighlight">\(P\)</span> groups for each training/test set. All possible
 combinations of <span class="math notranslate nohighlight">\(P\)</span> groups are left out, meaning test sets will overlap
@@ -923,7 +1419,7 @@ for <span class="math notranslate nohighlight">\(P&gt;1\)</span>.</p>
 </div>
 </section>
 <section id="group-shuffle-split">
-<span id="id9"></span><h4><span class="section-number">3.1.2.4.5. </span>Group Shuffle Split<a class="headerlink" href="#group-shuffle-split" title="Link to this heading">¶</a></h4>
+<span id="id9"></span><h4><span class="section-number">3.1.2.4.5. </span>Group Shuffle Split<a class="headerlink" href="#group-shuffle-split" title="Link to this heading">#</a></h4>
 <p>The <a class="reference internal" href="generated/sklearn.model_selection.GroupShuffleSplit.html#sklearn.model_selection.GroupShuffleSplit" title="sklearn.model_selection.GroupShuffleSplit"><code class="xref py py-class docutils literal notranslate"><span class="pre">GroupShuffleSplit</span></code></a> iterator behaves as a combination of
 <a class="reference internal" href="generated/sklearn.model_selection.ShuffleSplit.html#sklearn.model_selection.ShuffleSplit" title="sklearn.model_selection.ShuffleSplit"><code class="xref py py-class docutils literal notranslate"><span class="pre">ShuffleSplit</span></code></a> and <a class="reference internal" href="generated/sklearn.model_selection.LeavePGroupsOut.html#sklearn.model_selection.LeavePGroupsOut" title="sklearn.model_selection.LeavePGroupsOut"><code class="xref py py-class docutils literal notranslate"><span class="pre">LeavePGroupsOut</span></code></a>, and generates a
 sequence of randomized partitions in which a subset of groups are held
@@ -959,7 +1455,7 @@ generated by <a class="reference internal" href="generated/sklearn.model_selecti
 </section>
 </section>
 <section id="using-cross-validation-iterators-to-split-train-and-test">
-<h3><span class="section-number">3.1.2.5. </span>Using cross-validation iterators to split train and test<a class="headerlink" href="#using-cross-validation-iterators-to-split-train-and-test" title="Link to this heading">¶</a></h3>
+<h3><span class="section-number">3.1.2.5. </span>Using cross-validation iterators to split train and test<a class="headerlink" href="#using-cross-validation-iterators-to-split-train-and-test" title="Link to this heading">#</a></h3>
 <p>The above group cross-validation functions may also be useful for splitting a
 dataset into training and testing subsets. Note that the convenience
 function <a class="reference internal" href="generated/sklearn.model_selection.train_test_split.html#sklearn.model_selection.train_test_split" title="sklearn.model_selection.train_test_split"><code class="xref py py-func docutils literal notranslate"><span class="pre">train_test_split</span></code></a> is a wrapper around <a class="reference internal" href="generated/sklearn.model_selection.ShuffleSplit.html#sklearn.model_selection.ShuffleSplit" title="sklearn.model_selection.ShuffleSplit"><code class="xref py py-func docutils literal notranslate"><span class="pre">ShuffleSplit</span></code></a>
@@ -987,7 +1483,7 @@ cross-validation splitter. For example:</p>
 </div>
 </section>
 <section id="cross-validation-of-time-series-data">
-<span id="timeseries-cv"></span><h3><span class="section-number">3.1.2.6. </span>Cross validation of time series data<a class="headerlink" href="#cross-validation-of-time-series-data" title="Link to this heading">¶</a></h3>
+<span id="timeseries-cv"></span><h3><span class="section-number">3.1.2.6. </span>Cross validation of time series data<a class="headerlink" href="#cross-validation-of-time-series-data" title="Link to this heading">#</a></h3>
 <p>Time series data is characterized by the correlation between observations
 that are near in time (<em>autocorrelation</em>). However, classical
 cross-validation techniques such as <a class="reference internal" href="generated/sklearn.model_selection.KFold.html#sklearn.model_selection.KFold" title="sklearn.model_selection.KFold"><code class="xref py py-class docutils literal notranslate"><span class="pre">KFold</span></code></a> and
@@ -999,7 +1495,7 @@ to evaluate our model for time series data on the “future” observations
 least like those that are used to train the model. To achieve this, one
 solution is provided by <a class="reference internal" href="generated/sklearn.model_selection.TimeSeriesSplit.html#sklearn.model_selection.TimeSeriesSplit" title="sklearn.model_selection.TimeSeriesSplit"><code class="xref py py-class docutils literal notranslate"><span class="pre">TimeSeriesSplit</span></code></a>.</p>
 <section id="time-series-split">
-<span id="id10"></span><h4><span class="section-number">3.1.2.6.1. </span>Time Series Split<a class="headerlink" href="#time-series-split" title="Link to this heading">¶</a></h4>
+<span id="id10"></span><h4><span class="section-number">3.1.2.6.1. </span>Time Series Split<a class="headerlink" href="#time-series-split" title="Link to this heading">#</a></h4>
 <p><a class="reference internal" href="generated/sklearn.model_selection.TimeSeriesSplit.html#sklearn.model_selection.TimeSeriesSplit" title="sklearn.model_selection.TimeSeriesSplit"><code class="xref py py-class docutils literal notranslate"><span class="pre">TimeSeriesSplit</span></code></a> is a variation of <em>k-fold</em> which
 returns first <span class="math notranslate nohighlight">\(k\)</span> folds as train set and the <span class="math notranslate nohighlight">\((k+1)\)</span> th
 fold as test set. Note that unlike standard cross-validation methods,
@@ -1032,7 +1528,7 @@ that are observed at fixed time intervals.</p>
 </section>
 </section>
 <section id="a-note-on-shuffling">
-<h2><span class="section-number">3.1.3. </span>A note on shuffling<a class="headerlink" href="#a-note-on-shuffling" title="Link to this heading">¶</a></h2>
+<h2><span class="section-number">3.1.3. </span>A note on shuffling<a class="headerlink" href="#a-note-on-shuffling" title="Link to this heading">#</a></h2>
 <p>If the data ordering is not arbitrary (e.g. samples with the same class label
 are contiguous), shuffling it first may be essential to get a meaningful cross-
 validation result. However, the opposite may be true if the samples are not
@@ -1059,13 +1555,13 @@ of parameters validated by a single call to its <code class="docutils literal no
 common pitfalls, see <a class="reference internal" href="../common_pitfalls.html#randomness"><span class="std std-ref">Controlling randomness</span></a>.</p>
 </section>
 <section id="cross-validation-and-model-selection">
-<h2><span class="section-number">3.1.4. </span>Cross validation and model selection<a class="headerlink" href="#cross-validation-and-model-selection" title="Link to this heading">¶</a></h2>
+<h2><span class="section-number">3.1.4. </span>Cross validation and model selection<a class="headerlink" href="#cross-validation-and-model-selection" title="Link to this heading">#</a></h2>
 <p>Cross validation iterators can also be used to directly perform model
 selection using Grid Search for the optimal hyperparameters of the
 model. This is the topic of the next section: <a class="reference internal" href="grid_search.html#grid-search"><span class="std std-ref">Tuning the hyper-parameters of an estimator</span></a>.</p>
 </section>
 <section id="permutation-test-score">
-<span id="id11"></span><h2><span class="section-number">3.1.5. </span>Permutation test score<a class="headerlink" href="#permutation-test-score" title="Link to this heading">¶</a></h2>
+<span id="id11"></span><h2><span class="section-number">3.1.5. </span>Permutation test score<a class="headerlink" href="#permutation-test-score" title="Link to this heading">#</a></h2>
 <p><a class="reference internal" href="generated/sklearn.model_selection.permutation_test_score.html#sklearn.model_selection.permutation_test_score" title="sklearn.model_selection.permutation_test_score"><code class="xref py py-func docutils literal notranslate"><span class="pre">permutation_test_score</span></code></a> offers another way
 to evaluate the performance of classifiers. It provides a permutation-based
 p-value, which represents how likely an observed performance of the
@@ -1106,95 +1602,162 @@ random guessing.</p>
 using brute force and internally fits <code class="docutils literal notranslate"><span class="pre">(n_permutations</span> <span class="pre">+</span> <span class="pre">1)</span> <span class="pre">*</span> <span class="pre">n_cv</span></code> models.
 It is therefore only tractable with small datasets for which fitting an
 individual model is very fast.</p>
-<aside class="topic">
-<p class="topic-title">Examples</p>
+<p class="rubric">Examples</p>
 <ul class="simple">
 <li><p><a class="reference internal" href="../auto_examples/model_selection/plot_permutation_tests_for_classification.html#sphx-glr-auto-examples-model-selection-plot-permutation-tests-for-classification-py"><span class="std std-ref">Test with permutations the significance of a classification score</span></a></p></li>
 </ul>
-</aside>
-<p><details id="summary-anchor">
-<summary class="btn btn-light">
-<strong>References</strong>
-<span class="tooltiptext">Click for more details</span>
-<a class="headerlink" href="#summary-anchor" title="Permalink to this heading">¶</a>
-</summary>
-<div class="card"></p>
-<blockquote>
-<div><ul class="simple">
-<li><p>Ojala and Garriga. <a class="reference external" href="http://www.jmlr.org/papers/volume11/ojala10a/ojala10a.pdf">Permutation Tests for Studying Classifier Performance</a>.
+<details class="sd-sphinx-override sd-dropdown sd-card sd-mb-3" id="references-2">
+<summary class="sd-summary-title sd-card-header">
+References<a class="headerlink" href="#references-2" title="Link to this dropdown">#</a><div class="sd-summary-down docutils">
+<svg version="1.1" width="1.5em" height="1.5em" class="sd-octicon sd-octicon-chevron-down" viewBox="0 0 24 24" aria-hidden="true"><path fill-rule="evenodd" d="M5.22 8.72a.75.75 0 000 1.06l6.25 6.25a.75.75 0 001.06 0l6.25-6.25a.75.75 0 00-1.06-1.06L12 14.44 6.28 8.72a.75.75 0 00-1.06 0z"></path></svg></div>
+<div class="sd-summary-up docutils">
+<svg version="1.1" width="1.5em" height="1.5em" class="sd-octicon sd-octicon-chevron-up" viewBox="0 0 24 24" aria-hidden="true"><path fill-rule="evenodd" d="M18.78 15.28a.75.75 0 000-1.06l-6.25-6.25a.75.75 0 00-1.06 0l-6.25 6.25a.75.75 0 101.06 1.06L12 9.56l5.72 5.72a.75.75 0 001.06 0z"></path></svg></div>
+</summary><div class="sd-summary-content sd-card-body docutils">
+<ul class="simple">
+<li><p class="sd-card-text">Ojala and Garriga. <a class="reference external" href="http://www.jmlr.org/papers/volume11/ojala10a/ojala10a.pdf">Permutation Tests for Studying Classifier Performance</a>.
 J. Mach. Learn. Res. 2010.</p></li>
 </ul>
-</div></blockquote>
-<p></div>
-</details></p>
-</section>
+</div>
+</details></section>
 </section>
 
 
+                </article>
+              
+              
+              
+                <footer class="bd-footer-article">
+                  <div class="footer-article-items footer-article__inner">
+  
+    <div class="footer-article-item">
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="../model_selection.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title"><span class="section-number">3. </span>Model selection and evaluation</p>
       </div>
-    <div class="container">
-      <footer class="sk-content-footer">
-            &copy; 2007 - 2024, scikit-learn developers (BSD License).
-          <a href="../_sources/modules/cross_validation.rst.txt" rel="nofollow">Show this page source</a>
-      </footer>
-    </div>
+    </a>
+    <a class="right-next"
+       href="grid_search.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title"><span class="section-number">3.2. </span>Tuning the hyper-parameters of an estimator</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div></div>
+  
+</div>
+                </footer>
+              
+              
+              
+            </div>
+            
+            
+              
+                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+<div
+    id="pst-page-navigation-heading-2"
+    class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> On this page
+  </div>
+  <nav class="bd-toc-nav page-toc" aria-labelledby="pst-page-navigation-heading-2">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#computing-cross-validated-metrics">3.1.1. Computing cross-validated metrics</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#the-cross-validate-function-and-multiple-metric-evaluation">3.1.1.1. The cross_validate function and multiple metric evaluation</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#obtaining-predictions-by-cross-validation">3.1.1.2. Obtaining predictions by cross-validation</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#cross-validation-iterators">3.1.2. Cross validation iterators</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#cross-validation-iterators-for-i-i-d-data">3.1.2.1. Cross-validation iterators for i.i.d. data</a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#k-fold">3.1.2.1.1. K-fold</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#repeated-k-fold">3.1.2.1.2. Repeated K-Fold</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#leave-one-out-loo">3.1.2.1.3. Leave One Out (LOO)</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#leave-p-out-lpo">3.1.2.1.4. Leave P Out (LPO)</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#random-permutations-cross-validation-a-k-a-shuffle-split">3.1.2.1.5. Random permutations cross-validation a.k.a. Shuffle &amp; Split</a></li>
+</ul>
+</li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#cross-validation-iterators-with-stratification-based-on-class-labels">3.1.2.2. Cross-validation iterators with stratification based on class labels</a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#stratified-k-fold">3.1.2.2.1. Stratified k-fold</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#stratified-shuffle-split">3.1.2.2.2. Stratified Shuffle Split</a></li>
+</ul>
+</li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#predefined-fold-splits-validation-sets">3.1.2.3. Predefined fold-splits / Validation-sets</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#cross-validation-iterators-for-grouped-data">3.1.2.4. Cross-validation iterators for grouped data</a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#group-k-fold">3.1.2.4.1. Group k-fold</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#stratifiedgroupkfold">3.1.2.4.2. StratifiedGroupKFold</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#leave-one-group-out">3.1.2.4.3. Leave One Group Out</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#leave-p-groups-out">3.1.2.4.4. Leave P Groups Out</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#group-shuffle-split">3.1.2.4.5. Group Shuffle Split</a></li>
+</ul>
+</li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#using-cross-validation-iterators-to-split-train-and-test">3.1.2.5. Using cross-validation iterators to split train and test</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#cross-validation-of-time-series-data">3.1.2.6. Cross validation of time series data</a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#time-series-split">3.1.2.6.1. Time Series Split</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#a-note-on-shuffling">3.1.3. A note on shuffling</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#cross-validation-and-model-selection">3.1.4. Cross validation and model selection</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#permutation-test-score">3.1.5. Permutation test score</a></li>
+</ul>
+  </nav></div>
+
+  <div class="sidebar-secondary-item">
+
+  <div class="tocsection sourcelink">
+    <a href="../_sources/modules/cross_validation.rst.txt">
+      <i class="fa-solid fa-file-lines"></i> Show Source
+    </a>
   </div>
 </div>
-<script src="../_static/js/vendor/bootstrap.min.js"></script>
 
-<script>
-    window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
-    ga('create', 'UA-22606712-2', 'auto');
-    ga('set', 'anonymizeIp', true);
-    ga('send', 'pageview');
-</script>
-<script async src='https://www.google-analytics.com/analytics.js'></script>
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+          </footer>
+        
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="../_static/scripts/bootstrap.js?digest=8d27b9dea8ad943066ae"></script>
+<script src="../_static/scripts/pydata-sphinx-theme.js?digest=8d27b9dea8ad943066ae"></script>
 
+  <footer class="bd-footer">
+<div class="bd-footer__inner bd-page-width">
+  
+    <div class="footer-items__start">
+      
+        <div class="footer-item">
 
-
-<script defer data-domain="scikit-learn.org" src="https://views.scientific-python.org/js/script.js">
-</script>
-
-
-<script src="../_static/clipboard.min.js"></script>
-<script src="../_static/copybutton.js"></script>
-
-<script>
-$(document).ready(function() {
-    /* Add a [>>>] button on the top-right corner of code samples to hide
-     * the >>> and ... prompts and the output and thus make the code
-     * copyable. */
-    var div = $('.highlight-python .highlight,' +
-                '.highlight-python3 .highlight,' +
-                '.highlight-pycon .highlight,' +
-		'.highlight-default .highlight')
-    var pre = div.find('pre');
-
-    // get the styles from the current theme
-    pre.parent().parent().css('position', 'relative');
-
-    // create and add the button to all the code blocks that contain >>>
-    div.each(function(index) {
-        var jthis = $(this);
-        // tracebacks (.gt) contain bare text elements that need to be
-        // wrapped in a span to work with .nextUntil() (see later)
-        jthis.find('pre:has(.gt)').contents().filter(function() {
-            return ((this.nodeType == 3) && (this.data.trim().length > 0));
-        }).wrap('<span>');
-    });
-
-	/*** Add permalink buttons next to glossary terms ***/
-	$('dl.glossary > dt[id]').append(function() {
-		return ('<a class="headerlink" href="#' +
-			    this.getAttribute('id') +
-			    '" title="Permalink to this term">¶</a>');
-	});
-});
-
-</script>
+  <p class="copyright">
     
-<script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js"></script>
+      © Copyright 2007 - 2024, scikit-learn developers (BSD License).
+      <br/>
     
-    <script src="https://scikit-learn.org/versionwarning.js"></script>
-</body>
+  </p>
+</div>
+      
+    </div>
+  
+  
+  
+</div>
+
+  </footer>
+  </body>
 </html>

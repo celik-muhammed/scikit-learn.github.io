@@ -11,7 +11,7 @@
         :class: sphx-glr-download-link-note
 
         :ref:`Go to the end <sphx_glr_download_auto_examples_svm_plot_svm_kernels.py>`
-        to download the full example code or to run this example in your browser via JupyterLite or Binder
+        to download the full example code. or to run this example in your browser via JupyterLite or Binder
 
 .. rst-class:: sphx-glr-example-title
 
@@ -156,7 +156,7 @@ Finally the support vectors used during training (which always lay on the
 margins) are identified by means of the `support_vectors_` attribute of
 the trained SVCs, and plotted as well.
 
-.. GENERATED FROM PYTHON SOURCE LINES 109-155
+.. GENERATED FROM PYTHON SOURCE LINES 109-164
 
 .. code-block:: Python
 
@@ -164,12 +164,15 @@ the trained SVCs, and plotted as well.
     from sklearn.inspection import DecisionBoundaryDisplay
 
 
-    def plot_training_data_with_decision_boundary(kernel):
+    def plot_training_data_with_decision_boundary(
+        kernel, ax=None, long_title=True, support_vectors=True
+    ):
         # Train the SVC
         clf = svm.SVC(kernel=kernel, gamma=2).fit(X, y)
 
         # Settings for plotting
-        _, ax = plt.subplots(figsize=(4, 3))
+        if ax is None:
+            _, ax = plt.subplots(figsize=(4, 3))
         x_min, x_max, y_min, y_max = -3, 3, -3, 3
         ax.set(xlim=(x_min, x_max), ylim=(y_min, y_max))
 
@@ -190,30 +193,36 @@ the trained SVCs, and plotted as well.
             linestyles=["--", "-", "--"],
         )
 
-        # Plot bigger circles around samples that serve as support vectors
-        ax.scatter(
-            clf.support_vectors_[:, 0],
-            clf.support_vectors_[:, 1],
-            s=250,
-            facecolors="none",
-            edgecolors="k",
-        )
+        if support_vectors:
+            # Plot bigger circles around samples that serve as support vectors
+            ax.scatter(
+                clf.support_vectors_[:, 0],
+                clf.support_vectors_[:, 1],
+                s=150,
+                facecolors="none",
+                edgecolors="k",
+            )
+
         # Plot samples by color and add legend
-        ax.scatter(X[:, 0], X[:, 1], c=y, s=150, edgecolors="k")
+        ax.scatter(X[:, 0], X[:, 1], c=y, s=30, edgecolors="k")
         ax.legend(*scatter.legend_elements(), loc="upper right", title="Classes")
-        ax.set_title(f" Decision boundaries of {kernel} kernel in SVC")
+        if long_title:
+            ax.set_title(f" Decision boundaries of {kernel} kernel in SVC")
+        else:
+            ax.set_title(kernel)
 
-        _ = plt.show()
-
-
-
-
-
-
+        if ax is None:
+            plt.show()
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 156-166
+
+
+
+
+
+
+.. GENERATED FROM PYTHON SOURCE LINES 165-175
 
 Linear kernel
 *************
@@ -226,7 +235,7 @@ dataset. The dot product of the two points determines the
 :func:`~sklearn.metrics.pairwise.cosine_similarity` between both points. The
 higher the value, the more similar the points are.
 
-.. GENERATED FROM PYTHON SOURCE LINES 166-168
+.. GENERATED FROM PYTHON SOURCE LINES 175-177
 
 .. code-block:: Python
 
@@ -244,7 +253,7 @@ higher the value, the more similar the points are.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 169-194
+.. GENERATED FROM PYTHON SOURCE LINES 178-203
 
 Training a :class:`~sklearn.svm.SVC` on a linear kernel results in an
 untransformed feature space, where the hyperplane and the margins are
@@ -272,7 +281,7 @@ polynomial kernel is equivalent to creating
 although this alternative approach would be computationally expensive for most
 datasets.
 
-.. GENERATED FROM PYTHON SOURCE LINES 194-196
+.. GENERATED FROM PYTHON SOURCE LINES 203-205
 
 .. code-block:: Python
 
@@ -290,7 +299,7 @@ datasets.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 197-218
+.. GENERATED FROM PYTHON SOURCE LINES 206-227
 
 The polynomial kernel with `gamma=2`` adapts well to the training data,
 causing the margins on both sides of the hyperplane to bend accordingly.
@@ -314,7 +323,7 @@ The larger the euclidean distance between two points
 the closer the kernel function is to zero. This means that two points far away
 are more likely to be dissimilar.
 
-.. GENERATED FROM PYTHON SOURCE LINES 218-220
+.. GENERATED FROM PYTHON SOURCE LINES 227-229
 
 .. code-block:: Python
 
@@ -332,7 +341,7 @@ are more likely to be dissimilar.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 221-240
+.. GENERATED FROM PYTHON SOURCE LINES 230-249
 
 In the plot we can see how the decision boundaries tend to contract around
 data points that are close to each other.
@@ -354,10 +363,9 @@ using the hyperbolic tangent function (:math:`\tanh`). The kernel function
 scales and possibly shifts the dot product of the two points
 (:math:`\mathbf{x}_1` and :math:`\mathbf{x}_2`).
 
-.. GENERATED FROM PYTHON SOURCE LINES 240-243
+.. GENERATED FROM PYTHON SOURCE LINES 249-251
 
 .. code-block:: Python
-
 
     plot_training_data_with_decision_boundary("sigmoid")
 
@@ -373,7 +381,7 @@ scales and possibly shifts the dot product of the two points
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 244-274
+.. GENERATED FROM PYTHON SOURCE LINES 252-282
 
 We can see that the decision boundaries obtained with the sigmoid kernel
 appear curved and irregular. The decision boundary tries to separate the
@@ -406,10 +414,52 @@ parameters using techniques such as
 :class:`~sklearn.model_selection.GridSearchCV` is recommended to capture the
 underlying structures within the data.
 
+.. GENERATED FROM PYTHON SOURCE LINES 284-288
+
+XOR dataset
+-----------
+A classical example of a dataset which is not linearly separable is the XOR
+pattern. HEre we demonstrate how different kernels work on such a dataset.
+
+.. GENERATED FROM PYTHON SOURCE LINES 288-302
+
+.. code-block:: Python
+
+
+    xx, yy = np.meshgrid(np.linspace(-3, 3, 500), np.linspace(-3, 3, 500))
+    np.random.seed(0)
+    X = np.random.randn(300, 2)
+    y = np.logical_xor(X[:, 0] > 0, X[:, 1] > 0)
+
+    _, ax = plt.subplots(2, 2, figsize=(8, 8))
+    args = dict(long_title=False, support_vectors=False)
+    plot_training_data_with_decision_boundary("linear", ax[0, 0], **args)
+    plot_training_data_with_decision_boundary("poly", ax[0, 1], **args)
+    plot_training_data_with_decision_boundary("rbf", ax[1, 0], **args)
+    plot_training_data_with_decision_boundary("sigmoid", ax[1, 1], **args)
+    plt.show()
+
+
+
+
+.. image-sg:: /auto_examples/svm/images/sphx_glr_plot_svm_kernels_006.png
+   :alt: linear, poly, rbf, sigmoid
+   :srcset: /auto_examples/svm/images/sphx_glr_plot_svm_kernels_006.png
+   :class: sphx-glr-single-img
+
+
+
+
+
+.. GENERATED FROM PYTHON SOURCE LINES 303-305
+
+As you can see from the plots above, only the `rbf` kernel can find a
+reasonable decision boundary for the above dataset.
+
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** (0 minutes 0.451 seconds)
+   **Total running time of the script:** (0 minutes 1.372 seconds)
 
 
 .. _sphx_glr_download_auto_examples_svm_plot_svm_kernels.py:

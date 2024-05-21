@@ -11,7 +11,7 @@
         :class: sphx-glr-download-link-note
 
         :ref:`Go to the end <sphx_glr_download_auto_examples_gaussian_process_plot_gpr_co2.py>`
-        to download the full example code or to run this example in your browser via JupyterLite or Binder
+        to download the full example code. or to run this example in your browser via JupyterLite or Binder
 
 .. rst-class:: sphx-glr-example-title
 
@@ -23,7 +23,7 @@ Forecasting of CO2 level on Mona Loa dataset using Gaussian process regression (
 ====================================================================================
 
 This example is based on Section 5.4.3 of "Gaussian Processes for Machine
-Learning" [RW2006]_. It illustrates an example of complex kernel engineering
+Learning" [1]_. It illustrates an example of complex kernel engineering
 and hyperparameter optimization using gradient ascent on the
 log-marginal-likelihood. The data consists of the monthly average atmospheric
 CO2 concentrations (in parts per million by volume (ppm)) collected at the
@@ -31,14 +31,13 @@ Mauna Loa Observatory in Hawaii, between 1958 and 2001. The objective is to
 model the CO2 concentration as a function of the time :math:`t` and extrapolate
 for years after 2001.
 
-.. topic: References
+.. rubric:: References
 
-    .. [RW2006] `Rasmussen, Carl Edward.
-       "Gaussian processes in machine learning."
-       Summer school on machine learning. Springer, Berlin, Heidelberg, 2003
-       <http://www.gaussianprocess.org/gpml/chapters/RW.pdf>`_.
+.. [1] `Rasmussen, Carl Edward. "Gaussian processes in machine learning."
+    Summer school on machine learning. Springer, Berlin, Heidelberg, 2003
+    <http://www.gaussianprocess.org/gpml/chapters/RW.pdf>`_.
 
-.. GENERATED FROM PYTHON SOURCE LINES 22-29
+.. GENERATED FROM PYTHON SOURCE LINES 21-28
 
 .. code-block:: Python
 
@@ -56,7 +55,7 @@ for years after 2001.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 30-37
+.. GENERATED FROM PYTHON SOURCE LINES 29-37
 
 Build the dataset
 -----------------
@@ -64,7 +63,8 @@ Build the dataset
 We will derive a dataset from the Mauna Loa Observatory that collected air
 samples. We are interested in estimating the concentration of CO2 and
 extrapolate it for further year. First, we load the original dataset available
-in OpenML.
+in OpenML as a pandas dataframe. This will be replaced with Polars
+once `fetch_openml` adds a native support for it.
 
 .. GENERATED FROM PYTHON SOURCE LINES 37-42
 
@@ -170,18 +170,18 @@ in OpenML.
 
 .. GENERATED FROM PYTHON SOURCE LINES 43-45
 
-First, we process the original dataframe to create a date index and select
-only the CO2 column.
+First, we process the original dataframe to create a date column and select
+it along with the CO2 column.
 
 .. GENERATED FROM PYTHON SOURCE LINES 45-52
 
 .. code-block:: Python
 
-    import pandas as pd
+    import polars as pl
 
-    co2_data = co2.frame
-    co2_data["date"] = pd.to_datetime(co2_data[["year", "month", "day"]])
-    co2_data = co2_data[["date", "co2"]].set_index("date")
+    co2_data = pl.DataFrame(co2.frame[["year", "month", "day", "co2"]]).select(
+        pl.date("year", "month", "day"), "co2"
+    )
     co2_data.head()
 
 
@@ -192,55 +192,14 @@ only the CO2 column.
 .. raw:: html
 
     <div class="output_subarea output_html rendered_html output_result">
-    <div>
-    <style scoped>
-        .dataframe tbody tr th:only-of-type {
-            vertical-align: middle;
-        }
-
-        .dataframe tbody tr th {
-            vertical-align: top;
-        }
-
-        .dataframe thead th {
-            text-align: right;
-        }
+    <div><style>
+    .dataframe > thead > tr,
+    .dataframe > tbody > tr {
+      text-align: right;
+      white-space: pre-wrap;
+    }
     </style>
-    <table border="1" class="dataframe">
-      <thead>
-        <tr style="text-align: right;">
-          <th></th>
-          <th>co2</th>
-        </tr>
-        <tr>
-          <th>date</th>
-          <th></th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr>
-          <th>1958-03-29</th>
-          <td>316.1</td>
-        </tr>
-        <tr>
-          <th>1958-04-05</th>
-          <td>317.3</td>
-        </tr>
-        <tr>
-          <th>1958-04-12</th>
-          <td>317.6</td>
-        </tr>
-        <tr>
-          <th>1958-04-19</th>
-          <td>317.5</td>
-        </tr>
-        <tr>
-          <th>1958-04-26</th>
-          <td>316.4</td>
-        </tr>
-      </tbody>
-    </table>
-    </div>
+    <small>shape: (5, 2)</small><table border="1" class="dataframe"><thead><tr><th>date</th><th>co2</th></tr><tr><td>date</td><td>f64</td></tr></thead><tbody><tr><td>1958-03-29</td><td>316.1</td></tr><tr><td>1958-04-05</td><td>317.3</td></tr><tr><td>1958-04-12</td><td>317.6</td></tr><tr><td>1958-04-19</td><td>317.5</td></tr><tr><td>1958-04-26</td><td>316.4</td></tr></tbody></table></div>
     </div>
     <br />
     <br />
@@ -249,7 +208,7 @@ only the CO2 column.
 
 .. code-block:: Python
 
-    co2_data.index.min(), co2_data.index.max()
+    co2_data["date"].min(), co2_data["date"].max()
 
 
 
@@ -260,7 +219,7 @@ only the CO2 column.
  .. code-block:: none
 
 
-    (Timestamp('1958-03-29 00:00:00'), Timestamp('2001-12-29 00:00:00'))
+    (datetime.date(1958, 3, 29), datetime.date(2001, 12, 29))
 
 
 
@@ -270,13 +229,14 @@ We see that we get CO2 concentration for some days from March, 1958 to
 December, 2001. We can plot these raw information to have a better
 understanding.
 
-.. GENERATED FROM PYTHON SOURCE LINES 59-65
+.. GENERATED FROM PYTHON SOURCE LINES 59-66
 
 .. code-block:: Python
 
     import matplotlib.pyplot as plt
 
-    co2_data.plot()
+    plt.plot(co2_data["date"], co2_data["co2"])
+    plt.xlabel("date")
     plt.ylabel("CO$_2$ concentration (ppm)")
     _ = plt.title("Raw air samples measurements from the Mauna Loa Observatory")
 
@@ -292,26 +252,25 @@ understanding.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 66-69
+.. GENERATED FROM PYTHON SOURCE LINES 67-70
 
 We will preprocess the dataset by taking a monthly average and drop month
 for which no measurements were collected. Such a processing will have an
 smoothing effect on the data.
 
-.. GENERATED FROM PYTHON SOURCE LINES 69-84
+.. GENERATED FROM PYTHON SOURCE LINES 70-84
 
 .. code-block:: Python
 
 
-    try:
-        co2_data_resampled_monthly = co2_data.resample("ME")
-    except ValueError:
-        # pandas < 2.2 uses M instead of ME
-        co2_data_resampled_monthly = co2_data.resample("M")
-
-
-    co2_data = co2_data_resampled_monthly.mean().dropna(axis="index", how="any")
-    co2_data.plot()
+    co2_data = (
+        co2_data.sort(by="date")
+        .group_by_dynamic("date", every="1mo")
+        .agg(pl.col("co2").mean())
+        .drop_nulls()
+    )
+    plt.plot(co2_data["date"], co2_data["co2"])
+    plt.xlabel("date")
     plt.ylabel("Monthly average of CO$_2$ concentration (ppm)")
     _ = plt.title(
         "Monthly average of air samples measurements\nfrom the Mauna Loa Observatory"
@@ -338,11 +297,13 @@ after 2001.
 As a first step, we will divide the data and the target to estimate. The data
 being a date, we will convert it into a numeric.
 
-.. GENERATED FROM PYTHON SOURCE LINES 91-94
+.. GENERATED FROM PYTHON SOURCE LINES 91-96
 
 .. code-block:: Python
 
-    X = (co2_data.index.year + co2_data.index.month / 12).to_numpy().reshape(-1, 1)
+    X = co2_data.select(
+        pl.col("date").dt.year() + pl.col("date").dt.month() / 12
+    ).to_numpy()
     y = co2_data["co2"].to_numpy()
 
 
@@ -352,7 +313,7 @@ being a date, we will convert it into a numeric.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 95-109
+.. GENERATED FROM PYTHON SOURCE LINES 97-111
 
 Design the proper kernel
 ------------------------
@@ -369,7 +330,7 @@ with a large length-scale enforces this component to be smooth. An trending
 increase is not enforced as to give a degree of freedom to our model. The
 specific length-scale and the amplitude are free hyperparameters.
 
-.. GENERATED FROM PYTHON SOURCE LINES 109-113
+.. GENERATED FROM PYTHON SOURCE LINES 111-115
 
 .. code-block:: Python
 
@@ -384,7 +345,7 @@ specific length-scale and the amplitude are free hyperparameters.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 114-121
+.. GENERATED FROM PYTHON SOURCE LINES 116-123
 
 The seasonal variation is explained by the periodic exponential sine squared
 kernel with a fixed periodicity of 1 year. The length-scale of this periodic
@@ -394,7 +355,7 @@ taken. The length-scale of this RBF component controls the decay time and is
 a further free parameter. This type of kernel is also known as locally
 periodic kernel.
 
-.. GENERATED FROM PYTHON SOURCE LINES 121-129
+.. GENERATED FROM PYTHON SOURCE LINES 123-131
 
 .. code-block:: Python
 
@@ -413,7 +374,7 @@ periodic kernel.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 130-135
+.. GENERATED FROM PYTHON SOURCE LINES 132-137
 
 The small irregularities are to be explained by a rational quadratic kernel
 component, whose length-scale and alpha parameter, which quantifies the
@@ -421,7 +382,7 @@ diffuseness of the length-scales, are to be determined. A rational quadratic
 kernel is equivalent to an RBF kernel with several length-scale and will
 better accommodate the different irregularities.
 
-.. GENERATED FROM PYTHON SOURCE LINES 135-139
+.. GENERATED FROM PYTHON SOURCE LINES 137-141
 
 .. code-block:: Python
 
@@ -436,7 +397,7 @@ better accommodate the different irregularities.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 140-145
+.. GENERATED FROM PYTHON SOURCE LINES 142-147
 
 Finally, the noise in the dataset can be accounted with a kernel consisting
 of an RBF kernel contribution, which shall explain the correlated noise
@@ -444,7 +405,7 @@ components such as local weather phenomena, and a white kernel contribution
 for the white noise. The relative amplitudes and the RBF's length scale are
 further free parameters.
 
-.. GENERATED FROM PYTHON SOURCE LINES 145-151
+.. GENERATED FROM PYTHON SOURCE LINES 147-153
 
 .. code-block:: Python
 
@@ -461,11 +422,11 @@ further free parameters.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 152-153
+.. GENERATED FROM PYTHON SOURCE LINES 154-155
 
 Thus, our final kernel is an addition of all previous kernel.
 
-.. GENERATED FROM PYTHON SOURCE LINES 153-158
+.. GENERATED FROM PYTHON SOURCE LINES 155-160
 
 .. code-block:: Python
 
@@ -487,7 +448,7 @@ Thus, our final kernel is an addition of all previous kernel.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 159-168
+.. GENERATED FROM PYTHON SOURCE LINES 161-170
 
 Model fitting and extrapolation
 -------------------------------
@@ -499,7 +460,7 @@ would have also scaled the target (dividing `y` by its standard deviation).
 Thus, the hyperparameters of the different kernel would have had different
 meaning since they would not have been expressed in ppm.
 
-.. GENERATED FROM PYTHON SOURCE LINES 168-174
+.. GENERATED FROM PYTHON SOURCE LINES 170-176
 
 .. code-block:: Python
 
@@ -926,7 +887,7 @@ meaning since they would not have been expressed in ppm.
     <br />
     <br />
 
-.. GENERATED FROM PYTHON SOURCE LINES 175-182
+.. GENERATED FROM PYTHON SOURCE LINES 177-184
 
 Now, we will use the Gaussian process to predict on:
 
@@ -936,7 +897,7 @@ Now, we will use the Gaussian process to predict on:
 Thus, we create synthetic data from 1958 to the current month. In addition,
 we need to add the subtracted mean computed during training.
 
-.. GENERATED FROM PYTHON SOURCE LINES 182-192
+.. GENERATED FROM PYTHON SOURCE LINES 184-194
 
 .. code-block:: Python
 
@@ -957,7 +918,7 @@ we need to add the subtracted mean computed during training.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 193-209
+.. GENERATED FROM PYTHON SOURCE LINES 195-211
 
 .. code-block:: Python
 
@@ -989,7 +950,7 @@ we need to add the subtracted mean computed during training.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 210-217
+.. GENERATED FROM PYTHON SOURCE LINES 212-219
 
 Our fitted model is capable to fit previous data properly and extrapolate to
 future year with confidence.
@@ -999,7 +960,7 @@ Interpretation of kernel hyperparameters
 
 Now, we can have a look at the hyperparameters of the kernel.
 
-.. GENERATED FROM PYTHON SOURCE LINES 217-219
+.. GENERATED FROM PYTHON SOURCE LINES 219-221
 
 .. code-block:: Python
 
@@ -1018,7 +979,7 @@ Now, we can have a look at the hyperparameters of the kernel.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 220-228
+.. GENERATED FROM PYTHON SOURCE LINES 222-230
 
 Thus, most of the target signal, with the mean subtracted, is explained by a
 long-term rising trend for ~45 ppm and a length-scale of ~52 years. The
@@ -1032,7 +993,7 @@ indicating that the data can be very well explained by the model.
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** (0 minutes 4.895 seconds)
+   **Total running time of the script:** (0 minutes 14.273 seconds)
 
 
 .. _sphx_glr_download_auto_examples_gaussian_process_plot_gpr_co2.py:

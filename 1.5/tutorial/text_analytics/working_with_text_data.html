@@ -1,12 +1,12 @@
 
-
 <!DOCTYPE html>
-<!-- data-theme below is forced to be "light" but should be changed if we use pydata-theme-sphinx in the future -->
-<!--[if IE 8]><html class="no-js lt-ie9" lang="en" data-content_root="../../" data-theme="light"> <![endif]-->
-<!--[if gt IE 8]><!--> <html class="no-js" lang="en" data-content_root="../../" data-theme="light"> <!--<![endif]-->
-<head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+
+<html lang="en" data-content_root="../../" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 <meta property="og:title" content="Working With Text Data" />
 <meta property="og:type" content="website" />
 <meta property="og:url" content="https://scikit-learn/stable/tutorial/text_analytics/working_with_text_data.html" />
@@ -16,201 +16,656 @@
 <meta property="og:image:alt" content="scikit-learn" />
 <meta name="description" content="The goal of this guide is to explore some of the main scikit-learn tools on a single practical task: analyzing a collection of text documents (newsgroups posts) on twenty different topics. In this ..." />
 
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Working With Text Data &#8212; scikit-learn 1.5.0 documentation</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "light";
+  </script>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../../_static/styles/theme.css?digest=8d27b9dea8ad943066ae" rel="stylesheet" />
+<link href="../../_static/styles/bootstrap.css?digest=8d27b9dea8ad943066ae" rel="stylesheet" />
+<link href="../../_static/styles/pydata-sphinx-theme.css?digest=8d27b9dea8ad943066ae" rel="stylesheet" />
 
   
-  <title>Working With Text Data &mdash; scikit-learn 1.5.0rc1 documentation</title>
+  <link href="../../_static/vendor/fontawesome/6.5.1/css/all.min.css?digest=8d27b9dea8ad943066ae" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="../../_static/vendor/fontawesome/6.5.1/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../../_static/vendor/fontawesome/6.5.1/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../../_static/vendor/fontawesome/6.5.1/webfonts/fa-regular-400.woff2" />
+
+    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=a746c00c" />
+    <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="../../_static/plot_directive.css" />
+    <link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Vibur" />
+    <link rel="stylesheet" type="text/css" href="../../_static/jupyterlite_sphinx.css?v=ca70e7f1" />
+    <link rel="stylesheet" type="text/css" href="../../_static/sg_gallery.css?v=61a4c737" />
+    <link rel="stylesheet" type="text/css" href="../../_static/sg_gallery-binder.css?v=f4aeca0c" />
+    <link rel="stylesheet" type="text/css" href="../../_static/sg_gallery-dataframe.css?v=2082cf3c" />
+    <link rel="stylesheet" type="text/css" href="../../_static/sg_gallery-rendered-html.css?v=1277b6f3" />
+    <link rel="stylesheet" type="text/css" href="../../_static/design-style.1e8bd061cd6da7fc9cf755528e8ffc24.min.css?v=0a3b3ea7" />
+    <link rel="stylesheet" type="text/css" href="../../_static/styles/colors.css?v=cc94ab7d" />
+    <link rel="stylesheet" type="text/css" href="../../_static/styles/custom.css?v=42c874f8" />
   
-  <link rel="canonical" href="https://scikit-learn.org/stable/tutorial/text_analytics/working_with_text_data.html" />
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../../_static/scripts/bootstrap.js?digest=8d27b9dea8ad943066ae" />
+<link rel="preload" as="script" href="../../_static/scripts/pydata-sphinx-theme.js?digest=8d27b9dea8ad943066ae" />
+  <script src="../../_static/vendor/fontawesome/6.5.1/js/all.min.js?digest=8d27b9dea8ad943066ae"></script>
+
+    <script src="../../_static/documentation_options.js?v=e0a75244"></script>
+    <script src="../../_static/doctools.js?v=9a2dae69"></script>
+    <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="../../_static/copybutton.js?v=97f0b27d"></script>
+    <script src="../../_static/jupyterlite_sphinx.js?v=d6bdf5f8"></script>
+    <script src="../../_static/design-tabs.js?v=36754332"></script>
+    <script data-domain="scikit-learn.org" defer="defer" src="https://views.scientific-python.org/js/script.js"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'tutorial/text_analytics/working_with_text_data';</script>
+    <script>
+        DOCUMENTATION_OPTIONS.theme_version = '0.15.2';
+        DOCUMENTATION_OPTIONS.theme_switcher_json_url = 'https://scikit-learn.org/dev/_static/versions.json';
+        DOCUMENTATION_OPTIONS.theme_switcher_version_match = '1.5.0';
+        DOCUMENTATION_OPTIONS.show_version_warning_banner = true;
+        </script>
+    <script src="../../_static/scripts/dropdown.js?v=12d599f8"></script>
+    <script src="../../_static/scripts/version-switcher.js?v=a6dd8357"></script>
+    <link rel="icon" href="../../_static/favicon.ico"/>
+    <link rel="author" title="About these documents" href="../../about.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="Choosing the right estimator" href="../machine_learning_map/index.html" />
+    <link rel="prev" title="Putting it all together" href="../statistical_inference/putting_together.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
 
   
-  <link rel="shortcut icon" href="../../_static/favicon.ico"/>
+  
+  <a id="pst-skip-link" class="skip-link" href="#main-content">Skip to main content</a>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>
+    Back to top
+  </button>
+
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          name="__primary"
+          id="__primary"/>
+  <label class="overlay overlay-primary" for="__primary"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          name="__secondary"
+          id="__secondary"/>
+  <label class="overlay overlay-secondary" for="__secondary"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+<form class="bd-search d-flex align-items-center"
+      action="../../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search the docs ..."
+         aria-label="Search the docs ..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+  </div>
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar">
+<div class="bd-header__inner bd-page-width">
+  <label class="sidebar-toggle primary-toggle" for="__primary">
+    <span class="fa-solid fa-bars"></span>
+  </label>
+  
+  
+  <div class=" navbar-header-items__start">
+    
+      <div class="navbar-item">
+
   
 
-  <link rel="stylesheet" href="../../_static/css/vendor/bootstrap.min.css" type="text/css" />
-  <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
-  <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
-  <link rel="stylesheet" href="../../_static/copybutton.css" type="text/css" />
-  <link rel="stylesheet" href="../../_static/plot_directive.css" type="text/css" />
-  <link rel="stylesheet" href="../../https://fonts.googleapis.com/css?family=Vibur" type="text/css" />
-  <link rel="stylesheet" href="../../_static/jupyterlite_sphinx.css" type="text/css" />
-  <link rel="stylesheet" href="../../_static/sg_gallery.css" type="text/css" />
-  <link rel="stylesheet" href="../../_static/sg_gallery-binder.css" type="text/css" />
-  <link rel="stylesheet" href="../../_static/sg_gallery-dataframe.css" type="text/css" />
-  <link rel="stylesheet" href="../../_static/sg_gallery-rendered-html.css" type="text/css" />
-  <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
-<script id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
-<script src="../../_static/js/vendor/jquery-3.6.3.slim.min.js"></script>
-<script src="../../_static/js/details-permalink.js"></script> 
-</head>
-<body>
+<a class="navbar-brand logo" href="../../index.html">
+  
+  
+  
+  
+  
+    
+    
+      
+    
+    
+    <img src="../../_static/scikit-learn-logo-small.png" class="logo__image only-light" alt="scikit-learn homepage"/>
+    <script>document.write(`<img src="../../_static/scikit-learn-logo-small.png" class="logo__image only-dark" alt="scikit-learn homepage"/>`);</script>
+  
+  
+</a></div>
+    
+  </div>
+  
+  <div class=" navbar-header-items">
+    
+    <div class="me-auto navbar-header-items__center">
+      
+        <div class="navbar-item">
+<nav class="navbar-nav">
+  <ul class="bd-navbar-elements navbar-nav">
+    
+                    <li class="nav-item">
+                      <a class="nav-link nav-internal" href="../../install.html">
+                        Install
+                      </a>
+                    </li>
+                
 
+                    <li class="nav-item">
+                      <a class="nav-link nav-internal" href="../../user_guide.html">
+                        User Guide
+                      </a>
+                    </li>
+                
 
+                    <li class="nav-item">
+                      <a class="nav-link nav-internal" href="../../api/index.html">
+                        API
+                      </a>
+                    </li>
+                
 
+                    <li class="nav-item">
+                      <a class="nav-link nav-internal" href="../../auto_examples/index.html">
+                        Examples
+                      </a>
+                    </li>
+                
 
+                    <li class="nav-item">
+                      <a class="nav-link nav-external" href="https://blog.scikit-learn.org/">
+                        Community
+                      </a>
+                    </li>
+                
+            <li class="nav-item dropdown">
+                <button class="btn dropdown-toggle nav-item" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-controls="pst-nav-more-links">
+                    More
+                </button>
+                <ul id="pst-nav-more-links" class="dropdown-menu">
+                    
+                    <li class="nav-item">
+                      <a class="nav-link dropdown-item nav-internal" href="../../getting_started.html">
+                        Getting Started
+                      </a>
+                    </li>
+                
 
+                    <li class="nav-item current active">
+                      <a class="nav-link dropdown-item nav-internal" href="../index.html">
+                        Tutorials
+                      </a>
+                    </li>
+                
 
-<nav id="navbar" class="sk-docs-navbar navbar navbar-expand-md navbar-light bg-light py-0">
-  <div class="container-fluid sk-docs-container px-0">
-      <a class="navbar-brand py-0" href="../../index.html">
-        <img
-          class="sk-brand-img"
-          src="../../_static/scikit-learn-logo-small.png"
-          alt="logo"/>
-      </a>
-    <button
-      id="sk-navbar-toggler"
-      class="navbar-toggler"
+                    <li class="nav-item">
+                      <a class="nav-link dropdown-item nav-internal" href="../../whats_new.html">
+                        Release History
+                      </a>
+                    </li>
+                
+
+                    <li class="nav-item">
+                      <a class="nav-link dropdown-item nav-internal" href="../../glossary.html">
+                        Glossary
+                      </a>
+                    </li>
+                
+
+                    <li class="nav-item">
+                      <a class="nav-link dropdown-item nav-external" href="https://scikit-learn.org/dev/developers/index.html">
+                        Development
+                      </a>
+                    </li>
+                
+
+                    <li class="nav-item">
+                      <a class="nav-link dropdown-item nav-internal" href="../../faq.html">
+                        FAQ
+                      </a>
+                    </li>
+                
+
+                    <li class="nav-item">
+                      <a class="nav-link dropdown-item nav-internal" href="../../support.html">
+                        Support
+                      </a>
+                    </li>
+                
+
+                    <li class="nav-item">
+                      <a class="nav-link dropdown-item nav-internal" href="../../related_projects.html">
+                        Related Projects
+                      </a>
+                    </li>
+                
+
+                    <li class="nav-item">
+                      <a class="nav-link dropdown-item nav-internal" href="../../roadmap.html">
+                        Roadmap
+                      </a>
+                    </li>
+                
+
+                    <li class="nav-item">
+                      <a class="nav-link dropdown-item nav-internal" href="../../governance.html">
+                        Governance
+                      </a>
+                    </li>
+                
+
+                    <li class="nav-item">
+                      <a class="nav-link dropdown-item nav-internal" href="../../about.html">
+                        About us
+                      </a>
+                    </li>
+                
+                </ul>
+            </li>
+            
+  </ul>
+</nav></div>
+      
+    </div>
+    
+    
+    <div class="navbar-header-items__end">
+      
+        <div class="navbar-item navbar-persistent--container">
+          
+
+<script>
+document.write(`
+  <button class="btn btn-sm navbar-btn search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+  </button>
+`);
+</script>
+        </div>
+      
+      
+        <div class="navbar-item">
+
+<script>
+document.write(`
+  <button class="btn btn-sm navbar-btn theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="theme-switch nav-link" data-mode="light"><i class="fa-solid fa-sun fa-lg"></i></span>
+    <span class="theme-switch nav-link" data-mode="dark"><i class="fa-solid fa-moon fa-lg"></i></span>
+    <span class="theme-switch nav-link" data-mode="auto"><i class="fa-solid fa-circle-half-stroke fa-lg"></i></span>
+  </button>
+`);
+</script></div>
+      
+        <div class="navbar-item"><ul class="navbar-icon-links navbar-nav"
+    aria-label="Icon Links">
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://github.com/scikit-learn/scikit-learn" title="GitHub" class="nav-link" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><span><i class="fa-brands fa-square-github fa-lg" aria-hidden="true"></i></span>
+            <span class="sr-only">GitHub</span></a>
+        </li>
+</ul></div>
+      
+        <div class="navbar-item">
+<script>
+document.write(`
+  <div class="version-switcher__container dropdown">
+    <button id="pst-version-switcher-button-2"
       type="button"
-      data-toggle="collapse"
-      data-target="#navbarSupportedContent"
-      aria-controls="navbarSupportedContent"
-      aria-expanded="false"
-      aria-label="Toggle navigation"
+      class="version-switcher__button btn btn-sm navbar-btn dropdown-toggle"
+      data-bs-toggle="dropdown"
+      aria-haspopup="listbox"
+      aria-controls="pst-version-switcher-list-2"
+      aria-label="Version switcher list"
     >
-      <span class="navbar-toggler-icon"></span>
+      Choose version  <!-- this text may get changed later by javascript -->
+      <span class="caret"></span>
     </button>
-
-    <div class="sk-navbar-collapse collapse navbar-collapse" id="navbarSupportedContent">
-      <ul class="navbar-nav mr-auto">
-        <li class="nav-item">
-          <a class="sk-nav-link nav-link" href="../../install.html">Install</a>
-        </li>
-        <li class="nav-item">
-          <a class="sk-nav-link nav-link" href="../../user_guide.html">User Guide</a>
-        </li>
-        <li class="nav-item">
-          <a class="sk-nav-link nav-link" href="../../modules/classes.html">API</a>
-        </li>
-        <li class="nav-item">
-          <a class="sk-nav-link nav-link" href="../../auto_examples/index.html">Examples</a>
-        </li>
-        <li class="nav-item">
-          <a class="sk-nav-link nav-link" target="_blank" rel="noopener noreferrer" href="https://blog.scikit-learn.org/">Community</a>
-        </li>
-        <li class="nav-item">
-          <a class="sk-nav-link nav-link nav-more-item-mobile-items" href="../../getting_started.html" >Getting Started</a>
-        </li>
-        <li class="nav-item">
-          <a class="sk-nav-link nav-link nav-more-item-mobile-items" href="../index.html" >Tutorial</a>
-        </li>
-        <li class="nav-item">
-          <a class="sk-nav-link nav-link nav-more-item-mobile-items" href="../../whats_new/v1.5.html" >What's new</a>
-        </li>
-        <li class="nav-item">
-          <a class="sk-nav-link nav-link nav-more-item-mobile-items" href="../../glossary.html" >Glossary</a>
-        </li>
-        <li class="nav-item">
-          <a class="sk-nav-link nav-link nav-more-item-mobile-items" href="https://scikit-learn.org/dev/developers/index.html" target="_blank" rel="noopener noreferrer">Development</a>
-        </li>
-        <li class="nav-item">
-          <a class="sk-nav-link nav-link nav-more-item-mobile-items" href="../../faq.html" >FAQ</a>
-        </li>
-        <li class="nav-item">
-          <a class="sk-nav-link nav-link nav-more-item-mobile-items" href="../../support.html" >Support</a>
-        </li>
-        <li class="nav-item">
-          <a class="sk-nav-link nav-link nav-more-item-mobile-items" href="../../related_projects.html" >Related packages</a>
-        </li>
-        <li class="nav-item">
-          <a class="sk-nav-link nav-link nav-more-item-mobile-items" href="../../roadmap.html" >Roadmap</a>
-        </li>
-        <li class="nav-item">
-          <a class="sk-nav-link nav-link nav-more-item-mobile-items" href="../../governance.html" >Governance</a>
-        </li>
-        <li class="nav-item">
-          <a class="sk-nav-link nav-link nav-more-item-mobile-items" href="../../about.html" >About us</a>
-        </li>
-        <li class="nav-item">
-          <a class="sk-nav-link nav-link nav-more-item-mobile-items" href="https://github.com/scikit-learn/scikit-learn" >GitHub</a>
-        </li>
-        <li class="nav-item">
-          <a class="sk-nav-link nav-link nav-more-item-mobile-items" href="https://scikit-learn.org/dev/versions.html" >Other Versions and Download</a>
-        </li>
-        <li class="nav-item dropdown nav-more-item-dropdown">
-          <a class="sk-nav-link nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">More</a>
-          <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-              <a class="sk-nav-dropdown-item dropdown-item" href="../../getting_started.html" >Getting Started</a>
-              <a class="sk-nav-dropdown-item dropdown-item" href="../index.html" >Tutorial</a>
-              <a class="sk-nav-dropdown-item dropdown-item" href="../../whats_new/v1.5.html" >What's new</a>
-              <a class="sk-nav-dropdown-item dropdown-item" href="../../glossary.html" >Glossary</a>
-              <a class="sk-nav-dropdown-item dropdown-item" href="https://scikit-learn.org/dev/developers/index.html" target="_blank" rel="noopener noreferrer">Development</a>
-              <a class="sk-nav-dropdown-item dropdown-item" href="../../faq.html" >FAQ</a>
-              <a class="sk-nav-dropdown-item dropdown-item" href="../../support.html" >Support</a>
-              <a class="sk-nav-dropdown-item dropdown-item" href="../../related_projects.html" >Related packages</a>
-              <a class="sk-nav-dropdown-item dropdown-item" href="../../roadmap.html" >Roadmap</a>
-              <a class="sk-nav-dropdown-item dropdown-item" href="../../governance.html" >Governance</a>
-              <a class="sk-nav-dropdown-item dropdown-item" href="../../about.html" >About us</a>
-              <a class="sk-nav-dropdown-item dropdown-item" href="https://github.com/scikit-learn/scikit-learn" >GitHub</a>
-              <a class="sk-nav-dropdown-item dropdown-item" href="https://scikit-learn.org/dev/versions.html" >Other Versions and Download</a>
-          </div>
-        </li>
-      </ul>
-      <div id="searchbox" role="search">
-          <div class="searchformwrapper">
-          <form class="search" action="../../search.html" method="get">
-            <input class="sk-search-text-input" type="text" name="q" aria-labelledby="searchlabel" />
-            <input class="sk-search-text-btn" type="submit" value="Go" />
-          </form>
-          </div>
-      </div>
+    <div id="pst-version-switcher-list-2"
+      class="version-switcher__menu dropdown-menu list-group-flush py-0"
+      role="listbox" aria-labelledby="pst-version-switcher-button-2">
+      <!-- dropdown will be populated by javascript on page load -->
     </div>
   </div>
-</nav>
-<div class="d-flex" id="sk-doc-wrapper">
-    <input type="checkbox" name="sk-toggle-checkbox" id="sk-toggle-checkbox">
-    <label id="sk-sidemenu-toggle" class="sk-btn-toggle-toc btn sk-btn-primary" for="sk-toggle-checkbox">Toggle Menu</label>
-    <div id="sk-sidebar-wrapper" class="border-right">
-      <div class="sk-sidebar-toc-wrapper">
-        <div class="btn-group w-100 mb-2" role="group" aria-label="rellinks">
-            <a href="../statistical_inference/putting_together.html" role="button" class="btn sk-btn-rellink py-1" sk-rellink-tooltip="Putting it all together">Prev</a><a href="../index.html" role="button" class="btn sk-btn-rellink py-1" sk-rellink-tooltip="scikit-learn Tutorials">Up</a>
-            <a href="../machine_learning_map/index.html" role="button" class="btn sk-btn-rellink py-1" sk-rellink-tooltip="Choosing the right estimator">Next</a>
-        </div>
-        <div class="alert alert-danger p-1 mb-2" role="alert">
-          <p class="text-center mb-0">
-          <strong>scikit-learn 1.5.0rc1</strong><br/>
-          <a href="https://scikit-learn.org/dev/versions.html">Other versions</a>
-          </p>
-        </div>
-        <div class="alert alert-warning p-1 mb-2" role="alert">
-          <p class="text-center mb-0">
-            Please <a class="font-weight-bold" href="../../about.html#citing-scikit-learn"><string>cite us</string></a> if you use the software.
-          </p>
-        </div>
-            <div class="sk-sidebar-toc">
-              <ul>
-<li><a class="reference internal" href="#">Working With Text Data</a><ul>
-<li><a class="reference internal" href="#tutorial-setup">Tutorial setup</a></li>
-<li><a class="reference internal" href="#loading-the-20-newsgroups-dataset">Loading the 20 newsgroups dataset</a></li>
-<li><a class="reference internal" href="#extracting-features-from-text-files">Extracting features from text files</a><ul>
-<li><a class="reference internal" href="#bags-of-words">Bags of words</a></li>
-<li><a class="reference internal" href="#tokenizing-text-with-scikit-learn">Tokenizing text with <code class="docutils literal notranslate"><span class="pre">scikit-learn</span></code></a></li>
-<li><a class="reference internal" href="#from-occurrences-to-frequencies">From occurrences to frequencies</a></li>
-</ul>
-</li>
-<li><a class="reference internal" href="#training-a-classifier">Training a classifier</a></li>
-<li><a class="reference internal" href="#building-a-pipeline">Building a pipeline</a></li>
-<li><a class="reference internal" href="#evaluation-of-the-performance-on-the-test-set">Evaluation of the performance on the test set</a></li>
-<li><a class="reference internal" href="#parameter-tuning-using-grid-search">Parameter tuning using grid search</a><ul>
-<li><a class="reference internal" href="#exercises">Exercises</a></li>
-</ul>
-</li>
-<li><a class="reference internal" href="#exercise-1-language-identification">Exercise 1: Language identification</a></li>
-<li><a class="reference internal" href="#exercise-2-sentiment-analysis-on-movie-reviews">Exercise 2: Sentiment Analysis on movie reviews</a></li>
-<li><a class="reference internal" href="#exercise-3-cli-text-classification-utility">Exercise 3: CLI text classification utility</a></li>
-<li><a class="reference internal" href="#where-to-from-here">Where to from here</a></li>
-</ul>
-</li>
-</ul>
-
-            </div>
-      </div>
+`);
+</script></div>
+      
     </div>
-    <div id="sk-page-content-wrapper">
-      <div class="sk-page-content container-fluid body px-md-3" role="main">
+    
+  </div>
+  
+  
+    <div class="navbar-persistent--mobile">
+
+<script>
+document.write(`
+  <button class="btn btn-sm navbar-btn search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+  </button>
+`);
+</script>
+    </div>
+  
+
+  
+    <label class="sidebar-toggle secondary-toggle" for="__secondary" tabindex="0">
+      <span class="fa-solid fa-outdent"></span>
+    </label>
+  
+</div>
+
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <div class="bd-sidebar-primary bd-sidebar">
         
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+      <div class="sidebar-header-items__center">
+        
+          <div class="navbar-item">
+<nav class="navbar-nav">
+  <ul class="bd-navbar-elements navbar-nav">
+    
+                    <li class="nav-item">
+                      <a class="nav-link nav-internal" href="../../install.html">
+                        Install
+                      </a>
+                    </li>
+                
+
+                    <li class="nav-item">
+                      <a class="nav-link nav-internal" href="../../user_guide.html">
+                        User Guide
+                      </a>
+                    </li>
+                
+
+                    <li class="nav-item">
+                      <a class="nav-link nav-internal" href="../../api/index.html">
+                        API
+                      </a>
+                    </li>
+                
+
+                    <li class="nav-item">
+                      <a class="nav-link nav-internal" href="../../auto_examples/index.html">
+                        Examples
+                      </a>
+                    </li>
+                
+
+                    <li class="nav-item">
+                      <a class="nav-link nav-external" href="https://blog.scikit-learn.org/">
+                        Community
+                      </a>
+                    </li>
+                
+            <li class="nav-item dropdown">
+                <button class="btn dropdown-toggle nav-item" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-controls="pst-nav-more-links-2">
+                    More
+                </button>
+                <ul id="pst-nav-more-links-2" class="dropdown-menu">
+                    
+                    <li class="nav-item">
+                      <a class="nav-link dropdown-item nav-internal" href="../../getting_started.html">
+                        Getting Started
+                      </a>
+                    </li>
+                
+
+                    <li class="nav-item current active">
+                      <a class="nav-link dropdown-item nav-internal" href="../index.html">
+                        Tutorials
+                      </a>
+                    </li>
+                
+
+                    <li class="nav-item">
+                      <a class="nav-link dropdown-item nav-internal" href="../../whats_new.html">
+                        Release History
+                      </a>
+                    </li>
+                
+
+                    <li class="nav-item">
+                      <a class="nav-link dropdown-item nav-internal" href="../../glossary.html">
+                        Glossary
+                      </a>
+                    </li>
+                
+
+                    <li class="nav-item">
+                      <a class="nav-link dropdown-item nav-external" href="https://scikit-learn.org/dev/developers/index.html">
+                        Development
+                      </a>
+                    </li>
+                
+
+                    <li class="nav-item">
+                      <a class="nav-link dropdown-item nav-internal" href="../../faq.html">
+                        FAQ
+                      </a>
+                    </li>
+                
+
+                    <li class="nav-item">
+                      <a class="nav-link dropdown-item nav-internal" href="../../support.html">
+                        Support
+                      </a>
+                    </li>
+                
+
+                    <li class="nav-item">
+                      <a class="nav-link dropdown-item nav-internal" href="../../related_projects.html">
+                        Related Projects
+                      </a>
+                    </li>
+                
+
+                    <li class="nav-item">
+                      <a class="nav-link dropdown-item nav-internal" href="../../roadmap.html">
+                        Roadmap
+                      </a>
+                    </li>
+                
+
+                    <li class="nav-item">
+                      <a class="nav-link dropdown-item nav-internal" href="../../governance.html">
+                        Governance
+                      </a>
+                    </li>
+                
+
+                    <li class="nav-item">
+                      <a class="nav-link dropdown-item nav-internal" href="../../about.html">
+                        About us
+                      </a>
+                    </li>
+                
+                </ul>
+            </li>
+            
+  </ul>
+</nav></div>
+        
+      </div>
+    
+    
+    
+      <div class="sidebar-header-items__end">
+        
+          <div class="navbar-item">
+
+<script>
+document.write(`
+  <button class="btn btn-sm navbar-btn theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="theme-switch nav-link" data-mode="light"><i class="fa-solid fa-sun fa-lg"></i></span>
+    <span class="theme-switch nav-link" data-mode="dark"><i class="fa-solid fa-moon fa-lg"></i></span>
+    <span class="theme-switch nav-link" data-mode="auto"><i class="fa-solid fa-circle-half-stroke fa-lg"></i></span>
+  </button>
+`);
+</script></div>
+        
+          <div class="navbar-item"><ul class="navbar-icon-links navbar-nav"
+    aria-label="Icon Links">
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://github.com/scikit-learn/scikit-learn" title="GitHub" class="nav-link" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><span><i class="fa-brands fa-square-github fa-lg" aria-hidden="true"></i></span>
+            <span class="sr-only">GitHub</span></a>
+        </li>
+</ul></div>
+        
+          <div class="navbar-item">
+<script>
+document.write(`
+  <div class="version-switcher__container dropdown">
+    <button id="pst-version-switcher-button-3"
+      type="button"
+      class="version-switcher__button btn btn-sm navbar-btn dropdown-toggle"
+      data-bs-toggle="dropdown"
+      aria-haspopup="listbox"
+      aria-controls="pst-version-switcher-list-3"
+      aria-label="Version switcher list"
+    >
+      Choose version  <!-- this text may get changed later by javascript -->
+      <span class="caret"></span>
+    </button>
+    <div id="pst-version-switcher-list-3"
+      class="version-switcher__menu dropdown-menu list-group-flush py-0"
+      role="listbox" aria-labelledby="pst-version-switcher-button-3">
+      <!-- dropdown will be populated by javascript on page load -->
+    </div>
+  </div>
+`);
+</script></div>
+        
+      </div>
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+<nav class="bd-docs-nav bd-links"
+     aria-label="Section Navigation">
+  <p class="bd-links__title" role="heading" aria-level="1">Section Navigation</p>
+  <div class="bd-toc-item navbar-nav"><ul class="current nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../basic/tutorial.html">An introduction to machine learning with scikit-learn</a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../statistical_inference/index.html">A tutorial on statistical-learning for scientific data processing</a><input class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-1"><i class="fa-solid fa-chevron-down"></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../statistical_inference/settings.html">Statistical learning: the setting and the estimator object in scikit-learn</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../statistical_inference/supervised_learning.html">Supervised learning: predicting an output variable from high-dimensional observations</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../statistical_inference/model_selection.html">Model selection: choosing estimators and their parameters</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../statistical_inference/unsupervised_learning.html">Unsupervised learning: seeking representations of the data</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../statistical_inference/putting_together.html">Putting it all together</a></li>
+</ul>
+</li>
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">Working With Text Data</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../machine_learning_map/index.html">Choosing the right estimator</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../presentations.html">External Resources, Videos and Talks</a></li>
+</ul>
+</div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main">
+        
+        
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item">
+
+
+
+<nav aria-label="Breadcrumb">
+  <ul class="bd-breadcrumbs">
+    
+    <li class="breadcrumb-item breadcrumb-home">
+      <a href="../../index.html" class="nav-link" aria-label="Home">
+        <i class="fa-solid fa-home"></i>
+      </a>
+    </li>
+    
+    <li class="breadcrumb-item"><a href="../index.html" class="nav-link">scikit-learn Tutorials</a></li>
+    
+    <li class="breadcrumb-item active" aria-current="page">Working...</li>
+  </ul>
+</nav>
+</div>
+      
+    </div>
+  
+  
+</div>
+</div>
+              
+              
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
   <section id="working-with-text-data">
-<span id="text-data-tutorial"></span><h1>Working With Text Data<a class="headerlink" href="#working-with-text-data" title="Link to this heading">¶</a></h1>
+<span id="text-data-tutorial"></span><h1>Working With Text Data<a class="headerlink" href="#working-with-text-data" title="Link to this heading">#</a></h1>
 <p>The goal of this guide is to explore some of the main <code class="docutils literal notranslate"><span class="pre">scikit-learn</span></code>
 tools on a single practical task: analyzing a collection of text
 documents (newsgroups posts) on twenty different topics.</p>
@@ -223,7 +678,7 @@ documents (newsgroups posts) on twenty different topics.</p>
 the feature extraction components and the classifier</p></li>
 </ul>
 <section id="tutorial-setup">
-<h2>Tutorial setup<a class="headerlink" href="#tutorial-setup" title="Link to this heading">¶</a></h2>
+<h2>Tutorial setup<a class="headerlink" href="#tutorial-setup" title="Link to this heading">#</a></h2>
 <p>To get started with this tutorial, you must first install
 <em>scikit-learn</em> and all of its required dependencies.</p>
 <p>Please refer to the <a class="reference internal" href="../../install.html#installation-instructions"><span class="std std-ref">installation instructions</span></a>
@@ -258,7 +713,7 @@ having read them first).</p>
 <span class="prompt1">python<span class="w"> </span>fetch_data.py</span>
 </pre></div></div></section>
 <section id="loading-the-20-newsgroups-dataset">
-<h2>Loading the 20 newsgroups dataset<a class="headerlink" href="#loading-the-20-newsgroups-dataset" title="Link to this heading">¶</a></h2>
+<h2>Loading the 20 newsgroups dataset<a class="headerlink" href="#loading-the-20-newsgroups-dataset" title="Link to this heading">#</a></h2>
 <p>The dataset is called “Twenty Newsgroups”. Here is the official
 description, quoted from the <a class="reference external" href="http://people.csail.mit.edu/jrennie/20Newsgroups/">website</a>:</p>
 <blockquote>
@@ -349,11 +804,11 @@ you wish to select only a subset of samples to quickly train a model and get a
 first idea of the results before re-training on the complete dataset later.</p>
 </section>
 <section id="extracting-features-from-text-files">
-<h2>Extracting features from text files<a class="headerlink" href="#extracting-features-from-text-files" title="Link to this heading">¶</a></h2>
+<h2>Extracting features from text files<a class="headerlink" href="#extracting-features-from-text-files" title="Link to this heading">#</a></h2>
 <p>In order to perform machine learning on text documents, we first need to
 turn the text content into numerical feature vectors.</p>
 <section id="bags-of-words">
-<h3>Bags of words<a class="headerlink" href="#bags-of-words" title="Link to this heading">¶</a></h3>
+<h3>Bags of words<a class="headerlink" href="#bags-of-words" title="Link to this heading">#</a></h3>
 <p>The most intuitive way to do so is to use a bags of words representation:</p>
 <ol class="arabic simple">
 <li><p>Assign a fixed integer id to each word occurring in any document
@@ -378,7 +833,7 @@ only storing the non-zero parts of the feature vectors in memory.</p>
 and <code class="docutils literal notranslate"><span class="pre">scikit-learn</span></code> has built-in support for these structures.</p>
 </section>
 <section id="tokenizing-text-with-scikit-learn">
-<h3>Tokenizing text with <code class="docutils literal notranslate"><span class="pre">scikit-learn</span></code><a class="headerlink" href="#tokenizing-text-with-scikit-learn" title="Link to this heading">¶</a></h3>
+<h3>Tokenizing text with <code class="docutils literal notranslate"><span class="pre">scikit-learn</span></code><a class="headerlink" href="#tokenizing-text-with-scikit-learn" title="Link to this heading">#</a></h3>
 <p>Text preprocessing, tokenizing and filtering of stopwords are all included
 in <a class="reference internal" href="../../modules/generated/sklearn.feature_extraction.text.CountVectorizer.html#sklearn.feature_extraction.text.CountVectorizer" title="sklearn.feature_extraction.text.CountVectorizer"><code class="xref py py-class docutils literal notranslate"><span class="pre">CountVectorizer</span></code></a>, which builds a dictionary of features and
 transforms documents to feature vectors:</p>
@@ -400,7 +855,7 @@ indices:</p>
 in the whole training corpus.</p>
 </section>
 <section id="from-occurrences-to-frequencies">
-<h3>From occurrences to frequencies<a class="headerlink" href="#from-occurrences-to-frequencies" title="Link to this heading">¶</a></h3>
+<h3>From occurrences to frequencies<a class="headerlink" href="#from-occurrences-to-frequencies" title="Link to this heading">#</a></h3>
 <p>Occurrence count is a good start but there is an issue: longer
 documents will have higher average count values than shorter documents,
 even though they might talk about the same topics.</p>
@@ -439,7 +894,7 @@ in the previous section:</p>
 </section>
 </section>
 <section id="training-a-classifier">
-<h2>Training a classifier<a class="headerlink" href="#training-a-classifier" title="Link to this heading">¶</a></h2>
+<h2>Training a classifier<a class="headerlink" href="#training-a-classifier" title="Link to this heading">#</a></h2>
 <p>Now that we have our features, we can train a classifier to try to predict
 the category of a post. Let’s start with a <a class="reference internal" href="../../modules/naive_bayes.html#naive-bayes"><span class="std std-ref">naïve Bayes</span></a>
 classifier, which
@@ -469,7 +924,7 @@ on the transformers, since they have already been fit to the training set:</p>
 </div>
 </section>
 <section id="building-a-pipeline">
-<h2>Building a pipeline<a class="headerlink" href="#building-a-pipeline" title="Link to this heading">¶</a></h2>
+<h2>Building a pipeline<a class="headerlink" href="#building-a-pipeline" title="Link to this heading">#</a></h2>
 <p>In order to make the vectorizer =&gt; transformer =&gt; classifier easier
 to work with, <code class="docutils literal notranslate"><span class="pre">scikit-learn</span></code> provides a <a class="reference internal" href="../../modules/generated/sklearn.pipeline.Pipeline.html#sklearn.pipeline.Pipeline" title="sklearn.pipeline.Pipeline"><code class="xref py py-class docutils literal notranslate"><span class="pre">Pipeline</span></code></a> class that behaves
 like a compound classifier:</p>
@@ -490,7 +945,7 @@ We can now train the model with a single command:</p>
 </div>
 </section>
 <section id="evaluation-of-the-performance-on-the-test-set">
-<h2>Evaluation of the performance on the test set<a class="headerlink" href="#evaluation-of-the-performance-on-the-test-set" title="Link to this heading">¶</a></h2>
+<h2>Evaluation of the performance on the test set<a class="headerlink" href="#evaluation-of-the-performance-on-the-test-set" title="Link to this heading">#</a></h2>
 <p>Evaluating the predictive accuracy of the model is equally easy:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">twenty_test</span> <span class="o">=</span> <span class="n">fetch_20newsgroups</span><span class="p">(</span><span class="n">subset</span><span class="o">=</span><span class="s1">&#39;test&#39;</span><span class="p">,</span>
@@ -552,7 +1007,7 @@ on atheism and Christianity are more often confused for one another than
 with computer graphics.</p>
 </section>
 <section id="parameter-tuning-using-grid-search">
-<h2>Parameter tuning using grid search<a class="headerlink" href="#parameter-tuning-using-grid-search" title="Link to this heading">¶</a></h2>
+<h2>Parameter tuning using grid search<a class="headerlink" href="#parameter-tuning-using-grid-search" title="Link to this heading">#</a></h2>
 <p>We’ve already encountered some parameters such as <code class="docutils literal notranslate"><span class="pre">use_idf</span></code> in the
 <code class="docutils literal notranslate"><span class="pre">TfidfTransformer</span></code>. Classifiers tend to have many parameters as well;
 e.g., <code class="docutils literal notranslate"><span class="pre">MultinomialNB</span></code> includes a smoothing parameter <code class="docutils literal notranslate"><span class="pre">alpha</span></code> and
@@ -608,7 +1063,7 @@ mean score and the parameters setting corresponding to that score:</p>
 <p>The <code class="docutils literal notranslate"><span class="pre">cv_results_</span></code> parameter can be easily imported into pandas as a
 <code class="docutils literal notranslate"><span class="pre">DataFrame</span></code> for further inspection.</p>
 <section id="exercises">
-<h3>Exercises<a class="headerlink" href="#exercises" title="Link to this heading">¶</a></h3>
+<h3>Exercises<a class="headerlink" href="#exercises" title="Link to this heading">#</a></h3>
 <p>To do the exercises, copy the content of the ‘skeletons’ folder as
 a new folder named ‘workspace’:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span class="prompt1">cp<span class="w"> </span>-r<span class="w"> </span>skeletons<span class="w"> </span>workspace</span>
@@ -627,7 +1082,7 @@ the predictive accuracy of the model.</strong></p>
 </section>
 </section>
 <section id="exercise-1-language-identification">
-<h2>Exercise 1: Language identification<a class="headerlink" href="#exercise-1-language-identification" title="Link to this heading">¶</a></h2>
+<h2>Exercise 1: Language identification<a class="headerlink" href="#exercise-1-language-identification" title="Link to this heading">#</a></h2>
 <ul class="simple">
 <li><p>Write a text classification pipeline using a custom preprocessor and
 <code class="docutils literal notranslate"><span class="pre">TfidfVectorizer</span></code> set up to use character based n-grams, using data from Wikipedia articles as the training set.</p></li>
@@ -639,7 +1094,7 @@ the predictive accuracy of the model.</strong></p>
 </div>
 </section>
 <section id="exercise-2-sentiment-analysis-on-movie-reviews">
-<h2>Exercise 2: Sentiment Analysis on movie reviews<a class="headerlink" href="#exercise-2-sentiment-analysis-on-movie-reviews" title="Link to this heading">¶</a></h2>
+<h2>Exercise 2: Sentiment Analysis on movie reviews<a class="headerlink" href="#exercise-2-sentiment-analysis-on-movie-reviews" title="Link to this heading">#</a></h2>
 <ul class="simple">
 <li><p>Write a text classification pipeline to classify movie reviews as either
 positive or negative.</p></li>
@@ -652,7 +1107,7 @@ positive or negative.</p></li>
 </div>
 </section>
 <section id="exercise-3-cli-text-classification-utility">
-<h2>Exercise 3: CLI text classification utility<a class="headerlink" href="#exercise-3-cli-text-classification-utility" title="Link to this heading">¶</a></h2>
+<h2>Exercise 3: CLI text classification utility<a class="headerlink" href="#exercise-3-cli-text-classification-utility" title="Link to this heading">#</a></h2>
 <p>Using the results of the previous exercises and the <code class="docutils literal notranslate"><span class="pre">cPickle</span></code>
 module of the standard library, write a command line utility that
 detects the language of some text provided on <code class="docutils literal notranslate"><span class="pre">stdin</span></code> and estimate
@@ -662,7 +1117,7 @@ English.</p>
 predictions.</p>
 </section>
 <section id="where-to-from-here">
-<h2>Where to from here<a class="headerlink" href="#where-to-from-here" title="Link to this heading">¶</a></h2>
+<h2>Where to from here<a class="headerlink" href="#where-to-from-here" title="Link to this heading">#</a></h2>
 <p>Here are a few suggestions to help further your scikit-learn intuition
 upon the completion of this tutorial:</p>
 <ul class="simple">
@@ -685,70 +1140,123 @@ as a memory efficient alternative to <a class="reference internal" href="../../m
 </section>
 
 
+                </article>
+              
+              
+              
+                <footer class="bd-footer-article">
+                  <div class="footer-article-items footer-article__inner">
+  
+    <div class="footer-article-item">
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="../statistical_inference/putting_together.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">Putting it all together</p>
       </div>
-    <div class="container">
-      <footer class="sk-content-footer">
-            &copy; 2007 - 2024, scikit-learn developers (BSD License).
-          <a href="../../_sources/tutorial/text_analytics/working_with_text_data.rst.txt" rel="nofollow">Show this page source</a>
-      </footer>
-    </div>
+    </a>
+    <a class="right-next"
+       href="../machine_learning_map/index.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">Choosing the right estimator</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div></div>
+  
+</div>
+                </footer>
+              
+              
+              
+            </div>
+            
+            
+              
+                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+<div
+    id="pst-page-navigation-heading-2"
+    class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> On this page
+  </div>
+  <nav class="bd-toc-nav page-toc" aria-labelledby="pst-page-navigation-heading-2">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#tutorial-setup">Tutorial setup</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#loading-the-20-newsgroups-dataset">Loading the 20 newsgroups dataset</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#extracting-features-from-text-files">Extracting features from text files</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#bags-of-words">Bags of words</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#tokenizing-text-with-scikit-learn">Tokenizing text with <code class="docutils literal notranslate"><span class="pre">scikit-learn</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#from-occurrences-to-frequencies">From occurrences to frequencies</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#training-a-classifier">Training a classifier</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#building-a-pipeline">Building a pipeline</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#evaluation-of-the-performance-on-the-test-set">Evaluation of the performance on the test set</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#parameter-tuning-using-grid-search">Parameter tuning using grid search</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#exercises">Exercises</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#exercise-1-language-identification">Exercise 1: Language identification</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#exercise-2-sentiment-analysis-on-movie-reviews">Exercise 2: Sentiment Analysis on movie reviews</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#exercise-3-cli-text-classification-utility">Exercise 3: CLI text classification utility</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#where-to-from-here">Where to from here</a></li>
+</ul>
+  </nav></div>
+
+  <div class="sidebar-secondary-item">
+
+  <div class="tocsection sourcelink">
+    <a href="../../_sources/tutorial/text_analytics/working_with_text_data.rst.txt">
+      <i class="fa-solid fa-file-lines"></i> Show Source
+    </a>
   </div>
 </div>
-<script src="../../_static/js/vendor/bootstrap.min.js"></script>
 
-<script>
-    window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
-    ga('create', 'UA-22606712-2', 'auto');
-    ga('set', 'anonymizeIp', true);
-    ga('send', 'pageview');
-</script>
-<script async src='https://www.google-analytics.com/analytics.js'></script>
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+          </footer>
+        
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="../../_static/scripts/bootstrap.js?digest=8d27b9dea8ad943066ae"></script>
+<script src="../../_static/scripts/pydata-sphinx-theme.js?digest=8d27b9dea8ad943066ae"></script>
 
+  <footer class="bd-footer">
+<div class="bd-footer__inner bd-page-width">
+  
+    <div class="footer-items__start">
+      
+        <div class="footer-item">
 
-
-<script defer data-domain="scikit-learn.org" src="https://views.scientific-python.org/js/script.js">
-</script>
-
-
-<script src="../../_static/clipboard.min.js"></script>
-<script src="../../_static/copybutton.js"></script>
-
-<script>
-$(document).ready(function() {
-    /* Add a [>>>] button on the top-right corner of code samples to hide
-     * the >>> and ... prompts and the output and thus make the code
-     * copyable. */
-    var div = $('.highlight-python .highlight,' +
-                '.highlight-python3 .highlight,' +
-                '.highlight-pycon .highlight,' +
-		'.highlight-default .highlight')
-    var pre = div.find('pre');
-
-    // get the styles from the current theme
-    pre.parent().parent().css('position', 'relative');
-
-    // create and add the button to all the code blocks that contain >>>
-    div.each(function(index) {
-        var jthis = $(this);
-        // tracebacks (.gt) contain bare text elements that need to be
-        // wrapped in a span to work with .nextUntil() (see later)
-        jthis.find('pre:has(.gt)').contents().filter(function() {
-            return ((this.nodeType == 3) && (this.data.trim().length > 0));
-        }).wrap('<span>');
-    });
-
-	/*** Add permalink buttons next to glossary terms ***/
-	$('dl.glossary > dt[id]').append(function() {
-		return ('<a class="headerlink" href="#' +
-			    this.getAttribute('id') +
-			    '" title="Permalink to this term">¶</a>');
-	});
-});
-
-</script>
+  <p class="copyright">
     
-<script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js"></script>
+      © Copyright 2007 - 2024, scikit-learn developers (BSD License).
+      <br/>
     
-    <script src="https://scikit-learn.org/versionwarning.js"></script>
-</body>
+  </p>
+</div>
+      
+    </div>
+  
+  
+  
+</div>
+
+  </footer>
+  </body>
 </html>
