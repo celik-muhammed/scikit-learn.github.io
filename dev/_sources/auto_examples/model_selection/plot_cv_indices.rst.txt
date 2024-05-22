@@ -144,7 +144,7 @@ cross-validation object. We'll perform 4 splits of the data. On each
 split, we'll visualize the indices chosen for the training set
 (in blue) and the test set (in red).
 
-.. GENERATED FROM PYTHON SOURCE LINES 98-145
+.. GENERATED FROM PYTHON SOURCE LINES 98-146
 
 .. code-block:: Python
 
@@ -152,9 +152,10 @@ split, we'll visualize the indices chosen for the training set
 
     def plot_cv_indices(cv, X, y, group, ax, n_splits, lw=10):
         """Create a sample plot for indices of a cross-validation object."""
-
+        use_groups = "Group" in type(cv).__name__
+        groups = group if use_groups else None
         # Generate the training/testing visualizations for each CV split
-        for ii, (tr, tt) in enumerate(cv.split(X=X, y=y, groups=group)):
+        for ii, (tr, tt) in enumerate(cv.split(X=X, y=y, groups=groups)):
             # Fill in indices with the training/test groups
             indices = np.array([np.nan] * len(X))
             indices[tt] = 1
@@ -202,12 +203,12 @@ split, we'll visualize the indices chosen for the training set
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 146-148
+.. GENERATED FROM PYTHON SOURCE LINES 147-149
 
 Let's see how it looks for the :class:`~sklearn.model_selection.KFold`
 cross-validation object:
 
-.. GENERATED FROM PYTHON SOURCE LINES 148-153
+.. GENERATED FROM PYTHON SOURCE LINES 149-154
 
 .. code-block:: Python
 
@@ -229,16 +230,12 @@ cross-validation object:
 
  .. code-block:: none
 
-    /home/circleci/project/sklearn/model_selection/_split.py:91: UserWarning:
-
-    The groups parameter is ignored by KFold
-
 
     <Axes: title={'center': 'KFold'}, xlabel='Sample index', ylabel='CV iteration'>
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 154-163
+.. GENERATED FROM PYTHON SOURCE LINES 155-164
 
 As you can see, by default the KFold cross-validation iterator does not
 take either datapoint class or group into consideration. We can change this
@@ -250,7 +247,7 @@ by using either:
 - ``StratifiedGroupKFold`` to keep the constraint of ``GroupKFold`` while
   attempting to return stratified folds.
 
-.. GENERATED FROM PYTHON SOURCE LINES 163-177
+.. GENERATED FROM PYTHON SOURCE LINES 164-178
 
 .. code-block:: Python
 
@@ -296,19 +293,10 @@ by using either:
          :class: sphx-glr-multi-img
 
 
-.. rst-class:: sphx-glr-script-out
-
- .. code-block:: none
-
-    /home/circleci/project/sklearn/model_selection/_split.py:848: UserWarning:
-
-    The groups parameter is ignored by StratifiedKFold
 
 
 
-
-
-.. GENERATED FROM PYTHON SOURCE LINES 178-188
+.. GENERATED FROM PYTHON SOURCE LINES 179-189
 
 Next we'll visualize this behavior for a number of CV iterators.
 
@@ -321,7 +309,7 @@ common cross-validation objects, visualizing the behavior of each.
 
 Note how some use the group/class information while others do not.
 
-.. GENERATED FROM PYTHON SOURCE LINES 188-215
+.. GENERATED FROM PYTHON SOURCE LINES 189-216
 
 .. code-block:: Python
 
@@ -415,38 +403,13 @@ Note how some use the group/class information while others do not.
          :class: sphx-glr-multi-img
 
 
-.. rst-class:: sphx-glr-script-out
-
- .. code-block:: none
-
-    /home/circleci/project/sklearn/model_selection/_split.py:91: UserWarning:
-
-    The groups parameter is ignored by KFold
-
-    /home/circleci/project/sklearn/model_selection/_split.py:91: UserWarning:
-
-    The groups parameter is ignored by ShuffleSplit
-
-    /home/circleci/project/sklearn/model_selection/_split.py:848: UserWarning:
-
-    The groups parameter is ignored by StratifiedKFold
-
-    /home/circleci/project/sklearn/model_selection/_split.py:2328: UserWarning:
-
-    The groups parameter is ignored by StratifiedShuffleSplit
-
-    /home/circleci/project/sklearn/model_selection/_split.py:1211: UserWarning:
-
-    The groups parameter is ignored by TimeSeriesSplit
-
-
 
 
 
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** (0 minutes 1.394 seconds)
+   **Total running time of the script:** (0 minutes 1.709 seconds)
 
 
 .. _sphx_glr_download_auto_examples_model_selection_plot_cv_indices.py:
