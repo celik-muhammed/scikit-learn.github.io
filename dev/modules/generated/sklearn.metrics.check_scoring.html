@@ -1337,7 +1337,7 @@ document.write(`
 <h1>check_scoring<a class="headerlink" href="#check-scoring" title="Link to this heading">#</a></h1>
 <dl class="py function">
 <dt class="sig sig-object py" id="sklearn.metrics.check_scoring">
-<span class="sig-prename descclassname"><span class="pre">sklearn.metrics.</span></span><span class="sig-name descname"><span class="pre">check_scoring</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">estimator</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">scoring</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">allow_none</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/scikit-learn/scikit-learn/blob/5cbc419b8/sklearn/metrics/_scorer.py#L945"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#sklearn.metrics.check_scoring" title="Link to this definition">#</a></dt>
+<span class="sig-prename descclassname"><span class="pre">sklearn.metrics.</span></span><span class="sig-name descname"><span class="pre">check_scoring</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">estimator</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">scoring</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">allow_none</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">raise_exc</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/scikit-learn/scikit-learn/blob/e7be6149f/sklearn/metrics/_scorer.py#L945"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#sklearn.metrics.check_scoring" title="Link to this definition">#</a></dt>
 <dd><p>Determine scorer from user options.</p>
 <p>A TypeError will be thrown if the estimator cannot be scored.</p>
 <dl class="field-list">
@@ -1346,29 +1346,42 @@ document.write(`
 <dt><strong>estimator</strong><span class="classifier">estimator object implementing ‘fit’ or None, default=None</span></dt><dd><p>The object to use to fit the data. If <code class="docutils literal notranslate"><span class="pre">None</span></code>, then this function may error
 depending on <code class="docutils literal notranslate"><span class="pre">allow_none</span></code>.</p>
 </dd>
-<dt><strong>scoring</strong><span class="classifier">str, callable, list, tuple, or dict, default=None</span></dt><dd><p>Scorer to use. If <code class="docutils literal notranslate"><span class="pre">scoring</span></code> represents a single score, one can use:</p>
+<dt><strong>scoring</strong><span class="classifier">str, callable, list, tuple, set, or dict, default=None</span></dt><dd><p>Scorer to use. If <code class="docutils literal notranslate"><span class="pre">scoring</span></code> represents a single score, one can use:</p>
 <ul class="simple">
 <li><p>a single string (see <a class="reference internal" href="../model_evaluation.html#scoring-parameter"><span class="std std-ref">The scoring parameter: defining model evaluation rules</span></a>);</p></li>
 <li><p>a callable (see <a class="reference internal" href="../model_evaluation.html#scoring"><span class="std std-ref">Defining your scoring strategy from metric functions</span></a>) that returns a single value.</p></li>
 </ul>
 <p>If <code class="docutils literal notranslate"><span class="pre">scoring</span></code> represents multiple scores, one can use:</p>
 <ul class="simple">
-<li><p>a list or tuple of unique strings;</p></li>
-<li><p>a callable returning a dictionary where the keys are the metric
-names and the values are the metric scorers;</p></li>
-<li><p>a dictionary with metric names as keys and callables a values.</p></li>
+<li><p>a list, tuple or set of unique strings;</p></li>
+<li><p>a callable returning a dictionary where the keys are the metric names and the
+values are the metric scorers;</p></li>
+<li><p>a dictionary with metric names as keys and callables a values. The callables
+need to have the signature <code class="docutils literal notranslate"><span class="pre">callable(estimator,</span> <span class="pre">X,</span> <span class="pre">y)</span></code>.</p></li>
 </ul>
 <p>If None, the provided estimator object’s <code class="docutils literal notranslate"><span class="pre">score</span></code> method is used.</p>
 </dd>
-<dt><strong>allow_none</strong><span class="classifier">bool, default=False</span></dt><dd><p>If no scoring is specified and the estimator has no score function, we
-can either return None or raise an exception.</p>
+<dt><strong>allow_none</strong><span class="classifier">bool, default=False</span></dt><dd><p>Whether to return None or raise an error if no <code class="docutils literal notranslate"><span class="pre">scoring</span></code> is specified and the
+estimator has no <code class="docutils literal notranslate"><span class="pre">score</span></code> method.</p>
+</dd>
+<dt><strong>raise_exc</strong><span class="classifier">bool, default=True</span></dt><dd><p>Whether to raise an exception (if a subset of the scorers in multimetric scoring
+fails) or to return an error code.</p>
+<ul class="simple">
+<li><p>If set to <code class="docutils literal notranslate"><span class="pre">True</span></code>, raises the failing scorer’s exception.</p></li>
+<li><p>If set to <code class="docutils literal notranslate"><span class="pre">False</span></code>, a formatted string of the exception details is passed as
+result of the failing scorer(s).</p></li>
+</ul>
+<p>This applies if <code class="docutils literal notranslate"><span class="pre">scoring</span></code> is list, tuple, set, or dict. Ignored if <code class="docutils literal notranslate"><span class="pre">scoring</span></code> is
+a str or a callable.</p>
+<div class="versionadded">
+<p><span class="versionmodified added">Added in version 1.6.</span></p>
+</div>
 </dd>
 </dl>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><dl class="simple">
-<dt><strong>scoring</strong><span class="classifier">callable</span></dt><dd><p>A scorer callable object / function with signature
-<code class="docutils literal notranslate"><span class="pre">scorer(estimator,</span> <span class="pre">X,</span> <span class="pre">y)</span></code>.</p>
+<dt><strong>scoring</strong><span class="classifier">callable</span></dt><dd><p>A scorer callable object / function with signature <code class="docutils literal notranslate"><span class="pre">scorer(estimator,</span> <span class="pre">X,</span> <span class="pre">y)</span></code>.</p>
 </dd>
 </dl>
 </dd>
@@ -1382,6 +1395,20 @@ can either return None or raise an exception.</p>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">scorer</span> <span class="o">=</span> <span class="n">check_scoring</span><span class="p">(</span><span class="n">classifier</span><span class="p">,</span> <span class="n">scoring</span><span class="o">=</span><span class="s1">&#39;accuracy&#39;</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">scorer</span><span class="p">(</span><span class="n">classifier</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
 <span class="go">0.96...</span>
+</pre></div>
+</div>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">sklearn.metrics</span> <span class="kn">import</span> <span class="n">make_scorer</span><span class="p">,</span> <span class="n">accuracy_score</span><span class="p">,</span> <span class="n">mean_squared_log_error</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">X</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="n">load_iris</span><span class="p">(</span><span class="n">return_X_y</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">y</span> <span class="o">*=</span> <span class="o">-</span><span class="mi">1</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">clf</span> <span class="o">=</span> <span class="n">DecisionTreeClassifier</span><span class="p">()</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">scoring</span> <span class="o">=</span> <span class="p">{</span>
+<span class="gp">... </span>    <span class="s2">&quot;accuracy&quot;</span><span class="p">:</span> <span class="n">make_scorer</span><span class="p">(</span><span class="n">accuracy_score</span><span class="p">),</span>
+<span class="gp">... </span>    <span class="s2">&quot;mean_squared_log_error&quot;</span><span class="p">:</span> <span class="n">make_scorer</span><span class="p">(</span><span class="n">mean_squared_log_error</span><span class="p">),</span>
+<span class="gp">... </span><span class="p">}</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">scoring_call</span> <span class="o">=</span> <span class="n">check_scoring</span><span class="p">(</span><span class="n">estimator</span><span class="o">=</span><span class="n">clf</span><span class="p">,</span> <span class="n">scoring</span><span class="o">=</span><span class="n">scoring</span><span class="p">,</span> <span class="n">raise_exc</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">scores</span> <span class="o">=</span> <span class="n">scoring_call</span><span class="p">(</span><span class="n">clf</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">scores</span>
+<span class="go">{&#39;accuracy&#39;: 1.0, &#39;mean_squared_log_error&#39;: &#39;Traceback ...&#39;}</span>
 </pre></div>
 </div>
 </dd></dl>
