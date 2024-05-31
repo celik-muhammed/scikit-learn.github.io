@@ -2,15 +2,6 @@
  * searchtools.js
  * ~~~~~~~~~~~~~~~~
  *
- * This is vendored from Sphinx 7.3.7 (subject to formatting with `prettier`). The
- * original file is available at:
- * https://github.com/sphinx-doc/sphinx/blob/v7.3.7/sphinx/themes/basic/static/searchtools.js
- *
- * This file is used to override the default `searchtools.js`. Every occurrence of
- * `[role="main"]` is replaced with `#main-content` to make searching summary work with
- * `pydata-sphinx-theme==0.15.2`. After upgrading to `pydata-sphinx-theme>=0.15.3` this
- * file should be no longer needed.
- *
  * Sphinx JavaScript utilities for the full-text search.
  *
  * :copyright: Copyright 2007-2024 by the Sphinx team, see AUTHORS.
@@ -191,20 +182,20 @@ const Search = {
       htmlElement.querySelectorAll(removalQuery).forEach((el) => { el.remove() });
     }
     if (anchor) {
-      const anchorContent = htmlElement.querySelector(`#main-content ${anchor}`);
+      const anchorContent = htmlElement.querySelector(`[role="main"] ${anchor}`);
       if (anchorContent) return anchorContent.textContent;
 
       console.warn(
-        `Anchored content block not found. Sphinx search tries to obtain it via DOM query '#main-content ${anchor}'. Check your theme or template.`
+        `Anchored content block not found. Sphinx search tries to obtain it via DOM query '[role=main] ${anchor}'. Check your theme or template.`
       );
     }
 
     // if anchor not specified or not found, fall back to main content
-    const docContent = htmlElement.querySelector("#main-content");
+    const docContent = htmlElement.querySelector('[role="main"]');
     if (docContent) return docContent.textContent;
 
     console.warn(
-      "Content block not found. Sphinx search tries to obtain it via DOM query '#main-content'. Check your theme or template."
+      "Content block not found. Sphinx search tries to obtain it via DOM query '[role=main]'. Check your theme or template."
     );
     return "";
   },
