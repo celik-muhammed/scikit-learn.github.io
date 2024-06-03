@@ -1021,7 +1021,7 @@ overall cost.</p>
     <span class="k">return</span> <a class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-function" href="https://numpy.org/doc/stable/reference/generated/numpy.sum.html#numpy.sum" title="numpy.sum"><span class="n">np</span><span class="o">.</span><span class="n">sum</span></a><span class="p">(</span><span class="n">cm</span> <span class="o">*</span> <span class="n">gain_matrix</span><span class="p">)</span>
 
 
-<span class="n">scoring</span><span class="p">[</span><span class="s2">"cost_gain"</span><span class="p">]</span> <span class="o">=</span> <a class="sphx-glr-backref-module-sklearn-metrics sphx-glr-backref-type-py-function" href="../../modules/generated/sklearn.metrics.make_scorer.html#sklearn.metrics.make_scorer" title="sklearn.metrics.make_scorer"><span class="n">make_scorer</span></a><span class="p">(</span>
+<span class="n">scoring</span><span class="p">[</span><span class="s2">"credit_gain"</span><span class="p">]</span> <span class="o">=</span> <a class="sphx-glr-backref-module-sklearn-metrics sphx-glr-backref-type-py-function" href="../../modules/generated/sklearn.metrics.make_scorer.html#sklearn.metrics.make_scorer" title="sklearn.metrics.make_scorer"><span class="n">make_scorer</span></a><span class="p">(</span>
     <span class="n">credit_gain_score</span><span class="p">,</span> <span class="n">neg_label</span><span class="o">=</span><span class="n">neg_label</span><span class="p">,</span> <span class="n">pos_label</span><span class="o">=</span><span class="n">pos_label</span>
 <span class="p">)</span>
 </pre></div>
@@ -1505,7 +1505,7 @@ performance of the model when using <code class="docutils literal notranslate"><
 <p>However, we recall that the original aim was to minimize the cost (or maximize the
 gain) as defined by the business metric. We can compute the value of the business
 metric:</p>
-<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Business defined metric: </span><span class="si">{</span><span class="n">scoring</span><span class="p">[</span><span class="s1">'cost_gain'</span><span class="p">](</span><span class="n">model</span><span class="p">,</span><span class="w"> </span><span class="n">X_test</span><span class="p">,</span><span class="w"> </span><span class="n">y_test</span><span class="p">)</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Business defined metric: </span><span class="si">{</span><span class="n">scoring</span><span class="p">[</span><span class="s1">'credit_gain'</span><span class="p">](</span><span class="n">model</span><span class="p">,</span><span class="w"> </span><span class="n">X_test</span><span class="p">,</span><span class="w"> </span><span class="n">y_test</span><span class="p">)</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
 </pre></div>
 </div>
 <div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>Business defined metric: -232
@@ -1530,7 +1530,7 @@ cross-validation is used.</p>
 
 <span class="n">tuned_model</span> <span class="o">=</span> <a class="sphx-glr-backref-module-sklearn-model_selection sphx-glr-backref-type-py-class sphx-glr-backref-instance" href="../../modules/generated/sklearn.model_selection.TunedThresholdClassifierCV.html#sklearn.model_selection.TunedThresholdClassifierCV" title="sklearn.model_selection.TunedThresholdClassifierCV"><span class="n">TunedThresholdClassifierCV</span></a><span class="p">(</span>
     <span class="n">estimator</span><span class="o">=</span><span class="n">model</span><span class="p">,</span>
-    <span class="n">scoring</span><span class="o">=</span><span class="n">scoring</span><span class="p">[</span><span class="s2">"cost_gain"</span><span class="p">],</span>
+    <span class="n">scoring</span><span class="o">=</span><span class="n">scoring</span><span class="p">[</span><span class="s2">"credit_gain"</span><span class="p">],</span>
     <span class="n">store_cv_results</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>  <span class="c1"># necessary to inspect all results</span>
 <span class="p">)</span>
 <span class="n">tuned_model</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X_train</span><span class="p">,</span> <span class="n">y_train</span><span class="p">)</span>
@@ -1635,7 +1635,7 @@ of significantly lower precision: the tuned model is much more eager to
 predict the “bad” class label to larger fraction of individuals.</p>
 <p>We can now check if choosing this cut-off point leads to a better score on the testing
 set:</p>
-<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Business defined metric: </span><span class="si">{</span><span class="n">scoring</span><span class="p">[</span><span class="s1">'cost_gain'</span><span class="p">](</span><span class="n">tuned_model</span><span class="p">,</span><span class="w"> </span><span class="n">X_test</span><span class="p">,</span><span class="w"> </span><span class="n">y_test</span><span class="p">)</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Business defined metric: </span><span class="si">{</span><span class="n">scoring</span><span class="p">[</span><span class="s1">'credit_gain'</span><span class="p">](</span><span class="n">tuned_model</span><span class="p">,</span><span class="w"> </span><span class="n">X_test</span><span class="p">,</span><span class="w"> </span><span class="n">y_test</span><span class="p">)</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
 </pre></div>
 </div>
 <div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>Business defined metric: -134
@@ -2211,7 +2211,7 @@ fraudulent transactions.</p>
 <div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">fraud</span> <span class="o">=</span> <span class="n">target</span> <span class="o">==</span> <span class="mi">1</span>
 <span class="n">amount_fraud</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="s2">"Amount"</span><span class="p">][</span><span class="n">fraud</span><span class="p">]</span>
 <span class="n">_</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <a class="sphx-glr-backref-module-matplotlib-pyplot sphx-glr-backref-type-py-function" href="https://matplotlib.org/stable/api/_as_gen/matplotlib.pyplot.subplots.html#matplotlib.pyplot.subplots" title="matplotlib.pyplot.subplots"><span class="n">plt</span><span class="o">.</span><span class="n">subplots</span></a><span class="p">()</span>
-<span class="n">ax</span><span class="o">.</span><span class="n">hist</span><span class="p">(</span><span class="n">amount_fraud</span><span class="p">,</span> <span class="n">bins</span><span class="o">=</span><span class="mi">100</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">hist</span><span class="p">(</span><span class="n">amount_fraud</span><span class="p">,</span> <span class="n">bins</span><span class="o">=</span><span class="mi">30</span><span class="p">)</span>
 <span class="n">ax</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s2">"Amount of fraud transaction"</span><span class="p">)</span>
 <span class="n">_</span> <span class="o">=</span> <span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s2">"Amount (€)"</span><span class="p">)</span>
 </pre></div>
@@ -2224,18 +2224,16 @@ define the cost matrix similarly to <a class="footnote-reference brackets" href=
 a gain of 2% of the amount of the transaction. However, accepting a fraudulent
 transaction result in a loss of the amount of the transaction. As stated in <a class="footnote-reference brackets" href="#id3" id="id10" role="doc-noteref"><span class="fn-bracket">[</span>2<span class="fn-bracket">]</span></a>, the
 gain and loss related to refusals (of fraudulent and legitimate transactions) are not
-trivial to define. Here, we define that a refusal of a legitimate transaction is
-estimated to a loss of 5€ while the refusal of a fraudulent transaction is estimated
-to a gain of 50€ and the amount of the transaction. Therefore, we define the
-following function to compute the total benefit of a given decision:</p>
+trivial to define. Here, we define that a refusal of a legitimate transaction
+is estimated to a loss of 5€ while the refusal of a fraudulent transaction is
+estimated to a gain of 50€. Therefore, we define the following function to
+compute the total benefit of a given decision:</p>
 <div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">business_metric</span><span class="p">(</span><span class="n">y_true</span><span class="p">,</span> <span class="n">y_pred</span><span class="p">,</span> <span class="n">amount</span><span class="p">):</span>
     <span class="n">mask_true_positive</span> <span class="o">=</span> <span class="p">(</span><span class="n">y_true</span> <span class="o">==</span> <span class="mi">1</span><span class="p">)</span> <span class="o">&amp;</span> <span class="p">(</span><span class="n">y_pred</span> <span class="o">==</span> <span class="mi">1</span><span class="p">)</span>
     <span class="n">mask_true_negative</span> <span class="o">=</span> <span class="p">(</span><span class="n">y_true</span> <span class="o">==</span> <span class="mi">0</span><span class="p">)</span> <span class="o">&amp;</span> <span class="p">(</span><span class="n">y_pred</span> <span class="o">==</span> <span class="mi">0</span><span class="p">)</span>
     <span class="n">mask_false_positive</span> <span class="o">=</span> <span class="p">(</span><span class="n">y_true</span> <span class="o">==</span> <span class="mi">0</span><span class="p">)</span> <span class="o">&amp;</span> <span class="p">(</span><span class="n">y_pred</span> <span class="o">==</span> <span class="mi">1</span><span class="p">)</span>
     <span class="n">mask_false_negative</span> <span class="o">=</span> <span class="p">(</span><span class="n">y_true</span> <span class="o">==</span> <span class="mi">1</span><span class="p">)</span> <span class="o">&amp;</span> <span class="p">(</span><span class="n">y_pred</span> <span class="o">==</span> <span class="mi">0</span><span class="p">)</span>
-    <span class="n">fraudulent_refuse</span> <span class="o">=</span> <span class="p">(</span><span class="n">mask_true_positive</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span> <span class="o">*</span> <span class="mi">50</span><span class="p">)</span> <span class="o">+</span> <span class="n">amount</span><span class="p">[</span>
-        <span class="n">mask_true_positive</span>
-    <span class="p">]</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span>
+    <span class="n">fraudulent_refuse</span> <span class="o">=</span> <span class="n">mask_true_positive</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span> <span class="o">*</span> <span class="mi">50</span>
     <span class="n">fraudulent_accept</span> <span class="o">=</span> <span class="o">-</span><span class="n">amount</span><span class="p">[</span><span class="n">mask_false_negative</span><span class="p">]</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span>
     <span class="n">legitimate_refuse</span> <span class="o">=</span> <span class="n">mask_false_positive</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span> <span class="o">*</span> <span class="o">-</span><span class="mi">5</span>
     <span class="n">legitimate_accept</span> <span class="o">=</span> <span class="p">(</span><span class="n">amount</span><span class="p">[</span><span class="n">mask_true_negative</span><span class="p">]</span> <span class="o">*</span> <span class="mf">0.02</span><span class="p">)</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span>
@@ -2261,7 +2259,6 @@ metadata to the scorer. So let’s create this variable.</p>
 <div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">amount</span> <span class="o">=</span> <span class="n">credit_card</span><span class="o">.</span><span class="n">frame</span><span class="p">[</span><span class="s2">"Amount"</span><span class="p">]</span><span class="o">.</span><span class="n">to_numpy</span><span class="p">()</span>
 </pre></div>
 </div>
-<p>We first start to train a dummy classifier to have some baseline results.</p>
 <div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">sklearn.model_selection</span> <span class="kn">import</span> <a class="sphx-glr-backref-module-sklearn-model_selection sphx-glr-backref-type-py-function" href="../../modules/generated/sklearn.model_selection.train_test_split.html#sklearn.model_selection.train_test_split" title="sklearn.model_selection.train_test_split"><span class="n">train_test_split</span></a>
 
 <span class="n">data_train</span><span class="p">,</span> <span class="n">data_test</span><span class="p">,</span> <span class="n">target_train</span><span class="p">,</span> <span class="n">target_test</span><span class="p">,</span> <span class="n">amount_train</span><span class="p">,</span> <span class="n">amount_test</span> <span class="o">=</span> <span class="p">(</span>
@@ -2271,59 +2268,47 @@ metadata to the scorer. So let’s create this variable.</p>
 <span class="p">)</span>
 </pre></div>
 </div>
+<p>We first evaluate some baseline policies to serve as reference. Recall that
+class “0” is the legitimate class and class “1” is the fraudulent class.</p>
 <div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">sklearn.dummy</span> <span class="kn">import</span> <a class="sphx-glr-backref-module-sklearn-dummy sphx-glr-backref-type-py-class sphx-glr-backref-instance" href="../../modules/generated/sklearn.dummy.DummyClassifier.html#sklearn.dummy.DummyClassifier" title="sklearn.dummy.DummyClassifier"><span class="n">DummyClassifier</span></a>
 
-<span class="n">easy_going_classifier</span> <span class="o">=</span> <a class="sphx-glr-backref-module-sklearn-dummy sphx-glr-backref-type-py-class sphx-glr-backref-instance" href="../../modules/generated/sklearn.dummy.DummyClassifier.html#sklearn.dummy.DummyClassifier" title="sklearn.dummy.DummyClassifier"><span class="n">DummyClassifier</span></a><span class="p">(</span><span class="n">strategy</span><span class="o">=</span><span class="s2">"constant"</span><span class="p">,</span> <span class="n">constant</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
-<span class="n">easy_going_classifier</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">data_train</span><span class="p">,</span> <span class="n">target_train</span><span class="p">)</span>
-<span class="n">benefit_cost</span> <span class="o">=</span> <span class="n">business_scorer</span><span class="p">(</span>
-    <span class="n">easy_going_classifier</span><span class="p">,</span> <span class="n">data_test</span><span class="p">,</span> <span class="n">target_test</span><span class="p">,</span> <span class="n">amount</span><span class="o">=</span><span class="n">amount_test</span>
+<span class="n">always_accept_policy</span> <span class="o">=</span> <a class="sphx-glr-backref-module-sklearn-dummy sphx-glr-backref-type-py-class sphx-glr-backref-instance" href="../../modules/generated/sklearn.dummy.DummyClassifier.html#sklearn.dummy.DummyClassifier" title="sklearn.dummy.DummyClassifier"><span class="n">DummyClassifier</span></a><span class="p">(</span><span class="n">strategy</span><span class="o">=</span><span class="s2">"constant"</span><span class="p">,</span> <span class="n">constant</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+<span class="n">always_accept_policy</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">data_train</span><span class="p">,</span> <span class="n">target_train</span><span class="p">)</span>
+<span class="n">benefit</span> <span class="o">=</span> <span class="n">business_scorer</span><span class="p">(</span>
+    <span class="n">always_accept_policy</span><span class="p">,</span> <span class="n">data_test</span><span class="p">,</span> <span class="n">target_test</span><span class="p">,</span> <span class="n">amount</span><span class="o">=</span><span class="n">amount_test</span>
 <span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Benefit/cost of our easy-going classifier: </span><span class="si">{</span><span class="n">benefit_cost</span><span class="si">:</span><span class="s2">,.2f</span><span class="si">}</span><span class="s2">€"</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Benefit of the 'always accept' policy: </span><span class="si">{</span><span class="n">benefit</span><span class="si">:</span><span class="s2">,.2f</span><span class="si">}</span><span class="s2">€"</span><span class="p">)</span>
 </pre></div>
 </div>
-<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>Benefit/cost of our easy-going classifier: 221,445.07€
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>Benefit of the 'always accept' policy: 221,445.07€
 </pre></div>
 </div>
-<p>A classifier that predict all transactions as legitimate would create a profit of
-around 220,000.€ We make the same evaluation for a classifier that predicts all
+<p>A policy that considers all transactions as legitimate would create a profit of
+around 220,000€. We make the same evaluation for a classifier that predicts all
 transactions as fraudulent.</p>
-<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">intolerant_classifier</span> <span class="o">=</span> <a class="sphx-glr-backref-module-sklearn-dummy sphx-glr-backref-type-py-class sphx-glr-backref-instance" href="../../modules/generated/sklearn.dummy.DummyClassifier.html#sklearn.dummy.DummyClassifier" title="sklearn.dummy.DummyClassifier"><span class="n">DummyClassifier</span></a><span class="p">(</span><span class="n">strategy</span><span class="o">=</span><span class="s2">"constant"</span><span class="p">,</span> <span class="n">constant</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
-<span class="n">intolerant_classifier</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">data_train</span><span class="p">,</span> <span class="n">target_train</span><span class="p">)</span>
-<span class="n">benefit_cost</span> <span class="o">=</span> <span class="n">business_scorer</span><span class="p">(</span>
-    <span class="n">intolerant_classifier</span><span class="p">,</span> <span class="n">data_test</span><span class="p">,</span> <span class="n">target_test</span><span class="p">,</span> <span class="n">amount</span><span class="o">=</span><span class="n">amount_test</span>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">always_reject_policy</span> <span class="o">=</span> <a class="sphx-glr-backref-module-sklearn-dummy sphx-glr-backref-type-py-class sphx-glr-backref-instance" href="../../modules/generated/sklearn.dummy.DummyClassifier.html#sklearn.dummy.DummyClassifier" title="sklearn.dummy.DummyClassifier"><span class="n">DummyClassifier</span></a><span class="p">(</span><span class="n">strategy</span><span class="o">=</span><span class="s2">"constant"</span><span class="p">,</span> <span class="n">constant</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">always_reject_policy</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">data_train</span><span class="p">,</span> <span class="n">target_train</span><span class="p">)</span>
+<span class="n">benefit</span> <span class="o">=</span> <span class="n">business_scorer</span><span class="p">(</span>
+    <span class="n">always_reject_policy</span><span class="p">,</span> <span class="n">data_test</span><span class="p">,</span> <span class="n">target_test</span><span class="p">,</span> <span class="n">amount</span><span class="o">=</span><span class="n">amount_test</span>
 <span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Benefit/cost of our intolerant classifier: </span><span class="si">{</span><span class="n">benefit_cost</span><span class="si">:</span><span class="s2">,.2f</span><span class="si">}</span><span class="s2">€"</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Benefit of the 'always reject' policy: </span><span class="si">{</span><span class="n">benefit</span><span class="si">:</span><span class="s2">,.2f</span><span class="si">}</span><span class="s2">€"</span><span class="p">)</span>
 </pre></div>
 </div>
-<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>Benefit/cost of our intolerant classifier: -668,903.24€
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>Benefit of the 'always reject' policy: -698,490.00€
 </pre></div>
 </div>
-<p>Such a classifier create a loss of around 670,000.€ A predictive model should allow
-us to make a profit larger than 220,000.€ It is interesting to compare this business
-metric with another “standard” statistical metric such as the balanced accuracy.</p>
-<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">sklearn.metrics</span> <span class="kn">import</span> <a class="sphx-glr-backref-module-sklearn-metrics sphx-glr-backref-type-py-function" href="../../modules/generated/sklearn.metrics.get_scorer.html#sklearn.metrics.get_scorer" title="sklearn.metrics.get_scorer"><span class="n">get_scorer</span></a>
-
-<span class="n">balanced_accuracy_scorer</span> <span class="o">=</span> <a class="sphx-glr-backref-module-sklearn-metrics sphx-glr-backref-type-py-function" href="../../modules/generated/sklearn.metrics.get_scorer.html#sklearn.metrics.get_scorer" title="sklearn.metrics.get_scorer"><span class="n">get_scorer</span></a><span class="p">(</span><span class="s2">"balanced_accuracy"</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span>
-    <span class="s2">"Balanced accuracy of our easy-going classifier: "</span>
-    <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">balanced_accuracy_scorer</span><span class="p">(</span><span class="n">easy_going_classifier</span><span class="p">,</span><span class="w"> </span><span class="n">data_test</span><span class="p">,</span><span class="w"> </span><span class="n">target_test</span><span class="p">)</span><span class="si">:</span><span class="s2">.3f</span><span class="si">}</span><span class="s2">"</span>
-<span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span>
-    <span class="s2">"Balanced accuracy of our intolerant classifier: "</span>
-    <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">balanced_accuracy_scorer</span><span class="p">(</span><span class="n">intolerant_classifier</span><span class="p">,</span><span class="w"> </span><span class="n">data_test</span><span class="p">,</span><span class="w"> </span><span class="n">target_test</span><span class="p">)</span><span class="si">:</span><span class="s2">.3f</span><span class="si">}</span><span class="s2">"</span>
-<span class="p">)</span>
-</pre></div>
-</div>
-<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>Balanced accuracy of our easy-going classifier: 0.500
-Balanced accuracy of our intolerant classifier: 0.500
-</pre></div>
-</div>
-<p>This is not a surprise that the balanced accuracy is at 0.5 for both classifiers.
-However, we need to be careful in the rest of the evaluation: we potentially can
-obtain a model with a decent balanced accuracy that does not make any profit.
-In this case, the model would be harmful for our business.</p>
-<p>Let’s now create a predictive model using a logistic regression without tuning the
-decision threshold.</p>
+<p>Such a policy would entail a catastrophic loss: around 670,000€. This is
+expected since the vast majority of the transactions are legitimate and the
+policy would refuse them at a non-trivial cost.</p>
+<p>A predictive model that adapts the accept/reject decisions on a per
+transaction basis should ideally allow us to make a profit larger than the
+220,000€ of the best of our constant baseline policies.</p>
+<p>We start with a logistic regression model with the default decision threshold
+at 0.5. Here we tune the hyperparameter <code class="docutils literal notranslate"><span class="pre">C</span></code> of the logistic regression with a
+proper scoring rule (the log loss) to ensure that the model’s probabilistic
+predictions returned by its <code class="docutils literal notranslate"><span class="pre">predict_proba</span></code> method are as accurate as
+possible, irrespectively of the choice of the value of the decision
+threshold.</p>
 <div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">sklearn.linear_model</span> <span class="kn">import</span> <a class="sphx-glr-backref-module-sklearn-linear_model sphx-glr-backref-type-py-class sphx-glr-backref-instance" href="../../modules/generated/sklearn.linear_model.LogisticRegression.html#sklearn.linear_model.LogisticRegression" title="sklearn.linear_model.LogisticRegression"><span class="n">LogisticRegression</span></a>
 <span class="kn">from</span> <span class="nn">sklearn.model_selection</span> <span class="kn">import</span> <a class="sphx-glr-backref-module-sklearn-model_selection sphx-glr-backref-type-py-class sphx-glr-backref-instance" href="../../modules/generated/sklearn.model_selection.GridSearchCV.html#sklearn.model_selection.GridSearchCV" title="sklearn.model_selection.GridSearchCV"><span class="n">GridSearchCV</span></a>
 <span class="kn">from</span> <span class="nn">sklearn.pipeline</span> <span class="kn">import</span> <a class="sphx-glr-backref-module-sklearn-pipeline sphx-glr-backref-type-py-function" href="../../modules/generated/sklearn.pipeline.make_pipeline.html#sklearn.pipeline.make_pipeline" title="sklearn.pipeline.make_pipeline"><span class="n">make_pipeline</span></a>
@@ -2334,46 +2319,7 @@ decision threshold.</p>
 <span class="n">model</span> <span class="o">=</span> <a class="sphx-glr-backref-module-sklearn-model_selection sphx-glr-backref-type-py-class sphx-glr-backref-instance" href="../../modules/generated/sklearn.model_selection.GridSearchCV.html#sklearn.model_selection.GridSearchCV" title="sklearn.model_selection.GridSearchCV"><span class="n">GridSearchCV</span></a><span class="p">(</span><span class="n">logistic_regression</span><span class="p">,</span> <span class="n">param_grid</span><span class="p">,</span> <span class="n">scoring</span><span class="o">=</span><span class="s2">"neg_log_loss"</span><span class="p">)</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span>
     <span class="n">data_train</span><span class="p">,</span> <span class="n">target_train</span>
 <span class="p">)</span>
-
-<span class="nb">print</span><span class="p">(</span>
-    <span class="s2">"Benefit/cost of our logistic regression: "</span>
-    <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">business_scorer</span><span class="p">(</span><span class="n">model</span><span class="p">,</span><span class="w"> </span><span class="n">data_test</span><span class="p">,</span><span class="w"> </span><span class="n">target_test</span><span class="p">,</span><span class="w"> </span><span class="n">amount</span><span class="o">=</span><span class="n">amount_test</span><span class="p">)</span><span class="si">:</span><span class="s2">,.2f</span><span class="si">}</span><span class="s2">€"</span>
-<span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span>
-    <span class="s2">"Balanced accuracy of our logistic regression: "</span>
-    <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">balanced_accuracy_scorer</span><span class="p">(</span><span class="n">model</span><span class="p">,</span><span class="w"> </span><span class="n">data_test</span><span class="p">,</span><span class="w"> </span><span class="n">target_test</span><span class="p">)</span><span class="si">:</span><span class="s2">.3f</span><span class="si">}</span><span class="s2">"</span>
-<span class="p">)</span>
-</pre></div>
-</div>
-<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>Benefit/cost of our logistic regression: 260,787.21€
-Balanced accuracy of our logistic regression: 0.815
-</pre></div>
-</div>
-<p>By observing the balanced accuracy, we see that our predictive model is learning
-some associations between the features and the target. The business metric also shows
-that our model is beating the baseline in terms of profit and it would be already
-beneficial to use it instead of ignoring the fraud detection problem.</p>
-</section>
-<section id="tuning-the-decision-threshold">
-<h3>Tuning the decision threshold<a class="headerlink" href="#tuning-the-decision-threshold" title="Link to this heading">#</a></h3>
-<p>Now the question is: is our model optimum for the type of decision that we want to do?
-Up to now, we did not optimize the decision threshold. We use the
-<a class="reference internal" href="../../modules/generated/sklearn.model_selection.TunedThresholdClassifierCV.html#sklearn.model_selection.TunedThresholdClassifierCV" title="sklearn.model_selection.TunedThresholdClassifierCV"><code class="xref py py-class docutils literal notranslate"><span class="pre">TunedThresholdClassifierCV</span></code></a> to optimize the decision
-given our business scorer. To avoid a nested cross-validation, we will use the
-best estimator found during the previous grid-search.</p>
-<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">tuned_model</span> <span class="o">=</span> <a class="sphx-glr-backref-module-sklearn-model_selection sphx-glr-backref-type-py-class sphx-glr-backref-instance" href="../../modules/generated/sklearn.model_selection.TunedThresholdClassifierCV.html#sklearn.model_selection.TunedThresholdClassifierCV" title="sklearn.model_selection.TunedThresholdClassifierCV"><span class="n">TunedThresholdClassifierCV</span></a><span class="p">(</span>
-    <span class="n">estimator</span><span class="o">=</span><span class="n">model</span><span class="o">.</span><span class="n">best_estimator_</span><span class="p">,</span>
-    <span class="n">scoring</span><span class="o">=</span><span class="n">business_scorer</span><span class="p">,</span>
-    <span class="n">thresholds</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span>
-    <span class="n">n_jobs</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span>
-<span class="p">)</span>
-</pre></div>
-</div>
-<p>Since our business scorer requires the amount of each transaction, we need to pass
-this information in the <code class="docutils literal notranslate"><span class="pre">fit</span></code> method. The
-<a class="reference internal" href="../../modules/generated/sklearn.model_selection.TunedThresholdClassifierCV.html#sklearn.model_selection.TunedThresholdClassifierCV" title="sklearn.model_selection.TunedThresholdClassifierCV"><code class="xref py py-class docutils literal notranslate"><span class="pre">TunedThresholdClassifierCV</span></code></a> is in charge of
-automatically dispatching this metadata to the underlying scorer.</p>
-<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">tuned_model</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">data_train</span><span class="p">,</span> <span class="n">target_train</span><span class="p">,</span> <span class="n">amount</span><span class="o">=</span><span class="n">amount_train</span><span class="p">)</span>
+<span class="n">model</span>
 </pre></div>
 </div>
 <div class="output_subarea output_html rendered_html output_result">
@@ -2781,46 +2727,495 @@ div.sk-label-container:hover .sk-estimator-doc-link.fitted:hover,
   /* fitted */
   background-color: var(--sklearn-color-fitted-level-3);
 }
-</style><div class="sk-top-container" id="sk-container-id-58"><div class="sk-text-repr-fallback"><pre>TunedThresholdClassifierCV(estimator=Pipeline(steps=[('standardscaler',
-                                                      StandardScaler()),
-                                                     ('logisticregression',
-                                                      LogisticRegression(C=100.0))]),
-                           n_jobs=2,
-                           scoring=make_scorer(business_metric, response_method='predict'))</pre><b>In a Jupyter environment, please rerun this cell to show the HTML representation or trust the notebook. <br/>On GitHub, the HTML representation is unable to render, please try loading this page with nbviewer.org.</b></div><div class="sk-container" hidden=""><div class="sk-item sk-dashed-wrapped"><div class="sk-label-container"><div class="sk-label fitted sk-toggleable"><input class="sk-toggleable__control sk-hidden--visually" id="sk-estimator-id-234" type="checkbox"/><label class="sk-toggleable__label fitted sk-toggleable__label-arrow fitted" for="sk-estimator-id-234">  TunedThresholdClassifierCV<a class="sk-estimator-doc-link fitted" href="https://scikit-learn.org/dev/modules/generated/sklearn.model_selection.TunedThresholdClassifierCV.html" rel="noreferrer" target="_blank">?<span>Documentation for TunedThresholdClassifierCV</span></a><span class="sk-estimator-doc-link fitted">i<span>Fitted</span></span></label><div class="sk-toggleable__content fitted"><pre>TunedThresholdClassifierCV(estimator=Pipeline(steps=[('standardscaler',
-                                                      StandardScaler()),
-                                                     ('logisticregression',
-                                                      LogisticRegression(C=100.0))]),
-                           n_jobs=2,
-                           scoring=make_scorer(business_metric, response_method='predict'))</pre></div> </div></div><div class="sk-parallel"><div class="sk-parallel-item"><div class="sk-item"><div class="sk-label-container"><div class="sk-label fitted sk-toggleable"><input class="sk-toggleable__control sk-hidden--visually" id="sk-estimator-id-235" type="checkbox"/><label class="sk-toggleable__label fitted sk-toggleable__label-arrow fitted" for="sk-estimator-id-235">estimator: Pipeline</label><div class="sk-toggleable__content fitted"><pre>Pipeline(steps=[('standardscaler', StandardScaler()),
+</style><div class="sk-top-container" id="sk-container-id-58"><div class="sk-text-repr-fallback"><pre>GridSearchCV(estimator=Pipeline(steps=[('standardscaler', StandardScaler()),
+                                       ('logisticregression',
+                                        LogisticRegression())]),
+             param_grid={'logisticregression__C': array([1.e-06, 1.e-05, 1.e-04, 1.e-03, 1.e-02, 1.e-01, 1.e+00, 1.e+01,
+       1.e+02, 1.e+03, 1.e+04, 1.e+05, 1.e+06])},
+             scoring='neg_log_loss')</pre><b>In a Jupyter environment, please rerun this cell to show the HTML representation or trust the notebook. <br/>On GitHub, the HTML representation is unable to render, please try loading this page with nbviewer.org.</b></div><div class="sk-container" hidden=""><div class="sk-item sk-dashed-wrapped"><div class="sk-label-container"><div class="sk-label fitted sk-toggleable"><input class="sk-toggleable__control sk-hidden--visually" id="sk-estimator-id-234" type="checkbox"/><label class="sk-toggleable__label fitted sk-toggleable__label-arrow fitted" for="sk-estimator-id-234">  GridSearchCV<a class="sk-estimator-doc-link fitted" href="https://scikit-learn.org/dev/modules/generated/sklearn.model_selection.GridSearchCV.html" rel="noreferrer" target="_blank">?<span>Documentation for GridSearchCV</span></a><span class="sk-estimator-doc-link fitted">i<span>Fitted</span></span></label><div class="sk-toggleable__content fitted"><pre>GridSearchCV(estimator=Pipeline(steps=[('standardscaler', StandardScaler()),
+                                       ('logisticregression',
+                                        LogisticRegression())]),
+             param_grid={'logisticregression__C': array([1.e-06, 1.e-05, 1.e-04, 1.e-03, 1.e-02, 1.e-01, 1.e+00, 1.e+01,
+       1.e+02, 1.e+03, 1.e+04, 1.e+05, 1.e+06])},
+             scoring='neg_log_loss')</pre></div> </div></div><div class="sk-parallel"><div class="sk-parallel-item"><div class="sk-item"><div class="sk-label-container"><div class="sk-label fitted sk-toggleable"><input class="sk-toggleable__control sk-hidden--visually" id="sk-estimator-id-235" type="checkbox"/><label class="sk-toggleable__label fitted sk-toggleable__label-arrow fitted" for="sk-estimator-id-235">best_estimator_: Pipeline</label><div class="sk-toggleable__content fitted"><pre>Pipeline(steps=[('standardscaler', StandardScaler()),
                 ('logisticregression', LogisticRegression(C=100.0))])</pre></div> </div></div><div class="sk-serial"><div class="sk-item"><div class="sk-serial"><div class="sk-item"><div class="sk-estimator fitted sk-toggleable"><input class="sk-toggleable__control sk-hidden--visually" id="sk-estimator-id-236" type="checkbox"/><label class="sk-toggleable__label fitted sk-toggleable__label-arrow fitted" for="sk-estimator-id-236"> StandardScaler<a class="sk-estimator-doc-link fitted" href="https://scikit-learn.org/dev/modules/generated/sklearn.preprocessing.StandardScaler.html" rel="noreferrer" target="_blank">?<span>Documentation for StandardScaler</span></a></label><div class="sk-toggleable__content fitted"><pre>StandardScaler()</pre></div> </div></div><div class="sk-item"><div class="sk-estimator fitted sk-toggleable"><input class="sk-toggleable__control sk-hidden--visually" id="sk-estimator-id-237" type="checkbox"/><label class="sk-toggleable__label fitted sk-toggleable__label-arrow fitted" for="sk-estimator-id-237"> LogisticRegression<a class="sk-estimator-doc-link fitted" href="https://scikit-learn.org/dev/modules/generated/sklearn.linear_model.LogisticRegression.html" rel="noreferrer" target="_blank">?<span>Documentation for LogisticRegression</span></a></label><div class="sk-toggleable__content fitted"><pre>LogisticRegression(C=100.0)</pre></div> </div></div></div></div></div></div></div></div></div></div></div>
 </div>
 <br/>
 <br/><div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="nb">print</span><span class="p">(</span>
-    <span class="s2">"Benefit/cost of our logistic regression: "</span>
+    <span class="s2">"Benefit of logistic regression with default threshold: "</span>
+    <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">business_scorer</span><span class="p">(</span><span class="n">model</span><span class="p">,</span><span class="w"> </span><span class="n">data_test</span><span class="p">,</span><span class="w"> </span><span class="n">target_test</span><span class="p">,</span><span class="w"> </span><span class="n">amount</span><span class="o">=</span><span class="n">amount_test</span><span class="p">)</span><span class="si">:</span><span class="s2">,.2f</span><span class="si">}</span><span class="s2">€"</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>Benefit of logistic regression with default threshold: 244,919.87€
+</pre></div>
+</div>
+<p>The business metric shows that our predictive model with a default decision
+threshold is already winning over the baseline in terms of profit and it would be
+already beneficial to use it to accept or reject transactions instead of
+accepting all transactions.</p>
+</section>
+<section id="tuning-the-decision-threshold">
+<h3>Tuning the decision threshold<a class="headerlink" href="#tuning-the-decision-threshold" title="Link to this heading">#</a></h3>
+<p>Now the question is: is our model optimum for the type of decision that we want to do?
+Up to now, we did not optimize the decision threshold. We use the
+<a class="reference internal" href="../../modules/generated/sklearn.model_selection.TunedThresholdClassifierCV.html#sklearn.model_selection.TunedThresholdClassifierCV" title="sklearn.model_selection.TunedThresholdClassifierCV"><code class="xref py py-class docutils literal notranslate"><span class="pre">TunedThresholdClassifierCV</span></code></a> to optimize the decision
+given our business scorer. To avoid a nested cross-validation, we will use the
+best estimator found during the previous grid-search.</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">tuned_model</span> <span class="o">=</span> <a class="sphx-glr-backref-module-sklearn-model_selection sphx-glr-backref-type-py-class sphx-glr-backref-instance" href="../../modules/generated/sklearn.model_selection.TunedThresholdClassifierCV.html#sklearn.model_selection.TunedThresholdClassifierCV" title="sklearn.model_selection.TunedThresholdClassifierCV"><span class="n">TunedThresholdClassifierCV</span></a><span class="p">(</span>
+    <span class="n">estimator</span><span class="o">=</span><span class="n">model</span><span class="o">.</span><span class="n">best_estimator_</span><span class="p">,</span>
+    <span class="n">scoring</span><span class="o">=</span><span class="n">business_scorer</span><span class="p">,</span>
+    <span class="n">thresholds</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span>
+    <span class="n">n_jobs</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+<p>Since our business scorer requires the amount of each transaction, we need to pass
+this information in the <code class="docutils literal notranslate"><span class="pre">fit</span></code> method. The
+<a class="reference internal" href="../../modules/generated/sklearn.model_selection.TunedThresholdClassifierCV.html#sklearn.model_selection.TunedThresholdClassifierCV" title="sklearn.model_selection.TunedThresholdClassifierCV"><code class="xref py py-class docutils literal notranslate"><span class="pre">TunedThresholdClassifierCV</span></code></a> is in charge of
+automatically dispatching this metadata to the underlying scorer.</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">tuned_model</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">data_train</span><span class="p">,</span> <span class="n">target_train</span><span class="p">,</span> <span class="n">amount</span><span class="o">=</span><span class="n">amount_train</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="output_subarea output_html rendered_html output_result">
+<style>#sk-container-id-59 {
+  /* Definition of color scheme common for light and dark mode */
+  --sklearn-color-text: black;
+  --sklearn-color-line: gray;
+  /* Definition of color scheme for unfitted estimators */
+  --sklearn-color-unfitted-level-0: #fff5e6;
+  --sklearn-color-unfitted-level-1: #f6e4d2;
+  --sklearn-color-unfitted-level-2: #ffe0b3;
+  --sklearn-color-unfitted-level-3: chocolate;
+  /* Definition of color scheme for fitted estimators */
+  --sklearn-color-fitted-level-0: #f0f8ff;
+  --sklearn-color-fitted-level-1: #d4ebff;
+  --sklearn-color-fitted-level-2: #b3dbfd;
+  --sklearn-color-fitted-level-3: cornflowerblue;
+
+  /* Specific color for light theme */
+  --sklearn-color-text-on-default-background: var(--sg-text-color, var(--theme-code-foreground, var(--jp-content-font-color1, black)));
+  --sklearn-color-background: var(--sg-background-color, var(--theme-background, var(--jp-layout-color0, white)));
+  --sklearn-color-border-box: var(--sg-text-color, var(--theme-code-foreground, var(--jp-content-font-color1, black)));
+  --sklearn-color-icon: #696969;
+
+  @media (prefers-color-scheme: dark) {
+    /* Redefinition of color scheme for dark theme */
+    --sklearn-color-text-on-default-background: var(--sg-text-color, var(--theme-code-foreground, var(--jp-content-font-color1, white)));
+    --sklearn-color-background: var(--sg-background-color, var(--theme-background, var(--jp-layout-color0, #111)));
+    --sklearn-color-border-box: var(--sg-text-color, var(--theme-code-foreground, var(--jp-content-font-color1, white)));
+    --sklearn-color-icon: #878787;
+  }
+}
+
+#sk-container-id-59 {
+  color: var(--sklearn-color-text);
+}
+
+#sk-container-id-59 pre {
+  padding: 0;
+}
+
+#sk-container-id-59 input.sk-hidden--visually {
+  border: 0;
+  clip: rect(1px 1px 1px 1px);
+  clip: rect(1px, 1px, 1px, 1px);
+  height: 1px;
+  margin: -1px;
+  overflow: hidden;
+  padding: 0;
+  position: absolute;
+  width: 1px;
+}
+
+#sk-container-id-59 div.sk-dashed-wrapped {
+  border: 1px dashed var(--sklearn-color-line);
+  margin: 0 0.4em 0.5em 0.4em;
+  box-sizing: border-box;
+  padding-bottom: 0.4em;
+  background-color: var(--sklearn-color-background);
+}
+
+#sk-container-id-59 div.sk-container {
+  /* jupyter's `normalize.less` sets `[hidden] { display: none; }`
+     but bootstrap.min.css set `[hidden] { display: none !important; }`
+     so we also need the `!important` here to be able to override the
+     default hidden behavior on the sphinx rendered scikit-learn.org.
+     See: https://github.com/scikit-learn/scikit-learn/issues/21755 */
+  display: inline-block !important;
+  position: relative;
+}
+
+#sk-container-id-59 div.sk-text-repr-fallback {
+  display: none;
+}
+
+div.sk-parallel-item,
+div.sk-serial,
+div.sk-item {
+  /* draw centered vertical line to link estimators */
+  background-image: linear-gradient(var(--sklearn-color-text-on-default-background), var(--sklearn-color-text-on-default-background));
+  background-size: 2px 100%;
+  background-repeat: no-repeat;
+  background-position: center center;
+}
+
+/* Parallel-specific style estimator block */
+
+#sk-container-id-59 div.sk-parallel-item::after {
+  content: "";
+  width: 100%;
+  border-bottom: 2px solid var(--sklearn-color-text-on-default-background);
+  flex-grow: 1;
+}
+
+#sk-container-id-59 div.sk-parallel {
+  display: flex;
+  align-items: stretch;
+  justify-content: center;
+  background-color: var(--sklearn-color-background);
+  position: relative;
+}
+
+#sk-container-id-59 div.sk-parallel-item {
+  display: flex;
+  flex-direction: column;
+}
+
+#sk-container-id-59 div.sk-parallel-item:first-child::after {
+  align-self: flex-end;
+  width: 50%;
+}
+
+#sk-container-id-59 div.sk-parallel-item:last-child::after {
+  align-self: flex-start;
+  width: 50%;
+}
+
+#sk-container-id-59 div.sk-parallel-item:only-child::after {
+  width: 0;
+}
+
+/* Serial-specific style estimator block */
+
+#sk-container-id-59 div.sk-serial {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background-color: var(--sklearn-color-background);
+  padding-right: 1em;
+  padding-left: 1em;
+}
+
+
+/* Toggleable style: style used for estimator/Pipeline/ColumnTransformer box that is
+clickable and can be expanded/collapsed.
+- Pipeline and ColumnTransformer use this feature and define the default style
+- Estimators will overwrite some part of the style using the `sk-estimator` class
+*/
+
+/* Pipeline and ColumnTransformer style (default) */
+
+#sk-container-id-59 div.sk-toggleable {
+  /* Default theme specific background. It is overwritten whether we have a
+  specific estimator or a Pipeline/ColumnTransformer */
+  background-color: var(--sklearn-color-background);
+}
+
+/* Toggleable label */
+#sk-container-id-59 label.sk-toggleable__label {
+  cursor: pointer;
+  display: block;
+  width: 100%;
+  margin-bottom: 0;
+  padding: 0.5em;
+  box-sizing: border-box;
+  text-align: center;
+}
+
+#sk-container-id-59 label.sk-toggleable__label-arrow:before {
+  /* Arrow on the left of the label */
+  content: "▸";
+  float: left;
+  margin-right: 0.25em;
+  color: var(--sklearn-color-icon);
+}
+
+#sk-container-id-59 label.sk-toggleable__label-arrow:hover:before {
+  color: var(--sklearn-color-text);
+}
+
+/* Toggleable content - dropdown */
+
+#sk-container-id-59 div.sk-toggleable__content {
+  max-height: 0;
+  max-width: 0;
+  overflow: hidden;
+  text-align: left;
+  /* unfitted */
+  background-color: var(--sklearn-color-unfitted-level-0);
+}
+
+#sk-container-id-59 div.sk-toggleable__content.fitted {
+  /* fitted */
+  background-color: var(--sklearn-color-fitted-level-0);
+}
+
+#sk-container-id-59 div.sk-toggleable__content pre {
+  margin: 0.2em;
+  border-radius: 0.25em;
+  color: var(--sklearn-color-text);
+  /* unfitted */
+  background-color: var(--sklearn-color-unfitted-level-0);
+}
+
+#sk-container-id-59 div.sk-toggleable__content.fitted pre {
+  /* unfitted */
+  background-color: var(--sklearn-color-fitted-level-0);
+}
+
+#sk-container-id-59 input.sk-toggleable__control:checked~div.sk-toggleable__content {
+  /* Expand drop-down */
+  max-height: 200px;
+  max-width: 100%;
+  overflow: auto;
+}
+
+#sk-container-id-59 input.sk-toggleable__control:checked~label.sk-toggleable__label-arrow:before {
+  content: "▾";
+}
+
+/* Pipeline/ColumnTransformer-specific style */
+
+#sk-container-id-59 div.sk-label input.sk-toggleable__control:checked~label.sk-toggleable__label {
+  color: var(--sklearn-color-text);
+  background-color: var(--sklearn-color-unfitted-level-2);
+}
+
+#sk-container-id-59 div.sk-label.fitted input.sk-toggleable__control:checked~label.sk-toggleable__label {
+  background-color: var(--sklearn-color-fitted-level-2);
+}
+
+/* Estimator-specific style */
+
+/* Colorize estimator box */
+#sk-container-id-59 div.sk-estimator input.sk-toggleable__control:checked~label.sk-toggleable__label {
+  /* unfitted */
+  background-color: var(--sklearn-color-unfitted-level-2);
+}
+
+#sk-container-id-59 div.sk-estimator.fitted input.sk-toggleable__control:checked~label.sk-toggleable__label {
+  /* fitted */
+  background-color: var(--sklearn-color-fitted-level-2);
+}
+
+#sk-container-id-59 div.sk-label label.sk-toggleable__label,
+#sk-container-id-59 div.sk-label label {
+  /* The background is the default theme color */
+  color: var(--sklearn-color-text-on-default-background);
+}
+
+/* On hover, darken the color of the background */
+#sk-container-id-59 div.sk-label:hover label.sk-toggleable__label {
+  color: var(--sklearn-color-text);
+  background-color: var(--sklearn-color-unfitted-level-2);
+}
+
+/* Label box, darken color on hover, fitted */
+#sk-container-id-59 div.sk-label.fitted:hover label.sk-toggleable__label.fitted {
+  color: var(--sklearn-color-text);
+  background-color: var(--sklearn-color-fitted-level-2);
+}
+
+/* Estimator label */
+
+#sk-container-id-59 div.sk-label label {
+  font-family: monospace;
+  font-weight: bold;
+  display: inline-block;
+  line-height: 1.2em;
+}
+
+#sk-container-id-59 div.sk-label-container {
+  text-align: center;
+}
+
+/* Estimator-specific */
+#sk-container-id-59 div.sk-estimator {
+  font-family: monospace;
+  border: 1px dotted var(--sklearn-color-border-box);
+  border-radius: 0.25em;
+  box-sizing: border-box;
+  margin-bottom: 0.5em;
+  /* unfitted */
+  background-color: var(--sklearn-color-unfitted-level-0);
+}
+
+#sk-container-id-59 div.sk-estimator.fitted {
+  /* fitted */
+  background-color: var(--sklearn-color-fitted-level-0);
+}
+
+/* on hover */
+#sk-container-id-59 div.sk-estimator:hover {
+  /* unfitted */
+  background-color: var(--sklearn-color-unfitted-level-2);
+}
+
+#sk-container-id-59 div.sk-estimator.fitted:hover {
+  /* fitted */
+  background-color: var(--sklearn-color-fitted-level-2);
+}
+
+/* Specification for estimator info (e.g. "i" and "?") */
+
+/* Common style for "i" and "?" */
+
+.sk-estimator-doc-link,
+a:link.sk-estimator-doc-link,
+a:visited.sk-estimator-doc-link {
+  float: right;
+  font-size: smaller;
+  line-height: 1em;
+  font-family: monospace;
+  background-color: var(--sklearn-color-background);
+  border-radius: 1em;
+  height: 1em;
+  width: 1em;
+  text-decoration: none !important;
+  margin-left: 1ex;
+  /* unfitted */
+  border: var(--sklearn-color-unfitted-level-1) 1pt solid;
+  color: var(--sklearn-color-unfitted-level-1);
+}
+
+.sk-estimator-doc-link.fitted,
+a:link.sk-estimator-doc-link.fitted,
+a:visited.sk-estimator-doc-link.fitted {
+  /* fitted */
+  border: var(--sklearn-color-fitted-level-1) 1pt solid;
+  color: var(--sklearn-color-fitted-level-1);
+}
+
+/* On hover */
+div.sk-estimator:hover .sk-estimator-doc-link:hover,
+.sk-estimator-doc-link:hover,
+div.sk-label-container:hover .sk-estimator-doc-link:hover,
+.sk-estimator-doc-link:hover {
+  /* unfitted */
+  background-color: var(--sklearn-color-unfitted-level-3);
+  color: var(--sklearn-color-background);
+  text-decoration: none;
+}
+
+div.sk-estimator.fitted:hover .sk-estimator-doc-link.fitted:hover,
+.sk-estimator-doc-link.fitted:hover,
+div.sk-label-container:hover .sk-estimator-doc-link.fitted:hover,
+.sk-estimator-doc-link.fitted:hover {
+  /* fitted */
+  background-color: var(--sklearn-color-fitted-level-3);
+  color: var(--sklearn-color-background);
+  text-decoration: none;
+}
+
+/* Span, style for the box shown on hovering the info icon */
+.sk-estimator-doc-link span {
+  display: none;
+  z-index: 9999;
+  position: relative;
+  font-weight: normal;
+  right: .2ex;
+  padding: .5ex;
+  margin: .5ex;
+  width: min-content;
+  min-width: 20ex;
+  max-width: 50ex;
+  color: var(--sklearn-color-text);
+  box-shadow: 2pt 2pt 4pt #999;
+  /* unfitted */
+  background: var(--sklearn-color-unfitted-level-0);
+  border: .5pt solid var(--sklearn-color-unfitted-level-3);
+}
+
+.sk-estimator-doc-link.fitted span {
+  /* fitted */
+  background: var(--sklearn-color-fitted-level-0);
+  border: var(--sklearn-color-fitted-level-3);
+}
+
+.sk-estimator-doc-link:hover span {
+  display: block;
+}
+
+/* "?"-specific style due to the `<a>` HTML tag */
+
+#sk-container-id-59 a.estimator_doc_link {
+  float: right;
+  font-size: 1rem;
+  line-height: 1em;
+  font-family: monospace;
+  background-color: var(--sklearn-color-background);
+  border-radius: 1rem;
+  height: 1rem;
+  width: 1rem;
+  text-decoration: none;
+  /* unfitted */
+  color: var(--sklearn-color-unfitted-level-1);
+  border: var(--sklearn-color-unfitted-level-1) 1pt solid;
+}
+
+#sk-container-id-59 a.estimator_doc_link.fitted {
+  /* fitted */
+  border: var(--sklearn-color-fitted-level-1) 1pt solid;
+  color: var(--sklearn-color-fitted-level-1);
+}
+
+/* On hover */
+#sk-container-id-59 a.estimator_doc_link:hover {
+  /* unfitted */
+  background-color: var(--sklearn-color-unfitted-level-3);
+  color: var(--sklearn-color-background);
+  text-decoration: none;
+}
+
+#sk-container-id-59 a.estimator_doc_link.fitted:hover {
+  /* fitted */
+  background-color: var(--sklearn-color-fitted-level-3);
+}
+</style><div class="sk-top-container" id="sk-container-id-59"><div class="sk-text-repr-fallback"><pre>TunedThresholdClassifierCV(estimator=Pipeline(steps=[('standardscaler',
+                                                      StandardScaler()),
+                                                     ('logisticregression',
+                                                      LogisticRegression(C=100.0))]),
+                           n_jobs=2,
+                           scoring=make_scorer(business_metric, response_method='predict'))</pre><b>In a Jupyter environment, please rerun this cell to show the HTML representation or trust the notebook. <br/>On GitHub, the HTML representation is unable to render, please try loading this page with nbviewer.org.</b></div><div class="sk-container" hidden=""><div class="sk-item sk-dashed-wrapped"><div class="sk-label-container"><div class="sk-label fitted sk-toggleable"><input class="sk-toggleable__control sk-hidden--visually" id="sk-estimator-id-238" type="checkbox"/><label class="sk-toggleable__label fitted sk-toggleable__label-arrow fitted" for="sk-estimator-id-238">  TunedThresholdClassifierCV<a class="sk-estimator-doc-link fitted" href="https://scikit-learn.org/dev/modules/generated/sklearn.model_selection.TunedThresholdClassifierCV.html" rel="noreferrer" target="_blank">?<span>Documentation for TunedThresholdClassifierCV</span></a><span class="sk-estimator-doc-link fitted">i<span>Fitted</span></span></label><div class="sk-toggleable__content fitted"><pre>TunedThresholdClassifierCV(estimator=Pipeline(steps=[('standardscaler',
+                                                      StandardScaler()),
+                                                     ('logisticregression',
+                                                      LogisticRegression(C=100.0))]),
+                           n_jobs=2,
+                           scoring=make_scorer(business_metric, response_method='predict'))</pre></div> </div></div><div class="sk-parallel"><div class="sk-parallel-item"><div class="sk-item"><div class="sk-label-container"><div class="sk-label fitted sk-toggleable"><input class="sk-toggleable__control sk-hidden--visually" id="sk-estimator-id-239" type="checkbox"/><label class="sk-toggleable__label fitted sk-toggleable__label-arrow fitted" for="sk-estimator-id-239">estimator: Pipeline</label><div class="sk-toggleable__content fitted"><pre>Pipeline(steps=[('standardscaler', StandardScaler()),
+                ('logisticregression', LogisticRegression(C=100.0))])</pre></div> </div></div><div class="sk-serial"><div class="sk-item"><div class="sk-serial"><div class="sk-item"><div class="sk-estimator fitted sk-toggleable"><input class="sk-toggleable__control sk-hidden--visually" id="sk-estimator-id-240" type="checkbox"/><label class="sk-toggleable__label fitted sk-toggleable__label-arrow fitted" for="sk-estimator-id-240"> StandardScaler<a class="sk-estimator-doc-link fitted" href="https://scikit-learn.org/dev/modules/generated/sklearn.preprocessing.StandardScaler.html" rel="noreferrer" target="_blank">?<span>Documentation for StandardScaler</span></a></label><div class="sk-toggleable__content fitted"><pre>StandardScaler()</pre></div> </div></div><div class="sk-item"><div class="sk-estimator fitted sk-toggleable"><input class="sk-toggleable__control sk-hidden--visually" id="sk-estimator-id-241" type="checkbox"/><label class="sk-toggleable__label fitted sk-toggleable__label-arrow fitted" for="sk-estimator-id-241"> LogisticRegression<a class="sk-estimator-doc-link fitted" href="https://scikit-learn.org/dev/modules/generated/sklearn.linear_model.LogisticRegression.html" rel="noreferrer" target="_blank">?<span>Documentation for LogisticRegression</span></a></label><div class="sk-toggleable__content fitted"><pre>LogisticRegression(C=100.0)</pre></div> </div></div></div></div></div></div></div></div></div></div></div>
+</div>
+<br/>
+<br/><p>We observe that the tuned decision threshold is far away from the default 0.5:</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Tuned decision threshold: </span><span class="si">{</span><span class="n">tuned_model</span><span class="o">.</span><span class="n">best_threshold_</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>Tuned decision threshold: 0.03
+</pre></div>
+</div>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="nb">print</span><span class="p">(</span>
+    <span class="s2">"Benefit of logistic regression with a tuned threshold: "</span>
     <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">business_scorer</span><span class="p">(</span><span class="n">tuned_model</span><span class="p">,</span><span class="w"> </span><span class="n">data_test</span><span class="p">,</span><span class="w"> </span><span class="n">target_test</span><span class="p">,</span><span class="w"> </span><span class="n">amount</span><span class="o">=</span><span class="n">amount_test</span><span class="p">)</span><span class="si">:</span><span class="s2">,.2f</span><span class="si">}</span><span class="s2">€"</span>
 <span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span>
-    <span class="s2">"Balanced accuracy of our logistic regression: "</span>
-    <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">balanced_accuracy_scorer</span><span class="p">(</span><span class="n">tuned_model</span><span class="p">,</span><span class="w"> </span><span class="n">data_test</span><span class="p">,</span><span class="w"> </span><span class="n">target_test</span><span class="p">)</span><span class="si">:</span><span class="s2">.3f</span><span class="si">}</span><span class="s2">"</span>
-<span class="p">)</span>
 </pre></div>
 </div>
-<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>Benefit/cost of our logistic regression: 268,847.31€
-Balanced accuracy of our logistic regression: 0.898
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>Benefit of logistic regression with a tuned threshold: 249,433.39€
 </pre></div>
 </div>
-<p>We observe that tuning the decision threshold increases the expected profit of
-deploying our model as estimated by the business metric.
-Eventually, the balanced accuracy also increased. Note that it might not always be
-the case because the statistical metric is not necessarily a surrogate of the
-business metric. It is therefore important, whenever possible, optimize the decision
-threshold with respect to the business metric.</p>
-<p>Finally, the estimate of the business metric itself can be unreliable, in
-particular when the number of data points in the minority class is so small.
-Any business impact estimated by cross-validation of a business metric on
-historical data (offline evaluation) should ideally be confirmed by A/B testing
-on live data (online evaluation). Note however that A/B testing models is
-beyond the scope of the scikit-learn library itself.</p>
+<p>We observe that tuning the decision threshold increases the expected profit
+when deploying our model - as indicated by the business metric. It is therefore
+valuable, whenever possible, to optimize the decision threshold with respect
+to the business metric.</p>
 </section>
 <section id="manually-setting-the-decision-threshold-instead-of-tuning-it">
 <h3>Manually setting the decision threshold instead of tuning it<a class="headerlink" href="#manually-setting-the-decision-threshold-instead-of-tuning-it" title="Link to this heading">#</a></h3>
@@ -2836,27 +3231,28 @@ new model and check that it gives the same results.</p>
 <div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">sklearn.model_selection</span> <span class="kn">import</span> <a class="sphx-glr-backref-module-sklearn-model_selection sphx-glr-backref-type-py-class sphx-glr-backref-instance" href="../../modules/generated/sklearn.model_selection.FixedThresholdClassifier.html#sklearn.model_selection.FixedThresholdClassifier" title="sklearn.model_selection.FixedThresholdClassifier"><span class="n">FixedThresholdClassifier</span></a>
 
 <span class="n">model_fixed_threshold</span> <span class="o">=</span> <a class="sphx-glr-backref-module-sklearn-model_selection sphx-glr-backref-type-py-class sphx-glr-backref-instance" href="../../modules/generated/sklearn.model_selection.FixedThresholdClassifier.html#sklearn.model_selection.FixedThresholdClassifier" title="sklearn.model_selection.FixedThresholdClassifier"><span class="n">FixedThresholdClassifier</span></a><span class="p">(</span>
-    <span class="n">estimator</span><span class="o">=</span><span class="n">model</span><span class="p">,</span> <span class="n">threshold</span><span class="o">=</span><span class="n">tuned_model</span><span class="o">.</span><span class="n">best_threshold_</span>
+    <span class="n">estimator</span><span class="o">=</span><span class="n">model</span><span class="p">,</span> <span class="n">threshold</span><span class="o">=</span><span class="n">tuned_model</span><span class="o">.</span><span class="n">best_threshold_</span><span class="p">,</span> <span class="n">prefit</span><span class="o">=</span><span class="kc">True</span>
 <span class="p">)</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">data_train</span><span class="p">,</span> <span class="n">target_train</span><span class="p">)</span>
 </pre></div>
 </div>
 <div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">business_score</span> <span class="o">=</span> <span class="n">business_scorer</span><span class="p">(</span>
     <span class="n">model_fixed_threshold</span><span class="p">,</span> <span class="n">data_test</span><span class="p">,</span> <span class="n">target_test</span><span class="p">,</span> <span class="n">amount</span><span class="o">=</span><span class="n">amount_test</span>
 <span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Benefit/cost of our logistic regression: </span><span class="si">{</span><span class="n">business_score</span><span class="si">:</span><span class="s2">,.2f</span><span class="si">}</span><span class="s2">€"</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span>
-    <span class="s2">"Balanced accuracy of our logistic regression: "</span>
-    <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">balanced_accuracy_scorer</span><span class="p">(</span><span class="n">model_fixed_threshold</span><span class="p">,</span><span class="w"> </span><span class="n">data_test</span><span class="p">,</span><span class="w"> </span><span class="n">target_test</span><span class="p">)</span><span class="si">:</span><span class="s2">.3f</span><span class="si">}</span><span class="s2">"</span>
-<span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Benefit of logistic regression with a tuned threshold:  </span><span class="si">{</span><span class="n">business_score</span><span class="si">:</span><span class="s2">,.2f</span><span class="si">}</span><span class="s2">€"</span><span class="p">)</span>
 </pre></div>
 </div>
-<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>Benefit/cost of our logistic regression: 268,847.31€
-Balanced accuracy of our logistic regression: 0.898
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>Benefit of logistic regression with a tuned threshold:  249,433.39€
 </pre></div>
 </div>
-<p>We observe that we obtained the exact same results but the fitting process was much
-faster since we did not perform any search.</p>
-<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> (0 minutes 42.222 seconds)</p>
+<p>We observe that we obtained the exact same results but the fitting process
+was much faster since we did not perform any hyper-parameter search.</p>
+<p>Finally, the estimate of the (average) business metric itself can be unreliable, in
+particular when the number of data points in the minority class is very small.
+Any business impact estimated by cross-validation of a business metric on
+historical data (offline evaluation) should ideally be confirmed by A/B testing
+on live data (online evaluation). Note however that A/B testing models is
+beyond the scope of the scikit-learn library itself.</p>
+<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> (0 minutes 26.504 seconds)</p>
 
 <p class="rubric">Related examples</p>
 <div class="sphx-glr-thumbnails"><div class="sphx-glr-thumbcontainer" tooltip="Once a binary classifier is trained, the predict method outputs class label predictions corresp..."><img alt="" src="../../_images/sphx_glr_plot_tuned_decision_threshold_thumb.png"/>
