@@ -1423,6 +1423,31 @@ means that the final logistic regression step contains the feature names of the 
       dtype=object)
 </pre></div>
 </div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>If one uses the method <code class="docutils literal notranslate"><span class="pre">set_params</span></code>, the transformer will be
+replaced by a new one with the default output format.</p>
+</div>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">clf</span><span class="o">.</span><span class="n">set_params</span><span class="p">(</span><span class="n">standardscaler</span><span class="o">=</span><a class="sphx-glr-backref-module-sklearn-preprocessing sphx-glr-backref-type-py-class sphx-glr-backref-instance" href="../../modules/generated/sklearn.preprocessing.StandardScaler.html#sklearn.preprocessing.StandardScaler" title="sklearn.preprocessing.StandardScaler"><span class="n">StandardScaler</span></a><span class="p">())</span>
+<span class="n">clf</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X_train</span><span class="p">,</span> <span class="n">y_train</span><span class="p">)</span>
+<span class="n">clf</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">feature_names_in_</span>
+</pre></div>
+</div>
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>array(['x0', 'x2', 'x3'], dtype=object)
+</pre></div>
+</div>
+<p>To keep the intended behavior, use <code class="docutils literal notranslate"><span class="pre">set_output</span></code> on the new transformer
+beforehand</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">scaler</span> <span class="o">=</span> <a class="sphx-glr-backref-module-sklearn-preprocessing sphx-glr-backref-type-py-class sphx-glr-backref-instance" href="../../modules/generated/sklearn.preprocessing.StandardScaler.html#sklearn.preprocessing.StandardScaler" title="sklearn.preprocessing.StandardScaler"><span class="n">StandardScaler</span></a><span class="p">()</span><span class="o">.</span><span class="n">set_output</span><span class="p">(</span><span class="n">transform</span><span class="o">=</span><span class="s2">"pandas"</span><span class="p">)</span>
+<span class="n">clf</span><span class="o">.</span><span class="n">set_params</span><span class="p">(</span><span class="n">standardscaler</span><span class="o">=</span><span class="n">scaler</span><span class="p">)</span>
+<span class="n">clf</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X_train</span><span class="p">,</span> <span class="n">y_train</span><span class="p">)</span>
+<span class="n">clf</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">feature_names_in_</span>
+</pre></div>
+</div>
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>array(['sepal length (cm)', 'petal length (cm)', 'petal width (cm)'],
+      dtype=object)
+</pre></div>
+</div>
 <p>Next we load the titanic dataset to demonstrate <code class="docutils literal notranslate"><span class="pre">set_output</span></code> with
 <a class="reference internal" href="../../modules/generated/sklearn.compose.ColumnTransformer.html#sklearn.compose.ColumnTransformer" title="sklearn.compose.ColumnTransformer"><code class="xref py py-class docutils literal notranslate"><span class="pre">compose.ColumnTransformer</span></code></a> and heterogeneous data.</p>
 <div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">sklearn.datasets</span> <span class="kn">import</span> <a class="sphx-glr-backref-module-sklearn-datasets sphx-glr-backref-type-py-function" href="../../modules/generated/sklearn.datasets.fetch_openml.html#sklearn.datasets.fetch_openml" title="sklearn.datasets.fetch_openml"><span class="n">fetch_openml</span></a>
@@ -1967,7 +1992,7 @@ div.sk-label-container:hover .sk-estimator-doc-link.fitted:hover,
        [ 2.53284267,  3.54606834]])
 </pre></div>
 </div>
-<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> (0 minutes 0.145 seconds)</p>
+<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> (0 minutes 0.130 seconds)</p>
 
 <p class="rubric">Related examples</p>
 <div class="sphx-glr-thumbnails"><div class="sphx-glr-thumbcontainer" tooltip="We are pleased to announce the release of scikit-learn 1.2! Many bug fixes and improvements wer..."><img alt="" src="../../_images/sphx_glr_plot_release_highlights_1_2_0_thumb.png"/>
