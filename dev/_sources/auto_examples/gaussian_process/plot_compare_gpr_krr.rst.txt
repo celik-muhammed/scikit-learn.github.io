@@ -43,13 +43,12 @@ distributions.
 We will illustrate these differences with an example and we will also focus on
 tuning the kernel hyperparameters.
 
-.. GENERATED FROM PYTHON SOURCE LINES 27-32
+.. GENERATED FROM PYTHON SOURCE LINES 27-31
 
 .. code-block:: Python
 
 
-    # Authors: Jan Hendrik Metzen <jhm@informatik.uni-bremen.de>
-    #          Guillaume Lemaitre <g.lemaitre58@gmail.com>
+    # Authors: The scikit-learn developers
     # SPDX-License-Identifier: BSD-3-Clause
 
 
@@ -59,7 +58,7 @@ tuning the kernel hyperparameters.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 33-39
+.. GENERATED FROM PYTHON SOURCE LINES 32-38
 
 Generating a dataset
 --------------------
@@ -68,7 +67,7 @@ We create a synthetic dataset. The true generative process will take a 1-D
 vector and compute its sine. Note that the period of this sine is thus
 :math:`2 \pi`. We will reuse this information later in this example.
 
-.. GENERATED FROM PYTHON SOURCE LINES 39-45
+.. GENERATED FROM PYTHON SOURCE LINES 38-44
 
 .. code-block:: Python
 
@@ -85,7 +84,7 @@ vector and compute its sine. Note that the period of this sine is thus
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 46-51
+.. GENERATED FROM PYTHON SOURCE LINES 45-50
 
 Now, we can imagine a scenario where we get observations from this true
 process. However, we will add some challenges:
@@ -93,7 +92,7 @@ process. However, we will add some challenges:
 - the measurements will be noisy;
 - only samples from the beginning of the signal will be available.
 
-.. GENERATED FROM PYTHON SOURCE LINES 51-57
+.. GENERATED FROM PYTHON SOURCE LINES 50-56
 
 .. code-block:: Python
 
@@ -110,11 +109,11 @@ process. However, we will add some challenges:
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 58-59
+.. GENERATED FROM PYTHON SOURCE LINES 57-58
 
 Let's plot the true signal and the noisy measurements available for training.
 
-.. GENERATED FROM PYTHON SOURCE LINES 59-76
+.. GENERATED FROM PYTHON SOURCE LINES 58-75
 
 .. code-block:: Python
 
@@ -147,7 +146,7 @@ Let's plot the true signal and the noisy measurements available for training.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 77-83
+.. GENERATED FROM PYTHON SOURCE LINES 76-82
 
 Limitations of a simple linear model
 ------------------------------------
@@ -156,7 +155,7 @@ First, we would like to highlight the limitations of a linear model given
 our dataset. We fit a :class:`~sklearn.linear_model.Ridge` and check the
 predictions of this model on our dataset.
 
-.. GENERATED FROM PYTHON SOURCE LINES 83-100
+.. GENERATED FROM PYTHON SOURCE LINES 82-99
 
 .. code-block:: Python
 
@@ -189,7 +188,7 @@ predictions of this model on our dataset.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 101-127
+.. GENERATED FROM PYTHON SOURCE LINES 100-126
 
 Such a ridge regressor underfits data since it is not expressive enough.
 
@@ -218,7 +217,7 @@ between samples in the higher dimensional feature space is computed using the
 
 Thus, let's use such a :class:`~sklearn.kernel_ridge.KernelRidge`.
 
-.. GENERATED FROM PYTHON SOURCE LINES 127-140
+.. GENERATED FROM PYTHON SOURCE LINES 126-139
 
 .. code-block:: Python
 
@@ -248,7 +247,7 @@ Thus, let's use such a :class:`~sklearn.kernel_ridge.KernelRidge`.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 141-163
+.. GENERATED FROM PYTHON SOURCE LINES 140-162
 
 .. code-block:: Python
 
@@ -286,12 +285,12 @@ Thus, let's use such a :class:`~sklearn.kernel_ridge.KernelRidge`.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 164-166
+.. GENERATED FROM PYTHON SOURCE LINES 163-165
 
 This fitted model is not accurate. Indeed, we did not set the parameters of
 the kernel and instead used the default ones. We can inspect them.
 
-.. GENERATED FROM PYTHON SOURCE LINES 166-168
+.. GENERATED FROM PYTHON SOURCE LINES 165-167
 
 .. code-block:: Python
 
@@ -310,7 +309,7 @@ the kernel and instead used the default ones. We can inspect them.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 169-178
+.. GENERATED FROM PYTHON SOURCE LINES 168-177
 
 Our kernel has two parameters: the length-scale and the periodicity. For our
 dataset, we use `sin` as the generative process, implying a
@@ -322,7 +321,7 @@ tell us that the kernel parameters need to be tuned. We will use a randomized
 search to tune the different parameters the kernel ridge model: the `alpha`
 parameter and the kernel parameters.
 
-.. GENERATED FROM PYTHON SOURCE LINES 180-199
+.. GENERATED FROM PYTHON SOURCE LINES 179-198
 
 .. code-block:: Python
 
@@ -353,18 +352,18 @@ parameter and the kernel parameters.
 
  .. code-block:: none
 
-    Time for KernelRidge fitting: 4.020 seconds
+    Time for KernelRidge fitting: 4.064 seconds
 
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 200-203
+.. GENERATED FROM PYTHON SOURCE LINES 199-202
 
 Fitting the model is now more computationally expensive since we have to try
 several combinations of hyperparameters. We can have a look at the
 hyperparameters found to get some intuitions.
 
-.. GENERATED FROM PYTHON SOURCE LINES 203-205
+.. GENERATED FROM PYTHON SOURCE LINES 202-204
 
 .. code-block:: Python
 
@@ -383,13 +382,13 @@ hyperparameters found to get some intuitions.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 206-209
+.. GENERATED FROM PYTHON SOURCE LINES 205-208
 
 Looking at the best parameters, we see that they are different from the
 defaults. We also see that the periodicity is closer to the expected value:
 :math:`2 \pi`. We can now inspect the predictions of our tuned kernel ridge.
 
-.. GENERATED FROM PYTHON SOURCE LINES 209-213
+.. GENERATED FROM PYTHON SOURCE LINES 208-212
 
 .. code-block:: Python
 
@@ -405,12 +404,12 @@ defaults. We also see that the periodicity is closer to the expected value:
 
  .. code-block:: none
 
-    Time for KernelRidge predict: 0.001 seconds
+    Time for KernelRidge predict: 0.002 seconds
 
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 214-236
+.. GENERATED FROM PYTHON SOURCE LINES 213-235
 
 .. code-block:: Python
 
@@ -448,7 +447,7 @@ defaults. We also see that the periodicity is closer to the expected value:
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 237-251
+.. GENERATED FROM PYTHON SOURCE LINES 236-250
 
 We get a much more accurate model. We still observe some errors mainly due to
 the noise added to the dataset.
@@ -465,7 +464,7 @@ for the kernel ridge regressor: we add a
 :class:`~sklearn.gaussian_process.kernels.WhiteKernel` that is used to
 estimate the noise in the dataset.
 
-.. GENERATED FROM PYTHON SOURCE LINES 251-264
+.. GENERATED FROM PYTHON SOURCE LINES 250-263
 
 .. code-block:: Python
 
@@ -490,18 +489,18 @@ estimate the noise in the dataset.
 
  .. code-block:: none
 
-    Time for GaussianProcessRegressor fitting: 0.031 seconds
+    Time for GaussianProcessRegressor fitting: 0.039 seconds
 
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 265-268
+.. GENERATED FROM PYTHON SOURCE LINES 264-267
 
 The computation cost of training a Gaussian process is much less than the
 kernel ridge that uses a randomized search. We can check the parameters of
 the kernels that we computed.
 
-.. GENERATED FROM PYTHON SOURCE LINES 268-270
+.. GENERATED FROM PYTHON SOURCE LINES 267-269
 
 .. code-block:: Python
 
@@ -520,14 +519,14 @@ the kernels that we computed.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 271-275
+.. GENERATED FROM PYTHON SOURCE LINES 270-274
 
 Indeed, we see that the parameters have been optimized. Looking at the
 `periodicity` parameter, we see that we found a period close to the
 theoretical value :math:`2 \pi`. We can have a look now at the predictions of
 our model.
 
-.. GENERATED FROM PYTHON SOURCE LINES 275-284
+.. GENERATED FROM PYTHON SOURCE LINES 274-283
 
 .. code-block:: Python
 
@@ -553,7 +552,7 @@ our model.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 285-320
+.. GENERATED FROM PYTHON SOURCE LINES 284-319
 
 .. code-block:: Python
 
@@ -604,7 +603,7 @@ our model.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 321-344
+.. GENERATED FROM PYTHON SOURCE LINES 320-343
 
 We observe that the results of the kernel ridge and the Gaussian process
 regressor are close. However, the Gaussian process regressor also provide
@@ -630,7 +629,7 @@ Gaussian process allows to combine kernels together. Thus, we could associate
 the exponential sine squared kernel together with a radial basis function
 kernel.
 
-.. GENERATED FROM PYTHON SOURCE LINES 344-356
+.. GENERATED FROM PYTHON SOURCE LINES 343-355
 
 .. code-block:: Python
 
@@ -653,7 +652,7 @@ kernel.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 357-392
+.. GENERATED FROM PYTHON SOURCE LINES 356-391
 
 .. code-block:: Python
 
@@ -704,7 +703,7 @@ kernel.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 393-398
+.. GENERATED FROM PYTHON SOURCE LINES 392-397
 
 The effect of using a radial basis function kernel will attenuate the
 periodicity effect once that no sample are available in the training.
@@ -715,7 +714,7 @@ also increases.
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** (0 minutes 4.672 seconds)
+   **Total running time of the script:** (0 minutes 4.763 seconds)
 
 
 .. _sphx_glr_download_auto_examples_gaussian_process_plot_compare_gpr_krr.py:
