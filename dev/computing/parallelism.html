@@ -909,14 +909,12 @@ state of the aforementioned singletons.</p>
 the <code class="docutils literal notranslate"><span class="pre">global_random_seed`</span></code> fixture.</p>
 <p>All tests that use this fixture accept the contract that they should
 deterministically pass for any seed value from 0 to 99 included.</p>
-<p>If the <code class="docutils literal notranslate"><span class="pre">SKLEARN_TESTS_GLOBAL_RANDOM_SEED</span></code> environment variable is set to
-<code class="docutils literal notranslate"><span class="pre">&quot;any&quot;</span></code> (which should be the case on nightly builds on the CI), the fixture
-will choose an arbitrary seed in the above range (based on the BUILD_NUMBER or
-the current day) and all fixtured tests will run for that specific seed. The
-goal is to ensure that, over time, our CI will run all tests with different
-seeds while keeping the test duration of a single run of the full test suite
-limited. This will check that the assertions of tests written to use this
-fixture are not dependent on a specific seed value.</p>
+<p>In nightly CI builds, the <code class="docutils literal notranslate"><span class="pre">SKLEARN_TESTS_GLOBAL_RANDOM_SEED</span></code> environment
+variable is drawn randomly in the above range and all fixtured tests will run
+for that specific seed. The goal is to ensure that, over time, our CI will run
+all tests with different seeds while keeping the test duration of a single run
+of the full test suite limited. This will check that the assertions of tests
+written to use this fixture are not dependent on a specific seed value.</p>
 <p>The range of admissible seed values is limited to [0, 99] because it is often
 not possible to write a test that can work for any possible seed and we want to
 avoid having tests that randomly fail on the CI.</p>
@@ -925,8 +923,6 @@ avoid having tests that randomly fail on the CI.</p>
 <li><p><code class="docutils literal notranslate"><span class="pre">SKLEARN_TESTS_GLOBAL_RANDOM_SEED=&quot;42&quot;</span></code>: run tests with a fixed seed of 42</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">SKLEARN_TESTS_GLOBAL_RANDOM_SEED=&quot;40-42&quot;</span></code>: run the tests with all seeds
 between 40 and 42 included</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">SKLEARN_TESTS_GLOBAL_RANDOM_SEED=&quot;any&quot;</span></code>: run the tests with an arbitrary
-seed selected between 0 and 99 included</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">SKLEARN_TESTS_GLOBAL_RANDOM_SEED=&quot;all&quot;</span></code>: run the tests with all seeds
 between 0 and 99 included. This can take a long time: only use for individual
 tests, not the full test suite!</p></li>
