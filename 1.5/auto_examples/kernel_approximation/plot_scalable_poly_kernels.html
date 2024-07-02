@@ -13,19 +13,19 @@
 <meta content="https://scikit-learn.org/stable/_static/scikit-learn-logo-small.png" property="og:image"/>
 <meta content="scikit-learn" property="og:image:alt"/>
 <meta content="This example illustrates the use of PolynomialCountSketch to efficiently generate polynomial kernel feature-space approximations. This is used to train linear classifiers that approximate the accur..." name="description"/>
-<title>Scalable learning with polynomial kernel approximation — scikit-learn 1.5.0 documentation</title>
+<title>Scalable learning with polynomial kernel approximation — scikit-learn 1.5.1 documentation</title>
 <script data-cfasync="false">
     document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
-    document.documentElement.dataset.theme = localStorage.getItem("theme") || "light";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
   </script>
 <!-- Loaded before other Sphinx assets -->
-<link href="../../_static/styles/theme.css?digest=8d27b9dea8ad943066ae" rel="stylesheet"/>
-<link href="../../_static/styles/bootstrap.css?digest=8d27b9dea8ad943066ae" rel="stylesheet"/>
-<link href="../../_static/styles/pydata-sphinx-theme.css?digest=8d27b9dea8ad943066ae" rel="stylesheet"/>
-<link href="../../_static/vendor/fontawesome/6.5.1/css/all.min.css?digest=8d27b9dea8ad943066ae" rel="stylesheet"/>
-<link as="font" crossorigin="" href="../../_static/vendor/fontawesome/6.5.1/webfonts/fa-solid-900.woff2" rel="preload" type="font/woff2"/>
-<link as="font" crossorigin="" href="../../_static/vendor/fontawesome/6.5.1/webfonts/fa-brands-400.woff2" rel="preload" type="font/woff2"/>
-<link as="font" crossorigin="" href="../../_static/vendor/fontawesome/6.5.1/webfonts/fa-regular-400.woff2" rel="preload" type="font/woff2"/>
+<link href="../../_static/styles/theme.css?digest=3ee479438cf8b5e0d341" rel="stylesheet"/>
+<link href="../../_static/styles/bootstrap.css?digest=3ee479438cf8b5e0d341" rel="stylesheet"/>
+<link href="../../_static/styles/pydata-sphinx-theme.css?digest=3ee479438cf8b5e0d341" rel="stylesheet"/>
+<link href="../../_static/vendor/fontawesome/6.5.2/css/all.min.css?digest=3ee479438cf8b5e0d341" rel="stylesheet"/>
+<link as="font" crossorigin="" href="../../_static/vendor/fontawesome/6.5.2/webfonts/fa-solid-900.woff2" rel="preload" type="font/woff2"/>
+<link as="font" crossorigin="" href="../../_static/vendor/fontawesome/6.5.2/webfonts/fa-brands-400.woff2" rel="preload" type="font/woff2"/>
+<link as="font" crossorigin="" href="../../_static/vendor/fontawesome/6.5.2/webfonts/fa-regular-400.woff2" rel="preload" type="font/woff2"/>
 <link href="../../_static/pygments.css?v=a746c00c" rel="stylesheet" type="text/css"/>
 <link href="../../_static/copybutton.css?v=76b2166b" rel="stylesheet" type="text/css"/>
 <link href="../../_static/plot_directive.css" rel="stylesheet" type="text/css"/>
@@ -39,10 +39,10 @@
 <link href="../../_static/styles/colors.css?v=cc94ab7d" rel="stylesheet" type="text/css"/>
 <link href="../../_static/styles/custom.css?v=42c874f8" rel="stylesheet" type="text/css"/>
 <!-- Pre-loaded scripts that we'll load fully later -->
-<link as="script" href="../../_static/scripts/bootstrap.js?digest=8d27b9dea8ad943066ae" rel="preload"/>
-<link as="script" href="../../_static/scripts/pydata-sphinx-theme.js?digest=8d27b9dea8ad943066ae" rel="preload"/>
-<script src="../../_static/vendor/fontawesome/6.5.1/js/all.min.js?digest=8d27b9dea8ad943066ae"></script>
-<script src="../../_static/documentation_options.js?v=e0a75244"></script>
+<link as="script" href="../../_static/scripts/bootstrap.js?digest=3ee479438cf8b5e0d341" rel="preload"/>
+<link as="script" href="../../_static/scripts/pydata-sphinx-theme.js?digest=3ee479438cf8b5e0d341" rel="preload"/>
+<script src="../../_static/vendor/fontawesome/6.5.2/js/all.min.js?digest=3ee479438cf8b5e0d341"></script>
+<script src="../../_static/documentation_options.js?v=44dfd65d"></script>
 <script src="../../_static/doctools.js?v=9a2dae69"></script>
 <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
 <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
@@ -52,9 +52,9 @@
 <script data-domain="scikit-learn.org" defer="defer" src="https://views.scientific-python.org/js/script.js"></script>
 <script>DOCUMENTATION_OPTIONS.pagename = 'auto_examples/kernel_approximation/plot_scalable_poly_kernels';</script>
 <script>
-        DOCUMENTATION_OPTIONS.theme_version = '0.15.2';
+        DOCUMENTATION_OPTIONS.theme_version = '0.15.3';
         DOCUMENTATION_OPTIONS.theme_switcher_json_url = 'https://scikit-learn.org/dev/_static/versions.json';
-        DOCUMENTATION_OPTIONS.theme_switcher_version_match = '1.5.0';
+        DOCUMENTATION_OPTIONS.theme_switcher_version_match = '1.5.1';
         DOCUMENTATION_OPTIONS.show_version_warning_banner = true;
         </script>
 <script src="../../_static/scripts/dropdown.js?v=12d599f8"></script>
@@ -68,16 +68,14 @@
 <meta content="en" name="docsearch:language"/>
 </head>
 <body data-bs-root-margin="0px 0px -60%" data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-default-mode="" data-offset="180">
-<a class="skip-link" href="#main-content" id="pst-skip-link">Skip to main content</a>
+<div class="skip-link d-print-none" id="pst-skip-link"><a href="#main-content">Skip to main content</a></div>
 <div id="pst-scroll-pixel-helper"></div>
 <button class="btn rounded-pill" id="pst-back-to-top" type="button">
-<i class="fa-solid fa-arrow-up"></i>
-    Back to top
-  </button>
-<input class="sidebar-toggle" id="__primary" name="__primary" type="checkbox"/>
-<label class="overlay overlay-primary" for="__primary"></label>
-<input class="sidebar-toggle" id="__secondary" name="__secondary" type="checkbox"/>
-<label class="overlay overlay-secondary" for="__secondary"></label>
+<i class="fa-solid fa-arrow-up"></i>Back to top</button>
+<input class="sidebar-toggle" id="pst-primary-sidebar-checkbox" type="checkbox"/>
+<label class="overlay overlay-primary" for="pst-primary-sidebar-checkbox"></label>
+<input class="sidebar-toggle" id="pst-secondary-sidebar-checkbox" type="checkbox"/>
+<label class="overlay overlay-secondary" for="pst-secondary-sidebar-checkbox"></label>
 <div class="search-button__wrapper">
 <div class="search-button__overlay"></div>
 <div class="search-button__search-container">
@@ -87,11 +85,14 @@
 <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
 </form></div>
 </div>
-<header class="bd-header navbar navbar-expand-lg bd-navbar">
+<div class="pst-async-banner-revealer d-none">
+<aside aria-label="Version warning" class="d-none d-print-none" id="bd-header-version-warning"></aside>
+</div>
+<header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
 <div class="bd-header__inner bd-page-width">
-<label class="sidebar-toggle primary-toggle" for="__primary">
+<button aria-label="Site navigation" class="sidebar-toggle primary-toggle">
 <span class="fa-solid fa-bars"></span>
-</label>
+</button>
 <div class="navbar-header-items__start">
 <div class="navbar-item">
 <a class="navbar-brand logo" href="../../index.html">
@@ -104,90 +105,85 @@
 <div class="navbar-item">
 <nav class="navbar-nav">
 <ul class="bd-navbar-elements navbar-nav">
-<li class="nav-item">
+<li class="nav-item pst-header-nav-item">
 <a class="nav-link nav-internal" href="../../install.html">
-                        Install
-                      </a>
+    Install
+  </a>
 </li>
-<li class="nav-item">
+<li class="nav-item pst-header-nav-item">
 <a class="nav-link nav-internal" href="../../user_guide.html">
-                        User Guide
-                      </a>
+    User Guide
+  </a>
 </li>
-<li class="nav-item">
+<li class="nav-item pst-header-nav-item">
 <a class="nav-link nav-internal" href="../../api/index.html">
-                        API
-                      </a>
+    API
+  </a>
 </li>
-<li class="nav-item current active">
+<li class="nav-item pst-header-nav-item current active">
 <a class="nav-link nav-internal" href="../index.html">
-                        Examples
-                      </a>
+    Examples
+  </a>
 </li>
-<li class="nav-item">
+<li class="nav-item pst-header-nav-item">
 <a class="nav-link nav-external" href="https://blog.scikit-learn.org/">
-                        Community
-                      </a>
+    Community
+  </a>
 </li>
-<li class="nav-item dropdown">
+<li class="nav-item dropdown pst-header-nav-item">
 <button aria-controls="pst-nav-more-links" aria-expanded="false" class="btn dropdown-toggle nav-item" data-bs-toggle="dropdown" type="button">
                     More
                 </button>
 <ul class="dropdown-menu" id="pst-nav-more-links">
 <li class="nav-item">
 <a class="nav-link dropdown-item nav-internal" href="../../getting_started.html">
-                        Getting Started
-                      </a>
-</li>
-<li class="nav-item">
-<a class="nav-link dropdown-item nav-internal" href="../../tutorial/index.html">
-                        Tutorials
-                      </a>
+    Getting Started
+  </a>
 </li>
 <li class="nav-item">
 <a class="nav-link dropdown-item nav-internal" href="../../whats_new.html">
-                        Release History
-                      </a>
+    Release History
+  </a>
 </li>
 <li class="nav-item">
 <a class="nav-link dropdown-item nav-internal" href="../../glossary.html">
-                        Glossary
-                      </a>
+    Glossary
+  </a>
 </li>
 <li class="nav-item">
 <a class="nav-link dropdown-item nav-external" href="https://scikit-learn.org/dev/developers/index.html">
-                        Development
-                      </a>
+    Development
+  </a>
 </li>
 <li class="nav-item">
 <a class="nav-link dropdown-item nav-internal" href="../../faq.html">
-                        FAQ
-                      </a>
+    FAQ
+  </a>
 </li>
 <li class="nav-item">
 <a class="nav-link dropdown-item nav-internal" href="../../support.html">
-                        Support
-                      </a>
+    Support
+  </a>
 </li>
 <li class="nav-item">
 <a class="nav-link dropdown-item nav-internal" href="../../related_projects.html">
-                        Related Projects
-                      </a>
+    Related Projects
+  </a>
 </li>
 <li class="nav-item">
 <a class="nav-link dropdown-item nav-internal" href="../../roadmap.html">
-                        Roadmap
-                      </a>
+    Roadmap
+  </a>
 </li>
 <li class="nav-item">
 <a class="nav-link dropdown-item nav-internal" href="../../governance.html">
-                        Governance
-                      </a>
+    Governance
+  </a>
 </li>
 <li class="nav-item">
 <a class="nav-link dropdown-item nav-internal" href="../../about.html">
-                        About us
-                      </a>
+    About us
+  </a>
 </li>
 </ul>
 </li>
@@ -254,9 +250,9 @@ document.write(`
 `);
 </script>
 </div>
-<label class="sidebar-toggle secondary-toggle" for="__secondary" tabindex="0">
+<button aria-label="On this page" class="sidebar-toggle secondary-toggle">
 <span class="fa-solid fa-outdent"></span>
-</label>
+</button>
 </div>
 </header>
 <div class="bd-container">
@@ -267,92 +263,80 @@ document.write(`
 <div class="navbar-item">
 <nav class="navbar-nav">
 <ul class="bd-navbar-elements navbar-nav">
-<li class="nav-item">
+<li class="nav-item pst-header-nav-item">
 <a class="nav-link nav-internal" href="../../install.html">
-                        Install
-                      </a>
+    Install
+  </a>
 </li>
-<li class="nav-item">
+<li class="nav-item pst-header-nav-item">
 <a class="nav-link nav-internal" href="../../user_guide.html">
-                        User Guide
-                      </a>
+    User Guide
+  </a>
 </li>
-<li class="nav-item">
+<li class="nav-item pst-header-nav-item">
 <a class="nav-link nav-internal" href="../../api/index.html">
-                        API
-                      </a>
+    API
+  </a>
 </li>
-<li class="nav-item current active">
+<li class="nav-item pst-header-nav-item current active">
 <a class="nav-link nav-internal" href="../index.html">
-                        Examples
-                      </a>
+    Examples
+  </a>
 </li>
-<li class="nav-item">
+<li class="nav-item pst-header-nav-item">
 <a class="nav-link nav-external" href="https://blog.scikit-learn.org/">
-                        Community
-                      </a>
+    Community
+  </a>
 </li>
-<li class="nav-item dropdown">
-<button aria-controls="pst-nav-more-links-2" aria-expanded="false" class="btn dropdown-toggle nav-item" data-bs-toggle="dropdown" type="button">
-                    More
-                </button>
-<ul class="dropdown-menu" id="pst-nav-more-links-2">
-<li class="nav-item">
-<a class="nav-link dropdown-item nav-internal" href="../../getting_started.html">
-                        Getting Started
-                      </a>
+<li class="nav-item pst-header-nav-item">
+<a class="nav-link nav-internal" href="../../getting_started.html">
+    Getting Started
+  </a>
 </li>
-<li class="nav-item">
-<a class="nav-link dropdown-item nav-internal" href="../../tutorial/index.html">
-                        Tutorials
-                      </a>
+<li class="nav-item pst-header-nav-item">
+<a class="nav-link nav-internal" href="../../whats_new.html">
+    Release History
+  </a>
 </li>
-<li class="nav-item">
-<a class="nav-link dropdown-item nav-internal" href="../../whats_new.html">
-                        Release History
-                      </a>
+<li class="nav-item pst-header-nav-item">
+<a class="nav-link nav-internal" href="../../glossary.html">
+    Glossary
+  </a>
 </li>
-<li class="nav-item">
-<a class="nav-link dropdown-item nav-internal" href="../../glossary.html">
-                        Glossary
-                      </a>
+<li class="nav-item pst-header-nav-item">
+<a class="nav-link nav-external" href="https://scikit-learn.org/dev/developers/index.html">
+    Development
+  </a>
 </li>
-<li class="nav-item">
-<a class="nav-link dropdown-item nav-external" href="https://scikit-learn.org/dev/developers/index.html">
-                        Development
-                      </a>
+<li class="nav-item pst-header-nav-item">
+<a class="nav-link nav-internal" href="../../faq.html">
+    FAQ
+  </a>
 </li>
-<li class="nav-item">
-<a class="nav-link dropdown-item nav-internal" href="../../faq.html">
-                        FAQ
-                      </a>
+<li class="nav-item pst-header-nav-item">
+<a class="nav-link nav-internal" href="../../support.html">
+    Support
+  </a>
 </li>
-<li class="nav-item">
-<a class="nav-link dropdown-item nav-internal" href="../../support.html">
-                        Support
-                      </a>
+<li class="nav-item pst-header-nav-item">
+<a class="nav-link nav-internal" href="../../related_projects.html">
+    Related Projects
+  </a>
 </li>
-<li class="nav-item">
-<a class="nav-link dropdown-item nav-internal" href="../../related_projects.html">
-                        Related Projects
-                      </a>
+<li class="nav-item pst-header-nav-item">
+<a class="nav-link nav-internal" href="../../roadmap.html">
+    Roadmap
+  </a>
 </li>
-<li class="nav-item">
-<a class="nav-link dropdown-item nav-internal" href="../../roadmap.html">
-                        Roadmap
-                      </a>
+<li class="nav-item pst-header-nav-item">
+<a class="nav-link nav-internal" href="../../governance.html">
+    Governance
+  </a>
 </li>
-<li class="nav-item">
-<a class="nav-link dropdown-item nav-internal" href="../../governance.html">
-                        Governance
-                      </a>
-</li>
-<li class="nav-item">
-<a class="nav-link dropdown-item nav-internal" href="../../about.html">
-                        About us
-                      </a>
-</li>
-</ul>
+<li class="nav-item pst-header-nav-item">
+<a class="nav-link nav-internal" href="../../about.html">
+    About us
+  </a>
 </li>
 </ul>
 </nav></div>
@@ -404,7 +388,7 @@ document.write(`
 <nav aria-label="Section Navigation" class="bd-docs-nav bd-links">
 <p aria-level="1" class="bd-links__title" role="heading">Section Navigation</p>
 <div class="bd-toc-item navbar-nav"><ul class="current nav bd-sidenav">
-<li class="toctree-l1 has-children"><a class="reference internal" href="../release_highlights/index.html">Release Highlights</a><input class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-1"><i class="fa-solid fa-chevron-down"></i></label><ul>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../release_highlights/index.html">Release Highlights</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
 <li class="toctree-l2"><a class="reference internal" href="../release_highlights/plot_release_highlights_1_5_0.html">Release Highlights for scikit-learn 1.5</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../release_highlights/plot_release_highlights_1_4_0.html">Release Highlights for scikit-learn 1.4</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../release_highlights/plot_release_highlights_1_3_0.html">Release Highlights for scikit-learn 1.3</a></li>
@@ -415,29 +399,29 @@ document.write(`
 <li class="toctree-l2"><a class="reference internal" href="../release_highlights/plot_release_highlights_0_23_0.html">Release Highlights for scikit-learn 0.23</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../release_highlights/plot_release_highlights_0_22_0.html">Release Highlights for scikit-learn 0.22</a></li>
 </ul>
-</li>
-<li class="toctree-l1 has-children"><a class="reference internal" href="../bicluster/index.html">Biclustering</a><input class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-2"><i class="fa-solid fa-chevron-down"></i></label><ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../bicluster/index.html">Biclustering</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
 <li class="toctree-l2"><a class="reference internal" href="../bicluster/plot_spectral_biclustering.html">A demo of the Spectral Biclustering algorithm</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../bicluster/plot_spectral_coclustering.html">A demo of the Spectral Co-Clustering algorithm</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../bicluster/plot_bicluster_newsgroups.html">Biclustering documents with the Spectral Co-clustering algorithm</a></li>
 </ul>
-</li>
-<li class="toctree-l1 has-children"><a class="reference internal" href="../calibration/index.html">Calibration</a><input class="toctree-checkbox" id="toctree-checkbox-3" name="toctree-checkbox-3" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-3"><i class="fa-solid fa-chevron-down"></i></label><ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../calibration/index.html">Calibration</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
 <li class="toctree-l2"><a class="reference internal" href="../calibration/plot_compare_calibration.html">Comparison of Calibration of Classifiers</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../calibration/plot_calibration_curve.html">Probability Calibration curves</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../calibration/plot_calibration_multiclass.html">Probability Calibration for 3-class classification</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../calibration/plot_calibration.html">Probability calibration of classifiers</a></li>
 </ul>
-</li>
-<li class="toctree-l1 has-children"><a class="reference internal" href="../classification/index.html">Classification</a><input class="toctree-checkbox" id="toctree-checkbox-4" name="toctree-checkbox-4" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-4"><i class="fa-solid fa-chevron-down"></i></label><ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../classification/index.html">Classification</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
 <li class="toctree-l2"><a class="reference internal" href="../classification/plot_classifier_comparison.html">Classifier comparison</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../classification/plot_lda_qda.html">Linear and Quadratic Discriminant Analysis with covariance ellipsoid</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../classification/plot_lda.html">Normal, Ledoit-Wolf and OAS Linear Discriminant Analysis for classification</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../classification/plot_classification_probability.html">Plot classification probability</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../classification/plot_digits_classification.html">Recognizing hand-written digits</a></li>
 </ul>
-</li>
-<li class="toctree-l1 has-children"><a class="reference internal" href="../cluster/index.html">Clustering</a><input class="toctree-checkbox" id="toctree-checkbox-5" name="toctree-checkbox-5" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-5"><i class="fa-solid fa-chevron-down"></i></label><ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../cluster/index.html">Clustering</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
 <li class="toctree-l2"><a class="reference internal" href="../cluster/plot_kmeans_digits.html">A demo of K-Means clustering on the handwritten digits data</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../cluster/plot_coin_ward_segmentation.html">A demo of structured Ward hierarchical clustering on an image of coins</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../cluster/plot_mean_shift.html">A demo of the mean-shift clustering algorithm</a></li>
@@ -470,36 +454,36 @@ document.write(`
 <li class="toctree-l2"><a class="reference internal" href="../cluster/plot_digits_linkage.html">Various Agglomerative Clustering on a 2D embedding of digits</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../cluster/plot_face_compress.html">Vector Quantization Example</a></li>
 </ul>
-</li>
-<li class="toctree-l1 has-children"><a class="reference internal" href="../covariance/index.html">Covariance estimation</a><input class="toctree-checkbox" id="toctree-checkbox-6" name="toctree-checkbox-6" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-6"><i class="fa-solid fa-chevron-down"></i></label><ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../covariance/index.html">Covariance estimation</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
 <li class="toctree-l2"><a class="reference internal" href="../covariance/plot_lw_vs_oas.html">Ledoit-Wolf vs OAS estimation</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../covariance/plot_mahalanobis_distances.html">Robust covariance estimation and Mahalanobis distances relevance</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../covariance/plot_robust_vs_empirical_covariance.html">Robust vs Empirical covariance estimate</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../covariance/plot_covariance_estimation.html">Shrinkage covariance estimation: LedoitWolf vs OAS and max-likelihood</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../covariance/plot_sparse_cov.html">Sparse inverse covariance estimation</a></li>
 </ul>
-</li>
-<li class="toctree-l1 has-children"><a class="reference internal" href="../cross_decomposition/index.html">Cross decomposition</a><input class="toctree-checkbox" id="toctree-checkbox-7" name="toctree-checkbox-7" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-7"><i class="fa-solid fa-chevron-down"></i></label><ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../cross_decomposition/index.html">Cross decomposition</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
 <li class="toctree-l2"><a class="reference internal" href="../cross_decomposition/plot_compare_cross_decomposition.html">Compare cross decomposition methods</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../cross_decomposition/plot_pcr_vs_pls.html">Principal Component Regression vs Partial Least Squares Regression</a></li>
 </ul>
-</li>
-<li class="toctree-l1 has-children"><a class="reference internal" href="../datasets/index.html">Dataset examples</a><input class="toctree-checkbox" id="toctree-checkbox-8" name="toctree-checkbox-8" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-8"><i class="fa-solid fa-chevron-down"></i></label><ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../datasets/index.html">Dataset examples</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
 <li class="toctree-l2"><a class="reference internal" href="../datasets/plot_random_dataset.html">Plot randomly generated classification dataset</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../datasets/plot_random_multilabel_dataset.html">Plot randomly generated multilabel dataset</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../datasets/plot_digits_last_image.html">The Digit Dataset</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../datasets/plot_iris_dataset.html">The Iris Dataset</a></li>
 </ul>
-</li>
-<li class="toctree-l1 has-children"><a class="reference internal" href="../tree/index.html">Decision Trees</a><input class="toctree-checkbox" id="toctree-checkbox-9" name="toctree-checkbox-9" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-9"><i class="fa-solid fa-chevron-down"></i></label><ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../tree/index.html">Decision Trees</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
 <li class="toctree-l2"><a class="reference internal" href="../tree/plot_tree_regression.html">Decision Tree Regression</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../tree/plot_tree_regression_multioutput.html">Multi-output Decision Tree Regression</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../tree/plot_iris_dtc.html">Plot the decision surface of decision trees trained on the iris dataset</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../tree/plot_cost_complexity_pruning.html">Post pruning decision trees with cost complexity pruning</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../tree/plot_unveil_tree_structure.html">Understanding the decision tree structure</a></li>
 </ul>
-</li>
-<li class="toctree-l1 has-children"><a class="reference internal" href="../decomposition/index.html">Decomposition</a><input class="toctree-checkbox" id="toctree-checkbox-10" name="toctree-checkbox-10" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-10"><i class="fa-solid fa-chevron-down"></i></label><ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../decomposition/index.html">Decomposition</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
 <li class="toctree-l2"><a class="reference internal" href="../decomposition/plot_ica_blind_source_separation.html">Blind source separation using FastICA</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../decomposition/plot_pca_vs_lda.html">Comparison of LDA and PCA 2D projection of Iris dataset</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../decomposition/plot_faces_decomposition.html">Faces dataset decompositions</a></li>
@@ -512,12 +496,12 @@ document.write(`
 <li class="toctree-l2"><a class="reference internal" href="../decomposition/plot_pca_iris.html">PCA example with Iris Data-set</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../decomposition/plot_sparse_coding.html">Sparse coding with a precomputed dictionary</a></li>
 </ul>
-</li>
-<li class="toctree-l1 has-children"><a class="reference internal" href="../developing_estimators/index.html">Developing Estimators</a><input class="toctree-checkbox" id="toctree-checkbox-11" name="toctree-checkbox-11" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-11"><i class="fa-solid fa-chevron-down"></i></label><ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../developing_estimators/index.html">Developing Estimators</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
 <li class="toctree-l2"><a class="reference internal" href="../developing_estimators/sklearn_is_fitted.html"><code class="docutils literal notranslate"><span class="pre">__sklearn_is_fitted__</span></code> as Developer API</a></li>
 </ul>
-</li>
-<li class="toctree-l1 has-children"><a class="reference internal" href="../ensemble/index.html">Ensemble methods</a><input class="toctree-checkbox" id="toctree-checkbox-12" name="toctree-checkbox-12" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-12"><i class="fa-solid fa-chevron-down"></i></label><ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../ensemble/index.html">Ensemble methods</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
 <li class="toctree-l2"><a class="reference internal" href="../ensemble/plot_gradient_boosting_categorical.html">Categorical Feature Support in Gradient Boosting</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../ensemble/plot_stack_predictors.html">Combine predictors using stacking</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../ensemble/plot_forest_hist_grad_boosting_comparison.html">Comparing Random Forests and Histogram Gradient Boosting models</a></li>
@@ -544,8 +528,8 @@ document.write(`
 <li class="toctree-l2"><a class="reference internal" href="../ensemble/plot_bias_variance.html">Single estimator versus bagging: bias-variance decomposition</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../ensemble/plot_adaboost_twoclass.html">Two-class AdaBoost</a></li>
 </ul>
-</li>
-<li class="toctree-l1 has-children"><a class="reference internal" href="../applications/index.html">Examples based on real world datasets</a><input class="toctree-checkbox" id="toctree-checkbox-13" name="toctree-checkbox-13" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-13"><i class="fa-solid fa-chevron-down"></i></label><ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../applications/index.html">Examples based on real world datasets</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
 <li class="toctree-l2"><a class="reference internal" href="../applications/plot_tomography_l1_reconstruction.html">Compressive sensing: tomography reconstruction with L1 prior (Lasso)</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../applications/plot_face_recognition.html">Faces recognition example using eigenfaces and SVMs</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../applications/plot_digits_denoising.html">Image denoising using kernel PCA</a></li>
@@ -560,8 +544,8 @@ document.write(`
 <li class="toctree-l2"><a class="reference internal" href="../applications/plot_stock_market.html">Visualizing the stock market structure</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../applications/wikipedia_principal_eigenvector.html">Wikipedia principal eigenvector</a></li>
 </ul>
-</li>
-<li class="toctree-l1 has-children"><a class="reference internal" href="../feature_selection/index.html">Feature Selection</a><input class="toctree-checkbox" id="toctree-checkbox-14" name="toctree-checkbox-14" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-14"><i class="fa-solid fa-chevron-down"></i></label><ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../feature_selection/index.html">Feature Selection</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
 <li class="toctree-l2"><a class="reference internal" href="../feature_selection/plot_f_test_vs_mi.html">Comparison of F-test and mutual information</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../feature_selection/plot_select_from_model_diabetes.html">Model-based and sequential feature selection</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../feature_selection/plot_feature_selection_pipeline.html">Pipeline ANOVA SVM</a></li>
@@ -569,8 +553,8 @@ document.write(`
 <li class="toctree-l2"><a class="reference internal" href="../feature_selection/plot_rfe_with_cross_validation.html">Recursive feature elimination with cross-validation</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../feature_selection/plot_feature_selection.html">Univariate Feature Selection</a></li>
 </ul>
-</li>
-<li class="toctree-l1 has-children"><a class="reference internal" href="../mixture/index.html">Gaussian Mixture Models</a><input class="toctree-checkbox" id="toctree-checkbox-15" name="toctree-checkbox-15" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-15"><i class="fa-solid fa-chevron-down"></i></label><ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../mixture/index.html">Gaussian Mixture Models</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
 <li class="toctree-l2"><a class="reference internal" href="../mixture/plot_concentration_prior.html">Concentration Prior Type Analysis of Variation Bayesian Gaussian Mixture</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../mixture/plot_gmm_pdf.html">Density Estimation for a Gaussian mixture</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../mixture/plot_gmm_init.html">GMM Initialization Methods</a></li>
@@ -579,8 +563,8 @@ document.write(`
 <li class="toctree-l2"><a class="reference internal" href="../mixture/plot_gmm_selection.html">Gaussian Mixture Model Selection</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../mixture/plot_gmm_sin.html">Gaussian Mixture Model Sine Curve</a></li>
 </ul>
-</li>
-<li class="toctree-l1 has-children"><a class="reference internal" href="../gaussian_process/index.html">Gaussian Process for Machine Learning</a><input class="toctree-checkbox" id="toctree-checkbox-16" name="toctree-checkbox-16" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-16"><i class="fa-solid fa-chevron-down"></i></label><ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../gaussian_process/index.html">Gaussian Process for Machine Learning</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
 <li class="toctree-l2"><a class="reference internal" href="../gaussian_process/plot_gpr_noisy.html">Ability of Gaussian process regression (GPR) to estimate data noise-level</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../gaussian_process/plot_compare_gpr_krr.html">Comparison of kernel ridge and Gaussian process regression</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../gaussian_process/plot_gpr_co2.html">Forecasting of CO2 level on Mona Loa dataset using Gaussian process regression (GPR)</a></li>
@@ -592,8 +576,8 @@ document.write(`
 <li class="toctree-l2"><a class="reference internal" href="../gaussian_process/plot_gpc_isoprobability.html">Iso-probability lines for Gaussian Processes classification (GPC)</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../gaussian_process/plot_gpc.html">Probabilistic predictions with Gaussian process classification (GPC)</a></li>
 </ul>
-</li>
-<li class="toctree-l1 has-children"><a class="reference internal" href="../linear_model/index.html">Generalized Linear Models</a><input class="toctree-checkbox" id="toctree-checkbox-17" name="toctree-checkbox-17" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-17"><i class="fa-solid fa-chevron-down"></i></label><ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../linear_model/index.html">Generalized Linear Models</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
 <li class="toctree-l2"><a class="reference internal" href="../linear_model/plot_ard.html">Comparing Linear Bayesian Regressors</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../linear_model/plot_sgd_comparison.html">Comparing various online solvers</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../linear_model/plot_bayesian_ridge_curvefit.html">Curve Fitting with Bayesian Ridge Regression</a></li>
@@ -635,20 +619,20 @@ document.write(`
 <li class="toctree-l2"><a class="reference internal" href="../linear_model/plot_theilsen.html">Theil-Sen Regression</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../linear_model/plot_tweedie_regression_insurance_claims.html">Tweedie regression on insurance claims</a></li>
 </ul>
-</li>
-<li class="toctree-l1 has-children"><a class="reference internal" href="../inspection/index.html">Inspection</a><input class="toctree-checkbox" id="toctree-checkbox-18" name="toctree-checkbox-18" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-18"><i class="fa-solid fa-chevron-down"></i></label><ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../inspection/index.html">Inspection</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
 <li class="toctree-l2"><a class="reference internal" href="../inspection/plot_linear_model_coefficient_interpretation.html">Common pitfalls in the interpretation of coefficients of linear models</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../inspection/plot_causal_interpretation.html">Failure of Machine Learning to infer causal effects</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../inspection/plot_partial_dependence.html">Partial Dependence and Individual Conditional Expectation Plots</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../inspection/plot_permutation_importance.html">Permutation Importance vs Random Forest Feature Importance (MDI)</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../inspection/plot_permutation_importance_multicollinear.html">Permutation Importance with Multicollinear or Correlated Features</a></li>
 </ul>
-</li>
-<li class="toctree-l1 current active has-children"><a class="reference internal" href="index.html">Kernel Approximation</a><input checked="" class="toctree-checkbox" id="toctree-checkbox-19" name="toctree-checkbox-19" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-19"><i class="fa-solid fa-chevron-down"></i></label><ul class="current">
+</details></li>
+<li class="toctree-l1 current active has-children"><a class="reference internal" href="index.html">Kernel Approximation</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul class="current">
 <li class="toctree-l2 current active"><a class="current reference internal" href="#">Scalable learning with polynomial kernel approximation</a></li>
 </ul>
-</li>
-<li class="toctree-l1 has-children"><a class="reference internal" href="../manifold/index.html">Manifold learning</a><input class="toctree-checkbox" id="toctree-checkbox-20" name="toctree-checkbox-20" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-20"><i class="fa-solid fa-chevron-down"></i></label><ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../manifold/index.html">Manifold learning</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
 <li class="toctree-l2"><a class="reference internal" href="../manifold/plot_compare_methods.html">Comparison of Manifold Learning methods</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../manifold/plot_manifold_sphere.html">Manifold Learning methods on a severed sphere</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../manifold/plot_lle_digits.html">Manifold learning on handwritten digits: Locally Linear Embedding, Isomap…</a></li>
@@ -656,8 +640,8 @@ document.write(`
 <li class="toctree-l2"><a class="reference internal" href="../manifold/plot_swissroll.html">Swiss Roll And Swiss-Hole Reduction</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../manifold/plot_t_sne_perplexity.html">t-SNE: The effect of various perplexity values on the shape</a></li>
 </ul>
-</li>
-<li class="toctree-l1 has-children"><a class="reference internal" href="../miscellaneous/index.html">Miscellaneous</a><input class="toctree-checkbox" id="toctree-checkbox-21" name="toctree-checkbox-21" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-21"><i class="fa-solid fa-chevron-down"></i></label><ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../miscellaneous/index.html">Miscellaneous</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
 <li class="toctree-l2"><a class="reference internal" href="../miscellaneous/plot_partial_dependence_visualization_api.html">Advanced Plotting With Partial Dependence</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../miscellaneous/plot_anomaly_comparison.html">Comparing anomaly detection algorithms for outlier detection on toy datasets</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../miscellaneous/plot_kernel_ridge_regression.html">Comparison of kernel ridge regression and SVR</a></li>
@@ -674,13 +658,13 @@ document.write(`
 <li class="toctree-l2"><a class="reference internal" href="../miscellaneous/plot_johnson_lindenstrauss_bound.html">The Johnson-Lindenstrauss bound for embedding with random projections</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../miscellaneous/plot_display_object_visualization.html">Visualizations with Display Objects</a></li>
 </ul>
-</li>
-<li class="toctree-l1 has-children"><a class="reference internal" href="../impute/index.html">Missing Value Imputation</a><input class="toctree-checkbox" id="toctree-checkbox-22" name="toctree-checkbox-22" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-22"><i class="fa-solid fa-chevron-down"></i></label><ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../impute/index.html">Missing Value Imputation</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
 <li class="toctree-l2"><a class="reference internal" href="../impute/plot_missing_values.html">Imputing missing values before building an estimator</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../impute/plot_iterative_imputer_variants_comparison.html">Imputing missing values with variants of IterativeImputer</a></li>
 </ul>
-</li>
-<li class="toctree-l1 has-children"><a class="reference internal" href="../model_selection/index.html">Model Selection</a><input class="toctree-checkbox" id="toctree-checkbox-23" name="toctree-checkbox-23" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-23"><i class="fa-solid fa-chevron-down"></i></label><ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../model_selection/index.html">Model Selection</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
 <li class="toctree-l2"><a class="reference internal" href="../model_selection/plot_grid_search_refit_callable.html">Balance model complexity and cross-validated score</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../model_selection/plot_likelihood_ratios.html">Class Likelihood Ratios to measure classification performance</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../model_selection/plot_randomized_search.html">Comparing randomized search and grid search for hyperparameter estimation</a></li>
@@ -706,16 +690,16 @@ document.write(`
 <li class="toctree-l2"><a class="reference internal" href="../model_selection/plot_underfitting_overfitting.html">Underfitting vs. Overfitting</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../model_selection/plot_cv_indices.html">Visualizing cross-validation behavior in scikit-learn</a></li>
 </ul>
-</li>
-<li class="toctree-l1 has-children"><a class="reference internal" href="../multiclass/index.html">Multiclass methods</a><input class="toctree-checkbox" id="toctree-checkbox-24" name="toctree-checkbox-24" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-24"><i class="fa-solid fa-chevron-down"></i></label><ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../multiclass/index.html">Multiclass methods</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
 <li class="toctree-l2"><a class="reference internal" href="../multiclass/plot_multiclass_overview.html">Overview of multiclass training meta-estimators</a></li>
 </ul>
-</li>
-<li class="toctree-l1 has-children"><a class="reference internal" href="../multioutput/index.html">Multioutput methods</a><input class="toctree-checkbox" id="toctree-checkbox-25" name="toctree-checkbox-25" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-25"><i class="fa-solid fa-chevron-down"></i></label><ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../multioutput/index.html">Multioutput methods</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
 <li class="toctree-l2"><a class="reference internal" href="../multioutput/plot_classifier_chain_yeast.html">Multilabel classification using a classifier chain</a></li>
 </ul>
-</li>
-<li class="toctree-l1 has-children"><a class="reference internal" href="../neighbors/index.html">Nearest Neighbors</a><input class="toctree-checkbox" id="toctree-checkbox-26" name="toctree-checkbox-26" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-26"><i class="fa-solid fa-chevron-down"></i></label><ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../neighbors/index.html">Nearest Neighbors</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
 <li class="toctree-l2"><a class="reference internal" href="../neighbors/approximate_nearest_neighbors.html">Approximate nearest neighbors in TSNE</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../neighbors/plot_caching_nearest_neighbors.html">Caching nearest neighbors</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../neighbors/plot_nca_classification.html">Comparing Nearest Neighbors with and without Neighborhood Components Analysis</a></li>
@@ -730,15 +714,15 @@ document.write(`
 <li class="toctree-l2"><a class="reference internal" href="../neighbors/plot_lof_outlier_detection.html">Outlier detection with Local Outlier Factor (LOF)</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../neighbors/plot_kde_1d.html">Simple 1D Kernel Density Estimation</a></li>
 </ul>
-</li>
-<li class="toctree-l1 has-children"><a class="reference internal" href="../neural_networks/index.html">Neural Networks</a><input class="toctree-checkbox" id="toctree-checkbox-27" name="toctree-checkbox-27" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-27"><i class="fa-solid fa-chevron-down"></i></label><ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../neural_networks/index.html">Neural Networks</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
 <li class="toctree-l2"><a class="reference internal" href="../neural_networks/plot_mlp_training_curves.html">Compare Stochastic learning strategies for MLPClassifier</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../neural_networks/plot_rbm_logistic_classification.html">Restricted Boltzmann Machine features for digit classification</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../neural_networks/plot_mlp_alpha.html">Varying regularization in Multi-layer Perceptron</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../neural_networks/plot_mnist_filters.html">Visualization of MLP weights on MNIST</a></li>
 </ul>
-</li>
-<li class="toctree-l1 has-children"><a class="reference internal" href="../compose/index.html">Pipelines and composite estimators</a><input class="toctree-checkbox" id="toctree-checkbox-28" name="toctree-checkbox-28" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-28"><i class="fa-solid fa-chevron-down"></i></label><ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../compose/index.html">Pipelines and composite estimators</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
 <li class="toctree-l2"><a class="reference internal" href="../compose/plot_column_transformer.html">Column Transformer with Heterogeneous Data Sources</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../compose/plot_column_transformer_mixed_types.html">Column Transformer with Mixed Types</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../compose/plot_feature_union.html">Concatenating multiple feature extraction methods</a></li>
@@ -746,8 +730,8 @@ document.write(`
 <li class="toctree-l2"><a class="reference internal" href="../compose/plot_digits_pipe.html">Pipelining: chaining a PCA and a logistic regression</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../compose/plot_compare_reduction.html">Selecting dimensionality reduction with Pipeline and GridSearchCV</a></li>
 </ul>
-</li>
-<li class="toctree-l1 has-children"><a class="reference internal" href="../preprocessing/index.html">Preprocessing</a><input class="toctree-checkbox" id="toctree-checkbox-29" name="toctree-checkbox-29" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-29"><i class="fa-solid fa-chevron-down"></i></label><ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../preprocessing/index.html">Preprocessing</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
 <li class="toctree-l2"><a class="reference internal" href="../preprocessing/plot_all_scaling.html">Compare the effect of different scalers on data with outliers</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../preprocessing/plot_target_encoder.html">Comparing Target Encoder with Other Encoders</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../preprocessing/plot_discretization_strategies.html">Demonstrating the different strategies of KBinsDiscretizer</a></li>
@@ -757,8 +741,8 @@ document.write(`
 <li class="toctree-l2"><a class="reference internal" href="../preprocessing/plot_target_encoder_cross_val.html">Target Encoder’s Internal Cross fitting</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../preprocessing/plot_discretization.html">Using KBinsDiscretizer to discretize continuous features</a></li>
 </ul>
-</li>
-<li class="toctree-l1 has-children"><a class="reference internal" href="../semi_supervised/index.html">Semi Supervised Classification</a><input class="toctree-checkbox" id="toctree-checkbox-30" name="toctree-checkbox-30" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-30"><i class="fa-solid fa-chevron-down"></i></label><ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../semi_supervised/index.html">Semi Supervised Classification</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
 <li class="toctree-l2"><a class="reference internal" href="../semi_supervised/plot_semi_supervised_versus_svm_iris.html">Decision boundary of semi-supervised classifiers versus SVM on the Iris dataset</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../semi_supervised/plot_self_training_varying_threshold.html">Effect of varying threshold for self-training</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../semi_supervised/plot_label_propagation_digits_active_learning.html">Label Propagation digits active learning</a></li>
@@ -766,8 +750,8 @@ document.write(`
 <li class="toctree-l2"><a class="reference internal" href="../semi_supervised/plot_label_propagation_structure.html">Label Propagation learning a complex structure</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../semi_supervised/plot_semi_supervised_newsgroups.html">Semi-supervised Classification on a Text Dataset</a></li>
 </ul>
-</li>
-<li class="toctree-l1 has-children"><a class="reference internal" href="../svm/index.html">Support Vector Machines</a><input class="toctree-checkbox" id="toctree-checkbox-31" name="toctree-checkbox-31" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-31"><i class="fa-solid fa-chevron-down"></i></label><ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../svm/index.html">Support Vector Machines</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
 <li class="toctree-l2"><a class="reference internal" href="../svm/plot_oneclass.html">One-class SVM with non-linear kernel (RBF)</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../svm/plot_svm_kernels.html">Plot classification boundaries with different SVM Kernels</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../svm/plot_iris_svc.html">Plot different SVM classifiers in the iris dataset</a></li>
@@ -783,19 +767,19 @@ document.write(`
 <li class="toctree-l2"><a class="reference internal" href="../svm/plot_svm_scale_c.html">Scaling the regularization parameter for SVCs</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../svm/plot_svm_regression.html">Support Vector Regression (SVR) using linear and non-linear kernels</a></li>
 </ul>
-</li>
-<li class="toctree-l1 has-children"><a class="reference internal" href="../exercises/index.html">Tutorial exercises</a><input class="toctree-checkbox" id="toctree-checkbox-32" name="toctree-checkbox-32" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-32"><i class="fa-solid fa-chevron-down"></i></label><ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../exercises/index.html">Tutorial exercises</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
 <li class="toctree-l2"><a class="reference internal" href="../exercises/plot_cv_diabetes.html">Cross-validation on diabetes Dataset Exercise</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../exercises/plot_digits_classification_exercise.html">Digits Classification Exercise</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../exercises/plot_iris_exercise.html">SVM Exercise</a></li>
 </ul>
-</li>
-<li class="toctree-l1 has-children"><a class="reference internal" href="../text/index.html">Working with text documents</a><input class="toctree-checkbox" id="toctree-checkbox-33" name="toctree-checkbox-33" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-33"><i class="fa-solid fa-chevron-down"></i></label><ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../text/index.html">Working with text documents</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
 <li class="toctree-l2"><a class="reference internal" href="../text/plot_document_classification_20newsgroups.html">Classification of text documents using sparse features</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../text/plot_document_clustering.html">Clustering text documents using k-means</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../text/plot_hashing_vs_dict_vectorizer.html">FeatureHasher and DictVectorizer Comparison</a></li>
 </ul>
-</li>
+</details></li>
 </ul>
 </div>
 </nav></div>
@@ -804,14 +788,14 @@ document.write(`
 </div>
 <div id="rtd-footer-container"></div>
 </div>
-<main class="bd-main" id="main-content">
+<main class="bd-main" id="main-content" role="main">
 <div class="bd-content">
 <div class="bd-article-container">
-<div class="bd-header-article">
+<div class="bd-header-article d-print-none">
 <div class="header-article-items header-article__inner">
 <div class="header-article-items__start">
 <div class="header-article-item">
-<nav aria-label="Breadcrumb">
+<nav aria-label="Breadcrumb" class="d-print-none">
 <ul class="bd-breadcrumbs">
 <li class="breadcrumb-item breadcrumb-home">
 <a aria-label="Home" class="nav-link" href="../../index.html">
@@ -1073,7 +1057,7 @@ explicit feature maps.” KDD ‘13 (2013).
 <a class="reference external" href="https://doi.org/10.1145/2487575.2487591">https://doi.org/10.1145/2487575.2487591</a></p>
 <p>[2] LIBSVM binary datasets repository
 <a class="reference external" href="https://www.csie.ntu.edu.tw/~cjlin/libsvmtools/datasets/binary.html">https://www.csie.ntu.edu.tw/~cjlin/libsvmtools/datasets/binary.html</a></p>
-<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> (0 minutes 22.787 seconds)</p>
+<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> (0 minutes 22.155 seconds)</p>
 
 <p class="rubric">Related examples</p>
 <div class="sphx-glr-thumbnails"><div class="sphx-glr-thumbcontainer" tooltip="An example illustrating the approximation of the feature map of an RBF kernel."><img alt="" src="../../_images/sphx_glr_plot_kernel_approximation_thumb.png"/>
@@ -1143,8 +1127,8 @@ explicit feature maps.” KDD ‘13 (2013).
 </div>
 </div>
 <!-- Scripts loaded after <body> so the DOM is not blocked -->
-<script src="../../_static/scripts/bootstrap.js?digest=8d27b9dea8ad943066ae"></script>
-<script src="../../_static/scripts/pydata-sphinx-theme.js?digest=8d27b9dea8ad943066ae"></script>
+<script src="../../_static/scripts/bootstrap.js?digest=3ee479438cf8b5e0d341"></script>
+<script src="../../_static/scripts/pydata-sphinx-theme.js?digest=3ee479438cf8b5e0d341"></script>
 <footer class="bd-footer">
 <div class="bd-footer__inner bd-page-width">
 <div class="footer-items__start">

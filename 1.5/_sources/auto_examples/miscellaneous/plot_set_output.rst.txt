@@ -712,10 +712,64 @@ means that the final logistic regression step contains the feature names of the 
 
 .. GENERATED FROM PYTHON SOURCE LINES 67-69
 
+.. note:: If one uses the method `set_params`, the transformer will be
+   replaced by a new one with the default output format.
+
+.. GENERATED FROM PYTHON SOURCE LINES 69-73
+
+.. code-block:: Python
+
+    clf.set_params(standardscaler=StandardScaler())
+    clf.fit(X_train, y_train)
+    clf[-1].feature_names_in_
+
+
+
+
+
+.. rst-class:: sphx-glr-script-out
+
+ .. code-block:: none
+
+
+    array(['x0', 'x2', 'x3'], dtype=object)
+
+
+
+.. GENERATED FROM PYTHON SOURCE LINES 74-76
+
+To keep the intended behavior, use `set_output` on the new transformer
+beforehand
+
+.. GENERATED FROM PYTHON SOURCE LINES 76-81
+
+.. code-block:: Python
+
+    scaler = StandardScaler().set_output(transform="pandas")
+    clf.set_params(standardscaler=scaler)
+    clf.fit(X_train, y_train)
+    clf[-1].feature_names_in_
+
+
+
+
+
+.. rst-class:: sphx-glr-script-out
+
+ .. code-block:: none
+
+
+    array(['sepal length (cm)', 'petal length (cm)', 'petal width (cm)'],
+          dtype=object)
+
+
+
+.. GENERATED FROM PYTHON SOURCE LINES 82-84
+
 Next we load the titanic dataset to demonstrate `set_output` with
 :class:`compose.ColumnTransformer` and heterogeneous data.
 
-.. GENERATED FROM PYTHON SOURCE LINES 69-74
+.. GENERATED FROM PYTHON SOURCE LINES 84-89
 
 .. code-block:: Python
 
@@ -731,12 +785,12 @@ Next we load the titanic dataset to demonstrate `set_output` with
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 75-77
+.. GENERATED FROM PYTHON SOURCE LINES 90-92
 
 The `set_output` API can be configured globally by using :func:`set_config` and
 setting `transform_output` to `"pandas"`.
 
-.. GENERATED FROM PYTHON SOURCE LINES 77-103
+.. GENERATED FROM PYTHON SOURCE LINES 92-118
 
 .. code-block:: Python
 
@@ -779,12 +833,12 @@ setting `transform_output` to `"pandas"`.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 104-106
+.. GENERATED FROM PYTHON SOURCE LINES 119-121
 
 With the global configuration, all transformers output DataFrames. This allows us to
 easily plot the logistic regression coefficients with the corresponding feature names.
 
-.. GENERATED FROM PYTHON SOURCE LINES 106-112
+.. GENERATED FROM PYTHON SOURCE LINES 121-127
 
 .. code-block:: Python
 
@@ -806,12 +860,12 @@ easily plot the logistic regression coefficients with the corresponding feature 
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 113-115
+.. GENERATED FROM PYTHON SOURCE LINES 128-130
 
 In order to demonstrate the :func:`config_context` functionality below, let
 us first reset `transform_output` to its default value.
 
-.. GENERATED FROM PYTHON SOURCE LINES 115-117
+.. GENERATED FROM PYTHON SOURCE LINES 130-132
 
 .. code-block:: Python
 
@@ -824,14 +878,14 @@ us first reset `transform_output` to its default value.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 118-122
+.. GENERATED FROM PYTHON SOURCE LINES 133-137
 
 When configuring the output type with :func:`config_context` the
 configuration at the time when `transform` or `fit_transform` are
 called is what counts. Setting these only when you construct or fit
 the transformer has no effect.
 
-.. GENERATED FROM PYTHON SOURCE LINES 122-127
+.. GENERATED FROM PYTHON SOURCE LINES 137-142
 
 .. code-block:: Python
 
@@ -1257,7 +1311,7 @@ the transformer has no effect.
     <br />
     <br />
 
-.. GENERATED FROM PYTHON SOURCE LINES 128-133
+.. GENERATED FROM PYTHON SOURCE LINES 143-148
 
 .. code-block:: Python
 
@@ -1329,11 +1383,11 @@ the transformer has no effect.
     <br />
     <br />
 
-.. GENERATED FROM PYTHON SOURCE LINES 134-135
+.. GENERATED FROM PYTHON SOURCE LINES 149-150
 
 outside of the context manager, the output will be a NumPy array
 
-.. GENERATED FROM PYTHON SOURCE LINES 135-137
+.. GENERATED FROM PYTHON SOURCE LINES 150-152
 
 .. code-block:: Python
 
@@ -1359,7 +1413,7 @@ outside of the context manager, the output will be a NumPy array
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** (0 minutes 0.155 seconds)
+   **Total running time of the script:** (0 minutes 0.162 seconds)
 
 
 .. _sphx_glr_download_auto_examples_miscellaneous_plot_set_output.py:
