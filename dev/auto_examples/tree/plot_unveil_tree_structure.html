@@ -1286,7 +1286,8 @@ node</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">weighted_n_node_samples[i]</span></code>: the weighted number of training samples
 reaching node <code class="docutils literal notranslate"><span class="pre">i</span></code></p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">value[i,</span> <span class="pre">j,</span> <span class="pre">k]</span></code>: the summary of the training samples that reached node i for
-output j and class k (for regression tree, class is set to 1).</p></li>
+output j and class k (for regression tree, class is set to 1). See below
+for more information about <code class="docutils literal notranslate"><span class="pre">value</span></code>.</p></li>
 </ul>
 </div></blockquote>
 <p>Using the arrays, we can traverse the tree structure to compute various
@@ -1326,7 +1327,7 @@ it is a leaf.</p>
     <span class="k">if</span> <span class="n">is_leaves</span><span class="p">[</span><span class="n">i</span><span class="p">]:</span>
         <span class="nb">print</span><span class="p">(</span>
             <span class="s2">"</span><span class="si">{space}</span><span class="s2">node=</span><span class="si">{node}</span><span class="s2"> is a leaf node with value=</span><span class="si">{value}</span><span class="s2">."</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
-                <span class="n">space</span><span class="o">=</span><span class="n">node_depth</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">*</span> <span class="s2">"</span><span class="se">\t</span><span class="s2">"</span><span class="p">,</span> <span class="n">node</span><span class="o">=</span><span class="n">i</span><span class="p">,</span> <span class="n">value</span><span class="o">=</span><span class="n">values</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+                <span class="n">space</span><span class="o">=</span><span class="n">node_depth</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">*</span> <span class="s2">"</span><span class="se">\t</span><span class="s2">"</span><span class="p">,</span> <span class="n">node</span><span class="o">=</span><span class="n">i</span><span class="p">,</span> <span class="n">value</span><span class="o">=</span><a class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-function" href="https://numpy.org/doc/stable/reference/generated/numpy.around.html#numpy.around" title="numpy.around"><span class="n">np</span><span class="o">.</span><span class="n">around</span></a><span class="p">(</span><span class="n">values</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="mi">3</span><span class="p">)</span>
             <span class="p">)</span>
         <span class="p">)</span>
     <span class="k">else</span><span class="p">:</span>
@@ -1340,39 +1341,51 @@ it is a leaf.</p>
                 <span class="n">feature</span><span class="o">=</span><span class="n">feature</span><span class="p">[</span><span class="n">i</span><span class="p">],</span>
                 <span class="n">threshold</span><span class="o">=</span><span class="n">threshold</span><span class="p">[</span><span class="n">i</span><span class="p">],</span>
                 <span class="n">right</span><span class="o">=</span><span class="n">children_right</span><span class="p">[</span><span class="n">i</span><span class="p">],</span>
-                <span class="n">value</span><span class="o">=</span><span class="n">values</span><span class="p">[</span><span class="n">i</span><span class="p">],</span>
+                <span class="n">value</span><span class="o">=</span><a class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-function" href="https://numpy.org/doc/stable/reference/generated/numpy.around.html#numpy.around" title="numpy.around"><span class="n">np</span><span class="o">.</span><span class="n">around</span></a><span class="p">(</span><span class="n">values</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="mi">3</span><span class="p">),</span>
             <span class="p">)</span>
         <span class="p">)</span>
 </pre></div>
 </div>
 <div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>The binary tree structure has 5 nodes and has the following tree structure:
 
-node=0 is a split node with value=[[0.33035714 0.30357143 0.36607143]]: go to node 1 if X[:, 3] &lt;= 0.800000011920929 else to node 2.
+node=0 is a split node with value=[[0.33  0.304 0.366]]: go to node 1 if X[:, 3] &lt;= 0.800000011920929 else to node 2.
         node=1 is a leaf node with value=[[1. 0. 0.]].
-        node=2 is a split node with value=[[0.         0.45333333 0.54666667]]: go to node 3 if X[:, 2] &lt;= 4.950000047683716 else to node 4.
-                node=3 is a leaf node with value=[[0.         0.91666667 0.08333333]].
-                node=4 is a leaf node with value=[[0.         0.02564103 0.97435897]].
+        node=2 is a split node with value=[[0.    0.453 0.547]]: go to node 3 if X[:, 2] &lt;= 4.950000047683716 else to node 4.
+                node=3 is a leaf node with value=[[0.    0.917 0.083]].
+                node=4 is a leaf node with value=[[0.    0.026 0.974]].
 </pre></div>
 </div>
 </section>
 <section id="what-is-the-values-array-used-here">
 <h2>What is the values array used here?<a class="headerlink" href="#what-is-the-values-array-used-here" title="Link to this heading">#</a></h2>
 <p>The <code class="docutils literal notranslate"><span class="pre">tree_.value</span></code> array is a 3D array of shape
-[<code class="docutils literal notranslate"><span class="pre">n_nodes</span></code>, <code class="docutils literal notranslate"><span class="pre">n_classes</span></code>, <code class="docutils literal notranslate"><span class="pre">n_outputs</span></code>] which provides the count of samples
-reaching a node for each class and for each output. Each node has a <code class="docutils literal notranslate"><span class="pre">value</span></code>
-array which is the number of weighted samples reaching this
-node for each output and class.</p>
+[<code class="docutils literal notranslate"><span class="pre">n_nodes</span></code>, <code class="docutils literal notranslate"><span class="pre">n_classes</span></code>, <code class="docutils literal notranslate"><span class="pre">n_outputs</span></code>] which provides the proportion of samples
+reaching a node for each class and for each output.
+Each node has a <code class="docutils literal notranslate"><span class="pre">value</span></code> array which is the proportion of weighted samples reaching
+this node for each output and class with respect to the parent node.</p>
+<p>One could convert this to the absolute weighted number of samples reaching a node,
+by multiplying this number by <code class="docutils literal notranslate"><span class="pre">tree_.weighted_n_node_samples[node_idx]</span></code> for the
+given node. Note sample weights are not used in this example, so the weighted
+number of samples is the number of samples reaching the node because each sample
+has a weight of 1 by default.</p>
 <p>For example, in the above tree built on the iris dataset, the root node has
-<code class="docutils literal notranslate"><span class="pre">value</span> <span class="pre">=</span> <span class="pre">[37,</span> <span class="pre">34,</span> <span class="pre">41]</span></code>, indicating there are 37 samples
-of class 0, 34 samples of class 1, and 41 samples of class 2 at the root node.
-Traversing the tree, the samples are split and as a result, the <code class="docutils literal notranslate"><span class="pre">value</span></code> array
-reaching each node changes. The left child of the root node has <code class="docutils literal notranslate"><span class="pre">value</span> <span class="pre">=</span> <span class="pre">[37,</span> <span class="pre">0,</span> <span class="pre">0]</span></code>
+<code class="docutils literal notranslate"><span class="pre">value</span> <span class="pre">=</span> <span class="pre">[0.33,</span> <span class="pre">0.304,</span> <span class="pre">0.366]</span></code> indicating there are 33% of class 0 samples,
+30.4% of class 1 samples, and 36.6% of class 2 samples at the root node. One can
+convert this to the absolute number of samples by multiplying by the number of
+samples reaching the root node, which is <code class="docutils literal notranslate"><span class="pre">tree_.weighted_n_node_samples[0]</span></code>.
+Then the root node has <code class="docutils literal notranslate"><span class="pre">value</span> <span class="pre">=</span> <span class="pre">[37,</span> <span class="pre">34,</span> <span class="pre">41]</span></code>, indicating there are 37 samples
+of class 0, 34 samples of class 1, and 41 samples of class 2 at the root node.</p>
+<p>Traversing the tree, the samples are split and as a result, the <code class="docutils literal notranslate"><span class="pre">value</span></code> array
+reaching each node changes. The left child of the root node has <code class="docutils literal notranslate"><span class="pre">value</span> <span class="pre">=</span> <span class="pre">[1.,</span> <span class="pre">0,</span> <span class="pre">0]</span></code>
+(or <code class="docutils literal notranslate"><span class="pre">value</span> <span class="pre">=</span> <span class="pre">[37,</span> <span class="pre">0,</span> <span class="pre">0]</span></code> when converted to the absolute number of samples)
 because all 37 samples in the left child node are from class 0.</p>
 <p>Note: In this example, <code class="docutils literal notranslate"><span class="pre">n_outputs=1</span></code>, but the tree classifier can also handle
 multi-output problems. The <code class="docutils literal notranslate"><span class="pre">value</span></code> array at each node would just be a 2D
 array instead.</p>
-<p>We can compare the above output to the plot of the decision tree.</p>
-<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><a class="sphx-glr-backref-module-sklearn-tree sphx-glr-backref-type-py-function" href="../../modules/generated/sklearn.tree.plot_tree.html#sklearn.tree.plot_tree" title="sklearn.tree.plot_tree"><span class="n">tree</span><span class="o">.</span><span class="n">plot_tree</span></a><span class="p">(</span><span class="n">clf</span><span class="p">)</span>
+<p>We can compare the above output to the plot of the decision tree.
+Here, we show the proportions of samples of each class that reach each
+node corresponding to the actual elements of <code class="docutils literal notranslate"><span class="pre">tree_.value</span></code> array.</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><a class="sphx-glr-backref-module-sklearn-tree sphx-glr-backref-type-py-function" href="../../modules/generated/sklearn.tree.plot_tree.html#sklearn.tree.plot_tree" title="sklearn.tree.plot_tree"><span class="n">tree</span><span class="o">.</span><span class="n">plot_tree</span></a><span class="p">(</span><span class="n">clf</span><span class="p">,</span> <span class="n">proportion</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 <a class="sphx-glr-backref-module-matplotlib-pyplot sphx-glr-backref-type-py-function" href="https://matplotlib.org/stable/api/_as_gen/matplotlib.pyplot.show.html#matplotlib.pyplot.show" title="matplotlib.pyplot.show"><span class="n">plt</span><span class="o">.</span><span class="n">show</span></a><span class="p">()</span>
 </pre></div>
 </div>
@@ -1452,7 +1465,7 @@ through.</p>
 This is 40.0% of all nodes.
 </pre></div>
 </div>
-<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> (0 minutes 0.080 seconds)</p>
+<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> (0 minutes 0.078 seconds)</p>
 
 <p class="rubric">Related examples</p>
 <div class="sphx-glr-thumbnails"><div class="sphx-glr-thumbcontainer" tooltip="Plot Hierarchical Clustering Dendrogram"><img alt="" src="../../_images/sphx_glr_plot_agglomerative_dendrogram_thumb.png"/>
