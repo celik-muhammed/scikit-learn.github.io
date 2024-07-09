@@ -821,6 +821,45 @@ You can edit your issue descriptions and comments at any time to improve readabi
 </pre></div>
 </div>
 </section>
+<section id="debugging-ci-issues">
+<span id="id2"></span><h3>Debugging CI issues<a class="headerlink" href="#debugging-ci-issues" title="Link to this heading">#</a></h3>
+<p>CI issues may arise for a variety of reasons, so this is by no means a
+comprehensive guide, but rather a list of useful tips and tricks.</p>
+<section id="using-a-lock-file-to-get-an-environment-close-to-the-ci">
+<h4>Using a lock-file to get an environment close to the CI<a class="headerlink" href="#using-a-lock-file-to-get-an-environment-close-to-the-ci" title="Link to this heading">#</a></h4>
+<p><code class="docutils literal notranslate"><span class="pre">conda-lock</span></code> can be used to create a conda environment with the exact same
+conda and pip packages as on the CI. For example, the following command will
+create a conda environment named <code class="docutils literal notranslate"><span class="pre">scikit-learn-doc</span></code> that is similar to the CI:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span class="prompt1">conda-lock<span class="w"> </span>install<span class="w"> </span>-n<span class="w"> </span>scikit-learn-doc<span class="w"> </span>build_tools/circle/doc_linux-64_conda.lock</span>
+</pre></div></div><div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>It only works if you have the same OS as the CI build (check <code class="docutils literal notranslate"><span class="pre">platform:</span></code> in
+the lock-file). For example, the previous command will only work if you are
+on a Linux machine. Also this may not allow you to reproduce some of the
+issues that are more tied to the particularities of the CI environment, for
+example CPU architecture reported by OpenBLAS in <code class="docutils literal notranslate"><span class="pre">sklearn.show_versions()</span></code>.</p>
+</div>
+<p>If you don’t have the same OS as the CI build you can still create a conda
+environment from the right environment yaml file, although it won’t be as close
+as the CI environment as using the associated lock-file. For example for the
+doc build:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span class="prompt1">conda<span class="w"> </span>env<span class="w"> </span>create<span class="w"> </span>-n<span class="w"> </span>scikit-learn-doc<span class="w"> </span>-f<span class="w"> </span>build_tools/circle/doc_environment.yml<span class="w"> </span>-y</span>
+</pre></div></div><p>This may not give you exactly the same package versions as in the CI for a
+variety of reasons, for example:</p>
+<ul class="simple">
+<li><p>some packages may have had new releases between the time the lock files were
+last updated in the <code class="docutils literal notranslate"><span class="pre">main</span></code> branch and the time you run the <code class="docutils literal notranslate"><span class="pre">conda</span> <span class="pre">create</span></code>
+command. You can always try to look at the version in the lock-file and
+specify the versions by hand for some specific packages that you think would
+help reproducing the issue.</p></li>
+<li><p>different packages may be installed by default depending on the OS. For
+example, the default BLAS library when installing numpy is OpenBLAS on Linux
+and MKL on Windows.</p></li>
+</ul>
+<p>Also the problem may be OS specific so the only way to be able to reproduce
+would be to have the same OS as the CI build.</p>
+</section>
+</section>
 </section>
 <section id="debugging-memory-errors-in-cython-with-valgrind">
 <h2>Debugging memory errors in Cython with valgrind<a class="headerlink" href="#debugging-memory-errors-in-cython-with-valgrind" title="Link to this heading">#</a></h2>
@@ -966,6 +1005,10 @@ more background about how Meson works behind the scenes</p></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#display-code-coverage-in-pull-requests">Display code coverage in pull requests</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#useful-pytest-aliases-and-flags">Useful pytest aliases and flags</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#standard-replies-for-reviewing">Standard replies for reviewing</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#debugging-ci-issues">Debugging CI issues</a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#using-a-lock-file-to-get-an-environment-close-to-the-ci">Using a lock-file to get an environment close to the CI</a></li>
+</ul>
+</li>
 </ul>
 </li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#debugging-memory-errors-in-cython-with-valgrind">Debugging memory errors in Cython with valgrind</a></li>
