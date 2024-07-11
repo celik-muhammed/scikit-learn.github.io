@@ -32,36 +32,65 @@ See the example on
 for some data exploration on this dataset and a demo on periodic feature
 engineering.
 
-.. GENERATED FROM PYTHON SOURCE LINES 19-29
+.. GENERATED FROM PYTHON SOURCE LINES 19-32
 
 Analyzing the Bike Sharing Demand dataset
 -----------------------------------------
 
-We start by loading the data from the OpenML repository
-as a pandas dataframe. This will be replaced with Polars
-once `fetch_openml` adds a native support for it.
-We convert to Polars for feature engineering, as it automatically caches
-common subexpressions which are reused in multiple expressions
-(like `pl.col("count").shift(1)` below). See
-https://docs.pola.rs/user-guide/lazy/optimizations/ for more information.
+We start by loading the data from the OpenML repository as a raw parquet file
+to illustrate how to work with an arbitrary parquet file instead of hiding this
+step in a convenience tool such as `sklearn.datasets.fetch_openml`.
 
-.. GENERATED FROM PYTHON SOURCE LINES 29-43
+The URL of the parquet file can be found in the JSON description of the
+Bike Sharing Demand dataset with id 44063 on openml.org
+(https://openml.org/search?type=data&status=active&id=44063).
+
+The `sha256` hash of the file is also provided to ensure the integrity of the
+downloaded file.
+
+.. GENERATED FROM PYTHON SOURCE LINES 32-45
 
 .. code-block:: Python
-
 
     import numpy as np
     import polars as pl
 
-    from sklearn.datasets import fetch_openml
+    from sklearn.datasets import fetch_file
 
     pl.Config.set_fmt_str_lengths(20)
 
-    bike_sharing = fetch_openml(
-        "Bike_Sharing_Demand", version=2, as_frame=True, parser="pandas"
+    bike_sharing_data_file = fetch_file(
+        "https://openml1.win.tue.nl/datasets/0004/44063/dataset_44063.pq",
+        sha256="d120af76829af0d256338dc6dd4be5df4fd1f35bf3a283cab66a51c1c6abd06a",
     )
-    df = bike_sharing.frame
-    df = pl.DataFrame({col: df[col].to_numpy() for col in df.columns})
+    bike_sharing_data_file
+
+
+
+
+
+.. rst-class:: sphx-glr-script-out
+
+ .. code-block:: none
+
+
+    PosixPath('/home/circleci/scikit_learn_data/openml1.win.tue.nl/datasets_0004_44063/dataset_44063.pq')
+
+
+
+.. GENERATED FROM PYTHON SOURCE LINES 46-50
+
+We load the parquet file with Polars for feature engineering. Polars
+automatically caches common subexpressions which are reused in multiple
+expressions (like `pl.col("count").shift(1)` below). See
+https://docs.pola.rs/user-guide/lazy/optimizations/ for more information.
+
+.. GENERATED FROM PYTHON SOURCE LINES 50-53
+
+.. code-block:: Python
+
+
+    df = pl.read_parquet(bike_sharing_data_file)
 
 
 
@@ -70,12 +99,12 @@ https://docs.pola.rs/user-guide/lazy/optimizations/ for more information.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 44-46
+.. GENERATED FROM PYTHON SOURCE LINES 54-56
 
 Next, we take a look at the statistical summary of the dataset
 so that we can better understand the data that we are working with.
 
-.. GENERATED FROM PYTHON SOURCE LINES 46-51
+.. GENERATED FROM PYTHON SOURCE LINES 56-61
 
 .. code-block:: Python
 
@@ -99,17 +128,17 @@ so that we can better understand the data that we are working with.
       white-space: pre-wrap;
     }
     </style>
-    <small>shape: (9, 10)</small><table border="1" class="dataframe"><thead><tr><th>statistic</th><th>year</th><th>month</th><th>hour</th><th>weekday</th><th>temp</th><th>feel_temp</th><th>humidity</th><th>windspeed</th><th>count</th></tr><tr><td>str</td><td>f64</td><td>f64</td><td>f64</td><td>f64</td><td>f64</td><td>f64</td><td>f64</td><td>f64</td><td>f64</td></tr></thead><tbody><tr><td>&quot;count&quot;</td><td>17379.0</td><td>17379.0</td><td>17379.0</td><td>17379.0</td><td>17379.0</td><td>17379.0</td><td>17379.0</td><td>17379.0</td><td>17379.0</td></tr><tr><td>&quot;null_count&quot;</td><td>0.0</td><td>0.0</td><td>0.0</td><td>0.0</td><td>0.0</td><td>0.0</td><td>0.0</td><td>0.0</td><td>0.0</td></tr><tr><td>&quot;mean&quot;</td><td>0.502561</td><td>6.537775</td><td>11.546752</td><td>3.003683</td><td>20.376474</td><td>23.788755</td><td>0.627229</td><td>12.73654</td><td>189.463088</td></tr><tr><td>&quot;std&quot;</td><td>0.500008</td><td>3.438776</td><td>6.914405</td><td>2.005771</td><td>7.894801</td><td>8.592511</td><td>0.19293</td><td>8.196795</td><td>181.387599</td></tr><tr><td>&quot;min&quot;</td><td>0.0</td><td>1.0</td><td>0.0</td><td>0.0</td><td>0.82</td><td>0.0</td><td>0.0</td><td>0.0</td><td>1.0</td></tr><tr><td>&quot;25%&quot;</td><td>0.0</td><td>4.0</td><td>6.0</td><td>1.0</td><td>13.94</td><td>16.665</td><td>0.48</td><td>7.0015</td><td>40.0</td></tr><tr><td>&quot;50%&quot;</td><td>1.0</td><td>7.0</td><td>12.0</td><td>3.0</td><td>20.5</td><td>24.24</td><td>0.63</td><td>12.998</td><td>142.0</td></tr><tr><td>&quot;75%&quot;</td><td>1.0</td><td>10.0</td><td>18.0</td><td>5.0</td><td>27.06</td><td>31.06</td><td>0.78</td><td>16.9979</td><td>281.0</td></tr><tr><td>&quot;max&quot;</td><td>1.0</td><td>12.0</td><td>23.0</td><td>6.0</td><td>41.0</td><td>50.0</td><td>1.0</td><td>56.9969</td><td>977.0</td></tr></tbody></table></div>
+    <small>shape: (9, 8)</small><table border="1" class="dataframe"><thead><tr><th>statistic</th><th>month</th><th>hour</th><th>temp</th><th>feel_temp</th><th>humidity</th><th>windspeed</th><th>count</th></tr><tr><td>str</td><td>f64</td><td>f64</td><td>f64</td><td>f64</td><td>f64</td><td>f64</td><td>f64</td></tr></thead><tbody><tr><td>&quot;count&quot;</td><td>17379.0</td><td>17379.0</td><td>17379.0</td><td>17379.0</td><td>17379.0</td><td>17379.0</td><td>17379.0</td></tr><tr><td>&quot;null_count&quot;</td><td>0.0</td><td>0.0</td><td>0.0</td><td>0.0</td><td>0.0</td><td>0.0</td><td>0.0</td></tr><tr><td>&quot;mean&quot;</td><td>6.537775</td><td>11.546752</td><td>20.376474</td><td>23.788755</td><td>0.627229</td><td>12.73654</td><td>189.463088</td></tr><tr><td>&quot;std&quot;</td><td>3.438776</td><td>6.914405</td><td>7.894801</td><td>8.592511</td><td>0.19293</td><td>8.196795</td><td>181.387599</td></tr><tr><td>&quot;min&quot;</td><td>1.0</td><td>0.0</td><td>0.82</td><td>0.0</td><td>0.0</td><td>0.0</td><td>1.0</td></tr><tr><td>&quot;25%&quot;</td><td>4.0</td><td>6.0</td><td>13.94</td><td>16.665</td><td>0.48</td><td>7.0015</td><td>40.0</td></tr><tr><td>&quot;50%&quot;</td><td>7.0</td><td>12.0</td><td>20.5</td><td>24.24</td><td>0.63</td><td>12.998</td><td>142.0</td></tr><tr><td>&quot;75%&quot;</td><td>10.0</td><td>18.0</td><td>27.06</td><td>31.06</td><td>0.78</td><td>16.9979</td><td>281.0</td></tr><tr><td>&quot;max&quot;</td><td>12.0</td><td>23.0</td><td>41.0</td><td>50.0</td><td>1.0</td><td>56.9969</td><td>977.0</td></tr></tbody></table></div>
     </div>
     <br />
     <br />
 
-.. GENERATED FROM PYTHON SOURCE LINES 52-54
+.. GENERATED FROM PYTHON SOURCE LINES 62-64
 
 Let us look at the count of the seasons `"fall"`, `"spring"`, `"summer"`
 and `"winter"` present in the dataset to confirm they are balanced.
 
-.. GENERATED FROM PYTHON SOURCE LINES 54-60
+.. GENERATED FROM PYTHON SOURCE LINES 64-70
 
 .. code-block:: Python
 
@@ -134,12 +163,12 @@ and `"winter"` present in the dataset to confirm they are balanced.
       white-space: pre-wrap;
     }
     </style>
-    <small>shape: (4, 2)</small><table border="1" class="dataframe"><thead><tr><th>season</th><th>count</th></tr><tr><td>str</td><td>u32</td></tr></thead><tbody><tr><td>&quot;spring&quot;</td><td>4242</td></tr><tr><td>&quot;fall&quot;</td><td>4496</td></tr><tr><td>&quot;winter&quot;</td><td>4232</td></tr><tr><td>&quot;summer&quot;</td><td>4409</td></tr></tbody></table></div>
+    <small>shape: (4, 2)</small><table border="1" class="dataframe"><thead><tr><th>season</th><th>count</th></tr><tr><td>cat</td><td>u32</td></tr></thead><tbody><tr><td>&quot;3&quot;</td><td>4232</td></tr><tr><td>&quot;1&quot;</td><td>4242</td></tr><tr><td>&quot;0&quot;</td><td>4496</td></tr><tr><td>&quot;2&quot;</td><td>4409</td></tr></tbody></table></div>
     </div>
     <br />
     <br />
 
-.. GENERATED FROM PYTHON SOURCE LINES 61-68
+.. GENERATED FROM PYTHON SOURCE LINES 71-78
 
 Generating Polars-engineered lagged features
 --------------------------------------------
@@ -149,7 +178,7 @@ variable, one could intuitively use any regression model. However, we do
 not have the usual `(X_train, y_train)` dataset. Instead, we just have
 the `y_train` demand data sequentially organized by time.
 
-.. GENERATED FROM PYTHON SOURCE LINES 68-84
+.. GENERATED FROM PYTHON SOURCE LINES 78-94
 
 .. code-block:: Python
 
@@ -189,12 +218,12 @@ the `y_train` demand data sequentially organized by time.
     <br />
     <br />
 
-.. GENERATED FROM PYTHON SOURCE LINES 85-87
+.. GENERATED FROM PYTHON SOURCE LINES 95-97
 
 Watch out however, the first lines have undefined values because their own
 past is unknown. This depends on how much lag we used:
 
-.. GENERATED FROM PYTHON SOURCE LINES 87-89
+.. GENERATED FROM PYTHON SOURCE LINES 97-99
 
 .. code-block:: Python
 
@@ -220,12 +249,12 @@ past is unknown. This depends on how much lag we used:
     <br />
     <br />
 
-.. GENERATED FROM PYTHON SOURCE LINES 90-92
+.. GENERATED FROM PYTHON SOURCE LINES 100-102
 
 We can now separate the lagged features in a matrix `X` and the target variable
 (the counts to predict) in an array of the same first dimension `y`.
 
-.. GENERATED FROM PYTHON SOURCE LINES 92-97
+.. GENERATED FROM PYTHON SOURCE LINES 102-107
 
 .. code-block:: Python
 
@@ -248,7 +277,7 @@ We can now separate the lagged features in a matrix `X` and the target variable
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 98-108
+.. GENERATED FROM PYTHON SOURCE LINES 108-118
 
 Naive evaluation of the next hour bike demand regression
 --------------------------------------------------------
@@ -261,7 +290,7 @@ the "i.i.d" (independent and identically distributed) assumption does not
 hold true as the data points are not independent and have a temporal
 relationship.
 
-.. GENERATED FROM PYTHON SOURCE LINES 108-117
+.. GENERATED FROM PYTHON SOURCE LINES 118-127
 
 .. code-block:: Python
 
@@ -281,11 +310,11 @@ relationship.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 118-119
+.. GENERATED FROM PYTHON SOURCE LINES 128-129
 
 Taking a look at the performance of the model.
 
-.. GENERATED FROM PYTHON SOURCE LINES 119-124
+.. GENERATED FROM PYTHON SOURCE LINES 129-134
 
 .. code-block:: Python
 
@@ -307,7 +336,7 @@ Taking a look at the performance of the model.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 125-131
+.. GENERATED FROM PYTHON SOURCE LINES 135-141
 
 Proper next hour forecasting evaluation
 ---------------------------------------
@@ -316,7 +345,7 @@ the temporal structure of the dataset to evaluate our model's ability to
 predict data points in the future (to avoid cheating by reading values from
 the lagged features in the training set).
 
-.. GENERATED FROM PYTHON SOURCE LINES 131-141
+.. GENERATED FROM PYTHON SOURCE LINES 141-151
 
 .. code-block:: Python
 
@@ -337,11 +366,11 @@ the lagged features in the training set).
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 142-143
+.. GENERATED FROM PYTHON SOURCE LINES 152-153
 
 Training the model and evaluating its performance based on MAPE.
 
-.. GENERATED FROM PYTHON SOURCE LINES 143-151
+.. GENERATED FROM PYTHON SOURCE LINES 153-161
 
 .. code-block:: Python
 
@@ -366,7 +395,7 @@ Training the model and evaluating its performance based on MAPE.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 152-157
+.. GENERATED FROM PYTHON SOURCE LINES 162-167
 
 The generalization error measured via a shuffled trained test split
 is too optimistic. The generalization via a time-based split is likely to
@@ -374,7 +403,7 @@ be more representative of the true performance of the regression model.
 Let's assess this variability of our error evaluation with proper
 cross-validation:
 
-.. GENERATED FROM PYTHON SOURCE LINES 157-164
+.. GENERATED FROM PYTHON SOURCE LINES 167-174
 
 .. code-block:: Python
 
@@ -398,13 +427,13 @@ cross-validation:
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 165-168
+.. GENERATED FROM PYTHON SOURCE LINES 175-178
 
 The variability across splits is quite large! In a real life setting
 it would be advised to use more splits to better assess the variability.
 Let's report the mean CV scores and their standard deviation from now on.
 
-.. GENERATED FROM PYTHON SOURCE LINES 168-170
+.. GENERATED FROM PYTHON SOURCE LINES 178-180
 
 .. code-block:: Python
 
@@ -423,12 +452,12 @@ Let's report the mean CV scores and their standard deviation from now on.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 171-173
+.. GENERATED FROM PYTHON SOURCE LINES 181-183
 
 We can compute several combinations of evaluation metrics and loss functions,
 which are reported a bit below.
 
-.. GENERATED FROM PYTHON SOURCE LINES 173-223
+.. GENERATED FROM PYTHON SOURCE LINES 183-233
 
 .. code-block:: Python
 
@@ -489,7 +518,7 @@ which are reported a bit below.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 224-240
+.. GENERATED FROM PYTHON SOURCE LINES 234-250
 
 Modeling predictive uncertainty via quantile regression
 -------------------------------------------------------
@@ -508,7 +537,7 @@ call aleatoric uncertainty.
 Quantile regression makes it possible to give a finer description of that
 distribution without making strong assumptions on its shape.
 
-.. GENERATED FROM PYTHON SOURCE LINES 240-265
+.. GENERATED FROM PYTHON SOURCE LINES 250-275
 
 .. code-block:: Python
 
@@ -552,16 +581,16 @@ distribution without making strong assumptions on its shape.
       white-space: pre-wrap;
     }
     </style>
-    <small>shape: (6, 8)</small><table border="1" class="dataframe"><thead><tr><th>loss</th><th>fit_time</th><th>MAPE</th><th>RMSE</th><th>MAE</th><th>pinball_loss_05</th><th>pinball_loss_50</th><th>pinball_loss_95</th></tr><tr><td>str</td><td>str</td><td>str</td><td>str</td><td>str</td><td>str</td><td>str</td><td>str</td></tr></thead><tbody><tr><td>&quot;squared_error&quot;</td><td>&quot;0.30 ± 0.01 s&quot;</td><td>&quot;0.36 ± 0.07&quot;</td><td>&quot;62.3 ± 3.5&quot;</td><td>&quot;39.1 ± 2.3&quot;</td><td>&quot;17.7 ± 1.3&quot;</td><td>&quot;19.5 ± 1.1&quot;</td><td>&quot;21.4 ± 2.4&quot;</td></tr><tr><td>&quot;poisson&quot;</td><td>&quot;0.32 ± 0.01 s&quot;</td><td>&quot;0.32 ± 0.07&quot;</td><td>&quot;64.2 ± 4.0&quot;</td><td>&quot;39.3 ± 2.8&quot;</td><td>&quot;16.7 ± 1.5&quot;</td><td>&quot;19.7 ± 1.4&quot;</td><td>&quot;22.6 ± 3.0&quot;</td></tr><tr><td>&quot;absolute_error&quot;</td><td>&quot;0.42 ± 0.01 s&quot;</td><td>&quot;0.32 ± 0.06&quot;</td><td>&quot;64.6 ± 3.8&quot;</td><td>&quot;39.9 ± 3.2&quot;</td><td>&quot;17.1 ± 1.1&quot;</td><td>&quot;19.9 ± 1.6&quot;</td><td>&quot;22.7 ± 3.1&quot;</td></tr><tr><td>&quot;quantile 5&quot;</td><td>&quot;0.55 ± 0.01 s&quot;</td><td>&quot;0.41 ± 0.01&quot;</td><td>&quot;145.6 ± 20.9&quot;</td><td>&quot;92.5 ± 16.2&quot;</td><td>&quot;5.9 ± 0.9&quot;</td><td>&quot;46.2 ± 8.1&quot;</td><td>&quot;86.6 ± 15.3&quot;</td></tr><tr><td>&quot;quantile 50&quot;</td><td>&quot;0.59 ± 0.02 s&quot;</td><td>&quot;0.32 ± 0.06&quot;</td><td>&quot;64.6 ± 3.8&quot;</td><td>&quot;39.9 ± 3.2&quot;</td><td>&quot;17.1 ± 1.1&quot;</td><td>&quot;19.9 ± 1.6&quot;</td><td>&quot;22.7 ± 3.1&quot;</td></tr><tr><td>&quot;quantile 95&quot;</td><td>&quot;0.56 ± 0.00 s&quot;</td><td>&quot;1.07 ± 0.27&quot;</td><td>&quot;99.6 ± 8.7&quot;</td><td>&quot;72.0 ± 6.1&quot;</td><td>&quot;62.9 ± 7.4&quot;</td><td>&quot;36.0 ± 3.1&quot;</td><td>&quot;9.1 ± 1.3&quot;</td></tr></tbody></table></div>
+    <small>shape: (6, 8)</small><table border="1" class="dataframe"><thead><tr><th>loss</th><th>fit_time</th><th>MAPE</th><th>RMSE</th><th>MAE</th><th>pinball_loss_05</th><th>pinball_loss_50</th><th>pinball_loss_95</th></tr><tr><td>str</td><td>str</td><td>str</td><td>str</td><td>str</td><td>str</td><td>str</td><td>str</td></tr></thead><tbody><tr><td>&quot;squared_error&quot;</td><td>&quot;0.30 ± 0.01 s&quot;</td><td>&quot;0.36 ± 0.07&quot;</td><td>&quot;62.3 ± 3.5&quot;</td><td>&quot;39.1 ± 2.3&quot;</td><td>&quot;17.7 ± 1.3&quot;</td><td>&quot;19.5 ± 1.1&quot;</td><td>&quot;21.4 ± 2.4&quot;</td></tr><tr><td>&quot;poisson&quot;</td><td>&quot;0.37 ± 0.02 s&quot;</td><td>&quot;0.32 ± 0.07&quot;</td><td>&quot;64.2 ± 4.0&quot;</td><td>&quot;39.3 ± 2.8&quot;</td><td>&quot;16.7 ± 1.5&quot;</td><td>&quot;19.7 ± 1.4&quot;</td><td>&quot;22.6 ± 3.0&quot;</td></tr><tr><td>&quot;absolute_error&quot;</td><td>&quot;0.48 ± 0.02 s&quot;</td><td>&quot;0.32 ± 0.06&quot;</td><td>&quot;64.6 ± 3.8&quot;</td><td>&quot;39.9 ± 3.2&quot;</td><td>&quot;17.1 ± 1.1&quot;</td><td>&quot;19.9 ± 1.6&quot;</td><td>&quot;22.7 ± 3.1&quot;</td></tr><tr><td>&quot;quantile 5&quot;</td><td>&quot;0.64 ± 0.05 s&quot;</td><td>&quot;0.41 ± 0.01&quot;</td><td>&quot;145.6 ± 20.9&quot;</td><td>&quot;92.5 ± 16.2&quot;</td><td>&quot;5.9 ± 0.9&quot;</td><td>&quot;46.2 ± 8.1&quot;</td><td>&quot;86.6 ± 15.3&quot;</td></tr><tr><td>&quot;quantile 50&quot;</td><td>&quot;0.65 ± 0.05 s&quot;</td><td>&quot;0.32 ± 0.06&quot;</td><td>&quot;64.6 ± 3.8&quot;</td><td>&quot;39.9 ± 3.2&quot;</td><td>&quot;17.1 ± 1.1&quot;</td><td>&quot;19.9 ± 1.6&quot;</td><td>&quot;22.7 ± 3.1&quot;</td></tr><tr><td>&quot;quantile 95&quot;</td><td>&quot;0.60 ± 0.03 s&quot;</td><td>&quot;1.07 ± 0.27&quot;</td><td>&quot;99.6 ± 8.7&quot;</td><td>&quot;72.0 ± 6.1&quot;</td><td>&quot;62.9 ± 7.4&quot;</td><td>&quot;36.0 ± 3.1&quot;</td><td>&quot;9.1 ± 1.3&quot;</td></tr></tbody></table></div>
     </div>
     <br />
     <br />
 
-.. GENERATED FROM PYTHON SOURCE LINES 266-267
+.. GENERATED FROM PYTHON SOURCE LINES 276-277
 
 Let us take a look at the losses that minimise each metric.
 
-.. GENERATED FROM PYTHON SOURCE LINES 267-281
+.. GENERATED FROM PYTHON SOURCE LINES 277-291
 
 .. code-block:: Python
 
@@ -599,7 +628,7 @@ Let us take a look at the losses that minimise each metric.
     <br />
     <br />
 
-.. GENERATED FROM PYTHON SOURCE LINES 282-293
+.. GENERATED FROM PYTHON SOURCE LINES 292-303
 
 Even if the score distributions overlap due to the variance in the dataset,
 it is true that the average RMSE is lower when `loss="squared_error"`, whereas
@@ -613,7 +642,7 @@ A qualitative look at the predictions
 We can now visualize the performance of the model with regards
 to the 5th percentile, median and the 95th percentile:
 
-.. GENERATED FROM PYTHON SOURCE LINES 293-322
+.. GENERATED FROM PYTHON SOURCE LINES 303-332
 
 .. code-block:: Python
 
@@ -653,11 +682,11 @@ to the 5th percentile, median and the 95th percentile:
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 323-324
+.. GENERATED FROM PYTHON SOURCE LINES 333-334
 
 We can now take a look at the predictions made by the regression models:
 
-.. GENERATED FROM PYTHON SOURCE LINES 324-353
+.. GENERATED FROM PYTHON SOURCE LINES 334-363
 
 .. code-block:: Python
 
@@ -702,7 +731,7 @@ We can now take a look at the predictions made by the regression models:
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 354-375
+.. GENERATED FROM PYTHON SOURCE LINES 364-385
 
 Here it's interesting to notice that the blue area between the 5% and 95%
 percentile estimators has a width that varies with the time of the day:
@@ -726,7 +755,7 @@ percentile estimators has a width that varies with the time of the day:
 Looking at the performance of non-linear regression models vs
 the best models:
 
-.. GENERATED FROM PYTHON SOURCE LINES 375-402
+.. GENERATED FROM PYTHON SOURCE LINES 385-412
 
 .. code-block:: Python
 
@@ -769,7 +798,7 @@ the best models:
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 403-426
+.. GENERATED FROM PYTHON SOURCE LINES 413-436
 
 Conclusion
 ----------
@@ -798,7 +827,7 @@ series forecasting, that enables dynamic predictions of future values.
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** (0 minutes 8.948 seconds)
+   **Total running time of the script:** (0 minutes 10.240 seconds)
 
 
 .. _sphx_glr_download_auto_examples_applications_plot_time_series_lagged_features.py:
