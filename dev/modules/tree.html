@@ -1153,14 +1153,15 @@ whereas the MAE sets the predicted value of terminal nodes to the median
 <p>Mean Squared Error:</p>
 <div class="math notranslate nohighlight">
 \[ \begin{align}\begin{aligned}\bar{y}_m = \frac{1}{n_m} \sum_{y \in Q_m} y\\H(Q_m) = \frac{1}{n_m} \sum_{y \in Q_m} (y - \bar{y}_m)^2\end{aligned}\end{align} \]</div>
-<p>Half Poisson deviance:</p>
+<p>Mean Poisson deviance:</p>
 <div class="math notranslate nohighlight">
-\[H(Q_m) = \frac{1}{n_m} \sum_{y \in Q_m} (y \log\frac{y}{\bar{y}_m}
+\[H(Q_m) = \frac{2}{n_m} \sum_{y \in Q_m} (y \log\frac{y}{\bar{y}_m}
 - y + \bar{y}_m)\]</div>
 <p>Setting <code class="docutils literal notranslate"><span class="pre">criterion=&quot;poisson&quot;</span></code> might be a good choice if your target is a count
 or a frequency (count per some unit). In any case, <span class="math notranslate nohighlight">\(y &gt;= 0\)</span> is a
 necessary condition to use this criterion. Note that it fits much slower than
-the MSE criterion.</p>
+the MSE criterion. For performance reasons the actual implementation minimizes
+the half mean poisson deviance, i.e. the mean poisson deviance divided by 2.</p>
 <p>Mean Absolute Error:</p>
 <div class="math notranslate nohighlight">
 \[ \begin{align}\begin{aligned}median(y)_m = \underset{y \in Q_m}{\mathrm{median}}(y)\\H(Q_m) = \frac{1}{n_m} \sum_{y \in Q_m} |y - median(y)_m|\end{aligned}\end{align} \]</div>
