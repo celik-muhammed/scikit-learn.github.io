@@ -45,22 +45,31 @@ Random Forest Feature Importance on Breast Cancer Data
 
 First, we define a function to ease the plotting:
 
-.. GENERATED FROM PYTHON SOURCE LINES 29-45
+.. GENERATED FROM PYTHON SOURCE LINES 29-54
 
 .. code-block:: Python
 
+    import matplotlib
+
     from sklearn.inspection import permutation_importance
+    from sklearn.utils.fixes import parse_version
 
 
     def plot_permutation_importance(clf, X, y, ax):
         result = permutation_importance(clf, X, y, n_repeats=10, random_state=42, n_jobs=2)
         perm_sorted_idx = result.importances_mean.argsort()
 
-        ax.boxplot(
-            result.importances[perm_sorted_idx].T,
-            vert=False,
-            labels=X.columns[perm_sorted_idx],
+        # `labels` argument in boxplot is deprecated in matplotlib 3.9 and has been
+        # renamed to `tick_labels`. The following code handles this, but as a
+        # scikit-learn user you probably can write simpler code by using `labels=...`
+        # (matplotlib < 3.9) or `tick_labels=...` (matplotlib >= 3.9).
+        tick_labels_parameter_name = (
+            "tick_labels"
+            if parse_version(matplotlib.__version__) >= parse_version("3.9")
+            else "labels"
         )
+        tick_labels_dict = {tick_labels_parameter_name: X.columns[perm_sorted_idx]}
+        ax.boxplot(result.importances[perm_sorted_idx].T, vert=False, **tick_labels_dict)
         ax.axvline(x=0, color="k", linestyle="--")
         return ax
 
@@ -72,12 +81,12 @@ First, we define a function to ease the plotting:
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 46-48
+.. GENERATED FROM PYTHON SOURCE LINES 55-57
 
 We then train a :class:`~sklearn.ensemble.RandomForestClassifier` on the
 :ref:`breast_cancer_dataset` and evaluate its accuracy on a test set:
 
-.. GENERATED FROM PYTHON SOURCE LINES 48-59
+.. GENERATED FROM PYTHON SOURCE LINES 57-68
 
 .. code-block:: Python
 
@@ -105,13 +114,13 @@ We then train a :class:`~sklearn.ensemble.RandomForestClassifier` on the
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 60-63
+.. GENERATED FROM PYTHON SOURCE LINES 69-72
 
 Next, we plot the tree based feature importance and the permutation
 importance. The permutation importance is calculated on the training set to
 show how much the model relies on each feature during training.
 
-.. GENERATED FROM PYTHON SOURCE LINES 63-80
+.. GENERATED FROM PYTHON SOURCE LINES 72-89
 
 .. code-block:: Python
 
@@ -144,7 +153,7 @@ show how much the model relies on each feature during training.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 81-97
+.. GENERATED FROM PYTHON SOURCE LINES 90-106
 
 The plot on the left shows the Gini importance of the model. As the
 scikit-learn implementation of
@@ -163,7 +172,7 @@ computed as baseline: some feature must be important.
 Similarly, the change in accuracy score computed on the test set appears to be
 driven by chance:
 
-.. GENERATED FROM PYTHON SOURCE LINES 97-104
+.. GENERATED FROM PYTHON SOURCE LINES 106-113
 
 .. code-block:: Python
 
@@ -186,7 +195,7 @@ driven by chance:
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 105-119
+.. GENERATED FROM PYTHON SOURCE LINES 114-128
 
 Nevertheless, one can still compute a meaningful permutation importance in the
 presence of correlated features, as demonstrated in the following section.
@@ -203,7 +212,7 @@ clustering on the Spearman rank-order correlations, picking a threshold, and
 keeping a single feature from each cluster. First, we plot a heatmap of the
 correlated features:
 
-.. GENERATED FROM PYTHON SOURCE LINES 119-146
+.. GENERATED FROM PYTHON SOURCE LINES 128-155
 
 .. code-block:: Python
 
@@ -246,7 +255,7 @@ correlated features:
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 147-152
+.. GENERATED FROM PYTHON SOURCE LINES 156-161
 
 Next, we manually pick a threshold by visual inspection of the dendrogram to
 group our features into clusters and choose a feature from each cluster to
@@ -254,7 +263,7 @@ keep, select those features from our dataset, and train a new random forest.
 The test accuracy of the new random forest did not change much compared to the
 random forest trained on the complete dataset.
 
-.. GENERATED FROM PYTHON SOURCE LINES 152-171
+.. GENERATED FROM PYTHON SOURCE LINES 161-180
 
 .. code-block:: Python
 
@@ -290,12 +299,12 @@ random forest trained on the complete dataset.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 172-174
+.. GENERATED FROM PYTHON SOURCE LINES 181-183
 
 We can finally explore the permutation importance of the selected subset of
 features:
 
-.. GENERATED FROM PYTHON SOURCE LINES 174-181
+.. GENERATED FROM PYTHON SOURCE LINES 183-190
 
 .. code-block:: Python
 
@@ -321,7 +330,7 @@ features:
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** (0 minutes 4.247 seconds)
+   **Total running time of the script:** (0 minutes 4.238 seconds)
 
 
 .. _sphx_glr_download_auto_examples_inspection_plot_permutation_importance_multicollinear.py:
