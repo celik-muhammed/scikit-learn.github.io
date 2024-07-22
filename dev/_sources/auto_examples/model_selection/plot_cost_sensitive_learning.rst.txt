@@ -53,7 +53,22 @@ case, the business metric depends on the amount of each individual transaction.
     Vol. 17. No. 1. Lawrence Erlbaum Associates Ltd, 2001.
     <https://cseweb.ucsd.edu/~elkan/rescale.pdf>`_
 
-.. GENERATED FROM PYTHON SOURCE LINES 39-52
+.. GENERATED FROM PYTHON SOURCE LINES 37-41
+
+.. code-block:: Python
+
+
+    # Authors: The scikit-learn developers
+    # SPDX-License-Identifier: BSD-3-Clause
+
+
+
+
+
+
+
+
+.. GENERATED FROM PYTHON SOURCE LINES 42-55
 
 Cost-sensitive learning with constant gains and costs
 -----------------------------------------------------
@@ -69,7 +84,7 @@ confusion matrix are constant. We use the problematic presented in [2]_ using th
 
 We fetch the German credit dataset from OpenML.
 
-.. GENERATED FROM PYTHON SOURCE LINES 52-60
+.. GENERATED FROM PYTHON SOURCE LINES 55-63
 
 .. code-block:: Python
 
@@ -88,11 +103,11 @@ We fetch the German credit dataset from OpenML.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 61-62
+.. GENERATED FROM PYTHON SOURCE LINES 64-65
 
 We check the feature types available in `X`.
 
-.. GENERATED FROM PYTHON SOURCE LINES 62-64
+.. GENERATED FROM PYTHON SOURCE LINES 65-67
 
 .. code-block:: Python
 
@@ -137,12 +152,12 @@ We check the feature types available in `X`.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 65-67
+.. GENERATED FROM PYTHON SOURCE LINES 68-70
 
 Many features are categorical and usually string-encoded. We need to encode
 these categories when we develop our predictive model. Let's check the targets.
 
-.. GENERATED FROM PYTHON SOURCE LINES 67-69
+.. GENERATED FROM PYTHON SOURCE LINES 70-72
 
 .. code-block:: Python
 
@@ -164,7 +179,7 @@ these categories when we develop our predictive model. Let's check the targets.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 70-78
+.. GENERATED FROM PYTHON SOURCE LINES 73-81
 
 Another observation is that the dataset is imbalanced. We would need to be careful
 when evaluating our predictive model and use a family of metrics that are adapted
@@ -175,7 +190,7 @@ In addition, we observe that the target is string-encoded. Some metrics
 the "positive label". Here, we define that our goal is to predict whether or not
 a sample is a "bad" credit.
 
-.. GENERATED FROM PYTHON SOURCE LINES 78-80
+.. GENERATED FROM PYTHON SOURCE LINES 81-83
 
 .. code-block:: Python
 
@@ -188,11 +203,11 @@ a sample is a "bad" credit.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 81-82
+.. GENERATED FROM PYTHON SOURCE LINES 84-85
 
 To carry our analysis, we split our dataset using a single stratified split.
 
-.. GENERATED FROM PYTHON SOURCE LINES 82-86
+.. GENERATED FROM PYTHON SOURCE LINES 85-89
 
 .. code-block:: Python
 
@@ -207,7 +222,7 @@ To carry our analysis, we split our dataset using a single stratified split.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 87-102
+.. GENERATED FROM PYTHON SOURCE LINES 90-105
 
 We are ready to design our predictive model and the associated evaluation strategy.
 
@@ -225,7 +240,7 @@ the Precision-Recall curve.
 From these four metrics, scikit-learn does not provide a scorer for the FPR. We
 therefore need to define a small custom function to compute it.
 
-.. GENERATED FROM PYTHON SOURCE LINES 102-112
+.. GENERATED FROM PYTHON SOURCE LINES 105-115
 
 .. code-block:: Python
 
@@ -246,7 +261,7 @@ therefore need to define a small custom function to compute it.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 113-121
+.. GENERATED FROM PYTHON SOURCE LINES 116-124
 
 As previously stated, the "positive label" is not defined as the value "1" and calling
 some of the metrics with this non-standard value raise an error. We need to
@@ -257,7 +272,7 @@ We therefore need to define a scikit-learn scorer using
 the custom scorers in a dictionary. To use them, we need to pass the fitted model,
 the data and the target on which we want to evaluate the predictive model.
 
-.. GENERATED FROM PYTHON SOURCE LINES 121-131
+.. GENERATED FROM PYTHON SOURCE LINES 124-134
 
 .. code-block:: Python
 
@@ -278,7 +293,7 @@ the data and the target on which we want to evaluate the predictive model.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 132-146
+.. GENERATED FROM PYTHON SOURCE LINES 135-149
 
 In addition, the original research [1]_ defines a custom business metric. We
 call a "business metric" any metric function that aims at quantifying how the
@@ -295,7 +310,7 @@ default.
 We define a python function that weight the confusion matrix and return the
 overall cost.
 
-.. GENERATED FROM PYTHON SOURCE LINES 146-178
+.. GENERATED FROM PYTHON SOURCE LINES 149-181
 
 .. code-block:: Python
 
@@ -338,7 +353,7 @@ overall cost.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 179-184
+.. GENERATED FROM PYTHON SOURCE LINES 182-187
 
 Vanilla predictive model
 ^^^^^^^^^^^^^^^^^^^^^^^^
@@ -346,7 +361,7 @@ Vanilla predictive model
 We use :class:`~sklearn.ensemble.HistGradientBoostingClassifier` as a predictive model
 that natively handles categorical features and missing values.
 
-.. GENERATED FROM PYTHON SOURCE LINES 184-191
+.. GENERATED FROM PYTHON SOURCE LINES 187-194
 
 .. code-block:: Python
 
@@ -787,12 +802,12 @@ that natively handles categorical features and missing values.
     <br />
     <br />
 
-.. GENERATED FROM PYTHON SOURCE LINES 192-194
+.. GENERATED FROM PYTHON SOURCE LINES 195-197
 
 We evaluate the performance of our predictive model using the ROC and Precision-Recall
 curves.
 
-.. GENERATED FROM PYTHON SOURCE LINES 194-235
+.. GENERATED FROM PYTHON SOURCE LINES 197-238
 
 .. code-block:: Python
 
@@ -849,7 +864,7 @@ curves.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 236-250
+.. GENERATED FROM PYTHON SOURCE LINES 239-253
 
 We recall that these curves give insights on the statistical performance of the
 predictive model for different cut-off points. For the Precision-Recall curve, the
@@ -866,7 +881,7 @@ However, we recall that the original aim was to minimize the cost (or maximize t
 gain) as defined by the business metric. We can compute the value of the business
 metric:
 
-.. GENERATED FROM PYTHON SOURCE LINES 250-252
+.. GENERATED FROM PYTHON SOURCE LINES 253-255
 
 .. code-block:: Python
 
@@ -885,7 +900,7 @@ metric:
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 253-271
+.. GENERATED FROM PYTHON SOURCE LINES 256-274
 
 At this stage we don't know if any other cut-off can lead to a greater gain. To find
 the optimal one, we need to compute the cost-gain using the business metric for all
@@ -906,7 +921,7 @@ positive label. Internally, the optimum cut-off point is chosen such that it max
 the business metric via cross-validation. By default a 5-fold stratified
 cross-validation is used.
 
-.. GENERATED FROM PYTHON SOURCE LINES 271-281
+.. GENERATED FROM PYTHON SOURCE LINES 274-284
 
 .. code-block:: Python
 
@@ -933,13 +948,13 @@ cross-validation is used.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 282-285
+.. GENERATED FROM PYTHON SOURCE LINES 285-288
 
 We plot the ROC and Precision-Recall curves for the vanilla model and the tuned model.
 Also we plot the cut-off points that would be used by each model. Because, we are
 reusing the same code later, we define a function that generates the plots.
 
-.. GENERATED FROM PYTHON SOURCE LINES 285-361
+.. GENERATED FROM PYTHON SOURCE LINES 288-364
 
 .. code-block:: Python
 
@@ -1026,7 +1041,7 @@ reusing the same code later, we define a function that generates the plots.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 362-365
+.. GENERATED FROM PYTHON SOURCE LINES 365-368
 
 .. code-block:: Python
 
@@ -1045,7 +1060,7 @@ reusing the same code later, we define a function that generates the plots.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 366-382
+.. GENERATED FROM PYTHON SOURCE LINES 369-385
 
 The first remark is that both classifiers have exactly the same ROC and
 Precision-Recall curves. It is expected because by default, the classifier is fitted
@@ -1064,7 +1079,7 @@ predict the "bad" class label to larger fraction of individuals.
 We can now check if choosing this cut-off point leads to a better score on the testing
 set:
 
-.. GENERATED FROM PYTHON SOURCE LINES 382-384
+.. GENERATED FROM PYTHON SOURCE LINES 385-387
 
 .. code-block:: Python
 
@@ -1083,7 +1098,7 @@ set:
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 385-404
+.. GENERATED FROM PYTHON SOURCE LINES 388-407
 
 We observe that tuning the decision threshold almost improves our business gains
 by factor of 2.
@@ -1105,7 +1120,7 @@ case the cut-off point is found on the entire dataset provided at fitting time.
 Also, the underlying classifier is not be refitted by setting `refit=False`. Here, we
 can try to do such experiment.
 
-.. GENERATED FROM PYTHON SOURCE LINES 404-409
+.. GENERATED FROM PYTHON SOURCE LINES 407-412
 
 .. code-block:: Python
 
@@ -1127,11 +1142,11 @@ can try to do such experiment.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 410-411
+.. GENERATED FROM PYTHON SOURCE LINES 413-414
 
 Then, we evaluate our model with the same approach as before:
 
-.. GENERATED FROM PYTHON SOURCE LINES 411-414
+.. GENERATED FROM PYTHON SOURCE LINES 414-417
 
 .. code-block:: Python
 
@@ -1150,7 +1165,7 @@ Then, we evaluate our model with the same approach as before:
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 415-434
+.. GENERATED FROM PYTHON SOURCE LINES 418-437
 
 We observe the that the optimum cut-off point is different from the one found
 in the previous experiment. If we look at the right-hand side plot, we
@@ -1172,7 +1187,7 @@ single train-test split by providing a floating number in range `[0, 1]` to the 
 parameter. It splits the data into a training and testing set. Let's explore this
 option:
 
-.. GENERATED FROM PYTHON SOURCE LINES 434-436
+.. GENERATED FROM PYTHON SOURCE LINES 437-439
 
 .. code-block:: Python
 
@@ -1618,7 +1633,7 @@ option:
     <br />
     <br />
 
-.. GENERATED FROM PYTHON SOURCE LINES 437-440
+.. GENERATED FROM PYTHON SOURCE LINES 440-443
 
 .. code-block:: Python
 
@@ -1637,7 +1652,7 @@ option:
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 441-461
+.. GENERATED FROM PYTHON SOURCE LINES 444-464
 
 Regarding the cut-off point, we observe that the optimum is similar to the multiple
 repeated cross-validation case. However, be aware that a single split does not account
@@ -1660,7 +1675,7 @@ detecting fraud in credit card transaction records.
 The credit card dataset
 ^^^^^^^^^^^^^^^^^^^^^^^
 
-.. GENERATED FROM PYTHON SOURCE LINES 461-464
+.. GENERATED FROM PYTHON SOURCE LINES 464-467
 
 .. code-block:: Python
 
@@ -1716,13 +1731,13 @@ The credit card dataset
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 465-468
+.. GENERATED FROM PYTHON SOURCE LINES 468-471
 
 The dataset contains information about credit card records from which some are
 fraudulent and others are legitimate. The goal is therefore to predict whether or
 not a credit card record is fraudulent.
 
-.. GENERATED FROM PYTHON SOURCE LINES 468-472
+.. GENERATED FROM PYTHON SOURCE LINES 471-475
 
 .. code-block:: Python
 
@@ -1737,11 +1752,11 @@ not a credit card record is fraudulent.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 473-474
+.. GENERATED FROM PYTHON SOURCE LINES 476-477
 
 First, we check the class distribution of the datasets.
 
-.. GENERATED FROM PYTHON SOURCE LINES 474-476
+.. GENERATED FROM PYTHON SOURCE LINES 477-479
 
 .. code-block:: Python
 
@@ -1763,13 +1778,13 @@ First, we check the class distribution of the datasets.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 477-480
+.. GENERATED FROM PYTHON SOURCE LINES 480-483
 
 The dataset is highly imbalanced with fraudulent transaction representing only 0.17%
 of the data. Since we are interested in training a machine learning model, we should
 also make sure that we have enough samples in the minority class to train the model.
 
-.. GENERATED FROM PYTHON SOURCE LINES 480-482
+.. GENERATED FROM PYTHON SOURCE LINES 483-485
 
 .. code-block:: Python
 
@@ -1791,14 +1806,14 @@ also make sure that we have enough samples in the minority class to train the mo
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 483-487
+.. GENERATED FROM PYTHON SOURCE LINES 486-490
 
 We observe that we have around 500 samples that is on the low end of the number of
 samples required to train a machine learning model. In addition of the target
 distribution, we check the distribution of the amount of the
 fraudulent transactions.
 
-.. GENERATED FROM PYTHON SOURCE LINES 487-494
+.. GENERATED FROM PYTHON SOURCE LINES 490-497
 
 .. code-block:: Python
 
@@ -1821,7 +1836,7 @@ fraudulent transactions.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 495-507
+.. GENERATED FROM PYTHON SOURCE LINES 498-510
 
 Addressing the problem with a business metric
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -1836,7 +1851,7 @@ is estimated to a loss of 5€ while the refusal of a fraudulent transaction is
 estimated to a gain of 50€. Therefore, we define the following function to
 compute the total benefit of a given decision:
 
-.. GENERATED FROM PYTHON SOURCE LINES 507-521
+.. GENERATED FROM PYTHON SOURCE LINES 510-524
 
 .. code-block:: Python
 
@@ -1861,7 +1876,7 @@ compute the total benefit of a given decision:
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 522-527
+.. GENERATED FROM PYTHON SOURCE LINES 525-530
 
 From this business metric, we create a scikit-learn scorer that given a fitted
 classifier and a test set compute the business metric. In this regard, we use
@@ -1869,7 +1884,7 @@ the :func:`~sklearn.metrics.make_scorer` factory. The variable `amount` is an
 additional metadata to be passed to the scorer and we need to use
 :ref:`metadata routing <metadata_routing>` to take into account this information.
 
-.. GENERATED FROM PYTHON SOURCE LINES 527-530
+.. GENERATED FROM PYTHON SOURCE LINES 530-533
 
 .. code-block:: Python
 
@@ -1883,7 +1898,7 @@ additional metadata to be passed to the scorer and we need to use
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 531-538
+.. GENERATED FROM PYTHON SOURCE LINES 534-541
 
 So at this stage, we observe that the amount of the transaction is used twice: once
 as a feature to train our predictive model and once as a metadata to compute the
@@ -1893,7 +1908,7 @@ each transaction. To use this information as metadata, we need to have an extern
 variable that we can pass to the scorer or the model that internally routes this
 metadata to the scorer. So let's create this variable.
 
-.. GENERATED FROM PYTHON SOURCE LINES 538-540
+.. GENERATED FROM PYTHON SOURCE LINES 541-543
 
 .. code-block:: Python
 
@@ -1906,7 +1921,7 @@ metadata to the scorer. So let's create this variable.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 541-549
+.. GENERATED FROM PYTHON SOURCE LINES 544-552
 
 .. code-block:: Python
 
@@ -1925,12 +1940,12 @@ metadata to the scorer. So let's create this variable.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 550-552
+.. GENERATED FROM PYTHON SOURCE LINES 553-555
 
 We first evaluate some baseline policies to serve as reference. Recall that
 class "0" is the legitimate class and class "1" is the fraudulent class.
 
-.. GENERATED FROM PYTHON SOURCE LINES 552-561
+.. GENERATED FROM PYTHON SOURCE LINES 555-564
 
 .. code-block:: Python
 
@@ -1956,13 +1971,13 @@ class "0" is the legitimate class and class "1" is the fraudulent class.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 562-565
+.. GENERATED FROM PYTHON SOURCE LINES 565-568
 
 A policy that considers all transactions as legitimate would create a profit of
 around 220,000€. We make the same evaluation for a classifier that predicts all
 transactions as fraudulent.
 
-.. GENERATED FROM PYTHON SOURCE LINES 565-573
+.. GENERATED FROM PYTHON SOURCE LINES 568-576
 
 .. code-block:: Python
 
@@ -1987,7 +2002,7 @@ transactions as fraudulent.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 574-588
+.. GENERATED FROM PYTHON SOURCE LINES 577-591
 
 Such a policy would entail a catastrophic loss: around 670,000€. This is
 expected since the vast majority of the transactions are legitimate and the
@@ -2004,7 +2019,7 @@ predictions returned by its `predict_proba` method are as accurate as
 possible, irrespectively of the choice of the value of the decision
 threshold.
 
-.. GENERATED FROM PYTHON SOURCE LINES 588-600
+.. GENERATED FROM PYTHON SOURCE LINES 591-603
 
 .. code-block:: Python
 
@@ -2460,7 +2475,7 @@ threshold.
     <br />
     <br />
 
-.. GENERATED FROM PYTHON SOURCE LINES 601-606
+.. GENERATED FROM PYTHON SOURCE LINES 604-609
 
 .. code-block:: Python
 
@@ -2482,7 +2497,7 @@ threshold.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 607-620
+.. GENERATED FROM PYTHON SOURCE LINES 610-623
 
 The business metric shows that our predictive model with a default decision
 threshold is already winning over the baseline in terms of profit and it would be
@@ -2498,7 +2513,7 @@ Up to now, we did not optimize the decision threshold. We use the
 given our business scorer. To avoid a nested cross-validation, we will use the
 best estimator found during the previous grid-search.
 
-.. GENERATED FROM PYTHON SOURCE LINES 620-627
+.. GENERATED FROM PYTHON SOURCE LINES 623-630
 
 .. code-block:: Python
 
@@ -2516,14 +2531,14 @@ best estimator found during the previous grid-search.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 628-632
+.. GENERATED FROM PYTHON SOURCE LINES 631-635
 
 Since our business scorer requires the amount of each transaction, we need to pass
 this information in the `fit` method. The
 :class:`~sklearn.model_selection.TunedThresholdClassifierCV` is in charge of
 automatically dispatching this metadata to the underlying scorer.
 
-.. GENERATED FROM PYTHON SOURCE LINES 632-634
+.. GENERATED FROM PYTHON SOURCE LINES 635-637
 
 .. code-block:: Python
 
@@ -2969,11 +2984,11 @@ automatically dispatching this metadata to the underlying scorer.
     <br />
     <br />
 
-.. GENERATED FROM PYTHON SOURCE LINES 635-636
+.. GENERATED FROM PYTHON SOURCE LINES 638-639
 
 We observe that the tuned decision threshold is far away from the default 0.5:
 
-.. GENERATED FROM PYTHON SOURCE LINES 636-638
+.. GENERATED FROM PYTHON SOURCE LINES 639-641
 
 .. code-block:: Python
 
@@ -2992,7 +3007,7 @@ We observe that the tuned decision threshold is far away from the default 0.5:
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 639-644
+.. GENERATED FROM PYTHON SOURCE LINES 642-647
 
 .. code-block:: Python
 
@@ -3014,7 +3029,7 @@ We observe that the tuned decision threshold is far away from the default 0.5:
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 645-664
+.. GENERATED FROM PYTHON SOURCE LINES 648-667
 
 We observe that tuning the decision threshold increases the expected profit
 when deploying our model - as indicated by the business metric. It is therefore
@@ -3036,7 +3051,7 @@ tuned model but no search is performed during the fitting process.
 Here, we will reuse the decision threshold found in the previous section to create a
 new model and check that it gives the same results.
 
-.. GENERATED FROM PYTHON SOURCE LINES 664-670
+.. GENERATED FROM PYTHON SOURCE LINES 667-673
 
 .. code-block:: Python
 
@@ -3053,7 +3068,7 @@ new model and check that it gives the same results.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 671-676
+.. GENERATED FROM PYTHON SOURCE LINES 674-679
 
 .. code-block:: Python
 
@@ -3075,7 +3090,7 @@ new model and check that it gives the same results.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 677-686
+.. GENERATED FROM PYTHON SOURCE LINES 680-689
 
 We observe that we obtained the exact same results but the fitting process
 was much faster since we did not perform any hyper-parameter search.
@@ -3090,7 +3105,7 @@ beyond the scope of the scikit-learn library itself.
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** (0 minutes 29.106 seconds)
+   **Total running time of the script:** (0 minutes 28.002 seconds)
 
 
 .. _sphx_glr_download_auto_examples_model_selection_plot_cost_sensitive_learning.py:

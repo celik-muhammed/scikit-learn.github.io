@@ -55,7 +55,7 @@ helper functions for loading the data and visualizing results.
     Third-Party Liability Claims (November 8, 2018). `doi:10.2139/ssrn.3164764
     <https://doi.org/10.2139/ssrn.3164764>`_
 
-.. GENERATED FROM PYTHON SOURCE LINES 43-203
+.. GENERATED FROM PYTHON SOURCE LINES 44-204
 
 .. code-block:: Python
 
@@ -226,7 +226,7 @@ helper functions for loading the data and visualizing results.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 204-211
+.. GENERATED FROM PYTHON SOURCE LINES 205-212
 
 Loading datasets, basic feature extraction and target definitions
 -----------------------------------------------------------------
@@ -236,7 +236,7 @@ containing the number of claims (``ClaimNb``), with the freMTPL2sev table,
 containing the claim amount (``ClaimAmount``) for the same policy ids
 (``IDpol``).
 
-.. GENERATED FROM PYTHON SOURCE LINES 211-269
+.. GENERATED FROM PYTHON SOURCE LINES 212-270
 
 .. code-block:: Python
 
@@ -333,7 +333,7 @@ containing the claim amount (``ClaimAmount``) for the same policy ids
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 270-279
+.. GENERATED FROM PYTHON SOURCE LINES 271-280
 
 Frequency model -- Poisson distribution
 ---------------------------------------
@@ -345,7 +345,7 @@ constant rate in a given time interval (``Exposure``, in units of years).
 Here we model the frequency ``y = ClaimNb / Exposure``, which is still a
 (scaled) Poisson distribution, and use ``Exposure`` as `sample_weight`.
 
-.. GENERATED FROM PYTHON SOURCE LINES 280-285
+.. GENERATED FROM PYTHON SOURCE LINES 281-286
 
 .. code-block:: Python
 
@@ -361,13 +361,13 @@ Here we model the frequency ``y = ClaimNb / Exposure``, which is still a
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 286-289
+.. GENERATED FROM PYTHON SOURCE LINES 287-290
 
 Let us keep in mind that despite the seemingly large number of data points in
 this dataset, the number of evaluation points where the claim amount is
 non-zero is quite small:
 
-.. GENERATED FROM PYTHON SOURCE LINES 290-292
+.. GENERATED FROM PYTHON SOURCE LINES 291-293
 
 .. code-block:: Python
 
@@ -386,7 +386,7 @@ non-zero is quite small:
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 293-295
+.. GENERATED FROM PYTHON SOURCE LINES 294-296
 
 .. code-block:: Python
 
@@ -405,7 +405,7 @@ non-zero is quite small:
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 296-303
+.. GENERATED FROM PYTHON SOURCE LINES 297-304
 
 As a consequence, we expect a significant variability in our
 evaluation upon random resampling of the train test split.
@@ -415,7 +415,7 @@ on the training set via a Newton solver. Some of the features are collinear
 (e.g. because we did not drop any categorical level in the `OneHotEncoder`),
 we use a weak L2 penalization to avoid numerical issues.
 
-.. GENERATED FROM PYTHON SOURCE LINES 304-319
+.. GENERATED FROM PYTHON SOURCE LINES 305-320
 
 .. code-block:: Python
 
@@ -452,7 +452,7 @@ we use a weak L2 penalization to avoid numerical issues.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 320-328
+.. GENERATED FROM PYTHON SOURCE LINES 321-329
 
 Note that the score measured on the test set is surprisingly better than on
 the training set. This might be specific to this random train-test split.
@@ -463,7 +463,7 @@ We can visually compare observed and predicted values, aggregated by the
 drivers age (``DrivAge``), vehicle age (``VehAge``) and the insurance
 bonus/malus (``BonusMalus``).
 
-.. GENERATED FROM PYTHON SOURCE LINES 329-381
+.. GENERATED FROM PYTHON SOURCE LINES 330-382
 
 .. code-block:: Python
 
@@ -531,7 +531,7 @@ bonus/malus (``BonusMalus``).
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 382-399
+.. GENERATED FROM PYTHON SOURCE LINES 383-400
 
 According to the observed data, the frequency of accidents is higher for
 drivers younger than 30 years old, and is positively correlated with the
@@ -551,7 +551,7 @@ Note:
 - We use ``ClaimNb`` as `sample_weight` to account for policies that contain
   more than one claim.
 
-.. GENERATED FROM PYTHON SOURCE LINES 399-424
+.. GENERATED FROM PYTHON SOURCE LINES 400-425
 
 .. code-block:: Python
 
@@ -598,14 +598,14 @@ Note:
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 425-429
+.. GENERATED FROM PYTHON SOURCE LINES 426-430
 
 Those values of the metrics are not necessarily easy to interpret. It can be
 insightful to compare them with a model that does not use any input
 features and always predicts a constant value, i.e. the average claim
 amount, in the same setting:
 
-.. GENERATED FROM PYTHON SOURCE LINES 430-452
+.. GENERATED FROM PYTHON SOURCE LINES 431-453
 
 .. code-block:: Python
 
@@ -649,7 +649,7 @@ amount, in the same setting:
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 453-462
+.. GENERATED FROM PYTHON SOURCE LINES 454-463
 
 We conclude that the claim amount is very challenging to predict. Still, the
 :class:`~sklearn.linear_model.GammaRegressor` is able to leverage some
@@ -661,7 +661,7 @@ it is conditional on having at least one claim, and cannot be used to predict
 the average claim amount per policy. For this, it needs to be combined with
 a claims frequency model.
 
-.. GENERATED FROM PYTHON SOURCE LINES 463-481
+.. GENERATED FROM PYTHON SOURCE LINES 464-482
 
 .. code-block:: Python
 
@@ -699,12 +699,12 @@ a claims frequency model.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 482-484
+.. GENERATED FROM PYTHON SOURCE LINES 483-485
 
 We can visually compare observed and predicted values, aggregated for
 the drivers age (``DrivAge``).
 
-.. GENERATED FROM PYTHON SOURCE LINES 484-511
+.. GENERATED FROM PYTHON SOURCE LINES 485-512
 
 .. code-block:: Python
 
@@ -747,7 +747,7 @@ the drivers age (``DrivAge``).
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 512-542
+.. GENERATED FROM PYTHON SOURCE LINES 513-543
 
 Overall, the drivers age (``DrivAge``) has a weak impact on the claim
 severity, both in observed and predicted data.
@@ -780,7 +780,7 @@ models side by side, i.e. we compare them at identical values of `power`.
 Ideally, we hope that one model will be consistently better than the other,
 regardless of `power`.
 
-.. GENERATED FROM PYTHON SOURCE LINES 542-583
+.. GENERATED FROM PYTHON SOURCE LINES 543-584
 
 .. code-block:: Python
 
@@ -851,7 +851,7 @@ regardless of `power`.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 584-592
+.. GENERATED FROM PYTHON SOURCE LINES 585-593
 
 In this example, both modeling approaches yield comparable performance
 metrics. For implementation reasons, the percentage of explained variance
@@ -862,7 +862,7 @@ predicted total claim amount over the test and train subsets. We see that,
 on average, both model tend to underestimate the total claim (but this
 behavior depends on the amount of regularization).
 
-.. GENERATED FROM PYTHON SOURCE LINES 592-613
+.. GENERATED FROM PYTHON SOURCE LINES 593-614
 
 .. code-block:: Python
 
@@ -903,7 +903,7 @@ behavior depends on the amount of regularization).
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 614-643
+.. GENERATED FROM PYTHON SOURCE LINES 615-644
 
 Finally, we can compare the two models using a plot of cumulated claims: for
 each model, the policyholders are ranked from safest to riskiest based on the
@@ -935,7 +935,7 @@ directly fit on the pure premium is operationally simpler to develop and
 maintain as it consists of a single scikit-learn estimator instead of a pair
 of models, each with its own set of hyperparameters.
 
-.. GENERATED FROM PYTHON SOURCE LINES 644-694
+.. GENERATED FROM PYTHON SOURCE LINES 645-695
 
 .. code-block:: Python
 
@@ -1010,7 +1010,7 @@ of models, each with its own set of hyperparameters.
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** (0 minutes 7.953 seconds)
+   **Total running time of the script:** (0 minutes 7.081 seconds)
 
 
 .. _sphx_glr_download_auto_examples_linear_model_plot_tweedie_regression_insurance_claims.py:
