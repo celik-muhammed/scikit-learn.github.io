@@ -11,10 +11,10 @@
 <meta property="og:type" content="website" />
 <meta property="og:url" content="https://scikit-learn/stable/model_persistence.html" />
 <meta property="og:site_name" content="scikit-learn" />
-<meta property="og:description" content="After training a scikit-learn model, it is desirable to have a way to persist the model for future use without having to retrain. Based on your use-case, there are a few different ways to persist a..." />
+<meta property="og:description" content="Summary of model persistence methods:,,, Persistence method, Pros, Risks / Cons,,, ONNX, Serve models without a Python environment, Serving and training environments independent of one another, Mos..." />
 <meta property="og:image" content="https://scikit-learn.org/stable/_static/scikit-learn-logo-small.png" />
 <meta property="og:image:alt" content="scikit-learn" />
-<meta name="description" content="After training a scikit-learn model, it is desirable to have a way to persist the model for future use without having to retrain. Based on your use-case, there are a few different ways to persist a..." />
+<meta name="description" content="Summary of model persistence methods:,,, Persistence method, Pros, Risks / Cons,,, ONNX, Serve models without a Python environment, Serving and training environments independent of one another, Mos..." />
 
     <title>9. Model persistence &#8212; scikit-learn 1.6.dev0 documentation</title>
   
@@ -717,6 +717,91 @@ document.write(`
                   
   <section id="model-persistence">
 <span id="id1"></span><h1><span class="section-number">9. </span>Model persistence<a class="headerlink" href="#model-persistence" title="Link to this heading">#</a></h1>
+<div class="pst-scrollable-table-container"><table class="table" id="id2">
+<caption><span class="caption-text">Summary of model persistence methods</span><a class="headerlink" href="#id2" title="Link to this table">#</a></caption>
+<colgroup>
+<col style="width: 20.0%" />
+<col style="width: 40.0%" />
+<col style="width: 40.0%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Persistence method</p></th>
+<th class="head"><p>Pros</p></th>
+<th class="head"><p>Risks / Cons</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><a class="reference internal" href="#onnx-persistence"><span class="std std-ref">ONNX</span></a></p></td>
+<td><ul class="simple">
+<li><p>Serve models without a Python environment</p></li>
+<li><p>Serving and training environments independent of one another</p></li>
+<li><p>Most secure option</p></li>
+</ul>
+</td>
+<td><ul class="simple">
+<li><p>Not all scikit-learn models are supported</p></li>
+<li><p>Custom estimators require more work to support</p></li>
+<li><p>Original Python object is lost and cannot be reconstructed</p></li>
+</ul>
+</td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#skops-persistence"><span class="std std-ref">skops.io</span></a></p></td>
+<td><ul class="simple">
+<li><p>More secure than <code class="docutils literal notranslate"><span class="pre">pickle</span></code> based formats</p></li>
+<li><p>Contents can be partly validated without loading</p></li>
+</ul>
+</td>
+<td><ul class="simple">
+<li><p>Not as fast as <code class="docutils literal notranslate"><span class="pre">pickle</span></code> based formats</p></li>
+<li><p>Supports less types than <code class="docutils literal notranslate"><span class="pre">pickle</span></code> based formats</p></li>
+<li><p>Requires the same environment as the training environment</p></li>
+</ul>
+</td>
+</tr>
+<tr class="row-even"><td><p><a class="reference external" href="https://docs.python.org/3/library/pickle.html#module-pickle" title="(in Python v3.12)"><code class="xref py py-mod docutils literal notranslate"><span class="pre">pickle</span></code></a></p></td>
+<td><ul class="simple">
+<li><p>Native to Python</p></li>
+<li><p>Can serialize most Python objects</p></li>
+<li><p>Efficient memory usage with <code class="docutils literal notranslate"><span class="pre">protocol=5</span></code></p></li>
+</ul>
+</td>
+<td><ul class="simple">
+<li><p>Loading can execute arbitrary code</p></li>
+<li><p>Requires the same environment as the training environment</p></li>
+</ul>
+</td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference external" href="https://joblib.readthedocs.io/en/latest/index.html#module-joblib" title="(in joblib v1.5.dev0)"><code class="xref py py-mod docutils literal notranslate"><span class="pre">joblib</span></code></a></p></td>
+<td><ul class="simple">
+<li><p>Efficient memory usage</p></li>
+<li><p>Supports memory mapping</p></li>
+<li><p>Easy shortcuts for compression and decompression</p></li>
+</ul>
+</td>
+<td><ul class="simple">
+<li><p>Pickle based format</p></li>
+<li><p>Loading can execute arbitrary code</p></li>
+<li><p>Requires the same environment as the training environment</p></li>
+</ul>
+</td>
+</tr>
+<tr class="row-even"><td><p><a class="reference external" href="https://github.com/cloudpipe/cloudpickle">cloudpickle</a></p></td>
+<td><ul class="simple">
+<li><p>Can serialize non-packaged, custom Python code</p></li>
+<li><p>Comparable loading efficiency as <a class="reference external" href="https://docs.python.org/3/library/pickle.html#module-pickle" title="(in Python v3.12)"><code class="xref py py-mod docutils literal notranslate"><span class="pre">pickle</span></code></a> with <code class="docutils literal notranslate"><span class="pre">protocol=5</span></code></p></li>
+</ul>
+</td>
+<td><ul class="simple">
+<li><p>Pickle based format</p></li>
+<li><p>Loading can execute arbitrary code</p></li>
+<li><p>No forward compatibility guarantees</p></li>
+<li><p>Requires the same environment as the training environment</p></li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
 <p>After training a scikit-learn model, it is desirable to have a way to persist
 the model for future use without having to retrain. Based on your use-case,
 there are a few different ways to persist a scikit-learn model, and here we
